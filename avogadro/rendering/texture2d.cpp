@@ -131,10 +131,8 @@ GLenum convertTypeToGL(Type type)
       return GL_UNSIGNED_INT;
     case FloatType:
       return GL_FLOAT;
+#ifndef __EMSCRIPTEN__
     case DoubleType:
-#ifdef __EMSCRIPTEN__
-      return 0;
-#else
       return GL_DOUBLE;
 #endif
     default:

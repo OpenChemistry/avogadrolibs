@@ -16,6 +16,9 @@
 #include <QTemporaryDir>
 #include <gtest/gtest.h>
 
+#include <array>
+#include <string>
+
 using Avogadro::QtPlugins::Editor;
 using Avogadro::QtPlugins::EditorToolWidget;
 
@@ -25,9 +28,9 @@ protected:
   void SetUp() override
   {
     static int argc = 1;
-    static char name[] = "editortest";
-    static char* argv[] = { name, nullptr };
-    static QApplication app(argc, argv);
+    static std::string name = "editortest";
+    static std::array<char*, 2> argv{ name.data(), nullptr };
+    static QApplication app(argc, argv.data());
     static QTemporaryDir settings;
     QCoreApplication::setOrganizationName("AvogadroTests");
     QCoreApplication::setApplicationName("Editor");

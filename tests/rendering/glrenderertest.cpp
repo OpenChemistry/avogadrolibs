@@ -12,6 +12,8 @@
 #include <EGL/eglext.h>
 #include <gtest/gtest.h>
 
+#include <array>
+
 using namespace Avogadro;
 using namespace Avogadro::Rendering;
 
@@ -20,42 +22,46 @@ class GLRendererTest : public testing::Test
 protected:
   void SetUp() override
   {
+    // EGL returns an untyped function pointer; use the extension signature.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     const auto getDisplay = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
       eglGetProcAddress("eglGetPlatformDisplayEXT"));
     if (!getDisplay)
       GTEST_SKIP() << "Surfaceless EGL is unavailable";
     display =
       getDisplay(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
-    EGLint major, minor;
+    EGLint major = 0, minor = 0;
     if (!eglInitialize(display, &major, &minor))
       GTEST_SKIP() << "No surfaceless EGL driver";
     ASSERT_TRUE(eglBindAPI(EGL_OPENGL_API));
-    const EGLint attributes[] = { EGL_SURFACE_TYPE,
-                                  EGL_PBUFFER_BIT,
-                                  EGL_RENDERABLE_TYPE,
-                                  EGL_OPENGL_BIT,
-                                  EGL_RED_SIZE,
-                                  8,
-                                  EGL_GREEN_SIZE,
-                                  8,
-                                  EGL_BLUE_SIZE,
-                                  8,
-                                  EGL_DEPTH_SIZE,
-                                  24,
-                                  EGL_NONE };
-    EGLConfig config;
-    EGLint count;
-    ASSERT_TRUE(eglChooseConfig(display, attributes, &config, 1, &count));
+    const std::array attributes = { EGL_SURFACE_TYPE,
+                                    EGL_PBUFFER_BIT,
+                                    EGL_RENDERABLE_TYPE,
+                                    EGL_OPENGL_BIT,
+                                    EGL_RED_SIZE,
+                                    8,
+                                    EGL_GREEN_SIZE,
+                                    8,
+                                    EGL_BLUE_SIZE,
+                                    8,
+                                    EGL_DEPTH_SIZE,
+                                    24,
+                                    EGL_NONE };
+    EGLConfig config = nullptr;
+    EGLint count = 0;
+    ASSERT_TRUE(
+      eglChooseConfig(display, attributes.data(), &config, 1, &count));
     if (count == 0)
       GTEST_SKIP() << "No OpenGL pbuffer configuration";
-    const EGLint surfaceAttributes[] = { EGL_WIDTH, 64, EGL_HEIGHT, 64,
-                                         EGL_NONE };
-    surface = eglCreatePbufferSurface(display, config, surfaceAttributes);
-    const EGLint contextAttributes[] = { EGL_CONTEXT_MAJOR_VERSION, 4,
-                                         EGL_CONTEXT_MINOR_VERSION, 0,
-                                         EGL_NONE };
-    context =
-      eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttributes);
+    const std::array surfaceAttributes = { EGL_WIDTH, 64, EGL_HEIGHT, 64,
+                                           EGL_NONE };
+    surface =
+      eglCreatePbufferSurface(display, config, surfaceAttributes.data());
+    const std::array contextAttributes = { EGL_CONTEXT_MAJOR_VERSION, 4,
+                                           EGL_CONTEXT_MINOR_VERSION, 0,
+                                           EGL_NONE };
+    context = eglCreateContext(display, config, EGL_NO_CONTEXT,
+                               contextAttributes.data());
     if (context == EGL_NO_CONTEXT)
       GTEST_SKIP() << "OpenGL 4 is unavailable";
     ASSERT_TRUE(eglMakeCurrent(display, surface, surface, context));
@@ -73,6 +79,7 @@ protected:
     eglTerminate(display);
   }
 
+private:
   EGLDisplay display = EGL_NO_DISPLAY;
   EGLSurface surface = EGL_NO_SURFACE;
   EGLContext context = EGL_NO_CONTEXT;
@@ -96,8 +103,8 @@ TEST_F(GLRendererTest, SolidPipelineRendersWithAndWithoutAmbientOcclusion)
     SCOPED_TRACE(ao);
     renderer.solidPipeline().setAoEnabled(ao);
     renderer.render();
-    unsigned char pixel[4] = {};
-    glReadPixels(32, 32, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+    std::array<unsigned char, 4> pixel{};
+    glReadPixels(32, 32, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
     EXPECT_EQ(glGetError(), GL_NO_ERROR);
     EXPECT_GT(pixel[0], pixel[1]);
     EXPECT_GT(pixel[0], pixel[2]);

@@ -151,7 +151,7 @@ SolidPipeline::~SolidPipeline()
 
 void SolidPipeline::initialize()
 {
-  GLint previousFBO;
+  GLint previousFBO = 0;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
 #ifdef __EMSCRIPTEN__
   // Floating-point color attachments are optional even in WebGL 2.
@@ -351,7 +351,7 @@ void SolidPipeline::resize(int width, int height)
   d->aoReady = false;
   if (!d->initialized || m_width <= 0 || m_height <= 0)
     return;
-  GLint previousFBO;
+  GLint previousFBO = 0;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
 
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
