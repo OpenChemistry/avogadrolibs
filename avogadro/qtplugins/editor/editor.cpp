@@ -101,29 +101,34 @@ void Editor::setIcon(bool darkTheme)
 QWidget* Editor::toolWidget() const
 {
   if (!m_toolWidget) {
-    auto* self = const_cast<Editor*>(this);
     m_toolWidget = new EditorToolWidget(qobject_cast<QWidget*>(parent()));
-    connect(m_toolWidget, &QObject::destroyed, self,
-            [self]() { self->m_toolWidget = nullptr; });
-    auto sync = [self]() {
-      self->m_toolWidget->setAtomicNumber(self->atomicNumber());
-      self->m_toolWidget->setBondOrder(self->bondOrder());
-      self->m_toolWidget->setAdjustHydrogens(self->adjustHydrogens());
-    };
-    sync();
-    connect(self, &Editor::drawOptionsChanged, m_toolWidget, sync);
-    connect(m_toolWidget, &EditorToolWidget::optionsChanged, self, [self]() {
-      const auto number = self->m_toolWidget->atomicNumber();
-      const auto order = self->m_toolWidget->bondOrder();
-      const auto hydrogens = self->m_toolWidget->adjustHydrogens();
-      // Read all values before emitting updates back to the panel.
-      self->handleCommand(QStringLiteral("setDrawOptions"),
-                          { { "atomicNumber", number },
-                            { "bondOrder", order },
-                            { "adjustHydrogens", hydrogens } });
-    });
+    syncToolWidget();
+    connect(this, &Editor::drawOptionsChanged, m_toolWidget,
+            [this]() { syncToolWidget(); });
+    connect(m_toolWidget, &EditorToolWidget::optionsChanged, this,
+            &Editor::updateDrawOptionsFromWidget);
   }
   return m_toolWidget;
+}
+
+void Editor::syncToolWidget() const
+{
+  if (!m_toolWidget)
+    return;
+  m_toolWidget->setAtomicNumber(atomicNumber());
+  m_toolWidget->setBondOrder(bondOrder());
+  m_toolWidget->setAdjustHydrogens(adjustHydrogens());
+}
+
+void Editor::updateDrawOptionsFromWidget()
+{
+  if (!m_toolWidget)
+    return;
+  // Capture the complete panel state before notifying observers.
+  handleCommand(QStringLiteral("setDrawOptions"),
+                { { "atomicNumber", m_toolWidget->atomicNumber() },
+                  { "bondOrder", m_toolWidget->bondOrder() },
+                  { "adjustHydrogens", m_toolWidget->adjustHydrogens() } });
 }
 
 QVariantMap Editor::drawOptions() const

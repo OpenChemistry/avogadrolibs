@@ -71,3 +71,7 @@ endif()
 if(USE_OPENGL)
   add_subdirectory(rendering)
 endif()
+
+if(USE_QT AND USE_OPENGL AND NOT EMSCRIPTEN AND NOT PROJECT_IS_TOP_LEVEL)
+  add_subdirectory(qtplugins)
+endif()

@@ -14,6 +14,7 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
+#include <QtCore/QPointer>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -75,6 +76,8 @@ signals:
   void drawOptionsChanged();
 
 private slots:
+  void syncToolWidget() const;
+  void updateDrawOptionsFromWidget();
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
 
 private:
@@ -102,7 +105,7 @@ private:
   QtGui::RWMolecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
   Rendering::GLRenderer* m_renderer;
-  mutable EditorToolWidget* m_toolWidget;
+  mutable QPointer<EditorToolWidget> m_toolWidget;
   unsigned char m_atomicNumber = 6;
   unsigned char m_bondOrder = 0;
   bool m_adjustHydrogens = true;
