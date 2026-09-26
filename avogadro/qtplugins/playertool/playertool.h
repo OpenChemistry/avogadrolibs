@@ -44,6 +44,15 @@ public:
   QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
+  /**
+   * Registers nextFrame, previousFrame, setCoordinateSet and
+   * coordinateSetCount: the scripting / RPC equivalents of the panel's frame
+   * controls. None of them need the tool widget to exist.
+   */
+  void registerCommands() override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
 public slots:
   void setMolecule(QtGui::Molecule*) override;
   void setGLRenderer(Rendering::GLRenderer* renderer) override;
@@ -72,6 +81,10 @@ private:
 
   /** Push m_currentFrame into the slider and spin box without recursing. */
   void syncWidgets();
+
+  /** The {"frame": ..., "count": ...} result every RPC command returns on
+   *  success. */
+  QVariantMap frameResult() const;
 
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;

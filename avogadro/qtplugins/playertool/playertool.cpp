@@ -653,4 +653,81 @@ void PlayerTool::updateLimits()
   m_updatingWidgets = false;
 }
 
+QVariantMap PlayerTool::frameResult() const
+{
+  QVariantMap result;
+  result.insert(QStringLiteral("frame"), m_molecule->coordinate3d());
+  result.insert(QStringLiteral("count"),
+                static_cast<int>(m_molecule->coordinate3dCount()));
+  return result;
+}
+
+void PlayerTool::registerCommands()
+{
+  emit registerCommand(
+    "nextFrame",
+    tr("Advance one coordinate set, looping to the first frame after the "
+       "last. Returns {\"frame\": ..., \"count\": ...}."));
+  emit registerCommand(
+    "previousFrame",
+    tr("Step back one coordinate set, looping to the last frame before the "
+       "first. Returns {\"frame\": ..., \"count\": ...}."));
+  emit registerCommand(
+    "setCoordinateSet",
+    tr("Jump to a coordinate set, given as a zero-based index: {\"index\": "
+       "n}. Returns {\"frame\": ..., \"count\": ...}."));
+  emit registerCommand(
+    "coordinateSetCount",
+    tr("Report the current frame and the number of coordinate sets, without "
+       "changing anything. Returns {\"frame\": ..., \"count\": ...}."));
+}
+
+bool PlayerTool::handleCommand(const QString& command,
+                               const QVariantMap& options)
+{
+  if (command != QLatin1String("nextFrame") &&
+      command != QLatin1String("previousFrame") &&
+      command != QLatin1String("setCoordinateSet") &&
+      command != QLatin1String("coordinateSetCount")) {
+    // Not one of ours.
+    return false;
+  }
+
+  if (!m_molecule) {
+    emit commandFailed(tr("There is no molecule."));
+    return true;
+  }
+  if (m_molecule->coordinate3dCount() == 0) {
+    emit commandFailed(tr("The molecule has no coordinate sets."));
+    return true;
+  }
+
+  if (command == QLatin1String("nextFrame")) {
+    animate(1);
+  } else if (command == QLatin1String("previousFrame")) {
+    animate(-1);
+  } else if (command == QLatin1String("setCoordinateSet")) {
+    if (!options.contains(QStringLiteral("index"))) {
+      emit commandFailed(tr("index is required."));
+      return true;
+    }
+
+    bool ok = false;
+    int index = options.value(QStringLiteral("index")).toInt(&ok);
+    auto count = static_cast<int>(m_molecule->coordinate3dCount());
+    if (!ok || index < 0 || index >= count) {
+      emit commandFailed(
+        tr("index must be a whole number from 0 to %1.").arg(count - 1));
+      return true;
+    }
+
+    setFrame(index);
+  }
+  // coordinateSetCount falls through here: it reports state without
+  // changing it.
+
+  emit commandFinished(QString(), frameResult());
+  return true;
+}
+
 } // namespace Avogadro::QtPlugins
