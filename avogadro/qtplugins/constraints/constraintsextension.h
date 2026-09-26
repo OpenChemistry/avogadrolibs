@@ -6,9 +6,12 @@
 #ifndef AVOGADRO_QTPLUGINS_CONSTRAINTS_H
 #define AVOGADRO_QTPLUGINS_CONSTRAINTS_H
 
+#include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/constraint.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/extensionplugin.h>
 #include <QtCore/QMap>
+#include <QtCore/QVector>
 
 class QAction;
 
@@ -37,10 +40,26 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  /// Registers listConstraints/addConstraint/removeConstraint/
+  /// clearConstraints, the scripting/RPC equivalents of the dialog.
+  void registerCommands() override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
 private slots:
   void openDialog();
 
 private:
+  /**
+   * Parse the "atoms" option shared by the add/removeConstraint commands: a
+   * JSON array of 2 (distance), 3 (angle) or 4 (torsion) zero-based atom
+   * indices. On success, fills @p indices (in the given order) and returns
+   * true; otherwise fills @p error with a message identifying what was
+   * wrong and returns false.
+   */
+  bool parseAtomIndices(const QVariantMap& options, QVector<Index>& indices,
+                        QString& error) const;
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
   ConstraintsDialog* m_dialog = nullptr;
