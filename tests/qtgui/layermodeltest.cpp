@@ -14,6 +14,10 @@
 #include <QtCore/QCoreApplication>
 #include <QtGui/QGuiApplication>
 
+#include <limits>
+#include <utility>
+#include <vector>
+
 using Avogadro::MaxIndex;
 using Avogadro::Core::LayerManager;
 using Avogadro::QtGui::LayerModel;
@@ -486,4 +490,79 @@ TEST_F(LayerModelTest, OutOfRangeLayerIdIsHarmless)
   EXPECT_EQ(info->visible, visible);
   EXPECT_EQ(info->locked, locked);
   EXPECT_EQ(model.layerCount(), layerCountBefore);
+}
+
+// Views only repaint a layer's visibility/lock icon when told to, and the
+// icon sits on the layer's header row, not at row == layer id.
+TEST_F(LayerModelTest, SetLayerVisibleAndLockedNotifyHeaderRowOnce)
+{
+  Molecule molecule;
+  LayerModel model;
+  buildThreeLayerMoleculeWithPluginRow(model, molecule);
+
+  std::vector<std::pair<int, int>> changed;
+  QObject::connect(
+    &model, &LayerModel::dataChanged,
+    [&changed](const QModelIndex& topLeft, const QModelIndex& bottomRight) {
+      EXPECT_EQ(topLeft, bottomRight);
+      changed.emplace_back(topLeft.row(), topLeft.column());
+    });
+
+  model.setLayerVisible(1, false);
+  ASSERT_EQ(changed.size(), 1u);
+  EXPECT_EQ(changed[0].first, 2); // layer 1's header row, after "Plugin"
+  EXPECT_EQ(changed[0].second, static_cast<int>(LayerModel::Visible));
+
+  model.setLayerLocked(2, true);
+  ASSERT_EQ(changed.size(), 2u);
+  EXPECT_EQ(changed[1].first, 3);
+  EXPECT_EQ(changed[1].second, static_cast<int>(LayerModel::Lock));
+
+  // Unchanged values and out-of-range layers notify nobody.
+  model.setLayerVisible(1, false);
+  model.setLayerLocked(2, true);
+  model.setLayerVisible(MaxIndex, false);
+  EXPECT_EQ(changed.size(), 2u);
+}
+
+// A size_t row past INT_MAX must not wrap around to a real row.
+TEST_F(LayerModelTest, FlipRowPastIntMaxIsIgnored)
+{
+  Molecule molecule;
+  LayerModel model;
+  buildThreeLayerMoleculeWithPluginRow(model, molecule);
+
+  const size_t wrapsToRow2 =
+    (static_cast<size_t>(std::numeric_limits<unsigned int>::max()) + 1) + 2;
+  if (wrapsToRow2 <= 2)
+    GTEST_SKIP() << "size_t is 32 bits";
+
+  model.flipVisible(wrapsToRow2);
+  model.flipLocked(wrapsToRow2);
+  EXPECT_TRUE(model.layerVisible(1));
+  EXPECT_FALSE(model.layerLocked(1));
+}
+
+// An id at or past layerCount() must return before the manager, which
+// would otherwise leave an empty entry on the undo stack.
+TEST_F(LayerModelTest, OutOfRangeLayerIdPushesNoUndo)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  LayerModel model;
+  model.addMolecule(&molecule);
+  auto* rwmol = molecule.undoMolecule();
+  model.addLayer(rwmol);
+
+  const int undoCount = rwmol->undoStack().count();
+  const size_t activeBefore =
+    LayerManager::getMoleculeLayer(&molecule).activeLayer();
+
+  model.setActiveLayerId(model.layerCount(), rwmol);
+  model.removeLayerId(model.layerCount(), rwmol);
+
+  EXPECT_EQ(rwmol->undoStack().count(), undoCount);
+  EXPECT_EQ(model.layerCount(), 2u);
+  EXPECT_EQ(LayerManager::getMoleculeLayer(&molecule).activeLayer(),
+            activeBefore);
 }

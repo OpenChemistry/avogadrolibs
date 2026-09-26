@@ -101,6 +101,8 @@ public slots:
 
 private:
   QString getTranslatedName(const std::string& name) const;
+  /** Tell views that @p layer's icon in @p column changed. */
+  void emitLayerIconChanged(size_t layer, int column);
   size_t m_item;
 
   QIcon m_plusIcon;

@@ -16,6 +16,8 @@
 #include <QtGui/QIcon>
 #include <QtGui/QPalette>
 
+#include <limits>
+
 namespace Avogadro::QtGui {
 
 using Core::LayerManager;
@@ -276,6 +278,8 @@ size_t LayerModel::items() const
 
 void LayerModel::flipVisible(size_t row)
 {
+  if (row > static_cast<size_t>(std::numeric_limits<int>::max()))
+    return;
   const size_t layer = layerForRow(static_cast<int>(row));
   if (layer == MaxIndex)
     return;
@@ -284,6 +288,8 @@ void LayerModel::flipVisible(size_t row)
 
 void LayerModel::flipLocked(size_t row)
 {
+  if (row > static_cast<size_t>(std::numeric_limits<int>::max()))
+    return;
   const size_t layer = layerForRow(static_cast<int>(row));
   if (layer == MaxIndex)
     return;
@@ -323,6 +329,8 @@ void LayerModel::setLayerVisible(size_t layer, bool visible)
   if (layerVisible(layer) == visible)
     return;
   RWLayerManager::flipVisible(layer);
+  if (layerVisible(layer) == visible)
+    emitLayerIconChanged(layer, ColumnType::Visible);
 }
 
 void LayerModel::setLayerLocked(size_t layer, bool locked)
@@ -330,11 +338,14 @@ void LayerModel::setLayerLocked(size_t layer, bool locked)
   if (layerLocked(layer) == locked)
     return;
   RWLayerManager::flipLocked(layer);
+  if (layerLocked(layer) == locked)
+    emitLayerIconChanged(layer, ColumnType::Lock);
 }
 
 void LayerModel::setActiveLayerId(size_t layer, RWMolecule* rwmolecule)
 {
-  if (layer == MaxIndex)
+  // Check here: the manager would push an undo entry for a bad id anyway.
+  if (layer >= layerCount())
     return;
   RWLayerManager::setActiveLayer(layer, rwmolecule);
   updateRows();
@@ -342,10 +353,26 @@ void LayerModel::setActiveLayerId(size_t layer, RWMolecule* rwmolecule)
 
 void LayerModel::removeLayerId(size_t layer, RWMolecule* rwmolecule)
 {
-  if (layer == MaxIndex)
+  // Check here: the manager would push an undo entry for a bad id anyway.
+  if (layer >= layerCount())
     return;
   RWLayerManager::removeLayer(layer, rwmolecule);
   updateRows();
+}
+
+void LayerModel::emitLayerIconChanged(size_t layer, int column)
+{
+  // The icons live on the layer's header row, which plugin sub-rows can push
+  // away from the layer id -- see layerForRow().
+  auto names = activeMoleculeNames();
+  for (size_t row = 0; row < names.size(); ++row) {
+    if (names[row].first == layer && names[row].second == "Layer") {
+      QModelIndex changed = index(static_cast<int>(row), column);
+      if (changed.isValid())
+        emit dataChanged(changed, changed, { Qt::DecorationRole });
+      return;
+    }
+  }
 }
 
 } // namespace Avogadro::QtGui
