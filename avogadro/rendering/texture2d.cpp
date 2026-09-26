@@ -93,7 +93,7 @@ GLint convertIncomingFormatToGL(Texture2D::IncomingFormat fmt)
       return GL_RGB;
     case Texture2D::IncomingBGR:
 #ifdef __EMSCRIPTEN__
-      return GL_RGB;
+      return -1;
 #else
       return GL_BGR;
 #endif
@@ -101,7 +101,7 @@ GLint convertIncomingFormatToGL(Texture2D::IncomingFormat fmt)
       return GL_RGBA;
     case Texture2D::IncomingBGRA:
 #ifdef __EMSCRIPTEN__
-      return GL_RGBA;
+      return -1;
 #else
       return GL_BGRA;
 #endif
@@ -133,7 +133,7 @@ GLenum convertTypeToGL(Type type)
       return GL_FLOAT;
     case DoubleType:
 #ifdef __EMSCRIPTEN__
-      return GL_FLOAT;
+      return 0;
 #else
       return GL_DOUBLE;
 #endif
@@ -157,7 +157,7 @@ public:
   mutable GLuint textureId;
 };
 
-Texture2D::Texture2D() : d(new Private) {}
+Texture2D::Texture2D() : d(new Private), m_dirty(true) {}
 
 Texture2D::~Texture2D()
 {
@@ -257,11 +257,23 @@ bool Texture2D::uploadInternal(const void* buffer, const Vector2i& dims,
                                Avogadro::Type dataType,
                                Texture2D::InternalFormat internalFormat)
 {
-  // The dataType has already been validated.
+  const GLint incomingFormat = convertIncomingFormatToGL(dataFormat);
+  if (incomingFormat == -1) {
+    m_error = "Unsupported incoming texture format; WebGL requires RGB or RGBA "
+              "instead of BGR or BGRA.";
+    return false;
+  }
+  const GLint storageFormat = convertInternalFormatToGL(internalFormat);
+  const GLenum type = convertTypeToGL(dataType);
+  if (storageFormat == -1 || type == 0) {
+    m_error = "Unsupported texture storage format or data type.";
+    return false;
+  }
   Index old = pushTexture();
-  glTexImage2D(GL_TEXTURE_2D, 0, convertInternalFormatToGL(internalFormat),
-               dims[0], dims[1], 0, convertIncomingFormatToGL(dataFormat),
-               convertTypeToGL(dataType),
+  if (old == MaxIndex)
+    return false;
+  glTexImage2D(GL_TEXTURE_2D, 0, storageFormat, dims[0], dims[1], 0,
+               incomingFormat, type,
                static_cast<GLvoid*>(const_cast<void*>(buffer)));
   popTexture(old);
   return true;

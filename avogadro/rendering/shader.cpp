@@ -9,6 +9,26 @@
 
 namespace Avogadro::Rendering {
 
+#ifdef __EMSCRIPTEN__
+namespace {
+std::string webGLShaderSource(const std::string& input)
+{
+  std::string source = input;
+  size_t versionPos = source.find("#version");
+  if (versionPos != std::string::npos) {
+    size_t versionEnd = source.find('\n', versionPos);
+    if (versionEnd == std::string::npos)
+      source.erase(versionPos);
+    else
+      source.erase(versionPos, versionEnd - versionPos + 1);
+  }
+  source.insert(
+    0, "#version 300 es\nprecision highp float;\nprecision highp int;\n");
+  return source;
+}
+} // namespace
+#endif
+
 Shader::Shader(Type type_, const std::string& source_)
   : m_type(type_), m_handle(0), m_dirty(true), m_source(source_)
 {
@@ -43,17 +63,7 @@ bool Shader::compile()
   GLuint handle_ = glCreateShader(type_);
 
 #ifdef __EMSCRIPTEN__
-  std::string sourceForCompile = m_source;
-  size_t versionPos = sourceForCompile.find("#version");
-  if (versionPos != std::string::npos) {
-    size_t versionEnd = sourceForCompile.find('\n', versionPos);
-    if (versionEnd == std::string::npos)
-      sourceForCompile.erase(versionPos);
-    else
-      sourceForCompile.erase(versionPos, versionEnd - versionPos + 1);
-  }
-  sourceForCompile.insert(
-    0, "#version 300 es\nprecision highp float;\nprecision highp int;\n");
+  const std::string sourceForCompile = webGLShaderSource(m_source);
   const auto* source_ = static_cast<const GLchar*>(sourceForCompile.c_str());
 #else
   const auto* source_ = static_cast<const GLchar*>(m_source.c_str());
