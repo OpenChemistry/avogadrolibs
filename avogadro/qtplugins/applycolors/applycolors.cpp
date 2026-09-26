@@ -605,4 +605,83 @@ void ApplyColors::applyShapelyColors()
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
 }
 
+void ApplyColors::registerCommands()
+{
+  emit registerCommand("colorAtomsCustom",
+                       tr("Apply a custom color to atoms."));
+  emit registerCommand(
+    "resetAtomColors",
+    tr("Reset atom colors to their default element colors."));
+  emit registerCommand("colorResiduesCustom",
+                       tr("Apply a custom color to residues."));
+  emit registerCommand("colorResiduesByAminoAcid",
+                       tr("Color residues by their amino acid type."));
+  emit registerCommand("colorResiduesShapely",
+                       tr("Color residues using the Shapely color scheme."));
+  emit registerCommand("colorResiduesBySecondaryStructure",
+                       tr("Color residues by secondary structure."));
+  emit registerCommand("resetResidueColors",
+                       tr("Reset residue colors to default chain colors."));
+}
+
+bool ApplyColors::handleCommand(const QString& command,
+                                [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command
+
+  if (command == "colorAtomsCustom") {
+    if (options.contains("color")) {
+      QString colorString = options["color"].toString();
+
+      QColor color(colorString);
+
+      if (color.isValid()) {
+        applyCustomColor(color);
+        return true;
+      }
+    }
+  }
+
+  if (command == "resetAtomColors") {
+    resetColors();
+    return true;
+  }
+
+  if (command == "colorResiduesCustom") {
+    if (options.contains("color")) {
+      QString colorString = options["color"].toString();
+
+      QColor color(colorString);
+
+      if (color.isValid()) {
+        applyCustomColorResidue(color);
+        return true;
+      }
+    }
+  }
+
+  if (command == "colorResiduesByAminoAcid") {
+    applyAminoColors();
+    return true;
+  }
+
+  if (command == "colorResiduesShapely") {
+    applyShapelyColors();
+    return true;
+  }
+
+  if (command == "colorResiduesBySecondaryStructure") {
+    applySecondaryStructureColors();
+    return true;
+  }
+
+  if (command == "resetResidueColors") {
+    resetColorsResidue();
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace Avogadro::QtPlugins
