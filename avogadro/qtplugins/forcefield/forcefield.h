@@ -76,6 +76,11 @@ public:
 
   std::string recommendedForceField() const;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 public slots:
   /**
    * Scan for new scripts in the Forcefield directories.
