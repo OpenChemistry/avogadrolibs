@@ -609,23 +609,7 @@ Vector3 rotateLigandCoords(Vector3 in, Vector3 centerVector, Vector3 outVector)
 {
   if (centerVector.norm() == 0.0 || outVector.norm() == 0.0)
     return in;
-  Vector3 axis = centerVector.cross(outVector);
-  if (axis.norm() < 1e-12) { // vectors are parallel, let's pick an arbitrary
-                             // perpendicular axis
-    Matrix3 rotx =
-      Eigen::AngleAxisd(M_PI / 2.0, Vector3(1.0, 0.0, 0.0)).toRotationMatrix();
-    Matrix3 roty =
-      Eigen::AngleAxisd(M_PI / 2.0, Vector3(0.0, 1.0, 0.0)).toRotationMatrix();
-    axis = centerVector.cross(rotx * outVector);
-    if (axis.norm() < 1e-12)
-      axis = centerVector.cross(roty * outVector);
-  }
-  axis.normalize();
-  double cosine =
-    centerVector.dot(outVector) / centerVector.norm() / outVector.norm();
-  double angle = (abs(cosine) < 1.0) ? acos(cosine) : 0.0;
-  Matrix3 rot = Eigen::AngleAxisd(angle, axis).toRotationMatrix();
-  return rot * in;
+  return Eigen::Quaterniond::FromTwoVectors(centerVector, outVector) * in;
 }
 
 Matrix3 applyKabsch(const std::vector<Vector3>& templatePoints,
@@ -1000,25 +984,8 @@ void TemplateTool::atomLeftClickCenter(QMouseEvent* e)
   Vector3 targetDir = (anchorPos - newCenterPos).normalized();
 
   // Rotate the template so the chosen coordination slot points at the anchor.
-  Matrix3 rotation = Matrix3::Identity();
-  Vector3 axis = templateDir.cross(targetDir);
-  double cosine = templateDir.dot(targetDir);
-  if (axis.norm() < 1e-9) {
-    if (cosine < 0.0) {
-      Vector3 perp = (std::abs(templateDir.x()) < 0.9) ? Vector3(1.0, 0.0, 0.0)
-                                                       : Vector3(0.0, 1.0, 0.0);
-      axis = templateDir.cross(perp);
-      axis.normalize();
-      rotation = Eigen::AngleAxisd(M_PI, axis).toRotationMatrix();
-    }
-  } else {
-    axis.normalize();
-    if (cosine > 1.0)
-      cosine = 1.0;
-    else if (cosine < -1.0)
-      cosine = -1.0;
-    rotation = Eigen::AngleAxisd(std::acos(cosine), axis).toRotationMatrix();
-  }
+  Matrix3 rotation = Eigen::Quaterniond::FromTwoVectors(templateDir, targetDir)
+                       .toRotationMatrix();
   for (size_t i = 0; i < templateMolecule.atomCount(); ++i) {
     Vector3 rel = templateMolecule.atomPosition3d(i) - centerPos;
     templateMolecule.setAtomPosition3d(i, rotation * rel + newCenterPos);
