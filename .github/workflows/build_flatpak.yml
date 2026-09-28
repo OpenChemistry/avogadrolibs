@@ -2,6 +2,10 @@ name: Build Flatpak
 
 on: [push, pull_request, workflow_dispatch]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   flatpak:
     name: "Flatpak"
