@@ -12,6 +12,8 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
+class QComboBox;
+
 namespace Avogadro {
 namespace Core {
 class Molecule;
@@ -83,6 +85,25 @@ public:
    * not recognised must not be silently treated as the default.
    */
   static Unit fromSymbol(const QString& symbol, bool* ok = nullptr);
+
+  /**
+   * Fill @p combo with every unit in units(), selecting @p current, for any
+   * widget offering a choice of energy unit.
+   *
+   * Replaces any items @p combo already had. Signals are blocked while it is
+   * filled, so this does not emit currentIndexChanged(); a caller that needs
+   * to react to the selection connects afterwards. The unit itself rides
+   * along in the item data, so the combo's order need not match the enum's.
+   * Does nothing if @p combo is null.
+   */
+  static void fillCombo(QComboBox* combo, Unit current);
+
+  /**
+   * @return the unit named by @p combo's current item, or @p fallback when
+   * that item carries no recognised unit -- including when @p combo is null
+   * or empty.
+   */
+  static Unit unitFromCombo(const QComboBox* combo, Unit fallback);
 
   /** @return the unit energies read from a file are taken to be in. */
   Unit sourceUnit() const { return m_sourceUnit; }

@@ -37,38 +37,8 @@ using Avogadro::QtGui::Molecule;
 
 namespace Avogadro::QtPlugins {
 
-using QtGui::EnergyUnits;
-
-// Fill @p combo with every energy unit, selecting @p current. The unit itself
-// rides along in the item data, so the combo's order need not match the
-// enum's.
-static void fillUnitCombo(QComboBox* combo, EnergyUnits::Unit current)
-{
-  QSignalBlocker blocker(combo);
-  combo->clear();
-  for (EnergyUnits::Unit unit : EnergyUnits::units()) {
-    combo->addItem(EnergyUnits::symbol(unit), static_cast<int>(unit));
-    if (unit == current)
-      combo->setCurrentIndex(combo->count() - 1);
-  }
-}
-
-static EnergyUnits::Unit unitFromCombo(const QComboBox* combo,
-                                       EnergyUnits::Unit fallback)
-{
-  bool ok = false;
-  const int value = combo->currentData().toInt(&ok);
-  if (!ok)
-    return fallback;
-
-  for (EnergyUnits::Unit unit : EnergyUnits::units()) {
-    if (static_cast<int>(unit) == value)
-      return unit;
-  }
-  return fallback;
-}
-
 using Core::Array;
+using QtGui::EnergyUnits;
 
 // The selected atoms, in ascending index order. Molecule stores selection as a
 // flag per atom, so the order the user clicked them in is not available.
@@ -647,10 +617,11 @@ void PlotConformer::displayDialog()
       // every other file.
       const bool declared =
         m_molecule && EnergyUnits::declaresUnit(*m_molecule);
-      units->setUnits(declared
-                        ? units->sourceUnit()
-                        : unitFromCombo(m_unitsCombo, units->sourceUnit()),
-                      unitFromCombo(m_targetUnitsCombo, units->displayUnit()));
+      units->setUnits(
+        declared
+          ? units->sourceUnit()
+          : EnergyUnits::unitFromCombo(m_unitsCombo, units->sourceUnit()),
+        EnergyUnits::unitFromCombo(m_targetUnitsCombo, units->displayUnit()));
     };
     connect(m_unitsCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, unitsEdited);
@@ -917,7 +888,8 @@ void PlotConformer::syncUnitCombos()
   // the file said and take the choice away rather than letting a stale
   // setting look as though it were in force.
   const bool declared = m_molecule && EnergyUnits::declaresUnit(*m_molecule);
-  fillUnitCombo(m_unitsCombo, m_molecule ? units->sourceUnit(*m_molecule)
+  EnergyUnits::fillCombo(m_unitsCombo, m_molecule
+                                         ? units->sourceUnit(*m_molecule)
                                          : units->sourceUnit());
   m_unitsCombo->setEnabled(!declared);
   m_unitsCombo->setToolTip(
@@ -925,7 +897,7 @@ void PlotConformer::syncUnitCombos()
              : tr("The units the energies in this file are in, which the file "
                   "itself does not record."));
 
-  fillUnitCombo(m_targetUnitsCombo, units->displayUnit());
+  EnergyUnits::fillCombo(m_targetUnitsCombo, units->displayUnit());
 }
 
 double PlotConformer::timeStep() const

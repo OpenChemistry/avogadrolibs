@@ -11,6 +11,8 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtTest/QSignalSpy>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
 
 using Avogadro::QtGui::EnergyUnits;
 using Unit = EnergyUnits::Unit;
@@ -18,8 +20,12 @@ using Unit = EnergyUnits::Unit;
 namespace {
 
 // QSettings needs an organization and application name to write anywhere
-// sensible, and QSignalSpy needs a QCoreApplication. The test binary uses
-// gtest_main, which creates neither.
+// sensible, QSignalSpy needs a QCoreApplication, and fillCombo()/
+// unitFromCombo() build a real QComboBox, which needs a QApplication rather
+// than a plain QCoreApplication. The test binary uses gtest_main, which
+// creates none of that, so build a QApplication up front -- nothing in this
+// binary runs before it when ctest filters this file's tests on their own,
+// which is how the CMakeLists here registers every test file.
 QCoreApplication* ensureApp()
 {
   if (QCoreApplication::instance())
@@ -27,10 +33,21 @@ QCoreApplication* ensureApp()
   static int argc = 1;
   static char name[] = "EnergyUnitsTest";
   static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
+  // Run without a display so this works in CI.
+  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM"))
+    qputenv("QT_QPA_PLATFORM", "offscreen");
+  static QApplication app(argc, argv);
   QCoreApplication::setOrganizationName("OpenChemistry");
   QCoreApplication::setApplicationName("EnergyUnitsTest");
   return QCoreApplication::instance();
+}
+
+// A combo box needs a QApplication. When the whole binary runs unfiltered,
+// another test file may already have made a plain QCoreApplication, which
+// cannot be upgraded -- so the combo tests skip rather than abort.
+bool widgetsAvailable()
+{
+  return qobject_cast<QApplication*>(ensureApp()) != nullptr;
 }
 
 } // namespace
@@ -249,4 +266,102 @@ TEST(EnergyUnitsTest, clearingTheUnitReturnsToTheSetting)
   Avogadro::Core::setEnergyUnit(molecule, std::string());
   EXPECT_FALSE(EnergyUnits::declaresUnit(molecule));
   EXPECT_EQ(units->sourceUnit(molecule), Unit::KcalPerMol);
+}
+
+// The plot and the dialog both fill a combo from scratch, and both rely on
+// the current selection landing on the unit that was already in force.
+TEST(EnergyUnitsTest, fillComboListsEveryUnitAndSelectsCurrent)
+{
+  if (!widgetsAvailable())
+    GTEST_SKIP() << "needs a QApplication";
+
+  QComboBox combo;
+  EnergyUnits::fillCombo(&combo, Unit::KcalPerMol);
+
+  ASSERT_EQ(combo.count(), EnergyUnits::units().size());
+  for (int i = 0; i < combo.count(); ++i) {
+    bool ok = false;
+    const int stored = combo.itemData(i).toInt(&ok);
+    ASSERT_TRUE(ok);
+    EXPECT_EQ(stored, static_cast<int>(EnergyUnits::units().at(i)));
+    EXPECT_EQ(combo.itemText(i),
+              EnergyUnits::symbol(EnergyUnits::units().at(i)));
+  }
+  EXPECT_EQ(combo.currentData().toInt(), static_cast<int>(Unit::KcalPerMol));
+}
+
+// The molecule combo box is refilled whenever a new file changes what its
+// source unit is, so a second call has to start clean rather than growing.
+TEST(EnergyUnitsTest, fillComboReplacesExistingItems)
+{
+  if (!widgetsAvailable())
+    GTEST_SKIP() << "needs a QApplication";
+
+  QComboBox combo;
+  combo.addItem("stale", 12345);
+  EnergyUnits::fillCombo(&combo, Unit::Hartree);
+
+  EXPECT_EQ(combo.count(), EnergyUnits::units().size());
+  for (int i = 0; i < combo.count(); ++i)
+    EXPECT_NE(combo.itemText(i), QString("stale"));
+}
+
+// A caller connects to currentIndexChanged only after filling the combo
+// itself; if filling it announced a change, that connection would see a
+// spurious signal for a selection the user never made.
+TEST(EnergyUnitsTest, fillComboDoesNotEmitCurrentIndexChanged)
+{
+  if (!widgetsAvailable())
+    GTEST_SKIP() << "needs a QApplication";
+
+  QComboBox combo;
+  combo.addItem("stale", 12345);
+
+  int emitted = 0;
+  QObject::connect(&combo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                   [&emitted]() { ++emitted; });
+
+  EnergyUnits::fillCombo(&combo, Unit::ElectronVolt);
+  EXPECT_EQ(emitted, 0);
+}
+
+TEST(EnergyUnitsTest, unitFromComboRoundTripsEveryUnit)
+{
+  if (!widgetsAvailable())
+    GTEST_SKIP() << "needs a QApplication";
+
+  QComboBox combo;
+  for (Unit unit : EnergyUnits::units()) {
+    EnergyUnits::fillCombo(&combo, unit);
+    EXPECT_EQ(EnergyUnits::unitFromCombo(&combo, Unit::Hartree), unit);
+  }
+}
+
+// An empty combo, an item whose data names nothing this recognises, and a
+// null pointer are all the same case to the caller: nothing usable to read,
+// so the fallback stands rather than the code guessing or crashing.
+TEST(EnergyUnitsTest, unitFromComboFallsBackWhenNothingUsableIsSelected)
+{
+  if (!widgetsAvailable())
+    GTEST_SKIP() << "needs a QApplication";
+
+  QComboBox empty;
+  EXPECT_EQ(EnergyUnits::unitFromCombo(&empty, Unit::KjPerMol), Unit::KjPerMol);
+
+  QComboBox unknown;
+  unknown.addItem("nonsense", 99);
+  EXPECT_EQ(EnergyUnits::unitFromCombo(&unknown, Unit::ElectronVolt),
+            Unit::ElectronVolt);
+
+  EXPECT_EQ(EnergyUnits::unitFromCombo(nullptr, Unit::Hartree), Unit::Hartree);
+}
+
+// fillCombo() must survive being asked to fill nothing: a caller that has not
+// yet built its widget must not crash the whole dialog.
+TEST(EnergyUnitsTest, fillComboToleratesNullCombo)
+{
+  if (!widgetsAvailable())
+    GTEST_SKIP() << "needs a QApplication";
+
+  EnergyUnits::fillCombo(nullptr, Unit::Hartree);
 }

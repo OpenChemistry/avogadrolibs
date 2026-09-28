@@ -10,6 +10,8 @@
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QSettings>
+#include <QtCore/QSignalBlocker>
+#include <QtWidgets/QComboBox>
 
 namespace Avogadro::QtGui {
 
@@ -128,6 +130,38 @@ EnergyUnits::Unit EnergyUnits::fromSymbol(const QString& symbol, bool* ok)
   if (ok != nullptr)
     *ok = false;
   return Unit::Hartree;
+}
+
+void EnergyUnits::fillCombo(QComboBox* combo, Unit current)
+{
+  if (combo == nullptr)
+    return;
+
+  QSignalBlocker blocker(combo);
+  combo->clear();
+  for (Unit unit : units()) {
+    combo->addItem(symbol(unit), static_cast<int>(unit));
+    if (unit == current)
+      combo->setCurrentIndex(combo->count() - 1);
+  }
+}
+
+EnergyUnits::Unit EnergyUnits::unitFromCombo(const QComboBox* combo,
+                                             Unit fallback)
+{
+  if (combo == nullptr)
+    return fallback;
+
+  bool ok = false;
+  const int value = combo->currentData().toInt(&ok);
+  if (!ok)
+    return fallback;
+
+  for (Unit unit : units()) {
+    if (static_cast<int>(unit) == value)
+      return unit;
+  }
+  return fallback;
 }
 
 bool EnergyUnits::declaresUnit(const Core::Molecule& molecule)
