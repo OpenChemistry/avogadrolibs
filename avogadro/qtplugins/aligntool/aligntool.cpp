@@ -169,6 +169,9 @@ void AlignTool::alignAtomToAxis(Index atomIndex, int axis)
   alpha = beta = gamma = 0.0;
 
   Vector3 pos = m_molecule->atom(atomIndex).position3d();
+  // an atom at the origin has no direction to align
+  if (pos.norm() < 1e-8)
+    return;
   pos.normalize();
   Vector3 axisVector;
 
@@ -178,17 +181,17 @@ void AlignTool::alignAtomToAxis(Index atomIndex, int axis)
     axisVector = Vector3(0., 1., 0.);
   else if (axis == 2) // z-axis
     axisVector = Vector3(0., 0., 1.);
+  else
+    return;
 
-  // Calculate the angle of the atom from the axis
-  double angle = acos(axisVector.dot(pos));
-
-  // Get the vector for the rotation
-  axisVector = axisVector.cross(pos);
-  axisVector.normalize();
+  // Rotate the atom's direction onto the axis; FromTwoVectors also handles
+  // an atom on the negative axis, where the cross product vanishes
+  const Eigen::Quaterniond rotation =
+    Eigen::Quaterniond::FromTwoVectors(pos, axisVector);
 
   // Now to rotate the fragment
   for (Index i = 0; i < coords.size(); ++i)
-    newCoords[i] = Eigen::AngleAxisd(-angle, axisVector) * coords[i];
+    newCoords[i] = rotation * coords[i];
 
   m_molecule->setAtomPositions3d(newCoords, tr("Align to Axis"));
   m_molecule->emitChanged(QtGui::Molecule::Atoms);
