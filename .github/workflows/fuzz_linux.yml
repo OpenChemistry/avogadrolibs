@@ -40,7 +40,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
+        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev gdb
 
     - name: Install Qt
       uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
@@ -134,6 +134,8 @@ jobs:
 
     - name: Run fuzz tests
       shell: bash
+      # Backstop so the artifact upload below still runs inside the job's 90 minutes.
+      timeout-minutes: 60
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
       run: |
         set -uo pipefail
@@ -207,6 +209,59 @@ jobs:
           esac
         }
 
+        # Wall-clock backstop for a command that may never return:
+        #   run_with_watchdog <seconds> <label> <command> [args...]
+        # Returns the command's own exit status if it finishes in time, or 124
+        # if the watchdog fired.
+        #
+        # libFuzzer's -timeout only covers a single unit. Since 2026-09-28 the
+        # -merge of qtgui/layermanager has hung with no unit running (process
+        # exit, LeakSanitizer or a static destructor, or the alarm landing on
+        # a thread that is not fuzzing), and -timeout never fired -- the job
+        # sat until the 90 minute limit killed it. So when the limit is hit,
+        # dump every thread's stack from each fuzz process *first*, while the
+        # evidence still exists, and only then kill the tree.
+        #
+        # The command runs in the background of this shell and this shell polls
+        # it, so there is no watcher process to clean up after a normal finish.
+        # The command may be a shell function, which is how the fuzz pipeline
+        # into tee is passed in; `wait` returns the pipeline's status, so
+        # pipefail semantics are unchanged.
+        run_with_watchdog() {
+          local limit="$1" label="$2"
+          shift 2
+          local start="${SECONDS}" pid
+          "$@" &
+          pid=$!
+
+          while kill -0 "${pid}" 2>/dev/null; do
+            if [ $(( SECONDS - start )) -ge "${limit}" ]; then
+              local pids p
+              # Binaries are invoked as ./bin/fuzz_..., and a hung merge has
+              # an outer process and an inner child, so take them all.
+              pids=$(pgrep -f 'bin/fuzz_' || true)
+              echo "::group::Stack traces: ${label}"
+              for p in ${pids}; do
+                echo "=== $(ps -o pid=,ppid=,etime=,args= -p "${p}") ==="
+                # Attaching needs ptrace, which the runner allows via sudo.
+                sudo gdb -p "${p}" -batch -ex 'set pagination off' \
+                  -ex 'thread apply all bt' 2>&1 | head -n 400
+              done
+              echo "::endgroup::"
+              echo "::warning::${label} exceeded the ${limit}s watchdog (stack traces above)"
+              # Politely first, then for good: a wedged process may ignore
+              # SIGTERM, and libFuzzer handles it itself.
+              for p in ${pids}; do kill -TERM "${p}" 2>/dev/null || true; done
+              sleep 5
+              for p in ${pids}; do kill -KILL "${p}" 2>/dev/null || true; done
+              wait "${pid}" 2>/dev/null
+              return 124
+            fi
+            sleep 1
+          done
+          wait "${pid}"
+        }
+
         artifact_root="${PWD}/fuzz-artifacts"
         corpus_root="${{ runner.workspace }}/fuzz-corpus"
         failures=0
@@ -262,15 +317,26 @@ jobs:
             # build does in milliseconds -- perceiveBondOrders() on a 244-atom
             # nanotube, for one. A real hang still trips this comfortably.
             set_memory_limits "${name}"
-            if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
-                 "${memory_limits[@]}" \
-                 -artifact_prefix="${artifact_dir}/" \
-                 "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
-                 | tee "${artifact_dir}/run.log"; then
+            fuzz_pass() {
+              "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
+                "${memory_limits[@]}" \
+                -artifact_prefix="${artifact_dir}/" \
+                "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
+                | tee "${artifact_dir}/run.log"
+            }
+            # The limit is twice the fuzzing time plus slack, because
+            # -max_total_time does not bound the initial replay of the corpus.
+            run_with_watchdog $(( FUZZ_SECONDS * 2 + 300 )) "fuzzing ${name}" fuzz_pass
+            fuzz_rc=$?
+            if [ "${fuzz_rc}" -eq 0 ]; then
               result="pass"
             elif is_known_issue "${name}"; then
               result="known failure"
               echo "::warning::${name} failed (known issue, not failing the job)"
+            elif [ "${fuzz_rc}" -eq 124 ]; then
+              result="**TIMEOUT (watchdog)**"
+              echo "::error::${name} hung and was killed by the watchdog"
+              failures=1
             else
               result="**FAIL**"
               echo "::error::${name} failed - see the fuzz-crashes artifact"
@@ -292,14 +358,27 @@ jobs:
             # it away and rebuild from the seeds next time.
             merged_dir="${RUNNER_TEMP}/fuzz-merge/${suite}/${target}"
             rm -rf "${merged_dir}" && mkdir -p "${merged_dir}"
-            if "${binary}" -merge=1 -timeout=25 "${memory_limits[@]}" \
-                 "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
-                 > "${artifact_dir}/merge.log" 2>&1 \
-               && [ -n "$(ls -A "${merged_dir}")" ]; then
+            merge_corpus() {
+              "${binary}" -merge=1 -timeout=25 "${memory_limits[@]}" \
+                "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
+                > "${artifact_dir}/merge.log" 2>&1
+            }
+            # Normal merges take seconds (the biggest, quantumio/fchk, about
+            # ten). One that runs 300s is hung, not slow. A hang comes from
+            # the cached corpus, not from the change under test, so it resets
+            # the corpus like a failed merge but does not fail the job.
+            run_with_watchdog 300 "corpus merge ${name}" merge_corpus
+            merge_rc=$?
+            if [ "${merge_rc}" -eq 0 ] && [ -n "$(ls -A "${merged_dir}")" ]; then
               rm -rf "${corpus_dir}"
               mv "${merged_dir}" "${corpus_dir}"
             else
-              echo "::warning::${name} corpus merge failed, resetting the corpus"
+              if [ "${merge_rc}" -eq 124 ]; then
+                echo "::warning::${name} corpus merge hung for 300s (stack traces above); resetting the corpus"
+                result="${result}, merge hung"
+              else
+                echo "::warning::${name} corpus merge failed, resetting the corpus"
+              fi
               rm -rf "${merged_dir}" "${corpus_dir}"
               mkdir -p "${corpus_dir}"
             fi
@@ -313,11 +392,13 @@ jobs:
 
         exit "${failures}"
 
-    # Saved even when a target crashed: the corpus built up to that point is
-    # still worth keeping, and a rolling key means the next run restores the
-    # most recent entry.
+    # Saved when a target crashed: the corpus built up to that point is still
+    # worth keeping, and a rolling key means the next run restores the most
+    # recent entry. Not saved when the job was cancelled or timed out: the
+    # corpus was never minimized then, and may be the very thing that wedged
+    # the run, so saving it would wedge every later run the same way.
     - name: Save fuzz corpus
-      if: ${{ always() && github.event_name != 'pull_request' }}
+      if: ${{ (success() || failure()) && github.event_name != 'pull_request' }}
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.workspace }}/fuzz-corpus
