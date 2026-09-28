@@ -627,10 +627,12 @@ public:
   static std::pair<Vector3, Vector3> bestFitPlane(const Array<Vector3>& pos);
 
   /**
-   * Set the basis set for the molecule, note that the molecule takes ownership
-   * of the object.
+   * Set the basis set for the molecule. The molecule takes ownership of
+   * @p basis and deletes the basis set it replaces. Passing the current
+   * basis set is a no-op. Passing nullptr removes (and deletes) the
+   * current one.
    */
-  void setBasisSet(BasisSet* basis) { m_basisSet = basis; }
+  void setBasisSet(BasisSet* basis);
 
   /**
    * @return the basis set (if present) for the molecule.
