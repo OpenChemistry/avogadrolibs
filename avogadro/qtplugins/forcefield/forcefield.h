@@ -104,6 +104,9 @@ public slots:
   void unregisterFeature(const QString& type, const QString& packageDir,
                          const QString& command, const QString& identifier);
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
 private slots:
   void energy();
   void forces();
@@ -188,6 +191,31 @@ private:
   void startOptimizeCalculation(const std::string& methodId,
                                 const OptimizeRunOptions& runOptions,
                                 PendingCommand pending);
+
+  // Why an optimize run stopped, reported to the "optimize" command as
+  // "reason" so a script knows which criterion ended the run without
+  // guessing from "converged" alone. "optimizerStopped" means the worker's
+  // own converged flag was set -- not a discovered minimum: CalcWorker only
+  // sets it when it could not run the chunk at all (no calculator, or
+  // cancelled), or (defensively) for a malformed chunk size, never on
+  // finding one. "gradient" and "energy" are converged: true; "maxSteps",
+  // "nonFinite" and "optimizerStopped" are converged: false.
+  enum class ConvergenceReason
+  {
+    None,
+    Gradient,
+    Energy,
+    OptimizerStopped,
+    MaxSteps,
+    NonFinite
+  };
+  static QString convergenceReasonName(ConvergenceReason reason);
+
+  // handleCommand() helpers, one per registered command.
+  void handleListForceFieldsCommand();
+  void handleEnergyCommand(const QVariantMap& options);
+  void handleForcesCommand(const QVariantMap& options);
+  void handleOptimizeCommand(const QVariantMap& options);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
