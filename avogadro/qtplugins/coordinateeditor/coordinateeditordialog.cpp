@@ -198,7 +198,7 @@ void CoordinateEditorDialog::moleculeChanged(uint change)
 void CoordinateEditorDialog::presetChanged(int ind)
 {
   QVariant itemData(m_ui->presets->itemData(ind));
-  bool isCustom(itemData.type() != QVariant::String);
+  bool isCustom(itemData.typeId() != QMetaType::QString);
 
   // Changing the spec text will update the editor text.
   m_ui->spec->setText(isCustom ? m_defaultSpec : itemData.toString());

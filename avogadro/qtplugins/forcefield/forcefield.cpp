@@ -277,6 +277,12 @@ void Forcefield::registerCommands()
     "forces", tr("Compute the force field forces on the current molecule."));
   emit registerCommand("optimize",
                        tr("Optimize the geometry of the current molecule."));
+  emit registerCommand(
+    "freezeSelected",
+    tr("Freeze selected atoms during force field optimization."));
+  emit registerCommand("unfreezeSelected", tr("Unfreeze selected atoms."));
+  emit registerCommand(
+    "freezeAxis", tr("Freeze a specific axis (X, Y, or Z) of selected atoms."));
 }
 
 bool Forcefield::handleCommand(const QString& command,
@@ -296,6 +302,18 @@ bool Forcefield::handleCommand(const QString& command,
   }
   if (command == "optimize") {
     handleOptimizeCommand(options);
+    return true;
+  }
+  if (command == "freezeSelected") {
+    handleFreezeSelectedCommand();
+    return true;
+  }
+  if (command == "unfreezeSelected") {
+    handleUnfreezeSelectedCommand();
+    return true;
+  }
+  if (command == "freezeAxis") {
+    handleFreezeAxisCommand(options);
     return true;
   }
 
@@ -473,6 +491,113 @@ void Forcefield::handleOptimizeCommand(const QVariantMap& options)
 
   emit commandStarted();
   startOptimizeCalculation(methodId, runOptions, PendingCommand::Optimize);
+}
+
+void Forcefield::handleFreezeSelectedCommand()
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule is open."));
+    return;
+  }
+  if (m_molecule->isSelectionEmpty()) {
+    emit commandFailed(tr("No atoms are selected."));
+    return;
+  }
+
+  int count = 0;
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i))
+      ++count;
+  }
+
+  freezeSelected();
+
+  QVariantMap result;
+  result["count"] = count;
+  emit commandFinished(tr("Froze %n atom(s).", "", count), result);
+}
+
+void Forcefield::handleUnfreezeSelectedCommand()
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule is open."));
+    return;
+  }
+  if (m_molecule->isSelectionEmpty()) {
+    emit commandFailed(tr("No atoms are selected."));
+    return;
+  }
+
+  int count = 0;
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i))
+      ++count;
+  }
+
+  unfreezeSelected();
+
+  QVariantMap result;
+  result["count"] = count;
+  emit commandFinished(tr("Unfroze %n atom(s).", "", count), result);
+}
+
+void Forcefield::handleFreezeAxisCommand(const QVariantMap& options)
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule is open."));
+    return;
+  }
+  if (m_molecule->isSelectionEmpty()) {
+    emit commandFailed(tr("No atoms are selected."));
+    return;
+  }
+  if (!options.contains("axis")) {
+    emit commandFailed(tr("No axis was given."));
+    return;
+  }
+
+  QVariant axisData = options.value("axis");
+  int axisId = -1; // Default to invalid
+
+  // If the user sent a string like "x" or "Y"
+  if (axisData.typeId() == QMetaType::QString) {
+    QString axisStr = axisData.toString().toLower();
+    if (axisStr == "x")
+      axisId = 0;
+    else if (axisStr == "y")
+      axisId = 1;
+    else if (axisStr == "z")
+      axisId = 2;
+  }
+  // If the user sent an integer like 0, 1, or 2
+  else {
+    bool ok = false;
+    axisId = axisData.toInt(&ok);
+    if (!ok) {
+      axisId = -1;
+    }
+  }
+
+  if (axisId < 0 || axisId > 2) {
+    emit commandFailed(tr("Axis must be x, y, z or 0, 1, 2."));
+    return;
+  }
+
+  int count = 0;
+  auto numAtoms = m_molecule->atomCount();
+  for (Index i = 0; i < numAtoms; ++i) {
+    if (m_molecule->atomSelected(i))
+      ++count;
+  }
+
+  freezeAxis(axisId);
+
+  QVariantMap result;
+  result["count"] = count;
+  result["axis"] = axisId;
+  emit commandFinished(tr("Froze %n atom(s).", "", count), result);
 }
 
 void Forcefield::showDialog()
@@ -1678,70 +1803,6 @@ void Forcefield::unregisterFeature(const QString& type,
         delete m_scripts.takeAt(i);
     }
   }
-}
-
-void Forcefield::registerCommands()
-{
-  emit registerCommand(
-    "freezeSelected",
-    tr("Freeze selected atoms during force field optimization."));
-  emit registerCommand("unfreezeSelected", tr("Unfreeze selected atoms."));
-  emit registerCommand(
-    "freezeAxis", tr("Freeze a specific axis (X, Y, or Z) of selected atoms."));
-}
-
-bool Forcefield::handleCommand(const QString& command,
-                               [[maybe_unused]] const QVariantMap& options)
-{
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command
-
-  // Wraps freezeSelected()
-  if (command == "freezeSelected") {
-    freezeSelected();
-    return true;
-  }
-
-  // Wranps unfreezeSelected()
-  if (command == "unfreezeSelected") {
-    unfreezeSelected();
-    return true;
-  }
-
-  // Wraps freezeAxis()
-  if (command == "freezeAxis") {
-    if (options.contains("axis")) {
-      QVariant axisData = options.value("axis");
-      int axisId = -1; // Default to invalid
-
-      // If the user sent a string like "x" or "Y"
-      if (axisData.type() == QVariant::String) {
-        QString axisStr = axisData.toString().toLower();
-        if (axisStr == "x")
-          axisId = 0;
-        else if (axisStr == "y")
-          axisId = 1;
-        else if (axisStr == "z")
-          axisId = 2;
-      }
-      // If the user sent an integer like 0, 1, or 2
-      else {
-        bool ok = false;
-        axisId = axisData.toInt(&ok);
-        if (!ok) {
-          axisId = -1;
-        }
-      }
-
-      // Final security check: only proceed if it is strictly 0, 1, or 2
-      if (axisId >= 0 && axisId <= 2) {
-        freezeAxis(axisId);
-        return true;
-      }
-    }
-  }
-
-  return false;
 }
 
 } // namespace QtPlugins

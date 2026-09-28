@@ -144,7 +144,7 @@ void QTAIMExtension::triggered()
       QVariantList zNCPsVariantList;
       QVariantList nuclearChargesVariantList;
 
-      const qreal convertBohrToAngstrom = 0.529177249;
+      const qreal convertBohrToAngstrom = BOHR_TO_ANGSTROM_D;
 
       // Nuclear Critical Points
       for (qint64 n = 0; n < ncpList.length(); ++n) {
@@ -316,7 +316,7 @@ void QTAIMExtension::triggered()
       QVariantList zNCPsVariantList;
       QVariantList nuclearChargesVariantList;
 
-      const qreal convertBohrToAngstrom = 0.529177249;
+      const qreal convertBohrToAngstrom = BOHR_TO_ANGSTROM_D;
 
       // Nuclear Critical Points
       for (qint64 n = 0; n < ncpList.length(); ++n) {
@@ -520,7 +520,7 @@ void QTAIMExtension::triggered()
         QVariantList zNCPsVariantList;
         QVariantList nuclearChargesVariantList;
 
-        const qreal convertBohrToAngstrom = 0.529177249;
+        const qreal convertBohrToAngstrom = BOHR_TO_ANGSTROM_D;
 
         // Nuclear Critical Points
         for (qint64 n = 0; n < ncpList.length(); ++n) {

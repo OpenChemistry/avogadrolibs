@@ -96,6 +96,12 @@ constexpr Real HARTREE_TO_EV = static_cast<Real>(HARTREE_TO_EV_D);
 constexpr double KCAL_TO_KJ_D = 4.184;
 constexpr float KCAL_TO_KJ_F = static_cast<float>(KCAL_TO_KJ_D);
 constexpr Real KCAL_TO_KJ = static_cast<Real>(KCAL_TO_KJ_D);
+
+// one electron volt per particle in kJ/mol, i.e. e * N_A / 1000, exact
+// since the 2019 SI redefinition
+constexpr double EV_TO_KJ_PER_MOL_D = 96.48533212331;
+constexpr float EV_TO_KJ_PER_MOL_F = static_cast<float>(EV_TO_KJ_PER_MOL_D);
+constexpr Real EV_TO_KJ_PER_MOL = static_cast<Real>(EV_TO_KJ_PER_MOL_D);
 /** @} */
 
 } // namespace Avogadro

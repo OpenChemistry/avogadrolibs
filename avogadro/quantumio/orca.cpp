@@ -45,9 +45,6 @@ void ORCAOutput::clearBasisFunctions()
   m_basisFunctions.clear();
 }
 
-constexpr double BOHR_TO_ANGSTROM = 0.529177210544;
-constexpr double HARTREE_TO_EV = 27.211386245981;
-
 namespace {
 // ORCA prints MO coefficients as fixed-width columns of the form
 // [-]dd.dddddd. Adjacent (negative) values can run together with no
@@ -1200,7 +1197,8 @@ void ORCAOutput::processLine(std::istream& in,
           for (unsigned int i = 0; i < list.size(); i++) {
             // convert from Hartree to eV
             m_orbitalEnergy.push_back(
-              Core::lexicalCast<double>(list[i]).value_or(0.0) * HARTREE_TO_EV);
+              Core::lexicalCast<double>(list[i]).value_or(0.0) *
+              HARTREE_TO_EV_D);
           }
 
           Core::getLine(in, key); // occupations
@@ -1295,7 +1293,7 @@ void ORCAOutput::processLine(std::istream& in,
               // convert from Hartree to eV
               m_betaOrbitalEnergy.push_back(
                 Core::lexicalCast<double>(list[i]).value_or(0.0) *
-                HARTREE_TO_EV);
+                HARTREE_TO_EV_D);
             }
 
             Core::getLine(in, key); // symmetries
