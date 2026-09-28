@@ -42,6 +42,33 @@ using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Core::VariantMap;
 
+namespace {
+
+// Counts live instances so a test can see a basis set being leaked.
+class CountingBasisSet : public Avogadro::Core::BasisSet
+{
+public:
+  static int liveCount;
+
+  CountingBasisSet() { ++liveCount; }
+  CountingBasisSet(const CountingBasisSet& other) : BasisSet(other)
+  {
+    ++liveCount;
+  }
+  ~CountingBasisSet() override { --liveCount; }
+
+  BasisSet* clone() const override { return new CountingBasisSet(*this); }
+  unsigned int molecularOrbitalCount(ElectronType = Paired) const override
+  {
+    return 0;
+  }
+  bool isValid() override { return true; }
+};
+
+int CountingBasisSet::liveCount = 0;
+
+} // namespace
+
 class MoleculeTest : public testing::Test
 {
 public:
@@ -615,6 +642,109 @@ TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
 
   // The original's own residue atoms still refer to it.
   expectOwnPointers(original);
+}
+
+TEST_F(MoleculeTest, setBasisSetFreesTheOldBasisSet)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule m;
+    auto* a = new CountingBasisSet;
+    a->setMolecule(&m);
+    m.setBasisSet(a);
+    auto* b = new CountingBasisSet;
+    b->setMolecule(&m);
+    m.setBasisSet(b);
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    EXPECT_EQ(m.basisSet(), b);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
+}
+
+TEST_F(MoleculeTest, setBasisSetWithTheSameBasisSetKeepsIt)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule m;
+    auto* a = new CountingBasisSet;
+    a->setMolecule(&m);
+    m.setBasisSet(a);
+    m.setBasisSet(a);
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    EXPECT_EQ(m.basisSet(), a);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
+}
+
+TEST_F(MoleculeTest, setBasisSetNullptrFreesIt)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  Molecule m;
+  auto* a = new CountingBasisSet;
+  a->setMolecule(&m);
+  m.setBasisSet(a);
+  m.setBasisSet(nullptr);
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
+  EXPECT_EQ(m.basisSet(), nullptr);
+}
+
+TEST_F(MoleculeTest, readPropertiesFreesTheOldBasisSet)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule target;
+    auto* a = new CountingBasisSet;
+    a->setMolecule(&target);
+    target.setBasisSet(a);
+
+    Molecule source;
+    auto* b = new CountingBasisSet;
+    b->setMolecule(&source);
+    source.setBasisSet(b);
+
+    target.readProperties(source);
+
+    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+    ASSERT_NE(target.basisSet(), nullptr);
+    EXPECT_NE(target.basisSet(), source.basisSet());
+    EXPECT_EQ(target.basisSet()->molecule(), &target);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
+}
+
+TEST_F(MoleculeTest, readPropertiesWithoutBasisSetKeepsOurs)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule target;
+    auto* a = new CountingBasisSet;
+    a->setMolecule(&target);
+    target.setBasisSet(a);
+
+    Molecule source;
+    target.readProperties(source);
+
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    EXPECT_EQ(target.basisSet(), a);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
+}
+
+TEST_F(MoleculeTest, readPropertiesFromItself)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule m;
+    auto* a = new CountingBasisSet;
+    a->setMolecule(&m);
+    m.setBasisSet(a);
+
+    m.readProperties(m);
+
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    EXPECT_NE(m.basisSet(), nullptr);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
 }
 
 // Fill as many members as practical, so a member the moves forget shows up.

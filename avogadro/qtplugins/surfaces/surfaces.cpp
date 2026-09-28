@@ -351,13 +351,20 @@ void Surfaces::clearSurfaceData()
 
 void Surfaces::moleculeChanged(unsigned int changes)
 {
+  if (m_molecule == nullptr)
+    return;
+
   auto currentCubes = m_cubes.size();
+
+  // readProperties() can replace the basis set (freeing the old one)
+  // without a structural change, so refresh our cached pointer on every
+  // change, not just when derived data is invalidated.
+  m_basis = m_molecule->basisSet();
 
   // These are raw pointers into storage that Molecule::emitChanged() frees,
   // so refresh them exactly when it does.
   if (Molecule::invalidatesDerivedData(changes)) {
     m_cubes = m_molecule->cubes();
-    m_basis = m_molecule->basisSet();
     m_cube = nullptr;
     m_mesh1 = nullptr;
     m_mesh2 = nullptr;
