@@ -32,7 +32,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
   # Sanitizers
   set(CMAKE_CXX_FLAGS_TSAN "-fsanitize=thread -g -O1")
-  set(CMAKE_CXX_FLAGS_ASAN "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1")
+  # UndefinedBehaviorSanitizer is folded into this configuration rather than
+  # given its own CI job: the Linux ASan job builds and runs the same tests
+  # with -fsanitize=address,undefined, so a separate UBSan job would just
+  # rebuild and retest the same code a second time.
+  set(CMAKE_CXX_FLAGS_ASAN "-fsanitize=address,undefined -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1")
   set(CMAKE_CXX_FLAGS_LSAN "-fsanitize=leak -fno-omit-frame-pointer -g -O1")
   set(CMAKE_CXX_FLAGS_MSAN "-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2")
   set(CMAKE_CXX_FLAGS_UBSAN "-fsanitize=undefined")
