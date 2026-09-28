@@ -1715,7 +1715,7 @@ bool Forcefield::handleCommand(const QString& command,
       int axisId = -1; // Default to invalid
 
       // If the user sent a string like "x" or "Y"
-      if (axisData.type() == QVariant::String) {
+      if (axisData.typeId() == QMetaType::QString) {
         QString axisStr = axisData.toString().toLower();
         if (axisStr == "x")
           axisId = 0;

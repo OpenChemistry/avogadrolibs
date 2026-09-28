@@ -645,7 +645,7 @@ bool Select::handleCommand(const QString& command,
       QVariant elementData = options["element"];
       int atomicNum = InvalidElement;
 
-      if (elementData.type() == QVariant::String) {
+      if (elementData.typeId() == QMetaType::QString) {
         atomicNum = Core::Elements::atomicNumberFromSymbol(
           elementData.toString().toStdString());
       }

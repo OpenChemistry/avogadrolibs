@@ -98,7 +98,7 @@ bool MoleQueueQueueListModel::lookupProgram(const QModelIndex& idx,
                                             QString& programName) const
 {
   QVariant resultVariant = data(idx, QueueProgramRole);
-  if (resultVariant.type() == QVariant::StringList) {
+  if (resultVariant.typeId() == QMetaType::QStringList) {
     QStringList resultList(resultVariant.toStringList());
     if (resultList.size() == 2) {
       queueName = resultList[0];
