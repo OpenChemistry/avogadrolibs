@@ -79,8 +79,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   /**
    * Scan for new scripts in the Forcefield directories.
@@ -103,9 +101,6 @@ public slots:
    */
   void unregisterFeature(const QString& type, const QString& packageDir,
                          const QString& command, const QString& identifier);
-
-  bool handleCommand(const QString& command,
-                     const QVariantMap& options) override;
 
 private slots:
   void energy();
@@ -216,6 +211,9 @@ private:
   void handleEnergyCommand(const QVariantMap& options);
   void handleForcesCommand(const QVariantMap& options);
   void handleOptimizeCommand(const QVariantMap& options);
+  void handleFreezeSelectedCommand();
+  void handleUnfreezeSelectedCommand();
+  void handleFreezeAxisCommand(const QVariantMap& options);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
