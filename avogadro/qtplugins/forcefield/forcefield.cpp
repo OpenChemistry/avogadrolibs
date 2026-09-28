@@ -346,7 +346,8 @@ void Forcefield::handleListForceFieldsCommand()
     // report exactly the method that an "optimize"/"energy"/"forces" command
     // with no "method" would run under autodetect, not
     // EnergyManager::recommendedModel(), which ranks methods differently.
-    recommended = QString::fromStdString(recommendedForceField());
+    recommended = QString::fromStdString(
+      Calc::EnergyManager::instance().recommendedModel(*m_molecule));
 
     if (m_method == nullptr)
       setupMethod();
@@ -509,8 +510,11 @@ void Forcefield::showDialog()
   options["modelUserOptions"] = m_modelUserOptions;
   options["modelUserOptionsSchemas"] = modelUserOptionSchemas;
 
-  QVariantMap results = ForceFieldDialog::prompt(
-    nullptr, forceFields, options, recommendedForceField().c_str());
+  // m_molecule is guaranteed non-null here (see the guard above).
+  const std::string recommended =
+    Calc::EnergyManager::instance().recommendedModel(*m_molecule);
+  QVariantMap results = ForceFieldDialog::prompt(nullptr, forceFields, options,
+                                                 recommended.c_str());
 
   if (!results.isEmpty()) {
     // update settings
@@ -592,7 +596,8 @@ void Forcefield::setupMethod()
     return; // nothing to do until its set
 
   if (m_autodetect)
-    m_methodName = recommendedForceField();
+    m_methodName =
+      Calc::EnergyManager::instance().recommendedModel(*m_molecule);
 
   // check if m_methodName even exists (e.g., saved preference)
   // or if that method doesn't work for this (e.g., unit cell, etc.)
@@ -608,7 +613,8 @@ void Forcefield::setupMethod()
 
   // fall back to recommended if not found (LJ will always work)
   if (!found) {
-    m_methodName = recommendedForceField();
+    m_methodName =
+      Calc::EnergyManager::instance().recommendedModel(*m_molecule);
   }
 
   if (m_method != nullptr) {
@@ -1477,34 +1483,6 @@ void Forcefield::onBatchDone(std::vector<double> energies,
   m_molecule->emitChanged(changes);
 
   cleanupWorker();
-}
-
-std::string Forcefield::recommendedForceField() const
-{
-  // if we have a unit cell, we need to use the LJ calculator
-  // (implementing something better would be nice)
-  if (m_molecule == nullptr || m_molecule->unitCell() != nullptr)
-    return "LJ";
-
-  // otherwise, let's see what identifers are returned
-  auto list =
-    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
-  if (list.empty())
-    return "LJ"; // this will always work
-
-  // iterate to see what we have
-  std::string bestOption;
-  for (auto option : list) {
-    // GAFF is better than MMFF94 which is better than UFF
-    if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
-      bestOption = option;
-    if (option == "MMFF94" && bestOption != "GAFF")
-      bestOption = option;
-  }
-  if (!bestOption.empty())
-    return bestOption;
-  else
-    return "LJ"; // this will always work
 }
 
 void Forcefield::freezeSelected()

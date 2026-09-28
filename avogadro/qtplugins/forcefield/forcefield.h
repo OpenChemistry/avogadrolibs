@@ -74,8 +74,6 @@ public:
   void setMolecule(QtGui::Molecule* mol) override;
   void setupMethod();
 
-  std::string recommendedForceField() const;
-
   void registerCommands() override;
 
 public slots:
