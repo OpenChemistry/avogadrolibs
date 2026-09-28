@@ -19,7 +19,6 @@
 #include <string>
 
 using std::endl;
-using std::getline;
 using std::string;
 
 namespace Avogadro::Io {
@@ -81,12 +80,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   string buffer;
-  getline(inStream, buffer); // Finish the first line
+  Core::getLine(inStream, buffer); // Finish the first line
   if (!inStream.good()) {
     appendError("Error reading first line.");
     return false;
   }
-  getline(inStream, buffer); // comment or name or energy
+  Core::getLine(inStream, buffer); // comment or name or energy
   if (!buffer.empty())
     mol.setData("name", trimmed(buffer));
 
@@ -261,15 +260,15 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // Do we have an animation?
   // check if the next frame has the same number of atoms
-  getline(inStream, buffer); // should be the number of atoms
+  Core::getLine(inStream, buffer); // should be the number of atoms
   if (buffer.size() == 0 || buffer[0] == '>') {
-    getline(inStream, buffer); // Orca 6 prints ">" separators
+    Core::getLine(inStream, buffer); // Orca 6 prints ">" separators
   }
 
   auto numAtoms2 = lexicalCast<int>(buffer);
   if (numAtoms2 && *numAtoms2 > 0 &&
       numAtoms == static_cast<size_t>(*numAtoms2)) {
-    getline(inStream, buffer); // comment line
+    Core::getLine(inStream, buffer); // comment line
     // check for properties in the comment line
     if (auto energy = findEnergy(buffer)) {
       energies.push_back(*energy);
@@ -284,7 +283,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       positions.reserve(numAtoms);
 
       for (size_t i = 0; i < numAtoms; ++i) {
-        getline(inStream, buffer);
+        Core::getLine(inStream, buffer);
         if (inStream.eof()) {
           numAtoms2 = 0;
           done = true;
@@ -309,14 +308,14 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       if (!done)
         mol.setCoordinate3d(positions, coordSet++);
 
-      if (getline(inStream, buffer)) {
+      if (Core::getLine(inStream, buffer)) {
         if (inStream.eof()) {
           numAtoms2 = 0;
           break; // break this inner loop
         }
 
         if (buffer.size() == 0 || buffer[0] == '>')
-          getline(inStream, buffer); // Orca 6 prints ">" separators
+          Core::getLine(inStream, buffer); // Orca 6 prints ">" separators
         if (inStream.eof()) {
           numAtoms2 = 0;
           break; // break this inner loop
@@ -330,7 +329,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         break;
       }
 
-      std::getline(inStream, buffer); // Skip the blank
+      Core::getLine(inStream, buffer); // Skip the blank
       // check for energies
       if (auto energy = findEnergy(buffer)) {
         energies.push_back(*energy);

@@ -82,7 +82,7 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
   std::string detected;
 
   std::string line;
-  while (std::getline(in, line)) {
+  while (Core::getLine(in, line)) {
     if (line.find("Northwest Computational Chemistry Package") !=
         std::string::npos) {
       // NWChem

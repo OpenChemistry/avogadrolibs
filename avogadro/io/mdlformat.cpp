@@ -34,7 +34,6 @@ using Avogadro::Core::startsWith;
 using Avogadro::Core::toLower;
 using Avogadro::Core::trimmed;
 
-using std::getline;
 using std::istringstream;
 using std::setprecision;
 using std::setw;
@@ -99,11 +98,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   int spinMultiplicity = 1; // check for RAD lines
 
   // The first line is the molecule name.
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   buffer = trimmed(buffer);
   // Check for the record separator in SDF, and skip if found.
   if (buffer == "$$$$") {
-    getline(in, buffer);
+    Core::getLine(in, buffer);
     buffer = trimmed(buffer);
   }
   if (!buffer.empty())
@@ -115,7 +114,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   }
 
   // check the generator line for 2D vs 3D
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   // e.g.   -OEChem-01062507112D
   // check the last 2 characters
   if (buffer.size() >= 2 && buffer.compare(buffer.size() - 2, 2, "2D") == 0) {
@@ -154,14 +153,14 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     }
   }
 
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   if (!in.good()) {
     appendError("Error reading generator and comment lines.");
     return false;
   }
 
   // The counts line, and version identifier.
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   // should be long enough, e.g.
   //   5  4  0  0  0  0  0  0  0  0999 V2000
   if (!in.good() || buffer.size() < 39) {
@@ -200,7 +199,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   atomicNumbers.reserve(numAtoms);
   for (int i = 0; i < numAtoms; ++i) {
     Vector3 pos;
-    getline(in, buffer);
+    Core::getLine(in, buffer);
     //     0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
     if (!in.good() || buffer.size() < 40) {
       appendError("Error reading atom block.");
@@ -279,7 +278,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
     // Bond atom indices start at 1, -1 for C++.
-    getline(in, buffer);
+    Core::getLine(in, buffer);
     //   1  2  1  0  0  0  0
     if (!in.good() || buffer.size() < 10) {
       appendError("Error reading bond block.");
@@ -339,7 +338,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   // Property lines count is not used, as it it now unsupported.
   bool foundEnd(false);
   bool foundChgProperty(false);
-  while (getline(in, buffer)) {
+  while (Core::getLine(in, buffer)) {
     if (!in.good() || buffer.size() < 5) {
       break;
     }
@@ -485,7 +484,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   bool inValue(false);
   string dataName;
   string dataValue;
-  while (getline(in, buffer) && in.good()) {
+  while (Core::getLine(in, buffer) && in.good()) {
     if (trimmed(buffer) == "$$$$")
       break;
     if (inValue) {
@@ -561,7 +560,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
     // Skip to start of next molecule (should already be at $$$$ or past it)
     // Read the molecule name line
-    if (!getline(in, buffer))
+    if (!Core::getLine(in, buffer))
       break;
     buffer = trimmed(buffer);
 
@@ -569,7 +568,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (buffer == "$$$$") {
       // Update position to after $$$$, at start of next molecule
       molPos = in.tellg();
-      if (!getline(in, buffer))
+      if (!Core::getLine(in, buffer))
         break;
       buffer = trimmed(buffer);
     }
@@ -579,11 +578,11 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       break;
 
     // Skip generator and comment lines
-    if (!getline(in, buffer) || !getline(in, buffer))
+    if (!Core::getLine(in, buffer) || !Core::getLine(in, buffer))
       break;
 
     // Read counts line
-    if (!getline(in, buffer) || buffer.size() < 39)
+    if (!Core::getLine(in, buffer) || buffer.size() < 39)
       break;
 
     // Check if this is V3000 - skip if so
@@ -615,7 +614,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     bool validConformer = true;
 
     for (int i = 0; i < confAtoms; ++i) {
-      if (!getline(in, buffer) || buffer.size() < 40) {
+      if (!Core::getLine(in, buffer) || buffer.size() < 40) {
         validConformer = false;
         break;
       }
@@ -660,14 +659,14 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
     // Skip bond block
     for (int i = 0; i < confBonds; ++i) {
-      if (!getline(in, buffer))
+      if (!Core::getLine(in, buffer))
         break;
     }
 
     // Skip properties block until M  END
     // TODO: Consider reading properties in the future
     // (e.g. if radicals or charges change during a trajectory)
-    while (getline(in, buffer)) {
+    while (Core::getLine(in, buffer)) {
       if (startsWith(buffer, "M  END") || startsWith(buffer, "M END"))
         break;
     }
@@ -676,7 +675,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     // it stays parallel with the coordinate sets.
     // TODO: Consider reading other per-conformer data in the future.
     bool inEnergyValue = false;
-    while (getline(in, buffer)) {
+    while (Core::getLine(in, buffer)) {
       if (trimmed(buffer) == "$$$$")
         break;
       if (inEnergyValue) {
@@ -709,14 +708,14 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   string buffer;
   int spinMultiplicity = 1; // check for RAD lines
   // we should have M  V30 BEGIN CTAB
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   if (trimmed(buffer) != "M  V30 BEGIN CTAB") {
     appendError("Error parsing V3000 file, expected 'M  V30 BEGIN CTAB'.");
     return false;
   }
   // now we should get the counts line
   // e.g. 'M  V30 COUNTS 23694 24297 0 0 1'
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   // split by whitespace
   std::vector<string> counts = split(trimmed(buffer), ' ');
   if (counts.size() < 5) {
@@ -745,13 +744,13 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   // Parse the atom block.
   // 'M  V30 BEGIN ATOM'
   // 'M  V30 1 N 171.646 251.874 224.877 0'
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   if (trimmed(buffer) != "M  V30 BEGIN ATOM") {
     appendError("Error parsing V3000 atom block.");
     return false;
   }
   for (int i = 0; i < numAtoms; ++i) {
-    getline(in, buffer);
+    Core::getLine(in, buffer);
     std::vector<string> atomData = split(trimmed(buffer), ' ');
     if (atomData.size() < 7) {
       appendError("Error parsing V3000 atom line.");
@@ -850,7 +849,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       } // end of key-value loop
     }
   } // end of atom block
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   // check for END ATOM
   if (trimmed(buffer) != "M  V30 END ATOM") {
     appendError("Error parsing V3000 atom block.");
@@ -860,7 +859,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   // bond block
   // 'M  V30 BEGIN BOND'
   // 'M  V30 1 1 1 2'
-  getline(in, buffer);
+  Core::getLine(in, buffer);
   if (trimmed(buffer) != "M  V30 BEGIN BOND") {
     appendError("Error parsing V3000 bond block.");
     return false;
@@ -869,10 +868,9 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   aromaticBonds.reserve(numBonds);
   bool anyAromaticBond = false;
   for (int i = 0; i < numBonds; ++i) {
-    // in.good() as well as the size check below: getline() leaves the previous
-    // line in the buffer at end of input, so a bond count larger than the file
-    // would otherwise re-add that bond until the count ran out.
-    if (!getline(in, buffer) || !in.good()) {
+    // END BOND always follows the bond block, so end of input here means the
+    // bond count is larger than the file.
+    if (!Core::getLine(in, buffer) || !in.good()) {
       appendError("Error reading V3000 bond block.");
       return false;
     }
@@ -930,16 +928,16 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   }
 
   // look for M  END
-  while (getline(in, buffer)) {
+  while (Core::getLine(in, buffer)) {
     if (trimmed(buffer) == "M  END")
       break;
   }
   // read in any properties
-  while (getline(in, buffer)) {
+  while (Core::getLine(in, buffer)) {
     if (startsWith(buffer, "> <")) {
       string key = trimmed(buffer.substr(3, buffer.length() - 4));
       string value;
-      while (getline(in, buffer)) {
+      while (Core::getLine(in, buffer)) {
         if (trimmed(buffer) == "")
           break;
         value += buffer + "\n";

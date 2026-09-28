@@ -10,8 +10,10 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <limits>
 
 using std::cout;
 using std::endl;
@@ -43,12 +45,17 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
 {
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
-  while (!in.eof())
-    processLine(in);
+  while (!in.eof()) {
+    if (!processLine(in))
+      return false;
+  }
 
   auto* basis = new SlaterSet;
 
-  for (unsigned int i = 0; i < m_atomPos.size(); ++i) {
+  // The element and coordinate counts come from separate headers in the file
+  // and need not agree.
+  const size_t numAtoms = std::min(m_atomPos.size(), m_atomNums.size());
+  for (size_t i = 0; i < numAtoms; ++i) {
     Atom a = molecule.addAtom(static_cast<unsigned char>(m_atomNums[i]));
     a.setPosition3d(m_atomPos[i]);
   }
@@ -63,7 +70,23 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   flushVibrationData();
 
   const Index atomCount = molecule.atomCount();
+
+  // Geometries too short to hold every atom are skipped when the conformers
+  // are added below, so map each geometry in the file to the conformer index
+  // it actually receives; vibrations keyed to a skipped one are dropped.
+  constexpr size_t skipped = std::numeric_limits<size_t>::max();
+  vector<size_t> conformerIndices(m_coordSets.size(), skipped);
+  size_t accepted = 0;
+  for (size_t i = 0; i < m_coordSets.size(); ++i) {
+    if (m_coordSets[i].size() >= atomCount)
+      conformerIndices[i] = accepted++;
+  }
+
   for (const auto& set : m_vibrationSets) {
+    if (set.conformerIndex >= conformerIndices.size() ||
+        conformerIndices[set.conformerIndex] == skipped)
+      continue;
+
     Core::Molecule::VibrationData data;
     data.frequencies =
       Core::Array<double>(set.frequencies.begin(), set.frequencies.end());
@@ -85,7 +108,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
         set.normalModes.begin() + i, set.normalModes.begin() + i + atomCount));
     }
 
-    molecule.setVibrationData(data, set.conformerIndex);
+    molecule.setVibrationData(data, conformerIndices[set.conformerIndex]);
   }
 
   // add charges and properties
@@ -127,33 +150,51 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
 
   // if we have more than one coordinate set
   if (m_coordSets.size() > 1) {
-    for (unsigned int i = 0; i < m_coordSets.size(); ++i) {
+    int coordSet = 0;
+    for (const auto& coords : m_coordSets) {
+      // Each geometry has its own count in the file; skip one too short to
+      // hold every atom rather than read past its end.
+      if (coords.size() < molecule.atomCount())
+        continue;
       Core::Array<Vector3> positions;
       positions.reserve(molecule.atomCount());
       for (size_t j = 0; j < molecule.atomCount(); ++j) {
-        positions.push_back(m_coordSets[i][j]);
+        positions.push_back(coords[j]);
       }
-      molecule.setCoordinate3d(positions, i);
+      molecule.setCoordinate3d(positions, coordSet++);
     }
     // The atoms were added from the last block (ATOM_X_OPT, the optimized
     // geometry), so the active index has to name that set rather than being
     // left at 0 - the input geometry. Anything reading the active conformer,
     // vibrations included, would otherwise be looking at a different
     // structure than the one on screen.
-    molecule.setCoordinate3d(static_cast<int>(m_coordSets.size()) - 1);
+    molecule.setCoordinate3d(coordSet - 1);
   }
 
   return true;
 }
 
-void MopacAux::processLine(std::istream& in)
+bool MopacAux::processLine(std::istream& in)
 {
   // First truncate the line, remove trailing white space and check
   string line;
-  if (!getline(in, line) || Core::trimmed(line).empty())
-    return;
+  if (!Core::getLine(in, line) || Core::trimmed(line).empty())
+    return true;
 
   string key = Core::trimmed(line);
+
+  // Every array count below comes from a KEY[n]= header and reaches the
+  // readers as an unsigned int, where a negative count asks for billions of
+  // values (and readArrayVec() allocates them all up front).
+  const auto countStart = key.find('[');
+  if (countStart != string::npos) {
+    const auto countEnd = key.find(']', countStart);
+    const string count = key.substr(countStart + 1, countEnd - countStart - 1);
+    if (Core::lexicalCast<int>(count).value_or(0) < 0) {
+      appendError("Negative array count: " + key);
+      return false;
+    }
+  }
 
   // Big switch statement checking for various things we are interested in
   if (Core::contains(key, "ATOM_EL")) {
@@ -298,20 +339,23 @@ void MopacAux::processLine(std::istream& in)
     int tmp =
       Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     cout << "Size of lower half triangle of overlap matrix = " << tmp << endl;
-    readOverlapMatrix(in, tmp);
+    if (!readOverlapMatrix(in, tmp))
+      return false;
   } else if (Core::contains(key, "EIGENVECTORS")) {
     // For large molecules the Eigenvectors counter overflows to [*****]
     // So just use the square of the m_atomIndex array
     //      QString tmp = key.mid(key.indexOf('[')+1, 6);
     cout << "Size of eigen vectors matrix = "
          << m_atomIndex.size() * m_atomIndex.size() << endl;
-    readEigenVectors(in,
-                     static_cast<int>(m_atomIndex.size() * m_atomIndex.size()));
+    if (!readEigenVectors(
+          in, static_cast<int>(m_atomIndex.size() * m_atomIndex.size())))
+      return false;
   } else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
     int tmp =
       Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     cout << "Size of lower half triangle of density matrix = " << tmp << endl;
-    readDensityMatrix(in, tmp);
+    if (!readDensityMatrix(in, tmp))
+      return false;
   } else if (Core::contains(key, "VIB._FREQ")) {
     int tmp =
       Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
@@ -325,6 +369,7 @@ void MopacAux::processLine(std::istream& in)
       Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
     readNormalModes(in, tmp);
   }
+  return true;
 }
 
 void MopacAux::load(SlaterSet* basis)
@@ -350,7 +395,11 @@ vector<int> MopacAux::readArrayElements(std::istream& in, unsigned int n)
   vector<int> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // A truncated .aux file that promises n elements but never delivers them
+    // would otherwise spin forever: the loop condition only checks tmp.size(),
+    // not the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list) {
       tmp.push_back(
@@ -365,7 +414,9 @@ vector<int> MopacAux::readArrayI(std::istream& in, unsigned int n)
   vector<int> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
       tmp.push_back(Core::lexicalCast<int>(i).value_or(0));
@@ -378,7 +429,9 @@ vector<double> MopacAux::readArrayD(std::istream& in, unsigned int n)
   vector<double> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
       tmp.push_back(Core::lexicalCast<double>(i).value_or(0.0));
@@ -392,7 +445,9 @@ vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
   vector<int> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list) {
       if (i == "S")
@@ -424,15 +479,28 @@ vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
 vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
 {
   vector<Vector3> tmp(n / 3);
+  if (tmp.empty())
+    return tmp;
+  // Only whole vectors are stored, and a line may hold more values than the
+  // header promised, so never write past 3 * tmp.size() values.
+  const size_t size = 3 * tmp.size();
   double* ptr = tmp[0].data();
-  unsigned int cnt = 0;
-  while (cnt < n) {
+  size_t cnt = 0;
+  while (cnt < size) {
     string line;
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
-    for (auto& i : list)
+    for (auto& i : list) {
+      if (cnt >= size)
+        break;
       ptr[cnt++] = Core::lexicalCast<double>(i).value_or(0.0);
+    }
   }
+  // A file that ends mid-block leaves the tail zero-filled; keep only the
+  // vectors that were read in full.
+  tmp.resize(cnt / 3);
   return tmp;
 }
 
@@ -484,11 +552,16 @@ bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
   unsigned int f = 1;
   // Skip the first comment line...
   string line;
-  getline(in, line);
+  Core::getLine(in, line);
   while (cnt < n) {
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
+      // The header's count is not checked against the basis size.
+      if (j >= static_cast<unsigned int>(m_overlap.rows()))
+        return false;
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
       m_overlap(i, j) = m_overlap(j, i) =
         Core::lexicalCast<double>(k).value_or(0.0);
@@ -512,9 +585,14 @@ bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
   unsigned int i = 0, j = 0;
   while (cnt < n) {
     string line;
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
+      // The header's count is not checked against the basis size.
+      if (j >= static_cast<unsigned int>(m_eigenVectors.cols()))
+        return false;
       m_eigenVectors(i, j) = Core::lexicalCast<double>(k).value_or(0.0);
       ++i;
       ++cnt;
@@ -536,11 +614,16 @@ bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
   unsigned int f = 1;
   // Skip the first comment line...
   string line;
-  getline(in, line);
+  Core::getLine(in, line);
   while (cnt < n) {
-    getline(in, line);
+    // Stop at end of file; see readArrayElements().
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
+      // The header's count is not checked against the basis size.
+      if (j >= static_cast<unsigned int>(m_density.rows()))
+        return false;
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
       m_density(i, j) = m_density(j, i) =
         Core::lexicalCast<double>(k).value_or(0.0);

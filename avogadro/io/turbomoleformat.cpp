@@ -18,7 +18,6 @@
 #include <ostream>
 #include <string>
 
-using std::getline;
 using std::string;
 
 namespace Avogadro::Io {
@@ -54,11 +53,11 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // we loop through each line until we hit $end or EOF
   string buffer;
-  getline(inStream, buffer);
+  Core::getLine(inStream, buffer);
   while (inStream.good() && !buffer.empty()) {
     std::vector<string> tokens = split(rstrip(buffer, '#'), ' ');
     if (tokens.empty()) { // "# comment line"
-      getline(inStream, buffer);
+      Core::getLine(inStream, buffer);
       continue;
     }
 
@@ -81,7 +80,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         appendError("Failed to parse: " + buffer);
         return false;
       }
-      getline(inStream, buffer);
+      Core::getLine(inStream, buffer);
       continue;
     }
 
@@ -150,7 +149,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
       if (std::find(tokens.begin(), tokens.end(), "angs") != tokens.end())
         cellConversion = 1.0; // leave as Angstrom
 
-      getline(inStream, buffer);
+      Core::getLine(inStream, buffer);
       tokens = split(rstrip(buffer, '#'), ' ');
       const auto tokens_converted =
         lexicalCast<double>(tokens.begin(), tokens.end());
@@ -227,7 +226,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         }
 
         for (unsigned line = 0; line < *periodic_parsed; ++line) {
-          getline(inStream, buffer);
+          Core::getLine(inStream, buffer);
           tokens = split(rstrip(buffer, '#'), ' ');
           const auto tmp = lexicalCast<double>(tokens.begin(), tokens.end());
           if (!tmp) {
@@ -263,7 +262,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
         // $periodic does not appear yet, so guess dimensionality from line(s)
         // following $lattice
         for (unsigned line = 0; line < 3; ++line) {
-          getline(inStream, buffer);
+          Core::getLine(inStream, buffer);
           tokens = split(rstrip(buffer, '#'), ' ');
           const auto tmp = lexicalCast<double>(tokens.begin(), tokens.end());
           if (!tmp) {
@@ -311,7 +310,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
       std::cerr << "Ignore unknown token: " << buffer << '\n';
     }
 
-    getline(inStream, buffer);
+    Core::getLine(inStream, buffer);
   } // done reading the file
 
   if (periodic_parsed && *periodic_parsed > 0 && (!hasLattice && !hasCell)) {

@@ -182,3 +182,35 @@ Atoms
 )");
   }
 }
+
+// Regression test: a box-bounds row with too few fields was indexed with
+// at(), which threw instead of reporting a format error.
+TEST(LammpsTest, shortBoxBoundsRowFails)
+{
+  const std::string header = "ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n1\n";
+  const std::string atoms = "ITEM: ATOMS id type x y z\n1 1 0.0 0.0 0.0\n";
+
+  // Triclinic rows need lo, hi and a tilt factor.
+  LammpsTrajectoryFormat triclinic;
+  Molecule molecule;
+  EXPECT_FALSE(triclinic.readString(header +
+                                      "ITEM: BOX BOUNDS xy xz yz pp pp pp\n"
+                                      "0.0 5.0 0.0\n0.0 5.0\n0.0 5.0 0.0\n" +
+                                      atoms,
+                                    molecule));
+
+  // Orthogonal rows need lo and hi.
+  LammpsTrajectoryFormat orthogonal;
+  Molecule molecule2;
+  EXPECT_FALSE(orthogonal.readString(
+    header + "ITEM: BOX BOUNDS pp pp pp\n0.0 5.0\n0.0\n0.0 5.0\n" + atoms,
+    molecule2));
+
+  // Sanity check: the same file with complete rows reads.
+  LammpsTrajectoryFormat valid;
+  Molecule molecule3;
+  EXPECT_TRUE(valid.readString(
+    header + "ITEM: BOX BOUNDS pp pp pp\n0.0 5.0\n0.0 5.0\n0.0 5.0\n" + atoms,
+    molecule3))
+    << valid.error();
+}

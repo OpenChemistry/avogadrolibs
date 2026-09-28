@@ -53,12 +53,12 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   size_t currentResidueId = 0;
 
   // Title
-  std::getline(in, buffer);
+  Core::getLine(in, buffer);
   if (!buffer.empty())
     molecule.setData("name", trimmed(buffer));
 
   // Atom count
-  std::getline(in, buffer);
+  Core::getLine(in, buffer);
   buffer = trimmed(buffer);
   bool ok;
   auto numAtoms = lexicalCast<size_t>(buffer, ok);
@@ -73,7 +73,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   unsigned char customElementCounter = CustomElementMin;
   Vector3 pos;
   while (numAtoms-- > 0) {
-    std::getline(in, buffer);
+    Core::getLine(in, buffer);
     // Figure out the distance between decimal points, implement support for
     // variable precision as specified:
     // "any number of decimal places, the format will then be n+5 positions with
@@ -187,38 +187,39 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // v1(x) v2(y) v3(z) [v1(y) v1(z) v2(x) v2(z) v3(x) v3(y)]
   // The last six values may be omitted, set all non-specified values to 0.
   // v1(y) == v1(z) == v2(z) == 0 always.
-  std::getline(in, buffer);
-  std::vector<string> tokens(split(buffer, ' ', true));
-  if (tokens.size() > 0) {
-    if (tokens.size() != 3 && tokens.size() != 9) {
-      appendError("Invalid box specification -- need either 3 or 9 values: '" +
-                  buffer + "'");
-      return false;
-    }
-
-    // Index arrays for parsing loop:
-    const int rows[] = { 0, 1, 2, 1, 2, 0, 2, 0, 1 };
-    const int cols[] = { 0, 1, 2, 0, 0, 1, 1, 2, 2 };
-
-    Matrix3 cellMatrix = Matrix3::Zero();
-    for (size_t i = 0; i < tokens.size(); ++i) {
-      cellMatrix(rows[i], cols[i]) = lexicalCast<Real>(tokens[i], ok);
-      if (!ok || tokens[i].empty()) {
-        appendError("Invalid box specification -- bad value: '" + tokens[i] +
-                    "'");
-        return false;
-      }
-    }
-
-    auto* cell = new UnitCell;
-    cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
-    if (!cell->isRegular()) {
-      appendError("box vectors are not linear independent");
-      delete cell;
-      return false;
-    }
-    molecule.setUnitCell(cell);
+  if (!Core::getLine(in, buffer)) {
+    appendError("Missing box specification.");
+    return false;
   }
+  std::vector<string> tokens(split(buffer, ' ', true));
+  if (tokens.size() != 3 && tokens.size() != 9) {
+    appendError("Invalid box specification -- need either 3 or 9 values: '" +
+                buffer + "'");
+    return false;
+  }
+
+  // Index arrays for parsing loop:
+  const int rows[] = { 0, 1, 2, 1, 2, 0, 2, 0, 1 };
+  const int cols[] = { 0, 1, 2, 0, 0, 1, 1, 2, 2 };
+
+  Matrix3 cellMatrix = Matrix3::Zero();
+  for (size_t i = 0; i < tokens.size(); ++i) {
+    cellMatrix(rows[i], cols[i]) = lexicalCast<Real>(tokens[i], ok);
+    if (!ok || tokens[i].empty()) {
+      appendError("Invalid box specification -- bad value: '" + tokens[i] +
+                  "'");
+      return false;
+    }
+  }
+
+  auto* cell = new UnitCell;
+  cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
+  if (!cell->isRegular()) {
+    appendError("box vectors are not linear independent");
+    delete cell;
+    return false;
+  }
+  molecule.setUnitCell(cell);
 
   return true;
 }

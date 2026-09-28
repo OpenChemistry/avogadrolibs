@@ -126,7 +126,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   // Gaussian Cube format is very specific
 
   // Read and set name
-  if (!getline(in, line)) {
+  if (!Core::getLine(in, line)) {
     appendError("Invalid cube header.");
     return false;
   }
@@ -134,7 +134,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 
   // Read and skip field title (we may be able to use this to setCubeType in the
   // future)
-  if (!getline(in, line)) {
+  if (!Core::getLine(in, line)) {
     appendError("Invalid cube header.");
     return false;
   }
@@ -149,7 +149,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
       appendError("Invalid cube header.");
       return false;
     }
-  if (!getline(in, line)) { // capture newline before continuing
+  if (!Core::getLine(in, line)) { // capture newline before continuing
     appendError("Invalid cube header.");
     return false;
   }
@@ -166,7 +166,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 
   // Next 3 lines contains spacing and dim
   for (unsigned int i = 0; i < 3; ++i) {
-    if (!getline(in, line)) {
+    if (!Core::getLine(in, line)) {
       appendError("Invalid cube header.");
       return false;
     }
@@ -206,7 +206,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   // Geometry block
   Vector3 pos;
   for (int i = 0; i < atomCount; ++i) {
-    if (!getline(in, line)) {
+    if (!Core::getLine(in, line)) {
       appendError("Invalid cube atom data.");
       return false;
     }
@@ -251,7 +251,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
         return false;
       }
     // clear buffer
-    if (!getline(in, line)) {
+    if (!Core::getLine(in, line)) {
       appendError("Invalid cube header.");
       return false;
     }
@@ -301,7 +301,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
       return false;
     }
     // clear buffer, if more than one cube
-    if (!getline(in, line) && i + 1 < nCubes) {
+    if (!Core::getLine(in, line) && i + 1 < nCubes) {
       appendError("Invalid cube data.");
       return false;
     }

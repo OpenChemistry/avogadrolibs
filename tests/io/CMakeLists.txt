@@ -6,6 +6,7 @@ set(tests
   Dcd
   FileFormatGuard
   FileFormatManager
+  Gromacs
   Lammps
   Mdl
   Pdb
