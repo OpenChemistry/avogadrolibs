@@ -564,6 +564,7 @@ void Forcefield::optimize()
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   m_lastPositions = map;
   m_lastEnergy = 0.0;
+  m_hasPreviousEnergy = false;
 
   // Start the worker first (calls cleanupWorker() which resets m_optimizing)
   startWorker();
@@ -678,7 +679,14 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     // largest component magnitude, |g|_inf -- same test as energyoptimizer
     if (gradient.cwiseAbs().maxCoeff() < m_gradientTolerance)
       done = true;
-    if (m_lastEnergy != 0.0 && fabs(energy - m_lastEnergy) < m_tolerance)
+    // Compare the per-iteration energy change within this chunk, not the
+    // raw chunk-to-chunk change: chunk size adapts from 1 to 200 iterations
+    // to hold ~30 fps, so comparing whole chunks made the stopping point
+    // depend on how fast the machine renders. m_hasPreviousEnergy (rather
+    // than testing m_lastEnergy != 0.0) also stops skipping the test for a
+    // molecule whose energy happens to be exactly zero.
+    if (m_hasPreviousEnergy && chunkRan > 0 &&
+        fabs(energy - m_lastEnergy) / chunkRan < m_tolerance)
       done = true;
   }
 
@@ -686,6 +694,7 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     done = true;
 
   m_lastEnergy = energy;
+  m_hasPreviousEnergy = true;
 
   if (done || (m_progressDialog && m_progressDialog->wasCanceled())) {
     // Optimization complete
