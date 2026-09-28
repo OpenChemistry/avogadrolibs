@@ -322,17 +322,23 @@ bool AlignTool::handleCommand(const QString& command,
     return false;
   } else if (command == "alignAtom") {
     int axis = -1;
-    if (options.contains("axis") && options["axis"].type() == QVariant::Int) {
-      axis = options["axis"].toInt();
-    } else if (options.contains("axis") &&
-               options["axis"].type() == QVariant::String) {
-      QString axisString = options["axis"].toString();
-      if (axisString == "x")
-        axis = 0;
-      else if (axisString == "y")
-        axis = 1;
-      else if (axisString == "z")
-        axis = 2;
+    if (options.contains("axis")) {
+      QVariant axisData = options["axis"];
+      if (axisData.typeId() == QMetaType::QString) {
+        QString axisString = axisData.toString();
+        if (axisString == "x")
+          axis = 0;
+        else if (axisString == "y")
+          axis = 1;
+        else if (axisString == "z")
+          axis = 2;
+      } else {
+        // JSON numbers arrive as qlonglong or double, never Int
+        bool ok = false;
+        axis = axisData.toInt(&ok);
+        if (!ok)
+          axis = -1;
+      }
     }
 
     if (axis >= 0 && axis < 3) {
