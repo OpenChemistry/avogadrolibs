@@ -150,7 +150,7 @@ void MopacAux::processLine(std::istream& in)
 {
   // First truncate the line, remove trailing white space and check
   string line;
-  if (!getline(in, line) || Core::trimmed(line).empty())
+  if (!Core::getLine(in, line) || Core::trimmed(line).empty())
     return;
 
   string key = Core::trimmed(line);
@@ -350,7 +350,11 @@ vector<int> MopacAux::readArrayElements(std::istream& in, unsigned int n)
   vector<int> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // A truncated .aux file that promises n elements but never delivers them
+    // would otherwise spin forever: the loop condition only checks tmp.size(),
+    // not the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list) {
       tmp.push_back(
@@ -365,7 +369,10 @@ vector<int> MopacAux::readArrayI(std::istream& in, unsigned int n)
   vector<int> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
       tmp.push_back(Core::lexicalCast<int>(i).value_or(0));
@@ -378,7 +385,10 @@ vector<double> MopacAux::readArrayD(std::istream& in, unsigned int n)
   vector<double> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
       tmp.push_back(Core::lexicalCast<double>(i).value_or(0.0));
@@ -392,7 +402,10 @@ vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
   vector<int> tmp;
   while (tmp.size() < n) {
     string line;
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list) {
       if (i == "S")
@@ -428,7 +441,10 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
   unsigned int cnt = 0;
   while (cnt < n) {
     string line;
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& i : list)
       ptr[cnt++] = Core::lexicalCast<double>(i).value_or(0.0);
@@ -484,9 +500,12 @@ bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
   unsigned int f = 1;
   // Skip the first comment line...
   string line;
-  getline(in, line);
+  Core::getLine(in, line);
   while (cnt < n) {
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
@@ -512,7 +531,10 @@ bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
   unsigned int i = 0, j = 0;
   while (cnt < n) {
     string line;
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
       m_eigenVectors(i, j) = Core::lexicalCast<double>(k).value_or(0.0);
@@ -536,9 +558,12 @@ bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
   unsigned int f = 1;
   // Skip the first comment line...
   string line;
-  getline(in, line);
+  Core::getLine(in, line);
   while (cnt < n) {
-    getline(in, line);
+    // See readArrayElements(): without this check a truncated file spins
+    // forever, since the loop condition never looks at the stream state.
+    if (!Core::getLine(in, line))
+      break;
     vector<string> list = Core::split(line, ' ');
     for (auto& k : list) {
       // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();

@@ -46,7 +46,7 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
   // Read the log file line by line, most sections are terminated by an empty
   // line, so they should be retained.
   string buffer;
-  while (getline(in, buffer)) {
+  while (Core::getLine(in, buffer)) {
     if (Core::contains(buffer, "COORDINATES (BOHR)")) {
       readAtomBlock(in, molecule, false);
     } else if (Core::contains(buffer, "COORDINATES OF ALL ATOMS ARE (ANGS)")) {
@@ -109,7 +109,7 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
   bool atomsExist = molecule.atomCount() > 0;
   Index index = 0;
   //@TODO - store all the coordinates
-  while (getline(in, buffer)) {
+  while (Core::getLine(in, buffer)) {
     if (Core::contains(buffer, "CHARGE") || Core::contains(buffer, "------"))
       continue;
     else if (buffer.length() == 0 || buffer == "\n") // Our work here is done.
@@ -154,7 +154,7 @@ void GAMESSUSOutput::readBasisSet(std::istream& in)
   string buffer;
   int currentAtom(0);
   bool header(true);
-  while (getline(in, buffer)) {
+  while (Core::getLine(in, buffer)) {
     if (header) { // Skip the header lines until we hit the last header line.
       if (Core::contains(buffer, "SHELL"))
         header = false;
@@ -205,7 +205,7 @@ void GAMESSUSOutput::readBasisSet(std::istream& in)
         m_c.push_back(Core::lexicalCast<double>(parts[4]).value_or(0.0));
         if (shellType == GaussianSet::SP && parts.size() == 6)
           m_csp.push_back(Core::lexicalCast<double>(parts[5]).value_or(0.0));
-        if (!getline(in, buffer))
+        if (!Core::getLine(in, buffer))
           break;
         parts = Core::split(buffer, ' ');
       }
@@ -220,9 +220,9 @@ void GAMESSUSOutput::readBasisSet(std::istream& in)
 void GAMESSUSOutput::readEigenvectors(std::istream& in)
 {
   string buffer;
-  getline(in, buffer);
-  getline(in, buffer);
-  getline(in, buffer);
+  Core::getLine(in, buffer);
+  Core::getLine(in, buffer);
+  Core::getLine(in, buffer);
   vector<string> parts = Core::split(buffer, ' ');
   vector<vector<double>> eigenvectors;
   bool ok(false);
@@ -251,7 +251,7 @@ void GAMESSUSOutput::readEigenvectors(std::istream& in)
       // Note that we are either ending or entering a new block of orbitals.
       newBlock = true;
     }
-    if (!getline(in, buffer))
+    if (!Core::getLine(in, buffer))
       break;
     parts = Core::split(buffer, ' ');
   }

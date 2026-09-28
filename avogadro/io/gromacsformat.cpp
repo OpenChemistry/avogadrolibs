@@ -53,12 +53,12 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   size_t currentResidueId = 0;
 
   // Title
-  std::getline(in, buffer);
+  Core::getLine(in, buffer);
   if (!buffer.empty())
     molecule.setData("name", trimmed(buffer));
 
   // Atom count
-  std::getline(in, buffer);
+  Core::getLine(in, buffer);
   buffer = trimmed(buffer);
   bool ok;
   auto numAtoms = lexicalCast<size_t>(buffer, ok);
@@ -73,7 +73,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   unsigned char customElementCounter = CustomElementMin;
   Vector3 pos;
   while (numAtoms-- > 0) {
-    std::getline(in, buffer);
+    Core::getLine(in, buffer);
     // Figure out the distance between decimal points, implement support for
     // variable precision as specified:
     // "any number of decimal places, the format will then be n+5 positions with
@@ -187,7 +187,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // v1(x) v2(y) v3(z) [v1(y) v1(z) v2(x) v2(z) v3(x) v3(y)]
   // The last six values may be omitted, set all non-specified values to 0.
   // v1(y) == v1(z) == v2(z) == 0 always.
-  std::getline(in, buffer);
+  Core::getLine(in, buffer);
   std::vector<string> tokens(split(buffer, ' ', true));
   if (tokens.size() > 0) {
     if (tokens.size() != 3 && tokens.size() != 9) {

@@ -32,7 +32,6 @@ using Avogadro::Core::SecondaryStructureAssigner;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::trimmed;
 
-using std::getline;
 using std::istringstream;
 using std::string;
 
@@ -97,7 +96,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   bool inFirstBiomolecule = false;
   bool pastFirstBiomolecule = false;
 
-  while (getline(in, buffer)) { // Read Each line one by one
+  while (Core::getLine(in, buffer)) { // Read Each line one by one
     if (!in.good())
       break;
 
