@@ -163,29 +163,18 @@ std::string EnergyManager::recommendedModel(
   if (identifiers.empty())
     return "LJ"; // shouldn't really ever happen
 
-  std::string bestOption;
-
-  // first, we look through the identifiers to see if there's
-  // something not in the built-in list
-  // i.e., installed by the user = try that first
-  for (auto option : identifiers) {
-    if (std::find(METHOD_TIER_LIST.begin(), METHOD_TIER_LIST.end(), option) ==
-        METHOD_TIER_LIST.end())
+  // Only recommend one of the built-in models, in order of preference
+  // (e.g., GAFF > MMFF94 > UFF > LJ). Plugin / user-installed models are
+  // never auto-recommended here, even when compatible: they typically run
+  // as external processes (so can be slow to start and less robust), and
+  // when several are installed, there's no principled way to rank them
+  // against each other, so the user should select one explicitly.
+  for (const auto& option : METHOD_TIER_LIST) {
+    if (identifiers.find(option) != identifiers.end())
       return option;
   }
 
-  // if not, we look through the built-in list in order
-  // of preference (e.g., GAFF > MMFF94 > UFF > LJ)
-  for (auto option : METHOD_TIER_LIST) {
-    if (identifiers.find(option) != identifiers.end()) {
-      bestOption = option;
-      break;
-    }
-  }
-  if (!bestOption.empty())
-    return bestOption;
-  else
-    return "LJ"; // this will always work
+  return "LJ"; // this will always work
 }
 
 } // namespace Avogadro::Calc

@@ -266,6 +266,215 @@ QStringList Forcefield::menuPath(QAction* action) const
   return path;
 }
 
+void Forcefield::registerCommands()
+{
+  emit registerCommand(
+    "listForceFields",
+    tr("List the force fields available for the current molecule."));
+  emit registerCommand(
+    "energy", tr("Compute the force field energy of the current molecule."));
+  emit registerCommand(
+    "forces", tr("Compute the force field forces on the current molecule."));
+  emit registerCommand("optimize",
+                       tr("Optimize the geometry of the current molecule."));
+}
+
+bool Forcefield::handleCommand(const QString& command,
+                               const QVariantMap& options)
+{
+  if (command == "listForceFields") {
+    handleListForceFieldsCommand();
+    return true;
+  }
+  if (command == "energy") {
+    handleEnergyCommand(options);
+    return true;
+  }
+  if (command == "forces") {
+    handleForcesCommand(options);
+    return true;
+  }
+  if (command == "optimize") {
+    handleOptimizeCommand(options);
+    return true;
+  }
+
+  return false;
+}
+
+QString Forcefield::convergenceReasonName(ConvergenceReason reason)
+{
+  switch (reason) {
+    case ConvergenceReason::Gradient:
+      return QStringLiteral("gradient");
+    case ConvergenceReason::Energy:
+      return QStringLiteral("energy");
+    case ConvergenceReason::OptimizerStopped:
+      return QStringLiteral("optimizerStopped");
+    case ConvergenceReason::MaxSteps:
+      return QStringLiteral("maxSteps");
+    case ConvergenceReason::NonFinite:
+      return QStringLiteral("nonFinite");
+    default:
+      return QString();
+  }
+}
+
+void Forcefield::handleListForceFieldsCommand()
+{
+  emit commandStarted();
+
+  QStringList names;
+  QVariantList methods;
+  QString recommended;
+  QString current;
+
+  if (m_molecule != nullptr) {
+    auto compatible =
+      Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
+    for (const auto& id : compatible) {
+      const QString idString = QString::fromStdString(id);
+      names << idString;
+      QVariantMap entry;
+      entry["id"] = idString;
+      entry["name"] = QString::fromStdString(
+        Calc::EnergyManager::instance().nameForModel(id));
+      methods.push_back(entry);
+    }
+
+    // The same ranking autodetect uses in setupMethod().
+    recommended = QString::fromStdString(
+      Calc::EnergyManager::instance().recommendedModel(*m_molecule));
+
+    if (m_method == nullptr)
+      setupMethod();
+    current = QString::fromStdString(m_methodName);
+  }
+
+  QVariantMap result;
+  result["names"] = names;
+  result["count"] = names.size();
+  result["methods"] = methods;
+  result["recommended"] = recommended;
+  result["current"] = current;
+
+  emit commandFinished(tr("%1 force field(s) available.").arg(names.size()),
+                       result);
+}
+
+void Forcefield::handleEnergyCommand(const QVariantMap& options)
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule is open."));
+    return;
+  }
+  if (m_worker != nullptr || m_optimizing) {
+    emit commandFailed(tr("A force field calculation is already running."));
+    return;
+  }
+  if (m_molecule->atomCount() == 0) {
+    emit commandFailed(tr("No atoms provided for energy calculation."));
+    return;
+  }
+
+  QString error;
+  std::string methodId;
+  if (!resolveMethod(options.value("method").toString(), methodId, error)) {
+    emit commandFailed(error);
+    return;
+  }
+
+  emit commandStarted();
+  startEnergyCalculation(methodId, PendingCommand::Energy);
+}
+
+void Forcefield::handleForcesCommand(const QVariantMap& options)
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule is open."));
+    return;
+  }
+  if (m_worker != nullptr || m_optimizing) {
+    emit commandFailed(tr("A force field calculation is already running."));
+    return;
+  }
+  if (m_molecule->atomCount() == 0) {
+    emit commandFailed(tr("No atoms provided for force calculation."));
+    return;
+  }
+
+  QString error;
+  std::string methodId;
+  if (!resolveMethod(options.value("method").toString(), methodId, error)) {
+    emit commandFailed(error);
+    return;
+  }
+
+  emit commandStarted();
+  startForcesCalculation(methodId, PendingCommand::Forces);
+}
+
+void Forcefield::handleOptimizeCommand(const QVariantMap& options)
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule is open."));
+    return;
+  }
+  if (m_worker != nullptr || m_optimizing) {
+    emit commandFailed(tr("A force field calculation is already running."));
+    return;
+  }
+  if (m_molecule->atomCount() == 0) {
+    emit commandFailed(tr("No atoms provided for optimization."));
+    return;
+  }
+
+  QString error;
+  std::string methodId;
+  if (!resolveMethod(options.value("method").toString(), methodId, error)) {
+    emit commandFailed(error);
+    return;
+  }
+
+  OptimizeRunOptions runOptions;
+  runOptions.maxSteps = m_maxSteps;
+  runOptions.gradientTolerance = m_gradientTolerance;
+  runOptions.tolerance = m_tolerance;
+
+  if (options.contains("steps")) {
+    bool ok = false;
+    const int steps = options.value("steps").toInt(&ok);
+    if (!ok || steps < 1) {
+      emit commandFailed(tr("\"steps\" must be a positive integer."));
+      return;
+    }
+    runOptions.maxSteps = static_cast<unsigned int>(steps);
+  }
+  if (options.contains("gradientTolerance")) {
+    bool ok = false;
+    const double tolerance = options.value("gradientTolerance").toDouble(&ok);
+    if (!ok || !std::isfinite(tolerance) || tolerance < 0.0) {
+      emit commandFailed(
+        tr("\"gradientTolerance\" must be a finite, non-negative number."));
+      return;
+    }
+    runOptions.gradientTolerance = tolerance;
+  }
+  if (options.contains("energyTolerance")) {
+    bool ok = false;
+    const double tolerance = options.value("energyTolerance").toDouble(&ok);
+    if (!ok || !std::isfinite(tolerance) || tolerance < 0.0) {
+      emit commandFailed(
+        tr("\"energyTolerance\" must be a finite, non-negative number."));
+      return;
+    }
+    runOptions.tolerance = tolerance;
+  }
+
+  emit commandStarted();
+  startOptimizeCalculation(methodId, runOptions, PendingCommand::Optimize);
+}
+
 void Forcefield::showDialog()
 {
   if (m_molecule == nullptr)
@@ -300,8 +509,11 @@ void Forcefield::showDialog()
   options["modelUserOptions"] = m_modelUserOptions;
   options["modelUserOptionsSchemas"] = modelUserOptionSchemas;
 
-  QVariantMap results = ForceFieldDialog::prompt(
-    nullptr, forceFields, options, recommendedForceField().c_str());
+  // m_molecule is guaranteed non-null here (see the guard above).
+  const std::string recommended =
+    Calc::EnergyManager::instance().recommendedModel(*m_molecule);
+  QVariantMap results = ForceFieldDialog::prompt(nullptr, forceFields, options,
+                                                 recommended.c_str());
 
   if (!results.isEmpty()) {
     // update settings
@@ -383,7 +595,8 @@ void Forcefield::setupMethod()
     return; // nothing to do until its set
 
   if (m_autodetect)
-    m_methodName = recommendedForceField();
+    m_methodName =
+      Calc::EnergyManager::instance().recommendedModel(*m_molecule);
 
   // check if m_methodName even exists (e.g., saved preference)
   // or if that method doesn't work for this (e.g., unit cell, etc.)
@@ -399,7 +612,8 @@ void Forcefield::setupMethod()
 
   // fall back to recommended if not found (LJ will always work)
   if (!found) {
-    m_methodName = recommendedForceField();
+    m_methodName =
+      Calc::EnergyManager::instance().recommendedModel(*m_molecule);
   }
 
   if (m_method != nullptr) {
@@ -471,9 +685,20 @@ void Forcefield::cleanupWorker()
   }
   m_optimizing = false;
   m_batchRunning = false;
+
+  // A command left pending when the worker it was waiting on gets torn down
+  // (e.g. setMolecule() switching molecules mid-run, or the position-count
+  // sanity check in onOptimizeChunkDone()) would otherwise leave the caller
+  // waiting for the full RPC timeout. Every other path that finishes a
+  // command clears m_pendingCommand before calling cleanupWorker(), so
+  // reaching this with it still set means the run did not finish on its own.
+  if (m_pendingCommand != PendingCommand::None) {
+    m_pendingCommand = PendingCommand::None;
+    emit commandFailed(tr("The force field calculation was interrupted."));
+  }
 }
 
-void Forcefield::startWorker()
+void Forcefield::startWorker(const std::string& methodId)
 {
   cleanupWorker();
 
@@ -487,13 +712,14 @@ void Forcefield::startWorker()
   auto constraints = m_molecule->constraints();
 
   // Create a fresh calculator clone for the worker thread
-  auto* calc = Calc::EnergyManager::instance().model(m_methodName);
+  auto* calc = Calc::EnergyManager::instance().model(methodId);
   if (calc == nullptr)
     return;
 
   // Apply user options to the clone
-  const QString methodId = QString::fromStdString(m_methodName);
-  const QString modelOptions = m_modelUserOptions.value(methodId).toString();
+  const QString methodIdString = QString::fromStdString(methodId);
+  const QString modelOptions =
+    m_modelUserOptions.value(methodIdString).toString();
   if (!modelOptions.trimmed().isEmpty())
     calc->setUserOptions(modelOptions.toStdString());
 
@@ -530,14 +756,51 @@ void Forcefield::sendInitCalculator()
   m_pendingCalc = nullptr;
 }
 
+bool Forcefield::resolveMethod(const QString& methodOption,
+                               std::string& methodId, QString& errorMessage)
+{
+  if (methodOption.isEmpty()) {
+    // No method requested: use exactly what the GUI would.
+    if (m_method == nullptr)
+      setupMethod();
+    if (m_method == nullptr) {
+      errorMessage = tr("No force field is available for this molecule.");
+      return false;
+    }
+    methodId = m_methodName;
+    return true;
+  }
+
+  // An explicit request must be compatible with this molecule -- no falling
+  // back to the recommended method, which would silently report a different
+  // force field's numbers under the name the caller asked for.
+  const std::string requested = methodOption.toStdString();
+  auto compatible =
+    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
+  if (compatible.find(requested) != compatible.end()) {
+    methodId = requested;
+    return true;
+  }
+
+  auto all = Calc::EnergyManager::instance().identifiers();
+  if (all.find(requested) != all.end()) {
+    errorMessage =
+      tr("Force field \"%1\" is not compatible with this molecule.")
+        .arg(methodOption);
+  } else {
+    errorMessage = tr("Unknown force field \"%1\".").arg(methodOption);
+  }
+  return false;
+}
+
 void Forcefield::optimize()
 {
-  if (m_molecule == nullptr || m_optimizing)
+  if (m_molecule == nullptr || m_optimizing || m_worker != nullptr)
     return;
 
-  if (m_method == nullptr)
-    setupMethod();
-  if (m_method == nullptr)
+  QString error;
+  std::string methodId;
+  if (!resolveMethod(QString(), methodId, error))
     return;
 
   if (!m_molecule->atomCount()) {
@@ -546,6 +809,19 @@ void Forcefield::optimize()
     return;
   }
 
+  OptimizeRunOptions runOptions;
+  runOptions.maxSteps = m_maxSteps;
+  runOptions.gradientTolerance = m_gradientTolerance;
+  runOptions.tolerance = m_tolerance;
+
+  startOptimizeCalculation(methodId, runOptions, PendingCommand::None);
+}
+
+void Forcefield::startOptimizeCalculation(const std::string& methodId,
+                                          const OptimizeRunOptions& runOptions,
+                                          PendingCommand pending)
+{
+  m_runOptions = runOptions;
   m_iterationsDone = 0;
 
   // merge all coordinate updates into one undo step
@@ -564,36 +840,44 @@ void Forcefield::optimize()
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   m_lastPositions = map;
   m_lastEnergy = 0.0;
+  m_hasPreviousEnergy = false;
 
   // Start the worker first (calls cleanupWorker() which resets m_optimizing)
-  startWorker();
+  startWorker(methodId);
 
   if (!m_worker) {
     m_molecule->undoMolecule()->setInteractive(false);
+    if (pending != PendingCommand::None)
+      emit commandFailed(tr("Could not create a calculator for \"%1\".")
+                           .arg(QString::fromStdString(methodId)));
     return;
   }
 
   // Set m_optimizing AFTER startWorker, since cleanupWorker resets it
   m_optimizing = true;
+  m_pendingCommand = pending;
+  m_activeMethodName = methodId;
 
-  // Create progress dialog. Range is in iterations (not chunks) since the
-  // chunk size now varies across the run.
-  m_progressDialog =
-    new QProgressDialog(qobject_cast<QWidget*>(this->parent()));
-  m_progressDialog->setWindowTitle(tr("Optimize Geometry"));
-  // cancel button text is set automatically
-  m_progressDialog->setRange(0, static_cast<int>(m_maxSteps));
-  m_progressDialog->setWindowModality(Qt::WindowModal);
-  m_progressDialog->setMinimumDuration(0);
-  m_progressDialog->show();
+  if (pending == PendingCommand::None) {
+    // Progress dialog and cancel button are GUI-only; a command run has no
+    // window to show one in, and no cancel button to click.
+    m_progressDialog =
+      new QProgressDialog(qobject_cast<QWidget*>(this->parent()));
+    m_progressDialog->setWindowTitle(tr("Optimize Geometry"));
+    // cancel button text is set automatically
+    m_progressDialog->setRange(0, static_cast<int>(m_runOptions.maxSteps));
+    m_progressDialog->setWindowModality(Qt::WindowModal);
+    m_progressDialog->setMinimumDuration(0);
+    m_progressDialog->show();
 
-  connect(m_progressDialog, &QProgressDialog::canceled, this, [this]() {
-    if (m_worker)
-      m_worker->cancel();
-    cleanupWorker();
-    if (m_molecule)
-      m_molecule->undoMolecule()->setInteractive(false);
-  });
+    connect(m_progressDialog, &QProgressDialog::canceled, this, [this]() {
+      if (m_worker)
+        m_worker->cancel();
+      cleanupWorker();
+      if (m_molecule)
+        m_molecule->undoMolecule()->setInteractive(false);
+    });
+  }
 
   connect(m_worker, &QtGui::CalcWorker::calculatorReady, this,
           &Forcefield::onWorkerReady);
@@ -651,8 +935,20 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
            << " ms=" << elapsedMs;
 #endif
 
+  // CalcWorker sets its "converged" flag with an empty gradient (and a
+  // placeholder energy of 0.0) when it could not run this chunk at all --
+  // no calculator, or the run was cancelled (see
+  // CalcWorker::runOptimizeChunk). That is not a discovered minimum:
+  // Calc::optimizeSteps only returns false for a malformed chunk size or an
+  // unrecognized algorithm, and the two real optimizers (L-BFGS, FIRE)
+  // always return true. Detect that case so a placeholder energy/gradient
+  // never gets written into the molecule as if it were a real result.
+  const bool noResult =
+    converged && gradient.size() != 3 * static_cast<Eigen::Index>(n);
+
   // Update coordinates if valid
-  if (std::isfinite(energy) && positions.allFinite()) {
+  bool nonFinite = false;
+  if (!noResult && std::isfinite(energy) && positions.allFinite()) {
     Core::Array<Vector3> pos(n);
     Eigen::Map<Eigen::VectorXd>(pos[0].data(), 3 * n) = positions;
 
@@ -667,30 +963,96 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     m_molecule->emitChanged(changes);
 
     m_lastPositions = positions;
-  } else {
+  } else if (!noResult) {
     qDebug() << "Non-finite energy, stopping optimization" << energy;
-    converged = true;
+    nonFinite = true;
   }
 
-  // Check convergence criteria
-  bool done = converged;
+  // Check convergence criteria, tracking which one ended the run so the
+  // "optimize" command can report why (more useful to a script than the
+  // bare bool).
+  bool done = false;
+  ConvergenceReason reason = ConvergenceReason::None;
+
+  if (nonFinite) {
+    done = true;
+    reason = ConvergenceReason::NonFinite;
+  } else if (converged) {
+    // The worker could not run this chunk at all (see the comment above) --
+    // never a discovered minimum, so this is never reported as converged.
+    done = true;
+    reason = ConvergenceReason::OptimizerStopped;
+  }
+
   if (!done && gradient.size() > 0) {
     // largest component magnitude, |g|_inf -- same test as energyoptimizer
-    if (gradient.cwiseAbs().maxCoeff() < m_gradientTolerance)
+    if (gradient.cwiseAbs().maxCoeff() < m_runOptions.gradientTolerance) {
       done = true;
-    if (m_lastEnergy != 0.0 && fabs(energy - m_lastEnergy) < m_tolerance)
+      reason = ConvergenceReason::Gradient;
+    } else if (m_hasPreviousEnergy && chunkRan > 0 &&
+               // Compare the per-iteration energy change within this chunk,
+               // not the raw chunk-to-chunk change: chunk size adapts from 1
+               // to 200 iterations to hold ~30 fps, so comparing whole chunks
+               // made the stopping point depend on how fast the machine
+               // renders. m_hasPreviousEnergy (rather than testing
+               // m_lastEnergy != 0.0) also stops skipping the test for a
+               // molecule whose energy happens to be exactly zero.
+               fabs(energy - m_lastEnergy) / chunkRan <
+                 m_runOptions.tolerance) {
       done = true;
+      reason = ConvergenceReason::Energy;
+    }
   }
 
-  if (m_iterationsDone >= m_maxSteps)
+  if (!done && m_iterationsDone >= m_runOptions.maxSteps) {
     done = true;
+    reason = ConvergenceReason::MaxSteps;
+  }
 
   m_lastEnergy = energy;
+  m_hasPreviousEnergy = true;
 
-  if (done || (m_progressDialog && m_progressDialog->wasCanceled())) {
+  const bool canceled = m_progressDialog && m_progressDialog->wasCanceled();
+
+  if (done || canceled) {
     // Optimization complete
     m_molecule->undoMolecule()->setInteractive(false);
+
+    // Capture what the completed run was for before cleanupWorker() clears
+    // m_worker -- clear m_pendingCommand first so cleanupWorker()'s own
+    // "command left pending" check does not fire for this (successful) run.
+    const PendingCommand pending = m_pendingCommand;
+    const std::string methodId = m_activeMethodName;
+    const unsigned int iterationsDone = m_iterationsDone;
+    m_pendingCommand = PendingCommand::None;
     cleanupWorker();
+
+    if (pending == PendingCommand::Optimize) {
+      if (noResult) {
+        // energy/gradient are placeholders (0.0 / empty), not a real result
+        // -- report failure rather than a finished run at a fabricated
+        // zero energy.
+        emit commandFailed(
+          tr("The optimizer stopped without producing a result."));
+      } else {
+        // "maxSteps", "nonFinite" and "optimizerStopped" are not
+        // convergence: the run stopped because it ran out of budget, the
+        // model broke down, or the optimizer itself could not continue --
+        // not because it found a minimum.
+        const bool didConverge = reason == ConvergenceReason::Gradient ||
+                                 reason == ConvergenceReason::Energy;
+
+        QVariantMap result;
+        result["energy"] = energy;
+        result["unit"] = QStringLiteral("kJ/mol");
+        result["method"] = QString::fromStdString(methodId);
+        result["steps"] = static_cast<int>(iterationsDone);
+        result["converged"] = didConverge;
+        result["reason"] = convergenceReasonName(reason);
+        emit commandFinished(
+          tr("%1 Energy = %L2").arg(methodId.c_str()).arg(energy), result);
+      }
+    }
   } else {
     // Adapt chunk size toward ~30 fps using the measured round-trip. Cap
     // at the remaining iteration budget so we don't overshoot m_maxSteps.
@@ -700,7 +1062,7 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     constexpr size_t kMaxChunk = 200;
     size_t next = Calc::adaptChunkIterations(chunkRan, elapsedMs, kTargetMs,
                                              kSmoothing, kMinChunk, kMaxChunk);
-    const unsigned int remaining = m_maxSteps - m_iterationsDone;
+    const unsigned int remaining = m_runOptions.maxSteps - m_iterationsDone;
     if (next > remaining)
       next = remaining;
     m_optOptions.chunkIterations = next;
@@ -716,12 +1078,12 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
 
 void Forcefield::energy()
 {
-  if (m_molecule == nullptr || m_optimizing)
+  if (m_molecule == nullptr || m_optimizing || m_worker != nullptr)
     return;
 
-  if (m_method == nullptr)
-    setupMethod();
-  if (m_method == nullptr)
+  QString error;
+  std::string methodId;
+  if (!resolveMethod(QString(), methodId, error))
     return;
 
   if (m_molecule->atomCount() == 0) {
@@ -730,15 +1092,28 @@ void Forcefield::energy()
     return;
   }
 
+  startEnergyCalculation(methodId, PendingCommand::None);
+}
+
+void Forcefield::startEnergyCalculation(const std::string& methodId,
+                                        PendingCommand pending)
+{
   auto n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
 
-  startWorker();
+  startWorker(methodId);
 
-  if (!m_worker)
+  if (!m_worker) {
+    if (pending != PendingCommand::None)
+      emit commandFailed(tr("Could not create a calculator for \"%1\".")
+                           .arg(QString::fromStdString(methodId)));
     return;
+  }
+
+  m_pendingCommand = pending;
+  m_activeMethodName = methodId;
 
   auto* worker = m_worker;
 
@@ -761,19 +1136,42 @@ void Forcefield::onEnergyDone(Eigen::VectorXd gradient, double energy)
   Q_UNUSED(gradient);
   if (sender() != m_worker)
     return;
-  QString msg(tr("%1 Energy = %L2").arg(m_methodName.c_str()).arg(energy));
+
+  // Capture what the completed run was for before cleanupWorker() clears
+  // m_worker -- clear m_pendingCommand first so cleanupWorker()'s own
+  // "command left pending" check does not fire for this (successful) run.
+  const PendingCommand pending = m_pendingCommand;
+  const std::string methodId = m_activeMethodName;
+  m_pendingCommand = PendingCommand::None;
   cleanupWorker();
+
+  QString msg(tr("%1 Energy = %L2").arg(methodId.c_str()).arg(energy));
+
+  if (pending == PendingCommand::Energy) {
+    if (!std::isfinite(energy)) {
+      emit commandFailed(tr("%1 returned a non-finite energy.")
+                           .arg(QString::fromStdString(methodId)));
+      return;
+    }
+    QVariantMap result;
+    result["energy"] = energy;
+    result["unit"] = QStringLiteral("kJ/mol");
+    result["method"] = QString::fromStdString(methodId);
+    emit commandFinished(msg, result);
+    return;
+  }
+
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
 void Forcefield::forces()
 {
-  if (m_molecule == nullptr || m_optimizing)
+  if (m_molecule == nullptr || m_optimizing || m_worker != nullptr)
     return;
 
-  if (m_method == nullptr)
-    setupMethod();
-  if (m_method == nullptr)
+  QString error;
+  std::string methodId;
+  if (!resolveMethod(QString(), methodId, error))
     return;
 
   if (m_molecule->atomCount() == 0) {
@@ -782,15 +1180,28 @@ void Forcefield::forces()
     return;
   }
 
+  startForcesCalculation(methodId, PendingCommand::None);
+}
+
+void Forcefield::startForcesCalculation(const std::string& methodId,
+                                        PendingCommand pending)
+{
   auto n = m_molecule->atomCount();
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   Eigen::VectorXd positions = map;
 
-  startWorker();
+  startWorker(methodId);
 
-  if (!m_worker)
+  if (!m_worker) {
+    if (pending != PendingCommand::None)
+      emit commandFailed(tr("Could not create a calculator for \"%1\".")
+                           .arg(QString::fromStdString(methodId)));
     return;
+  }
+
+  m_pendingCommand = pending;
+  m_activeMethodName = methodId;
 
   auto* worker = m_worker;
 
@@ -810,29 +1221,81 @@ void Forcefield::forces()
 
 void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
 {
-  Q_UNUSED(energy);
-
   if (sender() != m_worker)
     return;
 
+  const PendingCommand pending = m_pendingCommand;
+  const std::string methodId = m_activeMethodName;
+
   if (m_molecule == nullptr) {
+    m_pendingCommand = PendingCommand::None;
     cleanupWorker();
+    if (pending == PendingCommand::Forces)
+      emit commandFailed(tr("The molecule changed during the calculation."));
     return;
   }
 
   auto n = m_molecule->atomCount();
 
+  // Reject an unusable result before it reaches the displayed force vectors
+  // or the caller.
+  if (pending == PendingCommand::Forces &&
+      (!std::isfinite(energy) || !gradient.allFinite() ||
+       gradient.size() != 3 * static_cast<Eigen::Index>(n))) {
+    m_pendingCommand = PendingCommand::None;
+    cleanupWorker();
+    emit commandFailed(tr("%1 returned a non-finite or incomplete result.")
+                         .arg(QString::fromStdString(methodId)));
+    return;
+  }
+
   Core::Array<Vector3> forces(n);
   if (n > 0 && gradient.size() == 3 * static_cast<Eigen::Index>(n))
     Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -gradient;
 
+  // Like the menu action, always update the displayed force vectors -- for
+  // a command as well as the GUI, since the point is to show what was
+  // computed.
   m_molecule->setForceVectors(forces);
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
   m_molecule->emitChanged(changes);
 
-  QString msg(
-    tr("%1 Force Norm = %L2").arg(m_methodName.c_str()).arg(gradient.norm()));
+  // Clear m_pendingCommand before cleanupWorker() so its own "command left
+  // pending" check does not fire for this (successful) run.
+  m_pendingCommand = PendingCommand::None;
   cleanupWorker();
+
+  QString msg(
+    tr("%1 Force Norm = %L2").arg(methodId.c_str()).arg(gradient.norm()));
+
+  if (pending == PendingCommand::Forces) {
+    // cleanGradients() zeroes the components of frozen atoms/axes, and also
+    // silently zeroes any non-finite component -- so a zero force here means
+    // "frozen, or balanced, or the model produced a NaN", not necessarily
+    // "at a minimum".
+    QVariantList forceList;
+    double maxForce = 0.0;
+    for (Index i = 0; i < n; ++i) {
+      const Vector3& f = forces[i];
+      forceList.push_back(QVariantList{ f.x(), f.y(), f.z() });
+      maxForce = std::max(maxForce, f.norm());
+    }
+    const double rmsForce =
+      gradient.size() > 0
+        ? gradient.norm() / std::sqrt(static_cast<double>(gradient.size()))
+        : 0.0;
+
+    QVariantMap result;
+    result["forces"] = forceList;
+    result["energy"] = energy;
+    result["rmsForce"] = rmsForce;
+    result["maxForce"] = maxForce;
+    result["unit"] = QStringLiteral("kJ/(mol*Angstrom)");
+    result["method"] = QString::fromStdString(methodId);
+    emit commandFinished(msg, result);
+    return;
+  }
+
   QMessageBox::information(nullptr, tr("Avogadro"), msg);
 }
 
@@ -893,7 +1356,7 @@ void Forcefield::runBatch(bool computeGradient)
 
   m_batchGradient = computeGradient;
 
-  startWorker();
+  startWorker(m_methodName);
 
   if (!m_worker)
     return;
@@ -1025,34 +1488,6 @@ void Forcefield::onBatchDone(std::vector<double> energies,
   m_molecule->emitChanged(changes);
 
   cleanupWorker();
-}
-
-std::string Forcefield::recommendedForceField() const
-{
-  // if we have a unit cell, we need to use the LJ calculator
-  // (implementing something better would be nice)
-  if (m_molecule == nullptr || m_molecule->unitCell() != nullptr)
-    return "LJ";
-
-  // otherwise, let's see what identifers are returned
-  auto list =
-    Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
-  if (list.empty())
-    return "LJ"; // this will always work
-
-  // iterate to see what we have
-  std::string bestOption;
-  for (auto option : list) {
-    // GAFF is better than MMFF94 which is better than UFF
-    if (option == "UFF" && bestOption != "GAFF" && bestOption != "MMFF94")
-      bestOption = option;
-    if (option == "MMFF94" && bestOption != "GAFF")
-      bestOption = option;
-  }
-  if (!bestOption.empty())
-    return bestOption;
-  else
-    return "LJ"; // this will always work
 }
 
 void Forcefield::freezeSelected()

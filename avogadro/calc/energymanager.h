@@ -106,6 +106,13 @@ public:
    *
    * This returns the identifier for a model that works,
    * given the charge, unit cell, spin states, etc.
+   *
+   * Only the built-in models (GAFF, MMFF94, UFF, LJ) are ever recommended,
+   * in that order of preference. Plugin / user-installed models are never
+   * auto-selected, even if compatible with the molecule: they typically
+   * run as external processes (so can be slow to start and less robust),
+   * and when several are installed there is no principled way to rank
+   * them against each other, so the user must choose one explicitly.
    * @return The recommended model identifier
    */
   std::string recommendedModel(const Core::Molecule& molecule) const;
