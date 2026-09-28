@@ -177,6 +177,10 @@ private:
   unsigned int m_iterationsDone = 0;
   Eigen::VectorXd m_lastPositions;
   double m_lastEnergy = 0.0;
+  // Whether m_lastEnergy holds a value from a previous chunk. Distinguishes
+  // "no previous chunk yet" from "previous energy happened to be 0.0", which
+  // an equality check against 0.0 cannot.
+  bool m_hasPreviousEnergy = false;
   Calc::OptimizationOptions m_optOptions;
   // Timer for chunk wall-clock measurement (round-trip from dispatch to
   // optimizeFinished, so dispatch overhead counts toward the frame budget).
