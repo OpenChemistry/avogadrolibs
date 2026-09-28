@@ -129,13 +129,61 @@ private slots:
   void onWorkerReady();
 
 private:
+  // Which command (if any) is waiting on the in-flight worker run. GUI-
+  // triggered runs leave this at None; onEnergyDone()/onForcesDone()/
+  // onOptimizeChunkDone() branch on it to decide whether to show a dialog
+  // or report a command result, and cleanupWorker() uses it to fail a
+  // command left pending when the worker is torn down out from under it
+  // (e.g. setMolecule() switching molecules mid-run).
+  enum class PendingCommand
+  {
+    None,
+    Energy,
+    Forces,
+    Optimize
+  };
+
+  // Effective parameters for the in-flight optimization run. Populated once
+  // at the start of the run (from QSettings-backed members for the GUI, or
+  // from command options for the "optimize" command) and read everywhere
+  // mid-run instead of m_maxSteps/m_gradientTolerance/m_tolerance, since a
+  // per-call value must never be written back to those members.
+  struct OptimizeRunOptions
+  {
+    unsigned int maxSteps = 100;
+    double gradientTolerance = 1.0e-4;
+    double tolerance = 1.0e-6;
+  };
+
   void cleanupWorker();
-  void startWorker();
+  void startWorker(const std::string& methodId);
   void sendInitCalculator();
   // Gather every coordinate set as a flat 3N vector (non-destructive).
   std::vector<Eigen::VectorXd> gatherCoordinateSets() const;
   // Shared entry point for the two batch actions.
   void runBatch(bool computeGradient);
+
+  // Resolve the force field a caller asked for. An empty methodOption means
+  // "use whatever the GUI would" (setupMethod(), then m_methodName). A
+  // non-empty methodOption must be compatible with the current molecule
+  // (per EnergyManager::identifiersForMolecule()) or this fails with a
+  // message saying whether the id is unknown or merely incompatible; there
+  // is no fallback to the recommended method for an explicit request.
+  bool resolveMethod(const QString& methodOption, std::string& methodId,
+                     QString& errorMessage);
+
+  // Compute-only entry points shared by the GUI slots and handleCommand().
+  // All UI (message boxes, the progress dialog) stays in the GUI slots;
+  // these only touch the molecule/worker and, on success, set
+  // m_pendingCommand so the completion slot knows how to report back.
+  void startEnergyCalculation(const std::string& methodId,
+                              PendingCommand pending);
+  void startForcesCalculation(const std::string& methodId,
+                              PendingCommand pending);
+  void startOptimizeCalculation(const std::string& methodId,
+                                const OptimizeRunOptions& runOptions,
+                                PendingCommand pending);
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
   Calc::EnergyCalculator* m_method = nullptr;
@@ -166,6 +214,16 @@ private:
   bool m_batchRunning = false;
   // Whether the in-flight batch run requested gradients.
   bool m_batchGradient = false;
+  // Set by startEnergyCalculation()/startForcesCalculation()/
+  // startOptimizeCalculation() once the worker is confirmed running for a
+  // command (None for a GUI-triggered run). See the enum's comment.
+  PendingCommand m_pendingCommand = PendingCommand::None;
+  // The method identifier the in-flight (or most recently finished) run
+  // actually used -- may differ from m_methodName for a command that named
+  // its own "method".
+  std::string m_activeMethodName;
+  // Effective options for the in-flight optimize run; see the struct.
+  OptimizeRunOptions m_runOptions;
   // Iterations completed (sum of chunk sizes already executed). Used to
   // bound total work and drive the progress dialog now that the chunk
   // size adapts per chunk.
