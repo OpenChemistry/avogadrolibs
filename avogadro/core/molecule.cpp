@@ -8,13 +8,11 @@
 #include "basisset.h"
 #include "cube.h"
 #include "elements.h"
-#include "gaussianset.h"
 #include "layermanager.h"
 #include "mdlvalence_p.h"
 #include "mesh.h"
 #include "neighborperceiver.h"
 #include "residue.h"
-#include "slaterset.h"
 #include "unitcell.h"
 
 #include <algorithm>
@@ -113,15 +111,9 @@ void Molecule::readProperties(const Molecule& other)
   m_residueProperties = other.m_residueProperties;
   m_conformerProperties = other.m_conformerProperties;
 
-  // copy orbital information
-  SlaterSet* slaterSet = dynamic_cast<SlaterSet*>(other.m_basisSet);
-  if (slaterSet != nullptr) {
-    m_basisSet = slaterSet->clone();
-    m_basisSet->setMolecule(this);
-  }
-  GaussianSet* gaussianSet = dynamic_cast<GaussianSet*>(other.m_basisSet);
-  if (gaussianSet != nullptr) {
-    m_basisSet = gaussianSet->clone();
+  // copy orbital information, replacing (and freeing) any we already had
+  if (other.m_basisSet != nullptr) {
+    setBasisSet(other.m_basisSet->clone());
     m_basisSet->setMolecule(this);
   }
 
@@ -1676,6 +1668,14 @@ std::string Molecule::formula(const std::string& delimiter, int over) const
   }
 
   return result.str();
+}
+
+void Molecule::setBasisSet(BasisSet* basis)
+{
+  if (basis == m_basisSet)
+    return;
+  delete m_basisSet;
+  m_basisSet = basis;
 }
 
 void Molecule::setUnitCell(UnitCell* uc)
