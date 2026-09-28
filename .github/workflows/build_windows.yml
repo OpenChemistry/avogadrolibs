@@ -7,7 +7,18 @@ name: Windows Build
 # .. since SignPath requires only a Windows build in the action
 # .. to successfully sign
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    # Bot branches get built by their pull_request event; building the push
+    # too just doubles the jobs. The tags line is required: with only a
+    # branch filter, tag pushes (release builds) would stop triggering.
+    branches-ignore:
+      - 'dependabot/**'
+      - 'update-i18n-templates'
+    tags:
+      - '**'
+  pull_request:
+  workflow_dispatch:
 
 env:
   QT_VERSION: 6.8.3
