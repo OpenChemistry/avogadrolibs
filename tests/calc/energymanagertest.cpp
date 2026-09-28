@@ -10,6 +10,7 @@
 #include <avogadro/calc/energycalculator.h>
 #include <avogadro/calc/energymanager.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 
 using namespace Avogadro::Calc;
 using namespace Avogadro::Core;
@@ -296,6 +297,73 @@ TEST_F(EnergyManagerTest, ErrorHandling)
   std::string error = manager->error();
   // Error string may or may not be empty initially, just verify it's accessible
   EXPECT_NO_THROW(manager->error());
+}
+
+// Tests for the built-in "tier list" ranking used by recommendedModel():
+// GAFF > MMFF94 > UFF > LJ among compatible models, and plugin / other
+// user-installed models are never auto-recommended.
+//
+// GAFF, MMFF94, UFF and LJ are normally registered by the Open Babel-backed
+// forcefield plugin or the calc library's own defaults, neither of which is
+// present in this calc-only test binary, so we register mock calculators
+// with those identifiers instead. Defensively unregister them first, in
+// case the real UFF/LJ (added by EnergyManager's constructor) are still
+// present -- test execution order is not guaranteed, and the singleton
+// persists across tests in this binary.
+class EnergyManagerRecommendationTest : public EnergyManagerTest
+{
+protected:
+  void SetUp() override
+  {
+    EnergyManagerTest::SetUp();
+    for (const auto& id : { "GAFF", "MMFF94", "UFF", "LJ", "AAAPlugin" })
+      manager->removeModel(id);
+  }
+};
+
+TEST_F(EnergyManagerRecommendationTest, PrefersGAFFOverMMFF94AndUFF)
+{
+  manager->addModel(new MockEnergyCalculator("GAFF", "GAFF"));
+  manager->addModel(new MockEnergyCalculator("MMFF94", "MMFF94"));
+  manager->addModel(new MockEnergyCalculator("UFF", "UFF"));
+
+  Molecule mol;
+  EXPECT_EQ(manager->recommendedModel(mol), "GAFF");
+}
+
+TEST_F(EnergyManagerRecommendationTest, PrefersMMFF94OverUFFWhenNoGAFF)
+{
+  manager->addModel(new MockEnergyCalculator("MMFF94", "MMFF94"));
+  manager->addModel(new MockEnergyCalculator("UFF", "UFF"));
+
+  Molecule mol;
+  EXPECT_EQ(manager->recommendedModel(mol), "MMFF94");
+}
+
+TEST_F(EnergyManagerRecommendationTest, NeverRecommendsPluginModel)
+{
+  // "AAAPlugin" sorts alphabetically before "UFF", so the old
+  // "anything outside the tier list wins" logic would have picked it.
+  manager->addModel(new MockEnergyCalculator("AAAPlugin", "AAA Plugin"));
+  manager->addModel(new MockEnergyCalculator("UFF", "UFF"));
+
+  Molecule mol;
+  EXPECT_EQ(manager->recommendedModel(mol), "UFF");
+}
+
+TEST_F(EnergyManagerRecommendationTest, UnitCellPrefersUFFOverPluginAndLJ)
+{
+  // Only models that accept a unit cell are compatible with this molecule:
+  // LJ, UFF, and a plugin model that (unusually) also claims unit cell
+  // support. UFF should still win over both LJ and the plugin model.
+  manager->addModel(new MockEnergyCalculator("LJ", "LJ", /*unitCell=*/true));
+  manager->addModel(new MockEnergyCalculator("UFF", "UFF", /*unitCell=*/true));
+  manager->addModel(new MockEnergyCalculator("AAAPlugin", "AAA Plugin",
+                                             /*unitCell=*/true));
+
+  Molecule mol;
+  mol.setUnitCell(new UnitCell(10.0, 10.0, 10.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  EXPECT_EQ(manager->recommendedModel(mol), "UFF");
 }
 
 // Integration test
