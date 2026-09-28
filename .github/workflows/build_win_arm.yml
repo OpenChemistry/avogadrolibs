@@ -38,23 +38,8 @@ jobs:
             package: "Avogadro2",
             sentry: false,
           }
-        # Diagnostic build with Sentry crash reporting compiled in. Ships as a
-        # separate installer that installs beside a release install; the
-        # release build above gets no crash reporting.
-        # RelWithDebInfo rather than Release: MSVC Release passes no /Zi, so it
-        # emits no PDBs and every frame would come back as a raw address.
-        - {
-            name: "Windows Qt6 ARM (Sentry)", artifact: "Win-ARM-diagnostic.exe",
-            os: windows-11-arm,
-            cc: "cl", cxx: "cl",
-            build_type: "RelWithDebInfo",
-            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
-            build_flags: "--parallel",
-            package: "Avogadro2-Diagnostic",
-            sentry: true,
-          }
 
-    steps:
+    steps: &build-steps
     - name: Checkout workflow repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -278,3 +263,35 @@ jobs:
       if: failure()
       uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
       timeout-minutes: 60
+
+  # Diagnostic (Sentry) builds skip PRs to save runners: they only run on
+  # pushes, releases and manual dispatches, or on a PR that has been labeled
+  # full-ci. Label a PR full-ci and push to it to include this job; fork push
+  # builds still run it, since a fork push is not a pull_request event here.
+  # The steps are shared with "build" through the &build-steps/*build-steps
+  # YAML anchor, so edit them there, not here.
+  diagnostic:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-ci')
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        # Diagnostic build with Sentry crash reporting compiled in. Ships as a
+        # separate installer that installs beside a release install; the
+        # release build above gets no crash reporting.
+        # RelWithDebInfo rather than Release: MSVC Release passes no /Zi, so it
+        # emits no PDBs and every frame would come back as a raw address.
+        - {
+            name: "Windows Qt6 ARM (Sentry)", artifact: "Win-ARM-diagnostic.exe",
+            os: windows-11-arm,
+            cc: "cl", cxx: "cl",
+            build_type: "RelWithDebInfo",
+            cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
+            build_flags: "--parallel",
+            package: "Avogadro2-Diagnostic",
+            sentry: true,
+          }
+
+    steps: *build-steps
