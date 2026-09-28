@@ -14,6 +14,10 @@ env:
   # CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   # SCCACHE_GHA_ENABLED: "true"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -29,15 +33,8 @@ jobs:
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
           }
-        - {
-            name: "macOS Qt6 Intel", artifact: "macOS-intel",
-            os: macos-15-intel,
-            cc: "clang", cxx: "clang++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
-          }
 
-    steps:
+    steps: &build-steps
     - name: Checkout workflow repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -326,3 +323,27 @@ jobs:
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
       timeout-minutes: 60
+
+  # Intel macOS runs only off PRs: macos-15-intel runners are the slowest
+  # option and macOS runner capacity is scarce and shared org-wide, and
+  # GitHub is retiring Intel macOS images. Label a PR full-ci and push to it
+  # to include this job; fork push builds still run it, since a fork push is
+  # not a pull_request event here. The steps are shared with "build" through
+  # the &build-steps/*build-steps YAML anchor, so edit them there, not here.
+  intel:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-ci')
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "macOS Qt6 Intel", artifact: "macOS-intel",
+            os: macos-15-intel,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
+          }
+
+    steps: *build-steps
