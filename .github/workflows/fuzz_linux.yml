@@ -65,6 +65,14 @@ jobs:
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
 
+        # NOTE (2026-09-28): until this was fixed, the fuzz job ran with no
+        # AddressSanitizer, UBSan or LeakSanitizer on avogadrolibs at all --
+        # only the coverage instrumentation. It was found through the
+        # qtgui/layermanager merge deadlock (run 36483371665): the stack
+        # traces showed libstdc++'s operator new calling glibc's malloc
+        # directly, where an ASan build has its own interceptors. See the
+        # FUZZ_* variables below and the check in "Build fuzz targets".
+        #
         # Hardening flags, on top of the sanitizers. _GLIBCXX_ASSERTIONS is the
         # important one here: Core::Array::operator[] forwards to std::vector,
         # so an index past the end but still inside the allocation is invisible
@@ -72,9 +80,10 @@ jobs:
         # turned on.
         #
         # Note that glibc disables _FORTIFY_SOURCE when __SANITIZE_ADDRESS__ is
-        # defined, so it is a no-op in this job -- it is set anyway so the flag
-        # list stays the one we want everywhere, and starts working if a
-        # non-ASan fuzz configuration is ever added.
+        # defined, and this job builds avogadrolibs with ASan, so it is a
+        # no-op here -- it is set anyway so the flag list stays the one we
+        # want everywhere, and starts working if a non-ASan fuzz
+        # configuration is ever added.
         HARDENING="-D_GLIBCXX_ASSERTIONS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3"
         HARDENING="$HARDENING -fstack-clash-protection -fstack-protector-strong"
 
@@ -89,6 +98,18 @@ jobs:
 
         SAN="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined"
 
+        # Hand the flags to the later steps. The environment variables on the
+        # cmake command below reach only the top-level superbuild project,
+        # NOT the ExternalProjects: avogadrolibs and every other subproject
+        # are configured later, during "Build", where these variables are not
+        # set, and the superbuild does not forward CMAKE_<LANG>_FLAGS to them.
+        # So "Build fuzz targets" passes these to avogadrolibs explicitly.
+        {
+          echo "FUZZ_CFLAGS=$SAN $HARDENING"
+          echo "FUZZ_LDFLAGS=-fsanitize=address,undefined"
+        } >> "$GITHUB_ENV"
+
+        # Harmless, but on its own it instruments nothing of ours (see above).
         CFLAGS="$SAN $HARDENING" \
         CXXFLAGS="$SAN $HARDENING" \
         LDFLAGS="-fsanitize=address,undefined" \
@@ -106,7 +127,12 @@ jobs:
     - name: Build fuzz targets
       run: |
         # ENABLE_FUZZ is not forwarded through the superbuild, so turn it on in
-        # the avogadrolibs build itself.
+        # the avogadrolibs build itself. The same is true of the sanitizer and
+        # hardening flags from "Configure" (see the note there), so they are
+        # passed here explicitly; this is what actually puts ASan and UBSan
+        # on avogadrolibs. The third-party subprojects stay uninstrumented.
+        # Changing the flags forces a full rebuild, as the per-config override
+        # below already did.
         #
         # Asserts are kept alive here, which is the point of overriding the
         # per-config flags. CMake appends CMAKE_CXX_FLAGS_<CONFIG> after
@@ -125,10 +151,36 @@ jobs:
         # mutation soak over all 14 core, 8 io and 5 quantumio targets, run
         # clean with asserts enabled. Only qtgui/rwmolecule tripped one, and
         # that is fixed.
+        : "${FUZZ_CFLAGS:?FUZZ_CFLAGS was not exported by the Configure step}"
         cmake -DENABLE_FUZZ=ON \
           -DCMAKE_C_FLAGS_RELWITHDEBINFO="-O2 -g" \
-          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g" .
+          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g" \
+          -DCMAKE_C_FLAGS="${FUZZ_CFLAGS}" \
+          -DCMAKE_CXX_FLAGS="${FUZZ_CFLAGS}" \
+          -DCMAKE_EXE_LINKER_FLAGS="${FUZZ_LDFLAGS}" \
+          -DCMAKE_SHARED_LINKER_FLAGS="${FUZZ_LDFLAGS}" \
+          -DCMAKE_MODULE_LINKER_FLAGS="${FUZZ_LDFLAGS}" .
         cmake --build .
+
+        # Guard against this silently regressing again: the fuzz job once ran
+        # with no ASan at all. Symbols go through a variable, not a
+        # pipe into grep -q, which would SIGPIPE nm under pipefail.
+        exe=./bin/fuzz_core_molecule
+        lib=$(ls ./lib/libAvogadroCore.so* 2>/dev/null | head -n 1 || true)
+        if [ ! -x "${exe}" ] || [ -z "${lib}" ]; then
+          echo "::error::Cannot find ${exe} or lib/libAvogadroCore.so* to check for ASan"
+          exit 1
+        fi
+        exe_syms=$(nm "${exe}")
+        if ! grep -q ' __asan_init$' <<< "${exe_syms}"; then
+          echo "::error::${exe} has no AddressSanitizer runtime; the sanitizer flags did not reach avogadrolibs"
+          exit 1
+        fi
+        lib_syms=$(nm -D --undefined-only "${lib}")
+        if ! grep -q '__asan_report' <<< "${lib_syms}"; then
+          echo "::error::${lib} is not ASan-instrumented; the sanitizer flags did not reach avogadrolibs"
+          exit 1
+        fi
       shell: bash
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
 
