@@ -247,24 +247,27 @@ TEST(MopacAuxTest, moreCoordinatesThanElementsStaysInBounds)
   EXPECT_EQ(molecule.atomCount(), 1);
 }
 
-TEST(MopacAuxTest, matricesLargerThanTheBasisStayInBounds)
+// A matrix block claiming more values than the basis holds is malformed, so
+// the read fails rather than publishing a partly filled basis.
+TEST(MopacAuxTest, matricesLargerThanTheBasisAreRejected)
 {
-  // One basis function, but the overlap, eigenvector and density blocks
-  // all claim more values than a 1x1 matrix holds.
-  MopacAux reader;
-  Molecule molecule;
-  reader.readString(" ATOM_EL[1]=\n H\n"
-                    " ATOM_X:ANGSTROMS[3]=\n 0.0 0.0 0.0\n"
-                    " AO_ATOMINDEX[2]=\n 1 1\n"
-                    " AO_ZETA[1]=\n 1.0\n"
-                    " OVERLAP_MATRIX[10]=\n # comment\n"
-                    " 1 2 3 4 5 6 7 8 9 10\n"
-                    " EIGENVECTORS[4]=\n 1 2 3 4\n"
-                    " TOTAL_DENSITY_MATRIX[10]=\n # comment\n"
-                    " 1 2 3 4 5 6 7 8 9 10\n",
-                    molecule);
-
-  EXPECT_EQ(molecule.atomCount(), 1);
+  // One basis function, but each block claims more values than a 1x1 matrix
+  // holds.
+  const std::string header = " ATOM_EL[1]=\n H\n"
+                             " ATOM_X:ANGSTROMS[3]=\n 0.0 0.0 0.0\n"
+                             " AO_ATOMINDEX[2]=\n 1 1\n"
+                             " AO_ZETA[1]=\n 1.0\n";
+  const std::string blocks[] = {
+    " OVERLAP_MATRIX[10]=\n # comment\n 1 2 3 4 5 6 7 8 9 10\n",
+    " EIGENVECTORS[4]=\n 1 2 3 4\n",
+    " TOTAL_DENSITY_MATRIX[10]=\n # comment\n 1 2 3 4 5 6 7 8 9 10\n"
+  };
+  for (const auto& block : blocks) {
+    MopacAux reader;
+    Molecule molecule;
+    EXPECT_FALSE(reader.readString(header + block, molecule)) << block;
+    EXPECT_EQ(molecule.atomCount(), 0) << block;
+  }
 }
 
 // Regression test: the array readers looped until they had collected the
@@ -292,4 +295,44 @@ TEST(MopacAuxTest, shortEarlierGeometryIsSkipped)
   ASSERT_EQ(molecule.atomCount(), 2);
   EXPECT_EQ(molecule.coordinate3dCount(), 1);
   EXPECT_DOUBLE_EQ(molecule.atomPosition3d(1).z(), 0.74);
+}
+
+// Regression test: a file ending mid-way through a coordinate block left the
+// unread components zero-filled, so the last atom sat at a made-up position.
+TEST(MopacAuxTest, truncatedCoordinatesKeepOnlyWholeAtoms)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(
+    " ATOM_EL[2]=\n H H\n ATOM_X:ANGSTROMS[6]=\n 1.0 2.0 3.0 4.0", molecule);
+
+  ASSERT_EQ(molecule.atomCount(), 1);
+  EXPECT_DOUBLE_EQ(molecule.atomPosition3d(0).z(), 3.0);
+}
+
+// Regression test: vibrations were keyed to a geometry's position in the file,
+// so skipping a short earlier geometry left them on a conformer index that no
+// longer matched (here, one that did not exist at all).
+TEST(MopacAuxTest, vibrationsFollowSkippedGeometries)
+{
+  MopacAux reader;
+  Molecule molecule;
+  ASSERT_TRUE(reader.readString(
+    " ATOM_X:ANGSTROMS[3]=\n 0.0 0.0 0.0\n" + twoAtomAux(), molecule));
+
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.coordinate3dCount(), 1);
+  EXPECT_EQ(molecule.vibrationFrequencies(0).size(), 6u);
+  EXPECT_EQ(molecule.vibrationFrequencies(1).size(), 0u);
+}
+
+// Regression test: a negative count became a huge unsigned one in the array
+// readers, and readArrayVec() tried to allocate that many vectors.
+TEST(MopacAuxTest, negativeCountIsRejected)
+{
+  MopacAux reader;
+  Molecule molecule;
+  EXPECT_FALSE(reader.readString(
+    " ATOM_EL[1]=\n H\n ATOM_X:ANGSTROMS[-3]=\n 0.0 0.0 0.0\n", molecule));
+  EXPECT_EQ(molecule.atomCount(), 0);
 }
