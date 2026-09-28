@@ -17,6 +17,8 @@
 #include <sstream>
 #include <string>
 
+using Avogadro::ANGSTROM_TO_BOHR_D;
+using Avogadro::BOHR_TO_ANGSTROM_D;
 using Avogadro::Core::Cube;
 using Avogadro::Core::GaussianSetTools;
 using Avogadro::Core::Molecule;
@@ -29,8 +31,6 @@ using std::string;
 
 using Eigen::Vector3d;
 using Eigen::Vector3i;
-static const double BOHR_TO_ANGSTROM = 0.529177249;
-static const double ANGSTROM_TO_BOHR = 1.0 / BOHR_TO_ANGSTROM;
 
 void printHelp();
 
@@ -109,10 +109,10 @@ int main(int argc, char* argv[])
   Vector3i points = Vector3i(61, 61, 61);
 
   Cube* m_qube = new Cube;
-  m_qube->setLimits(min * BOHR_TO_ANGSTROM, max * BOHR_TO_ANGSTROM, points);
+  m_qube->setLimits(min * BOHR_TO_ANGSTROM_D, max * BOHR_TO_ANGSTROM_D, points);
 
-  min = m_qube->position(0) * ANGSTROM_TO_BOHR;
-  Vector3d spacing = m_qube->spacing() * ANGSTROM_TO_BOHR;
+  min = m_qube->position(0) * ANGSTROM_TO_BOHR_D;
+  Vector3d spacing = m_qube->spacing() * ANGSTROM_TO_BOHR_D;
   int nat = mol.atomCount();
   printf("%4d %11.6f %11.6f %11.6f\n", nat, min.x(), min.y(), min.z());
   printf("%4d %11.6f %11.6f %11.6f\n", points.x(), spacing.x(), 0.0, 0.0);
@@ -122,9 +122,9 @@ int main(int argc, char* argv[])
   // atoms
   for (int iatom = 0; iatom < nat; iatom++) {
     printf("%4d %11.6f %11.6f %11.6f %11.6f\n", mol.atomicNumber(iatom), 0.0,
-           mol.atomPosition3d(iatom).x() * ANGSTROM_TO_BOHR,
-           mol.atomPosition3d(iatom).y() * ANGSTROM_TO_BOHR,
-           mol.atomPosition3d(iatom).z() * ANGSTROM_TO_BOHR);
+           mol.atomPosition3d(iatom).x() * ANGSTROM_TO_BOHR_D,
+           mol.atomPosition3d(iatom).y() * ANGSTROM_TO_BOHR_D,
+           mol.atomPosition3d(iatom).z() * ANGSTROM_TO_BOHR_D);
   }
   if (orbitalNumber > 0)
     cout << "1  " << orbitalNumber << endl;
