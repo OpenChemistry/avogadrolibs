@@ -5,8 +5,7 @@
 
 #include "compression.h"
 
-#include <algorithm>
-#include <cctype>
+#include <avogadro/core/utilities.h>
 
 #ifdef AVO_USE_LIBARCHIVE
 #include <archive.h>
@@ -45,20 +44,11 @@ bool probeCodec(int (*readFilter)(struct archive*),
 }
 #endif
 
-std::string toLower(const std::string& value)
-{
-  std::string result(value);
-  std::transform(
-    result.begin(), result.end(), result.begin(),
-    [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
-  return result;
-}
-
 } // namespace
 
 Compression compressionFromExtension(const std::string& extension)
 {
-  std::string ext = toLower(extension);
+  std::string ext = Core::toLower(extension);
   if (ext == "gz")
     return Compression::Gzip;
   if (ext == "bz2")

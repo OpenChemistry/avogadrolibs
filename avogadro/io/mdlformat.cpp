@@ -14,7 +14,6 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <cctype>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -32,6 +31,7 @@ using Avogadro::Core::endsWith;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
+using Avogadro::Core::toLower;
 using Avogadro::Core::trimmed;
 
 using std::getline;
@@ -477,10 +477,8 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
   // that data("energies") can drive the conformer energy plot. The first entry
   // corresponds to coordinate set 0 (this initial block).
   std::vector<double> energies;
-  auto isEnergyTag = [](std::string name) {
-    for (auto& c : name)
-      c = static_cast<char>(::tolower(static_cast<unsigned char>(c)));
-    return name == "energy";
+  auto isEnergyTag = [](const std::string& name) {
+    return toLower(name) == "energy";
   };
 
   // Now parse the data block.

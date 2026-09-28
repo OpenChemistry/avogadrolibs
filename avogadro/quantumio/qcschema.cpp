@@ -85,13 +85,6 @@ bool isThermochemistry(const std::string& key)
          key == "zero_point_energy";
 }
 
-std::string toLower(std::string text)
-{
-  std::transform(text.begin(), text.end(), text.begin(),
-                 [](unsigned char c) { return std::tolower(c); });
-  return text;
-}
-
 /**
  * WebMO writes the electronic energy under a key named for the method it ran
  * -- "uhf_energy", "pm6_energy", "rb3lyp_energy" -- rather than the
@@ -106,7 +99,7 @@ json findMethodEnergy(const json& properties)
   std::string method;
   const auto name = properties.find("method_energy_name");
   if (name != properties.end() && name->is_string())
-    method = toLower(name->get<std::string>()) + "_energy";
+    method = Core::toLower(name->get<std::string>()) + "_energy";
 
   json fallback;
   for (const auto& item : properties.items()) {
@@ -117,7 +110,7 @@ json findMethodEnergy(const json& properties)
         item.value().find("value") == item.value().end())
       continue;
 
-    if (!method.empty() && toLower(key) == method)
+    if (!method.empty() && Core::toLower(key) == method)
       return item.value();
     if (fallback.is_null())
       fallback = item.value();

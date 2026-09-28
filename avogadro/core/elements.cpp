@@ -9,7 +9,6 @@
 #include "elementdata.h"
 #include "utilities.h"
 
-#include <algorithm>
 #include <cctype>
 #include <vector>
 
@@ -184,7 +183,7 @@ unsigned char Elements::guessAtomicNumber(const std::string& inputStr)
     return static_cast<unsigned char>(atomicNumberInt);
 
   // Format string as text
-  std::transform(str.begin(), str.end(), str.begin(), tolower);
+  str = toLower(str);
   str[0] = static_cast<char>(toupper(static_cast<int>(str[0])));
 
   int length = str.size();
