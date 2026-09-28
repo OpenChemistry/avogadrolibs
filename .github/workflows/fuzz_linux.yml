@@ -215,11 +215,16 @@ jobs:
         # if the watchdog fired.
         #
         # libFuzzer's -timeout only covers a single unit. Since 2026-09-28 the
-        # -merge of qtgui/layermanager has hung with no unit running (process
-        # exit, LeakSanitizer or a static destructor, or the alarm landing on
-        # a thread that is not fuzzing), and -timeout never fired -- the job
-        # sat until the 90 minute limit killed it. So when the limit is hit,
-        # dump every thread's stack from each fuzz process *first*, while the
+        # -merge of qtgui/layermanager has hung and -timeout never fired -- the
+        # job sat until the 90 minute limit killed it. The stack traces this
+        # watchdog captured (run 36483371665) show why: the merge's inner
+        # process crashed inside glibc malloc, with the heap already corrupted.
+        # The sanitizer's deadly-signal handler then called pthread_getattr_np
+        # -> getline -> realloc and deadlocked on the malloc arena lock the
+        # crashed thread still held. libFuzzer's alarm handler allocates too
+        # (DumpCurrentUnit -> fwrite -> malloc) and deadlocked on the same
+        # lock, so -timeout could never end it. When the limit is hit, dump
+        # every thread's stack from each fuzz process *first*, while the
         # evidence still exists, and only then kill the tree.
         #
         # The command runs in the background of this shell and this shell polls
@@ -227,6 +232,9 @@ jobs:
         # The command may be a shell function, which is how the fuzz pipeline
         # into tee is passed in; `wait` returns the pipeline's status, so
         # pipefail semantics are unchanged.
+        #
+        # Callers must use `run_with_watchdog ... || rc=$?`: this step runs
+        # under `bash -e` (see the call sites).
         run_with_watchdog() {
           local limit="$1" label="$2"
           shift 2
@@ -254,7 +262,7 @@ jobs:
               for p in ${pids}; do kill -TERM "${p}" 2>/dev/null || true; done
               sleep 5
               for p in ${pids}; do kill -KILL "${p}" 2>/dev/null || true; done
-              wait "${pid}" 2>/dev/null
+              wait "${pid}" 2>/dev/null || true
               return 124
             fi
             sleep 1
@@ -326,8 +334,17 @@ jobs:
             }
             # The limit is twice the fuzzing time plus slack, because
             # -max_total_time does not bound the initial replay of the corpus.
-            run_with_watchdog $(( FUZZ_SECONDS * 2 + 300 )) "fuzzing ${name}" fuzz_pass
-            fuzz_rc=$?
+            #
+            # GitHub runs `shell: bash` steps as `bash --noprofile --norc -eo
+            # pipefail {0}`, so this step runs under errexit even though the
+            # `set` above does not say -e. A bare `run_with_watchdog ...`
+            # followed by `rc=$?` would abort the whole script on the first
+            # failing target (or on the SIGTERM status of a killed hung one,
+            # as in run 36483371665) instead of recording it. That is why the
+            # calls use `|| rc=$?`: a function on the left of `||` runs with
+            # errexit suppressed, and the status is still captured.
+            fuzz_rc=0
+            run_with_watchdog $(( FUZZ_SECONDS * 2 + 300 )) "fuzzing ${name}" fuzz_pass || fuzz_rc=$?
             if [ "${fuzz_rc}" -eq 0 ]; then
               result="pass"
             elif is_known_issue "${name}"; then
@@ -367,8 +384,8 @@ jobs:
             # ten). One that runs 300s is hung, not slow. A hang comes from
             # the cached corpus, not from the change under test, so it resets
             # the corpus like a failed merge but does not fail the job.
-            run_with_watchdog 300 "corpus merge ${name}" merge_corpus
-            merge_rc=$?
+            merge_rc=0
+            run_with_watchdog 300 "corpus merge ${name}" merge_corpus || merge_rc=$?
             if [ "${merge_rc}" -eq 0 ] && [ -n "$(ls -A "${merged_dir}")" ]; then
               rm -rf "${corpus_dir}"
               mv "${merged_dir}" "${corpus_dir}"
