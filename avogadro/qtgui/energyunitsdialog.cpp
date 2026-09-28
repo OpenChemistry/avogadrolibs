@@ -15,36 +15,6 @@
 
 namespace Avogadro::QtGui {
 
-namespace {
-
-// The unit itself rides along in the item data, so the combo's order and the
-// enum's need not agree.
-void fillUnitCombo(QComboBox* combo, EnergyUnits::Unit current)
-{
-  for (EnergyUnits::Unit unit : EnergyUnits::units()) {
-    combo->addItem(EnergyUnits::symbol(unit), static_cast<int>(unit));
-    if (unit == current)
-      combo->setCurrentIndex(combo->count() - 1);
-  }
-}
-
-EnergyUnits::Unit unitFromCombo(const QComboBox* combo,
-                                EnergyUnits::Unit fallback)
-{
-  bool ok = false;
-  const int value = combo->currentData().toInt(&ok);
-  if (!ok)
-    return fallback;
-
-  for (EnergyUnits::Unit unit : EnergyUnits::units()) {
-    if (static_cast<int>(unit) == value)
-      return unit;
-  }
-  return fallback;
-}
-
-} // namespace
-
 EnergyUnitsDialog::EnergyUnitsDialog(QWidget* parent,
                                      const Core::Molecule* molecule)
   : QDialog(parent), m_sourceCombo(new QComboBox(this)),
@@ -55,10 +25,10 @@ EnergyUnitsDialog::EnergyUnitsDialog(QWidget* parent,
   setWindowTitle(tr("Convert Energy Units"));
 
   auto* units = EnergyUnits::instance();
-  fillUnitCombo(m_sourceCombo, molecule != nullptr
-                                 ? units->sourceUnit(*molecule)
-                                 : units->sourceUnit());
-  fillUnitCombo(m_displayCombo, units->displayUnit());
+  EnergyUnits::fillCombo(m_sourceCombo, molecule != nullptr
+                                          ? units->sourceUnit(*molecule)
+                                          : units->sourceUnit());
+  EnergyUnits::fillCombo(m_displayCombo, units->displayUnit());
   // Nothing to choose where the file already said: show it, and leave open
   // only the question that still is.
   m_sourceCombo->setEnabled(!m_sourceDeclared);
@@ -106,10 +76,11 @@ void EnergyUnitsDialog::accept()
   // energy once rather than twice. A source the file declared is left alone:
   // it belongs to this molecule, and is not the user's answer for every file
   // they open next.
-  units->setUnits(m_sourceDeclared
-                    ? units->sourceUnit()
-                    : unitFromCombo(m_sourceCombo, units->sourceUnit()),
-                  unitFromCombo(m_displayCombo, units->displayUnit()));
+  units->setUnits(
+    m_sourceDeclared
+      ? units->sourceUnit()
+      : EnergyUnits::unitFromCombo(m_sourceCombo, units->sourceUnit()),
+    EnergyUnits::unitFromCombo(m_displayCombo, units->displayUnit()));
 
   QDialog::accept();
 }
