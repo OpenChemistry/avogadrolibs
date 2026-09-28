@@ -5,6 +5,7 @@
 
 #include "noncovalent.h"
 
+#include <avogadro/core/angletools.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/atom.h>
 #include <avogadro/core/atomutilities.h>
@@ -193,9 +194,10 @@ static bool checkAtomPairNotBonded(const Molecule& molecule, Index i, Index n)
   });
 }
 
-static float computeAngle(Vector3 a, Vector3 b)
+static float computeAngle(const Vector3& a, const Vector3& b)
 {
-  return acos(a.normalized().dot(b.normalized()));
+  // bondAngle() negates its first vector and returns degrees
+  return static_cast<float>(bondAngle(-a, b) * DEG_TO_RAD);
 }
 
 static bool checkHoleVector(const Molecule& molecule, Index i,

@@ -5,6 +5,7 @@
 
 #include "aligntool.h"
 
+#include <avogadro/core/angletools.h>
 #include <avogadro/core/contrastcolor.h>
 #include <avogadro/core/vector.h>
 
@@ -180,7 +181,7 @@ void AlignTool::alignAtomToAxis(Index atomIndex, int axis)
     axisVector = Vector3(0., 0., 1.);
 
   // Calculate the angle of the atom from the axis
-  double angle = acos(axisVector.dot(pos));
+  double angle = bondAngle(-axisVector, pos) * DEG_TO_RAD;
 
   // Get the vector for the rotation
   axisVector = axisVector.cross(pos);
