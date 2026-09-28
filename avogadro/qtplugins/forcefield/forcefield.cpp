@@ -675,7 +675,8 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
   // Check convergence criteria
   bool done = converged;
   if (!done && gradient.size() > 0) {
-    if (fabs(gradient.maxCoeff()) < m_gradientTolerance)
+    // largest component magnitude, |g|_inf -- same test as energyoptimizer
+    if (gradient.cwiseAbs().maxCoeff() < m_gradientTolerance)
       done = true;
     if (m_lastEnergy != 0.0 && fabs(energy - m_lastEnergy) < m_tolerance)
       done = true;
