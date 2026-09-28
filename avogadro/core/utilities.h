@@ -109,6 +109,21 @@ inline bool endsWith(std::string const& input, std::string const& ending)
 }
 
 /**
+ * @brief Lower-case the ASCII letters A-Z in @p input.
+ *
+ * Deliberately independent of the C locale, since it is used on file
+ * contents: every other byte, including UTF-8 sequences, is left unchanged.
+ */
+inline std::string toLower(std::string input)
+{
+  for (auto& c : input) {
+    if (c >= 'A' && c <= 'Z')
+      c = static_cast<char>(c - 'A' + 'a');
+  }
+  return input;
+}
+
+/**
  * @brief Trim a string of whitespace from the left and right.
  */
 inline std::string trimmed(const std::string& input)

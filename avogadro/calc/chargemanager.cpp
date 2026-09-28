@@ -7,16 +7,11 @@
 #include "chargemodel.h"
 #include "defaultmodel.h"
 
+#include <avogadro/core/utilities.h>
+
 namespace Avogadro::Calc {
 
-// Helper function to convert a string to lowercase
-// to register all lower-case identifiers
-std::string toLower(const std::string& str)
-{
-  std::string result = str;
-  std::transform(result.begin(), result.end(), result.begin(), ::tolower);
-  return result;
-}
+using Core::toLower;
 
 ChargeManager& ChargeManager::instance()
 {

@@ -174,7 +174,7 @@ void MoldenFile::processLine(std::istream& in)
           if (list.size() < 2)
             break;
           shell = list[0];
-          std::transform(shell.begin(), shell.end(), shell.begin(), tolower);
+          shell = Core::toLower(shell);
           shellType = GaussianSet::UU;
           if (shell == "sp")
             shellType = GaussianSet::SP;

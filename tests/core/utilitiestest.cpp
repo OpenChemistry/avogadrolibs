@@ -13,6 +13,7 @@ using Avogadro::Core::contains;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::split;
 using Avogadro::Core::startsWith;
+using Avogadro::Core::toLower;
 using Avogadro::Core::trimmed;
 using std::string;
 
@@ -144,4 +145,15 @@ TEST(UtilitiesTest, startsWith)
   EXPECT_TRUE(startsWith("hasFoo", "has"));
   EXPECT_FALSE(startsWith("hasFoo", "Foo"));
   EXPECT_FALSE(startsWith("hasFoo", "bar"));
+}
+
+TEST(UtilitiesTest, toLower)
+{
+  EXPECT_EQ(toLower("AbC xYz"), "abc xyz");
+  EXPECT_EQ(toLower(""), "");
+  // Digits and punctuation are unaffected.
+  EXPECT_EQ(toLower("H2O-1.5"), "h2o-1.5");
+  // Bytes above 127, including UTF-8 sequences, are left alone: only ASCII
+  // 'T' lower-cases, the two-byte 'É' (0xC3 0x89) passes through untouched.
+  EXPECT_EQ(toLower("\xC3\x89T"), "\xC3\x89t");
 }

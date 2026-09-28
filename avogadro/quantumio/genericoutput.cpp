@@ -5,6 +5,7 @@
 
 #include "genericoutput.h"
 
+#include <avogadro/core/utilities.h>
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/io/xyzformat.h>
@@ -14,21 +15,14 @@
 #include "nwchemlog.h"
 #include "orca.h"
 
-#include <algorithm>
-#include <cctype>
 #include <sstream>
 
 namespace Avogadro::QuantumIO {
 
 namespace {
 
+using Core::startsWith;
 using Io::FileFormat;
-
-bool startsWith(const std::string& text, const std::string& prefix)
-{
-  return text.size() >= prefix.size() &&
-         text.compare(0, prefix.size(), prefix) == 0;
-}
 
 /**
  * The lower-cased extension of @a fileName, without the dot, or an empty
@@ -51,12 +45,7 @@ std::string lowerExtension(const std::string& fileName)
   if (dot == std::string::npos || dot < start || dot + 1 >= fileName.size())
     return std::string();
 
-  std::string extension = fileName.substr(dot + 1);
-  std::transform(extension.begin(), extension.end(), extension.begin(),
-                 [](unsigned char character) {
-                   return static_cast<char>(std::tolower(character));
-                 });
-  return extension;
+  return Core::toLower(fileName.substr(dot + 1));
 }
 
 } // namespace
