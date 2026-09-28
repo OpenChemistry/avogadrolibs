@@ -5,6 +5,7 @@
 
 #include "genericoutput.h"
 
+#include <avogadro/core/utilities.h>
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/io/xyzformat.h>
@@ -93,7 +94,7 @@ bool GenericOutput::read(std::istream& in, Core::Molecule& molecule)
   std::string detected;
 
   std::string line;
-  while (std::getline(in, line)) {
+  while (Core::getLine(in, line)) {
     if (line.find("Northwest Computational Chemistry Package") !=
         std::string::npos) {
       // NWChem
