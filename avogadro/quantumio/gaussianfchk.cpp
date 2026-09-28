@@ -53,9 +53,6 @@ bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
 }
 } // namespace
 
-// https://physics.nist.gov/cgi-bin/cuu/Value?hrev
-const double hartreeToEV = 27.211386245981;
-
 GaussianFchk::GaussianFchk() : m_scftype(Rhf) {}
 
 GaussianFchk::~GaussianFchk() {}
@@ -222,10 +219,10 @@ void GaussianFchk::processLine(std::istream& in)
              list.size() > 2) {
     if (m_scftype == Rhf) {
       m_orbitalEnergy = readArrayD(
-        in, Core::lexicalCast<int>(list[2]).value_or(0), 16, hartreeToEV);
+        in, Core::lexicalCast<int>(list[2]).value_or(0), 16, HARTREE_TO_EV_D);
     } else if (m_scftype == Uhf) {
       m_alphaOrbitalEnergy = readArrayD(
-        in, Core::lexicalCast<int>(list[2]).value_or(0), 16, hartreeToEV);
+        in, Core::lexicalCast<int>(list[2]).value_or(0), 16, HARTREE_TO_EV_D);
     }
   } else if (key == "Beta Orbital Energies" && list.size() > 2) {
     if (m_scftype != Uhf) {
@@ -238,7 +235,7 @@ void GaussianFchk::processLine(std::istream& in)
     }
 
     m_betaOrbitalEnergy = readArrayD(
-      in, Core::lexicalCast<int>(list[2]).value_or(0), 16, hartreeToEV);
+      in, Core::lexicalCast<int>(list[2]).value_or(0), 16, HARTREE_TO_EV_D);
   } else if ((key == "Alpha MO coefficients" || key == "MO coefficients (C)") &&
              list.size() > 2) {
     if (m_scftype == Rhf) {

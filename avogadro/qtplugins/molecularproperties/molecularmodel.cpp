@@ -21,10 +21,6 @@ using Avogadro::Core::GaussianSet;
 using Avogadro::QtGui::Molecule;
 using QtGui::Molecule;
 
-// CODATA 2022
-// https://physics.nist.gov/cgi-bin/cuu/Value?hrev
-#define AU_TO_EV 27.211386245981
-
 MolecularModel::MolecularModel(QObject* parent)
   : QAbstractTableModel(parent), m_molecule(nullptr)
 {
@@ -354,16 +350,19 @@ void MolecularModel::updateTable(unsigned int flags)
     unsigned int lumo = gaussianSet->lumo();
     const auto moEnergies = gaussianSet->moEnergy();
     if (moEnergies.size() > homo) {
-      m_propertiesCache.setValue("homoEnergy", moEnergies[homo] * AU_TO_EV);
+      m_propertiesCache.setValue("homoEnergy",
+                                 moEnergies[homo] * HARTREE_TO_EV_D);
     }
     // look for the lumo if there's a degenerate HOMO
-    const double threshold = 0.01 / AU_TO_EV; // 0.01 eV minimal separation
+    // 0.01 eV minimal separation
+    const double threshold = 0.01 / HARTREE_TO_EV_D;
     while (moEnergies.size() > lumo &&
            std::abs(moEnergies[lumo] - moEnergies[homo]) < threshold) {
       lumo += 1;
     }
     if (moEnergies.size() > lumo)
-      m_propertiesCache.setValue("lumoEnergy", moEnergies[lumo] * AU_TO_EV);
+      m_propertiesCache.setValue("lumoEnergy",
+                                 moEnergies[lumo] * HARTREE_TO_EV_D);
   }
   // m_propertiesCache.setValue("somoEnergy", energy);
 
