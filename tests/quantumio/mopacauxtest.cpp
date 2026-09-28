@@ -208,3 +208,88 @@ TEST(MopacAuxTest, energyUnitIsWhatWasStoredNotWhatWasPrinted)
   ASSERT_TRUE(molecule.hasData("energies"));
   EXPECT_EQ(Avogadro::Core::energyUnit(molecule), "kJ/mol");
 }
+
+// Regression tests: the array and matrix readers trusted the counts in the
+// file headers. A coordinate count that was not a multiple of three, a line
+// holding more values than remained, or a matrix larger than the basis wrote
+// past the end of the destination. Run under ASan to see the overflows.
+TEST(MopacAuxTest, coordinateCountNotAMultipleOfThreeStaysInBounds)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[1]=\n H\n"
+                    " ATOM_X:ANGSTROMS[4]=\n 0.5 0.6 0.7 9.0 9.0 9.0 9.0\n",
+                    molecule);
+
+  ASSERT_EQ(molecule.atomCount(), 1);
+  EXPECT_DOUBLE_EQ(molecule.atomPosition3d(0).x(), 0.5);
+  EXPECT_DOUBLE_EQ(molecule.atomPosition3d(0).z(), 0.7);
+}
+
+TEST(MopacAuxTest, fewerThanThreeCoordinatesReadsNoAtoms)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[1]=\n H\n ATOM_X:ANGSTROMS[2]=\n 1.0 2.0\n",
+                    molecule);
+
+  EXPECT_EQ(molecule.atomCount(), 0);
+}
+
+TEST(MopacAuxTest, moreCoordinatesThanElementsStaysInBounds)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[1]=\n H\n"
+                    " ATOM_X:ANGSTROMS[6]=\n 0.0 0.0 0.0 0.0 0.0 0.74\n",
+                    molecule);
+
+  EXPECT_EQ(molecule.atomCount(), 1);
+}
+
+TEST(MopacAuxTest, matricesLargerThanTheBasisStayInBounds)
+{
+  // One basis function, but the overlap, eigenvector and density blocks
+  // all claim more values than a 1x1 matrix holds.
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[1]=\n H\n"
+                    " ATOM_X:ANGSTROMS[3]=\n 0.0 0.0 0.0\n"
+                    " AO_ATOMINDEX[2]=\n 1 1\n"
+                    " AO_ZETA[1]=\n 1.0\n"
+                    " OVERLAP_MATRIX[10]=\n # comment\n"
+                    " 1 2 3 4 5 6 7 8 9 10\n"
+                    " EIGENVECTORS[4]=\n 1 2 3 4\n"
+                    " TOTAL_DENSITY_MATRIX[10]=\n # comment\n"
+                    " 1 2 3 4 5 6 7 8 9 10\n",
+                    molecule);
+
+  EXPECT_EQ(molecule.atomCount(), 1);
+}
+
+// Regression test: the array readers looped until they had collected the
+// promised number of values without checking the stream, so a file that
+// ended early never returned.
+TEST(MopacAuxTest, truncatedArrayTerminates)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[2]=\n H\n ATOM_X:ANGSTROMS[6]=\n 0.0 0.0 0.0",
+                    molecule);
+
+  EXPECT_LE(molecule.atomCount(), 1);
+}
+
+TEST(MopacAuxTest, shortEarlierGeometryIsSkipped)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[2]=\n H H\n"
+                    " ATOM_X:ANGSTROMS[3]=\n 0.0 0.0 0.0\n"
+                    " ATOM_X_OPT:ANGSTROMS[6]=\n 0.0 0.0 0.0 0.0 0.0 0.74\n",
+                    molecule);
+
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.coordinate3dCount(), 1);
+  EXPECT_DOUBLE_EQ(molecule.atomPosition3d(1).z(), 0.74);
+}
