@@ -342,10 +342,7 @@ void Forcefield::handleListForceFieldsCommand()
       methods.push_back(entry);
     }
 
-    // Keep in sync with Forcefield::recommendedForceField(): this must
-    // report exactly the method that an "optimize"/"energy"/"forces" command
-    // with no "method" would run under autodetect, not
-    // EnergyManager::recommendedModel(), which ranks methods differently.
+    // The same ranking autodetect uses in setupMethod().
     recommended = QString::fromStdString(
       Calc::EnergyManager::instance().recommendedModel(*m_molecule));
 
@@ -456,8 +453,9 @@ void Forcefield::handleOptimizeCommand(const QVariantMap& options)
   if (options.contains("gradientTolerance")) {
     bool ok = false;
     const double tolerance = options.value("gradientTolerance").toDouble(&ok);
-    if (!ok || tolerance < 0.0) {
-      emit commandFailed(tr("\"gradientTolerance\" must not be negative."));
+    if (!ok || !std::isfinite(tolerance) || tolerance < 0.0) {
+      emit commandFailed(
+        tr("\"gradientTolerance\" must be a finite, non-negative number."));
       return;
     }
     runOptions.gradientTolerance = tolerance;
@@ -465,8 +463,9 @@ void Forcefield::handleOptimizeCommand(const QVariantMap& options)
   if (options.contains("energyTolerance")) {
     bool ok = false;
     const double tolerance = options.value("energyTolerance").toDouble(&ok);
-    if (!ok || tolerance < 0.0) {
-      emit commandFailed(tr("\"energyTolerance\" must not be negative."));
+    if (!ok || !std::isfinite(tolerance) || tolerance < 0.0) {
+      emit commandFailed(
+        tr("\"energyTolerance\" must be a finite, non-negative number."));
       return;
     }
     runOptions.tolerance = tolerance;
@@ -1238,6 +1237,18 @@ void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
 
   auto n = m_molecule->atomCount();
 
+  // Reject an unusable result before it reaches the displayed force vectors
+  // or the caller.
+  if (pending == PendingCommand::Forces &&
+      (!std::isfinite(energy) || !gradient.allFinite() ||
+       gradient.size() != 3 * static_cast<Eigen::Index>(n))) {
+    m_pendingCommand = PendingCommand::None;
+    cleanupWorker();
+    emit commandFailed(tr("%1 returned a non-finite or incomplete result.")
+                         .arg(QString::fromStdString(methodId)));
+    return;
+  }
+
   Core::Array<Vector3> forces(n);
   if (n > 0 && gradient.size() == 3 * static_cast<Eigen::Index>(n))
     Eigen::Map<Eigen::VectorXd>(forces[0].data(), 3 * n) = -gradient;
@@ -1258,12 +1269,6 @@ void Forcefield::onForcesDone(Eigen::VectorXd gradient, double energy)
     tr("%1 Force Norm = %L2").arg(methodId.c_str()).arg(gradient.norm()));
 
   if (pending == PendingCommand::Forces) {
-    if (!std::isfinite(energy)) {
-      emit commandFailed(tr("%1 returned a non-finite energy.")
-                           .arg(QString::fromStdString(methodId)));
-      return;
-    }
-
     // cleanGradients() zeroes the components of frozen atoms/axes, and also
     // silently zeroes any non-finite component -- so a zero force here means
     // "frozen, or balanced, or the model produced a NaN", not necessarily
