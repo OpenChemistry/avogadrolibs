@@ -49,7 +49,7 @@ public:
   }
 
 private:
-  void processLine(std::istream& in);
+  bool processLine(std::istream& in);
   void load(Core::SlaterSet* basis);
   std::vector<int> readArrayElements(std::istream& in, unsigned int n);
   std::vector<int> readArrayI(std::istream& in, unsigned int n);

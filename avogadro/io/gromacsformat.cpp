@@ -187,38 +187,39 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   // v1(x) v2(y) v3(z) [v1(y) v1(z) v2(x) v2(z) v3(x) v3(y)]
   // The last six values may be omitted, set all non-specified values to 0.
   // v1(y) == v1(z) == v2(z) == 0 always.
-  Core::getLine(in, buffer);
-  std::vector<string> tokens(split(buffer, ' ', true));
-  if (tokens.size() > 0) {
-    if (tokens.size() != 3 && tokens.size() != 9) {
-      appendError("Invalid box specification -- need either 3 or 9 values: '" +
-                  buffer + "'");
-      return false;
-    }
-
-    // Index arrays for parsing loop:
-    const int rows[] = { 0, 1, 2, 1, 2, 0, 2, 0, 1 };
-    const int cols[] = { 0, 1, 2, 0, 0, 1, 1, 2, 2 };
-
-    Matrix3 cellMatrix = Matrix3::Zero();
-    for (size_t i = 0; i < tokens.size(); ++i) {
-      cellMatrix(rows[i], cols[i]) = lexicalCast<Real>(tokens[i], ok);
-      if (!ok || tokens[i].empty()) {
-        appendError("Invalid box specification -- bad value: '" + tokens[i] +
-                    "'");
-        return false;
-      }
-    }
-
-    auto* cell = new UnitCell;
-    cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
-    if (!cell->isRegular()) {
-      appendError("box vectors are not linear independent");
-      delete cell;
-      return false;
-    }
-    molecule.setUnitCell(cell);
+  if (!Core::getLine(in, buffer)) {
+    appendError("Missing box specification.");
+    return false;
   }
+  std::vector<string> tokens(split(buffer, ' ', true));
+  if (tokens.size() != 3 && tokens.size() != 9) {
+    appendError("Invalid box specification -- need either 3 or 9 values: '" +
+                buffer + "'");
+    return false;
+  }
+
+  // Index arrays for parsing loop:
+  const int rows[] = { 0, 1, 2, 1, 2, 0, 2, 0, 1 };
+  const int cols[] = { 0, 1, 2, 0, 0, 1, 1, 2, 2 };
+
+  Matrix3 cellMatrix = Matrix3::Zero();
+  for (size_t i = 0; i < tokens.size(); ++i) {
+    cellMatrix(rows[i], cols[i]) = lexicalCast<Real>(tokens[i], ok);
+    if (!ok || tokens[i].empty()) {
+      appendError("Invalid box specification -- bad value: '" + tokens[i] +
+                  "'");
+      return false;
+    }
+  }
+
+  auto* cell = new UnitCell;
+  cell->setCellMatrix(cellMatrix * static_cast<Real>(10)); // nm --> Angstrom
+  if (!cell->isRegular()) {
+    appendError("box vectors are not linear independent");
+    delete cell;
+    return false;
+  }
+  molecule.setUnitCell(cell);
 
   return true;
 }

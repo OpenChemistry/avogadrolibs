@@ -90,6 +90,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     std::vector<string> box_bounds_x(split(buffer, ' '));
+    if (box_bounds_x.size() < 3) {
+      appendError("Invalid box bounds: " + buffer);
+      return false;
+    }
     x_min = lexicalCast<double>(box_bounds_x.at(0)).value_or(0.0);
     x_max = lexicalCast<double>(box_bounds_x.at(1)).value_or(0.0);
     tilt_xy = lexicalCast<double>(box_bounds_x.at(2)).value_or(0.0);
@@ -99,6 +103,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     std::vector<string> box_bounds_y(split(buffer, ' '));
+    if (box_bounds_y.size() < 3) {
+      appendError("Invalid box bounds: " + buffer);
+      return false;
+    }
     y_min = lexicalCast<double>(box_bounds_y.at(0)).value_or(0.0);
     y_max = lexicalCast<double>(box_bounds_y.at(1)).value_or(0.0);
     tilt_xz = lexicalCast<double>(box_bounds_y.at(2)).value_or(0.0);
@@ -108,6 +116,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
     // Read z_min, z_max, tiltfactor_yz
     std::vector<string> box_bounds_z(split(buffer, ' '));
+    if (box_bounds_z.size() < 3) {
+      appendError("Invalid box bounds: " + buffer);
+      return false;
+    }
     z_min = lexicalCast<double>(box_bounds_z.at(0)).value_or(0.0);
     z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
     tilt_yz = lexicalCast<double>(box_bounds_z.at(2)).value_or(0.0);
@@ -126,6 +138,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     std::vector<string> box_bounds_x(split(buffer, ' '));
+    if (box_bounds_x.size() < 2) {
+      appendError("Invalid box bounds: " + buffer);
+      return false;
+    }
     x_min = lexicalCast<double>(box_bounds_x.at(0)).value_or(0.0);
     x_max = lexicalCast<double>(box_bounds_x.at(1)).value_or(0.0);
     // Read y_min, y_max
@@ -134,6 +150,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     std::vector<string> box_bounds_y(split(buffer, ' '));
+    if (box_bounds_y.size() < 2) {
+      appendError("Invalid box bounds: " + buffer);
+      return false;
+    }
     y_min = lexicalCast<double>(box_bounds_y.at(0)).value_or(0.0);
     y_max = lexicalCast<double>(box_bounds_y.at(1)).value_or(0.0);
     // Read z_min, z_max
@@ -142,6 +162,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
     std::vector<string> box_bounds_z(split(buffer, ' '));
+    if (box_bounds_z.size() < 2) {
+      appendError("Invalid box bounds: " + buffer);
+      return false;
+    }
     z_min = lexicalCast<double>(box_bounds_z.at(0)).value_or(0.0);
     z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
   }
@@ -324,6 +348,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
         return false;
       }
       std::vector<string> box_bounds_x(split(buffer, ' '));
+      if (box_bounds_x.size() < 3) {
+        appendError("Invalid box bounds: " + buffer);
+        return false;
+      }
       x_min = lexicalCast<double>(box_bounds_x.at(0)).value_or(0.0);
       x_max = lexicalCast<double>(box_bounds_x.at(1)).value_or(0.0);
       tilt_xy = lexicalCast<double>(box_bounds_x.at(2)).value_or(0.0);
@@ -333,6 +361,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
         return false;
       }
       std::vector<string> box_bounds_y(split(buffer, ' '));
+      if (box_bounds_y.size() < 3) {
+        appendError("Invalid box bounds: " + buffer);
+        return false;
+      }
       y_min = lexicalCast<double>(box_bounds_y.at(0)).value_or(0.0);
       y_max = lexicalCast<double>(box_bounds_y.at(1)).value_or(0.0);
       tilt_xz = lexicalCast<double>(box_bounds_y.at(2)).value_or(0.0);
@@ -342,6 +374,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
       }
       // Read z_min, z_max, tiltfactor_yz
       std::vector<string> box_bounds_z(split(buffer, ' '));
+      if (box_bounds_z.size() < 3) {
+        appendError("Invalid box bounds: " + buffer);
+        return false;
+      }
       z_min = lexicalCast<double>(box_bounds_z.at(0)).value_or(0.0);
       z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
       tilt_yz = lexicalCast<double>(box_bounds_z.at(2)).value_or(0.0);
@@ -360,6 +396,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
         return false;
       }
       std::vector<string> box_bounds_x(split(buffer, ' '));
+      if (box_bounds_x.size() < 2) {
+        appendError("Invalid box bounds: " + buffer);
+        return false;
+      }
       x_min = lexicalCast<double>(box_bounds_x.at(0)).value_or(0.0);
       x_max = lexicalCast<double>(box_bounds_x.at(1)).value_or(0.0);
       // Read y_min, y_max
@@ -368,6 +408,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
         return false;
       }
       std::vector<string> box_bounds_y(split(buffer, ' '));
+      if (box_bounds_y.size() < 2) {
+        appendError("Invalid box bounds: " + buffer);
+        return false;
+      }
       y_min = lexicalCast<double>(box_bounds_y.at(0)).value_or(0.0);
       y_max = lexicalCast<double>(box_bounds_y.at(1)).value_or(0.0);
       // Read z_min, z_max
@@ -376,6 +420,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
         return false;
       }
       std::vector<string> box_bounds_z(split(buffer, ' '));
+      if (box_bounds_z.size() < 2) {
+        appendError("Invalid box bounds: " + buffer);
+        return false;
+      }
       z_min = lexicalCast<double>(box_bounds_z.at(0)).value_or(0.0);
       z_max = lexicalCast<double>(box_bounds_z.at(1)).value_or(0.0);
     }
