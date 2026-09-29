@@ -87,34 +87,16 @@ jobs:
       with:
         arch: x64
 
-    # Update + re-bootstrap vcpkg, and emit a vcpkg_version output
-    - name: Ensure vcpkg is up to date
+    - name: Install vcpkg packages
       if: runner.os == 'Windows'
-      id: vcpkg_version
-      uses: ./.github/actions/update-vcpkg
-
-    # Restore vcpkg cache (use manifest lock if available)
-    - name: Restore vcpkg cache
-      if: runner.os == 'Windows'
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      uses: ./.github/actions/vcpkg-install
       with:
-        path: |
-          C:\vcpkg\installed
-          C:\vcpkg\packages
-          C:\vcpkg\downloads
-        # We don't use a vcpkg manifest so we'll use the vcpkg git SHA as the cache key
-        # Fallback to vcpkg git SHA so cache is somewhat stable across runs.
-        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
-        restore-keys: |
-          vcpkg-${{ runner.os }}-${{ runner.arch }}-
-      env:
-        VCPKG_ROOT: C:\vcpkg
+        packages: libarchive eigen3 libxml2 zlib gtest
 
     - name: Install Dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
         choco install nsis ninja
-        vcpkg install libarchive eigen3 libxml2 zlib gtest
       shell: bash
 
     - name: Configure
@@ -135,7 +117,8 @@ jobs:
 
     # Cache thirdparty builds (OpenBabel, etc.)
     - name: Cache thirdparty
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      id: thirdparty-cache
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
@@ -146,6 +129,15 @@ jobs:
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    # Saved from master only, for the reason given in the vcpkg-install action.
+    - name: Save thirdparty cache
+      if: steps.thirdparty-cache.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ steps.thirdparty-cache.outputs.cache-primary-key }}
 
     - name: Run tests
       if: (matrix.config.test == true)
@@ -300,7 +292,7 @@ jobs:
         name: ${{ matrix.config.artifact }}
 
     - name: Upload release assets
-      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+      if: matrix.config.artifact != 0 && github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
       uses: ./.github/actions/upload-release
       env:
         GH_TOKEN: ${{ github.token }}
