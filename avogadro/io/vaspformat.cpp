@@ -445,6 +445,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           auto* cell = new UnitCell(ax1, ax2, ax3);
           if (!cell->isRegular()) {
             appendError("cell vectors are not linear independent");
+            delete cell;
             return false;
           }
           mol.setUnitCell(cell);
@@ -484,6 +485,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
           auto* cell = new UnitCell(ax1, ax2, ax3);
           if (!cell->isRegular()) {
             appendError("cell vectors are not linear independent");
+            delete cell;
             return false;
           }
           mol.setUnitCell(cell);
