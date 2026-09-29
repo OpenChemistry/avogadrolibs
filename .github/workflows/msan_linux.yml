@@ -36,9 +36,13 @@ env:
   GTEST_TAG: v1.17.0
   AVOGADRO_DATA_ROOT: ${{ github.workspace }}/openchemistry/avogadrodata
 
+# Never cancel a master run: a cancelled run never saves its compiler cache.
+# The group still allows only one running and one pending master run, so
+# master runs queue one after another instead of stacking up. Pull requests
+# and other branches keep cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   msan:
@@ -112,6 +116,16 @@ jobs:
       with:
         path: ${{ runner.workspace }}/msan-prefix
         key: msan-libcxx-${{ runner.os }}-${{ env.LLVM_TAG }}-clang${{ env.LLVM_VERSION }}
+
+    # Must run before the first step that compiles. The launcher variables it
+    # exports do not interfere with the explicit -DCMAKE_C_COMPILER="${CC}"
+    # flags below. The instrumented libc++ build only runs on its own cache
+    # miss, so on most runs this cache serves GoogleTest and avogadrolibs.
+    - name: Restore compiler cache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: Ubuntu Memory Sanitizer
 
     - name: Build instrumented libc++
       if: steps.libcxx-cache.outputs.cache-hit != 'true'
@@ -219,6 +233,17 @@ jobs:
         ulimit -s 65536
 
         ctest -j "$(nproc)"
+
+    # !cancelled() lets the action run after a failed build or failed tests.
+    # The action prints its statistics on every run and saves only on master,
+    # failures included: sccache entries are content-addressed, so a partial
+    # cache is still correct.
+    - name: Save compiler cache
+      if: ${{ !cancelled() }}
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: save
+        name: Ubuntu Memory Sanitizer
 
     - name: Upload test logs
       if: ${{ always() }}
