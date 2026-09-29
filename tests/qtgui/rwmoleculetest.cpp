@@ -1997,3 +1997,52 @@ TEST(RWMoleculeTest, changedSignalReorderAtomsInitialCallEmitsOnce)
   ASSERT_EQ(static_cast<size_t>(1), changes.size());
   EXPECT_EQ(expected, changes[0]);
 }
+
+// Regression test for a fuzzer-found out-of-bounds write: setAtomPosition3d()
+// grows the position array before pushing its command, so redoing that command
+// after the position-less AddAtomCommand was undone and redone wrote past the
+// end of the array.
+TEST(RWMoleculeTest, redoPositionAfterPositionlessAddAtom)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6, false);
+
+  const Vector3 p(1.0, 2.0, 3.0);
+  EXPECT_TRUE(mol.setAtomPosition3d(0, p));
+
+  mol.undoStack().undo(); // position
+  mol.undoStack().undo(); // atom
+  EXPECT_EQ(static_cast<Index>(0), mol.atomCount());
+
+  mol.undoStack().redo(); // atom, without a position
+  mol.undoStack().redo(); // position
+  ASSERT_EQ(static_cast<Index>(1), mol.atomCount());
+  EXPECT_EQ(static_cast<size_t>(1), mol.atomPositions3d().size());
+  EXPECT_EQ(p, mol.atomPosition3d(0));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(0));
+}
+
+TEST(RWMoleculeTest, redoPositionAfterPositionlessAddAtomSecondAtom)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6, false);
+  mol.addAtom(8, false);
+
+  const Vector3 p(1.0, 2.0, 3.0);
+  EXPECT_TRUE(mol.setAtomPosition3d(1, p));
+
+  mol.undoStack().undo(); // position
+  mol.undoStack().undo(); // second atom
+  mol.undoStack().undo(); // first atom
+  mol.undoStack().redo();
+  mol.undoStack().redo();
+  mol.undoStack().redo(); // position
+  ASSERT_EQ(static_cast<Index>(2), mol.atomCount());
+  EXPECT_EQ(static_cast<size_t>(2), mol.atomPositions3d().size());
+  EXPECT_EQ(p, mol.atomPosition3d(1));
+  EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(0));
+}
