@@ -55,17 +55,51 @@ public:
     m_moleculeInfo->visible.push_back(m_visible);
     m_moleculeInfo->locked.push_back(m_locked);
 
+    // The new layer takes the next id. The per-plugin arrays are grown
+    // lazily, apart from Core::Layer, so they can be shorter than that (pad
+    // them, with the same "nothing here" defaults getSetting() and the enable
+    // queries use) or already have a slot for it (use that slot, and give
+    // its old contents back in undo()). Never just append to the end.
+    m_newLayer = m_moleculeInfo->layer.layerCount();
+
     // it's confusing to create an empty layer
     //  .. so we just create a layer that matches the active layer
     for (const auto& enable : m_enable) {
-      m_moleculeInfo->enable[enable.first].push_back(enable.second);
+      auto& layers = m_moleculeInfo->enable[enable.first];
+      auto& placed = m_placedEnable[enable.first];
+      placed.originalSize = layers.size();
+      if (layers.size() < m_newLayer)
+        layers.resize(m_newLayer, false);
+      placed.appended = layers.size() == m_newLayer;
+      if (placed.appended) {
+        placed.displaced = false;
+        layers.push_back(enable.second);
+      } else {
+        placed.displaced = layers[m_newLayer];
+        layers[m_newLayer] = enable.second;
+      }
     }
     for (const auto& settings : m_settings) {
       if (settings.second == nullptr)
         continue;
-      // A new layer gets its own copy of the active layer's settings.
-      m_moleculeInfo->settings[settings.first].push_back(
-        Core::LayerDataPtr(settings.second->clone()));
+      // A new layer gets its own copy of the active layer's settings. Redoing
+      // after undo() puts back that same copy, edits included.
+      auto& copy = m_copies[settings.first];
+      if (copy == nullptr)
+        copy = Core::LayerDataPtr(settings.second->clone());
+      auto& placed = m_placedSettings[settings.first];
+      auto& layers = m_moleculeInfo->settings[settings.first];
+      placed.originalSize = layers.size();
+      if (layers.size() < m_newLayer)
+        layers.resize(m_newLayer, nullptr);
+      placed.appended = layers.size() == m_newLayer;
+      if (placed.appended) {
+        placed.displaced = nullptr;
+        layers.push_back(copy);
+      } else {
+        placed.displaced = layers[m_newLayer];
+        layers[m_newLayer] = copy;
+      }
     }
 
     m_moleculeInfo->layer.addLayer();
@@ -80,18 +114,39 @@ public:
 
     m_moleculeInfo->visible.pop_back();
     m_moleculeInfo->locked.pop_back();
-    size_t qttyLayer = m_moleculeInfo->layer.layerCount();
-    for (auto& enable : m_moleculeInfo->enable) {
-      if (enable.second.size() == qttyLayer) {
-        m_enable[enable.first] = enable.second[enable.second.size() - 1];
-        enable.second.pop_back();
+
+    // Take out only what redo() put in, from the slot it used: an array that
+    // was already long enough gets its old entry back, and one that redo()
+    // appended to is trimmed back to its old length, padding included.
+    for (const auto& placed : m_placedEnable) {
+      auto it = m_moleculeInfo->enable.find(placed.first);
+      if (it == m_moleculeInfo->enable.end() || it->second.size() <= m_newLayer)
+        continue;
+      auto& layers = it->second;
+      // Keep the new layer's flag, changed or not, for the next redo().
+      m_enable[placed.first] = layers[m_newLayer];
+      if (placed.second.appended && layers.size() == m_newLayer + 1) {
+        layers.pop_back();
+        while (layers.size() > placed.second.originalSize && !layers.back())
+          layers.pop_back();
+      } else {
+        layers[m_newLayer] = placed.second.displaced;
       }
     }
-
-    for (auto& setting : m_moleculeInfo->settings) {
-      if (setting.second.size() == qttyLayer) {
-        m_settings[setting.first] = setting.second[setting.second.size() - 1];
-        setting.second.pop_back();
+    for (const auto& placed : m_placedSettings) {
+      auto it = m_moleculeInfo->settings.find(placed.first);
+      if (it == m_moleculeInfo->settings.end() ||
+          it->second.size() <= m_newLayer ||
+          it->second[m_newLayer] != m_copies[placed.first])
+        continue;
+      auto& layers = it->second;
+      if (placed.second.appended && layers.size() == m_newLayer + 1) {
+        layers.pop_back();
+        while (layers.size() > placed.second.originalSize &&
+               layers.back() == nullptr)
+          layers.pop_back();
+      } else {
+        layers[m_newLayer] = placed.second.displaced;
       }
     }
 
@@ -99,9 +154,26 @@ public:
   }
 
 protected:
+  // What redo() did to one plugin's array, so undo() can reverse exactly that.
+  template <typename T>
+  struct Placed
+  {
+    // Pushed onto the end (after any padding) rather than into a slot.
+    bool appended = false;
+    // What that slot held before, when it was not appended.
+    T displaced{};
+    size_t originalSize = 0;
+  };
+
   shared_ptr<MoleculeInfo> m_moleculeInfo;
+  // The active layer's flags and settings, which the new layer copies.
   map<string, bool> m_enable;
   map<string, Core::LayerDataPtr> m_settings;
+  // The new layer's own settings, cloned from m_settings on the first redo().
+  map<string, Core::LayerDataPtr> m_copies;
+  map<string, Placed<bool>> m_placedEnable;
+  map<string, Placed<Core::LayerDataPtr>> m_placedSettings;
+  size_t m_newLayer = 0;
   bool m_visible;
   bool m_locked;
 };
