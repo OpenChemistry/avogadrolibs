@@ -20,9 +20,15 @@ env:
   QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
+# Never cancel a master run: a cancelled run never saves its compiler cache,
+# and the slowest jobs, which gain the most from the cache, are exactly the
+# ones a following merge would cancel. The group still allows only one running
+# and one pending master run, so master runs queue one after another instead
+# of stacking up, and release-asset uploads never overlap. PRs and other
+# branches keep cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   build:
