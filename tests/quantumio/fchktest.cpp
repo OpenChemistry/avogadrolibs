@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
@@ -107,4 +108,64 @@ TEST(GaussianFchkTest, densityMatrixMustFillTheLowerTriangle)
   EXPECT_EQ(accepting.error().find("Invalid density matrix size"),
             std::string::npos)
     << accepting.error();
+}
+
+// Regression test: the shell type is read unchecked from the file, and
+// (type + 1) * (type + 2) overflowed an int for values like 64340206 (found
+// by the UBSan fuzz job). Unsupported shell types are now rejected up front
+// so the atomic-orbital offsets cannot be misaligned either.
+TEST(GaussianFchkTest, unsupportedShellTypeRejected)
+{
+  auto build = [](int shellType) {
+    std::ostringstream out;
+    out << "Header line 1\n";
+    out
+      << "SP        RHF                                               STO-3G\n";
+    out << std::left << std::setw(42) << "Number of atoms"
+        << " I          1\n";
+    out << std::left << std::setw(42) << "Atomic numbers"
+        << " I   N=           1\n";
+    out << "           1\n";
+    out << std::left << std::setw(42) << "Current cartesian coordinates"
+        << " R   N=           3\n";
+    out << "  0.00000000E+00  0.00000000E+00  0.00000000E+00\n";
+    out << std::left << std::setw(42) << "Shell types"
+        << " I   N=           1\n";
+    out << "  " << shellType << "\n";
+    out << std::left << std::setw(42) << "Number of primitives per shell"
+        << " I   N=           1\n";
+    out << "           1\n";
+    out << std::left << std::setw(42) << "Shell to atom map"
+        << " I   N=           1\n";
+    out << "           1\n";
+    out << std::left << std::setw(42) << "Primitive exponents"
+        << " R   N=           1\n";
+    out << "  1.00000000E+00\n";
+    out << std::left << std::setw(42) << "Contraction coefficients"
+        << " R   N=           1\n";
+    out << "  1.00000000E+00\n";
+    return out.str();
+  };
+
+  // A supported type builds a basis with one shell...
+  {
+    GaussianFchk format;
+    Molecule molecule;
+    EXPECT_TRUE(format.readString(build(0), molecule));
+    auto* basis =
+      dynamic_cast<Avogadro::Core::GaussianSet*>(molecule.basisSet());
+    ASSERT_NE(basis, nullptr);
+    EXPECT_EQ(basis->atomIndices().size(), 1u);
+  }
+
+  // ...while unsupported ones must neither crash nor add any shells.
+  for (int bad : { 64340206, 7, -7, 2147483647, -2147483647 - 1 }) {
+    GaussianFchk format;
+    Molecule molecule;
+    format.readString(build(bad), molecule);
+    auto* basis =
+      dynamic_cast<Avogadro::Core::GaussianSet*>(molecule.basisSet());
+    ASSERT_NE(basis, nullptr) << bad;
+    EXPECT_TRUE(basis->atomIndices().empty()) << bad;
+  }
 }

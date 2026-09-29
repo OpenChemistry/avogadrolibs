@@ -361,6 +361,10 @@ const int cartesianGFromFchk[15] = { 14, 4,  0, 13, 12, 8, 3, 5,
 // negative is spherical, -1 is the SP special case, positive is Cartesian.
 int shellComponentCount(int shellType)
 {
+  // Shell types come straight from the file; a huge one would overflow the
+  // arithmetic below, and load() rejects anything past i shells anyway.
+  if (shellType > 6 || shellType < -6)
+    return 0;
   if (shellType == -1)
     return 4;
   if (shellType < 0)
@@ -463,6 +467,12 @@ void GaussianFchk::load(GaussianSet* basis)
     const int atomIndex = m_shelltoAtom[i];
     if (atomIndex <= 0 || atomIndex > m_numAtoms) {
       cout << "GaussianFchk: invalid shell-to-atom map.\n";
+      return;
+    }
+    // Only the types handled by the switch below (s through i, with -1 for
+    // SP) are supported; skipping the rest would misalign the AO offsets.
+    if (m_shellTypes[i] < -6 || m_shellTypes[i] > 6) {
+      cout << "GaussianFchk: unsupported shell type.\n";
       return;
     }
     const size_t shellNumU = static_cast<size_t>(shellNum);
