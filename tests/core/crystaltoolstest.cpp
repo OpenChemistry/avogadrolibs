@@ -10,6 +10,7 @@
 #include <avogadro/core/unitcell.h>
 
 #include <algorithm>
+#include <limits>
 
 using namespace Avogadro;
 using namespace Avogadro::Core;
@@ -74,6 +75,30 @@ TEST(CrystalToolsTest, buildSupercellRejectsBadInput)
   Molecule noCell;
   EXPECT_FALSE(CrystalTools::buildSupercell(noCell, Vector3(0.0, 0.0, 0.0),
                                             Vector3(1.0, 1.0, 1.0)));
+}
+
+// A NaN position has no meaningful supercell: it used to be cast to long in
+// the duplicate-detection grid (undefined behavior). Refuse it instead.
+TEST(CrystalToolsTest, buildSupercellRejectsNonFinitePosition)
+{
+  Molecule mol = cubicCell();
+  Atom h = mol.addAtom(1);
+  h.setPosition3d(Vector3(std::numeric_limits<double>::quiet_NaN(), 1.0, 1.0));
+  const Index before = mol.atomCount();
+  EXPECT_FALSE(CrystalTools::buildSupercell(mol, 2, 2, 2));
+  EXPECT_EQ(mol.atomCount(), before);
+  EXPECT_NEAR(mol.unitCell()->a(), 5.0, 1e-6);
+}
+
+// Finite but enormous coordinates overflow long in the grid's bin index unless
+// they are clamped; this must simply not crash.
+TEST(CrystalToolsTest, buildSupercellHugePosition)
+{
+  Molecule mol = cubicCell();
+  Atom h = mol.addAtom(1);
+  h.setPosition3d(Vector3(1e300, -1e300, 1e30));
+  EXPECT_TRUE(CrystalTools::buildSupercell(mol, 2, 2, 2));
+  EXPECT_GE(mol.atomCount(), 16);
 }
 
 // An integer range must give exactly the same result as the integer form.

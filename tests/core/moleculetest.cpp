@@ -338,6 +338,54 @@ TEST_F(MoleculeTest, perceiveBondsSimple)
   EXPECT_FALSE(molecule.bond(h2, h3).isValid());
 }
 
+namespace {
+
+// Adds an H2O with its oxygen at @a origin.
+void addWater(Molecule& molecule, const Vector3& origin)
+{
+  Atom o = molecule.addAtom(8);
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  o.setPosition3d(origin);
+  h1.setPosition3d(origin + Vector3(0.6, -0.5, 0.0));
+  h2.setPosition3d(origin + Vector3(-0.6, -0.5, 0.0));
+}
+
+} // namespace
+
+// A molecule spanning more than 1000 bond-search distances used to lose the
+// bonds past the 1000th bin of the neighbor grid.
+TEST_F(MoleculeTest, perceiveBondsSimpleLongChain)
+{
+  const int waters = 1500;
+  Molecule molecule;
+  for (int i = 0; i < waters; ++i)
+    addWater(molecule, Vector3(6.0 * i, 0.0, 0.0));
+  ASSERT_EQ(molecule.atomCount(), static_cast<Index>(3 * waters));
+
+  molecule.perceiveBondsSimple();
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(2 * waters));
+  // the far end in particular
+  const Index last = 3 * (waters - 1);
+  EXPECT_TRUE(molecule.bond(last, last + 1).isValid());
+  EXPECT_TRUE(molecule.bond(last, last + 2).isValid());
+}
+
+// A sparse box too big for one neighbor bin per search distance (a solvated
+// system) used to get no bonds at all.
+TEST_F(MoleculeTest, perceiveBondsSimpleLargeBox)
+{
+  Molecule molecule;
+  for (int corner = 0; corner < 8; ++corner) {
+    addWater(molecule,
+             Vector3((corner & 1) ? 1000.0 : 0.0, (corner & 2) ? 1000.0 : 0.0,
+                     (corner & 4) ? 1000.0 : 0.0));
+  }
+
+  molecule.perceiveBondsSimple();
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(16));
+}
+
 TEST_F(MoleculeTest, copy)
 {
   Molecule copy(m_testMolecule);

@@ -7,6 +7,8 @@
 
 #include <avogadro/core/variant.h>
 
+#include <limits>
+
 using Avogadro::MatrixX;
 using Avogadro::Core::Variant;
 using namespace std::string_literals;
@@ -84,6 +86,66 @@ TEST(VariantTest, toInt)
 
   variant.setValue(false);
   EXPECT_EQ(variant.toInt(), int(0));
+}
+
+TEST(VariantTest, floatToIntSaturates)
+{
+  const double inf = std::numeric_limits<double>::infinity();
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  const int imax = std::numeric_limits<int>::max();
+  const int imin = std::numeric_limits<int>::lowest();
+
+  for (double d : { 1e30, inf, 2147483648.0 })
+    EXPECT_EQ(imax, Variant(d).value<int>()) << d;
+  for (double d : { -1e30, -inf, -2147483649.0 })
+    EXPECT_EQ(imin, Variant(d).value<int>()) << d;
+  EXPECT_EQ(0, Variant(nan).value<int>());
+  EXPECT_EQ(imax, Variant(2147483647.0).value<int>());
+  EXPECT_EQ(imin, Variant(-2147483648.0).value<int>());
+
+  // float source, as seen from the fuzzer
+  EXPECT_EQ(imin, Variant(-3.40282e+38f).value<int>());
+  EXPECT_EQ(imax, Variant(3.40282e+38f).value<int>());
+  EXPECT_EQ(0, Variant(std::numeric_limits<float>::quiet_NaN()).value<int>());
+  EXPECT_EQ(imax, Variant(std::numeric_limits<float>::infinity()).value<int>());
+
+  // ordinary values truncate toward zero
+  EXPECT_EQ(3, Variant(3.9).value<int>());
+  EXPECT_EQ(-3, Variant(-3.9).value<int>());
+  EXPECT_EQ(3, Variant(3.9f).value<int>());
+  EXPECT_EQ(-3, Variant(-3.9f).value<int>());
+}
+
+TEST(VariantTest, floatToIntegerHelper)
+{
+  using Avogadro::Core::detail::floatToInteger;
+  const double inf = std::numeric_limits<double>::infinity();
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+
+  // long long: max() converts to 2^63 as a double, which must saturate
+  constexpr long long llmax = std::numeric_limits<long long>::max();
+  constexpr long long llmin = std::numeric_limits<long long>::lowest();
+  EXPECT_EQ(llmax, floatToInteger<long long>(9223372036854775808.0));
+  EXPECT_EQ(llmax, floatToInteger<long long>(1e30));
+  EXPECT_EQ(llmax, floatToInteger<long long>(inf));
+  EXPECT_EQ(llmin, floatToInteger<long long>(-9223372036854775808.0));
+  EXPECT_EQ(llmin, floatToInteger<long long>(-1e30));
+  EXPECT_EQ(llmin, floatToInteger<long long>(-inf));
+  EXPECT_EQ(0, floatToInteger<long long>(nan));
+  EXPECT_EQ(3, floatToInteger<long long>(3.9));
+  EXPECT_EQ(-3, floatToInteger<long long>(-3.9));
+  EXPECT_EQ(4000000000LL, floatToInteger<long long>(4e9));
+
+  EXPECT_EQ(32767, floatToInteger<short>(1e30));
+  EXPECT_EQ(-32768, floatToInteger<short>(-inf));
+  EXPECT_EQ(0, floatToInteger<short>(nan));
+  EXPECT_EQ(-3, floatToInteger<short>(-3.9));
+
+  EXPECT_EQ(std::numeric_limits<unsigned int>::max(),
+            floatToInteger<unsigned int>(1e30));
+  EXPECT_EQ(0u, floatToInteger<unsigned int>(-5.0));
+  EXPECT_EQ(3u, floatToInteger<unsigned int>(3.9));
+  EXPECT_EQ(std::numeric_limits<char>::max(), floatToInteger<char>(1e30));
 }
 
 TEST(VariantTest, toLong)

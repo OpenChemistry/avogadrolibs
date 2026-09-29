@@ -363,6 +363,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                       mat[2][2] * NM_TO_ANGSTROM));
             if (!uc->isRegular()) {
               appendError("lattice vectors are not linear independent");
+              delete uc;
               return false;
             }
             mol.setUnitCell(uc);
@@ -384,6 +385,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                       mat[2][2] * NM_TO_ANGSTROM));
             if (!uc->isRegular()) {
               appendError("lattice vectors are not linear independent");
+              delete uc;
               return false;
             }
             mol.setUnitCell(uc);

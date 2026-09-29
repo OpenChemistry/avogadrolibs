@@ -222,6 +222,22 @@ TEST(VaspTest, readTruncatedOutcar)
   }
 }
 
+TEST(VaspTest, outcarSingularLattice)
+{
+  // Linearly dependent lattice vectors must fail the read and must not leak
+  // the UnitCell allocated to test them (found by the io/OUTCAR fuzz target).
+  const std::string text = "  Lattice vectors:\n"
+                           "  \n"
+                           " A1 = (   1.0,   0.0,   0.0)\n"
+                           " A2 = (   2.0,   0.0,   0.0)\n"
+                           " A3 = (   0.0,   0.0,   1.0)\n";
+  Molecule molecule;
+  OutcarFormat outcar;
+  EXPECT_FALSE(outcar.readString(text, molecule));
+  EXPECT_NE(outcar.error(), std::string());
+  EXPECT_EQ(molecule.unitCell(), nullptr);
+}
+
 TEST(VaspTest, OutcarModes)
 {
   // This tests some of the mode setting/checking code

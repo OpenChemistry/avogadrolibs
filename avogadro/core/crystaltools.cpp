@@ -810,13 +810,23 @@ private:
     }
   };
 
+  // Bin index along one axis. Casting a NaN, or a double beyond the range of
+  // long, is undefined behavior, so map NaN to bin 0 and clamp the rest. This
+  // only merges absurdly distant coordinates into the outermost bins; find()
+  // still compares the real distances, so the results stay correct.
+  long binIndex(double x) const
+  {
+    double v = std::floor(x * m_invBin);
+    if (!std::isfinite(v))
+      v = 0.0;
+    v = std::clamp(v, -1e15, 1e15);
+    return static_cast<long>(v);
+  }
+
   std::array<long, 3> key(const Vector3& pos) const
   {
-    return std::array<long, 3>{
-      static_cast<long>(std::floor(pos.x() * m_invBin)),
-      static_cast<long>(std::floor(pos.y() * m_invBin)),
-      static_cast<long>(std::floor(pos.z() * m_invBin))
-    };
+    return std::array<long, 3>{ binIndex(pos.x()), binIndex(pos.y()),
+                                binIndex(pos.z()) };
   }
 
   double m_tol;
@@ -842,6 +852,19 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
                 << "Returning false.";
       return false;
     }
+  }
+
+  // A non-finite range, cell or atom position has no meaningful supercell,
+  // and would feed NaN into the integer conversions below. Leave the molecule
+  // alone.
+  bool finite = rangeMin.allFinite() && rangeMax.allFinite() &&
+                molecule.unitCell()->cellMatrix().allFinite();
+  for (Index i = 0; finite && i < molecule.atomCount(); ++i)
+    finite = molecule.atomPosition3d(i).allFinite();
+  if (!finite) {
+    std::cerr << "Warning: in buildSupercell(), the range, unit cell or an "
+              << "atom position is not finite. Returning false.";
+    return false;
   }
 
   // Tolerance used when deciding whether a fractional limit is an integer and

@@ -40,7 +40,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
+        sudo apt-get -qq install clang ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev gdb
 
     - name: Install Qt
       uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
@@ -65,6 +65,14 @@ jobs:
         if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
         cd "${{ runner.workspace }}/build"
 
+        # NOTE (2026-09-28): until this was fixed, the fuzz job ran with no
+        # AddressSanitizer, UBSan or LeakSanitizer on avogadrolibs at all --
+        # only the coverage instrumentation. It was found through the
+        # qtgui/layermanager merge deadlock (run 36483371665): the stack
+        # traces showed libstdc++'s operator new calling glibc's malloc
+        # directly, where an ASan build has its own interceptors. See the
+        # FUZZ_* variables below and the check in "Build fuzz targets".
+        #
         # Hardening flags, on top of the sanitizers. _GLIBCXX_ASSERTIONS is the
         # important one here: Core::Array::operator[] forwards to std::vector,
         # so an index past the end but still inside the allocation is invisible
@@ -72,9 +80,10 @@ jobs:
         # turned on.
         #
         # Note that glibc disables _FORTIFY_SOURCE when __SANITIZE_ADDRESS__ is
-        # defined, so it is a no-op in this job -- it is set anyway so the flag
-        # list stays the one we want everywhere, and starts working if a
-        # non-ASan fuzz configuration is ever added.
+        # defined, and this job builds avogadrolibs with ASan, so it is a
+        # no-op here -- it is set anyway so the flag list stays the one we
+        # want everywhere, and starts working if a non-ASan fuzz
+        # configuration is ever added.
         HARDENING="-D_GLIBCXX_ASSERTIONS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3"
         HARDENING="$HARDENING -fstack-clash-protection -fstack-protector-strong"
 
@@ -89,6 +98,18 @@ jobs:
 
         SAN="-O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined"
 
+        # Hand the flags to the later steps. The environment variables on the
+        # cmake command below reach only the top-level superbuild project,
+        # NOT the ExternalProjects: avogadrolibs and every other subproject
+        # are configured later, during "Build", where these variables are not
+        # set, and the superbuild does not forward CMAKE_<LANG>_FLAGS to them.
+        # So "Build fuzz targets" passes these to avogadrolibs explicitly.
+        {
+          echo "FUZZ_CFLAGS=$SAN $HARDENING"
+          echo "FUZZ_LDFLAGS=-fsanitize=address,undefined"
+        } >> "$GITHUB_ENV"
+
+        # Harmless, but on its own it instruments nothing of ours (see above).
         CFLAGS="$SAN $HARDENING" \
         CXXFLAGS="$SAN $HARDENING" \
         LDFLAGS="-fsanitize=address,undefined" \
@@ -106,7 +127,12 @@ jobs:
     - name: Build fuzz targets
       run: |
         # ENABLE_FUZZ is not forwarded through the superbuild, so turn it on in
-        # the avogadrolibs build itself.
+        # the avogadrolibs build itself. The same is true of the sanitizer and
+        # hardening flags from "Configure" (see the note there), so they are
+        # passed here explicitly; this is what actually puts ASan and UBSan
+        # on avogadrolibs. The third-party subprojects stay uninstrumented.
+        # Changing the flags forces a full rebuild, as the per-config override
+        # below already did.
         #
         # Asserts are kept alive here, which is the point of overriding the
         # per-config flags. CMake appends CMAKE_CXX_FLAGS_<CONFIG> after
@@ -125,15 +151,43 @@ jobs:
         # mutation soak over all 14 core, 8 io and 5 quantumio targets, run
         # clean with asserts enabled. Only qtgui/rwmolecule tripped one, and
         # that is fixed.
+        : "${FUZZ_CFLAGS:?FUZZ_CFLAGS was not exported by the Configure step}"
         cmake -DENABLE_FUZZ=ON \
           -DCMAKE_C_FLAGS_RELWITHDEBINFO="-O2 -g" \
-          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g" .
+          -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g" \
+          -DCMAKE_C_FLAGS="${FUZZ_CFLAGS}" \
+          -DCMAKE_CXX_FLAGS="${FUZZ_CFLAGS}" \
+          -DCMAKE_EXE_LINKER_FLAGS="${FUZZ_LDFLAGS}" \
+          -DCMAKE_SHARED_LINKER_FLAGS="${FUZZ_LDFLAGS}" \
+          -DCMAKE_MODULE_LINKER_FLAGS="${FUZZ_LDFLAGS}" .
         cmake --build .
+
+        # Guard against this silently regressing again: the fuzz job once ran
+        # with no ASan at all. Symbols go through a variable, not a
+        # pipe into grep -q, which would SIGPIPE nm under pipefail.
+        exe=./bin/fuzz_core_molecule
+        lib=$(ls ./lib/libAvogadroCore.so* 2>/dev/null | head -n 1 || true)
+        if [ ! -x "${exe}" ] || [ -z "${lib}" ]; then
+          echo "::error::Cannot find ${exe} or lib/libAvogadroCore.so* to check for ASan"
+          exit 1
+        fi
+        exe_syms=$(nm "${exe}")
+        if ! grep -q ' __asan_init$' <<< "${exe_syms}"; then
+          echo "::error::${exe} has no AddressSanitizer runtime; the sanitizer flags did not reach avogadrolibs"
+          exit 1
+        fi
+        lib_syms=$(nm -D --undefined-only "${lib}")
+        if ! grep -q '__asan_report' <<< "${lib_syms}"; then
+          echo "::error::${lib} is not ASan-instrumented; the sanitizer flags did not reach avogadrolibs"
+          exit 1
+        fi
       shell: bash
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
 
     - name: Run fuzz tests
       shell: bash
+      # Backstop so the artifact upload below still runs inside the job's 90 minutes.
+      timeout-minutes: 60
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
       run: |
         set -uo pipefail
@@ -207,6 +261,67 @@ jobs:
           esac
         }
 
+        # Wall-clock backstop for a command that may never return:
+        #   run_with_watchdog <seconds> <label> <command> [args...]
+        # Returns the command's own exit status if it finishes in time, or 124
+        # if the watchdog fired.
+        #
+        # libFuzzer's -timeout only covers a single unit. Since 2026-09-28 the
+        # -merge of qtgui/layermanager has hung and -timeout never fired -- the
+        # job sat until the 90 minute limit killed it. The stack traces this
+        # watchdog captured (run 36483371665) show why: the merge's inner
+        # process crashed inside glibc malloc, with the heap already corrupted.
+        # The sanitizer's deadly-signal handler then called pthread_getattr_np
+        # -> getline -> realloc and deadlocked on the malloc arena lock the
+        # crashed thread still held. libFuzzer's alarm handler allocates too
+        # (DumpCurrentUnit -> fwrite -> malloc) and deadlocked on the same
+        # lock, so -timeout could never end it. When the limit is hit, dump
+        # every thread's stack from each fuzz process *first*, while the
+        # evidence still exists, and only then kill the tree.
+        #
+        # The command runs in the background of this shell and this shell polls
+        # it, so there is no watcher process to clean up after a normal finish.
+        # The command may be a shell function, which is how the fuzz pipeline
+        # into tee is passed in; `wait` returns the pipeline's status, so
+        # pipefail semantics are unchanged.
+        #
+        # Callers must use `run_with_watchdog ... || rc=$?`: this step runs
+        # under `bash -e` (see the call sites).
+        run_with_watchdog() {
+          local limit="$1" label="$2"
+          shift 2
+          local start="${SECONDS}" pid
+          "$@" &
+          pid=$!
+
+          while kill -0 "${pid}" 2>/dev/null; do
+            if [ $(( SECONDS - start )) -ge "${limit}" ]; then
+              local pids p
+              # Binaries are invoked as ./bin/fuzz_..., and a hung merge has
+              # an outer process and an inner child, so take them all.
+              pids=$(pgrep -f 'bin/fuzz_' || true)
+              echo "::group::Stack traces: ${label}"
+              for p in ${pids}; do
+                echo "=== $(ps -o pid=,ppid=,etime=,args= -p "${p}") ==="
+                # Attaching needs ptrace, which the runner allows via sudo.
+                sudo gdb -p "${p}" -batch -ex 'set pagination off' \
+                  -ex 'thread apply all bt' 2>&1 | head -n 400
+              done
+              echo "::endgroup::"
+              echo "::warning::${label} exceeded the ${limit}s watchdog (stack traces above)"
+              # Politely first, then for good: a wedged process may ignore
+              # SIGTERM, and libFuzzer handles it itself.
+              for p in ${pids}; do kill -TERM "${p}" 2>/dev/null || true; done
+              sleep 5
+              for p in ${pids}; do kill -KILL "${p}" 2>/dev/null || true; done
+              wait "${pid}" 2>/dev/null || true
+              return 124
+            fi
+            sleep 1
+          done
+          wait "${pid}"
+        }
+
         artifact_root="${PWD}/fuzz-artifacts"
         corpus_root="${{ runner.workspace }}/fuzz-corpus"
         failures=0
@@ -262,15 +377,35 @@ jobs:
             # build does in milliseconds -- perceiveBondOrders() on a 244-atom
             # nanotube, for one. A real hang still trips this comfortably.
             set_memory_limits "${name}"
-            if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
-                 "${memory_limits[@]}" \
-                 -artifact_prefix="${artifact_dir}/" \
-                 "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
-                 | tee "${artifact_dir}/run.log"; then
+            fuzz_pass() {
+              "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
+                "${memory_limits[@]}" \
+                -artifact_prefix="${artifact_dir}/" \
+                "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
+                | tee "${artifact_dir}/run.log"
+            }
+            # The limit is twice the fuzzing time plus slack, because
+            # -max_total_time does not bound the initial replay of the corpus.
+            #
+            # GitHub runs `shell: bash` steps as `bash --noprofile --norc -eo
+            # pipefail {0}`, so this step runs under errexit even though the
+            # `set` above does not say -e. A bare `run_with_watchdog ...`
+            # followed by `rc=$?` would abort the whole script on the first
+            # failing target (or on the SIGTERM status of a killed hung one,
+            # as in run 36483371665) instead of recording it. That is why the
+            # calls use `|| rc=$?`: a function on the left of `||` runs with
+            # errexit suppressed, and the status is still captured.
+            fuzz_rc=0
+            run_with_watchdog $(( FUZZ_SECONDS * 2 + 300 )) "fuzzing ${name}" fuzz_pass || fuzz_rc=$?
+            if [ "${fuzz_rc}" -eq 0 ]; then
               result="pass"
             elif is_known_issue "${name}"; then
               result="known failure"
               echo "::warning::${name} failed (known issue, not failing the job)"
+            elif [ "${fuzz_rc}" -eq 124 ]; then
+              result="**TIMEOUT (watchdog)**"
+              echo "::error::${name} hung and was killed by the watchdog"
+              failures=1
             else
               result="**FAIL**"
               echo "::error::${name} failed - see the fuzz-crashes artifact"
@@ -292,14 +427,27 @@ jobs:
             # it away and rebuild from the seeds next time.
             merged_dir="${RUNNER_TEMP}/fuzz-merge/${suite}/${target}"
             rm -rf "${merged_dir}" && mkdir -p "${merged_dir}"
-            if "${binary}" -merge=1 -timeout=25 "${memory_limits[@]}" \
-                 "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
-                 > "${artifact_dir}/merge.log" 2>&1 \
-               && [ -n "$(ls -A "${merged_dir}")" ]; then
+            merge_corpus() {
+              "${binary}" -merge=1 -timeout=25 "${memory_limits[@]}" \
+                "${merged_dir}" "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} \
+                > "${artifact_dir}/merge.log" 2>&1
+            }
+            # Normal merges take seconds (the biggest, quantumio/fchk, about
+            # ten). One that runs 300s is hung, not slow. A hang comes from
+            # the cached corpus, not from the change under test, so it resets
+            # the corpus like a failed merge but does not fail the job.
+            merge_rc=0
+            run_with_watchdog 300 "corpus merge ${name}" merge_corpus || merge_rc=$?
+            if [ "${merge_rc}" -eq 0 ] && [ -n "$(ls -A "${merged_dir}")" ]; then
               rm -rf "${corpus_dir}"
               mv "${merged_dir}" "${corpus_dir}"
             else
-              echo "::warning::${name} corpus merge failed, resetting the corpus"
+              if [ "${merge_rc}" -eq 124 ]; then
+                echo "::warning::${name} corpus merge hung for 300s (stack traces above); resetting the corpus"
+                result="${result}, merge hung"
+              else
+                echo "::warning::${name} corpus merge failed, resetting the corpus"
+              fi
               rm -rf "${merged_dir}" "${corpus_dir}"
               mkdir -p "${corpus_dir}"
             fi
@@ -313,11 +461,13 @@ jobs:
 
         exit "${failures}"
 
-    # Saved even when a target crashed: the corpus built up to that point is
-    # still worth keeping, and a rolling key means the next run restores the
-    # most recent entry.
+    # Saved when a target crashed: the corpus built up to that point is still
+    # worth keeping, and a rolling key means the next run restores the most
+    # recent entry. Not saved when the job was cancelled or timed out: the
+    # corpus was never minimized then, and may be the very thing that wedged
+    # the run, so saving it would wedge every later run the same way.
     - name: Save fuzz corpus
-      if: ${{ always() && github.event_name != 'pull_request' }}
+      if: ${{ (success() || failure()) && github.event_name != 'pull_request' }}
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.workspace }}/fuzz-corpus
