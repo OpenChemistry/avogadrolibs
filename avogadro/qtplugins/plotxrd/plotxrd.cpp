@@ -308,4 +308,23 @@ bool PlotXrd::executeGenXrdPattern(const QStringList& args,
   return true;
 }
 
+void PlotXrd::registerCommands()
+{
+  emit registerCommand("showXrdPlot", tr("Show XRD plot."));
+}
+
+bool PlotXrd::handleCommand(const QString& command,
+                            [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr || m_molecule->unitCell() == nullptr)
+    return false; // reject if null OR if it lacks a crystal unit cell
+
+  if (command == "showXrdPlot") {
+    displayDialog();
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace Avogadro::QtPlugins

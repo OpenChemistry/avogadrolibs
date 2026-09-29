@@ -158,4 +158,30 @@ void Spectra::gatherSpectra()
   m_dialog->setSpectra(spectra);
 }
 
+void Spectra::registerCommands()
+{
+  emit registerCommand("showSpectra", tr("Open spectra dialog."));
+}
+
+bool Spectra::handleCommand(const QString& command,
+                            [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr)
+    return false; // No molecule to handle the command
+
+  if (command == "showSpectra") {
+    // Guard: Prevent Eigen crash by ensuring spectra data actually exists
+    bool hasSpectra = !m_molecule->vibrationFrequencies().empty() ||
+                      !m_molecule->spectraTypes().empty();
+
+    if (!hasSpectra)
+      return false;
+
+    openDialog();
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace Avogadro::QtPlugins

@@ -39,6 +39,11 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+  void registerCommands() override;
+
 public slots:
 
   void openDialog();

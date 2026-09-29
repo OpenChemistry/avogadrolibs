@@ -206,4 +206,24 @@ bool PlotPdf::generatePdfPattern(QtGui::Molecule& mol, PdfData& results,
   return true;
 }
 
+void PlotPdf::registerCommands()
+{
+  emit registerCommand("showPdfPlot", tr("Show PDF plot."));
+}
+
+bool PlotPdf::handleCommand(const QString& command,
+                            [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr || m_molecule->unitCell() == nullptr)
+    return false; // reject if null OR if it lacks a crystal unit cell
+
+  // Wraps displayDialog
+  if (command == "showPdfPlot") {
+    displayDialog();
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace Avogadro::QtPlugins
