@@ -2084,40 +2084,46 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   // check for bonds
   // O(n) average-case, O(n^2) worst-case
   // note that the "worst case" here would need to be an invalid molecule
+  //
+  // The neighborhood relation and the bond criteria are both symmetric, so
+  // each pair only needs to be considered once, at min(i, j).
+  const Array<Vector3>& positions = m_positions3d; // avoid copy-on-write checks
   Array<Index> neighbors;
   for (Index i = 0; i < atomCount(); i++) {
-    Vector3 ipos = m_positions3d[i];
+    // Don't automatically bond nobel gases to anything
+    const unsigned char iNumber = atomicNumber(i);
+    switch (iNumber) {
+      case 2:  // He
+      case 10: // Ne
+      case 18: // Ar
+      case 36: // Kr
+        continue;
+      default:
+        break;
+    }
+
+    const Vector3 ipos = positions[i];
     neighborPerceiver.getNeighborsInclusiveInPlace(neighbors, ipos);
     for (unsigned long j : neighbors) {
+      if (j <= i)
+        continue;
+
+      const unsigned char jNumber = atomicNumber(j);
+      switch (jNumber) {
+        case 2:  // He
+        case 10: // Ne
+        case 18: // Ar
+        case 36: // Kr
+          continue;
+        default:
+          break;
+      }
+
       double cutoff = radii[i] + radii[j] + tolerance;
-      Vector3 jpos = m_positions3d[j];
-      Vector3 diff = jpos - ipos;
-
-      // Don't automatically bond nobel gases to anything
-      switch (atomicNumber(i)) {
-        case 2:  // He
-        case 10: // Ne
-        case 18: // Ar
-        case 36: // Kr
-          continue;
-        default:
-          break;
-      }
-
-      // now for the other atom
-      switch (atomicNumber(j)) {
-        case 2:  // He
-        case 10: // Ne
-        case 18: // Ar
-        case 36: // Kr
-          continue;
-        default:
-          break;
-      }
+      Vector3 diff = positions[j] - ipos;
 
       if (std::fabs(diff[0]) > cutoff || std::fabs(diff[1]) > cutoff ||
-          std::fabs(diff[2]) > cutoff ||
-          (atomicNumber(i) == 1 && atomicNumber(j) == 1))
+          std::fabs(diff[2]) > cutoff || (iNumber == 1 && jNumber == 1))
         continue;
 
       // check radius and add bond if needed
