@@ -931,11 +931,8 @@ bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
   if (atomId >= atomCount())
     return false;
 
-  if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
-    m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
-
   auto* comm = new SetForceVectorCommand(
-    *this, atomId, m_molecule.m_positions3d[atomId], forces);
+    *this, atomId, m_molecule.forceVector(atomId), forces);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);
