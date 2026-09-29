@@ -1,0 +1,82 @@
+name: 'Install vcpkg packages'
+description: 'Updates vcpkg and installs packages, caching the installed tree per package list and month'
+inputs:
+  packages:
+    description: 'Space-separated vcpkg package names'
+    required: true
+  vcpkg-root:
+    description: 'Location of the vcpkg checkout'
+    required: false
+    default: 'C:\vcpkg'
+outputs:
+  cache-hit:
+    description: 'Whether the installed tree was restored from the cache'
+    value: ${{ steps.restore.outputs.cache-hit }}
+
+runs:
+  using: "composite"
+  steps:
+  - name: Update vcpkg
+    uses: ./.github/actions/update-vcpkg
+    with:
+      vcpkg-root: ${{ inputs.vcpkg-root }}
+
+  # The key is the sorted package list (hashed) plus the UTC month. Inputs
+  # arrive through env, never interpolated into the script text.
+  - name: Compute cache key
+    id: key
+    shell: pwsh
+    env:
+      PACKAGES: ${{ inputs.packages }}
+      RUNNER_OS_NAME: ${{ runner.os }}
+      RUNNER_ARCH_NAME: ${{ runner.arch }}
+    run: |
+      $sorted = (($env:PACKAGES -split '\s+' | Where-Object { $_ }) | Sort-Object -Unique) -join ' '
+      $bytes = [System.Text.Encoding]::UTF8.GetBytes($sorted)
+      $hash = [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes)).Substring(0, 8).ToLowerInvariant()
+      $month = (Get-Date).ToUniversalTime().ToString('yyyy-MM')
+      $key = "vcpkg-$($env:RUNNER_OS_NAME)-$($env:RUNNER_ARCH_NAME)-$hash-$month"
+      Write-Host "Packages: $sorted"
+      Write-Host "Cache key: $key"
+      "key=$key" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+  # Deliberately no restore-keys. vcpkg's classic mode never rebuilds a
+  # package that is already installed, so falling back to an older entry would
+  # freeze the installed tree forever. An exact-match-only key rebuilds from
+  # vcpkg HEAD once a month instead. The package hash in the key also means
+  # jobs with different package lists (fuzz_windows adds glew) can never
+  # restore each other's tree; that cross-restore once leaked vcpkg's GLEW
+  # into build_windows and hung its ASan tests.
+  #
+  # Only installed/ is cached: packages/ is vcpkg's staging copy of the same
+  # files, and downloads/ only matters when building.
+  - name: Restore vcpkg cache
+    id: restore
+    uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    with:
+      path: ${{ inputs.vcpkg-root }}\installed
+      key: ${{ steps.key.outputs.key }}
+
+  # VCPKG_ROOT is set explicitly because ilammy/msvc-dev-cmd points it at
+  # Visual Studio's bundled vcpkg. pwsh needs the explicit exit-code check for
+  # the reason given in update-vcpkg.
+  - name: Install vcpkg packages
+    shell: pwsh
+    env:
+      VCPKG_ROOT: ${{ inputs.vcpkg-root }}
+      PACKAGES: ${{ inputs.packages }}
+    run: |
+      $packages = @($env:PACKAGES -split '\s+' | Where-Object { $_ })
+      & (Join-Path $env:VCPKG_ROOT 'vcpkg.exe') install @packages
+      if ($LASTEXITCODE -ne 0) { throw "vcpkg install failed" }
+
+  # Save only from master: a PR-scoped entry cannot be read by any other PR
+  # and costs ~1 GB of the 10 GB repo cache, while PRs still restore master's
+  # entry. Saving right after the install, rather than at job end, means a
+  # later build or test failure does not stop the cache from being saved.
+  - name: Save vcpkg cache
+    if: steps.restore.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+    uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    with:
+      path: ${{ inputs.vcpkg-root }}\installed
+      key: ${{ steps.key.outputs.key }}

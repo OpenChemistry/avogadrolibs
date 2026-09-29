@@ -75,35 +75,22 @@ jobs:
       with:
         arch: x64
 
-    - name: Ensure vcpkg is up to date
-      id: vcpkg_version
-      uses: ./.github/actions/update-vcpkg
-
-    # This job installs glew, which no other Windows job wants. A cache key
-    # shared with build_windows.yml let that job restore this cache and pick
-    # up vcpkg's GLEW, which its CMake config-mode lookup then preferred over
-    # the superbuild's own GLEW. Keep this job's key/restore-keys on their
-    # own "vcpkg-fuzz-" prefix so build_windows.yml's restore-keys can never
-    # match a cache saved here again.
-    - name: Restore vcpkg cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    # This job installs glew, which no other Windows job wants. A cache
+    # shared with build_windows.yml once let that job restore this tree and
+    # pick up vcpkg's GLEW, which its CMake config-mode lookup then preferred
+    # over the superbuild's own GLEW. The package-list hash in the
+    # vcpkg-install cache key keeps the two jobs' trees apart.
+    #
+    # glew is here but not in build_windows.yml, and USE_SYSTEM_GLEW below
+    # says why.
+    - name: Install vcpkg packages
+      uses: ./.github/actions/vcpkg-install
       with:
-        path: |
-          C:\vcpkg\installed
-          C:\vcpkg\packages
-          C:\vcpkg\downloads
-        key: vcpkg-fuzz-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
-        restore-keys: |
-          vcpkg-fuzz-${{ runner.os }}-${{ runner.arch }}-
-      env:
-        VCPKG_ROOT: C:\vcpkg
+        packages: libarchive eigen3 libxml2 zlib gtest glew
 
     - name: Install Dependencies
       run: |
         choco install ninja
-        # glew is here but not in build_windows.yml, and USE_SYSTEM_GLEW below
-        # says why.
-        vcpkg install libarchive eigen3 libxml2 zlib gtest glew
       shell: bash
 
     # Everything the fuzz targets need from LLVM: clang-cl itself, libFuzzer
