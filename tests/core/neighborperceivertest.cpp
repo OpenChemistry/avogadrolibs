@@ -189,8 +189,8 @@ TEST(NeighborPerceiverTest, matchesBruteForce)
 TEST(NeighborPerceiverTest, sparsePointsOverHugeRange)
 {
   // A few points spread over 1e6 A on each axis at a small cutoff would need
-  // ~1e18 bins. The bin budget follows the point count, so the grid stays
-  // small and no neighbour is lost: the close pair still finds each other and
+  // ~1e18 dense bins. Only occupied bins are stored, so the grid stays small
+  // and no neighbour is lost: the close pair still finds each other and
   // nothing else needs to be reported.
   Array<Vector3> points;
   points.push_back(Vector3(0.0, 0.0, 0.0));
@@ -222,4 +222,119 @@ TEST(NeighborPerceiverTest, fuzzOomRegression)
 
   for (Avogadro::Index i = 0; i < points.size(); ++i)
     EXPECT_TRUE(contains(perceiver.getNeighborsInclusive(points[i]), i));
+}
+
+namespace {
+
+// About 1000 points on a 1.5 A cubic lattice (10 x 10 x 10).
+Array<Vector3> latticeCluster()
+{
+  Array<Vector3> points;
+  for (int x = 0; x < 10; ++x)
+    for (int y = 0; y < 10; ++y)
+      for (int z = 0; z < 10; ++z)
+        points.push_back(Vector3(1.5 * x, 1.5 * y, 1.5 * z));
+  return points;
+}
+
+void expectClusterStaysBinned(const Array<Vector3>& points, float maxDistance)
+{
+  NeighborPerceiver perceiver(points, maxDistance);
+  const Avogadro::Index clusterSize = 1000;
+  Array<Avogadro::Index> neighbors;
+  for (Avogadro::Index i = 0; i < clusterSize; ++i) {
+    perceiver.getNeighborsInclusiveInPlace(neighbors, points[i]);
+    // The bins are maxDistance wide however far away the outlier is, so a
+    // point sees a few dozen at most, never the whole cluster.
+    EXPECT_LT(neighbors.size(), static_cast<size_t>(200)) << i;
+    EXPECT_TRUE(contains(neighbors, i)) << i;
+    for (Avogadro::Index j = 0; j < points.size(); ++j) {
+      if ((points[j] - points[i]).norm() < maxDistance)
+        EXPECT_TRUE(contains(neighbors, j)) << i << " " << j;
+    }
+  }
+}
+
+} // namespace
+
+TEST(NeighborPerceiverTest, farOutlierKeepsBinsSmall)
+{
+  // One stray atom must not enlarge the bins for everyone else: that put a
+  // whole protein in one bin and made bond perception O(n^2).
+  Array<Vector3> points = latticeCluster();
+  points.push_back(Vector3(0.0, 0.0, 200000.0));
+
+  expectClusterStaysBinned(points, 2.0f);
+
+  NeighborPerceiver perceiver(points, 2.0f);
+  auto neighbors = perceiver.getNeighborsInclusive(points[points.size() - 1]);
+  EXPECT_EQ(neighbors.size(), static_cast<size_t>(1));
+}
+
+TEST(NeighborPerceiverTest, extremeOutlierKeepsBinsSmall)
+{
+  // An extent this large cannot be resolved relative to the minimum
+  // (p - min rounds to the same value for the whole cluster), so the grid is
+  // anchored at the origin instead.
+  Array<Vector3> points = latticeCluster();
+  points.push_back(Vector3(0.0, 0.0, -1.0e300));
+
+  expectClusterStaysBinned(points, 2.0f);
+
+  NeighborPerceiver perceiver(points, 2.0f);
+  auto neighbors = perceiver.getNeighborsInclusive(points[points.size() - 1]);
+  EXPECT_EQ(neighbors.size(), static_cast<size_t>(1));
+}
+
+TEST(NeighborPerceiverTest, nonFinitePointsAreIgnored)
+{
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  const double inf = std::numeric_limits<double>::infinity();
+  Array<Vector3> points;
+  points.push_back(Vector3(0.0, 0.0, 0.0));  // 0
+  points.push_back(Vector3(nan, 0.0, 0.0));  // 1
+  points.push_back(Vector3(1.0, 0.0, 0.0));  // 2
+  points.push_back(Vector3(0.0, inf, 0.0));  // 3
+  points.push_back(Vector3(0.0, 1.0, -inf)); // 4
+  points.push_back(Vector3(1.0, 1.0, 0.0));  // 5
+
+  NeighborPerceiver perceiver(points, 1.5f);
+
+  const Avogadro::Index finite[] = { 0, 2, 5 };
+  for (Avogadro::Index i : finite) {
+    auto neighbors = perceiver.getNeighborsInclusive(points[i]);
+    for (Avogadro::Index j : finite)
+      EXPECT_TRUE(contains(neighbors, j)) << i << " " << j;
+    for (Avogadro::Index bad : { 1, 3, 4 })
+      EXPECT_FALSE(contains(neighbors, bad)) << i << " " << bad;
+  }
+  // a non-finite query has no neighbors
+  EXPECT_TRUE(perceiver.getNeighborsInclusive(points[1]).empty());
+  EXPECT_TRUE(perceiver.getNeighborsInclusive(points[3]).empty());
+}
+
+TEST(NeighborPerceiverTest, allNonFinitePoints)
+{
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  Array<Vector3> points;
+  points.push_back(Vector3(nan, nan, nan));
+  points.push_back(Vector3(nan, 0.0, 0.0));
+
+  NeighborPerceiver perceiver(points, 1.5f);
+  EXPECT_TRUE(perceiver.getNeighborsInclusive(Vector3(0.0, 0.0, 0.0)).empty());
+}
+
+TEST(NeighborPerceiverTest, degenerateInput)
+{
+  Array<Vector3> points;
+  points.push_back(Vector3(0.0, 0.0, 0.0));
+  EXPECT_TRUE(NeighborPerceiver(Array<Vector3>(), 1.0f)
+                .getNeighborsInclusive(Vector3::Zero())
+                .empty());
+  EXPECT_TRUE(NeighborPerceiver(points, 0.0f)
+                .getNeighborsInclusive(Vector3::Zero())
+                .empty());
+  EXPECT_TRUE(NeighborPerceiver(points, std::numeric_limits<float>::infinity())
+                .getNeighborsInclusive(Vector3::Zero())
+                .empty());
 }
