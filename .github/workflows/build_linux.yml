@@ -31,6 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # sccache is the Phase 3 pilot; the other entries will follow.
         config:
         - {
             name: "Ubuntu x86", artifact: "",
@@ -38,6 +39,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE",
+            sccache: true,
           }
         - {
             name: "AppImage x86", artifact: "Avogadro2-x86_64.AppImage",
@@ -52,6 +54,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "asan",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
+            sccache: true,
           }
         - {
             name: "Ubuntu Thread Sanitizer", artifact: "",
@@ -79,6 +82,15 @@ jobs:
       with:
         cache: true
         version: ${{ env.QT_VERSION }}
+
+    # Must run before Configure: it exports the compiler-launcher variables
+    # that the superbuild's subprojects read when they configure.
+    - name: Restore compiler cache
+      if: matrix.config.sccache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: ${{ matrix.config.name }}
 
     - name: Configure
       run: |
@@ -115,6 +127,17 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    # !cancelled() lets the action run after a failed build or failed tests.
+    # The action prints its statistics on every run and saves only on master
+    # pushes, failures included: sccache entries are content-addressed, so a
+    # partial cache is still correct.
+    - name: Save compiler cache
+      if: matrix.config.sccache && !cancelled()
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: save
+        name: ${{ matrix.config.name }}
 
     - name: Package AppImage
       if: matrix.config.name == 'AppImage x86'
