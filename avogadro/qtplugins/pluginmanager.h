@@ -112,13 +112,12 @@ QList<T*> PluginManager::pluginFactories() const
 template <typename T>
 T* PluginManager::pluginFactory(const QString& id) const
 {
-  T* factory;
   foreach (QObject* plugin, m_plugins) {
-    factory = qobject_cast<T*>(plugin);
+    auto* factory = qobject_cast<T*>(plugin);
     if (factory && factory->identifier() == id)
-      break;
+      return factory;
   }
-  return factory;
+  return nullptr;
 }
 
 } // namespace QtPlugins

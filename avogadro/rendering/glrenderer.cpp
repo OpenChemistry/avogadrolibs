@@ -54,6 +54,9 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::initialize()
 {
+#ifdef __EMSCRIPTEN__
+  m_valid = true;
+#else
   GLenum result = glewInit();
   m_valid = (result == GLEW_OK || result == GLEW_ERROR_NO_GLX_DISPLAY);
   if (!m_valid) {
@@ -66,6 +69,7 @@ void GLRenderer::initialize()
     m_valid = false;
     return;
   }
+#endif
 
   m_solidPipeline.initialize();
 }
@@ -104,15 +108,16 @@ void GLRenderer::render()
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   // Setup for solid geometry
   // m_volume.begin()
-  m_solidPipeline.begin();
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
+  const bool useSolidPipeline = m_solidPipeline.begin();
   m_scene.rootNode().accept(visitor);
-  // Before end(), so the offset the fog and depth-of-field are sized by
-  // belongs to the camera this frame is drawn with rather than the last one.
-  m_solidPipeline.adjustOffset(m_camera);
-  m_solidPipeline.end(m_camera);
+  if (useSolidPipeline) {
+    // Use this frame's camera for the fog and depth-of-field offsets.
+    m_solidPipeline.adjustOffset(m_camera);
+    m_solidPipeline.end(m_camera);
+  }
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);

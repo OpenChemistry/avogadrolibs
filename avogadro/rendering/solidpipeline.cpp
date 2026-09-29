@@ -21,6 +21,10 @@
 
 #include <cmath>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/html5.h>
+#endif
+
 namespace Avogadro::Rendering {
 
 // Texture units shared by the pipeline's stages. Kept together so that adding
@@ -59,7 +63,11 @@ public:
     prog.setUniformValue("height", float(h));
   }
 
-  GLuint defaultFBO;
+  bool initialized = false;
+  bool framebufferReady = false;
+  bool aoSupported = true;
+  bool aoReady = false;
+  GLuint defaultFBO = 0;
   GLint defaultViewport[4] = { 0, 0, 0, 0 };
   GLuint renderFBO;
   GLuint renderTexture;
@@ -94,8 +102,13 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
 
   glGenTextures(1, texDepth);
   glBindTexture(GL_TEXTURE_2D, *texDepth);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+#ifdef __EMSCRIPTEN__
+  const GLint depthFilter = GL_NEAREST;
+#else
+  const GLint depthFilter = GL_LINEAR;
+#endif
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, depthFilter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, depthFilter);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
@@ -138,6 +151,13 @@ SolidPipeline::~SolidPipeline()
 
 void SolidPipeline::initialize()
 {
+  GLint previousFBO = 0;
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+#ifdef __EMSCRIPTEN__
+  // Floating-point color attachments are optional even in WebGL 2.
+  d->aoSupported = emscripten_webgl_enable_extension(
+    emscripten_webgl_get_current_context(), "EXT_color_buffer_float");
+#endif
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeAoFramebuffer(&d->aoFBO, &d->aoTexture);
   // Each helper leaves its own framebuffer bound; settle on the one the
@@ -161,32 +181,40 @@ void SolidPipeline::initialize()
 
   d->screenVertexShader.setType(Shader::Vertex);
   d->screenVertexShader.setSource(solid_vs);
-  if (!d->screenVertexShader.compile())
+  const bool vertexCompiled = d->screenVertexShader.compile();
+  if (!vertexCompiled)
     std::cout << d->screenVertexShader.error() << std::endl;
 
   d->firstFragmentShader.setType(Shader::Fragment);
   d->firstFragmentShader.setSource(solid_first_fs);
-  if (!d->firstFragmentShader.compile())
+  const bool fragmentCompiled = d->firstFragmentShader.compile();
+  if (!fragmentCompiled)
     std::cout << d->firstFragmentShader.error() << std::endl;
 
   d->firstStageShaders.attachShader(d->screenVertexShader);
   d->firstStageShaders.attachShader(d->firstFragmentShader);
-  if (!d->firstStageShaders.link())
+  d->initialized =
+    vertexCompiled && fragmentCompiled && d->firstStageShaders.link();
+  if (!d->initialized)
     std::cout << d->firstStageShaders.error() << std::endl;
 
-  d->aoFragmentShader.setType(Shader::Fragment);
-  d->aoFragmentShader.setSource(solid_ao_fs);
-  if (!d->aoFragmentShader.compile())
-    std::cout << d->aoFragmentShader.error() << std::endl;
-
-  d->aoStageShaders.attachShader(d->screenVertexShader);
-  d->aoStageShaders.attachShader(d->aoFragmentShader);
-  if (!d->aoStageShaders.link())
-    std::cout << d->aoStageShaders.error() << std::endl;
+  if (d->aoSupported) {
+    d->aoFragmentShader.setType(Shader::Fragment);
+    d->aoFragmentShader.setSource(solid_ao_fs);
+    d->aoSupported = d->aoFragmentShader.compile();
+    if (d->aoSupported) {
+      d->aoStageShaders.attachShader(d->screenVertexShader);
+      d->aoStageShaders.attachShader(d->aoFragmentShader);
+      d->aoSupported = d->aoStageShaders.link();
+    }
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
 }
 
-void SolidPipeline::begin()
+bool SolidPipeline::begin()
 {
+  if (!d->initialized || !d->framebufferReady)
+    return false;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
   glGetIntegerv(GL_VIEWPORT, d->defaultViewport);
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
@@ -206,7 +234,12 @@ void SolidPipeline::begin()
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(tmp[0], tmp[1], tmp[2], tmp[3]);
+#ifdef __EMSCRIPTEN__
+  glClearDepthf(tmp[4]);
+#else
   glClearDepth(tmp[4]);
+#endif
+  return true;
 }
 
 void SolidPipeline::end(const Camera& camera)
@@ -217,7 +250,8 @@ void SolidPipeline::end(const Camera& camera)
   // Render the ambient occlusion term into its own buffer first, so the
   // compositing stage can blur away the kernel's sampling pattern. Skipped
   // entirely when ambient occlusion is off, since nothing would read it.
-  if (m_aoEnabled) {
+  const bool useAo = m_aoEnabled && d->aoReady;
+  if (useAo) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
     GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, aoBuffersList);
@@ -248,14 +282,18 @@ void SolidPipeline::end(const Camera& camera)
     glDrawBuffers(1, drawBuffersList);
   } else {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#ifdef __EMSCRIPTEN__
+    const GLenum back = GL_BACK;
+    glDrawBuffers(1, &back);
+#else
     glDrawBuffer(GL_BACK);
+#endif
   }
   glViewport(d->defaultViewport[0], d->defaultViewport[1],
              d->defaultViewport[2], d->defaultViewport[3]);
   d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture,
                  "inDepthTex", d->depthTexture, m_width, m_height);
-  d->firstStageShaders.setUniformValue("inAoEnabled",
-                                       m_aoEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders.setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue("inDofEnabled",
                                        m_dofEnabled ? 1.0f : 0.0f);
   d->firstStageShaders.setUniformValue(
@@ -309,13 +347,30 @@ void SolidPipeline::resize(int width, int height)
   m_width = width * m_pixelRatio;
   m_height = height * m_pixelRatio;
 
+  d->framebufferReady = false;
+  d->aoReady = false;
+  if (!d->initialized || m_width <= 0 || m_height <= 0)
+    return;
+  GLint previousFBO = 0;
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
+#ifdef __EMSCRIPTEN__
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, nullptr);
+#else
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, nullptr);
+#endif
 
   glBindTexture(GL_TEXTURE_2D, d->depthTexture);
+#ifdef __EMSCRIPTEN__
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_width, m_height, 0,
+               GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr);
+#else
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0,
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+#endif
 
   // Two channels: the occlusion term and the distance to the surface.
   //
@@ -331,8 +386,22 @@ void SolidPipeline::resize(int width, int height)
   // units from the geometry would lose the surface test. Nothing chemical
   // comes near it.
   glBindTexture(GL_TEXTURE_2D, d->aoTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, m_width, m_height, 0, GL_RG,
-               GL_FLOAT, nullptr);
+  if (d->aoSupported) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, m_width, m_height, 0, GL_RG,
+                 GL_FLOAT, nullptr);
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    d->aoReady =
+      glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+  } else {
+    // Keep the composite shader's unused sampler complete without requiring
+    // a floating-point render target.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
+  d->framebufferReady =
+    glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+  glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

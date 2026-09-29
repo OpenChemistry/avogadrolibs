@@ -14,10 +14,17 @@
 
 #include <QPointer>
 
+#include <QtCore/QtGlobal>
+
+#ifdef Q_OS_WASM
+#include <QtOpenGL/QOpenGLWindow>
+#include <QtWidgets/QWidget>
+#else
 #if QT_VERSION >= 0x060000
 #include <QtOpenGLWidgets/QOpenGLWidget>
 #else
 #include <QOpenGLWidget>
+#endif
 #endif
 
 class QTimer;
@@ -29,6 +36,12 @@ class Molecule;
 }
 
 namespace QtOpenGL {
+
+#ifdef Q_OS_WASM
+using GLWidgetBase = QWidget;
+#else
+using GLWidgetBase = QOpenGLWidget;
+#endif
 
 /**
  * @class GLWidget glwidget.h <avogadro/qtopengl/glwidget.h>
@@ -46,7 +59,7 @@ namespace QtOpenGL {
  * tool also ignores the event, it will be passed to QOpenGLWidget's handlers.
  */
 
-class AVOGADROQTOPENGL_EXPORT GLWidget : public QOpenGLWidget
+class AVOGADROQTOPENGL_EXPORT GLWidget : public GLWidgetBase
 {
   Q_OBJECT
 
@@ -67,6 +80,10 @@ public:
 
   /** Get a reference to the renderer for the widget. */
   Rendering::GLRenderer& renderer() { return m_renderer; }
+
+#ifdef Q_OS_WASM
+  QImage grabFramebuffer();
+#endif
 
   /**
    * @return A list of the ToolPlugins owned by the GLWidget.
@@ -187,13 +204,25 @@ protected slots:
 
 protected:
   /** This is where the GL context is initialized. */
+#ifdef Q_OS_WASM
+  void initializeGL();
+#else
   void initializeGL() override;
+#endif
 
   /** Take care of resizing the context. */
+#ifdef Q_OS_WASM
+  void resizeGL(int width, int height);
+#else
   void resizeGL(int width, int height) override;
+#endif
 
   /** Main entry point for all GL rendering. */
+#ifdef Q_OS_WASM
+  void paintGL();
+#else
   void paintGL() override;
+#endif
 
   /** Reimplemented from QOpenGLWidget @{ */
   void mouseDoubleClickEvent(QMouseEvent*) override;
@@ -206,6 +235,9 @@ protected:
   /** @} */
 
 private:
+#ifdef Q_OS_WASM
+  friend class WasmOpenGLWindow;
+#endif
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
   bool isNavigationKeyGesture(const QKeyEvent* event) const;
 
@@ -218,6 +250,10 @@ private:
   QtGui::ScenePluginModel m_scenePlugins;
 
   QTimer* m_renderTimer;
+#ifdef Q_OS_WASM
+  QOpenGLWindow* m_glWindow;
+  QWidget* m_glContainer;
+#endif
 
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;

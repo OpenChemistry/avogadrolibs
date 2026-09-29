@@ -30,6 +30,7 @@
 #include <avogadro/rendering/textproperties.h>
 
 #include <QAction>
+#include <QVariantMap>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
@@ -68,8 +69,7 @@ using Avogadro::Rendering::TextProperties;
 Editor::Editor(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
     m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
-    m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
-    m_pressedButtons(Qt::NoButton),
+    m_toolWidget(nullptr), m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
     m_fixValenceLater(false), m_layerManager("Editor")
 {
@@ -80,11 +80,15 @@ Editor::Editor(QObject* parent_)
        "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
        "Right Mouse:\tDelete Atom")
       .arg(shortcut));
+  setProperty("drawOptions", drawOptions());
   setIcon();
   reset();
 }
 
-Editor::~Editor() {}
+Editor::~Editor()
+{
+  delete m_toolWidget;
+}
 
 void Editor::setIcon(bool darkTheme)
 {
@@ -96,7 +100,85 @@ void Editor::setIcon(bool darkTheme)
 
 QWidget* Editor::toolWidget() const
 {
+  if (!m_toolWidget) {
+    m_toolWidget = new EditorToolWidget(qobject_cast<QWidget*>(parent()));
+    syncToolWidget();
+    connect(this, &Editor::drawOptionsChanged, m_toolWidget,
+            [this]() { syncToolWidget(); });
+    connect(m_toolWidget, &EditorToolWidget::optionsChanged, this,
+            &Editor::updateDrawOptionsFromWidget);
+  }
   return m_toolWidget;
+}
+
+void Editor::syncToolWidget() const
+{
+  if (!m_toolWidget)
+    return;
+  m_toolWidget->setAtomicNumber(atomicNumber());
+  m_toolWidget->setBondOrder(bondOrder());
+  m_toolWidget->setAdjustHydrogens(adjustHydrogens());
+}
+
+void Editor::updateDrawOptionsFromWidget()
+{
+  if (!m_toolWidget)
+    return;
+  // Capture the complete panel state before notifying observers.
+  handleCommand(QStringLiteral("setDrawOptions"),
+                { { "atomicNumber", m_toolWidget->atomicNumber() },
+                  { "bondOrder", m_toolWidget->bondOrder() },
+                  { "adjustHydrogens", m_toolWidget->adjustHydrogens() } });
+}
+
+QVariantMap Editor::drawOptions() const
+{
+  return { { "atomicNumber", m_atomicNumber },
+           { "bondOrder", m_bondOrder },
+           { "adjustHydrogens", m_adjustHydrogens } };
+}
+
+bool Editor::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (command != QStringLiteral("setDrawOptions"))
+    return false;
+  bool numberOk = true, orderOk = true;
+  int number = options.contains("atomicNumber")
+                 ? options.value("atomicNumber").toInt(&numberOk)
+                 : m_atomicNumber;
+  int order = options.contains("bondOrder")
+                ? options.value("bondOrder").toInt(&orderOk)
+                : m_bondOrder;
+  if (!numberOk || !orderOk || number < 1 || number > 118 || order < 0 ||
+      order > 3)
+    return false;
+  bool hydrogens = options.value("adjustHydrogens", m_adjustHydrogens).toBool();
+  if (number != m_atomicNumber || order != m_bondOrder ||
+      hydrogens != m_adjustHydrogens) {
+    m_atomicNumber = static_cast<unsigned char>(number);
+    m_bondOrder = static_cast<unsigned char>(order);
+    m_adjustHydrogens = hydrogens;
+    setProperty("drawOptions", drawOptions());
+    emit drawOptionsChanged();
+  }
+  return true;
+}
+
+void Editor::setAtomicNumber(unsigned char number)
+{
+  handleCommand(QStringLiteral("setDrawOptions"),
+                { { "atomicNumber", number } });
+}
+
+void Editor::setBondOrder(unsigned char order)
+{
+  handleCommand(QStringLiteral("setDrawOptions"), { { "bondOrder", order } });
+}
+
+void Editor::setAdjustHydrogens(bool adjust)
+{
+  handleCommand(QStringLiteral("setDrawOptions"),
+                { { "adjustHydrogens", adjust } });
 }
 
 QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
@@ -256,13 +338,13 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   int bondOrder = m_keyPressBuffer.toInt(&ok);
 
   if (ok && bondOrder > 0 && bondOrder <= 4) {
-    m_toolWidget->setBondOrder(static_cast<unsigned char>(bondOrder));
+    setBondOrder(static_cast<unsigned char>(bondOrder));
   } else {
     atomicNum =
       Core::Elements::atomicNumberFromSymbol(m_keyPressBuffer.toStdString());
 
     if (atomicNum != Avogadro::InvalidElement)
-      m_toolWidget->setAtomicNumber(static_cast<unsigned char>(atomicNum));
+      setAtomicNumber(static_cast<unsigned char>(atomicNum));
   }
 
   return nullptr;
@@ -368,12 +450,11 @@ void Editor::emptyLeftClick(QMouseEvent* e)
   // Add an atom at the clicked position
   Vector2f windowPos(e->localPos().x(), e->localPos().y());
   Vector3f atomPos = m_renderer->camera().unProject(windowPos);
-  RWAtom newAtom =
-    m_molecule->addAtom(m_toolWidget->atomicNumber(), atomPos.cast<double>());
+  RWAtom newAtom = m_molecule->addAtom(atomicNumber(), atomPos.cast<double>());
 
   Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
-  if (m_toolWidget->adjustHydrogens()) {
+  if (adjustHydrogens()) {
     m_fixValenceLater = true;
   }
 
@@ -393,7 +474,7 @@ void Editor::atomLeftClick(QMouseEvent* e)
   RWAtom atom = m_molecule->atom(m_clickedObject.index);
   if (atom.isValid()) {
     // Store the original atomic number of the clicked atom before updating it.
-    unsigned char atomicNumber = m_toolWidget->atomicNumber();
+    unsigned char atomicNumber = this->atomicNumber();
     if (atom.atomicNumber() != atomicNumber) {
       // Okay, we're changing this element
       m_clickedAtomicNumber = atom.atomicNumber();
@@ -404,7 +485,7 @@ void Editor::atomLeftClick(QMouseEvent* e)
       if (atomBonds.size() == 1) {
         // If the clicked atom only has one bond, we can adjust the bond length
         bond = atomBonds[0];
-      } else if (atomBonds.size() > 1 && m_toolWidget->adjustHydrogens()) {
+      } else if (atomBonds.size() > 1 && adjustHydrogens()) {
         // loop through to see if there's one bond and *only* one bond
         // that's not a hydrogen
         for (const RWBond& b : atomBonds) {
@@ -421,7 +502,8 @@ void Editor::atomLeftClick(QMouseEvent* e)
       }
 
       // If we found a valid bond, adjust the bond distance
-      if (bond.isValid() && m_toolWidget->adjustBondLengths()) {
+      if (bond.isValid() &&
+          (!m_toolWidget || m_toolWidget->adjustBondLengths())) {
         RWAtom atom2 = bond.getOtherAtom(atom);
 
         m_bondDistance = Core::AtomUtilities::idealBondLength(
@@ -437,7 +519,7 @@ void Editor::atomLeftClick(QMouseEvent* e)
 
       Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
 
-      if (m_toolWidget->adjustHydrogens())
+      if (adjustHydrogens())
         m_fixValenceLater = true;
 
       m_molecule->emitChanged(changes);
@@ -484,7 +566,8 @@ void Editor::bondLeftClick(QMouseEvent* e)
   }
 
   // can we move atom1?
-  if (adjustBondLength && m_toolWidget->adjustBondLengths()) {
+  if (adjustBondLength &&
+      (!m_toolWidget || m_toolWidget->adjustBondLengths())) {
     Vector3 bondVector = atom1.position3d() - atom2.position3d();
     bondVector.normalize();
     bondVector *= distance;
@@ -503,7 +586,8 @@ void Editor::bondLeftClick(QMouseEvent* e)
       }
       adjustBondLength = true;
     }
-    if (adjustBondLength && m_toolWidget->adjustBondLengths()) {
+    if (adjustBondLength &&
+        (!m_toolWidget || m_toolWidget->adjustBondLengths())) {
       Vector3 bondVector = atom2.position3d() - atom1.position3d();
       bondVector.normalize();
       bondVector *= distance;
@@ -514,7 +598,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
     }
   }
 
-  if (m_toolWidget->adjustHydrogens()) {
+  if (adjustHydrogens()) {
     // change for the new bond order
     QtGui::HydrogenTools::adjustHydrogens(atom1);
     QtGui::HydrogenTools::adjustHydrogens(atom2);
@@ -534,7 +618,7 @@ void Editor::atomRightClick(QMouseEvent* e)
   Core::Array<Index> bondedAtoms;
   Core::Array<Index> hToRemove; // atoms to remove
   RWAtom atom = m_molecule->atom(m_clickedObject.index);
-  if (m_toolWidget->adjustHydrogens()) {
+  if (adjustHydrogens()) {
     // before we remove the atom, we need to delete any H atoms
     // that are bonded to it -- unless it's a hydrogen atom itself
     if (atom.isValid() && atom.atomicNumber() != Core::Hydrogen) {
@@ -583,7 +667,7 @@ void Editor::bondRightClick(QMouseEvent* e)
   RWAtom atom2 = bond.atom2();
   m_molecule->removeBond(m_clickedObject.index);
 
-  if (m_toolWidget->adjustHydrogens()) {
+  if (adjustHydrogens()) {
     QtGui::HydrogenTools::adjustHydrogens(atom1);
     QtGui::HydrogenTools::adjustHydrogens(atom2);
   }
@@ -644,9 +728,9 @@ void Editor::atomLeftDrag(QMouseEvent* e)
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
       RWAtom atom = m_molecule->atom(m_clickedObject.index);
-      if (atom.atomicNumber() != m_toolWidget->atomicNumber()) {
+      if (atom.atomicNumber() != atomicNumber()) {
         m_clickedAtomicNumber = atom.atomicNumber();
-        atom.setAtomicNumber(m_toolWidget->atomicNumber());
+        atom.setAtomicNumber(atomicNumber());
         changes |= Molecule::Atoms | Molecule::Modified;
       }
       m_molecule->emitChanged(changes);
@@ -733,7 +817,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
       RWAtom bondedAtom = m_molecule->atom(atomToBond.index);
       if (!m_molecule->bond(clickedAtom, bondedAtom).isValid()) {
 
-        int bondOrder = m_toolWidget->bondOrder();
+        int bondOrder = this->bondOrder();
         if (bondOrder == 0) {
           // automatic - guess the size
           bondOrder = expectedBondOrder(clickedAtom, bondedAtom);
@@ -743,7 +827,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
       } // we have a bond, but it might be the wrong order
       else {
         RWBond bond = m_molecule->bond(clickedAtom, bondedAtom);
-        int bondOrder = m_toolWidget->bondOrder();
+        int bondOrder = this->bondOrder();
         if (bondOrder == 0) {
           // automatic - guess the size
           bondOrder = expectedBondOrder(clickedAtom, bondedAtom);
@@ -767,11 +851,10 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   if (!m_newObject.isValid()) {
     // Add a new atom bonded to the clicked atom
     RWAtom clickedAtom = m_molecule->atom(m_clickedObject.index);
-    newAtom = m_molecule->addAtom(m_toolWidget->atomicNumber(),
-                                  clickedAtom.position3d());
+    newAtom = m_molecule->addAtom(atomicNumber(), clickedAtom.position3d());
 
     // Handle the automatic bond order
-    int bondOrder = m_toolWidget->bondOrder();
+    int bondOrder = this->bondOrder();
     if (bondOrder == 0) {
       // automatic - guess the size
       bondOrder = expectedBondOrder(clickedAtom, newAtom);
@@ -779,7 +862,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
     m_molecule->addBond(clickedAtom, newAtom, bondOrder);
 
     // now if we need to adjust hydrogens, do it
-    if (m_toolWidget->adjustHydrogens())
+    if (adjustHydrogens())
       m_fixValenceLater = true;
 
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
@@ -811,7 +894,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
       m_bondDistance = bondVector.norm();
 
       // need to check if bond order needs to change
-      if (m_toolWidget->bondOrder() == 0) { // automatic
+      if (bondOrder() == 0) { // automatic
         RWBond bond = m_molecule->bond(newAtom, clickedAtom);
         if (bond.isValid()) {
           int bondOrder = expectedBondOrder(newAtom, clickedAtom);
@@ -822,7 +905,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
         }
       } // otherwise see if the bond order is different than what's there
       else {
-        int bondOrder = m_toolWidget->bondOrder();
+        int bondOrder = this->bondOrder();
         RWBond bond = m_molecule->bond(newAtom, clickedAtom);
         if (bond.isValid() && bondOrder != bond.order())
           bond.setOrder(bondOrder);
