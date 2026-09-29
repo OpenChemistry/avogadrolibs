@@ -1,0 +1,107 @@
+name: 'Compiler cache'
+description: 'Caches compiler output with sccache on its local disk backend, one actions/cache tarball per configuration'
+inputs:
+  mode:
+    description: '"restore" (before configuring) or "save" (after building and testing)'
+    required: true
+  name:
+    description: 'Configuration name, e.g. the matrix config name; slugified for the cache key'
+    required: true
+  size:
+    description: 'Maximum sccache cache size'
+    required: false
+    default: '600M'
+
+runs:
+  using: "composite"
+  steps:
+  - name: Validate mode
+    if: inputs.mode != 'restore' && inputs.mode != 'save'
+    shell: bash
+    env:
+      MODE: ${{ inputs.mode }}
+    run: |
+      echo "::error::compiler-cache: mode must be 'restore' or 'save', got '$MODE'"
+      exit 1
+
+  # The key is the configuration slug plus the commit. Inputs arrive through
+  # env, never interpolated into the script text. Restore and save both run
+  # this same step, so they always agree on the key.
+  #
+  # The restore-keys prefix is wanted here, the opposite of vcpkg: sccache
+  # content-addresses every object (compiler, flags and preprocessed source
+  # all go into the hash), so an older entry can never produce a wrong result.
+  # It can only miss, and then the compiler runs as usual.
+  - name: Compute cache key
+    id: key
+    shell: bash
+    env:
+      CONFIG_NAME: ${{ inputs.name }}
+      RUNNER_OS_NAME: ${{ runner.os }}
+      RUNNER_ARCH_NAME: ${{ runner.arch }}
+    run: |
+      slug=$(printf '%s' "$CONFIG_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
+      prefix="sccache-${RUNNER_OS_NAME}-${RUNNER_ARCH_NAME}-${slug}-"
+      echo "Cache key: ${prefix}${GITHUB_SHA}"
+      echo "key=${prefix}${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+      echo "restore-prefix=${prefix}" >> "$GITHUB_OUTPUT"
+
+  # Only installs the binary; the cache itself is the actions/cache step
+  # below, not sccache's GHA backend.
+  - name: Install sccache
+    if: inputs.mode == 'restore'
+    uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+
+  # These are environment variables rather than -D flags because this is a
+  # CMake superbuild: each ExternalProject (Open Babel, libarchive, spglib,
+  # avogadrolibs, avogadroapp...) is configured during the *build* step, and
+  # the superbuild does not forward -D...LAUNCHER flags to its subprojects.
+  # CMake >= 3.17 initialises CMAKE_<LANG>_COMPILER_LAUNCHER from the
+  # environment, so every subproject picks the launcher up. That is also why
+  # restore mode must run before the Configure step.
+  - name: Configure sccache
+    if: inputs.mode == 'restore'
+    shell: bash
+    env:
+      WORKSPACE: ${{ github.workspace }}
+      CACHE_SIZE: ${{ inputs.size }}
+    run: |
+      {
+        echo "SCCACHE_DIR=${WORKSPACE}/.sccache"
+        echo "SCCACHE_CACHE_SIZE=${CACHE_SIZE}"
+        echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
+        echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
+      } >> "$GITHUB_ENV"
+
+  - name: Restore compiler cache
+    if: inputs.mode == 'restore'
+    uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    with:
+      path: ${{ github.workspace }}/.sccache
+      key: ${{ steps.key.outputs.key }}
+      restore-keys: ${{ steps.key.outputs.restore-prefix }}
+
+  # Stopping the server flushes it to disk before the tarball is made. Neither
+  # command may fail the job: sccache may never have started if the build
+  # failed early.
+  - name: Show sccache statistics
+    if: inputs.mode == 'save'
+    shell: bash
+    run: |
+      sccache --show-stats || true
+      sccache --stop-server || true
+
+  # Save only from master: a PR-scoped entry cannot be read by any other PR,
+  # while PRs still restore master's entry through the restore-keys prefix.
+  # It also keeps the 10 GB repo cache budget predictable. The condition has
+  # no status function, so success() is implied and the save is skipped after
+  # a failure; the caller's !cancelled() only exists so the statistics above
+  # still print. (If the runner evaluates success() against this composite's
+  # own steps only, a save after failed tests is harmless anyway, since
+  # sccache entries are content-addressed.)
+  - name: Save compiler cache
+    if: inputs.mode == 'save' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    with:
+      path: ${{ github.workspace }}/.sccache
+      key: ${{ steps.key.outputs.key }}
