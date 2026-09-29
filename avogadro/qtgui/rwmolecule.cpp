@@ -278,6 +278,12 @@ void RWMolecule::setAtomSelected(Index atomId, bool selected,
   if (atomId >= atomCount())
     return;
 
+  // Selecting an already-selected atom (or deselecting an unselected one)
+  // changes nothing, so it must not leave an undo step that does nothing --
+  // e.g. "select all" twice, or a select-by-element with no matches.
+  if (m_molecule.atomSelected(atomId) == selected)
+    return;
+
   auto* comm = new ModifySelectionCommand(*this, atomId, selected);
   comm->setText(undoText);
   comm->setCanMerge(true);

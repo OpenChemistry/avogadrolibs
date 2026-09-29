@@ -1130,6 +1130,107 @@ TEST(RWMoleculeTest, setAtomSelectedIgnoresOutOfRangeIndices)
     expectAtomIs(mol, i, i);
 }
 
+namespace {
+std::vector<bool> selectionOf(const RWMolecule& mol)
+{
+  std::vector<bool> sel;
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    sel.push_back(mol.atomSelected(i));
+  return sel;
+}
+} // namespace
+
+// A selection change that changes nothing must not leave an undo step behind:
+// "select all" on an all-selected molecule, or a select-by-element that
+// matches no atom, used to push one command per atom visited.
+TEST(RWMoleculeTest, setAtomSelectedNoOpPushesNothing)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 4);
+  const int count = mol.undoStack().count();
+  const int index = mol.undoStack().index();
+
+  // Deselecting atoms that are not selected.
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    mol.setAtomSelected(i, false);
+
+  EXPECT_EQ(count, mol.undoStack().count());
+  EXPECT_EQ(index, mol.undoStack().index());
+  EXPECT_EQ(std::vector<bool>(4, false), selectionOf(mol));
+
+  // Selecting an atom, then a non-selection edit (which ends merging), then
+  // selecting the same atom again: the second select is a no-op.
+  mol.setAtomSelected(2, true);
+  mol.setAtomicNumber(0, 8);
+  const int afterEdit = mol.undoStack().count();
+  mol.setAtomSelected(2, true);
+  EXPECT_EQ(afterEdit, mol.undoStack().count());
+  EXPECT_EQ(afterEdit, mol.undoStack().index());
+}
+
+// A real change is still exactly one undoable step, which undo and redo
+// reverse and replay.
+TEST(RWMoleculeTest, setAtomSelectedRealChangeUndoRedo)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 3);
+  const int count = mol.undoStack().count();
+
+  mol.setAtomSelected(1, true);
+  EXPECT_EQ(count + 1, mol.undoStack().count());
+  EXPECT_EQ((std::vector<bool>{ false, true, false }), selectionOf(mol));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(std::vector<bool>(3, false), selectionOf(mol));
+  EXPECT_EQ(count, mol.undoStack().index());
+  // The atom itself was not touched by undoing the selection.
+  for (Index i = 0; i < 3; ++i)
+    expectAtomIs(mol, i, i);
+
+  mol.undoStack().redo();
+  EXPECT_EQ((std::vector<bool>{ false, true, false }), selectionOf(mol));
+  EXPECT_EQ(count + 1, mol.undoStack().index());
+}
+
+// A batch mixing real changes and no-ops (e.g. "select all" with some atoms
+// already selected) is one merged step that restores the exact prior
+// selection on undo; repeating the batch adds nothing.
+TEST(RWMoleculeTest, setAtomSelectedMixedBatchIsOneStep)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 5);
+  mol.setAtomSelected(1, true);
+  mol.setAtomSelected(3, true);
+  // End the merge chain so the batch below starts a step of its own.
+  mol.setAtomicNumber(0, 8);
+  const int count = mol.undoStack().count();
+  const std::vector<bool> before{ false, true, false, true, false };
+  ASSERT_EQ(before, selectionOf(mol));
+
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    mol.setAtomSelected(i, true);
+  EXPECT_EQ(count + 1, mol.undoStack().count());
+  EXPECT_EQ(std::vector<bool>(5, true), selectionOf(mol));
+
+  // Selecting everything again is a pure no-op.
+  mol.setAtomicNumber(0, 6);
+  const int afterEdit = mol.undoStack().count();
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    mol.setAtomSelected(i, true);
+  EXPECT_EQ(afterEdit, mol.undoStack().count());
+
+  mol.undoStack().undo(); // atomic number back to 8
+  mol.undoStack().undo(); // the select-all batch
+  EXPECT_EQ(before, selectionOf(mol));
+  EXPECT_EQ(8, mol.atomicNumber(0));
+
+  mol.undoStack().redo();
+  EXPECT_EQ(std::vector<bool>(5, true), selectionOf(mol));
+}
+
 // Renumbering swaps atoms that are bonded to each other, which used to leave
 // Graph's adjacency list naming those vertices as their own neighbours. The
 // edge between them could then no longer be found, so removeEdge() returned
