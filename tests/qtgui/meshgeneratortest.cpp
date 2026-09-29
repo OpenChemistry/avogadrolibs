@@ -100,3 +100,42 @@ TEST(MeshGeneratorTest, generateSphereMesh)
   // Vertices and normals should have the same count
   EXPECT_EQ(mesh.vertices().size(), mesh.normals().size());
 }
+
+// Regression test: initialize() sized its working arrays from
+// dimension - 1 without checking, so a cube with fewer than two points on
+// an axis gave zero or wrapped (huge) sizes.
+TEST(MeshGeneratorTest, initializeRejectsThinCube)
+{
+  Mesh mesh;
+
+  // An empty cube: all dimensions zero.
+  Cube empty;
+  MeshGenerator gen;
+  EXPECT_FALSE(gen.initialize(&empty, &mesh, 1.0f));
+  EXPECT_EQ(gen.cube(), nullptr);
+  EXPECT_EQ(gen.mesh(), nullptr);
+
+  // One point along each axis in turn -- valid for Cube, since the spacing
+  // is given, but there are no cells to march.
+  const Vector3i thin[] = { Vector3i(1, 4, 4), Vector3i(4, 1, 4),
+                            Vector3i(4, 4, 1) };
+  for (const auto& dim : thin) {
+    Cube cube;
+    ASSERT_TRUE(
+      cube.setLimits(Vector3(0.0, 0.0, 0.0), dim, Vector3(0.5, 0.5, 0.5)));
+    EXPECT_FALSE(gen.initialize(&cube, &mesh, 1.0f)) << dim.transpose();
+    EXPECT_EQ(gen.cube(), nullptr);
+  }
+
+  // A rejected cube also drops a previously accepted one, so running the
+  // generator afterwards does nothing rather than reusing stale pointers.
+  Cube good;
+  good.setLimits(Vector3(-3.0, -3.0, -3.0), Vector3(3.0, 3.0, 3.0),
+                 Vector3i(8, 8, 8));
+  fillSphereFunction(good);
+  ASSERT_TRUE(gen.initialize(&good, &mesh, 1.5f));
+  EXPECT_FALSE(gen.initialize(&empty, &mesh, 1.5f));
+  EXPECT_EQ(gen.cube(), nullptr);
+  gen.run();
+  EXPECT_EQ(mesh.numVertices(), 0u);
+}

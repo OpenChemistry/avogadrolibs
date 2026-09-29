@@ -532,7 +532,7 @@ jobs:
         # CRT build (see the reconfigure step). When a target is added there,
         # add it here too.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
         )

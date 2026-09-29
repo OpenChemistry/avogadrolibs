@@ -82,6 +82,17 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   // this blocks until the outstanding isosurface is complete.
   wait();
 
+  // The working buffers below are sized from dimension - 1, and marching
+  // needs at least one cell along every axis. A rejected cube must not be
+  // left for run() to pick up either, nor the previous (possibly deleted)
+  // cube and mesh, so both pointers are cleared.
+  const Vector3i dim = cube_->dimensions();
+  if (dim.x() < 2 || dim.y() < 2 || dim.z() < 2) {
+    m_cube = nullptr;
+    m_mesh = nullptr;
+    return false;
+  }
+
   m_cube = cube_;
   m_mesh = mesh_;
   m_iso = iso;

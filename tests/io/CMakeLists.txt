@@ -77,6 +77,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     tmol
     POSCAR
     OUTCAR
+    dump
   )
   foreach(fuzzName ${fuzz})
     add_executable(fuzz_${fuzzName} fuzztest.cpp)

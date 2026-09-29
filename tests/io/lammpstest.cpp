@@ -214,3 +214,99 @@ TEST(LammpsTest, shortBoxBoundsRowFails)
     molecule3))
     << valid.error();
 }
+
+namespace {
+
+const std::string kLammpsFrameHead =
+  "ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n2\n"
+  "ITEM: BOX BOUNDS pp pp pp\n0.0 5.0\n0.0 5.0\n0.0 5.0\n";
+const std::string kLammpsFrameHead2 =
+  "ITEM: TIMESTEP\n10\nITEM: NUMBER OF ATOMS\n2\n"
+  "ITEM: BOX BOUNDS pp pp pp\n0.0 5.0\n0.0 5.0\n0.0 5.0\n";
+
+bool readLammps(const std::string& input)
+{
+  LammpsTrajectoryFormat format;
+  Molecule molecule;
+  return format.readString(input, molecule);
+}
+
+} // namespace
+
+// Regression test: the atom columns were indexed as header position minus
+// two without checking that the header began with "ITEM: ATOMS", so a
+// header without that prefix underflowed the unsigned index.
+TEST(LammpsTest, malformedAtomsHeaderFails)
+{
+  const std::string rows = "1 1 0.0 0.0 0.0\n2 1 1.0 1.0 1.0\n";
+
+  // No ITEM: ATOMS prefix at all -- x would be column 2, "index 0".
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + "id type x y z\n" + rows));
+  // ITEM: without ATOMS.
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + "ITEM: id type x y z\n" + rows));
+  // Missing x column.
+  EXPECT_FALSE(
+    readLammps(kLammpsFrameHead + "ITEM: ATOMS id type y z\n" + rows));
+  // Column list too short to name anything.
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + "ITEM: ATOMS\n" + rows));
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + "ITEM:\n" + rows));
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + "\n" + rows));
+
+  // The same header malformed in a later frame.
+  const std::string first =
+    kLammpsFrameHead + "ITEM: ATOMS id type x y z\n" + rows;
+  EXPECT_FALSE(readLammps(first + kLammpsFrameHead2 + "x y z type\n" + rows));
+  EXPECT_FALSE(
+    readLammps(first + kLammpsFrameHead2 + "ITEM: ATOMS id type x z\n" + rows));
+
+  // Sanity check: the well-formed version reads both frames.
+  LammpsTrajectoryFormat valid;
+  Molecule molecule;
+  EXPECT_TRUE(valid.readString(
+    first + kLammpsFrameHead2 + "ITEM: ATOMS id type x y z\n" + rows, molecule))
+    << valid.error();
+  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+}
+
+// Regression test: an atom row shorter than the header declares must be
+// rejected rather than read past its end.
+TEST(LammpsTest, shortAtomRowFails)
+{
+  // The coordinates sit in the last three of six declared columns.
+  const std::string header = "ITEM: ATOMS id type q x y z\n";
+  const std::string rows = "1 1 0.5 0.0 0.0 0.0\n2 1 -0.5 1.0 1.0 1.0\n";
+  const std::string shortRows = "1 1 0.5 0.0 0.0 0.0\n2 1 -0.5 1.0 1.0\n";
+
+  // First frame.
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + header + shortRows));
+
+  // A later frame. Five tokens used to be enough there whatever the header
+  // said, so z (the sixth column) was read from past the end of the row.
+  EXPECT_FALSE(readLammps(kLammpsFrameHead + header + rows + kLammpsFrameHead2 +
+                          header + shortRows));
+
+  // Sanity check: complete rows read, and x/y/z come from the right columns.
+  LammpsTrajectoryFormat valid;
+  Molecule molecule;
+  ASSERT_TRUE(valid.readString(kLammpsFrameHead + header + rows +
+                                 kLammpsFrameHead2 + header + rows,
+                               molecule))
+    << valid.error();
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+  EXPECT_EQ(molecule.atom(1).position3d(), Vector3(1.0, 1.0, 1.0));
+}
+
+// Scaled (fractional) coordinates are unscaled against the box bounds.
+TEST(LammpsTest, scaledCoordinates)
+{
+  LammpsTrajectoryFormat format;
+  Molecule molecule;
+  ASSERT_TRUE(
+    format.readString("ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n1\n"
+                      "ITEM: BOX BOUNDS pp pp pp\n1.0 5.0\n0.0 10.0\n-2.0 2.0\n"
+                      "ITEM: ATOMS id type xs ys zs\n1 1 0.5 0.25 0.75\n",
+                      molecule))
+    << format.error();
+  EXPECT_EQ(molecule.atom(0).position3d(), Vector3(3.0, 2.5, 1.0));
+}

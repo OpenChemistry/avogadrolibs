@@ -8,6 +8,10 @@
 #include "molecule.h"
 #include "mutex.h"
 
+#include <cmath>
+#include <cstdint>
+#include <limits>
+
 namespace Avogadro::Core {
 
 Cube::Cube()
@@ -23,9 +27,38 @@ Cube::~Cube()
   m_lock = nullptr;
 }
 
+namespace {
+
+// Each axis needs at least minimumPoints points, and the total point count
+// must fit in an int: setData() and the index helpers compute x * y * z as
+// int. The product is taken in 64 bits so it cannot wrap while testing.
+bool validPointCount(const Vector3i& points, int minimumPoints)
+{
+  if (points.x() < minimumPoints || points.y() < minimumPoints ||
+      points.z() < minimumPoints)
+    return false;
+  const auto total = static_cast<std::uint64_t>(points.x()) *
+                     static_cast<std::uint64_t>(points.y()) *
+                     static_cast<std::uint64_t>(points.z());
+  return total <= static_cast<std::uint64_t>(std::numeric_limits<int>::max());
+}
+
+bool validSpacing(const Vector3& spacing)
+{
+  return spacing.allFinite() && spacing.x() > 0.0 && spacing.y() > 0.0 &&
+         spacing.z() > 0.0;
+}
+
+} // namespace
+
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
                      const Vector3i& points)
 {
+  // The spacing is delta / (points - 1), so a single point on any axis has
+  // no defined spacing (and zero or negative counts none at all).
+  if (!validPointCount(points, 2) || !min_.allFinite() || !max_.allFinite())
+    return false;
+
   // We can calculate all necessary properties and initialise our data
   Vector3 delta = max_ - min_;
   m_spacing =
@@ -34,13 +67,24 @@ bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
   m_min = min_;
   m_max = max_;
   m_points = points;
-  m_data.resize(m_points.x() * m_points.y() * m_points.z());
+  m_data.resize(static_cast<size_t>(m_points.x()) * m_points.y() *
+                m_points.z());
   return true;
 }
+
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_, float spacing_)
 {
+  if (!std::isfinite(spacing_) || spacing_ <= 0.0f)
+    return false;
   Vector3 delta = max_ - min_;
   delta = delta / spacing_;
+  // Converting a double outside int's range is undefined behaviour, so
+  // anything that large is rejected here; the overload below rejects
+  // anything under two points per axis.
+  constexpr double maxPoints = std::numeric_limits<int>::max();
+  if (!delta.allFinite() || delta.x() >= maxPoints || delta.y() >= maxPoints ||
+      delta.z() >= maxPoints || delta.minCoeff() < 0.0)
+    return false;
   return setLimits(min_, max_, delta.cast<int>());
 }
 
@@ -52,6 +96,10 @@ bool Cube::setLimits(const Vector3& min_, const Vector3i& dim, float spacing_)
 bool Cube::setLimits(const Vector3& min_, const Vector3i& dim,
                      const Vector3& spacing_)
 {
+  // The spacing is given, so one point per axis is well defined here.
+  if (!validPointCount(dim, 1) || !validSpacing(spacing_) || !min_.allFinite())
+    return false;
+
   Vector3 max_ = Vector3(min_.x() + (dim.x() - 1) * spacing_[0],
                          min_.y() + (dim.y() - 1) * spacing_[1],
                          min_.z() + (dim.z() - 1) * spacing_[2]);
@@ -59,17 +107,22 @@ bool Cube::setLimits(const Vector3& min_, const Vector3i& dim,
   m_max = max_;
   m_points = dim;
   m_spacing = spacing_;
-  m_data.resize(m_points.x() * m_points.y() * m_points.z());
+  m_data.resize(static_cast<size_t>(m_points.x()) * m_points.y() *
+                m_points.z());
   return true;
 }
 
 bool Cube::setLimits(const Cube& cube)
 {
+  if (!validPointCount(cube.m_points, 1))
+    return false;
+
   m_min = cube.m_min;
   m_max = cube.m_max;
   m_points = cube.m_points;
   m_spacing = cube.m_spacing;
-  m_data.resize(m_points.x() * m_points.y() * m_points.z());
+  m_data.resize(static_cast<size_t>(m_points.x()) * m_points.y() *
+                m_points.z());
   return true;
 }
 
