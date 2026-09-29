@@ -2046,3 +2046,21 @@ TEST(RWMoleculeTest, redoPositionAfterPositionlessAddAtomSecondAtom)
   EXPECT_EQ(p, mol.atomPosition3d(1));
   EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(0));
 }
+
+TEST(RWMoleculeTest, undoSetForceVectorRestoresOldForce)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6, Vector3(1.0, 2.0, 3.0));
+
+  const Vector3 f(0.5, -0.5, 0.25);
+  EXPECT_TRUE(mol.setForceVector(0, f));
+  EXPECT_EQ(f, m.forceVector(0));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(Vector3::Zero(), m.forceVector(0));
+  EXPECT_EQ(Vector3(1.0, 2.0, 3.0), mol.atomPosition3d(0));
+
+  mol.undoStack().redo();
+  EXPECT_EQ(f, m.forceVector(0));
+}

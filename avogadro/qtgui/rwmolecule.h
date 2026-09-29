@@ -759,13 +759,14 @@ public:
   const Core::Array<Vector3>& forceVectors() const;
 
   /**
-   * Replace the current array of force vectors.
-   * @param pos The new force vector array. Must be of length atomCount().
+   * Set the force vector on a single atom.
+   * @param atomId The index of the atom.
+   * @param force The new force vector for the atom.
    * @param undoText The undo text to be displayed for undo commands.
    * @return True on success, false otherwise.
    */
   bool setForceVector(
-    Index atomId, const Vector3& pos,
+    Index atomId, const Vector3& force,
     const QString& undoText = QStringLiteral("Change Force Vectors"));
 
 public slots:
