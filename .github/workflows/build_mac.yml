@@ -3,7 +3,18 @@ name: Mac Build Matrix
 # e.g. https://github.com/cristianadam/HelloWorld/blob/master/.github/workflows/build_cmake.yml
 # https://cristianadam.eu/20191222/using-github-actions-with-c-plus-plus-and-cmake/
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    # Bot branches get built by their pull_request event; building the push
+    # too just doubles the jobs. The tags line is required: with only a
+    # branch filter, tag pushes (release builds) would stop triggering.
+    branches-ignore:
+      - 'dependabot/**'
+      - 'update-i18n-templates'
+    tags:
+      - '**'
+  pull_request:
+  workflow_dispatch:
 
 env:
   QT_VERSION: 6.10.1
@@ -13,6 +24,10 @@ env:
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
   # CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
   # SCCACHE_GHA_ENABLED: "true"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -29,15 +44,8 @@ jobs:
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
           }
-        - {
-            name: "macOS Qt6 Intel", artifact: "macOS-intel",
-            os: macos-15-intel,
-            cc: "clang", cxx: "clang++",
-            build_type: "Release",
-            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
-          }
 
-    steps:
+    steps: &build-steps
     - name: Checkout workflow repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -326,3 +334,27 @@ jobs:
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3.24
       timeout-minutes: 60
+
+  # Intel macOS runs only off PRs: macos-15-intel runners are the slowest
+  # option and macOS runner capacity is scarce and shared org-wide, and
+  # GitHub is retiring Intel macOS images. Label a PR full-ci and push to it
+  # to include this job; fork push builds still run it, since a fork push is
+  # not a pull_request event here. The steps are shared with "build" through
+  # the &build-steps/*build-steps YAML anchor, so edit them there, not here.
+  intel:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-ci')
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "macOS Qt6 Intel", artifact: "macOS-intel",
+            os: macos-15-intel,
+            cc: "clang", cxx: "clang++",
+            build_type: "Release",
+            cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
+          }
+
+    steps: *build-steps
