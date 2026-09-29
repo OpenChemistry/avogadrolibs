@@ -8,10 +8,34 @@
 
 #include "variant.h"
 
+#include <cmath>
 #include <iostream>
+#include <limits>
 #include <sstream>
 
 namespace Avogadro::Core {
+
+namespace detail {
+
+// Convert a floating-point value to an integer type without undefined
+// behavior: NaN becomes 0, infinities and out-of-range values saturate to the
+// limits of T, and in-range values truncate toward zero.
+template <typename T>
+constexpr T floatToInteger(double x) noexcept
+{
+  static_assert(std::numeric_limits<T>::is_integer, "T must be an integer");
+  if (x != x)
+    return 0;
+  // The limits are exactly representable, or round up to a power of two (e.g.
+  // 2^63 for long long), which is itself out of range -- hence >= for max.
+  if (x >= static_cast<double>(std::numeric_limits<T>::max()))
+    return std::numeric_limits<T>::max();
+  if (x <= static_cast<double>(std::numeric_limits<T>::lowest()))
+    return std::numeric_limits<T>::lowest();
+  return static_cast<T>(x);
+}
+
+} // namespace detail
 
 inline Variant::Variant() : m_type(Null) {}
 
@@ -324,9 +348,9 @@ inline int Variant::value() const
   else if (m_type == Bool)
     return static_cast<int>(m_value._bool);
   else if (m_type == Float)
-    return static_cast<int>(m_value._float);
+    return detail::floatToInteger<int>(static_cast<double>(m_value._float));
   else if (m_type == Double)
-    return static_cast<int>(m_value._double);
+    return detail::floatToInteger<int>(m_value._double);
   else if (m_type == String)
     return lexical_cast<int>(*m_value.string);
 
