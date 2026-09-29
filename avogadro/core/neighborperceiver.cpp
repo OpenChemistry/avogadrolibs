@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <utility>
 
 namespace Avogadro::Core {
 
@@ -47,8 +48,15 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
   // case the edge is grown until it fits. Since the edge never drops below
   // maxDistance, the 27-bin neighborhood still holds every point within
   // maxDistance of the query; only the inclusive superset gets larger.
+  //
+  // The bin budget scales with the number of points: a grid with far more
+  // bins than points is almost all empty vectors (24 bytes each). One million
+  // bins (~24 MB, 100 per axis -- a 200 A cube at a 2 A cutoff) is the floor,
+  // so every ordinary molecule is binned exactly as before; only huge, sparse
+  // point sets get larger bins.
   constexpr double maxAxisBins = 1000;
-  constexpr double maxTotalBins = 10'000'000; // ~240 MB of vector overhead
+  const double maxTotalBins = std::clamp(
+    64.0 * static_cast<double>(points.size()), 1'000'000.0, 10'000'000.0);
   const double padding = 0.1;
   std::array<double, 3> extent;
   for (size_t c = 0; c < 3; c++) {
@@ -86,7 +94,7 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
     m_binCount[0], std::vector<std::vector<std::vector<Index>>>(
                      m_binCount[1], std::vector<std::vector<Index>>(
                                       m_binCount[2], std::vector<Index>())));
-  m_bins = bins;
+  m_bins = std::move(bins);
   for (Index i = 0; i < points.size(); i++) {
     std::array<int, 3> bin_index = getBinIndex(points[i]);
     if (bin_index[0] >= 0 && bin_index[0] < m_binCount[0] &&

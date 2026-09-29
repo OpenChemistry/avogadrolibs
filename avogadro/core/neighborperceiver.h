@@ -35,6 +35,9 @@ public:
    * @param maxDistance All neighbors strictly within this distance will be
    *                    detected. Should be as low as possible for best
    *                    performance.
+   *
+   * Widely spread points make the constructor use larger bins than
+   * maxDistance to bound memory; results are then a larger superset.
    */
   NeighborPerceiver(const Array<Vector3> points, float maxDistance);
 
@@ -66,8 +69,9 @@ private:
 protected:
   float m_maxDistance;
   /// Edge length of the cubic bins. Equal to m_maxDistance unless the point
-  /// set would need too many bins, in which case it is enlarged (never
-  /// reduced) so that the bin grid stays within its size limits.
+  /// set would need too many bins (at most 1000 per axis, and between 1M and
+  /// 10M in total depending on the number of points), in which case it is
+  /// enlarged (never reduced) so that the bin grid stays within those limits.
   double m_binSize;
   std::array<int, 3> m_binCount;
   std::vector<std::vector<std::vector<std::vector<Index>>>> m_bins;

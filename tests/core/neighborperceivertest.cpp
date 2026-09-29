@@ -185,3 +185,41 @@ TEST(NeighborPerceiverTest, matchesBruteForce)
     }
   }
 }
+
+TEST(NeighborPerceiverTest, sparsePointsOverHugeRange)
+{
+  // A few points spread over 1e6 A on each axis at a small cutoff would need
+  // ~1e18 bins. The bin budget follows the point count, so the grid stays
+  // small and no neighbour is lost: the close pair still finds each other and
+  // nothing else needs to be reported.
+  Array<Vector3> points;
+  points.push_back(Vector3(0.0, 0.0, 0.0));
+  points.push_back(Vector3(1.0e6, 1.0e6, 1.0e6));
+  points.push_back(Vector3(1.0e6 + 0.25, 1.0e6, 1.0e6));
+
+  NeighborPerceiver perceiver(points, 0.5f);
+
+  auto neighbors = perceiver.getNeighborsInclusive(points[1]);
+  EXPECT_TRUE(contains(neighbors, 1));
+  EXPECT_TRUE(contains(neighbors, 2));
+  neighbors = perceiver.getNeighborsInclusive(points[2]);
+  EXPECT_TRUE(contains(neighbors, 1));
+  EXPECT_TRUE(contains(neighbors, 2));
+  neighbors = perceiver.getNeighborsInclusive(points[0]);
+  EXPECT_TRUE(contains(neighbors, 0));
+}
+
+TEST(NeighborPerceiverTest, fuzzOomRegression)
+{
+  // Two atoms at opposite corners of a +-100 A box with a 0.1 A cutoff (the
+  // fuzz harness's range) used to build a ~10M-bin grid, and copy it. Both
+  // atoms must still see themselves.
+  Array<Vector3> points;
+  points.push_back(Vector3(-100.0, -100.0, -100.0));
+  points.push_back(Vector3(100.0, 100.0, 100.0));
+
+  NeighborPerceiver perceiver(points, 0.1f);
+
+  for (Avogadro::Index i = 0; i < points.size(); ++i)
+    EXPECT_TRUE(contains(perceiver.getNeighborsInclusive(points[i]), i));
+}
