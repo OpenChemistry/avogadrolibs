@@ -24,9 +24,15 @@ env:
   QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
 
+# Never cancel a master run: a cancelled run never saves its compiler cache,
+# and the slowest jobs, which gain the most from the cache, are exactly the
+# ones a following merge would cancel. The group still allows only one running
+# and one pending master run, so master runs queue one after another instead
+# of stacking up, and release-asset uploads never overlap. PRs and other
+# branches keep cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   build:
@@ -35,6 +41,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # sccache: true turns on the compiler cache for an entry. It is only on
+        # for the MSVC Release build, which passes no /Zi. The RelWithDebInfo
+        # entries (the Sentry diagnostic build and the Address Sanitizer
+        # entry below) are left out on purpose: /Zi writes every object's
+        # debug information into one shared PDB, which sccache cannot cache,
+        # so those compiles would all miss. Enabling them needs /Z7 (debug
+        # information embedded in each object), for example with CMP0141 NEW
+        # and CMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded. The asan flags in
+        # cmake/CompilerFlags.cmake hard-code /Zi as well, and would need the
+        # same change.
         config:
         - {
             name: "Windows Qt6", artifact: "Win64.exe",
@@ -42,6 +58,7 @@ jobs:
             cc: "cl", cxx: "cl",
             build_type: "Release",
             test: true,
+            sccache: true,
             cmake_flags: "-G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON",
             build_flags: "--parallel",
             package: "Avogadro2",
@@ -98,6 +115,16 @@ jobs:
       run: |
         choco install nsis ninja
       shell: bash
+
+    # Must run before Configure: it exports the compiler-launcher variables
+    # that the superbuild's subprojects read when they configure.
+    - name: Restore compiler cache
+      if: matrix.config.sccache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Configure
       run: |
@@ -194,6 +221,19 @@ jobs:
         fi
 
         ctest --output-on-failure
+
+    # Saved after the tests, which build avogadrolibs again with tests
+    # enabled. !cancelled() lets the action run after a failed build or
+    # failed tests. The action prints its statistics on every run and saves
+    # only on master, failures included: sccache entries are content-addressed,
+    # so a partial cache is still correct.
+    - name: Save compiler cache
+      if: matrix.config.sccache && !cancelled()
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: save
+        name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     # The crashpad binaries reach the prefix through crashpad's own install
     # rules, which sentry-native does not drive directly when building shared.
@@ -354,6 +394,8 @@ jobs:
       fail-fast: false
       matrix:
         config:
+        # No sccache here: RelWithDebInfo compiles with /Zi (see the note on
+        # the build job's matrix).
         # Diagnostic build with Sentry crash reporting compiled in. Ships as a
         # separate installer that installs beside a release install; the
         # release build above gets no crash reporting.

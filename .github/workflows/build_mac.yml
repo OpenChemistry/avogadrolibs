@@ -22,12 +22,16 @@ env:
   # we set MACOSX_DEPLOYMENT_TARGET later
   MACOS_TARGET: 14
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_YAEHMOP=ON
-  # CACHE: -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
-  # SCCACHE_GHA_ENABLED: "true"
 
+# Never cancel a master run: a cancelled run never saves its compiler cache,
+# and the slowest jobs, which gain the most from the cache, are exactly the
+# ones a following merge would cancel. The group still allows only one running
+# and one pending master run, so master runs queue one after another instead
+# of stacking up, and release-asset uploads never overlap. PRs and other
+# branches keep cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   build:
@@ -43,6 +47,7 @@ jobs:
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=arm64",
+            sccache: true,
           }
 
     steps: &build-steps
@@ -69,8 +74,15 @@ jobs:
           ${{ runner.workspace }}/build/Downloads
         key: ${{ matrix.config.name }}-downloads
 
-    #- name: Run sccache-cache
-    #  uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+    # Must run before Configure: it exports the compiler-launcher variables
+    # that the superbuild's subprojects read when they configure.
+    - name: Restore compiler cache
+      if: matrix.config.sccache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Configure
       run: |
@@ -78,7 +90,7 @@ jobs:
         cd "${{ runner.workspace }}/build"
         # won't have any effect except on Mac
         echo "MACOSX_DEPLOYMENT_TARGET=${{ env.MACOS_TARGET }}" >> $GITHUB_ENV
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} ${{env.CACHE}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}}
       shell: bash
 
     - name: Build
@@ -86,6 +98,19 @@ jobs:
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    # This job has no test step, so the cache is saved right after the build.
+    # !cancelled() lets the action run after a failed build. The action prints
+    # its statistics on every run and saves only on master, failures
+    # included: sccache entries are content-addressed, so a partial cache is
+    # still correct.
+    - name: Save compiler cache
+      if: matrix.config.sccache && !cancelled()
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: save
+        name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
@@ -355,6 +380,7 @@ jobs:
             cc: "clang", cxx: "clang++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DCMAKE_OSX_ARCHITECTURES=x86_64",
+            sccache: true,
           }
 
     steps: *build-steps

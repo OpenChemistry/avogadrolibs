@@ -20,9 +20,15 @@ env:
   QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
+# Never cancel a master run: a cancelled run never saves its compiler cache,
+# and the slowest jobs, which gain the most from the cache, are exactly the
+# ones a following merge would cancel. The group still allows only one running
+# and one pending master run, so master runs queue one after another instead
+# of stacking up, and release-asset uploads never overlap. PRs and other
+# branches keep cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   build:
@@ -31,7 +37,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # sccache is the Phase 3 pilot; the other entries will follow.
+        # sccache: true turns on the compiler cache for an entry; the other
+        # workflows use the same keys.
+        # sccache_size: sanitizer objects are much larger (the cold ASan build
+        # hit the 600M cap); read the real size from `sccache --show-stats`
+        # on master and tune it.
         config:
         - {
             name: "Ubuntu x86", artifact: "",
@@ -47,6 +57,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DINSTALL_BUNDLE_FILES=ON -DUSE_YAEHMOP=ON",
+            sccache: true,
           }
         - {
             name: "Ubuntu Address + UB Sanitizer", artifact: "",
@@ -54,7 +65,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "asan",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
-            sccache: true,
+            sccache: true, sccache_size: "1500M",
           }
         - {
             name: "Ubuntu Thread Sanitizer", artifact: "",
@@ -62,6 +73,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "tsan",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE -DENABLE_TESTING=ON -DTEST_QTGL=OFF -DUSE_SYSTEM_ZLIB=ON",
+            sccache: true, sccache_size: "1500M",
           }
 
     steps:
@@ -91,6 +103,7 @@ jobs:
       with:
         mode: restore
         name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Configure
       run: |
@@ -138,6 +151,7 @@ jobs:
       with:
         mode: save
         name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Package AppImage
       if: matrix.config.name == 'AppImage x86'

@@ -5,7 +5,14 @@ name: Prune compiler caches
 # Add more build workflows to this list as sccache rolls out to them.
 on:
   workflow_run:
-    workflows: ["Linux Build Matrix"]
+    workflows:
+    - "Linux Build Matrix"
+    - "Linux ARM64 Build Matrix"
+    - "Mac Build Matrix"
+    - "Windows Build"
+    - "Windows ARM Build"
+    - "Linux Fuzz Tests"
+    - "Linux Memory Sanitizer"
     types: [completed]
     branches: [master]
   workflow_dispatch:
