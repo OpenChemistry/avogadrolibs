@@ -145,6 +145,11 @@ public:
   void redo() override
   {
     m_applied = false;
+    // Forget what an earlier redo() took out. The per-plugin arrays grow
+    // lazily and can be shorter by the time this runs again, and undo() must
+    // only put back what this redo() removed.
+    m_enable.clear();
+    m_settings.clear();
     if (m_layer >= m_moleculeInfo->visible.size() ||
         m_layer >= m_moleculeInfo->locked.size())
       return;
@@ -206,14 +211,21 @@ public:
     m_moleculeInfo->visible.insert(itVisible, m_visible);
     auto itLocked = m_moleculeInfo->locked.begin() + m_layer;
     m_moleculeInfo->locked.insert(itLocked, m_locked);
+    // The per-plugin arrays are not kept the same length as the layer count,
+    // so pad a short one out to m_layer (with the defaults getSetting() and
+    // isActiveLayerEnabled() already treat as "nothing here") rather than
+    // inserting past its end.
     for (const auto& enable : m_enable) {
-      auto itEnable = m_moleculeInfo->enable[enable.first].begin() + m_layer;
-      m_moleculeInfo->enable[enable.first].insert(itEnable, enable.second);
+      auto& layers = m_moleculeInfo->enable[enable.first];
+      if (layers.size() < m_layer)
+        layers.resize(m_layer, false);
+      layers.insert(std::next(layers.begin(), m_layer), enable.second);
     }
     for (const auto& setting : m_settings) {
-      auto itSetting =
-        m_moleculeInfo->settings[setting.first].begin() + m_layer;
-      m_moleculeInfo->settings[setting.first].insert(itSetting, setting.second);
+      auto& layers = m_moleculeInfo->settings[setting.first];
+      if (layers.size() < m_layer)
+        layers.resize(m_layer, nullptr);
+      layers.insert(std::next(layers.begin(), m_layer), setting.second);
     }
     m_moleculeInfo->layer.addLayer(m_layer);
     for (Index atom : m_atoms)

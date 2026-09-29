@@ -7,6 +7,7 @@
 
 #include <avogadro/core/layermanager.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/pluginlayermanager.h>
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -23,6 +24,7 @@ using Avogadro::Core::LayerDataPtr;
 using Avogadro::Core::LayerManager;
 using Avogadro::Core::MoleculeInfo;
 using Avogadro::QtGui::Molecule;
+using Avogadro::QtGui::PluginLayerManager;
 using Avogadro::QtGui::RWLayerManager;
 using Avogadro::QtGui::RWMolecule;
 
@@ -472,4 +474,88 @@ TEST_F(RWLayerManagerTest, RemoveOnlyLayerIsNoop)
     SCOPED_TRACE("after undo()");
     expectSnapshotsEqual(before, captureSnapshot(info, 2));
   }
+}
+
+// RemoveLayerCommand used to keep the per-plugin settings (and enable flags)
+// an earlier redo() had taken out. Plugin settings are created lazily and are
+// not on the undo stack, so a later redo() can find the array too short to
+// take anything out -- and undo() then put the stale entry back anyway. Here
+// that makes layers 1 and 2 share one settings object.
+TEST_F(RWLayerManagerTest, RemoveLayerUndoRestoresOnlyWhatItsRedoRemoved)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  TestLayerManager manager;
+  manager.addMolecule(&molecule);
+  auto* rwmol = molecule.undoMolecule();
+  auto& stack = rwmol->undoStack();
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+
+  // Layers 0-3, index 3.
+  for (int i = 0; i < 3; ++i)
+    manager.addLayer(rwmol);
+  manager.removeLayer(1, rwmol);    // layers 0-2
+  manager.setActiveLayer(2, rwmol); // index 5
+  PluginLayerManager plugin("TestPlugin");
+  ASSERT_NE(plugin.getSetting<LayerData>(), nullptr); // one entry per layer
+  manager.removeLayer(2, rwmol); // takes layer 2's entry out, index 6
+
+  stack.setIndex(3); // layers 0-3 are back; the three entries stay
+  stack.setIndex(6); // removing layer 1 leaves two; nothing to take for 2
+  stack.setIndex(5); // so undoing the second removal has nothing to put back
+
+  const auto& settings = info->settings["TestPlugin"];
+  EXPECT_LE(settings.size(), info->layer.layerCount());
+  for (size_t i = 0; i < settings.size(); ++i) {
+    for (size_t j = i + 1; j < settings.size(); ++j) {
+      if (settings[i] != nullptr)
+        EXPECT_NE(settings[i].get(), settings[j].get())
+          << "layers " << i << " and " << j << " share settings";
+    }
+  }
+}
+
+// The same stale entry, but now the array is shorter than the layer it was
+// put back at: undo() inserted past the end of the vector, corrupting the
+// heap and leaking the settings object (found by fuzz-layermanager under
+// LeakSanitizer).
+TEST_F(RWLayerManagerTest, RemoveLayerUndoNeverInsertsPastSettingsEnd)
+{
+  std::vector<std::weak_ptr<LayerData>> created;
+  {
+    Molecule molecule;
+    molecule.addAtom(1);
+    TestLayerManager manager;
+    manager.addMolecule(&molecule);
+    auto* rwmol = molecule.undoMolecule();
+    auto& stack = rwmol->undoStack();
+    auto info = LayerManager::getMoleculeInfo(&molecule);
+
+    for (int i = 0; i < 5; ++i)
+      manager.addLayer(rwmol); // layers 0-5, index 5
+    manager.removeLayer(1, rwmol);
+    manager.removeLayer(1, rwmol);    // layers 0-3
+    manager.setActiveLayer(3, rwmol); // index 8
+    PluginLayerManager plugin("TestPlugin");
+    ASSERT_NE(plugin.getSetting<LayerData>(), nullptr);
+    for (const auto& data : info->settings["TestPlugin"])
+      created.push_back(data);
+    ASSERT_EQ(created.size(), 4u);
+    manager.removeLayer(3, rwmol); // index 9
+
+    stack.setIndex(5); // four settings entries, six layers
+    stack.setIndex(9); // both removals of layer 1 leave two entries
+    stack.setIndex(8); // must not insert at 3
+
+    const auto& settings = info->settings["TestPlugin"];
+    EXPECT_LE(settings.size(), info->layer.layerCount());
+
+    // The whole stack still round trips.
+    stack.setIndex(0);
+    stack.setIndex(stack.count());
+    EXPECT_LE(info->settings["TestPlugin"].size(), info->layer.layerCount());
+  }
+  // The molecule and its undo stack are gone, so nothing may own these.
+  for (const auto& data : created)
+    EXPECT_TRUE(data.expired());
 }
