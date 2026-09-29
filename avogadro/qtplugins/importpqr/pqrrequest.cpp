@@ -74,7 +74,7 @@ void PQRRequest::sendPNGRequest(QString url)
  */
 QString PQRRequest::molSelected(int num)
 {
-  if (results.empty() || num > static_cast<int>(results.size()))
+  if (num < 0 || num >= static_cast<int>(results.size()))
     return QString("N/A");
 
   QString mol2 = results[num].mol2url;
@@ -96,10 +96,13 @@ void PQRRequest::parseJson()
     // Reading the data from the response
     QByteArray bytes = reply->readAll();
 
-    // parse the json
-    json root = json::parse(bytes.data());
-
-    int resultSize = root.size();
+    // parse the json -- without exceptions, since this is whatever the
+    // server (or anything in between) sent back. Anything but an array of
+    // results is treated as no results.
+    json root = json::parse(bytes.data(), nullptr, false);
+    int resultSize = 0;
+    if (!root.is_discarded() && root.is_array())
+      resultSize = static_cast<int>(root.size());
 
     results.clear();
     if (resultSize == 0) {
@@ -112,16 +115,20 @@ void PQRRequest::parseJson()
       for (int i = 0; i < resultSize; i++) {
         results.emplace_back();
 
-        // Loop through the keys
-        for (auto it = root[i].cbegin(); it != root[i].cend(); ++it) {
-          if (it.key() == "formula" && it.value().is_string())
-            results[i].formula = it.value().get<std::string>().c_str();
-          else if (it.key() == "inchikey" && it.value().is_string())
-            results[i].inchikey = it.value().get<std::string>().c_str();
-          else if (it.key() == "mol2url" && it.value().is_string())
-            results[i].mol2url = it.value().get<std::string>().c_str();
-          else if (it.key() == "name" && it.value().is_string())
-            results[i].name = it.value().get<std::string>().c_str();
+        // Loop through the keys. key() throws on anything but an object, so
+        // any other entry is left as an empty row.
+        const json& entry = root[i];
+        if (entry.is_object()) {
+          for (auto it = entry.cbegin(); it != entry.cend(); ++it) {
+            if (it.key() == "formula" && it.value().is_string())
+              results[i].formula = it.value().get<std::string>().c_str();
+            else if (it.key() == "inchikey" && it.value().is_string())
+              results[i].inchikey = it.value().get<std::string>().c_str();
+            else if (it.key() == "mol2url" && it.value().is_string())
+              results[i].mol2url = it.value().get<std::string>().c_str();
+            else if (it.key() == "name" && it.value().is_string())
+              results[i].name = it.value().get<std::string>().c_str();
+          }
         }
         results[i].mass = getMolMass(results[i].formula);
 
@@ -143,6 +150,9 @@ void PQRRequest::parseJson()
       }
     }
   } else {
+    // The table no longer shows the previous results, so a click on it must
+    // not select one of them.
+    results.clear();
     table->setRowCount(3);
     table->setItem(0, 0, new QTableWidgetItem("Network Error!"));
     table->setItem(0, 1, new QTableWidgetItem("N/A"));
