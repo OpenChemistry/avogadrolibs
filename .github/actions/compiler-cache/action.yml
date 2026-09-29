@@ -26,7 +26,9 @@ runs:
 
   # The key is the configuration slug plus the commit. Inputs arrive through
   # env, never interpolated into the script text. Restore and save both run
-  # this same step, so they always agree on the key.
+  # this same step, so they always agree on the key. It carries an explicit
+  # !cancelled() so it still runs in save mode after a failed build or tests;
+  # skipped, the save would get an empty key.
   #
   # The restore-keys prefix is wanted here, the opposite of vcpkg: sccache
   # content-addresses every object (compiler, flags and preprocessed source
@@ -34,6 +36,7 @@ runs:
   # It can only miss, and then the compiler runs as usual.
   - name: Compute cache key
     id: key
+    if: ${{ !cancelled() }}
     shell: bash
     env:
       CONFIG_NAME: ${{ inputs.name }}
@@ -85,7 +88,7 @@ runs:
   # command may fail the job: sccache may never have started if the build
   # failed early.
   - name: Show sccache statistics
-    if: inputs.mode == 'save'
+    if: ${{ !cancelled() && inputs.mode == 'save' }}
     shell: bash
     run: |
       sccache --show-stats || true
@@ -93,14 +96,14 @@ runs:
 
   # Save only from master: a PR-scoped entry cannot be read by any other PR,
   # while PRs still restore master's entry through the restore-keys prefix.
-  # It also keeps the 10 GB repo cache budget predictable. The condition has
-  # no status function, so success() is implied and the save is skipped after
-  # a failure; the caller's !cancelled() only exists so the statistics above
-  # still print. (If the runner evaluates success() against this composite's
-  # own steps only, a save after failed tests is harmless anyway, since
-  # sccache entries are content-addressed.)
+  # It also keeps the 10 GB repo cache budget predictable. The save happens
+  # even after a failed build or failed tests: every sccache entry is
+  # content-addressed, so a partial cache is still correct and still useful.
+  # The explicit !cancelled() (here and on the key and statistics steps) is
+  # deliberate. An implied success() inside a composite action would make
+  # these steps depend on how the runner scopes step status.
   - name: Save compiler cache
-    if: inputs.mode == 'save' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: ${{ !cancelled() && inputs.mode == 'save' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
     with:
       path: ${{ github.workspace }}/.sccache
