@@ -96,14 +96,17 @@ runs:
 
   # Save only from master: a PR-scoped entry cannot be read by any other PR,
   # while PRs still restore master's entry through the restore-keys prefix.
-  # It also keeps the 10 GB repo cache budget predictable. The save happens
+  # It also keeps the 10 GB repo cache budget predictable. Any event other
+  # than pull_request counts, not just push: the fuzz workflow has no push
+  # trigger, so its master builds come only from schedule (and
+  # workflow_dispatch), both of which run with ref master. The save happens
   # even after a failed build or failed tests: every sccache entry is
   # content-addressed, so a partial cache is still correct and still useful.
   # The explicit !cancelled() (here and on the key and statistics steps) is
   # deliberate. An implied success() inside a composite action would make
   # these steps depend on how the runner scopes step status.
   - name: Save compiler cache
-    if: ${{ !cancelled() && inputs.mode == 'save' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    if: ${{ !cancelled() && inputs.mode == 'save' && github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
     uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
     with:
       path: ${{ github.workspace }}/.sccache
