@@ -285,7 +285,8 @@ jobs:
           -DUSE_SYSTEM_GTEST=ON -DENABLE_TESTING=OFF
 
     - name: Cache thirdparty
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      id: thirdparty-cache
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
@@ -301,6 +302,15 @@ jobs:
         # skip avogadroapp. Note that avogadrolibs does not depend on Open
         # Babel in the superbuild, so clang-cl never has to build it.
         CC=clang-cl CXX=clang-cl cmake --build . --target avogadrolibs
+
+    # Saved from master only, for the reason given in the vcpkg-install action.
+    - name: Save thirdparty cache
+      if: steps.thirdparty-cache.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ steps.thirdparty-cache.outputs.cache-primary-key }}
 
     - name: Build fuzz targets
       shell: bash
