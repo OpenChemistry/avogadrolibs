@@ -73,6 +73,9 @@ public:
    * @param min The minimum point in the cube.
    * @param max The maximum point in the cube.
    * @param points The number of (integer) points in the cube.
+   * @return False, leaving the cube unchanged, if any axis has fewer than two
+   * points (the spacing would be undefined), the total point count exceeds
+   * INT_MAX, or min or max is not finite.
    */
   bool setLimits(const Vector3& min, const Vector3& max,
                  const Vector3i& points);
@@ -82,6 +85,8 @@ public:
    * @param min The minimum point in the cube.
    * @param max The maximum point in the cube.
    * @param spacing The interval between points in the cube.
+   * @return False, leaving the cube unchanged, if spacing is not positive and
+   * finite or the resulting grid has fewer than two points on any axis.
    */
   bool setLimits(const Vector3& min, const Vector3& max, float spacing);
 
@@ -90,6 +95,9 @@ public:
    * @param min The minimum point in the cube.
    * @param dim The integer dimensions of the cube in x, y and z.
    * @param spacing The interval between points in the cube.
+   * @return False, leaving the cube unchanged, if any dimension is below one,
+   * the total point count exceeds INT_MAX, or spacing is not positive and
+   * finite.
    */
   bool setLimits(const Vector3& min, const Vector3i& dim, float spacing);
 
@@ -98,6 +106,9 @@ public:
    * @param min The minimum point in the cube.
    * @param dim The integer dimensions of the cube in x, y and z.
    * @param spacing The interval between points in the cube.
+   * @return False, leaving the cube unchanged, if any dimension is below one,
+   * the total point count exceeds INT_MAX, or any spacing component is not
+   * positive and finite.
    */
   bool setLimits(const Vector3& min, const Vector3i& dim,
                  const Vector3& spacing);
@@ -105,6 +116,7 @@ public:
   /**
    * Set the limits of the cube - copy the limits of an existing Cube.
    * @param cube Existing Cube to copy the limits from.
+   * @return False, leaving this cube unchanged, if @p cube has no points.
    */
   bool setLimits(const Cube& cube);
 
