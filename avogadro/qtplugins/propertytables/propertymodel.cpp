@@ -388,13 +388,13 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   if (role == Qt::DecorationRole) {
     // color for atom and residue
-    if (m_type == AtomType && col == AtomDataColor &&
+    if (m_type == AtomType && col == AtomDataColor && row >= 0 &&
         row < static_cast<int>(m_molecule->atomCount())) {
 
       auto c = m_molecule->color(row);
       QColor color(c[0], c[1], c[2]);
       return color;
-    } else if (m_type == ResidueType && col == ResidueDataColor &&
+    } else if (m_type == ResidueType && col == ResidueDataColor && row >= 0 &&
                row < static_cast<int>(m_molecule->residueCount())) {
 
       auto c = m_molecule->residue(row).color();
@@ -455,12 +455,13 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
   }
 
   if (m_type == AtomType) {
-    auto column = static_cast<AtomColumn>(index.column());
-
-    if (row >= static_cast<int>(m_molecule->atomCount()) ||
-        column > AtomColumns) {
+    // Check the column before converting it: an out-of-range value is
+    // undefined behaviour for an enum without a fixed underlying type.
+    if (row < 0 || row >= static_cast<int>(m_molecule->atomCount()) ||
+        col < 0 || col >= AtomColumns) {
       return QVariant(); // invalid index
     }
+    auto column = static_cast<AtomColumn>(col);
 
     QString format("%L1");
 
@@ -527,12 +528,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   } else if (m_type == BondType) {
 
-    auto column = static_cast<BondColumn>(index.column());
-
-    if (row >= static_cast<int>(m_molecule->bondCount()) ||
-        column > BondColumns) {
+    if (row < 0 || row >= static_cast<int>(m_molecule->bondCount()) ||
+        col < 0 || col >= BondColumns) {
       return QVariant(); // invalid index
     }
+    auto column = static_cast<BondColumn>(col);
 
     auto bond = m_molecule->bond(row);
     auto atom1 = bond.atom1();
@@ -575,12 +575,11 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     }
   } else if (m_type == ResidueType) {
 
-    auto column = static_cast<ResidueColumn>(index.column());
-
-    if (row >= static_cast<int>(m_molecule->residueCount()) ||
-        column > ResidueColumns) {
+    if (row < 0 || row >= static_cast<int>(m_molecule->residueCount()) ||
+        col < 0 || col >= ResidueColumns) {
       return QVariant(); // invalid index
     }
+    auto column = static_cast<ResidueColumn>(col);
 
     auto residue = m_molecule->residue(row);
     // name, number, chain, secondary structure
@@ -603,9 +602,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
     }
   } else if (m_type == AngleType) {
 
-    auto column = static_cast<AngleColumn>(index.column());
-    if (row > static_cast<int>(m_angles.size()) || column > AngleColumns)
+    if (row < 0 || row >= static_cast<int>(m_angles.size()) || col < 0 ||
+        col >= AngleColumns)
       return QVariant(); // invalid index
+    auto column = static_cast<AngleColumn>(col);
 
     auto angle = m_angles[row];
     auto atomNumber1 = m_molecule->atomicNumber(std::get<0>(angle));
@@ -654,9 +654,10 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
 
   } else if (m_type == TorsionType) {
 
-    auto column = static_cast<TorsionColumn>(index.column());
-    if (row > static_cast<int>(m_torsions.size()) || column > TorsionColumns)
+    if (row < 0 || row >= static_cast<int>(m_torsions.size()) || col < 0 ||
+        col >= TorsionColumns)
       return QVariant(); // invalid index
+    auto column = static_cast<TorsionColumn>(col);
 
     auto torsion = m_torsions[row];
     auto atomNumber1 = m_molecule->atomicNumber(std::get<0>(torsion));
@@ -978,10 +979,16 @@ Qt::DropActions PropertyModel::supportedDropActions() const
 bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
                             int role)
 {
-  if (!index.isValid())
+  if (!index.isValid() || m_molecule == nullptr)
     return false;
 
   if (role != Qt::EditRole)
+    return false;
+
+  // Every branch below indexes the molecule (or the angle and torsion
+  // lists) by row without checking it.
+  if (index.row() < 0 || index.row() >= rowCount() || index.column() < 0 ||
+      index.column() >= columnCount())
     return false;
 
   // If an item is actually editable, we should invalidate the cache
@@ -1238,6 +1245,9 @@ bool PropertyModel::setBondLength(unsigned int index, double length)
 
 bool PropertyModel::setAngle(unsigned int index, double newValue)
 {
+  if (m_molecule == nullptr || index >= m_angles.size())
+    return false;
+
   // the index refers to the angle
   auto angle = m_angles[index];
   auto* undoMolecule = m_molecule->undoMolecule();
@@ -1258,6 +1268,9 @@ bool PropertyModel::setAngle(unsigned int index, double newValue)
 
 bool PropertyModel::setTorsion(unsigned int index, double newValue)
 {
+  if (m_molecule == nullptr || index >= m_torsions.size())
+    return false;
+
   auto torsion = m_torsions[index];
   auto* undoMolecule = m_molecule->undoMolecule();
   auto atom1 = undoMolecule->atom(std::get<0>(torsion));
