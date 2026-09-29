@@ -569,6 +569,8 @@ void Select::createLayerFromSelection()
 
   auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
   QtGui::RWLayerManager rwLayerManager;
+  // addLayer() makes m_molecule the active molecule if it is not already, so
+  // the layer lands on the molecule whose atoms are moved into it below.
   rwLayerManager.addLayer(rwmol);
   int layer = layerInfo.maxLayer();
 
