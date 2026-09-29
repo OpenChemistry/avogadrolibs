@@ -8,6 +8,7 @@
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/layer.h>
 #include <avogadro/core/moleculeinfo.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -34,6 +35,10 @@ class ActiveLayerMolecule : public QtGui::RWLayerManager
 {
 public:
   using QtGui::RWLayerManager::addMolecule;
+  static bool isActive(const Core::Molecule* molecule)
+  {
+    return molecule != nullptr && activeMoleculeInfo() == molecule->layerInfo();
+  }
 };
 
 QString eventName(bool started, bool failed)
@@ -45,6 +50,37 @@ QString eventName(bool started, bool failed)
 }
 
 } // namespace
+
+std::string describe(const CommandOutcome& out)
+{
+  std::string text = std::string("status ") + toString(out.status);
+  if (!out.message.isEmpty())
+    text += ", message \"" + out.message.toStdString() + "\"";
+  text +=
+    ", violations: " + out.violations.join(QStringLiteral("; ")).toStdString();
+  return text;
+}
+
+void recordKnownDeviation(const char* what)
+{
+  ::testing::Test::RecordProperty("known_deviation", what);
+}
+
+void recordUndecided(const char* what)
+{
+  ::testing::Test::RecordProperty("undecided", what);
+}
+
+bool expectNear(const Vector3& actual, const Vector3& expected,
+                double tolerance, const std::string& what)
+{
+  const bool near = (actual - expected).cwiseAbs().maxCoeff() <= tolerance;
+  EXPECT_TRUE(near) << what << ": got (" << actual.x() << ", " << actual.y()
+                    << ", " << actual.z() << "), expected (" << expected.x()
+                    << ", " << expected.y() << ", " << expected.z()
+                    << ") within " << tolerance;
+  return near;
+}
 
 const char* toString(CommandStatus status)
 {
@@ -103,6 +139,8 @@ MoleculeSnapshot MoleculeSnapshot::take(QtGui::Molecule& molecule)
   }
   s.coordinateSetCount = molecule.coordinate3dCount();
   s.hasUnitCell = molecule.unitCell() != nullptr;
+  if (s.hasUnitCell)
+    s.cellMatrix = molecule.unitCell()->cellMatrix();
 
   const QUndoStack& stack = molecule.undoMolecule()->undoStack();
   s.undoIndex = stack.index();
@@ -134,7 +172,7 @@ QStringList MoleculeSnapshot::differences(const MoleculeSnapshot& o,
     d << QStringLiteral("constraints");
   if (coordinateSetCount != o.coordinateSetCount)
     d << QStringLiteral("coordinate sets");
-  if (hasUnitCell != o.hasUnitCell)
+  if (hasUnitCell != o.hasUnitCell || cellMatrix != o.cellMatrix)
     d << QStringLiteral("unit cell");
   if (includeUndo && (undoIndex != o.undoIndex || undoCount != o.undoCount))
     d << QStringLiteral("undo stack (%1/%2 -> %3/%4)")
@@ -204,6 +242,37 @@ void CommandTestHarness::buildMethanol()
   mol.addBond(0, 3);
   mol.addBond(0, 4);
   mol.addBond(1, 5);
+}
+
+void CommandTestHarness::buildPeroxideChain()
+{
+  resetMolecule();
+  QtGui::Molecule& mol = *m_molecule;
+  // Not a real H2O2 geometry: chosen so that every distance, angle and
+  // dihedral is a round number (see the header).
+  mol.addAtom(1, Vector3(0.0, 1.0, 0.0)); // 0 H
+  mol.addAtom(8, Vector3(0.0, 0.0, 0.0)); // 1 O
+  mol.addAtom(8, Vector3(1.5, 0.0, 0.0)); // 2 O
+  mol.addAtom(1, Vector3(1.5, 0.0, 1.0)); // 3 H
+  mol.addBond(0, 1);
+  mol.addBond(1, 2);
+  mol.addBond(2, 3);
+}
+
+void CommandTestHarness::buildEmpty()
+{
+  resetMolecule();
+}
+
+void CommandTestHarness::setActiveLayerMolecule(const QtGui::Molecule* molecule)
+{
+  ActiveLayerMolecule().addMolecule(molecule != nullptr ? molecule
+                                                        : m_molecule.get());
+}
+
+bool CommandTestHarness::harnessMoleculeIsActive() const
+{
+  return ActiveLayerMolecule::isActive(m_molecule.get());
 }
 
 void CommandTestHarness::setPluginMolecule(QtGui::Molecule* molecule)
@@ -384,6 +453,17 @@ CommandOutcome CommandTestHarness::run(const QString& command,
   }
   if (out.status == CommandStatus::Failed && before != after) {
     out.violations << QStringLiteral("failed command changed the molecule: %1")
+                        .arg(before.differences(after).join(", "));
+  }
+  // Decision 2: an undo step must actually do something. A claimed command
+  // that left everything the snapshot tracks as it was, yet moved the undo
+  // stack, pushed an entry that does nothing. (A command changing something
+  // the snapshot does not track, e.g. atom labels, would be misreported
+  // here; none of the plugins under test does.)
+  if (out.claimed && out.status != CommandStatus::Failed &&
+      before.differences(after, false).isEmpty() && before != after) {
+    out.violations << QStringLiteral("changed nothing but pushed an undo "
+                                     "entry: %1")
                         .arg(before.differences(after).join(", "));
   }
   if (!out.claimed && before != after) {

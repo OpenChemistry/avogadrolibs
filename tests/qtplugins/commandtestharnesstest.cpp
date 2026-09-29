@@ -9,8 +9,11 @@
 #include "commandtestharness.h"
 
 #include <avogadro/qtgui/extensionplugin.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QTimer>
+#include <QtGui/QUndoCommand>
+#include <QtGui/QUndoStack>
 
 #include <gtest/gtest.h>
 
@@ -56,6 +59,15 @@ public:
         if (m_molecule != nullptr && m_molecule->atomCount() > 0)
           m_molecule->setAtomPosition3d(0, Vector3(9.0, 9.0, 9.0));
       });
+      return true;
+    }
+    if (command == "pushesEmptyUndo" || command == "failsAfterEmptyUndo") {
+      if (m_molecule != nullptr) {
+        m_molecule->undoMolecule()->undoStack().push(
+          new QUndoCommand(QStringLiteral("nothing")));
+      }
+      if (command == "failsAfterEmptyUndo")
+        emit commandFailed(QStringLiteral("refused"));
       return true;
     }
     if (command == "disownsButSignals") {
@@ -131,5 +143,34 @@ TEST(CommandTestHarnessTest, detectsSignalsFromUnclaimedCommand)
   const CommandOutcome out = harness.run("disownsButSignals");
   EXPECT_EQ(out.status, CommandStatus::NotHandled);
   EXPECT_TRUE(hasViolation(out, "returned false"))
+    << out.violations.join("; ").toStdString();
+}
+
+// Decision 2: an undo entry that changes nothing is a violation.
+TEST(CommandTestHarnessTest, detectsUndoEntryThatChangesNothing)
+{
+  MisbehavingPlugin plugin;
+  CommandTestHarness harness(200);
+  harness.buildMethanol();
+  harness.attach(&plugin);
+
+  const CommandOutcome out = harness.run("pushesEmptyUndo");
+  EXPECT_EQ(out.status, CommandStatus::Finished);
+  EXPECT_TRUE(hasViolation(out, "changed nothing but pushed an undo entry"))
+    << out.violations.join("; ").toStdString();
+}
+
+// Decision 3: a failed command leaves the molecule exactly as it was, undo
+// stack included.
+TEST(CommandTestHarnessTest, detectsFailedCommandThatTouchedTheUndoStack)
+{
+  MisbehavingPlugin plugin;
+  CommandTestHarness harness(200);
+  harness.buildMethanol();
+  harness.attach(&plugin);
+
+  const CommandOutcome out = harness.run("failsAfterEmptyUndo");
+  EXPECT_EQ(out.status, CommandStatus::Failed);
+  EXPECT_TRUE(hasViolation(out, "failed command changed the molecule: undo"))
     << out.violations.join("; ").toStdString();
 }

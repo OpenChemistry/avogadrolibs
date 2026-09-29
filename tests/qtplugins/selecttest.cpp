@@ -18,7 +18,9 @@ using Avogadro::QtPlugins::Select;
 using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
+using Avogadro::QtPluginsTests::describe;
 using Avogadro::QtPluginsTests::MoleculeSnapshot;
+using Avogadro::QtPluginsTests::recordKnownDeviation;
 
 namespace {
 
@@ -36,21 +38,6 @@ protected:
   Select m_select;
   CommandTestHarness m_harness;
 };
-
-std::string describe(const CommandOutcome& out)
-{
-  return std::string("status ") + toString(out.status) + ", violations: " +
-         out.violations.join(QStringLiteral("; ")).toStdString();
-}
-
-// Records a behaviour that differs from the command outcome contract (2.1
-// release plan, section 2, decision 2) in the test XML, so the deviations can
-// be listed from a CI run. The test body asserts the current behaviour, so it
-// fails -- and must be rewritten to the contract -- once the plugin is fixed.
-void recordKnownDeviation(const char* what)
-{
-  ::testing::Test::RecordProperty("known_deviation", what);
-}
 
 } // namespace
 
@@ -149,9 +136,9 @@ TEST_F(SelectCommandTest, knownDeviationInvalidElementIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Not a contract case the plan decides (see the design note's open
-// questions): measuretool and symmetry claim the command and fail it, while
-// Select, like most older plugins, returns false without a molecule.
+// Contract (decision 1): with no molecule a recognized command returns true
+// and emits commandFailed("No molecule"). Select, like most older plugins,
+// returns false instead.
 TEST_F(SelectCommandTest, knownDeviationNoMoleculeIsNotClaimed)
 {
   recordKnownDeviation("with no molecule every command returns false");
@@ -193,4 +180,105 @@ TEST_F(SelectCommandTest, createLayerFromSelectionUndoRedo)
   EXPECT_TRUE(violations.isEmpty()) << violations.join("; ").toStdString();
   EXPECT_EQ(m_harness.snapshot().differences(layered), QStringList())
     << "redo should restore the layered molecule, undo position included";
+}
+
+// Release plan section 4.2 sequence. Consecutive selection changes merge into
+// one undo step (RWMolecule's ModifySelectionCommand), so the three commands
+// leave a single step whose undo returns to "nothing selected".
+TEST_F(SelectCommandTest, selectAllInvertInvertSequence)
+{
+  const MoleculeSnapshot before = m_harness.snapshot();
+  ASSERT_TRUE(before.selectedIndices().empty());
+  const std::vector<Index> all = { 0, 1, 2, 3, 4, 5 };
+
+  CommandOutcome out = m_harness.run("selectAll");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(m_harness.snapshot().selectedIndices(), all);
+
+  out = m_harness.run("invertSelection");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_TRUE(m_harness.snapshot().selectedIndices().empty());
+
+  out = m_harness.run("invertSelection");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.selectedIndices(), all);
+  EXPECT_EQ(before.differences(after, false), QStringList({ "selection" }));
+  EXPECT_EQ(after.undoCount, before.undoCount + 1);
+
+  QStringList violations = m_harness.undo();
+  EXPECT_TRUE(violations.isEmpty()) << violations.join("; ").toStdString();
+  EXPECT_EQ(m_harness.snapshot().differences(before, false), QStringList());
+
+  violations = m_harness.redo();
+  EXPECT_TRUE(violations.isEmpty()) << violations.join("; ").toStdString();
+  EXPECT_EQ(m_harness.snapshot().differences(after), QStringList());
+}
+
+// Contract (decision 2): a command that changes nothing must not push an
+// undo entry. RWMolecule::setAtomSelected() pushed one even when the atom was
+// already in the requested state (fixed on branch fix-selection-noop-undo).
+// Each case starts from a fresh molecule, so the empty undo stack gives the
+// no-op entry nothing to merge into.
+TEST_F(SelectCommandTest, knownDeviationNoOpSelectionPushesUndoEntry)
+{
+  recordKnownDeviation(
+    "a selection command that changes nothing pushes an undo entry");
+
+  const std::vector<std::pair<const char*, QVariantMap>> noOps = {
+    { "selectNone", {} },                        // nothing selected
+    { "selectElement", { { "element", "U" } } }, // valid, no uranium
+    { "selectElement", { { "element", qlonglong(92) } } },
+  };
+  for (const auto& [name, options] : noOps) {
+    m_harness.buildMethanol();
+    const MoleculeSnapshot before = m_harness.snapshot();
+    ASSERT_EQ(before.undoCount, 0);
+
+    const CommandOutcome out = m_harness.run(name, options);
+    EXPECT_EQ(out.status, CommandStatus::Finished) << name;
+    const MoleculeSnapshot after = m_harness.snapshot();
+    EXPECT_EQ(before.differences(after, false), QStringList()) << name;
+    // When these fail, the no-op no longer pushes anything: expect
+    // out.clean() and after == before instead.
+    EXPECT_EQ(after.undoCount, 1) << name;
+    EXPECT_FALSE(out.clean()) << name;
+  }
+}
+
+// Decided: createLayerFromSelection must put the layer on the plugin's own
+// molecule, making it the active one first if it is not. Currently
+// RWLayerManager::addLayer() adds the layer to whichever molecule is active
+// (fixed on branch fix-layer-from-selection-active).
+TEST_F(SelectCommandTest,
+       knownDeviationCreateLayerOnInactiveMoleculeGoesToActiveOne)
+{
+  recordKnownDeviation("createLayerFromSelection adds the layer to the active "
+                       "molecule, not the plugin's");
+
+  ASSERT_EQ(m_harness.run("selectElement", { { "element", "O" } }).status,
+            CommandStatus::Finished);
+
+  // Another window's molecule is active; the plugin still has ours.
+  Avogadro::QtGui::Molecule other;
+  other.addAtom(6);
+  other.addAtom(6);
+  m_harness.setActiveLayerMolecule(&other);
+  ASSERT_FALSE(m_harness.harnessMoleculeIsActive());
+
+  const CommandOutcome out = m_harness.run("createLayerFromSelection");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+
+  const MoleculeSnapshot after = m_harness.snapshot();
+  // When these fail, the fix has landed: expect our molecule to be active,
+  // after.maxLayer == 1, O (atom 1) in layer 1, other.layer().maxLayer() == 0.
+  EXPECT_FALSE(m_harness.harnessMoleculeIsActive());
+  EXPECT_EQ(after.maxLayer, 0u);
+  EXPECT_EQ(after.layerIds, std::vector<size_t>(6, 0));
+  EXPECT_EQ(other.layer().maxLayer(), 1u);
+
+  m_harness.setActiveLayerMolecule(nullptr);
 }

@@ -9,7 +9,15 @@
 find_package(Qt${QT_VERSION} COMPONENTS Widgets Test REQUIRED)
 
 # Plugin targets under test, and the test file for each (lowercased name).
+# Only plugins that need nothing but a molecule (and, for Focus, a plain
+# Rendering::Camera/Scene); tools needing a GLWidget or renderer are tested
+# through avogadroapp's RPC harness instead.
 set(plugins
+  AlignTool
+  Bonding
+  Crystal
+  Focus
+  MeasureTool
   Select
 )
 
@@ -46,6 +54,12 @@ target_link_libraries(AvogadroQtPluginsTests
   Avogadro::QtGui
   ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB}
   Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+
+# Plugin headers include rendering headers, and the Focus test builds a
+# Camera and Scene of its own.
+if(TARGET Avogadro::Rendering)
+  target_link_libraries(AvogadroQtPluginsTests Avogadro::Rendering)
+endif()
 
 foreach(plugin CommandTestHarness ${pluginTargets})
   if(plugin STREQUAL "CommandTestHarness")
