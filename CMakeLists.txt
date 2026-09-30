@@ -65,6 +65,7 @@ option(USE_SPGLIB "Enable optional features using spglib" ON)
 option(USE_PLOTTER "Enable JKQTPlotter for charts and spectra" ON)
 option(USE_MMTF "Enable optional features using mmtf" OFF) # MMTF is no longer maintained
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
+option(USE_EXTERNAL_FASTFLOAT "Use an externally-provided version of the fast_float library" OFF)
 option(USE_EXTERNAL_NLOHMANN "Use an externally-provided version of the nlohmann JSON library" OFF)
 option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
 option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)

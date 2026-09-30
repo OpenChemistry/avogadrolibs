@@ -6,6 +6,7 @@
 #include "scriptenergy.h"
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
 
@@ -81,9 +82,10 @@ bool readFloatText(const char*& pos, const char* end, double& value)
   if (pos == nullptr || pos >= end)
     return false;
 
-  char* parsedEnd = nullptr;
-  value = std::strtod(pos, &parsedEnd);
-  if (parsedEnd == pos || parsedEnd == nullptr || parsedEnd > end)
+  // Not strtod: Qt sets the C locale from the environment, and strtod would
+  // then read "-76.4123" as -76 wherever the decimal separator is a comma.
+  const char* parsedEnd = Core::parseDouble(pos, end, value);
+  if (parsedEnd == nullptr)
     return false;
 
   pos = parsedEnd;
@@ -810,8 +812,11 @@ Real ScriptEnergy::value(const Eigen::VectorXd& x)
     while (pos < end && (*pos == ' ' || *pos == '\t'))
       ++pos;
     double parsedEnergy = 0.0;
-    if (readFloatText(pos, end, parsedEnergy))
-      energy = parsedEnergy;
+    if (!readFloatText(pos, end, parsedEnergy)) {
+      appendError("Could not parse the energy after \"AvogadroEnergy:\".");
+      return std::numeric_limits<Real>::quiet_NaN();
+    }
+    energy = parsedEnergy;
   }
 
   energy += constraintEnergies(x);

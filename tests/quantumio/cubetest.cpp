@@ -14,6 +14,7 @@
 
 #include <avogadro/quantumio/gaussiancube.h>
 
+#include <clocale>
 #include <cmath>
 #include <fstream>
 #include <limits>
@@ -146,6 +147,70 @@ TEST(GaussianCubeTest, malformedValuesStillRejected)
     EXPECT_FALSE(cube.readString(input, molecule)) << "accepted: " << bad;
     EXPECT_NE(cube.error(), std::string()) << "no error for: " << bad;
   }
+}
+
+namespace {
+
+// Switches the C locale to one with a comma as the decimal separator, and
+// restores the previous locale on destruction.
+class CommaDecimalLocale
+{
+public:
+  CommaDecimalLocale()
+  {
+    const char* current = std::setlocale(LC_ALL, nullptr);
+    if (current != nullptr)
+      m_previous = current;
+    for (const char* name : { "de_DE.UTF-8", "de_DE.utf8", "de_DE" }) {
+      if (std::setlocale(LC_ALL, name) != nullptr) {
+        m_active = true;
+        return;
+      }
+    }
+  }
+
+  ~CommaDecimalLocale() { std::setlocale(LC_ALL, m_previous.c_str()); }
+
+  bool active() const { return m_active; }
+
+private:
+  std::string m_previous = "C";
+  bool m_active = false;
+};
+
+} // namespace
+
+// Qt calls setlocale(LC_ALL, "") on Unix. With a comma as the decimal
+// separator strtod stopped at the '.' of every value, so every cube file failed
+// with "Invalid cube data." Reading must not depend on the C locale.
+TEST(GaussianCubeTest, readIsIndependentOfCommaDecimalLocale)
+{
+  const std::string path = AVOGADRO_DATA "/data/cube/benzene-homo.cube";
+
+  // Read once in whatever locale the test runs in (normally "C").
+  GaussianCube reference;
+  Molecule expected;
+  ASSERT_TRUE(reference.readFile(path, expected));
+  ASSERT_EQ(expected.cubeCount(), static_cast<size_t>(1));
+  const std::vector<float>* expectedValues = expected.cube(0)->data();
+  ASSERT_NE(expectedValues, nullptr);
+  ASSERT_FALSE(expectedValues->empty());
+
+  CommaDecimalLocale locale;
+  if (!locale.active())
+    GTEST_SKIP() << "No de_DE locale is installed";
+
+  GaussianCube cube;
+  Molecule molecule;
+  ASSERT_TRUE(cube.readFile(path, molecule)) << cube.error();
+  ASSERT_EQ(cube.error(), std::string());
+  ASSERT_EQ(molecule.atomCount(), expected.atomCount());
+  ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+
+  const std::vector<float>* values = molecule.cube(0)->data();
+  ASSERT_NE(values, nullptr);
+  ASSERT_EQ(values->size(), expectedValues->size());
+  EXPECT_EQ(*values, *expectedValues);
 }
 
 // Regression test: binary junk input should fail gracefully.
