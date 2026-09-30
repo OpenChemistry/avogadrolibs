@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_CORE_UTILITIES_H
 #define AVOGADRO_CORE_UTILITIES_H
 
+#include "avogadrocoreexport.h"
+
 #include <algorithm>
 #include <cerrno>
 #include <cmath>
@@ -161,69 +163,98 @@ std::optional<T> lexicalCast(const std::string& inputString)
 }
 
 /**
- * @brief Cast the inputString to a double, tolerating out of range exponents.
+ * @brief Parse a floating-point number from [first, last) independent of the C
+ * locale.
+ * @param first Start of the text.
+ * @param last One past the end of the text.
+ * @param value Receives the number; unchanged if nothing was parsed.
+ * @return Pointer one past the parsed number, or nullptr if no number was
+ * parsed.
  *
- * Some programs write coordinates (or other values) with exponents a double
- * cannot represent, e.g. "2.61793E-500" or "-7.5467E-6000". The stream
- * extractor reports these as errors, which would otherwise abort reading an
- * entire file over a value that is effectively zero. Fall back to strtod for
- * the range error alone: underflow becomes zero and overflow is clamped to the
- * largest representable magnitude so that later arithmetic cannot see an
- * infinity. Anything the extractor rejects for another reason (including the
- * literals "nan" and "inf") is still an error.
+ * Leading whitespace and a leading '+' are accepted; "nan" and "inf" are
+ * rejected. A Fortran double precision exponent is read like an 'E' one
+ * ("1.0D-03" is 0.001), but an exponent with no letter is not: "1-5" gives 1
+ * and stops at the '-'. Values too small to represent become (signed) zero;
+ * values too large are clamped to the largest finite magnitude, so a stray
+ * exponent such as "2.61793E-500" does not discard a whole file.
+ *
+ * Qt sets the C locale from the environment, and strtod then expects the
+ * user's decimal separator ("1,5" rather than "1.5" in a German locale). Use
+ * these functions, not strtod or atof, for anything read from a file or from
+ * another program.
+ */
+AVOGADROCORE_EXPORT const char* parseDouble(const char* first, const char* last,
+                                            double& value);
+
+/**
+ * @brief Single precision version of parseDouble().
+ *
+ * The text is parsed directly as a float, so subnormal values such as
+ * "9.293354777E-39" are accepted and are not rounded twice.
+ */
+AVOGADROCORE_EXPORT const char* parseFloat(const char* first, const char* last,
+                                           float& value);
+
+/**
+ * @brief Whether @p pos ends a number that was parsed up to @p last.
+ *
+ * A number is complete at the end of the text, or before a character that
+ * could not continue it: anything except an ASCII letter, digit, '.', '+'
+ * or '-'. This rejects "1.5abc", "1.2.3", "1.5D" and the letterless Fortran
+ * exponents "1-5" and "1.5+2" (which a stream extractor would silently read
+ * as 1.0 or 1.5 with some standard libraries and refuse with others), while
+ * still accepting "1.5 2.0" (the first token), "1.5," and "1.5)". Fortran
+ * "1.0D-03" is a number: parseDouble() reads the whole of it.
+ */
+inline bool endsNumber(const char* pos, const char* last)
+{
+  if (pos == last)
+    return true;
+  const char c = *pos;
+  const bool letter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+  const bool digit = c >= '0' && c <= '9';
+  return !(letter || digit || c == '.' || c == '+' || c == '-');
+}
+
+/**
+ * @brief Cast the inputString to a double, independent of the C locale.
+ *
+ * Uses parseDouble(), so exponents a double cannot represent (e.g.
+ * "2.61793E-500") give zero or the largest finite magnitude rather than an
+ * error, and the literals "nan" and "inf" are rejected. The number must be
+ * followed by the end of the string or by a character that cannot continue it
+ * (see endsNumber()).
  */
 template <>
 inline std::optional<double> lexicalCast(const std::string& inputString)
 {
-  double value;
-  std::istringstream stream(inputString);
-  stream >> value;
-  // Whether the extractor accepts the literals "nan" and "inf" varies between
-  // standard library implementations and versions -- libstdc++ rejects them,
-  // and libc++ accepted them until recently -- so a non-finite result from it
-  // cannot be trusted. Fall through to strtod, which tells a genuine
-  // out-of-range exponent (ERANGE, clamped below) apart from a literal.
-  if (!stream.fail() && std::isfinite(value))
-    return value;
-
-  const char* first = inputString.c_str();
-  char* last = nullptr;
-  errno = 0;
-  value = std::strtod(first, &last);
-  if (last == first || errno != ERANGE)
+  const char* first = inputString.data();
+  const char* last = first + inputString.size();
+  double value = 0.0;
+  const char* end = parseDouble(first, last, value);
+  if (end == nullptr || !endsNumber(end, last))
     return std::nullopt;
-
-  if (std::isinf(value))
-    value = (value > 0.0) ? std::numeric_limits<double>::max()
-                          : std::numeric_limits<double>::lowest();
   return value;
 }
 
 /**
- * @brief Cast the inputString to a float, tolerating out of range exponents.
+ * @brief Cast the inputString to a float, independent of the C locale.
  *
- * The stream extractor for float rejects a merely subnormal result, because
- * strtof reports underflow as ERANGE. Quantum chemistry codes routinely write
- * the decaying tail of a density or an orbital with exponents past FLT_MIN
- * (e.g. "1.505124610E-39"), so the generic template above would discard a
- * value that is effectively zero. Delegate to the double overload, which
- * already separates a range error from a genuine parse failure, then narrow --
- * clamping so that a magnitude beyond float cannot become an infinity.
+ * As for the double overload. The text is parsed directly as a float, so the
+ * decaying tail of a density or an orbital written past FLT_MIN (e.g.
+ * "1.505124610E-39") is kept as a subnormal, and a magnitude beyond float is
+ * clamped rather than becoming an infinity.
  */
 template <>
 inline std::optional<float> lexicalCast(const std::string& inputString)
 {
-  const std::optional<double> value = lexicalCast<double>(inputString);
-  if (!value)
+  const char* first = inputString.data();
+  const char* last = first + inputString.size();
+  float value = 0.0f;
+  const char* end = parseFloat(first, last, value);
+  if (end == nullptr || !endsNumber(end, last))
     return std::nullopt;
-
-  constexpr double floatMax =
-    static_cast<double>(std::numeric_limits<float>::max());
-  if (*value > floatMax)
-    return std::numeric_limits<float>::max();
-  if (*value < -floatMax)
-    return std::numeric_limits<float>::lowest();
-  return static_cast<float>(*value);
+  return value;
 }
 
 /**
