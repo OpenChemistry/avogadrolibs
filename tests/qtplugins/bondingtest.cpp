@@ -152,29 +152,95 @@ TEST_F(BondingCommandTest, unknownCommandIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Every mutating command must be undoable. Bonding edits the QtGui::Molecule
-// directly, bypassing RWMolecule, so nothing reaches the undo stack and undo
-// cannot bring the bonds back.
-TEST_F(BondingCommandTest, knownDeviationEditsAreNotUndoable)
+// Every mutating command is one undo entry: undo restores the molecule as it
+// was and redo the result of the command.
+TEST_F(BondingCommandTest, removeBondsUndoRedo)
 {
-  recordKnownDeviation("removeBonds, createBonds and addBondOrders push no "
-                       "undo entry");
-
   const MoleculeSnapshot before = m_harness.snapshot();
-  ASSERT_EQ(before.undoCount, 0);
   ASSERT_EQ(m_harness.run("removeBonds").status, CommandStatus::Finished);
-  // When these fail, expect undoCount 1 and undo() to restore `before`.
-  EXPECT_EQ(m_harness.snapshot().undoCount, 0);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.undoCount, before.undoCount + 1);
+  EXPECT_TRUE(after.bondPairs.empty());
+
   EXPECT_TRUE(m_harness.undo().isEmpty());
-  EXPECT_TRUE(m_harness.snapshot().bondPairs.empty());
+  EXPECT_EQ(m_harness.snapshot().differences(before, false), QStringList());
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(after), QStringList());
+}
 
+TEST_F(BondingCommandTest, removeBondsWithSelectionUndoRedo)
+{
+  m_harness.molecule()->setAtomSelected(1, true);
+  m_harness.molecule()->setAtomSelected(2, true);
+  const MoleculeSnapshot before = m_harness.snapshot();
+  ASSERT_EQ(m_harness.run("removeBonds").status, CommandStatus::Finished);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.undoCount, before.undoCount + 1);
+  // Every bond touches O1 or O2, including O1-O2, which both list.
+  EXPECT_TRUE(after.bondPairs.empty());
+
+  EXPECT_TRUE(m_harness.undo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(before, false), QStringList());
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(after), QStringList());
+}
+
+TEST_F(BondingCommandTest, createBondsUndoRedo)
+{
+  ASSERT_EQ(m_harness.run("removeBonds").status, CommandStatus::Finished);
+  const MoleculeSnapshot before = m_harness.snapshot();
   ASSERT_EQ(m_harness.run("createBonds").status, CommandStatus::Finished);
-  EXPECT_EQ(m_harness.snapshot().undoCount, 0);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.undoCount, before.undoCount + 1);
+  EXPECT_EQ(after.bondPairs, BondList({ { 0, 1 }, { 1, 2 }, { 2, 3 } }));
 
+  EXPECT_TRUE(m_harness.undo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(before, false), QStringList());
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(after), QStringList());
+}
+
+TEST_F(BondingCommandTest, addBondOrdersUndoRedo)
+{
+  buildEthyleneAllSingle();
+  const MoleculeSnapshot before = m_harness.snapshot();
+  ASSERT_EQ(m_harness.run("addBondOrders").status, CommandStatus::Finished);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.undoCount, before.undoCount + 1);
+  EXPECT_EQ(after.bondOrders, std::vector<unsigned char>({ 2, 1, 1, 1, 1 }));
+
+  EXPECT_TRUE(m_harness.undo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(before, false), QStringList());
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(after), QStringList());
+}
+
+// A command that changes nothing must not push an undo entry.
+TEST_F(BondingCommandTest, noOpCommandsPushNoUndoEntry)
+{
+  // createBonds when every bond is already there
+  const MoleculeSnapshot chain = m_harness.snapshot();
+  CommandOutcome out = m_harness.run("createBonds");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(m_harness.snapshot(), chain);
+
+  // removeBonds on a molecule with no bonds
+  ASSERT_EQ(m_harness.run("removeBonds").status, CommandStatus::Finished);
+  const MoleculeSnapshot bondless = m_harness.snapshot();
+  out = m_harness.run("removeBonds");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(m_harness.snapshot(), bondless);
+
+  // addBondOrders twice
   buildEthyleneAllSingle();
   ASSERT_EQ(m_harness.run("addBondOrders").status, CommandStatus::Finished);
-  EXPECT_EQ(m_harness.snapshot().bondOrders[0], 2);
-  EXPECT_EQ(m_harness.snapshot().undoCount, 0);
+  const MoleculeSnapshot perceived = m_harness.snapshot();
+  out = m_harness.run("addBondOrders");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(m_harness.snapshot(), perceived);
 }
 
 // Contract (decision 1): no molecule -> true + commandFailed("No molecule").
@@ -193,19 +259,41 @@ TEST_F(BondingCommandTest, knownDeviationNoMoleculeIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// A finding, not a contract case: createBonds re-adds existing bonds with
-// order 1, and Core::Molecule::addBond() updates the order of an existing
-// bond, so perceived double bonds are silently demoted.
-TEST_F(BondingCommandTest, createBondsResetsExistingBondOrders)
+// createBonds must leave an existing bond alone: Core::Molecule::addBond()
+// (and RWMolecule::addBond()) update the order of a bonded pair, so a
+// perceived double bond would be demoted to single.
+TEST_F(BondingCommandTest, createBondsPreservesExistingBondOrders)
 {
-  ::testing::Test::RecordProperty(
-    "finding", "createBonds demotes existing multiple bonds to single");
-
   buildEthyleneAllSingle();
   ASSERT_EQ(m_harness.run("addBondOrders").status, CommandStatus::Finished);
-  ASSERT_EQ(m_harness.snapshot().bondOrders[0], 2);
+  const MoleculeSnapshot perceived = m_harness.snapshot();
+  ASSERT_EQ(perceived.bondOrders,
+            std::vector<unsigned char>({ 2, 1, 1, 1, 1 }));
 
   const CommandOutcome out = m_harness.run("createBonds");
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_EQ(m_harness.snapshot().bondOrders[0], 1);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.bondPairs, perceived.bondPairs);
+  EXPECT_EQ(after.bondOrders, std::vector<unsigned char>({ 2, 1, 1, 1, 1 }));
+  EXPECT_EQ(after.undoCount, perceived.undoCount);
+}
+
+// With C=C present and one C-H bond missing, only that C-H is added, as a
+// single bond.
+TEST_F(BondingCommandTest, createBondsAddsMissingBondKeepingDoubleBond)
+{
+  buildEthyleneAllSingle();
+  ASSERT_EQ(m_harness.run("addBondOrders").status, CommandStatus::Finished);
+  // Bond 4 is C1-H5 (the last bond, so nothing else moves).
+  ASSERT_TRUE(m_harness.molecule()->removeBond(4));
+  ASSERT_EQ(m_harness.snapshot().bondPairs.size(), 4u);
+
+  const CommandOutcome out = m_harness.run("createBonds");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(after.bondPairs,
+            BondList({ { 0, 1 }, { 0, 2 }, { 0, 3 }, { 1, 4 }, { 1, 5 } }));
+  EXPECT_EQ(after.bondOrders, std::vector<unsigned char>({ 2, 1, 1, 1, 1 }));
 }
