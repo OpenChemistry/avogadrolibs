@@ -150,38 +150,42 @@ TEST_F(CrystalCommandTest, unknownCommandIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Release plan section 4.2: wrapUnitCell -> wrapUnitCell. The second wrap
-// moves nothing, but RWMolecule::wrapAtomsToCell() pushes its positions
-// command unconditionally (decision 2: it must not). The same holds for
-// orienting a cell that is already standard.
-TEST_F(CrystalCommandTest, knownDeviationNoOpCrystalEditPushesUndoEntry)
+// Decision 2: a second wrapUnitCell moves nothing, so it pushes no undo entry.
+TEST_F(CrystalCommandTest, wrapUnitCellTwiceIsANoOp)
 {
-  recordKnownDeviation("a second wrapUnitCell, or standardCrystalOrientation "
-                       "on a standard cell, pushes an undo entry");
-
   buildCubicArgon();
   ASSERT_EQ(m_harness.run("wrapUnitCell").status, CommandStatus::Finished);
 
-  for (const char* name : { "wrapUnitCell", "standardCrystalOrientation" }) {
-    const MoleculeSnapshot before = m_harness.snapshot();
-    const CommandOutcome out = m_harness.run(name);
-    EXPECT_EQ(out.status, CommandStatus::Finished) << name;
-    const MoleculeSnapshot after = m_harness.snapshot();
-    EXPECT_EQ(before.differences(after, false), QStringList()) << name;
-    // When these fail, expect out.clean() and after == before.
-    EXPECT_EQ(after.undoCount, before.undoCount + 1) << name;
-    EXPECT_FALSE(out.clean()) << name;
-  }
+  const MoleculeSnapshot before = m_harness.snapshot();
+  const CommandOutcome out = m_harness.run("wrapUnitCell");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Every mutating command must be undoable. wrapAtomsToCell() clears and
-// re-perceives bonds on the molecule directly, but its undo command only
-// stores positions, so undo restores the coordinates and not the bonds.
-TEST_F(CrystalCommandTest, knownDeviationWrapUndoDoesNotRestoreBonds)
+// Release plan section 4.2: orienting a cell that is already standard moves
+// nothing, but RWMolecule::rotateCellToStandardOrientation() pushes its
+// command unconditionally (decision 2: it must not).
+TEST_F(CrystalCommandTest, knownDeviationNoOpCrystalEditPushesUndoEntry)
 {
-  recordKnownDeviation("undoing wrapUnitCell does not restore the bonds the "
-                       "wrap removed");
+  recordKnownDeviation("standardCrystalOrientation on a standard cell "
+                       "pushes an undo entry");
 
+  buildCubicArgon();
+  const MoleculeSnapshot before = m_harness.snapshot();
+  const CommandOutcome out = m_harness.run("standardCrystalOrientation");
+  EXPECT_EQ(out.status, CommandStatus::Finished);
+  const MoleculeSnapshot after = m_harness.snapshot();
+  EXPECT_EQ(before.differences(after, false), QStringList());
+  // When this fails, expect out.clean() and after == before.
+  EXPECT_EQ(after.undoCount, before.undoCount + 1);
+  EXPECT_FALSE(out.clean());
+}
+
+// Wrapping clears and re-perceives the bonds, so undo has to bring them back
+// along with the positions.
+TEST_F(CrystalCommandTest, wrapUnitCellUndoRestoresBonds)
+{
   buildCubicArgon();
   // A bond perception would never make (Ar0-Ar1 is 2.83 A before the wrap,
   // beyond the 0.96 + 0.96 + 0.45 = 2.37 A cutoff), so it only survives if
@@ -189,14 +193,17 @@ TEST_F(CrystalCommandTest, knownDeviationWrapUndoDoesNotRestoreBonds)
   m_harness.molecule()->addBond(0, 1, 1);
   const MoleculeSnapshot before = m_harness.snapshot();
 
-  ASSERT_EQ(m_harness.run("wrapUnitCell").status, CommandStatus::Finished);
-  EXPECT_TRUE(m_harness.snapshot().bondPairs.empty());
+  const CommandOutcome out = m_harness.run("wrapUnitCell");
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  const MoleculeSnapshot wrapped = m_harness.snapshot();
+  EXPECT_TRUE(wrapped.bondPairs.empty());
+  EXPECT_EQ(wrapped.undoCount, before.undoCount + 1);
 
   EXPECT_TRUE(m_harness.undo().isEmpty());
-  const MoleculeSnapshot undone = m_harness.snapshot();
-  EXPECT_EQ(undone.positions, before.positions);
-  // When this fails, expect undone.differences(before, false) to be empty.
-  EXPECT_EQ(undone.differences(before, false), QStringList({ "bonds" }));
+  EXPECT_EQ(m_harness.snapshot().differences(before, false), QStringList());
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(m_harness.snapshot().differences(wrapped), QStringList());
 }
 
 // Contract (decision 1): no molecule -> true + commandFailed("No molecule").
