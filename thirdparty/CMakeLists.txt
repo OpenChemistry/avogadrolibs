@@ -26,6 +26,23 @@ else()
   add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
 endif(USE_EXTERNAL_NLOHMANN)
 
+if(USE_EXTERNAL_FASTFLOAT)
+  # No version in the call: FastFloat's version file only accepts the major
+  # version that was requested, so "7.0.0" would refuse the current 8.x. 7.0.0
+  # is the first release with allow_leading_plus, skip_white_space and
+  # no_infnan together, which parseDouble() needs.
+  find_package(FastFloat REQUIRED GLOBAL)
+  if(FastFloat_VERSION VERSION_LESS 7.0.0)
+    message(FATAL_ERROR
+      "fast_float 7.0.0 or newer is required, found ${FastFloat_VERSION}")
+  endif()
+else()
+  add_library(fast_float INTERFACE IMPORTED GLOBAL)
+  target_include_directories(fast_float
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+  add_library(FastFloat::fast_float ALIAS fast_float)
+endif(USE_EXTERNAL_FASTFLOAT)
+
 if(USE_EXTERNAL_PUGIXML)
   find_package(pugixml 1.12 REQUIRED GLOBAL)
 else()
