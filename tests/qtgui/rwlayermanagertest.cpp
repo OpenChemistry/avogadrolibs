@@ -67,6 +67,69 @@ TEST_F(RWLayerManagerTest, AddLayerFromSelection)
   EXPECT_EQ(LayerManager::getMoleculeInfo(&molecule)->layer.maxLayer(), 1u);
 }
 
+// Select::createLayerFromSelection() and SelectionTool push the command on
+// their own molecule's undo stack; the layer used to be added to whichever
+// molecule was active instead, so the selected atoms were then moved into a
+// layer their molecule did not have. The plugin's molecule must be made
+// active and receive the layer.
+TEST_F(RWLayerManagerTest, AddLayerActsOnTheGivenMoleculeNotTheActiveOne)
+{
+  Molecule active;
+  active.addAtom(1);
+  Molecule other;
+  for (Index i = 0; i < 3; ++i)
+    other.addAtom(6);
+
+  TestLayerManager manager;
+  manager.addMolecule(&active);
+  ASSERT_EQ(LayerManager::getMoleculeInfo(), active.layerInfo());
+
+  auto* rwOther = other.undoMolecule();
+  const int activeUndo = active.undoMolecule()->undoStack().count();
+  // Reproduce createLayerFromSelection(): atom 1 is selected and moved.
+  rwOther->setAtomSelected(1, true);
+  rwOther->beginMergeMode("Change Layer");
+  manager.addLayer(rwOther);
+  const size_t layer = LayerManager::getMoleculeInfo(&other)->layer.maxLayer();
+  for (Index i = 0; i < rwOther->atomCount(); ++i)
+    if (rwOther->atomSelected(i))
+      rwOther->setLayer(i, layer);
+  rwOther->endMergeMode();
+
+  // `other` got the layer and became the active molecule; `active` is
+  // untouched, including its undo stack.
+  EXPECT_EQ(LayerManager::getMoleculeInfo(), other.layerInfo());
+  EXPECT_EQ(1u, layer);
+  EXPECT_EQ(1u, other.layer().maxLayer());
+  EXPECT_EQ(1u, other.layer().getLayerID(1));
+  EXPECT_EQ(0u, other.layer().getLayerID(0));
+  EXPECT_EQ(0u, active.layer().maxLayer());
+  EXPECT_EQ(2u, LayerManager::getMoleculeInfo(&other)->visible.size());
+  EXPECT_EQ(1u, LayerManager::getMoleculeInfo(&active)->visible.size());
+  EXPECT_EQ(activeUndo, active.undoMolecule()->undoStack().count());
+
+  // Undoing on `other`'s stack removes `other`'s layer again.
+  rwOther->undoStack().undo();
+  EXPECT_EQ(0u, other.layer().maxLayer());
+  EXPECT_EQ(0u, other.layer().getLayerID(1));
+  EXPECT_EQ(0u, active.layer().maxLayer());
+}
+
+// With no active molecule at all, addLayer() used to be a silent no-op (an
+// empty macro on the undo stack); it now activates the given molecule.
+TEST_F(RWLayerManagerTest, AddLayerWithNoActiveMoleculeActivatesIt)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  ASSERT_EQ(nullptr, LayerManager::getMoleculeInfo());
+
+  TestLayerManager manager;
+  manager.addLayer(molecule.undoMolecule());
+
+  EXPECT_EQ(LayerManager::getMoleculeInfo(), molecule.layerInfo());
+  EXPECT_EQ(1u, molecule.layer().maxLayer());
+}
+
 // The same, but with a plugin having registered per-layer enable flags first.
 // AddLayerCommand indexes enable[name][activeLayer] with no bounds check, and
 // the flag vectors are grown separately from Core::Layer.

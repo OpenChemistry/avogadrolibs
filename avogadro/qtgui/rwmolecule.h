@@ -301,7 +301,10 @@ public:
                     const QString& undoText = tr("Change Bond Label"));
 
   /**
-   * Set whether the specified atom is selected or not.
+   * Set whether the specified atom is selected or not. Nothing is pushed
+   * onto the undo stack if the atom is already in the requested state (or
+   * @p atomId is out of range). Consecutive selection changes merge into a
+   * single undo step.
    */
   void setAtomSelected(Index atomId, bool selected,
                        const QString& undoText = tr("Change Selection"));

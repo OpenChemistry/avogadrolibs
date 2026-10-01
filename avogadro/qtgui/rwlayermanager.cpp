@@ -347,6 +347,17 @@ void RWLayerManager::removeLayer(size_t layer, RWMolecule* rwmolecule)
 void RWLayerManager::addLayer(RWMolecule* rwmolecule)
 {
   assert(rwmolecule != nullptr);
+  if (rwmolecule == nullptr)
+    return;
+
+  // The command goes on @p rwmolecule's undo stack, so it must act on that
+  // molecule's layers -- never on whichever molecule happens to be active
+  // (e.g. a plugin still holding a molecule the window has switched away
+  // from). Make it the active molecule first, as switching to it would.
+  const Core::Molecule* target = &rwmolecule->molecule();
+  if (activeMoleculeInfo() != target->layerInfo())
+    setActiveMolecule(target);
+
   rwmolecule->undoStack().beginMacro(QObject::tr("Add Layer"));
   auto molecule = activeMoleculeInfo();
   if (molecule == nullptr) {

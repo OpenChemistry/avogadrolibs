@@ -527,7 +527,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // check if name matches specified (e.g. HIS57 is really a HIS)
-      } // index makes sense
+      }   // index makes sense
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
@@ -539,7 +539,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // residue matches label
-      } // for(residues)
+      }   // for(residues)
       continue;
     } // 3-character labels
   }
@@ -569,6 +569,8 @@ void Select::createLayerFromSelection()
 
   auto& layerInfo = Core::LayerManager::getMoleculeInfo(m_molecule)->layer;
   QtGui::RWLayerManager rwLayerManager;
+  // addLayer() makes m_molecule the active molecule if it is not already, so
+  // the layer lands on the molecule whose atoms are moved into it below.
   rwLayerManager.addLayer(rwmol);
   int layer = layerInfo.maxLayer();
 
@@ -619,11 +621,23 @@ void Select::registerCommands()
                        tr("Separate the selected atoms into a new layer."));
 }
 
-bool Select::handleCommand(const QString& command,
-                           [[maybe_unused]] const QVariantMap& options)
+bool Select::handleCommand(const QString& command, const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command
+  static const QStringList knownCommands = {
+    "selectAll",       "selectNone",
+    "invertSelection", "selectElement",
+    "selectBackbone",  "selectSidechains",
+    "selectWater",     "enlargeSelection",
+    "shrinkSelection", "createLayerFromSelection"
+  };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   // Helper lambda to gather selected indices and emit them back via JSON-RPC
   auto emitSelection = [this]() {
@@ -660,29 +674,39 @@ bool Select::handleCommand(const QString& command,
   }
 
   if (command == "selectElement") {
-    if (options.contains("element")) {
-      QVariant elementData = options["element"];
-      int atomicNum = InvalidElement;
-
-      if (elementData.typeId() == QMetaType::QString) {
-        atomicNum = Core::Elements::atomicNumberFromSymbol(
-          elementData.toString().toStdString());
-      }
-
-      if (atomicNum == InvalidElement) {
-        bool ok = false;
-        atomicNum = elementData.toInt(&ok);
-        if (!ok || atomicNum <= 0) {
-          return false;
-        }
-      }
-
-      selectElement(atomicNum);
-      emitSelection();
+    if (!options.contains("element")) {
+      emit commandFailed(tr("selectElement requires an \"element\" option "
+                            "(an element symbol or atomic number)."));
       return true;
     }
 
-    return false;
+    QVariant elementData = options["element"];
+    int atomicNum = InvalidElement;
+
+    if (elementData.typeId() == QMetaType::QString) {
+      atomicNum = Core::Elements::atomicNumberFromSymbol(
+        elementData.toString().toStdString());
+    }
+
+    if (atomicNum == InvalidElement) {
+      bool ok = false;
+      atomicNum = elementData.toInt(&ok);
+      if (!ok) {
+        emit commandFailed(
+          tr("Unknown element \"%1\".").arg(elementData.toString()));
+        return true;
+      }
+      if (atomicNum < 1 || atomicNum >= Core::Elements::elementCount()) {
+        emit commandFailed(tr("Atomic number %1 is out of range (1 to %2).")
+                             .arg(atomicNum)
+                             .arg(Core::Elements::elementCount() - 1));
+        return true;
+      }
+    }
+
+    selectElement(atomicNum);
+    emitSelection();
+    return true;
   }
 
   if (command == "selectBackbone") {

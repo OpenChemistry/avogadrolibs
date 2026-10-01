@@ -27,6 +27,10 @@ class AVOGADROQTGUI_EXPORT RWLayerManager : protected Core::LayerManager
 {
 public:
   void removeLayer(size_t layer, RWMolecule* rwmolecule);
+  /**
+   * Add a layer to @p rwmolecule's molecule, as one undoable step on its undo
+   * stack. If that molecule is not the active one it is made active first.
+   */
   void addLayer(RWMolecule* rwmolecule);
   void setActiveLayer(size_t layer, RWMolecule* rwmolecule);
 

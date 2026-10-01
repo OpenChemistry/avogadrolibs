@@ -351,27 +351,19 @@ TEST_F(MeasureToolCommandTest, unknownCommandIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Contract (decision 1): true + commandFailed("No molecule"). MeasureTool
-// claims and fails, as required, but with its own message.
-TEST_F(MeasureToolCommandTest, knownDeviationNoMoleculeMessage)
+// Contract (decision 1): true + commandFailed("No molecule").
+TEST_F(MeasureToolCommandTest, noMoleculeFails)
 {
-  recordKnownDeviation("no molecule fails with \"There is no molecule to "
-                       "measure.\" rather than \"No molecule\"");
-
   m_harness.setPluginMolecule(nullptr);
   const MoleculeSnapshot before = m_harness.snapshot();
   for (const char* name :
        { "measureDistance", "editDistance", "editAngle", "measureDihedral" }) {
     const CommandOutcome out =
       m_harness.run(name, { { "atoms", atoms({ 0, 1 }) }, { "value", 1.0 } });
-    // The contract part, already met.
     EXPECT_TRUE(out.claimed) << name;
     EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.message, QString(NoMoleculeMessage)) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
-    // The deviation: when this fails, expect NoMoleculeMessage.
-    EXPECT_NE(out.message, QString(NoMoleculeMessage)) << name;
-    EXPECT_EQ(out.message, QStringLiteral("There is no molecule to measure."))
-      << name;
   }
   EXPECT_EQ(m_harness.snapshot(), before);
 }

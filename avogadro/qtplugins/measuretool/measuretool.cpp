@@ -761,7 +761,7 @@ bool MeasureTool::handleCommand(const QString& command,
   // edits specifically need the undo stack that only setMolecule() (not
   // setEditMolecule()) provides -- see the comment in setEditMolecule().
   if (!m_molecule) {
-    emit commandFailed(tr("There is no molecule to measure."));
+    emit commandFailed(tr("No molecule"));
     return true;
   }
 
