@@ -17,6 +17,13 @@ namespace Io {
 /**
  * @class CjsonFormat cjsonformat.h <avogadro/io/cjsonformat.h>
  * @brief Implementation of the Chemical JSON format.
+ *
+ * Writing accepts these options (a JSON object passed to setOptions()):
+ * - `"properties"` (bool, default true): write the molecule's property map.
+ * - `"cubes"` (bool, default true): write the first volumetric data set as the
+ *   `"cube"` object. Set to false to omit it, which keeps the file small;
+ *   basis set and orbital coefficients are still written, so cubes can be
+ *   recomputed.
  */
 
 class AVOGADROIO_EXPORT CjsonFormat : public FileFormat

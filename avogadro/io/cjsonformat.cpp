@@ -1672,6 +1672,10 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 {
   bool writeProperties = true;
   boolOption("properties", writeProperties);
+  // Cubes are by far the largest thing a molecule can carry (a few hundred
+  // MB for one orbital), and callers such as autosave can recompute them.
+  bool writeCubes = true;
+  boolOption("cubes", writeCubes);
 
   ordered_json root;
 
@@ -1941,7 +1945,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   }
 
   // Write out any cubes that are present in the molecule.
-  if (molecule.cubeCount() > 0) {
+  if (writeCubes && molecule.cubeCount() > 0) {
     json cubeObj;
     const Cube* cube = molecule.cube(0);
     // Get the origin, max, spacing, and dimensions to place in the object.
