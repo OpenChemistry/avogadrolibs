@@ -180,6 +180,13 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
   Core::getLine(inStream, buffer);
   std::vector<string> labels(split(buffer, ' '));
+  // The column indices below are positions in this header line, and atom
+  // rows lack its two leading "ITEM:" "ATOMS" words -- hence the "- 2" when
+  // indexing a row. Without that prefix the subtraction would underflow.
+  if (labels.size() < 2 || labels[0] != "ITEM:" || labels[1] != "ATOMS") {
+    appendError("No 'ITEM: ATOMS' header found: " + buffer);
+    return false;
+  }
   for (size_t i = 0; i < labels.size(); i++) {
     if (labels[i] == "x" || labels[i] == "xu") {
       x_idx = i;
@@ -207,7 +214,8 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
-      type_idx == SIZE_MAX) {
+      type_idx == SIZE_MAX || x_idx < 2 || y_idx < 2 || z_idx < 2 ||
+      type_idx < 2) {
     appendError("Failed to parse attributes: " + buffer);
     return false;
   }
@@ -293,7 +301,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   mol.setUnitCell(uc);
 
   // Do we have an animation?
-  size_t numAtoms2;
+  size_t numAtoms2 = 0;
   int coordSet = 1;
   while (Core::getLine(inStream, buffer) &&
          trimmed(buffer) == "ITEM: TIMESTEP") {
@@ -434,6 +442,11 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
     Core::getLine(inStream, buffer);
     labels = std::vector<string>(split(buffer, ' '));
+    // See the first frame: row indices are header indices minus two.
+    if (labels.size() < 2 || labels[0] != "ITEM:" || labels[1] != "ATOMS") {
+      appendError("No 'ITEM: ATOMS' header found: " + buffer);
+      return false;
+    }
     for (size_t i = 0; i < labels.size(); ++i) {
       if (labels[i] == "x" || labels[i] == "xu") {
         x_idx = i;
@@ -461,7 +474,8 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     if (x_idx == SIZE_MAX || y_idx == SIZE_MAX || z_idx == SIZE_MAX ||
-        type_idx == SIZE_MAX) {
+        type_idx == SIZE_MAX || x_idx < 2 || y_idx < 2 || z_idx < 2 ||
+        type_idx < 2) {
       appendError("Failed to parse attributes: " + buffer);
       return false;
     }
@@ -476,7 +490,9 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
         return false;
       }
       std::vector<string> tokens(split(buffer, ' '));
-      if (tokens.size() < 5) {
+      // Every column the header declares, not a fixed five: x_idx etc. can
+      // point past the fifth token.
+      if (tokens.size() < labels.size() - 2) {
         appendError("Not enough tokens in this line: " + buffer);
         return false;
       }

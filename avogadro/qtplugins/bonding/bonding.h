@@ -11,6 +11,9 @@
 
 #include <QtWidgets/QDialog>
 
+#include <utility>
+#include <vector>
+
 namespace Ui {
 class BondingDialog;
 }
@@ -55,7 +58,11 @@ private slots:
   void setValues();
 
 private:
-  QtGui::Molecule* m_molecule;
+  /** Add single bonds as one undo entry; does nothing for an empty list. */
+  void addBonds(const std::vector<std::pair<Index, Index>>& newBonds,
+                const QString& undoText);
+
+  QtGui::Molecule* m_molecule = nullptr;
 
   double m_tolerance;
   double m_minDistance;

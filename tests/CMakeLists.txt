@@ -67,6 +67,14 @@ add_subdirectory(io)
 add_subdirectory(quantumio)
 if(USE_QT)
   add_subdirectory(qtgui)
+  # The command-boundary tests link plugin targets directly, which only works
+  # when they are static libraries built in this tree.
+  if(BUILD_STATIC_PLUGINS AND NOT PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(qtplugins)
+  else()
+    message(STATUS "Skipping qtplugins tests: they need in-tree static plugins"
+      " (BUILD_STATIC_PLUGINS=ON).")
+  endif()
 endif()
 if(USE_OPENGL)
   add_subdirectory(rendering)

@@ -14,6 +14,9 @@
 #include "vector.h"
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
+#include <unordered_map>
 #include <vector>
 
 namespace Avogadro::Core {
@@ -36,15 +39,17 @@ public:
    *                    detected. Should be as low as possible for best
    *                    performance.
    *
-   * Widely spread points make the constructor use larger bins than
-   * maxDistance to bound memory; results are then a larger superset.
+   * The bin size always equals maxDistance. Only occupied bins are stored, so
+   * memory is proportional to the number of points however widely they are
+   * spread. Points with non-finite coordinates are ignored: they are never
+   * returned as neighbors, and do not affect the other points.
    */
   NeighborPerceiver(const Array<Vector3> points, float maxDistance);
 
   /**
    * Returns a list of neighboring points. Linear time to number of neighbors.
-   * Can include some neighbors up to 2*sqrt(3) times the bin size, which equals
-   * the maximum distance except for very large point sets.
+   * Can include some neighbors up to 2*sqrt(3) times the bin size, which always
+   * equals the maximum distance. A non-finite query point has no neighbors.
    * The list is newly allocated on every call; if performance/fragmentation
    * is a concern, prefer NeighborPerceiver::getNeighborsInclusiveInPlace().
    *
@@ -55,7 +60,8 @@ public:
   /**
    * Fills an array with all neighboring points. Linear time to number of
    * neighbors. Can include some neighbors up to 2*sqrt(3) times the bin size,
-   * which equals the maximum distance except for very large point sets.
+   * which always equals the maximum distance. A non-finite query point has no
+   * neighbors.
    *
    * @param out Array to output neighbor indices in.
    * @param point Position to return neighbors of, can be located anywhere.
@@ -64,21 +70,40 @@ public:
                                     const Vector3& point) const;
 
 private:
-  std::array<int, 3> getBinIndex(const Vector3& point) const;
+  /// Integer coordinates of a bin. Stored as 64-bit so that neighboring bins
+  /// (cell +/- 1) can never overflow.
+  using BinKey = std::array<int64_t, 3>;
+
+  struct BinKeyHash
+  {
+    size_t operator()(const BinKey& key) const noexcept
+    {
+      // splitmix64-style mixing of the three components
+      uint64_t h = 0x9e3779b97f4a7c15ULL;
+      for (int64_t v : key) {
+        h ^= static_cast<uint64_t>(v) + 0x9e3779b97f4a7c15ULL + (h << 6) +
+             (h >> 2);
+        h *= 0xbf58476d1ce4e5b9ULL;
+        h ^= h >> 31;
+      }
+      return static_cast<size_t>(h);
+    }
+  };
+
+  /// Computes the bin of a finite point. Returns false for non-finite points.
+  bool getBinIndex(const Vector3& point, BinKey& key) const;
 
 protected:
   float m_maxDistance;
-  /// Edge length of the cubic bins. Equal to m_maxDistance unless the point
-  /// set would need too many bins (at most 1000 per axis, and between 1M and
-  /// 10M in total depending on the number of points), in which case it is
-  /// enlarged (never reduced) so that the bin grid stays within those limits.
+  /// Edge length of the cubic bins. Always equal to m_maxDistance.
   double m_binSize;
-  std::array<int, 3> m_binCount;
-  std::vector<std::vector<std::vector<std::vector<Index>>>> m_bins;
+  /// Only occupied bins are stored (sparse), in insertion order per bin.
+  std::unordered_map<BinKey, std::vector<Index>, BinKeyHash> m_bins;
+  /// Origin of the bin grid: the bounding box minimum of the finite points, or
+  /// the origin if the extent is too large for a minimum-anchored grid.
+  Vector3 m_anchor = Vector3::Zero();
   Vector3 m_minPos = Vector3::Zero();
   Vector3 m_maxPos = Vector3::Zero();
-  mutable Array<Index>* m_cachedArray;
-  mutable std::array<int, 3> m_cachedIndex;
 };
 
 } // namespace Avogadro::Core

@@ -402,16 +402,36 @@ public:
 
   void redo() override
   {
-    for (size_t i = 0; i < m_atomIds.size(); ++i)
-      positions3d()[m_atomIds[i]] = m_newPosition3ds[i];
+    growPositions();
+    write(m_newPosition3ds);
   }
 
   void undo() override
   {
-    for (size_t i = 0; i < m_atomIds.size(); ++i)
-      positions3d()[m_atomIds[i]] = m_oldPosition3ds[i];
+    growPositions();
+    write(m_oldPosition3ds);
   }
 
+private:
+  // RWMolecule::setAtomPosition3d() grows the position array to atomCount()
+  // before pushing this command, outside the undo history. Redoing after an
+  // undone position-less AddAtomCommand must repeat that growth, or the
+  // array is shorter than the atom ids (found by fuzzing).
+  void growPositions()
+  {
+    if (positions3d().size() < m_molecule.atomCount())
+      positions3d().resize(m_molecule.atomCount(), Vector3::Zero());
+  }
+
+  void write(const Array<Vector3>& values)
+  {
+    for (size_t i = 0; i < m_atomIds.size(); ++i) {
+      if (m_atomIds[i] < positions3d().size())
+        positions3d()[m_atomIds[i]] = values[i];
+    }
+  }
+
+public:
   bool mergeWith(const QUndoCommand* o) override
   {
     const SetPosition3dCommand* other =

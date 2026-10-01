@@ -1,0 +1,56 @@
+name: Prune compiler caches
+
+# Each master push saves a new sccache-...-<sha> entry. Without pruning they
+# pile up until GitHub's LRU eviction throws out the Qt and vcpkg caches first.
+# Add more build workflows to this list as sccache rolls out to them.
+on:
+  workflow_run:
+    workflows:
+    - "Linux Build Matrix"
+    - "Linux ARM64 Build Matrix"
+    - "Mac Build Matrix"
+    - "Windows Build"
+    - "Windows ARM Build"
+    - "Linux Fuzz Tests"
+    - "Linux Memory Sanitizer"
+    types: [completed]
+    branches: [master]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  prune:
+    name: Prune sccache entries
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+    # Keep the newest entry per configuration (the key minus its trailing
+    # commit SHA) and delete the rest. Only keys ending in a 40-hex SHA are
+    # considered, so an unexpected key can never be deleted by mistake.
+    - name: Delete superseded sccache entries
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ github.repository }}
+      run: |
+        set -euo pipefail
+        lines=$(gh cache list -R "$REPO" --key sccache- --ref refs/heads/master \
+          --limit 1000 --json id,key,createdAt -q '
+            map(select(.key | test("-[0-9a-f]{40}$")))
+            | group_by(.key | sub("-[0-9a-f]{40}$"; ""))
+            | .[]
+            | sort_by(.createdAt) | reverse
+            | (.[0] | "keep \(.id) \(.key)"),
+              (.[1:][] | "delete \(.id) \(.key)")')
+        if [ -z "$lines" ]; then
+          echo "No sccache entries found."
+          exit 0
+        fi
+        while read -r action id key; do
+          echo "${action}: ${key} (${id})"
+          if [ "$action" = delete ]; then
+            gh cache delete -R "$REPO" "$id"
+          fi
+        done <<< "$lines"

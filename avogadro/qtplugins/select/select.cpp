@@ -527,7 +527,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // check if name matches specified (e.g. HIS57 is really a HIS)
-      } // index makes sense
+      }   // index makes sense
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
@@ -539,7 +539,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // residue matches label
-      } // for(residues)
+      }   // for(residues)
       continue;
     } // 3-character labels
   }
@@ -633,22 +633,41 @@ bool Select::handleCommand(const QString& command, const QVariantMap& options)
     return false; // not one of our commands
 
   if (m_molecule == nullptr) {
-    emit commandFailed(tr("There is no molecule to select from."));
+    emit commandFailed(tr("No molecule"));
     return true;
   }
 
+  // Helper lambda to gather selected indices and emit them back via JSON-RPC
+  auto emitSelection = [this]() {
+    QVariantList indices;
+
+    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+      if (m_molecule->atomSelected(i)) {
+        indices.append(static_cast<int>(i));
+      }
+    }
+
+    QVariantMap result;
+    result["indices"] = indices;
+
+    emit commandFinished(QString(), result);
+  };
+
   if (command == "selectAll") {
     selectAll();
+    emitSelection();
     return true;
   }
 
   if (command == "selectNone") {
     selectNone();
+    emitSelection();
     return true;
   }
 
   if (command == "invertSelection") {
     invertSelection();
+    emitSelection();
     return true;
   }
 
@@ -684,36 +703,43 @@ bool Select::handleCommand(const QString& command, const QVariantMap& options)
     }
 
     selectElement(atomicNum);
+    emitSelection();
     return true;
   }
 
   if (command == "selectBackbone") {
     selectBackboneAtoms();
+    emitSelection();
     return true;
   }
 
   if (command == "selectSidechains") {
     selectSidechainAtoms();
+    emitSelection();
     return true;
   }
 
   if (command == "selectWater") {
     selectWater();
+    emitSelection();
     return true;
   }
 
   if (command == "enlargeSelection") {
     enlargeSelection();
+    emitSelection();
     return true;
   }
 
   if (command == "shrinkSelection") {
     shrinkSelection();
+    emitSelection();
     return true;
   }
 
   if (command == "createLayerFromSelection") {
     createLayerFromSelection();
+    emitSelection();
     return true;
   }
 

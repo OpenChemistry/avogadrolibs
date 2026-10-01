@@ -30,6 +30,10 @@ target_sources(Headers PUBLIC
     vector.h
 )
 target_link_libraries(Headers INTERFACE Eigen3::Eigen)
+# utilities.h includes the export header that is generated for Core below.
+target_include_directories(Headers
+  INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 install(TARGETS Headers
   EXPORT "AvogadroLibsTargets"
   FILE_SET HEADERS DESTINATION "${INSTALL_INCLUDE_DIR}")
@@ -112,6 +116,7 @@ target_sources(Core PRIVATE
   stereo.cpp
   symbolatomtyper.cpp
   unitcell.cpp
+  utilities.cpp
   variantmap.cpp
   version.cpp
 )
@@ -136,5 +141,9 @@ if(UNIX AND NOT APPLE AND NOT PYTHON_WHEEL_BUILD)
 endif()
 
 avogadro_add_library(Core)
+# fast_float is header-only and used only in utilities.cpp. Keep it out of the
+# exported link interface: a static Avogadro::Core would otherwise list it for
+# its consumers, and it is in no export set.
 target_link_libraries(Core
-  PUBLIC Avogadro::Headers)
+  PUBLIC Avogadro::Headers
+  PRIVATE "$<BUILD_INTERFACE:FastFloat::fast_float>")

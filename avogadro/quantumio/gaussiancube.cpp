@@ -9,9 +9,6 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
-#include <cerrno>
-#include <cmath>
-#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -52,47 +49,26 @@ bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
  * decaying tail of a density with exponents past FLT_MIN ("1.505124610E-39"),
  * which would abort the read a handful of values from the end.
  *
- * Parse the token with strtod instead, which lets a range error be told apart
- * from a genuine parse failure. Core::lexicalCast<double> applies the same
- * rule, but builds an istringstream per value -- far too costly for a loop
- * that runs once per grid point -- so the range handling is repeated here.
- * Keep the two consistent.
+ * Parse the token with Core::parseFloat instead. It is the parser behind
+ * Core::lexicalCast<float>, so a range error is handled the same way here --
+ * underflow gives zero or a subnormal, overflow is clamped -- but it works
+ * on the token in place, which matters for a loop that runs once per grid
+ * point. It is also independent of the C locale: strtod is not, and Qt sets
+ * that locale from the environment, so under a comma-decimal locale every
+ * cube file failed to read.
  */
 bool readCubeValue(std::istream& in, std::string& token, float& value)
 {
   if (!(in >> token))
     return false;
 
-  const char* first = token.c_str();
-  char* last = nullptr;
-  errno = 0;
-  double parsed = std::strtod(first, &last);
-
   // Reject anything that is not a number, or that stopped short of the end of
-  // the token ("1.5abc", the "*******" some codes emit on overflow).
-  if (last != first + token.size())
-    return false;
-
-  if (errno == ERANGE) {
-    // Underflow leaves a zero or subnormal result, which is what we want. Only
-    // an overflow needs clamping, so that later arithmetic cannot see it.
-    if (std::isinf(parsed))
-      parsed = (parsed > 0.0) ? std::numeric_limits<double>::max()
-                              : std::numeric_limits<double>::lowest();
-  } else if (!std::isfinite(parsed)) {
-    // The literals "nan" and "inf" parse cleanly but have no meaning on a grid.
-    return false;
-  }
-
-  constexpr double floatMax =
-    static_cast<double>(std::numeric_limits<float>::max());
-  if (parsed > floatMax)
-    parsed = floatMax;
-  else if (parsed < -floatMax)
-    parsed = -floatMax;
-
-  value = static_cast<float>(parsed);
-  return true;
+  // the token ("1.5abc", the "*******" some codes emit on overflow). The
+  // literals "nan" and "inf" have no meaning on a grid and are refused by the
+  // parser.
+  const char* first = token.data();
+  const char* last = first + token.size();
+  return Core::parseFloat(first, last, value) == last;
 }
 } // namespace
 

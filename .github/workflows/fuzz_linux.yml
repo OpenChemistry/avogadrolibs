@@ -20,9 +20,13 @@ env:
   # Pull requests get a quick smoke run; the nightly run fuzzes for longer.
   FUZZ_SECONDS: ${{ github.event_name == 'pull_request' && '10' || github.event.inputs.fuzz_seconds || '60' }}
 
+# Never cancel a master run: a cancelled run never saves its compiler cache.
+# Master runs here come only from the nightly schedule (and manual dispatch),
+# so the group just keeps two of them from overlapping. Pull requests keep
+# cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   fuzz:
@@ -59,6 +63,18 @@ jobs:
         key: fuzz-corpus-${{ github.run_id }}
         restore-keys: |
           fuzz-corpus-
+
+    # Must run before Configure: it exports the compiler-launcher variables
+    # that the superbuild's subprojects read when they configure. The size is
+    # larger than the default because the superbuild's avogadrolibs is built
+    # once in "Build", and then again in "Build fuzz targets" with the
+    # sanitizer flags, so the cache holds two sets of objects for it.
+    - name: Restore compiler cache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: Ubuntu Fuzz Tests
+        size: 1500M
 
     - name: Configure
       run: |
@@ -203,7 +219,7 @@ jobs:
         # To fuzz a new class, add its name here and to the matching list in
         # tests/<suite>/CMakeLists.txt.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "calc|fuzz_calc_|calc|forcefield"
@@ -460,6 +476,19 @@ jobs:
         du -sh "${corpus_root}" || true
 
         exit "${failures}"
+
+    # !cancelled() lets the action run after a failed build or a crashing fuzz
+    # target. The action prints its statistics on every run and saves only on
+    # master, which for this workflow means the nightly schedule. Failures are
+    # included: sccache entries are content-addressed, so a partial cache is
+    # still correct.
+    - name: Save compiler cache
+      if: ${{ !cancelled() }}
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: save
+        name: Ubuntu Fuzz Tests
+        size: 1500M
 
     # Saved when a target crashed: the corpus built up to that point is still
     # worth keeping, and a rolling key means the next run restores the most

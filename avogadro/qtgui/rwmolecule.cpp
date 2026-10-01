@@ -621,16 +621,23 @@ void RWMolecule::wrapAtomsToCell()
   if (!m_molecule.unitCell())
     return;
 
-  Core::Array<Vector3> oldPos = m_molecule.atomPositions3d();
-  CrystalTools::wrapAtomsToUnitCell(m_molecule);
-  Core::Array<Vector3> newPos = m_molecule.atomPositions3d();
+  // Wrapping clears and re-perceives the bonds, so edit a copy and let
+  // modifyMolecule() store both states for undo.
+  Molecule newMolecule = m_molecule;
 
-  auto* comm = new SetPositions3dCommand(*this, oldPos, newPos);
-  comm->setText(tr("Wrap Atoms to Cell"));
-  m_undoStack.push(comm);
+  CrystalTools::wrapAtomsToUnitCell(newMolecule);
 
-  Molecule::MoleculeChanges changes = Molecule::Atoms | Molecule::Modified;
-  emitChanged(changes);
+  // Nothing moved and the bonds came out the same: no undo entry
+  if (newMolecule.atomPositions3d() == m_molecule.atomPositions3d() &&
+      newMolecule.bondPairs() == m_molecule.bondPairs() &&
+      newMolecule.bondOrders() == m_molecule.bondOrders())
+    return;
+
+  Molecule::MoleculeChanges changes =
+    Molecule::Atoms | Molecule::Bonds | Molecule::Modified;
+  QString undoText = tr("Wrap Atoms to Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
 }
 
 void RWMolecule::setCellVolume(double newVolume, CrystalTools::Options options)
@@ -931,11 +938,8 @@ bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
   if (atomId >= atomCount())
     return false;
 
-  if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
-    m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
-
   auto* comm = new SetForceVectorCommand(
-    *this, atomId, m_molecule.m_positions3d[atomId], forces);
+    *this, atomId, m_molecule.forceVector(atomId), forces);
   comm->setText(undoText);
   comm->setCanMerge(m_interactive);
   m_undoStack.push(comm);

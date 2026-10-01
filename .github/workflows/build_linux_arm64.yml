@@ -20,9 +20,15 @@ env:
   QT_VERSION: 6.8.3
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
+# Never cancel a master run: a cancelled run never saves its compiler cache,
+# and the slowest jobs, which gain the most from the cache, are exactly the
+# ones a following merge would cancel. The group still allows only one running
+# and one pending master run, so master runs queue one after another instead
+# of stacking up, and release-asset uploads never overlap. PRs and other
+# branches keep cancelling superseded runs.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   build:
@@ -31,6 +37,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # sccache: true turns on the compiler cache for an entry.
+        # sccache_size: the Debug build's objects are much larger than a
+        # Release build's; read the real size from `sccache --show-stats` on
+        # master and tune it.
         config:
         - {
             name: "Ubuntu ARM", artifact: "",
@@ -38,6 +48,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "Debug",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE",
+            sccache: true, sccache_size: "1000M",
           }
         - {
             name: "AppImage ARM", artifact: "Avogadro2-arm64.AppImage",
@@ -45,6 +56,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             build_type: "Release",
             cmake_flags: "-G Ninja -DINSTALL_BUNDLE_FILES=ON",
+            sccache: true,
           }
 
     steps:
@@ -65,6 +77,16 @@ jobs:
       with:
         cache: true
         version: ${{ env.QT_VERSION }}
+
+    # Must run before Configure: it exports the compiler-launcher variables
+    # that the superbuild's subprojects read when they configure.
+    - name: Restore compiler cache
+      if: matrix.config.sccache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Configure
       run: |
@@ -95,6 +117,18 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
+
+    # !cancelled() lets the action run after a failed build or failed tests.
+    # The action prints its statistics on every run and saves only on master,
+    # failures included: sccache entries are content-addressed, so a partial
+    # cache is still correct.
+    - name: Save compiler cache
+      if: matrix.config.sccache && !cancelled()
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: save
+        name: ${{ matrix.config.name }}
+        size: ${{ matrix.config.sccache_size || '600M' }}
 
     - name: Package AppImage
       if: matrix.config.name == 'AppImage ARM'

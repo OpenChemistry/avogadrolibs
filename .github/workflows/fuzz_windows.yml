@@ -75,35 +75,22 @@ jobs:
       with:
         arch: x64
 
-    - name: Ensure vcpkg is up to date
-      id: vcpkg_version
-      uses: ./.github/actions/update-vcpkg
-
-    # This job installs glew, which no other Windows job wants. A cache key
-    # shared with build_windows.yml let that job restore this cache and pick
-    # up vcpkg's GLEW, which its CMake config-mode lookup then preferred over
-    # the superbuild's own GLEW. Keep this job's key/restore-keys on their
-    # own "vcpkg-fuzz-" prefix so build_windows.yml's restore-keys can never
-    # match a cache saved here again.
-    - name: Restore vcpkg cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    # This job installs glew, which no other Windows job wants. A cache
+    # shared with build_windows.yml once let that job restore this tree and
+    # pick up vcpkg's GLEW, which its CMake config-mode lookup then preferred
+    # over the superbuild's own GLEW. The package-list hash in the
+    # vcpkg-install cache key keeps the two jobs' trees apart.
+    #
+    # glew is here but not in build_windows.yml, and USE_SYSTEM_GLEW below
+    # says why.
+    - name: Install vcpkg packages
+      uses: ./.github/actions/vcpkg-install
       with:
-        path: |
-          C:\vcpkg\installed
-          C:\vcpkg\packages
-          C:\vcpkg\downloads
-        key: vcpkg-fuzz-${{ runner.os }}-${{ runner.arch }}-${{ steps.vcpkg_version.outputs.sha || 'no-vcpkgjson' }}
-        restore-keys: |
-          vcpkg-fuzz-${{ runner.os }}-${{ runner.arch }}-
-      env:
-        VCPKG_ROOT: C:\vcpkg
+        packages: libarchive eigen3 libxml2 zlib gtest glew
 
     - name: Install Dependencies
       run: |
         choco install ninja
-        # glew is here but not in build_windows.yml, and USE_SYSTEM_GLEW below
-        # says why.
-        vcpkg install libarchive eigen3 libxml2 zlib gtest glew
       shell: bash
 
     # Everything the fuzz targets need from LLVM: clang-cl itself, libFuzzer
@@ -298,7 +285,8 @@ jobs:
           -DUSE_SYSTEM_GTEST=ON -DENABLE_TESTING=OFF
 
     - name: Cache thirdparty
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      id: thirdparty-cache
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ${{ runner.workspace }}/build/Downloads
@@ -314,6 +302,15 @@ jobs:
         # skip avogadroapp. Note that avogadrolibs does not depend on Open
         # Babel in the superbuild, so clang-cl never has to build it.
         CC=clang-cl CXX=clang-cl cmake --build . --target avogadrolibs
+
+    # Saved from master only, for the reason given in the vcpkg-install action.
+    - name: Save thirdparty cache
+      if: steps.thirdparty-cache.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: ${{ steps.thirdparty-cache.outputs.cache-primary-key }}
 
     - name: Build fuzz targets
       shell: bash
@@ -535,7 +532,7 @@ jobs:
         # CRT build (see the reconfigure step). When a target is added there,
         # add it here too.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
         )
