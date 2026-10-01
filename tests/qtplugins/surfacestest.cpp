@@ -28,7 +28,6 @@ using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
 using Avogadro::QtPluginsTests::describe;
-using Avogadro::QtPluginsTests::recordKnownDeviation;
 
 namespace {
 
@@ -335,19 +334,10 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   const size_t sasInside = ref.insideCount();
   EXPECT_GT(sasInside, total / 50) << "the reference cube is nearly empty";
 
-  // Stage 2: performEDTStep(). It calls resolution() with no argument, which
-  // is NOT the resolution the cube was built with: with no dialog it is the
-  // automatic value derived from the atom count. Mirror that, so the test
-  // pins what the plugin does today.
-  const float automatic = std::clamp(
-    0.02f * std::pow(static_cast<float>(m_harness.molecule()->atomCount()),
-                     1.0f / 3.0f),
-    0.05f, 0.5f);
-  const double scaledProbe = SolventProbe / automatic;
-  if (automatic != Resolution) {
-    recordKnownDeviation("performEDTStep() uses resolution() instead of the "
-                         "resolution the cube was built with");
-  }
+  // Stage 2: performEDTStep() erodes inside voxels within the probe radius,
+  // in voxels of the resolution the cube was built with, of the "outside"
+  // voxels touching the filled region.
+  const double scaledProbe = SolventProbe / Resolution;
 
   std::vector<Vector3> outsideContact;
   std::vector<Vector3i> insideVoxels;
@@ -393,7 +383,21 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   RecordProperty("ses_sas_inside", static_cast<int>(sasInside));
   RecordProperty("ses_inside", static_cast<int>(sesInside));
   EXPECT_EQ(sasInside - sesInside, erased);
-  EXPECT_LE(sesInside, sasInside);
+  // The probe must erode something, but not everything.
+  EXPECT_GT(sesInside, 0u);
+  EXPECT_LT(sesInside, sasInside);
 
   expectEqual(*cube, ref, "SES");
+
+  // A heavy atom is buried deeper (its SAS sphere reaches 3.1 A) than the
+  // probe can erode (1.4 A), so its centre voxel survives.
+  for (Index i = 0; i < 3; ++i) {
+    const Vector3 rel =
+      (m_harness.molecule()->atomPosition3d(i) - cube->min()) / Resolution;
+    EXPECT_GT(cube->value(static_cast<int>(std::lround(rel(0))),
+                          static_cast<int>(std::lround(rel(1))),
+                          static_cast<int>(std::lround(rel(2)))),
+              0.0f)
+      << "heavy atom " << i;
+  }
 }

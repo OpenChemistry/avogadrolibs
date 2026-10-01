@@ -539,6 +539,11 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   // Set this cube as the active cube for volume rendering
   m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
 
+  // Decide the resolution here, on the main thread, and remember it:
+  // performEDTStep() must erode with the grid spacing the cube was built with.
+  const float res = resolution(defaultResolution);
+  m_edtResolution = res;
+
   QFuture future = QtConcurrent::run([=]() {
     double probeRadius = 0.0;
     switch (type) {
@@ -573,10 +578,9 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     }
 
     double padding = max_radius + probeRadius + 0.2;
-    m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
+    m_cube->setLimits(*m_molecule, res, padding);
     m_cube->fill(-1.0);
 
-    const float res = resolution(defaultResolution);
     const Vector3 min = m_cube->min();
 
     // Overlapping atom spheres touch the same voxels, so threads must not
@@ -652,7 +656,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 void Surfaces::performEDTStep()
 {
   QFuture future = QtConcurrent::run([=]() {
-    const double scaledProbeRadius = SolventProbeRadius / resolution();
+    const double scaledProbeRadius = SolventProbeRadius / m_edtResolution;
 
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube
