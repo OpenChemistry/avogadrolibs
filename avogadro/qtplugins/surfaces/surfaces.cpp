@@ -552,7 +552,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
     // first, make a list of all atom positions and radii
     Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    auto* atoms = new std::vector<std::pair<Vector3, double>>();
+    std::vector<std::pair<Vector3, double>> atoms;
     double max_radius = probeRadius;
     QtGui::RWLayerManager layerManager;
     for (size_t i = 0; i < m_molecule->atomCount(); i++) {
@@ -560,7 +560,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         continue; // ignore invisible atoms
       auto radius =
         Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-      atoms->emplace_back(atomPositions[i], radius);
+      atoms.emplace_back(atomPositions[i], radius);
       if (radius > max_radius)
         max_radius = radius;
     }
@@ -581,8 +581,8 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     // the result is the same as filling atom by atom.
     const Vector3i dims = m_cube->dimensions();
     std::vector<std::vector<size_t>> slabAtoms(dims(0));
-    for (size_t a = 0; a < atoms->size(); ++a) {
-      const std::pair<Vector3, double>& in = (*atoms)[a];
+    for (size_t a = 0; a < atoms.size(); ++a) {
+      const std::pair<Vector3, double>& in = atoms[a];
       double startPosX = in.first(0) - in.second;
       double endPosX = in.first(0) + in.second;
       int startIndexX = (startPosX - min(0)) / res;
@@ -600,7 +600,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     QFuture innerFuture = QtConcurrent::map(slabIndices, [&](int indexX) {
       const double posX = indexX * res + min(0);
       for (size_t a : slabAtoms[indexX]) {
-        const std::pair<Vector3, double>& in = (*atoms)[a];
+        const std::pair<Vector3, double>& in = atoms[a];
         double radiusXsq = square(in.second) - square(posX - in.first(0));
         if (radiusXsq < 0.0)
           continue;
@@ -652,10 +652,10 @@ void Surfaces::performEDTStep()
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
     // also make a list of all "inside" cubes
-    auto* insideIndices = new std::vector<Vector3i>;
+    std::vector<Vector3i> insideIndices;
     Vector3i size = m_cube->dimensions();
-    relativePositions.reserve(size(0) * size(1) * 4);    // O(n^2)
-    insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
+    relativePositions.reserve(size(0) * size(1) * 4);   // O(n^2)
+    insideIndices.reserve(size(0) * size(1) * size(2)); // O(n^3)
     for (int z = 0; z < size(2); z++) {
       int zp = std::max(z - 1, 0);
       int zn = std::min(z + 1, size(2) - 1);
@@ -664,7 +664,7 @@ void Surfaces::performEDTStep()
         int yn = std::min(y + 1, size(1) - 1);
         for (int x = 0; x < size(0); x++) {
           if (m_cube->value(x, y, z) > 0.0) {
-            insideIndices->emplace_back(x, y, z);
+            insideIndices.emplace_back(x, y, z);
             continue;
           }
           int xp = std::max(x - 1, 0);
@@ -682,13 +682,13 @@ void Surfaces::performEDTStep()
     NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
 
     // now, exclude all "inside" cubes too close to any "outside" cube
-    thread_local Array<Index>* neighbors = nullptr;
-    QFuture innerFuture = QtConcurrent::map(*insideIndices, [=](Vector3i& in) {
+    // The scratch list is per pool thread; getNeighborsInclusiveInPlace()
+    // clears it before refilling it.
+    QFuture innerFuture = QtConcurrent::map(insideIndices, [=](Vector3i& in) {
+      thread_local Array<Index> neighbors;
       Vector3 pos = in.cast<double>();
-      if (neighbors == nullptr)
-        neighbors = new Array<Index>;
-      perceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
-      for (Index neighbor : *neighbors) {
+      perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
+      for (Index neighbor : neighbors) {
         const Vector3& npos = relativePositions[neighbor];
         float distance = (npos - pos).norm();
         if (distance <= scaledProbeRadius) {
