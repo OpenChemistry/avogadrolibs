@@ -302,6 +302,12 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh2 = nullptr;
   m_molecule = mol;
 
+  if (mol == nullptr) {
+    m_basis = nullptr;
+    m_cubes.clear();
+    return;
+  }
+
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
   } else if (mol->cubes().size() != 0) {

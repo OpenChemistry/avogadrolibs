@@ -19,6 +19,7 @@ set(plugins
   Focus
   MeasureTool
   Select
+  Surfaces
 )
 
 set(testSrcs "")
@@ -59,6 +60,11 @@ target_link_libraries(AvogadroQtPluginsTests
 # Camera and Scene of its own.
 if(TARGET Avogadro::Rendering)
   target_link_libraries(AvogadroQtPluginsTests Avogadro::Rendering)
+endif()
+
+# surfaces.h includes tinycolormap.hpp.
+if(TARGET Surfaces AND TARGET tinycolormap)
+  target_link_libraries(AvogadroQtPluginsTests tinycolormap)
 endif()
 
 foreach(plugin CommandTestHarness ${pluginTargets})
