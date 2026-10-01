@@ -509,6 +509,12 @@ void Surfaces::calculateSurface()
   }
 }
 
+namespace {
+// Radius, in Angstrom, of the water-sized probe that rolls over the
+// van der Waals surface for solvent-accessible and solvent-excluded surfaces.
+constexpr double SolventProbeRadius = 1.4;
+} // namespace
+
 float inline square(float x)
 {
   return x * x;
@@ -540,10 +546,11 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         m_cube->setCubeType(Core::Cube::Type::VdW);
         break;
       case SolventAccessible:
+        probeRadius = SolventProbeRadius;
         m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
         break;
       case SolventExcluded:
-        probeRadius = 1.4;
+        probeRadius = SolventProbeRadius;
         m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
         break;
       default:
@@ -645,8 +652,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 void Surfaces::performEDTStep()
 {
   QFuture future = QtConcurrent::run([=]() {
-    const double probeRadius = 1.4;
-    const double scaledProbeRadius = probeRadius / resolution();
+    const double scaledProbeRadius = SolventProbeRadius / resolution();
 
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube

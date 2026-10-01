@@ -35,10 +35,6 @@ namespace {
 // Requested grid resolution in Angstrom; coarse so the cubes stay small.
 constexpr float Resolution = 0.25f;
 constexpr double SolventProbe = 1.4;
-// calculateEDT() only adds the probe radius for the solvent-excluded type; the
-// solvent-accessible type is filled with plain van der Waals radii. The test
-// pins that (see solventAccessibleMatchesSerialReference).
-constexpr double SasFillProbe = 0.0;
 
 using AtomSphere = std::pair<Vector3, double>; // centre, radius incl. probe
 
@@ -308,20 +304,19 @@ TEST_F(SurfacesCommandTest, solventAccessibleMatchesSerialReference)
   const size_t total = static_cast<size_t>(dims(0)) * dims(1) * dims(2);
   EXPECT_GT(total, 10000u);
 
-  // Surfaces::calculateEDT() leaves probeRadius at 0 for the solvent-accessible
-  // type, so today this cube is the van der Waals one. A real SAS surface
-  // would use SolventProbe here; when that is fixed, change SasFillProbe.
-  recordKnownDeviation("solvent-accessible surface is filled without the "
-                       "probe radius");
-  const ReferenceGrid ref = fillReference(*cube, SasFillProbe);
+  const ReferenceGrid ref = fillReference(*cube, SolventProbe);
   const size_t inside = ref.insideCount();
   RecordProperty("sas_voxels", static_cast<int>(total));
   RecordProperty("sas_inside", static_cast<int>(inside));
   EXPECT_GT(inside, total / 50) << "the reference cube is nearly empty";
   EXPECT_LT(inside, total);
 
+  // Regression: the probe once went missing, which made SAS equal to VdW.
+  // Compare on the same grid, so only the radii differ.
+  EXPECT_GT(inside, fillReference(*cube, 0.0).insideCount());
+
   expectEqual(*cube, ref, "SAS");
-  expectGeometry(*cube, spheres(SasFillProbe));
+  expectGeometry(*cube, spheres(SolventProbe));
 }
 
 TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
