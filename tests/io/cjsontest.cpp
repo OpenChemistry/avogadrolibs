@@ -1073,3 +1073,91 @@ TEST(CjsonTest, invalidUtf8StringsAreReplacedOnWrite)
             "C:\\Users\\Usuario\\Mol\xEF\xBF\xBD"
             "culas\\agua.xyz");
 }
+
+namespace {
+Molecule makeCubeMolecule()
+{
+  Molecule molecule;
+  molecule.addAtom(6).setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(8).setPosition3d(Avogadro::Vector3(1.2, 0.0, 0.0));
+  molecule.addBond(0, 1, 2);
+
+  Avogadro::Core::Cube* cube = molecule.addCube();
+  cube->setCubeType(Avogadro::Core::Cube::MO);
+  cube->setName("test orbital");
+  cube->setLimits(Avogadro::Vector3(-1.0, -1.0, -1.0),
+                  Avogadro::Vector3i(2, 2, 2), 0.5);
+  std::vector<float> data;
+  for (int i = 0; i < 8; ++i)
+    data.push_back(0.25f * static_cast<float>(i));
+  cube->setData(data);
+  return molecule;
+}
+} // namespace
+
+TEST(CjsonTest, writeCubesByDefault)
+{
+  Molecule molecule = makeCubeMolecule();
+
+  CjsonFormat cjson;
+  std::string serialized;
+  ASSERT_TRUE(cjson.writeString(serialized, molecule)) << cjson.error();
+  EXPECT_NE(serialized.find("\"cube\""), std::string::npos);
+
+  // Explicitly asking for cubes is the same as the default.
+  CjsonFormat explicitCubes;
+  explicitCubes.setOptions(R"({"cubes": true})");
+  std::string withOption;
+  ASSERT_TRUE(explicitCubes.writeString(withOption, molecule))
+    << explicitCubes.error();
+  EXPECT_EQ(serialized, withOption);
+
+  Molecule readBack;
+  ASSERT_TRUE(cjson.readString(serialized, readBack)) << cjson.error();
+  ASSERT_EQ(readBack.cubeCount(), static_cast<size_t>(1));
+  const auto* cube = readBack.cube(0);
+  EXPECT_EQ(cube->dimensions().x(), 2);
+  ASSERT_EQ(cube->data()->size(), static_cast<size_t>(8));
+  EXPECT_FLOAT_EQ((*cube->data())[7], 1.75f);
+}
+
+TEST(CjsonTest, cubesOptionFalseSkipsCube)
+{
+  Molecule molecule = makeCubeMolecule();
+
+  CjsonFormat cjson;
+  cjson.setOptions(R"({"cubes": false})");
+  std::string serialized;
+  ASSERT_TRUE(cjson.writeString(serialized, molecule)) << cjson.error();
+  EXPECT_EQ(serialized.find("\"cube\""), std::string::npos);
+  EXPECT_EQ(serialized.find("\"scalars\""), std::string::npos);
+
+  // Everything else is intact.
+  CjsonFormat reader;
+  Molecule readBack;
+  ASSERT_TRUE(reader.readString(serialized, readBack)) << reader.error();
+  EXPECT_EQ(readBack.cubeCount(), static_cast<size_t>(0));
+  EXPECT_EQ(readBack.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(readBack.bondCount(), static_cast<size_t>(1));
+  EXPECT_EQ(readBack.atomicNumber(1), static_cast<unsigned char>(8));
+  EXPECT_EQ(readBack.bond(0).order(), static_cast<unsigned char>(2));
+
+  // The molecule being written is not modified.
+  EXPECT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+}
+
+TEST(CjsonTest, defaultOutputUnchangedWithoutCubes)
+{
+  // With no cube, the option makes no difference to the output.
+  Molecule molecule = makeCubeMolecule();
+  molecule.clearCubes();
+
+  CjsonFormat plain;
+  std::string a;
+  ASSERT_TRUE(plain.writeString(a, molecule)) << plain.error();
+  CjsonFormat noCubes;
+  noCubes.setOptions(R"({"cubes": false})");
+  std::string b;
+  ASSERT_TRUE(noCubes.writeString(b, molecule)) << noCubes.error();
+  EXPECT_EQ(a, b);
+}
