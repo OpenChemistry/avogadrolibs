@@ -45,12 +45,18 @@ void main(void)
   // eyeAnchor.z is negative for items in front of the camera
   // The scaling factor is:
   // S = eyeAnchor.z'/eyeAnchor.z
-  //   = (eyeAnchor.z + radius)/eyeAnchor.z 
+  //   = (eyeAnchor.z + radius)/eyeAnchor.z
   //   = 1 + radius/eyeAnchor.z
-  
+
+  // That keeps the screen position only under perspective. An orthographic
+  // projection (proj[3][3] == 1, 0 for perspective) views along -z
+  // everywhere, so scaling would pull the label toward the view center;
+  // translate along z instead.
   float MIN_DEPTH = 1.0e-06;
-  if(-eyeAnchor.z > MIN_DEPTH) {
-    float scale = 1.0 + radius / eyeAnchor.z; 
+  if (proj[3][3] != 0.0) {
+    eyeAnchor.z += radius;
+  } else if(-eyeAnchor.z > MIN_DEPTH) {
+    float scale = 1.0 + radius / eyeAnchor.z;
     eyeAnchor *= vec4(scale, scale, scale, 1.0);
   }
 
