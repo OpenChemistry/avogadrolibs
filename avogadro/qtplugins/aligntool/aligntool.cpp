@@ -135,7 +135,7 @@ void AlignTool::alignChanged(int align)
 
 void AlignTool::align()
 {
-  if (m_atoms.size() == 0)
+  if (m_molecule == nullptr || m_atoms.size() == 0)
     return;
 
   if (m_atoms.size() >= 1)
@@ -146,6 +146,9 @@ void AlignTool::align()
 
 void AlignTool::shiftAtomToOrigin(Index atomIndex)
 {
+  if (m_molecule == nullptr)
+    return;
+
   // Shift the atom to the origin
   Vector3 shift = m_molecule->atom(atomIndex).position3d();
   const Core::Array<Vector3>& coords = m_molecule->atomPositions3d();
@@ -159,6 +162,9 @@ void AlignTool::shiftAtomToOrigin(Index atomIndex)
 
 void AlignTool::alignAtomToAxis(Index atomIndex, int axis)
 {
+  if (m_molecule == nullptr)
+    return;
+
   // Align the atom to the specified axis
   [[maybe_unused]] Vector3 align = m_molecule->atom(atomIndex).position3d();
   const Core::Array<Vector3>& coords = m_molecule->atomPositions3d();
@@ -248,7 +254,7 @@ bool AlignTool::toggleAtom(const Rendering::Identifier& atom)
 
 void AlignTool::draw(Rendering::GroupNode& node)
 {
-  if (m_atoms.size() == 0)
+  if (m_molecule == nullptr || m_atoms.size() == 0)
     return;
 
   // check to make sure we have atoms for all of these

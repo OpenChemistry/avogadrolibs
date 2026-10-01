@@ -39,13 +39,16 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override
   {
-    if (mol)
-      m_molecule = mol->undoMolecule();
-
+    m_molecule = mol ? mol->undoMolecule() : nullptr;
     m_atoms.clear();
   }
 
-  void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
+  void setEditMolecule(QtGui::RWMolecule* mol) override
+  {
+    if (m_molecule != mol)
+      m_atoms.clear();
+    m_molecule = mol;
+  }
 
   void setGLRenderer(Rendering::GLRenderer* renderer) override
   {
