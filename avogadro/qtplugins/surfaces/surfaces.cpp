@@ -64,6 +64,10 @@ namespace {
 #include <QGuiApplication>
 #include <QScreen>
 
+#include <algorithm>
+#include <numeric>
+#include <vector>
+
 using namespace tinycolormap;
 
 namespace Avogadro::QtPlugins {
@@ -568,38 +572,64 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     const float res = resolution(defaultResolution);
     const Vector3 min = m_cube->min();
 
-    // then, for each atom, set cubes around it up to a certain radius
-    QFuture innerFuture =
-      QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
-        double startPosX = in.first(0) - in.second;
-        double endPosX = in.first(0) + in.second;
-        int startIndexX = (startPosX - min(0)) / res;
-        int endIndexX = (endPosX - min(0)) / res + 1;
-        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-          double posX = indexX * res + min(0);
-          double radiusXsq = square(in.second) - square(posX - in.first(0));
-          if (radiusXsq < 0.0)
+    // Overlapping atom spheres touch the same voxels, so threads must not
+    // be handed atoms: two of them would write one voxel at the same time.
+    // Instead, bin each atom into every x slab (constant indexX) it covers,
+    // and give each slab to exactly one thread. A slab task only writes
+    // voxels with its own indexX, so no two threads ever share a voxel.
+    // Filling is idempotent (it only sets 1.0 over the -1.0 background), so
+    // the result is the same as filling atom by atom.
+    const Vector3i dims = m_cube->dimensions();
+    std::vector<std::vector<size_t>> slabAtoms(dims(0));
+    for (size_t a = 0; a < atoms->size(); ++a) {
+      const std::pair<Vector3, double>& in = (*atoms)[a];
+      double startPosX = in.first(0) - in.second;
+      double endPosX = in.first(0) + in.second;
+      int startIndexX = (startPosX - min(0)) / res;
+      int endIndexX = (endPosX - min(0)) / res + 1;
+      // Slabs outside the cube have no voxels to write.
+      for (int indexX = std::max(startIndexX, 0);
+           indexX < std::min(endIndexX, dims(0)); indexX++)
+        slabAtoms[indexX].push_back(a);
+    }
+
+    std::vector<int> slabIndices(dims(0));
+    std::iota(slabIndices.begin(), slabIndices.end(), 0);
+
+    // then, for each slab, set cubes around its atoms up to a certain radius
+    QFuture innerFuture = QtConcurrent::map(slabIndices, [&](int indexX) {
+      const double posX = indexX * res + min(0);
+      for (size_t a : slabAtoms[indexX]) {
+        const std::pair<Vector3, double>& in = (*atoms)[a];
+        double radiusXsq = square(in.second) - square(posX - in.first(0));
+        if (radiusXsq < 0.0)
+          continue;
+        double radiusX = sqrt(radiusXsq);
+        double startPosY = in.first(1) - radiusX;
+        double endPosY = in.first(1) + radiusX;
+        int startIndexY = (startPosY - min(1)) / res;
+        int endIndexY = (endPosY - min(1)) / res + 1;
+        // fillStripe() only checks the flat index, so keep y and z inside the
+        // cube; an overflow would spill into a neighbouring slab.
+        for (int indexY = std::max(startIndexY, 0);
+             indexY < std::min(endIndexY, dims(1)); indexY++) {
+          double posY = indexY * res + min(1);
+          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+          if (lengthXYsq < 0.0)
             continue;
-          double radiusX = sqrt(radiusXsq);
-          double startPosY = in.first(1) - radiusX;
-          double endPosY = in.first(1) + radiusX;
-          int startIndexY = (startPosY - min(1)) / res;
-          int endIndexY = (endPosY - min(1)) / res + 1;
-          for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-            double posY = indexY * res + min(1);
-            double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-            if (lengthXYsq < 0.0)
-              continue;
-            double lengthXY = sqrt(lengthXYsq);
-            double startPosZ = in.first(2) - lengthXY;
-            double endPosZ = in.first(2) + lengthXY;
-            int startIndexZ = (startPosZ - min(2)) / res;
-            int endIndexZ = (endPosZ - min(2)) / res + 1;
-            m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
-                               1.0f);
-          }
+          double lengthXY = sqrt(lengthXYsq);
+          double startPosZ = in.first(2) - lengthXY;
+          double endPosZ = in.first(2) + lengthXY;
+          int startIndexZ = (startPosZ - min(2)) / res;
+          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          int firstZ = std::max(startIndexZ, 0);
+          int lastZ = std::min(endIndexZ - 1, dims(2) - 1);
+          if (firstZ > lastZ)
+            continue;
+          m_cube->fillStripe(indexX, indexY, firstZ, lastZ, 1.0f);
         }
-      });
+      }
+    });
 
     innerFuture.waitForFinished();
   });
