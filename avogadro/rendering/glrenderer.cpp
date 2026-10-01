@@ -102,6 +102,7 @@ void GLRenderer::render()
   applyProjection();
 
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
+  visitor.setPixelRatio(m_pixelRatio);
   // Setup for solid geometry
   // m_volume.begin()
   m_solidPipeline.begin();

@@ -74,10 +74,20 @@ public:
   }
   /** @} */
 
+  /**
+   * The ratio of device pixels to logical pixels. Text labels are rasterized
+   * at this scale so they stay sharp on high-DPI displays.
+   * @{
+   */
+  void setPixelRatio(float ratio) { m_pixelRatio = ratio; }
+  float pixelRatio() const { return m_pixelRatio; }
+  /** @} */
+
 private:
   Camera m_camera;
   const TextRenderStrategy* m_textRenderStrategy;
   RenderPass m_renderPass;
+  float m_pixelRatio = 1.0f;
 };
 
 } // End namespace Rendering
