@@ -83,7 +83,7 @@ public:
 
 TextLabelBase::RenderImpl::RenderImpl()
   : vertices(4), shadersInvalid(true), textureInvalid(true), vboInvalid(true),
-    radius(0.0)
+    anchor(Vector3f::Zero()), radius(0.0)
 {
   texture.setMinFilter(Texture2D::Linear);
   texture.setMagFilter(Texture2D::Linear);
@@ -300,6 +300,8 @@ TextLabelBase::TextLabelBase(const TextLabelBase& other)
     m_imageDimensions(other.m_imageDimensions), m_imageRgba(other.m_imageRgba),
     m_render(new RenderImpl)
 {
+  m_render->anchor = other.m_render->anchor;
+  m_render->radius = other.m_render->radius;
   m_render->pixelRatio = other.m_render->pixelRatio;
 }
 

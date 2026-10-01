@@ -110,6 +110,15 @@ inline void swap(TextLabelBase& lhs, TextLabelBase& rhs)
   swap(lhs.m_textProperties, rhs.m_textProperties);
   swap(lhs.m_imageDimensions, rhs.m_imageDimensions);
   swap(lhs.m_imageRgba, rhs.m_imageRgba);
+  const float lhsPixelRatio = lhs.pixelRatio();
+  lhs.setPixelRatio(rhs.pixelRatio());
+  rhs.setPixelRatio(lhsPixelRatio);
+  const Vector3f lhsAnchor = lhs.getAnchorInternal();
+  lhs.setAnchorInternal(rhs.getAnchorInternal());
+  rhs.setAnchorInternal(lhsAnchor);
+  const float lhsRadius = lhs.getRadiusInternal();
+  lhs.setRadiusInternal(rhs.getRadiusInternal());
+  rhs.setRadiusInternal(lhsRadius);
   lhs.markDirty();
   rhs.markDirty();
 }
