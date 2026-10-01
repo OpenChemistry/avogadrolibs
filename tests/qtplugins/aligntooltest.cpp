@@ -240,25 +240,46 @@ TEST_F(AlignToolCommandTest, knownDeviationNoOpMovePushesUndoEntry)
 }
 
 // Contract (decision 1): no molecule -> true + commandFailed("No molecule").
-// A tool that never had a molecule returns false. And setMolecule(nullptr)
-// is ignored: the tool keeps the previous molecule (a dangling pointer once
-// that molecule is deleted) and goes on editing it.
+// AlignTool returns false for a tool with no molecule, whether it never had
+// one or was detached with setMolecule(nullptr).
 TEST_F(AlignToolCommandTest, knownDeviationNoMolecule)
 {
-  recordKnownDeviation("with no molecule commands return false; "
-                       "setMolecule(nullptr) keeps the old molecule");
+  recordKnownDeviation("with no molecule commands return false");
 
   AlignTool fresh;
   // When these fail, expect true and commandFailed("No molecule").
   EXPECT_FALSE(fresh.handleCommand("centerAtom", { { "id", qlonglong(0) } }));
   EXPECT_FALSE(fresh.handleCommand("notACommand", {}));
 
+  const MoleculeSnapshot before = m_harness.snapshot();
   m_harness.setPluginMolecule(nullptr);
   const CommandOutcome out =
     m_harness.run("centerAtom", { { "id", qlonglong(2) } });
-  EXPECT_TRUE(out.claimed);
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  // The "detached" tool still moved the harness molecule.
+  // When this fails, expect claimed and commandFailed("No molecule").
+  EXPECT_FALSE(out.claimed);
+  EXPECT_EQ(m_harness.snapshot(), before);
+}
+
+// setMolecule(nullptr) must detach the tool from the old molecule, which may
+// be deleted next. Re-attaching must make it work again.
+TEST_F(AlignToolCommandTest, setMoleculeNullDetachesTool)
+{
+  const MoleculeSnapshot before = m_harness.snapshot();
+  m_harness.setPluginMolecule(nullptr);
+
+  const CommandOutcome center =
+    m_harness.run("centerAtom", { { "id", qlonglong(2) } });
+  EXPECT_TRUE(center.clean()) << describe(center);
+  const CommandOutcome align =
+    m_harness.run("alignAtom", { { "id", qlonglong(0) }, { "axis", "x" } });
+  EXPECT_TRUE(align.clean()) << describe(align);
+  EXPECT_EQ(m_harness.snapshot(), before);
+
+  m_harness.setPluginMolecule(m_harness.molecule());
+  const CommandOutcome again =
+    m_harness.run("centerAtom", { { "id", qlonglong(2) } });
+  EXPECT_TRUE(again.claimed);
+  EXPECT_TRUE(again.clean()) << describe(again);
   EXPECT_EQ(position(2), Vector3(0.0, 0.0, 0.0));
 }
 
