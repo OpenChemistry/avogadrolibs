@@ -24,6 +24,8 @@ namespace {
 #include "textlabelbase_vs.h"
 } // namespace
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 
 using Avogadro::Core::Array;
@@ -57,6 +59,7 @@ public:
   // Uniforms:
   Vector3f anchor;
   float radius;
+  float pixelRatio = 1.0f;
   Texture2D texture;
 
   // Shaders
@@ -80,7 +83,7 @@ public:
 
 TextLabelBase::RenderImpl::RenderImpl()
   : vertices(4), shadersInvalid(true), textureInvalid(true), vboInvalid(true),
-    radius(0.0)
+    anchor(Vector3f::Zero()), radius(0.0)
 {
   texture.setMinFilter(Texture2D::Linear);
   texture.setMagFilter(Texture2D::Linear);
@@ -170,7 +173,8 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
 
   const Matrix4f mv(cam.modelView().matrix());
   const Matrix4f proj(cam.projection().matrix());
-  const Vector2i vpDims(cam.width(), cam.height());
+  const Vector2i vpDims(static_cast<int>(cam.width() * pixelRatio),
+                        static_cast<int>(cam.height() * pixelRatio));
 
   // Bind VAO (captures all vertex attribute state)
   if (!vao.bind()) {
@@ -192,8 +196,28 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
     return;
   }
 
+  // The texture holds premultiplied color (QPainter renders into
+  // Format_ARGB32_Premultiplied), so blend with GL_ONE rather than
+  // GL_SRC_ALPHA, which would multiply by alpha a second time. Save and
+  // restore the caller's blend state.
+  const GLboolean blendWasEnabled = glIsEnabled(GL_BLEND);
+  GLint srcRgb = GL_SRC_ALPHA, dstRgb = GL_ONE_MINUS_SRC_ALPHA;
+  GLint srcAlpha = GL_ONE, dstAlpha = GL_ONE;
+  glGetIntegerv(GL_BLEND_SRC_RGB, &srcRgb);
+  glGetIntegerv(GL_BLEND_DST_RGB, &dstRgb);
+  glGetIntegerv(GL_BLEND_SRC_ALPHA, &srcAlpha);
+  glGetIntegerv(GL_BLEND_DST_ALPHA, &dstAlpha);
+  glEnable(GL_BLEND);
+  glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+
   // Draw texture
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+  glBlendFuncSeparate(static_cast<GLenum>(srcRgb), static_cast<GLenum>(dstRgb),
+                      static_cast<GLenum>(srcAlpha),
+                      static_cast<GLenum>(dstAlpha));
+  if (!blendWasEnabled)
+    glDisable(GL_BLEND);
 
   // Release resources:
   vao.release();
@@ -276,6 +300,9 @@ TextLabelBase::TextLabelBase(const TextLabelBase& other)
     m_imageDimensions(other.m_imageDimensions), m_imageRgba(other.m_imageRgba),
     m_render(new RenderImpl)
 {
+  m_render->anchor = other.m_render->anchor;
+  m_render->radius = other.m_render->radius;
+  m_render->pixelRatio = other.m_render->pixelRatio;
 }
 
 TextLabelBase::~TextLabelBase()
@@ -294,8 +321,14 @@ void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
     return;
 
   // Determine texture size and allocate buffer
+  // Rasterize in device pixels; m_textProperties stays in logical units.
+  TextProperties scaledProperties(m_textProperties);
+  scaledProperties.setPixelHeight(std::max<size_t>(
+    1, static_cast<size_t>(
+         std::lround(m_textProperties.pixelHeight() * m_render->pixelRatio))));
+
   int bbox[4];
-  tren.boundingBox(m_text, m_textProperties, bbox);
+  tren.boundingBox(m_text, scaledProperties, bbox);
   const Vector2i newDims(bbox[1] - bbox[0] + 1, bbox[3] - bbox[2] + 1);
   if (newDims != m_imageDimensions) {
     m_imageDimensions = newDims;
@@ -309,7 +342,7 @@ void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
 
   // Render the text to the buffer
   if (m_imageRgba.size() > 0) {
-    tren.render(m_text, m_textProperties, m_imageRgba.data(),
+    tren.render(m_text, scaledProperties, m_imageRgba.data(),
                 m_imageDimensions);
   }
 
@@ -341,6 +374,19 @@ void TextLabelBase::setTextProperties(const TextProperties& tprop)
 const TextProperties& TextLabelBase::textProperties() const
 {
   return m_textProperties;
+}
+
+void TextLabelBase::setPixelRatio(float ratio)
+{
+  if (ratio != m_render->pixelRatio) {
+    m_render->pixelRatio = ratio;
+    m_render->textureInvalid = true;
+  }
+}
+
+float TextLabelBase::pixelRatio() const
+{
+  return m_render->pixelRatio;
 }
 
 void TextLabelBase::resetTexture()

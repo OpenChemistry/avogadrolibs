@@ -59,6 +59,16 @@ public:
   /** @} */
 
   /**
+   * The ratio of device pixels to logical pixels. The label is rasterized
+   * and positioned in device pixels, so it stays sharp on high-DPI displays.
+   * Changing the ratio forces the texture to be regenerated.
+   * @{
+   */
+  void setPixelRatio(float ratio);
+  float pixelRatio() const;
+  /** @} */
+
+  /**
    * Clear the texture, forcing it to be regenerated on the next render.
    */
   void resetTexture();
@@ -100,6 +110,15 @@ inline void swap(TextLabelBase& lhs, TextLabelBase& rhs)
   swap(lhs.m_textProperties, rhs.m_textProperties);
   swap(lhs.m_imageDimensions, rhs.m_imageDimensions);
   swap(lhs.m_imageRgba, rhs.m_imageRgba);
+  const float lhsPixelRatio = lhs.pixelRatio();
+  lhs.setPixelRatio(rhs.pixelRatio());
+  rhs.setPixelRatio(lhsPixelRatio);
+  const Vector3f lhsAnchor = lhs.getAnchorInternal();
+  lhs.setAnchorInternal(rhs.getAnchorInternal());
+  rhs.setAnchorInternal(lhsAnchor);
+  const float lhsRadius = lhs.getRadiusInternal();
+  lhs.setRadiusInternal(rhs.getRadiusInternal());
+  rhs.setRadiusInternal(lhsRadius);
   lhs.markDirty();
   rhs.markDirty();
 }

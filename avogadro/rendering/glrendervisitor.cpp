@@ -57,8 +57,10 @@ void GLRenderVisitor::visit(MeshGeometry& geometry)
 void GLRenderVisitor::visit(TextLabel2D& geometry)
 {
   if (geometry.renderPass() == m_renderPass) {
-    if (m_textRenderStrategy)
+    if (m_textRenderStrategy) {
+      geometry.setPixelRatio(m_pixelRatio);
       geometry.buildTexture(*m_textRenderStrategy);
+    }
     geometry.render(m_camera);
   }
 }
@@ -66,8 +68,10 @@ void GLRenderVisitor::visit(TextLabel2D& geometry)
 void GLRenderVisitor::visit(TextLabel3D& geometry)
 {
   if (geometry.renderPass() == m_renderPass) {
-    if (m_textRenderStrategy)
+    if (m_textRenderStrategy) {
+      geometry.setPixelRatio(m_pixelRatio);
       geometry.buildTexture(*m_textRenderStrategy);
+    }
     geometry.render(m_camera);
   }
 }
