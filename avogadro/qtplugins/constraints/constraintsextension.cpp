@@ -154,7 +154,7 @@ void ConstraintsExtension::registerCommands()
     "listConstraints",
     tr("List the geometry constraints on the current molecule. No options. "
        "Returns {\"constraints\": [{\"type\": \"distance\"|\"angle\"|"
-       "\"torsion\", \"atoms\": [i, j, (k, (l))], \"value\": v}, ...]}, "
+       "\"torsion\", \"atoms\": [i, j, (k, (l))], \"value\": v}, …]}, "
        "with zero-based atom indices and value in Å for a distance or "
        "degrees for an angle or torsion."));
   emit registerCommand(
@@ -162,12 +162,12 @@ void ConstraintsExtension::registerCommands()
     tr("Add or update a geometry constraint, given as zero-based atom "
        "indices: {\"atoms\": [i, j]} for a distance, {\"atoms\": [i, j, "
        "k]} for an angle, or {\"atoms\": [i, j, k, l]} for a torsion, plus "
-       "an optional {\"value\": ...} in Å for a distance or degrees "
+       "an optional {\"value\": …} in Å for a distance or degrees "
        "for an angle or torsion. If \"value\" is omitted, the current "
        "geometry of those atoms is measured and used. If a constraint "
        "already exists on the same atoms (in either order), its value is "
-       "updated instead of adding a duplicate. Returns {\"type\": ..., "
-       "\"atoms\": [...], \"value\": ..., \"updated\": bool}."));
+       "updated instead of adding a duplicate. Returns {\"type\": …, "
+       "\"atoms\": […], \"value\": …, \"updated\": bool}."));
   emit registerCommand(
     "removeConstraint",
     tr("Remove the constraint on the given zero-based atom indices (in "

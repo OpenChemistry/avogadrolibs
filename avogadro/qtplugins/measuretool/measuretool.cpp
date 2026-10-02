@@ -693,35 +693,35 @@ void MeasureTool::registerCommands()
     "measureDistance",
     tr("Measure the distance in Å between two atoms, given as "
        "zero-based indices: {\"atoms\": [i, j]}. Returns {\"distance\": "
-       "..., \"atoms\": [i, j]}."));
+       "…, \"atoms\": [i, j]}."));
   emit registerCommand(
     "measureAngle",
     tr("Measure the angle in degrees at the middle of three atoms, given "
        "as zero-based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": "
-       "..., \"atoms\": [i, j, k]}."));
+       "…, \"atoms\": [i, j, k]}."));
   emit registerCommand(
     "measureDihedral",
     tr("Measure the dihedral angle in degrees (-180 to 180) of four "
        "atoms, given as zero-based indices: {\"atoms\": [i, j, k, l]}. "
-       "Returns {\"dihedral\": ..., \"atoms\": [i, j, k, l]}."));
+       "Returns {\"dihedral\": …, \"atoms\": [i, j, k, l]}."));
   emit registerCommand(
     "editDistance",
     tr("Set the distance in Å between two atoms, given as zero-based "
-       "indices: {\"atoms\": [i, j], \"value\": ...}; the second atom and "
+       "indices: {\"atoms\": [i, j], \"value\": …}; the second atom and "
        "everything bonded to it on that side move. Returns the new "
-       "{\"distance\": ..., \"atoms\": [i, j]}."));
+       "{\"distance\": …, \"atoms\": [i, j]}."));
   emit registerCommand(
     "editAngle",
     tr("Set the angle in degrees at the middle of three atoms, given as "
-       "zero-based indices: {\"atoms\": [i, j, k], \"value\": ...}; the "
+       "zero-based indices: {\"atoms\": [i, j, k], \"value\": …}; the "
        "last atom and everything bonded to it on that side move. Returns "
-       "the new {\"angle\": ..., \"atoms\": [i, j, k]}."));
+       "the new {\"angle\": …, \"atoms\": [i, j, k]}."));
   emit registerCommand(
     "editDihedral",
     tr("Set the dihedral angle in degrees of four atoms, given as "
-       "zero-based indices: {\"atoms\": [i, j, k, l], \"value\": ...}; "
+       "zero-based indices: {\"atoms\": [i, j, k, l], \"value\": …}; "
        "the last atom and everything bonded to it on that side move. "
-       "Returns the new {\"dihedral\": ..., \"atoms\": [i, j, k, l]}."));
+       "Returns the new {\"dihedral\": …, \"atoms\": [i, j, k, l]}."));
 }
 
 bool MeasureTool::handleCommand(const QString& command,
