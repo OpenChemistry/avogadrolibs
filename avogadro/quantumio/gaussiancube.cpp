@@ -41,7 +41,7 @@ bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
 }
 
 /**
- * Read one grid value into the float a Core::Cube stores.
+ * Reads the grid values of a cube file one at a time.
  *
  * Extracting straight into a float discards valid files: strtof reports an
  * underflow to subnormal as ERANGE, and the extractor turns that into failbit
@@ -49,27 +49,60 @@ bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
  * decaying tail of a density with exponents past FLT_MIN ("1.505124610E-39"),
  * which would abort the read a handful of values from the end.
  *
- * Parse the token with Core::parseFloat instead. It is the parser behind
+ * Parse each token with Core::parseFloat instead. It is the parser behind
  * Core::lexicalCast<float>, so a range error is handled the same way here --
  * underflow gives zero or a subnormal, overflow is clamped -- but it works
  * on the token in place, which matters for a loop that runs once per grid
  * point. It is also independent of the C locale: strtod is not, and Qt sets
  * that locale from the environment, so under a comma-decimal locale every
  * cube file failed to read.
+ *
+ * CP2K writes the grid with Fortran E13.5 edit descriptors, which leave no
+ * separator in front of a negative number and use three digit exponents:
+ * " 0.26189E-002-0.85098E-002-0.14043E-001". A whitespace token can therefore
+ * hold several values. When a number stops short at a '+' or '-' that follows
+ * a digit or '.', the rest of the token is kept for the next call. A sign
+ * after an exponent letter never gets here (parseFloat consumes the exponent),
+ * so this cannot split a valid number.
  */
-bool readCubeValue(std::istream& in, std::string& token, float& value)
+class CubeValueReader
 {
-  if (!(in >> token))
-    return false;
+public:
+  explicit CubeValueReader(std::istream& stream) : m_in(stream) {}
 
-  // Reject anything that is not a number, or that stopped short of the end of
-  // the token ("1.5abc", the "*******" some codes emit on overflow). The
-  // literals "nan" and "inf" have no meaning on a grid and are refused by the
-  // parser.
-  const char* first = token.data();
-  const char* last = first + token.size();
-  return Core::parseFloat(first, last, value) == last;
-}
+  bool read(float& value)
+  {
+    if (m_pos == m_end) {
+      if (!(m_in >> m_token))
+        return false;
+      m_pos = m_token.data();
+      m_end = m_pos + m_token.size();
+    }
+
+    // Reject anything that is not a number, or that stopped short of the end
+    // of the token other than at a run-together sign ("1.5abc", the "*******"
+    // some codes emit on overflow). The literals "nan" and "inf" have no
+    // meaning on a grid and are refused by the parser.
+    const char* stop = Core::parseFloat(m_pos, m_end, value);
+    if (stop == nullptr)
+      return false;
+    if (stop != m_end) {
+      const char next = *stop;
+      const char prev = *(stop - 1);
+      const bool prevEndsMantissa = (prev >= '0' && prev <= '9') || prev == '.';
+      if ((next != '+' && next != '-') || !prevEndsMantissa)
+        return false;
+    }
+    m_pos = stop;
+    return true;
+  }
+
+private:
+  std::istream& m_in;
+  std::string m_token;
+  const char* m_pos = nullptr;
+  const char* m_end = nullptr;
+};
 } // namespace
 
 GaussianCube::GaussianCube() {}
@@ -265,9 +298,9 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     }
     if (values->size() != valueCount)
       values->resize(valueCount);
-    std::string token;
+    CubeValueReader reader(in);
     for (size_t index = 0; index < valueCount; ++index) {
-      if (!readCubeValue(in, token, (*values)[index])) {
+      if (!reader.read((*values)[index])) {
         appendError("Invalid cube data.");
         return false;
       }

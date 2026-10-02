@@ -149,6 +149,87 @@ TEST(GaussianCubeTest, malformedValuesStillRejected)
   }
 }
 
+// Builds a one atom cube with @p count points along x whose data section is
+// exactly @p dataText.
+static std::string makeCubeWithData(size_t count, const std::string& dataText)
+{
+  std::ostringstream out;
+  out << "Comment line\n";
+  out << "Second comment line\n";
+  out << "    1    0.000000    0.000000    0.000000\n";
+  out << "    " << count << "    0.100000    0.000000    0.000000\n";
+  out << "    1    0.000000    0.100000    0.000000\n";
+  out << "    1    0.000000    0.000000    0.100000\n";
+  out << "    1    1.000000    0.000000    0.000000    0.000000\n";
+  out << dataText << "\n";
+  return out.str();
+}
+
+// CP2K writes Fortran E13.5 values with three digit exponents and no separator
+// before a negative number, so one whitespace token holds several values.
+TEST(GaussianCubeTest, runTogetherValuesAreRead)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  const std::string input = makeCubeWithData(
+    9, " 0.26189E-002-0.85098E-002-0.14043E-001-0.92412E-002 0.72516E-003 "
+       "0.14311E-001\n -0.1E-048 0.5-0.25+0.75");
+
+  ASSERT_TRUE(cube.readString(input, molecule)) << cube.error();
+  ASSERT_EQ(cube.error(), std::string());
+  ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+  const auto* values = molecule.cube(0)->data();
+  ASSERT_NE(values, nullptr);
+  ASSERT_EQ(values->size(), static_cast<size_t>(9));
+
+  EXPECT_FLOAT_EQ((*values)[0], 0.26189E-002f);
+  EXPECT_FLOAT_EQ((*values)[1], -0.85098E-002f);
+  EXPECT_FLOAT_EQ((*values)[2], -0.14043E-001f);
+  EXPECT_FLOAT_EQ((*values)[3], -0.92412E-002f);
+  EXPECT_FLOAT_EQ((*values)[4], 0.72516E-003f);
+  EXPECT_FLOAT_EQ((*values)[5], 0.14311E-001f);
+  // Underflows float entirely, so it is read as (negative) zero.
+  EXPECT_FLOAT_EQ((*values)[6], 0.0f);
+  // Plain decimals run together too, including a '+' separator.
+  EXPECT_FLOAT_EQ((*values)[7], 0.5f);
+  EXPECT_FLOAT_EQ((*values)[8], -0.25f);
+}
+
+// A subnormal value followed by a run-together negative value.
+TEST(GaussianCubeTest, runTogetherSubnormalIsRead)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  const std::string input =
+    makeCubeWithData(3, " 0.15051E-039-0.20000E+001 0.30000E+000");
+  ASSERT_TRUE(cube.readString(input, molecule)) << cube.error();
+  const auto* values = molecule.cube(0)->data();
+  ASSERT_NE(values, nullptr);
+  ASSERT_EQ(values->size(), static_cast<size_t>(3));
+  EXPECT_NEAR((*values)[0], 0.15051e-039f, 1.0e-42f);
+  EXPECT_GT((*values)[0], 0.0f);
+  EXPECT_FLOAT_EQ((*values)[1], -2.0f);
+  EXPECT_FLOAT_EQ((*values)[2], 0.3f);
+}
+
+// Splitting at a sign must not make the reader accept junk.
+TEST(GaussianCubeTest, runTogetherDoesNotAcceptJunk)
+{
+  for (const std::string& bad :
+       { std::string("*******"), std::string("1.5abc"),
+         std::string("0.1E-002*****"), std::string("0.1-"),
+         std::string("0.1-abc"), std::string("0.1-0.2x"),
+         std::string("0.1E-002-nan") }) {
+    GaussianCube cube;
+    Molecule molecule;
+    const std::string input = makeCubeWithData(3, " 0.5 " + bad + " 0.5");
+    EXPECT_FALSE(cube.readString(input, molecule)) << "accepted: " << bad;
+    EXPECT_NE(cube.error(), std::string()) << "no error for: " << bad;
+  }
+}
+
 namespace {
 
 // Switches the C locale to one with a comma as the decimal separator, and
