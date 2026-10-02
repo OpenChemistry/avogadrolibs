@@ -534,9 +534,10 @@ void RWMolecule::modifyMolecule(const Molecule& newMolecule,
   auto* comm = new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
 
   comm->setText(undoText);
+  // push() runs redo(), which cancels any worker still using the data being
+  // replaced and assigns the new molecule.
   m_undoStack.push(comm);
 
-  m_molecule = newMolecule;
   emitChanged(changes);
 }
 

@@ -395,7 +395,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       } else { // replace the whole molecule
         Molecule::MoleculeChanges changes =
           (Molecule::Atoms | Molecule::Bonds | Molecule::Added |
-           Molecule::Removed);
+           Molecule::Removed | Molecule::Replaced);
         guiMol->undoMolecule()->modifyMolecule(newMol, changes, m_displayName);
       }
     }

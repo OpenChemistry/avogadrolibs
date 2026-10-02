@@ -2165,3 +2165,64 @@ TEST(RWMoleculeTest, undoSetForceVectorRestoresOldForce)
   mol.undoStack().redo();
   EXPECT_EQ(f, m.forceVector(0));
 }
+
+namespace {
+// Two atoms with one vibrational mode, as a command plugin or file reader
+// would hand back.
+void addVibrations(Molecule& mol)
+{
+  mol.addAtom(1).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1).setPosition3d(Vector3(0.0, 0.0, 0.74));
+  Array<Array<Vector3>> lx(1, Array<Vector3>(2, Vector3(0.0, 0.0, 0.5)));
+  mol.setVibrationFrequencies(Array<double>(1, 4400.0));
+  mol.setVibrationIRIntensities(Array<double>(1, 1.0));
+  mol.setVibrationLx(lx);
+}
+
+const Molecule::MoleculeChanges replaceChanges =
+  Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed;
+} // namespace
+
+// What arrived with a replacement must survive the changed() it triggers.
+TEST(RWMoleculeTest, modifyMoleculeKeepsReplacementVibrations)
+{
+  Molecule target;
+  target.addAtom(8);
+
+  Molecule source;
+  addVibrations(source);
+  ASSERT_TRUE(source.hasVibrations());
+
+  target.undoMolecule()->modifyMolecule(
+    source, replaceChanges | Molecule::Replaced, "Replace");
+  EXPECT_EQ(target.atomCount(), 2u);
+  EXPECT_TRUE(target.hasVibrations());
+  EXPECT_EQ(target.vibrationFrequencies().size(), 1u);
+
+  // cached pointers into the old data are still stale
+  EXPECT_TRUE(
+    Molecule::invalidatesDerivedData(replaceChanges | Molecule::Replaced));
+}
+
+// An in-place edit is not a replacement: the modes no longer match.
+TEST(RWMoleculeTest, editWithoutReplacedClearsVibrations)
+{
+  Molecule mol;
+  addVibrations(mol);
+  ASSERT_TRUE(mol.hasVibrations());
+
+  mol.emitChanged(Molecule::Atoms | Molecule::Added);
+  EXPECT_FALSE(mol.hasVibrations());
+}
+
+// Callers that do not say Replaced (e.g. the coordinate editor, which edits a
+// copy of the old molecule) still lose stale vibrations.
+TEST(RWMoleculeTest, modifyMoleculeWithoutReplacedClearsVibrations)
+{
+  Molecule target;
+  Molecule source;
+  addVibrations(source);
+
+  target.undoMolecule()->modifyMolecule(source, replaceChanges, "Edit");
+  EXPECT_FALSE(target.hasVibrations());
+}

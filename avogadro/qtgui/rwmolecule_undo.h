@@ -7,6 +7,10 @@
 
 #include "rwmolecule.h"
 
+#include "gaussiansetconcurrent.h"
+#include "meshgenerator.h"
+#include "slatersetconcurrent.h"
+
 #include <QUndoCommand>
 #include <cassert>
 
@@ -805,6 +809,15 @@ class ModifyMoleculeCommand : public RWMolecule::UndoCommand
   Molecule m_oldMolecule;
   Molecule m_newMolecule;
 
+  // Assigning a molecule frees the basis set and cubes it replaces, which an
+  // orbital or surface calculation may still be reading or writing.
+  static void cancelWorkers()
+  {
+    GaussianSetConcurrent::cancelAllCalculations();
+    SlaterSetConcurrent::cancelAllCalculations();
+    MeshGenerator::cancelAllCalculations();
+  }
+
 public:
   ModifyMoleculeCommand(RWMolecule& m, const Molecule& oldMolecule,
                         const Molecule& newMolecule)
@@ -812,9 +825,17 @@ public:
   {
   }
 
-  void redo() override { m_mol.molecule() = m_newMolecule; }
+  void redo() override
+  {
+    cancelWorkers();
+    m_mol.molecule() = m_newMolecule;
+  }
 
-  void undo() override { m_mol.molecule() = m_oldMolecule; }
+  void undo() override
+  {
+    cancelWorkers();
+    m_mol.molecule() = m_oldMolecule;
+  }
 };
 } // namespace
 
