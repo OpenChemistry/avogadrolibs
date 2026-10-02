@@ -338,6 +338,22 @@ const Io::FileFormat* FileFormatDialog::selectFileFormat(
   //  the shift, control or meta keys.
   if (!(QApplication::keyboardModifiers() &
         (Qt::ShiftModifier | Qt::ControlModifier | Qt::MetaModifier))) {
+    // The built-in Generic Output format claims only .out, .output and .log.
+    // Those extensions are shared by many programs, so it sniffs the file
+    // content (built-in banners plus the "patterns" declared by plugins) and
+    // delegates to the right reader. Prefer it over whichever format happened
+    // to register first, which could hand a log to the wrong plugin or Open
+    // Babel format. Holding a modifier key still shows the full chooser.
+    // qtgui cannot link QuantumIO, so match on name and identifier prefix. The
+    // prefix keeps Open Babel's "Generic Output file format" and script
+    // formats from matching, and unlike the full identifier it survives a read
+    // changing the identifier of an instance.
+    for (int i = 0; i < static_cast<int>(ffs.size()); ++i) {
+      if (ffs[i]->name() == "Generic Output" &&
+          idents[i].startsWith("Avogadro:"))
+        return ffs[i];
+    }
+
     // use a script format if set (i.e., these override internal)
     // otherwise use internal over Open Babel
     for (int i = 0; i < static_cast<int>(ffs.size()); ++i) {

@@ -9,14 +9,20 @@
 
 #include <avogadro/core/molecule.h>
 
+#include <avogadro/io/fileformat.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/quantumio/genericoutput.h>
 #include <avogadro/quantumio/orca.h>
 
 #include <cstdio>
 #include <fstream>
+#include <memory>
 #include <string>
+#include <vector>
 
 using Avogadro::Core::Molecule;
+using Avogadro::Io::FileFormat;
+using Avogadro::Io::FileFormatManager;
 using Avogadro::QuantumIO::GenericOutput;
 using Avogadro::QuantumIO::ORCAOutput;
 
@@ -40,6 +46,76 @@ public:
 
 private:
   std::string m_name;
+};
+
+// A stand-in for a script plugin: declares content patterns, claims an
+// extension nothing else uses, and records that it was asked to read.
+class PatternFormat : public FileFormat
+{
+public:
+  PatternFormat(const std::string& id, const std::vector<std::string>& patterns,
+                std::shared_ptr<int> readCount)
+    : m_id(id), m_patterns(patterns), m_readCount(readCount)
+  {
+  }
+
+  Operations supportedOperations() const override { return Read | File; }
+  FileFormat* newInstance() const override
+  {
+    return new PatternFormat(m_id, m_patterns, m_readCount);
+  }
+  std::string identifier() const override { return m_id; }
+  std::string name() const override { return m_id; }
+  std::string description() const override { return "Test format"; }
+  std::string specificationUrl() const override { return ""; }
+  std::vector<std::string> fileExtensions() const override
+  {
+    return { "testpattern" };
+  }
+  std::vector<std::string> mimeTypes() const override { return {}; }
+  std::vector<std::string> contentPatterns() const override
+  {
+    return m_patterns;
+  }
+
+  bool read(std::istream&, Molecule& molecule) override
+  {
+    ++(*m_readCount);
+    molecule.addAtom(6);
+    return true;
+  }
+
+  bool write(std::ostream&, const Molecule&) override { return false; }
+
+private:
+  std::string m_id;
+  std::vector<std::string> m_patterns;
+  std::shared_ptr<int> m_readCount;
+};
+
+// Registers pattern formats and always removes them again, so nothing leaks
+// into other tests in this binary.
+class GenericOutputPatternTest : public testing::Test
+{
+protected:
+  void TearDown() override
+  {
+    for (const std::string& id : m_registered)
+      FileFormatManager::unregisterFormat(id);
+  }
+
+  std::shared_ptr<int> add(const std::string& id,
+                           const std::vector<std::string>& patterns)
+  {
+    auto count = std::make_shared<int>(0);
+    EXPECT_TRUE(FileFormatManager::registerFormat(
+      new PatternFormat(id, patterns, count)));
+    m_registered.push_back(id);
+    return count;
+  }
+
+private:
+  std::vector<std::string> m_registered;
 };
 
 bool contains(const std::string& haystack, const std::string& needle)
@@ -111,4 +187,92 @@ TEST(GenericOutputTest, recognizedOutputReadsWithoutError)
   EXPECT_EQ(reader.error(), std::string());
   EXPECT_EQ(reader.identifier(), std::string("Avogadro: NWChem"));
   EXPECT_EQ(molecule.atomCount(), 7);
+}
+
+// The real CP2K banner (lines 28-29 of a CP2K 2026.2 run) on the third line of
+// a ".out" file hands the file to the plugin that declared it.
+TEST_F(GenericOutputPatternTest, contentPatternSelectsPlugin)
+{
+  auto count = add("Test: CP2K", { "CP2K| version string" });
+  TemporaryFile fixture(
+    "genericoutput-pattern.out",
+    "header\n\n CP2K| version string:   CP2K version 2026.2\n"
+    " CP2K| source code revision number:  git:c92cc08\n");
+
+  GenericOutput reader;
+  Molecule molecule;
+  EXPECT_TRUE(reader.readFile(fixture.name(), molecule));
+  EXPECT_EQ(*count, 1);
+  EXPECT_EQ(molecule.atomCount(), 1);
+  EXPECT_EQ(reader.identifier(), std::string("Test: CP2K"));
+  EXPECT_EQ(reader.error(), std::string());
+}
+
+// A plugin pattern on the first line beats a built-in banner on a later line.
+TEST_F(GenericOutputPatternTest, earlierPluginLineBeatsBuiltInBanner)
+{
+  auto count = add("Test: first", { "PLUGIN-BANNER" });
+  TemporaryFile fixture("genericoutput-pattern-first.out",
+                        "PLUGIN-BANNER\n           * O   R   C   A *\n");
+
+  GenericOutput reader;
+  Molecule molecule;
+  EXPECT_TRUE(reader.readFile(fixture.name(), molecule));
+  EXPECT_EQ(*count, 1);
+  EXPECT_EQ(reader.identifier(), std::string("Test: first"));
+}
+
+// And the reverse: a built-in banner on an earlier line wins. The truncated
+// ORCA file fails to read, which is harmless; what matters is who ran.
+TEST_F(GenericOutputPatternTest, earlierBuiltInBannerBeatsPlugin)
+{
+  auto count = add("Test: late", { "PLUGIN-BANNER" });
+  TemporaryFile fixture("genericoutput-pattern-late.out",
+                        "           * O   R   C   A *\nPLUGIN-BANNER\n");
+
+  GenericOutput reader;
+  Molecule molecule;
+  EXPECT_FALSE(reader.readFile(fixture.name(), molecule));
+  EXPECT_EQ(*count, 0);
+  EXPECT_EQ(reader.identifier(), std::string("Avogadro: Orca"));
+}
+
+// Plugins matching the same line: the first one registered wins.
+TEST_F(GenericOutputPatternTest, firstRegisteredWinsOnSameLine)
+{
+  auto firstCount = add("Test: one", { "SHARED" });
+  auto secondCount = add("Test: two", { "SHARED" });
+  TemporaryFile fixture("genericoutput-pattern-tie.out", "SHARED banner\n");
+
+  GenericOutput reader;
+  Molecule molecule;
+  EXPECT_TRUE(reader.readFile(fixture.name(), molecule));
+  EXPECT_EQ(*firstCount, 1);
+  EXPECT_EQ(*secondCount, 0);
+}
+
+// An empty pattern would match every line, so it must never select a format.
+TEST_F(GenericOutputPatternTest, emptyPatternNeverMatches)
+{
+  auto count = add("Test: empty", { "" });
+  TemporaryFile fixture("genericoutput-pattern-empty.out",
+                        "some program we do not know\n");
+
+  GenericOutput reader;
+  Molecule molecule;
+  EXPECT_FALSE(reader.readFile(fixture.name(), molecule));
+  EXPECT_EQ(*count, 0);
+  EXPECT_TRUE(contains(reader.error(), "Could not determine"));
+}
+
+// No match anywhere, and nothing else registered: the existing error.
+TEST_F(GenericOutputPatternTest, noMatchKeepsExistingError)
+{
+  add("Test: unmatched", { "NEVER-PRESENT" });
+  TemporaryFile fixture("genericoutput-pattern-none.out", "nothing here\n");
+
+  GenericOutput reader;
+  Molecule molecule;
+  EXPECT_FALSE(reader.readFile(fixture.name(), molecule));
+  EXPECT_TRUE(contains(reader.error(), "Could not determine"));
 }

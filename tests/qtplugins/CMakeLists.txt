@@ -19,6 +19,7 @@ set(plugins
   Focus
   MeasureTool
   Select
+  ScriptFileFormats
 )
 
 set(testSrcs "")
