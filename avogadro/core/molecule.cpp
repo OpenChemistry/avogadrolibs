@@ -215,6 +215,33 @@ Molecule& Molecule::operator=(const Molecule& other)
   return *this;
 }
 
+void Molecule::copyDisplayStateFrom(const Molecule& other)
+{
+  if (this == &other)
+    return;
+
+  // Go through a copy so the settings are cloned rather than shared.
+  const MoleculeInfo source(other.ensureLayerInfo());
+  MoleculeInfo& info = ensureLayerInfo();
+  info.enable = source.enable;
+  info.settings = source.settings;
+  info.loaded = source.loaded;
+
+  const size_t layers = info.layer.layerCount();
+  for (auto& entry : info.enable) {
+    auto& flags = entry.second;
+    if (!flags.empty() && flags.size() < layers)
+      flags.resize(layers, flags.front());
+    else if (flags.size() > layers)
+      flags.resize(layers);
+  }
+  // The plugins create missing settings on demand, so only trim.
+  for (auto& entry : info.settings) {
+    if (entry.second.size() > layers)
+      entry.second.resize(layers);
+  }
+}
+
 Molecule& Molecule::operator=(Molecule&& other) noexcept
 {
   if (this != &other) {

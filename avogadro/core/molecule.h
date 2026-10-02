@@ -1169,6 +1169,20 @@ public:
   const Layer& layer() const;
 
   /**
+   * Copy which display types are on (and their settings) from @p other, e.g.
+   * to keep Ball and Stick showing when this molecule is replaced by one
+   * freshly read from a file or script that has no display state of its own.
+   *
+   * Copies the per-plugin enable flags, settings and loaded set, cloning the
+   * settings as the copy constructor does. The per-layer vectors are then
+   * fitted to this molecule's layer count: extra layers are dropped, and
+   * missing ones take the first layer's value so that every layer shows what
+   * the user had switched on. Layer assignment, visibility and locks are
+   * not touched.
+   */
+  void copyDisplayStateFrom(const Molecule& other);
+
+  /**
    * @return this molecule's layer state, shared with anything that needs it to
    * outlive a single operation. Never null.
    */
