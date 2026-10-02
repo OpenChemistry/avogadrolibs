@@ -510,12 +510,15 @@ void Command::processFinished()
   // Drop results if the launch-time molecule was destroyed, or if the user
   // has since swapped to a different molecule (its atom count/ordering may
   // no longer match what the script is about to write back).
+  QStringList errors;
   if (target != nullptr && target == m_molecule) {
     script->processCommand(target);
 
-    // collect errors
+    // collect errors; only real failures (crash, non-zero exit, or errors the
+    // script reported) are in the list, not stderr chatter
     if (script->hasErrors()) {
-      qWarning() << script->errorList();
+      errors = script->errorList();
+      qWarning() << errors;
     }
   } else if (target == nullptr) {
     qWarning() << "Command: discarding script results; molecule was closed "
@@ -525,7 +528,16 @@ void Command::processFinished()
                   "changed while the command was running.";
   }
 
+  // Safe to queue the deletion first: the modal dialog below runs the event
+  // loop, but this command no longer refers to the script and the errors were
+  // copied out above.
   script->deleteLater();
+
+  if (!errors.isEmpty()) {
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                         tr("Error Running Script"),
+                         errors.join(QStringLiteral("\n")));
+  }
 }
 
 void Command::configurePython()

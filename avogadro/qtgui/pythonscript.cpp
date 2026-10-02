@@ -425,7 +425,8 @@ bool PythonScript::asyncExecute(const QStringList& args,
   return true;
 }
 
-void PythonScript::processFinished(int, QProcess::ExitStatus)
+void PythonScript::processFinished(int exitCode,
+                                   QProcess::ExitStatus exitStatus)
 {
   if (m_scanProgress && m_process != nullptr) {
     // readyRead() may not have fired for the last chunk, and a script's final
@@ -443,6 +444,28 @@ void PythonScript::processFinished(int, QProcess::ExitStatus)
 
     if (m_debug && !m_stderrBuffer.isEmpty())
       qDebug() << "Script standard error:" << m_stderrBuffer;
+  }
+
+  // A crash or non-zero exit is a failure whatever the script printed, so
+  // record it here: callers that only look at errorList() (and any partial
+  // output they would otherwise try to parse) then see why it failed. Stderr
+  // is only available when it was being drained, i.e. with progress scanning.
+  if (exitStatus != QProcess::NormalExit || exitCode != 0) {
+    QString message =
+      exitStatus == QProcess::NormalExit
+        ? tr("The script exited with error code %1.").arg(exitCode)
+        : tr("The script crashed.");
+
+    // Only the end of stderr matters (a traceback ends with the exception),
+    // and a chatty library could otherwise fill the dialog.
+    constexpr qsizetype maxStderrChars = 2000;
+    QString stderrText = QString::fromUtf8(m_stderrBuffer).trimmed();
+    if (stderrText.size() > maxStderrChars)
+      stderrText = QStringLiteral("...") + stderrText.right(maxStderrChars);
+    if (!stderrText.isEmpty())
+      message += tr("\n\nScript standard error:\n%1").arg(stderrText);
+
+    m_errors << message;
   }
 
   emit finished();
