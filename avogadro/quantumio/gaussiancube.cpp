@@ -63,10 +63,12 @@ bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
  * CP2K writes the grid with Fortran E13.5 edit descriptors, which leave no
  * separator in front of a negative number and use three digit exponents:
  * " 0.26189E-002-0.85098E-002-0.14043E-001". A whitespace token can therefore
- * hold several values. When a number stops short at a '+' or '-' that follows
- * a digit or '.', the rest of the token is kept for the next call. A sign
- * after an exponent letter never gets here (parseFloat consumes the exponent),
- * so this cannot split a valid number.
+ * hold several values. When a number stops short at a '+' or '-', the rest of
+ * the token is kept for the next call, but only if the number just parsed
+ * has an explicit exponent letter (E, e, D or d). Fortran drops the letter
+ * when the exponent needs three digits ("0.12345-102" is 1.2345e-103 in
+ * Ew.d output), so a sign after a bare mantissa is ambiguous: splitting it
+ * would silently shift every later value. It is rejected instead.
  */
 class CubeValueReader
 {
@@ -91,9 +93,13 @@ public:
       return false;
     if (stop != m_end) {
       const char next = *stop;
-      const char prev = *(stop - 1);
-      const bool prevEndsMantissa = (prev >= '0' && prev <= '9') || prev == '.';
-      if ((next != '+' && next != '-') || !prevEndsMantissa)
+      if (next != '+' && next != '-')
+        return false;
+      bool hasExponent = false;
+      for (const char* c = m_pos; c != stop; ++c)
+        if (*c == 'E' || *c == 'e' || *c == 'D' || *c == 'd')
+          hasExponent = true;
+      if (!hasExponent)
         return false;
     }
     m_pos = stop;

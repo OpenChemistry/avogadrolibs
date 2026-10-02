@@ -176,15 +176,15 @@ TEST(GaussianCubeTest, runTogetherValuesAreRead)
   Molecule molecule;
 
   const std::string input = makeCubeWithData(
-    9, " 0.26189E-002-0.85098E-002-0.14043E-001-0.92412E-002 0.72516E-003 "
-       "0.14311E-001\n -0.1E-048 0.5-0.25+0.75");
+    10, " 0.26189E-002-0.85098E-002-0.14043E-001-0.92412E-002 0.72516E-003 "
+        "0.14311E-001\n -0.1E-048 0.1D-01-0.2D-01+0.3E+00");
 
   ASSERT_TRUE(cube.readString(input, molecule)) << cube.error();
   ASSERT_EQ(cube.error(), std::string());
   ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
   const auto* values = molecule.cube(0)->data();
   ASSERT_NE(values, nullptr);
-  ASSERT_EQ(values->size(), static_cast<size_t>(9));
+  ASSERT_EQ(values->size(), static_cast<size_t>(10));
 
   EXPECT_FLOAT_EQ((*values)[0], 0.26189E-002f);
   EXPECT_FLOAT_EQ((*values)[1], -0.85098E-002f);
@@ -194,9 +194,10 @@ TEST(GaussianCubeTest, runTogetherValuesAreRead)
   EXPECT_FLOAT_EQ((*values)[5], 0.14311E-001f);
   // Underflows float entirely, so it is read as (negative) zero.
   EXPECT_FLOAT_EQ((*values)[6], 0.0f);
-  // Plain decimals run together too, including a '+' separator.
-  EXPECT_FLOAT_EQ((*values)[7], 0.5f);
-  EXPECT_FLOAT_EQ((*values)[8], -0.25f);
+  // Fortran D exponents split too, including at a '+' sign.
+  EXPECT_FLOAT_EQ((*values)[7], 0.1e-1f);
+  EXPECT_FLOAT_EQ((*values)[8], -0.2e-1f);
+  EXPECT_FLOAT_EQ((*values)[9], 0.3f);
 }
 
 // A subnormal value followed by a run-together negative value.
@@ -223,8 +224,9 @@ TEST(GaussianCubeTest, runTogetherDoesNotAcceptJunk)
   for (const std::string& bad :
        { std::string("*******"), std::string("1.5abc"),
          std::string("0.1E-002*****"), std::string("0.1-"),
-         std::string("0.1-abc"), std::string("0.1-0.2x"),
-         std::string("0.1E-002-nan") }) {
+         std::string("0.12345-102"), std::string("1-5"),
+         std::string("0.5-0.25"), std::string("0.1-abc"),
+         std::string("0.1-0.2x"), std::string("0.1E-002-nan") }) {
     GaussianCube cube;
     Molecule molecule;
     const std::string input = makeCubeWithData(3, " 0.5 " + bad + " 0.5");
