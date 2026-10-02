@@ -125,7 +125,7 @@ public:
                                 const QString& command);
 
   /** How to launch a package command. */
-  struct CommandLine
+  struct AVOGADROQTGUI_EXPORT CommandLine
   {
     QString program;        ///< empty if no environment can run the command
     QStringList prefixArgs; ///< arguments preceding the command's own
