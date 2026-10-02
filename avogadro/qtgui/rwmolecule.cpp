@@ -531,7 +531,19 @@ void RWMolecule::modifyMolecule(const Molecule& newMolecule,
                                 Molecule::MoleculeChanges changes,
                                 const QString& undoText)
 {
-  auto* comm = new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
+  // A replacement that arrives with no display state of its own (anything
+  // freshly read from a file or script) would switch off every display type,
+  // so it inherits the current molecule's. Done on a copy, before the command
+  // is built, so redo restores it as well.
+  const Molecule* replacement = &newMolecule;
+  Molecule withDisplayState;
+  if (newMolecule.layerInfo()->enable.empty()) {
+    withDisplayState = newMolecule;
+    withDisplayState.copyDisplayStateFrom(m_molecule);
+    replacement = &withDisplayState;
+  }
+
+  auto* comm = new ModifyMoleculeCommand(*this, m_molecule, *replacement);
 
   comm->setText(undoText);
   // push() runs redo(), which cancels any worker still using the data being

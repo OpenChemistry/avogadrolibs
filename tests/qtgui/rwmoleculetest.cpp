@@ -2226,3 +2226,54 @@ TEST(RWMoleculeTest, modifyMoleculeWithoutReplacedClearsVibrations)
   target.undoMolecule()->modifyMolecule(source, replaceChanges, "Edit");
   EXPECT_FALSE(target.hasVibrations());
 }
+
+// A freshly read replacement has no display state, and would otherwise turn
+// every display type off.
+TEST(RWMoleculeTest, modifyMoleculeKeepsDisplayState)
+{
+  Molecule target;
+  target.addAtom(8);
+  auto info = target.layerInfo();
+  info->enable["Ball and Stick"] = { true };
+  info->loaded.insert("Ball and Stick");
+
+  Molecule source;
+  addVibrations(source);
+  ASSERT_TRUE(source.layerInfo()->enable.empty());
+
+  target.undoMolecule()->modifyMolecule(source, replaceChanges, "Replace");
+  auto after = target.layerInfo();
+  ASSERT_EQ(after->enable.count("Ball and Stick"), 1u);
+  EXPECT_EQ(after->enable["Ball and Stick"], std::vector<bool>({ true }));
+  EXPECT_EQ(after->loaded.count("Ball and Stick"), 1u);
+  // the source is not changed
+  EXPECT_TRUE(source.layerInfo()->enable.empty());
+
+  // undo restores the old molecule, display state included
+  target.undoMolecule()->undoStack().undo();
+  EXPECT_EQ(target.atomCount(), 1u);
+  EXPECT_EQ(target.layerInfo()->enable["Ball and Stick"],
+            std::vector<bool>({ true }));
+
+  // and redo restores the replacement with the carried-over state
+  target.undoMolecule()->undoStack().redo();
+  EXPECT_EQ(target.atomCount(), 2u);
+  EXPECT_EQ(target.layerInfo()->enable["Ball and Stick"],
+            std::vector<bool>({ true }));
+}
+
+TEST(RWMoleculeTest, modifyMoleculeKeepsReplacementsOwnDisplayState)
+{
+  Molecule target;
+  target.addAtom(8);
+  target.layerInfo()->enable["Ball and Stick"] = { true };
+
+  Molecule source;
+  addVibrations(source);
+  source.layerInfo()->enable["Wireframe"] = { true };
+
+  target.undoMolecule()->modifyMolecule(source, replaceChanges, "Replace");
+  auto after = target.layerInfo();
+  EXPECT_EQ(after->enable.count("Wireframe"), 1u);
+  EXPECT_EQ(after->enable.count("Ball and Stick"), 0u);
+}
