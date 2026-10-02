@@ -79,6 +79,9 @@ more detail.
  *   supports.
  * - `bond` is a boolean indicating whether the format expects Avogadro
  *   to perceive bonds after reading the file.
+ * - `patterns` is a string, or an array of strings, of literal substrings
+ *   that identify the format by content (see
+ *   Io::FileFormat::contentPatterns()). Blank entries are ignored.
  *
  * Required members are
  * - `operations`
@@ -175,6 +178,11 @@ public:
 
   std::vector<std::string> mimeTypes() const override { return m_mimeTypes; }
 
+  std::vector<std::string> contentPatterns() const override
+  {
+    return m_contentPatterns;
+  }
+
 private:
   static Format stringToFormat(const std::string& str);
   static std::string formatToString(Format fmt);
@@ -197,6 +205,7 @@ private:
   std::string m_specificationUrl;
   std::vector<std::string> m_fileExtensions;
   std::vector<std::string> m_mimeTypes;
+  std::vector<std::string> m_contentPatterns;
 };
 
 } // namespace QtPlugins

@@ -244,6 +244,25 @@ public:
    */
   virtual std::vector<std::string> mimeTypes() const = 0;
 
+  /**
+   * @brief Get literal strings that identify files in this format by content.
+   *
+   * Each entry is a plain substring (not a regular expression). If any one of
+   * them occurs in a line of a file, the file is taken to be in this format.
+   * Generic extensions such as ".out" and ".log" are written by many programs,
+   * so the extension alone cannot choose a reader; QuantumIO::GenericOutput
+   * consults these patterns to pick one. Empty entries are meaningless (they
+   * would match every line) and should not be returned.
+   *
+   * The default implementation returns an empty list: the format is never
+   * chosen by content.
+   * @return A vector of substrings, possibly empty.
+   */
+  virtual std::vector<std::string> contentPatterns() const
+  {
+    return std::vector<std::string>();
+  }
+
 protected:
   /**
    * @brief Append an error to the error string for the format.
