@@ -410,7 +410,9 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
             guiMol->undoMolecule()->setAtomSelected(index, true);
         }
       }
-      guiMol->emitChanged(Molecule::Atoms);
+      // Only the selection changed. Atoms alone would count as a structural
+      // edit and discard the vibrations or orbitals the script just returned.
+      guiMol->emitChanged(Molecule::Selection);
     }
 
     // check if there are messages for the user
