@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-09-25 15:21+0000\n"
-"PO-Revision-Date: 2026-09-15 19:03+0000\n"
+"PO-Revision-Date: 2026-10-02 12:12+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.10.dev0\n"
+"X-Generator: Weblate 2026.10\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -550,12 +550,12 @@ msgstr ""
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Constraint"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Frame"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -566,15 +566,15 @@ msgstr "Time"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Relative Energy"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
-msgstr ""
+msgstr "RMS Gradient"
 
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
@@ -595,7 +595,7 @@ msgstr "Temperature"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1175,7 +1175,7 @@ msgstr "All files"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "Compressed files"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1210,7 +1210,7 @@ msgstr "Error reading molecule representation: Unrecognized file format: %1"
 #: qtgui/interfacescript.cpp:370
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "Error reading molecule representation: %1"
 
 #: qtgui/interfacescript.cpp:428
 #, qt-format
@@ -1293,7 +1293,7 @@ msgstr "Multiplicity"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Coordinates"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
@@ -3443,7 +3443,7 @@ msgstr "Could not read the PDB molecule: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
-msgstr ""
+msgstr "Download a structure from the Protein Data Bank."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
@@ -3465,7 +3465,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
 #, qt-format
 msgid "Downloaded %1"
-msgstr ""
+msgstr "Downloaded %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:212
 msgid "PDB Code"
@@ -3521,7 +3521,7 @@ msgstr "Unfocus"
 
 #: qtplugins/focus/focus.cpp:138
 msgid "Focus a selection"
-msgstr ""
+msgstr "Focus a selection"
 
 #: qtplugins/focus/focus.cpp:139
 msgid "Unfocus a focused selection"
@@ -4200,6 +4200,15 @@ msgid ""
 "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Manipulation Tool\t(%1)\n"
+"\n"
+"Left Mouse:\tClick and drag to move atoms\n"
+"Right Mouse:\tClick and drag to rotate atoms\n"
+"\n"
+"Arrow Keys:\tTranslate atoms\n"
+"Shift+Arrows:\tRotate around X/Y axes\n"
+"Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
+"Alt+<key>:\tLarger steps"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4228,6 +4237,15 @@ msgid ""
 "\n"
 "Values can also be typed into the tool panel to move the atoms."
 msgstr ""
+"Measure Tool\t(%1)\n"
+"\n"
+"Left Mouse:\tSelect up to four Atoms.\n"
+"\tDistances are measured between 1-2 and 2-3\n"
+"\tAngle is measured between 1-3 using 2 as the common point\n"
+"\tDihedral is measured between 1-2-3-4\n"
+"Right Mouse:\tReset the measurements.\n"
+"\n"
+"Values can also be typed into the tool panel to move the atoms."
 
 #: qtplugins/measuretool/measuretool.cpp:426
 #: qtplugins/measuretool/measuretool.cpp:436
@@ -4438,7 +4456,7 @@ msgstr ""
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 msgid "Distance 1–2"
-msgstr ""
+msgstr "Distance 1–2"
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 #: qtplugins/measuretool/measurewidget.cpp:36
@@ -4448,11 +4466,11 @@ msgstr " Å"
 
 #: qtplugins/measuretool/measurewidget.cpp:36
 msgid "Distance 2–3"
-msgstr ""
+msgstr "Distance 2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:38
 msgid "Distance 3–4"
-msgstr ""
+msgstr "Distance 3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 msgid "Angle 1–2–3"
@@ -5066,7 +5084,7 @@ msgstr "Error: empty response from server."
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 #, qt-format
 msgid "Authors: %1"
-msgstr ""
+msgstr "Authors: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 msgid ", "
@@ -5292,7 +5310,7 @@ msgstr "Description"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:183
 msgid "Keywords"
-msgstr ""
+msgstr "Keywords"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
@@ -5788,11 +5806,11 @@ msgstr "Residue Properties"
 #: qtplugins/propertytables/propertyview.cpp:891
 #: qtplugins/propertytables/propertyview.cpp:901
 msgid "Add Property"
-msgstr ""
+msgstr "Add Property"
 
 #: qtplugins/propertytables/propertyview.cpp:867
 msgid "Property name"
-msgstr ""
+msgstr "Property name"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -5804,15 +5822,15 @@ msgstr "Name:"
 
 #: qtplugins/propertytables/propertyview.cpp:873
 msgid "Number"
-msgstr ""
+msgstr "Number"
 
 #: qtplugins/propertytables/propertyview.cpp:874
 msgid "Integer"
-msgstr ""
+msgstr "Integer"
 
 #: qtplugins/propertytables/propertyview.cpp:877
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:45
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -6072,11 +6090,11 @@ msgstr "Select Residue"
 
 #: qtplugins/select/select.cpp:587
 msgid "Select all atoms."
-msgstr ""
+msgstr "Select all atoms."
 
 #: qtplugins/select/select.cpp:589
 msgid "Deselect all atoms"
-msgstr ""
+msgstr "Deselect all atoms"
 
 #: qtplugins/select/select.cpp:592
 msgid ""
@@ -6858,7 +6876,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr ""
+msgstr "Detected %1"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
@@ -7191,7 +7209,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:127
 msgid "Distance (Å)"
-msgstr ""
+msgstr "Distance (Å)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:131
 msgid "Dihedral (°)"
@@ -7892,17 +7910,17 @@ msgstr "Super Cell Options"
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:28
 #. i18n: ectx: property (text), widget (QLabel, minLabel)
 msgid "Minimum"
-msgstr ""
+msgstr "Minimum"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:38
 #. i18n: ectx: property (text), widget (QLabel, maxLabel)
 msgid "Maximum"
-msgstr ""
+msgstr "Maximum"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:48
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A range:"
-msgstr ""
+msgstr "A range:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:93
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
@@ -9765,12 +9783,12 @@ msgstr "Search plugins…"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
 msgid "Plugin Information"
-msgstr ""
+msgstr "Plugin Information"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:122
 #. i18n: ectx: property (text), widget (QPushButton, bugTrackerButton)
 msgid "Report an Issue"
-msgstr ""
+msgstr "Report an Issue"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
@@ -10462,12 +10480,12 @@ msgstr ""
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, modesLabel)
 msgid "Modes:"
-msgstr ""
+msgstr "Modes:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:32
 #. i18n: ectx: property (text), widget (QLabel, scaleLabel)
 msgid "Scale factor:"
-msgstr ""
+msgstr "Scale factor:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:39
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, scaleSpinBox)
