@@ -13,6 +13,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
+#include <QtCore/QProcessEnvironment>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QThread>
@@ -214,20 +215,63 @@ QString PackageManager::venvScriptPath(const QString& packageDir,
   return findInstalledScript(packageDir, command, false);
 }
 
+bool PackageManager::CommandLine::applyEnvironment(
+  QProcessEnvironment& environment) const
+{
+  bool modified = false;
+  if (!environmentBinDir.isEmpty()) {
+#ifdef Q_OS_WIN
+    const QString separator = QStringLiteral(";");
+#else
+    const QString separator = QStringLiteral(":");
+#endif
+    const QString path = environment.value(QStringLiteral("PATH"));
+    environment.insert(QStringLiteral("PATH"),
+                       path.isEmpty() ? environmentBinDir
+                                      : environmentBinDir + separator + path);
+    modified = true;
+  }
+  if (!environmentPrefix.isEmpty()) {
+    environment.insert(QStringLiteral("CONDA_PREFIX"), environmentPrefix);
+    modified = true;
+  }
+  return modified;
+}
+
 PackageManager::CommandLine PackageManager::resolveCommandLine(
   const QString& packageDir, const QString& command)
 {
+  return resolveCommandLine(packageDir, command, findPixiExecutable());
+}
+
+PackageManager::CommandLine PackageManager::resolveCommandLine(
+  const QString& packageDir, const QString& command,
+  const QString& pixiExecutable)
+{
   CommandLine commandLine;
 
-  const QString pixiExe = findPixiExecutable();
-  if (!pixiExe.isEmpty() && !pixiScriptPath(packageDir, command).isEmpty()) {
-    commandLine.program = pixiExe;
-    commandLine.prefixArgs = { QStringLiteral("run"), QStringLiteral("--as-is"),
-                               command };
+  const QString pixiScript = pixiScriptPath(packageDir, command);
+  if (!pixiScript.isEmpty()) {
+    if (!pixiExecutable.isEmpty()) {
+      commandLine.program = pixiExecutable;
+      commandLine.prefixArgs = { QStringLiteral("run"),
+                                 QStringLiteral("--as-is"), command };
+      return commandLine;
+    }
+
+    // No pixi to activate the environment, but its script runs fine on its
+    // own once its bin directory is on PATH.
+    commandLine.program = pixiScript;
+    commandLine.environmentBinDir = QFileInfo(pixiScript).absolutePath();
+    commandLine.environmentPrefix =
+      packageDir + QStringLiteral("/.pixi/envs/default");
     return commandLine;
   }
 
   commandLine.program = venvScriptPath(packageDir, command);
+  if (!commandLine.program.isEmpty())
+    commandLine.environmentBinDir =
+      QFileInfo(commandLine.program).absolutePath();
   return commandLine;
 }
 
@@ -249,6 +293,9 @@ QJsonObject PackageManager::loadOptionsFromScript(const QString& packageDir,
 
   QProcess proc;
   proc.setWorkingDirectory(packageDir);
+  QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+  if (commandLine.applyEnvironment(environment))
+    proc.setProcessEnvironment(environment);
   proc.start(commandLine.program, userOptsArgs);
 
   // Plugins may always expect some valid JSON as input over stdin, even if it's

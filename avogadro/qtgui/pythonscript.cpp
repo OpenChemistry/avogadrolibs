@@ -182,6 +182,10 @@ QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
       return QString();
     }
 
+    // A script run directly needs its environment's bin directory on PATH.
+    if (commandLine.applyEnvironment(environment))
+      proc.setProcessEnvironment(environment);
+
     // An empty identifier would otherwise be passed as an empty argument.
     if (!m_packageIdentifier.isEmpty())
       realArgs.prepend(m_packageIdentifier);

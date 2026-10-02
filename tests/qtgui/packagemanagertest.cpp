@@ -12,6 +12,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QProcessEnvironment>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryDir>
 #include <QtCore/QVersionNumber>
@@ -1228,6 +1229,70 @@ TEST_F(PackageManagerTest, resolveCommandLineFallsBackToVenvScript)
   EXPECT_EQ(commandLine.program,
             PackageManager::venvScriptPath(m_packageDir, "avo-cmd"));
   EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
+}
+
+// The pixi executable is passed in explicitly below, so these do not depend
+// on whether pixi happens to be installed (or discoverable, e.g. in
+// /opt/homebrew/bin on macOS) on the machine running the tests.
+TEST_F(PackageManagerTest, resolveCommandLineRunsPixiScriptWhenPixiMissing)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  const auto commandLine =
+    PackageManager::resolveCommandLine(m_packageDir, "avo-cmd", QString());
+
+  // The pixi environment wins over the venv, and is run without pixi.
+  EXPECT_EQ(commandLine.program,
+            PackageManager::pixiScriptPath(m_packageDir, "avo-cmd"));
+  EXPECT_TRUE(commandLine.prefixArgs.isEmpty());
+  EXPECT_EQ(commandLine.environmentBinDir,
+            QFileInfo(commandLine.program).absolutePath());
+  EXPECT_EQ(commandLine.environmentPrefix,
+            m_packageDir + "/.pixi/envs/default");
+
+  // Nothing activated the environment, so it is applied by hand.
+  QProcessEnvironment environment;
+  environment.insert("PATH", "/somewhere/else");
+  EXPECT_TRUE(commandLine.applyEnvironment(environment));
+  EXPECT_TRUE(
+    environment.value("PATH").startsWith(commandLine.environmentBinDir));
+  EXPECT_TRUE(environment.value("PATH").endsWith("/somewhere/else"));
+  EXPECT_EQ(environment.value("CONDA_PREFIX"), commandLine.environmentPrefix);
+}
+
+TEST_F(PackageManagerTest, resolveCommandLineUsesPixiWhenFound)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+
+  const auto commandLine = PackageManager::resolveCommandLine(
+    m_packageDir, "avo-cmd", "/fake/bin/pixi");
+
+  // pixi activates the environment itself.
+  EXPECT_EQ(commandLine.program, QString("/fake/bin/pixi"));
+  EXPECT_EQ(commandLine.prefixArgs,
+            QStringList({ "run", "--as-is", "avo-cmd" }));
+  EXPECT_TRUE(commandLine.environmentBinDir.isEmpty());
+  EXPECT_TRUE(commandLine.environmentPrefix.isEmpty());
+
+  QProcessEnvironment environment;
+  EXPECT_FALSE(commandLine.applyEnvironment(environment));
+}
+
+TEST_F(PackageManagerTest, resolveCommandLineVenvFallbackSetsBinDir)
+{
+  ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));
+
+  // With or without pixi: no pixi environment, so the venv is run directly.
+  for (const QString pixi : { QString(), QString("/fake/bin/pixi") }) {
+    const auto commandLine =
+      PackageManager::resolveCommandLine(m_packageDir, "avo-cmd", pixi);
+    EXPECT_EQ(commandLine.program,
+              PackageManager::venvScriptPath(m_packageDir, "avo-cmd"));
+    EXPECT_EQ(commandLine.environmentBinDir,
+              QFileInfo(commandLine.program).absolutePath());
+    EXPECT_TRUE(commandLine.environmentPrefix.isEmpty());
+  }
 }
 
 TEST_F(PackageManagerTest, resolveCommandLineEmptyWithoutAnyEnvironment)
