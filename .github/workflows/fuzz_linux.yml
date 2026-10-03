@@ -230,13 +230,6 @@ jobs:
         # upload artifacts, but they do not fail the job. Delete entries here as
         # the underlying bugs are fixed.
         known_issues=(
-          # quantumio/nwchem: pre-existing heap-buffer-overflow in
-          # NWChemLog::readFrequencies, reported in #3104 -- `cols` is sized
-          # from the first column line of a P.Frequency block and indexed by
-          # later lines' token counts (nwchemlog.cpp:271 vs :276), and
-          # cols[i][j + 1]/[j + 2] read past short columns (:289-290). Crashed
-          # in 3 of 5 local 10 s runs. Delete this entry once #3104 is fixed.
-          "quantumio/nwchem"
         )
 
         is_known_issue() {

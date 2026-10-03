@@ -563,13 +563,6 @@ jobs:
         # one known artifact.
         known_issues=(
           "quantumio/qcjson"
-          # quantumio/nwchem: pre-existing heap-buffer-overflow in
-          # NWChemLog::readFrequencies, reported in #3104 and reproduced under
-          # ASan on Linux within seconds of mutation (3 of 5 local 10 s runs).
-          # Parked here as well so this PR's smoke run cannot go red on the same
-          # parser bug while the Windows behaviour is unverified; delete this
-          # entry once #3104 is fixed.
-          "quantumio/nwchem"
         )
 
         is_known_issue() {
