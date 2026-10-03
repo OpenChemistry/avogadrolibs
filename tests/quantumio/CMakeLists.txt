@@ -100,6 +100,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     cube
     fchk
     molden
+    nwchem
     orca
     qcjson
   )
