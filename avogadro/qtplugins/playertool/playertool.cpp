@@ -667,19 +667,19 @@ void PlayerTool::registerCommands()
   emit registerCommand(
     "nextFrame",
     tr("Advance one coordinate set, looping to the first frame after the "
-       "last. Returns {\"frame\": ..., \"count\": ...}."));
+       "last. Returns {\"frame\": …, \"count\": …}."));
   emit registerCommand(
     "previousFrame",
     tr("Step back one coordinate set, looping to the last frame before the "
-       "first. Returns {\"frame\": ..., \"count\": ...}."));
+       "first. Returns {\"frame\": …, \"count\": …}."));
   emit registerCommand(
     "setCoordinateSet",
     tr("Jump to a coordinate set, given as a zero-based index: {\"index\": "
-       "n}. Returns {\"frame\": ..., \"count\": ...}."));
+       "n}. Returns {\"frame\": …, \"count\": …}."));
   emit registerCommand(
     "coordinateSetCount",
     tr("Report the current frame and the number of coordinate sets, without "
-       "changing anything. Returns {\"frame\": ..., \"count\": ...}."));
+       "changing anything. Returns {\"frame\": …, \"count\": …}."));
 }
 
 bool PlayerTool::handleCommand(const QString& command,

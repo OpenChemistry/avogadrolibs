@@ -812,9 +812,19 @@ public:
   {
   }
 
-  void redo() override { m_mol.molecule() = m_newMolecule; }
+  // Assigning a molecule frees the basis set and cubes it replaces, which an
+  // orbital or surface calculation may still be reading or writing.
+  void redo() override
+  {
+    RWMolecule::cancelBackgroundCalculations();
+    m_mol.molecule() = m_newMolecule;
+  }
 
-  void undo() override { m_mol.molecule() = m_oldMolecule; }
+  void undo() override
+  {
+    RWMolecule::cancelBackgroundCalculations();
+    m_mol.molecule() = m_oldMolecule;
+  }
 };
 } // namespace
 

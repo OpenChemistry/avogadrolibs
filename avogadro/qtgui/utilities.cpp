@@ -63,6 +63,10 @@ QString highestVersionedDirectory(const QString& base)
 // profile, so pixi is invisible to us even though the user's terminal finds
 // it. Search the directory explicitly, after PATH so that a pixi the user has
 // deliberately put on PATH still wins.
+//
+// On macOS the same applies to Homebrew, whose Apple Silicon prefix
+// (/opt/homebrew/bin) is only added to PATH by the shell profile. Intel
+// Homebrew's /usr/local/bin is already checked above.
 QStringList executableSearchPaths()
 {
   const QProcessEnvironment system = QProcessEnvironment::systemEnvironment();
@@ -84,6 +88,9 @@ QStringList executableSearchPaths()
   if (pixiHome.isEmpty())
     pixiHome = QDir::homePath() + "/.pixi";
   paths.append(pixiHome + "/bin");
+#ifdef Q_OS_MACOS
+  paths.append("/opt/homebrew/bin");
+#endif
 
   paths.removeDuplicates();
   return paths;

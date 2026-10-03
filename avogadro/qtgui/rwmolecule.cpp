@@ -6,6 +6,10 @@
 #include "rwmolecule.h"
 #include "rwmolecule_undo.h"
 
+#include "gaussiansetconcurrent.h"
+#include "meshgenerator.h"
+#include "slatersetconcurrent.h"
+
 #include <algorithm>
 #include <cassert>
 
@@ -527,16 +531,40 @@ void RWMolecule::removeUnitCell()
   emitChanged(Molecule::UnitCell | Molecule::Removed);
 }
 
+void RWMolecule::cancelBackgroundCalculations()
+{
+  GaussianSetConcurrent::cancelAllCalculations();
+  SlaterSetConcurrent::cancelAllCalculations();
+  MeshGenerator::cancelAllCalculations();
+}
+
 void RWMolecule::modifyMolecule(const Molecule& newMolecule,
                                 Molecule::MoleculeChanges changes,
                                 const QString& undoText)
 {
-  auto* comm = new ModifyMoleculeCommand(*this, m_molecule, newMolecule);
+  // Both copies below read the current molecule's cubes, meshes and basis
+  // set, which an orbital or surface calculation may still be writing.
+  cancelBackgroundCalculations();
+
+  // A replacement that arrives with no display state of its own (anything
+  // freshly read from a file or script) would switch off every display type,
+  // so it inherits the current molecule's. Done on a copy, before the command
+  // is built, so redo restores it as well.
+  const Molecule* replacement = &newMolecule;
+  Molecule withDisplayState;
+  if (newMolecule.layerInfo()->enable.empty()) {
+    withDisplayState = newMolecule;
+    withDisplayState.copyDisplayStateFrom(m_molecule);
+    replacement = &withDisplayState;
+  }
+
+  auto* comm = new ModifyMoleculeCommand(*this, m_molecule, *replacement);
 
   comm->setText(undoText);
+  // push() runs redo(), which cancels any worker still using the data being
+  // replaced and assigns the new molecule.
   m_undoStack.push(comm);
 
-  m_molecule = newMolecule;
   emitChanged(changes);
 }
 
@@ -607,6 +635,7 @@ void RWMolecule::editUnitCell(Matrix3 cellMatrix, CrystalTools::Options options)
   // Make a copy of the molecule to edit so we can store the old one
   // If the user has "TransformAtoms" set in the options, then
   // the atom positions will move as well.
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
   CrystalTools::setCellMatrix(newMolecule, cellMatrix, options);
 
@@ -629,6 +658,7 @@ void RWMolecule::wrapAtomsToCell()
 
   // Wrapping clears and re-perceives the bonds, so edit a copy and let
   // modifyMolecule() store both states for undo.
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   CrystalTools::wrapAtomsToUnitCell(newMolecule);
@@ -654,6 +684,7 @@ void RWMolecule::setCellVolume(double newVolume, CrystalTools::Options options)
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell and atom positions may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   CrystalTools::setVolume(newMolecule, newVolume, options);
@@ -675,6 +706,7 @@ void RWMolecule::buildSupercell(unsigned int a, unsigned int b, unsigned int c)
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell and atom positions may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   CrystalTools::buildSupercell(newMolecule, a, b, c);
@@ -697,6 +729,7 @@ void RWMolecule::buildSupercell(const Vector3& rangeMin,
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell and atom positions may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   if (!CrystalTools::buildSupercell(newMolecule, rangeMin, rangeMax, options))
@@ -719,6 +752,7 @@ void RWMolecule::niggliReduceCell()
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell and atom positions may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   // We need to perform all three of these operations...
@@ -743,6 +777,7 @@ void RWMolecule::rotateCellToStandardOrientation()
 
   // Store a copy of the old molecule
   // The atom positions may move as well.
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   CrystalTools::rotateToStandardOrientation(newMolecule,
@@ -765,6 +800,7 @@ bool RWMolecule::reduceCellToPrimitive(double cartTol, double copyTol)
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell, atom positions, and numbers of atoms may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 #ifdef USE_SPGLIB
   if (!Core::AvoSpglib::reduceToPrimitive(newMolecule, cartTol))
@@ -800,6 +836,7 @@ bool RWMolecule::conventionalizeCell(double cartTol, double copyTol)
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell, atom positions, and numbers of atoms may all change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
 #ifdef USE_SPGLIB
@@ -834,6 +871,7 @@ bool RWMolecule::symmetrizeCell(double cartTol, double copyTol)
 
   // Make a copy of the molecule to edit so we can store the old one
   // The unit cell, atom positions, and numbers of atoms may all change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
 #ifdef USE_SPGLIB
@@ -869,6 +907,7 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
 
   // Make a copy of the molecule to edit so we can store the old one
   // The atom positions and numbers of atoms may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
   newMolecule.setHallNumber(hallNumber);
 
@@ -887,6 +926,7 @@ bool RWMolecule::fillTranslationalCopies(double cartTol)
   if (!m_molecule.unitCell())
     return false;
 
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   Core::SpaceGroups::fillTranslationalCopies(newMolecule, cartTol);
@@ -907,6 +947,7 @@ bool RWMolecule::reduceCellToAsymmetricUnit(unsigned short hallNumber,
 
   // Make a copy of the molecule to edit so we can store the old one
   // The atom positions and numbers of atoms may change
+  cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
 
   Core::SpaceGroups::reduceToAsymmetricUnit(newMolecule, hallNumber, cartTol);

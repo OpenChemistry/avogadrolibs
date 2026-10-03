@@ -18,6 +18,7 @@ set(plugins
   Crystal
   Focus
   MeasureTool
+  ScriptFileFormats
   Select
   Surfaces
 )

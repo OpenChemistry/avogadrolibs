@@ -510,22 +510,40 @@ void Command::processFinished()
   // Drop results if the launch-time molecule was destroyed, or if the user
   // has since swapped to a different molecule (its atom count/ordering may
   // no longer match what the script is about to write back).
+  // Only real failures (crash, non-zero exit, or errors the script reported)
+  // are collected, not stderr chatter.
+  QStringList errors;
   if (target != nullptr && target == m_molecule) {
+    // Includes the interpreter's errors, which processCommand() copies in.
     script->processCommand(target);
-
-    // collect errors
-    if (script->hasErrors()) {
-      qWarning() << script->errorList();
-    }
-  } else if (target == nullptr) {
-    qWarning() << "Command: discarding script results; molecule was closed "
-                  "or edited while the command was running.";
+    errors = script->errorList();
   } else {
-    qWarning() << "Command: discarding script results; active molecule "
-                  "changed while the command was running.";
+    if (target == nullptr) {
+      qWarning() << "Command: discarding script results; molecule was closed "
+                    "or edited while the command was running.";
+    } else {
+      qWarning() << "Command: discarding script results; active molecule "
+                    "changed while the command was running.";
+    }
+    // The results are dropped, but a script that crashed or exited with an
+    // error should still be reported. processCommand() was never called, so
+    // read the interpreter directly.
+    errors = script->interpreter().errorList();
   }
 
+  if (!errors.isEmpty())
+    qWarning() << errors;
+
+  // Safe to queue the deletion first: the modal dialog below runs the event
+  // loop, but this command no longer refers to the script and the errors were
+  // copied out above.
   script->deleteLater();
+
+  if (!errors.isEmpty()) {
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()),
+                         tr("Error Running Script"),
+                         errors.join(QStringLiteral("\n")));
+  }
 }
 
 void Command::configurePython()

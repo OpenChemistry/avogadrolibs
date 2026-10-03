@@ -335,6 +335,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
 
       json coordSets = properties["geometry_sequence"]["geometries"];
       if (coordSets.is_array() && coordSets.size()) {
+        int lastStep = -1;
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
           Array<Vector3> setArray;
           json set = coordSets[i];
@@ -345,10 +346,15 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
                 Vector3(set[3 * j], set[3 * j + 1], set[3 * j + 2]));
             }
             molecule.setCoordinate3d(setArray, i);
+            lastStep = static_cast<int>(i);
           }
         }
-        // Make sure the first step is active once we are done loading the sets.
-        molecule.setCoordinate3d(0);
+        // Open on the final step: for an optimization it is the converged
+        // geometry (the top-level "geometry" matches it), and any vibrations
+        // below were computed there. They are written to the active
+        // conformer, so this also keeps them off the starting geometry.
+        if (lastStep >= 0)
+          molecule.setCoordinate3d(lastStep);
       }
     }
 

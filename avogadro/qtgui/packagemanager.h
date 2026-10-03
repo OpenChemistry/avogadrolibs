@@ -15,6 +15,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariantMap>
 
+class QProcessEnvironment;
+
 namespace Avogadro {
 namespace QtGui {
 
@@ -123,28 +125,59 @@ public:
                                 const QString& command);
 
   /** How to launch a package command. */
-  struct CommandLine
+  struct AVOGADROQTGUI_EXPORT CommandLine
   {
     QString program;        ///< empty if no environment can run the command
     QStringList prefixArgs; ///< arguments preceding the command's own
+
+    /// Bin directory to prepend to PATH, empty when the launcher activates
+    /// the environment itself (@c "pixi run"). Set when the command's script
+    /// is run directly, so that a plugin shelling out to another program
+    /// installed in its environment still finds it.
+    QString environmentBinDir;
+    /// Root of a conda-style environment, exported as @c CONDA_PREFIX. Empty
+    /// unless the script is run directly from a pixi environment.
+    QString environmentPrefix;
+
+    /**
+     * Apply @c environmentBinDir and @c environmentPrefix to @p environment.
+     * @return true if @p environment was modified.
+     */
+    bool applyEnvironment(QProcessEnvironment& environment) const;
   };
 
   /**
    * Resolve how to run @p command from @p packageDir, so that every caller
    * applies the same backend policy.
    *
-   * Prefers the package's pixi environment and falls back to the console
-   * script pip installed into @c .venv. Having the pixi executable is not on
-   * its own enough to choose pixi, because @c "pixi run --as-is" is shorthand
-   * for @c --no-install @c --frozen and will not create a missing
-   * environment: a package installed before pixi was available has to keep
-   * running from @c .venv until it is installed again.
+   * In order of preference:
+   *  -# @c "pixi run --as-is" when the pixi executable is found and the pixi
+   *     environment provides @p command;
+   *  -# the pixi environment's own script, run directly, when pixi cannot be
+   *     found (for example an application launched from the Finder or Dock
+   *     has no Homebrew directory on its PATH) -- the script works without
+   *     pixi, but skips activation, hence CommandLine::environmentBinDir;
+   *  -# the console script pip installed into @c .venv.
+   *
+   * Having the pixi executable is not on its own enough to choose pixi,
+   * because @c "pixi run --as-is" is shorthand for @c --no-install
+   * @c --frozen and will not create a missing environment: a package
+   * installed before pixi was available has to keep running from @c .venv
+   * until it is installed again.
    *
    * @return a CommandLine whose @c program is empty when neither environment
    *         provides @p command.
    */
   static CommandLine resolveCommandLine(const QString& packageDir,
                                         const QString& command);
+
+  /**
+   * As above, but with the pixi executable supplied by the caller rather than
+   * searched for. @p pixiExecutable may be empty, meaning "pixi not found".
+   */
+  static CommandLine resolveCommandLine(const QString& packageDir,
+                                        const QString& command,
+                                        const QString& pixiExecutable);
 
   /**
    * Run the package script with @c --user-options and parse the JSON output.

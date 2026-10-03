@@ -350,7 +350,10 @@ bool Molecule::invalidatesDerivedData(unsigned int changes)
 void Molecule::emitChanged(unsigned int change)
 {
   if (change != NoChange) {
-    if (invalidatesDerivedData(change)) {
+    // A replacement carries its own derived data, so only an in-place edit
+    // discards it. RWMolecule::modifyMolecule has already stopped the workers
+    // that were using what the replacement swapped out.
+    if (invalidatesDerivedData(change) && !(change & Replaced)) {
       // Worker threads may still be reading the basis set and writing into
       // the cubes and meshes that are about to be deleted.
       GaussianSetConcurrent::cancelAllCalculations();
