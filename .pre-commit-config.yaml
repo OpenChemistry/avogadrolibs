@@ -12,6 +12,10 @@ repos:
     -   id: check-json
     -   id: check-case-conflict
     -   id: check-toml
+-   repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3  # or the latest tag
+    hooks:
+    -   id: codespell
 -   repo: https://github.com/pre-commit/mirrors-clang-format
     rev: 'v17.0.6'  # Use the sha / tag you want to point at
     hooks:
