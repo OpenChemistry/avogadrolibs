@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-03-07 11:10+0000\n"
+"PO-Revision-Date: 2026-10-04 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1642,7 +1642,7 @@ msgstr "Lega gli atomi alla cellula"
 #: qtgui/rwmolecule.cpp:696
 #, fuzzy
 msgid "Scale Cell Volume"
-msgstr "Scala il volume della cellula di unità"
+msgstr "Scala il volume della cellula"
 
 #: qtgui/rwmolecule.cpp:717 qtgui/rwmolecule.cpp:742
 msgid "Build Super Cell"
@@ -1886,7 +1886,7 @@ msgstr ""
 #: qtplugins/apbs/apbs.cpp:115
 #, fuzzy
 msgid "IO Error"
-msgstr "Errore"
+msgstr "Errore IO"
 
 #: qtplugins/apbs/apbs.cpp:116
 #, qt-format
@@ -2034,7 +2034,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:62
 #, fuzzy
 msgid "By Element"
-msgstr "Elemento"
+msgstr "Da Element"
 
 #: qtplugins/applycolors/applycolors.cpp:73
 msgid "By Chain"
@@ -2190,14 +2190,12 @@ msgid "&View"
 msgstr "&Visualizza"
 
 #: qtplugins/applycolors/applycolors.cpp:153
-#, fuzzy
 msgid "Color Atoms"
-msgstr "Colori"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:155
-#, fuzzy
 msgid "Color Residues"
-msgstr "Colore per Residuo"
+msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:217
 #: qtplugins/applycolors/applycolors.cpp:318
@@ -2314,7 +2312,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Optimization"
 msgid "Optimize"
-msgstr "Ottimizzazione"
+msgstr "Ottimizza"
 
 #: qtplugins/autoopt/autoopt.cpp:269
 msgid "Dynamics"
@@ -6082,9 +6080,8 @@ msgstr ""
 "proprietà di torsione."
 
 #: qtplugins/propertytables/propertytables.h:29
-#, fuzzy
 msgid "PropertyTables"
-msgstr "Proprietà"
+msgstr ""
 
 #: qtplugins/propertytables/propertyview.cpp:59
 msgid "Atom Properties"
