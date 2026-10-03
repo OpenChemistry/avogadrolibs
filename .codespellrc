@@ -1,0 +1,12 @@
+[codespell]
+# Translations, bundled code, and the qtaim plugin (citations, test data).
+skip = *.po,*.ts,*.svg,*.json,i18n/*,./i18n/*,thirdparty/*,./thirdparty/*,*/qtaim/*
+# Chemistry, file-format keywords and variable names that are not typos:
+#   conect: PDB CONECT records    te, nd: tellurium, neodymium
+#   ser: serine                   contrl: GAMESS $CONTRL group
+#   coul: LAMMPS lj/cut/coul      ot: CP2K orbital transformation
+#   namd: the MD program          haa, metdata: residue/atom names
+#   seh: Windows structured exception handling
+# Misspelled identifiers, kept until renamed (public API):
+#   frustrum, elipse, highligher
+ignore-words-list = conect,te,nd,ser,coul,namd,contrl,ot,haa,metdata,aparent,hass,caf,statics,inout,thirdparty,pre-select,seh,frustrum,elipse,highligher
