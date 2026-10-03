@@ -114,9 +114,11 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     fabs(start.x() - end.x()) > 2 && fabs(start.y() - end.y()) > 2;
 
   bool anySelect = false;
+  bool selectionChanged = false;
   Index selectedIndex = MaxIndex;
   if (m_drawSelectionBox && bigEnough) {
     shouldClean(e);
+    selectionChanged = true;
     m_initSelectionBox = false;
     auto hits = m_renderer->hits(start.x(), start.y(), end.x(), end.y());
     for (const auto& hit : hits) {
@@ -132,6 +134,7 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
     Identifier hit = m_renderer->hit(e->pos().x(), e->pos().y());
     // Now add the atom on release.
     if (hit.type == Rendering::AtomType) {
+      selectionChanged = true;
       // store the result in case it's a toggle
       bool selected = selectAtom(e, hit.index);
       shouldClean(e);
@@ -149,6 +152,8 @@ QUndoCommand* SelectionTool::mouseReleaseEvent(QMouseEvent* e)
                               m_layerManager.layerCount());
   }
   m_drawSelectionBox = false;
+  if (selectionChanged && m_molecule)
+    m_molecule->emitChanged(Molecule::Selection);
   // Disable this code until rectangle selection is ready.
   emit drawablesChanged();
   e->accept();
@@ -165,6 +170,8 @@ QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
     // Reset the atom list
     if (!hit.isValid()) {
       clearAtoms();
+      if (m_molecule)
+        m_molecule->emitChanged(Molecule::Selection);
     } else {
       shouldClean(e);
       m_drawSelectionBox = false;
@@ -173,6 +180,8 @@ QUndoCommand* SelectionTool::mouseDoubleClickEvent(QMouseEvent* e)
         toggleAtom(hit.index);
       }
       selectLinkedMolecule(e, hit.index);
+      if (m_molecule)
+        m_molecule->emitChanged(Molecule::Selection);
       emit drawablesChanged();
       e->accept();
     }

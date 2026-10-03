@@ -146,7 +146,7 @@ void Select::selectAll()
       m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i));
     }
 
-    m_molecule->emitChanged(Molecule::Atoms);
+    m_molecule->emitChanged(Molecule::Selection);
   }
 }
 
@@ -156,7 +156,7 @@ void Select::selectNone()
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       m_molecule->undoMolecule()->setAtomSelected(i, false);
 
-    m_molecule->emitChanged(Molecule::Atoms);
+    m_molecule->emitChanged(Molecule::Selection);
   }
 }
 
@@ -189,7 +189,7 @@ void Select::selectElement(int element)
       m_molecule->undoMolecule()->setAtomSelected(i, false, undoText);
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 bool Select::isWaterOxygen(Index i)
@@ -257,7 +257,7 @@ void Select::selectWater()
     }
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void Select::selectBackboneAtoms()
@@ -296,7 +296,7 @@ void Select::selectBackboneAtoms()
     }
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void Select::selectSidechainAtoms()
@@ -336,7 +336,7 @@ void Select::selectSidechainAtoms()
     }
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 Vector3 Select::getSelectionCenter()
@@ -390,7 +390,7 @@ void Select::enlargeSelection()
     }
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void Select::shrinkSelection()
@@ -429,7 +429,7 @@ void Select::shrinkSelection()
                                                   undoText);
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void Select::selectAtomIndex()
@@ -474,7 +474,7 @@ void Select::selectAtomIndex()
     }
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void Select::selectResidue()
@@ -544,7 +544,7 @@ void Select::selectResidue()
     } // 3-character labels
   }
 
-  m_molecule->emitChanged(Molecule::Atoms);
+  m_molecule->emitChanged(Molecule::Selection);
 }
 
 void Select::invertSelection()
@@ -553,7 +553,7 @@ void Select::invertSelection()
     for (Index i = 0; i < m_molecule->atomCount(); ++i)
       m_molecule->undoMolecule()->setAtomSelected(
         i, evalSelect(!m_molecule->atomSelected(i), i), tr("Invert Selection"));
-    m_molecule->emitChanged(Molecule::Atoms);
+    m_molecule->emitChanged(Molecule::Selection);
   }
 }
 

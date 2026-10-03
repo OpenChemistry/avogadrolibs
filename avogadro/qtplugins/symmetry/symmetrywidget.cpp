@@ -289,7 +289,7 @@ void SymmetryWidget::equivalenceSelectionChanged(
   auto selectedAtom = reinterpret_cast<Index>(a->id);
   m_molecule->setAtomSelected(selectedAtom, true);
 
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Selection);
 }
 
 void SymmetryWidget::setRadius(double radius)
