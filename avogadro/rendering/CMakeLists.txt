@@ -54,6 +54,7 @@ avogadro_headers(Rendering
   shaderprogram.h
   solidpipeline.h
   spheregeometry.h
+  tessellatingvisitor.h
   textlabel2d.h
   textlabel3d.h
   textlabelbase.h
@@ -98,6 +99,7 @@ target_sources(Rendering PRIVATE
   shaderprogram.cpp
   solidpipeline.cpp
   spheregeometry.cpp
+  tessellatingvisitor.cpp
   textlabel2d.cpp
   textlabel3d.cpp
   textlabelbase.cpp

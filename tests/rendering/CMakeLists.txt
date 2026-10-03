@@ -1,8 +1,11 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   Camera
+  CurveGeometry
   Node
+  PLYVisitor
   SphereGeometry
+  TessellatingVisitor
   )
 
 find_package(OpenGL REQUIRED)
