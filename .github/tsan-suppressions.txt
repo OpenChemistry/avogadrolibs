@@ -26,3 +26,17 @@ race:Avogadro::QtGui::BackgroundFileFormat::~BackgroundFileFormat
 # via an eventfd. Synchronization happens through the kernel fd, which TSan
 # doesn't model; glib itself isn't instrumented either.
 called_from_lib:libglib-2.0.so
+
+# Surfaces' EDT runs QtConcurrent::run -> nested QtConcurrent::map, and hands
+# results back through QFutureWatcher. QThreadPool/QFutureInterface sync inside
+# uninstrumented libQt6Core (futex QMutex), so every hand-off (main -> worker,
+# outer task -> inner map workers, worker -> main) looks like a race. We cannot
+# match QtConcurrent frames: every pool-thread stack has them, and that would
+# hide all pool races. ~MapKernel is the teardown vs forThreadFunction case.
+# Trade-off: this also blinds TSan to a real race inside the EDT fill itself.
+# That race is prevented by construction (x-slab partitioning: each task writes
+# only voxels of its own indexX) and checked by the exact voxel comparison in
+# surfacestest.cpp. With a TSan-instrumented Qt, remove these entries first.
+race:Avogadro::QtPlugins::Surfaces::calculateEDT
+race:Avogadro::QtPlugins::Surfaces::performEDTStep
+race:~MapKernel
