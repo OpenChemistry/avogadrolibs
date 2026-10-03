@@ -143,6 +143,11 @@ public:
       setRenderPass(TranslucentPass);
   }
 
+  /**
+   * The opacity of the cylinders in this group (0.0 to 1.0).
+   */
+  float opacity() const { return m_opacity; }
+
 private:
   std::vector<CylinderColor> m_cylinders;
   std::vector<size_t> m_indices;

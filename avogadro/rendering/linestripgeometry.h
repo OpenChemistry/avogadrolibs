@@ -99,6 +99,12 @@ public:
   /** The vertex array. */
   Core::Array<PackedVertex> vertices() const { return m_vertices; }
 
+  /** Index of the first vertex of each strip (parallel to lineWidths()). */
+  const Core::Array<unsigned int>& lineStarts() const { return m_lineStarts; }
+
+  /** Width of each strip (parallel to lineStarts()). */
+  const Core::Array<float>& lineWidths() const { return m_lineWidths; }
+
 private:
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.

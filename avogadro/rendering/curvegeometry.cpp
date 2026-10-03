@@ -82,14 +82,24 @@ float CurveGeometry::computeScale(size_t, float, float scale) const
   return scale;
 }
 
-void CurveGeometry::update(int index)
+bool CurveGeometry::isFlatLine(size_t lineIndex) const
 {
+  return lineIndex < m_lines.size() && m_lines[lineIndex]->flat && m_canBeFlat;
+}
+
+void CurveGeometry::tessellate(size_t lineIndex,
+                               std::vector<ColorNormalVertex>& vertices,
+                               std::vector<unsigned int>& indices) const
+{
+  vertices.clear();
+  indices.clear();
+  if (lineIndex >= m_lines.size())
+    return;
+
   // compute the middle points
-  Line* line = m_lines[index];
+  const Line* line = m_lines[lineIndex];
   const size_t lineResolution = line->flat ? 20u : 15u;
   const size_t qttyPoints = line->points.size();
-  line->numberOfVertices = 0;
-  line->numberOfIndices = 0;
 
   const size_t qttySegments = lineResolution * qttyPoints;
   Vector3f previous;
@@ -152,13 +162,8 @@ void CurveGeometry::update(int index)
     }
   }
 
-  // prepare VBO and EBO
-  std::vector<unsigned int> indices;
-  std::vector<ColorNormalVertex> vertices;
-  if (points.empty()) {
-    line->dirty = false;
+  if (points.empty())
     return;
-  }
 
   // Map spline sample index to control point color
   const size_t numControlPoints = line->points.size();
@@ -219,6 +224,18 @@ void CurveGeometry::update(int index)
       }
     }
   }
+}
+
+void CurveGeometry::update(int index)
+{
+  Line* line = m_lines[index];
+  line->numberOfVertices = 0;
+  line->numberOfIndices = 0;
+
+  // The pure-CPU geometry lives in tessellate(); only the GL upload is here.
+  std::vector<ColorNormalVertex> vertices;
+  std::vector<unsigned int> indices;
+  tessellate(static_cast<size_t>(index), vertices, indices);
 
   if (vertices.empty()) {
     line->dirty = false;

@@ -117,6 +117,10 @@ public:
   Core::Array<PackedVertex> vertices() { return m_vertices; }
   Core::Array<unsigned int> triangles() { return m_indices; }
 
+  /** Const access without copying. */
+  const Core::Array<PackedVertex>& vertices() const { return m_vertices; }
+  const Core::Array<unsigned int>& triangles() const { return m_indices; }
+
 private:
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.

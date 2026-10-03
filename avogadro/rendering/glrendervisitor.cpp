@@ -5,14 +5,17 @@
 
 #include "glrendervisitor.h"
 
+#include "arrowgeometry.h"
 #include "curvegeometry.h"
 #include "cylindergeometry.h"
+#include "dashedlinegeometry.h"
 #include "linestripgeometry.h"
 #include "widelinegeometry.h"
 #include "meshgeometry.h"
 #include "spheregeometry.h"
 #include "textlabel2d.h"
 #include "textlabel3d.h"
+#include "volumegeometry.h"
 
 namespace Avogadro::Rendering {
 
@@ -83,6 +86,24 @@ void GLRenderVisitor::visit(LineStripGeometry& geometry)
 }
 
 void GLRenderVisitor::visit(WideLineGeometry& geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(DashedLineGeometry& geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(ArrowGeometry& geometry)
+{
+  if (geometry.renderPass() == m_renderPass)
+    geometry.render(m_camera);
+}
+
+void GLRenderVisitor::visit(VolumeGeometry& geometry)
 {
   if (geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);

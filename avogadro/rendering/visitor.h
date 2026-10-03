@@ -12,7 +12,9 @@
 namespace Avogadro {
 namespace Rendering {
 
+class ArrowGeometry;
 class CylinderGeometry;
+class DashedLineGeometry;
 class Drawable;
 class GeometryNode;
 class GroupNode;
@@ -23,6 +25,7 @@ class SphereGeometry;
 class TextLabel2D;
 class TextLabel3D;
 class CurveGeometry;
+class VolumeGeometry;
 class WideLineGeometry;
 
 /**
@@ -55,6 +58,9 @@ public:
   virtual void visit(TextLabel3D&) { return; }
   virtual void visit(LineStripGeometry&) { return; }
   virtual void visit(WideLineGeometry&) { return; }
+  virtual void visit(DashedLineGeometry&) { return; }
+  virtual void visit(ArrowGeometry&) { return; }
+  virtual void visit(VolumeGeometry&) { return; }
 };
 
 } // End namespace Rendering

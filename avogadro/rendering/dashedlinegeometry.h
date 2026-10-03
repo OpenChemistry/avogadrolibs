@@ -101,6 +101,14 @@ public:
   unsigned char lineWidth() const { return m_lineWidth; }
   /** @} */
 
+  /**
+   * The CPU-side vertex array, laid out as GL_LINES pairs: vertices 2k and
+   * 2k+1 are the endpoints of one dash. Each addDashedLine() call appends
+   * 2 * dashCount evenly spaced points from start to end inclusive, so the
+   * gaps between dashes are the same length as the dashes.
+   */
+  const Core::Array<PackedVertex>& vertices() const { return m_vertices; }
+
 private:
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.

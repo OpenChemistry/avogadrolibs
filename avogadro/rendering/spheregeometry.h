@@ -90,6 +90,11 @@ public:
   }
 
   /**
+   * The opacity of the spheres in this group (0.0 to 1.0).
+   */
+  float opacity() const { return m_opacity; }
+
+  /**
    * Add a sphere to the geometry object.
    */
   void addSphere(const Vector3f& position, const Vector3ub& color, float radius,

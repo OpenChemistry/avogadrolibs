@@ -82,6 +82,9 @@ public:
   /** Set the default color for arrows added without explicit color. */
   void setColor(const Vector3ub& c) { m_color = c; }
 
+  /** The default color for arrows added without explicit color. */
+  Vector3ub color() const { return m_color; }
+
   /** Set a scale factor for arrow radii (default 1.0). */
   void setRadiusScale(float scale)
   {
