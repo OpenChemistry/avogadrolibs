@@ -87,6 +87,16 @@ public:
   gwavi_t* gwaviWriter = nullptr;
 };
 
+namespace {
+// The manager only takes ownership when registration succeeds; it refuses
+// duplicates (e.g. a second Surfaces instance), so free the rejected format.
+void registerQuantumFormat(Io::FileFormat* format)
+{
+  if (!Io::FileFormatManager::registerFormat(format))
+    delete format;
+}
+} // namespace
+
 Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
 {
   auto action = new QAction(this);
@@ -98,21 +108,24 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   m_actions.push_back(action);
 
   // Register quantum file formats
-  Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GenericJson);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GenericOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
-  Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
-  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
-  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
-  Io::FileFormatManager::registerFormat(new QuantumIO::ORCAOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::QCSchema);
+  registerQuantumFormat(new QuantumIO::GAMESSUSOutput);
+  registerQuantumFormat(new QuantumIO::GaussianFchk);
+  registerQuantumFormat(new QuantumIO::GaussianCube);
+  registerQuantumFormat(new QuantumIO::GenericJson);
+  registerQuantumFormat(new QuantumIO::GenericOutput);
+  registerQuantumFormat(new QuantumIO::MoldenFile);
+  registerQuantumFormat(new QuantumIO::MopacAux);
+  registerQuantumFormat(new QuantumIO::NWChemJson);
+  registerQuantumFormat(new QuantumIO::NWChemLog);
+  registerQuantumFormat(new QuantumIO::ORCAOutput);
+  registerQuantumFormat(new QuantumIO::QCSchema);
 }
 
 Surfaces::~Surfaces()
 {
+  // Parentless QThreads; ~MeshGenerator() waits for a running thread.
+  delete m_meshGenerator1;
+  delete m_meshGenerator2;
   delete d;
   // delete m_cube; // should be freed by the molecule
 }
