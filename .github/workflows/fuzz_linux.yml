@@ -220,7 +220,7 @@ jobs:
         # tests/<suite>/CMakeLists.txt.
         suites=(
           "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps smiles decompress=compressed compress-roundtrip=compressed"
-          "quantumio|fuzz_||cube fchk molden orca qcjson=qcschema"
+          "quantumio|fuzz_||cube fchk molden nwchem orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "calc|fuzz_calc_|calc|forcefield"
           "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json layermanager"
@@ -230,6 +230,13 @@ jobs:
         # upload artifacts, but they do not fail the job. Delete entries here as
         # the underlying bugs are fixed.
         known_issues=(
+          # quantumio/nwchem: pre-existing heap-buffer-overflow in
+          # NWChemLog::readFrequencies, reported in #3104 -- `cols` is sized
+          # from the first column line of a P.Frequency block and indexed by
+          # later lines' token counts (nwchemlog.cpp:271 vs :276), and
+          # cols[i][j + 1]/[j + 2] read past short columns (:289-290). Crashed
+          # in 3 of 5 local 10 s runs. Delete this entry once #3104 is fixed.
+          "quantumio/nwchem"
         )
 
         is_known_issue() {
