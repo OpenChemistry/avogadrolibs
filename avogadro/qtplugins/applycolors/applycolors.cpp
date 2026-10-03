@@ -234,7 +234,9 @@ void ApplyColors::applyIndexColors()
     rwmol->setColor(i, rainbowGradient(indexFraction, type));
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  // colors are not structural; emitting Atoms would discard orbitals,
+  // vibrations, etc.
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::applyChargeColors()
@@ -295,7 +297,7 @@ void ApplyColors::applyChargeColors()
     rwmol->setColor(i, chargeGradient(charges(i, 0), clamp, type));
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::applyDistanceColors()
@@ -339,7 +341,7 @@ void ApplyColors::applyDistanceColors()
     rwmol->setColor(i, rainbowGradient(distanceFraction, type));
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::resetColors()
@@ -360,7 +362,7 @@ void ApplyColors::resetColors()
     rwmol->setColor(i, color);
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::applyCustomColor(const QColor& new_color)
@@ -385,7 +387,7 @@ void ApplyColors::applyCustomColor(const QColor& new_color)
     rwmol->setColor(i, color);
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::openColorDialogResidue()
@@ -426,7 +428,7 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
     rwmol->setResidueColor(i, color);
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::resetColorsResidue()
@@ -460,7 +462,7 @@ void ApplyColors::resetColorsResidue()
     rwmol->setResidueColor(i, color);
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::applySecondaryStructureColors()
@@ -489,7 +491,7 @@ void ApplyColors::applySecondaryStructureColors()
     rwmol->setResidueColor(i, color);
   } // end loop
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 int residueNameToOffset(const std::string& name)
@@ -575,7 +577,7 @@ void ApplyColors::applyAminoColors()
     rwmol->setResidueColor(i, color);
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::applyShapelyColors()
@@ -602,7 +604,7 @@ void ApplyColors::applyShapelyColors()
     rwmol->setResidueColor(i, color);
   }
   rwmol->endMergeMode();
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void ApplyColors::registerCommands()

@@ -261,7 +261,7 @@ void SelectionTool::applyColor(Vector3ub color)
       a.setColor(color);
   }
   rwmol->endMergeMode();
-  rwmol->emitChanged(Molecule::Atoms | Molecule::Modified);
+  rwmol->emitChanged(Molecule::Properties);
 }
 
 void SelectionTool::applyLayer(int layer)
