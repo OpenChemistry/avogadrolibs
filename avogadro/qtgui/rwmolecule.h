@@ -589,6 +589,14 @@ public:
     const QString& undoText = QStringLiteral("Modify Molecule"));
 
   /**
+   * Stop every background calculation (orbitals, surfaces) and wait for it
+   * to finish. These calculations read and write a molecule's basis set,
+   * cubes and meshes, so call this before copying the current molecule to
+   * pass to modifyMolecule(), which calls it before replacing the molecule.
+   */
+  static void cancelBackgroundCalculations();
+
+  /**
    * Generic edit that adds @a newMolecule to the current molecule.
    * Also sets the text for the undo command to be @a undoText. Changes are
    * emitted.

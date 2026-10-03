@@ -98,15 +98,25 @@ public:
      * listeners that detect structural change by comparing counts will miss
      * it unless they check for this flag.
      */
-    Reordered = 16384
+    Reordered = 16384,
+    /**
+     * Indicates the molecule's contents were replaced wholesale by a molecule
+     * built elsewhere (see RWMolecule::modifyMolecule). The derived data now
+     * present (vibrations, spectra, cubes, meshes, basis set) came with the
+     * replacement, so emitChanged() keeps it. Cached pointers into that data
+     * are still stale: invalidatesDerivedData() remains true.
+     */
+    Replaced = 32768
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
   /**
-   * @return True if @p changes causes emitChanged() to discard the cubes,
-   * meshes, basis set and vibration data derived from this molecule.
-   * Consumers that cache raw pointers to any of that must refresh them in
-   * step with this, rather than re-deriving the rule from the flags.
+   * @return True if @p changes leaves the cubes, meshes, basis set and
+   * vibration data derived from this molecule stale: emitChanged() discards
+   * them, unless @p changes includes Replaced, in which case it keeps the
+   * replacement's own data but the objects are still new ones. Consumers that
+   * cache raw pointers to any of that must refresh them in step with this,
+   * rather than re-deriving the rule from the flags.
    */
   static bool invalidatesDerivedData(unsigned int changes);
 

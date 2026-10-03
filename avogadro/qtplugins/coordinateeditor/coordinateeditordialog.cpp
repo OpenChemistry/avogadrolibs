@@ -593,6 +593,7 @@ void CoordinateEditorDialog::applyFinish(bool valid)
   bool hadBonds(m_molecule->bondCount() > 0);
 
   // Create a new molecule so we can eventually store both in the undo command
+  QtGui::RWMolecule::cancelBackgroundCalculations();
   Molecule newMolecule = *m_molecule;
   newMolecule.clearAtoms();
   foreach (const AtomStruct& atom, atoms)

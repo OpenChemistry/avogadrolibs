@@ -807,6 +807,7 @@ void OpenBabel::onPerceiveBondsFinished(const QByteArray& output)
   }
 
   // Update the undo stack
+  QtGui::RWMolecule::cancelBackgroundCalculations();
   Molecule newMolecule = *m_molecule;
   newMolecule.clearBonds();
   for (size_t i = 0; i < mol.bondCount(); ++i) {

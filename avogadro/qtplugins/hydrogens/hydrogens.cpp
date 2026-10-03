@@ -12,6 +12,8 @@
 #include <QAction>
 
 #include <QtCore/QStringList>
+#include <qcontainerfwd.h>
+#include <qobject.h>
 
 namespace Avogadro::QtPlugins {
 
@@ -103,6 +105,56 @@ void Hydrogens::removeAllHydrogens()
     m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Bonds |
                             QtGui::Molecule::Removed);
   }
+}
+
+void Hydrogens::registerCommands()
+{
+  emit registerCommand(
+    "addHydrogens",
+    tr("Add any missing hydrogen atoms on atoms that have incomplete octets."));
+
+  emit registerCommand(
+    "removeHydrogens",
+    tr("Remove any extra hydrogen atoms on atoms with overfull octets."));
+
+  emit registerCommand(
+    "adjustHydrogens",
+    tr("Add any missing hydrogen atoms, and remove any extra hydrogen atoms on "
+       "any atoms that violate the octet rule."));
+
+  emit registerCommand("removeAllHydrogens",
+                       tr("Remove all hydrogen atoms in the molecule."));
+}
+
+bool Hydrogens::handleCommand(const QString& command,
+                              [[maybe_unused]] const QVariantMap& options)
+{
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule."));
+    return true;
+  }
+
+  if (command == "addHydrogens") {
+    addHydrogens();
+    return true;
+  }
+
+  if (command == "removeHydrogens") {
+    removeHydrogens();
+    return true;
+  }
+
+  if (command == "adjustHydrogens") {
+    adjustHydrogens();
+    return true;
+  }
+
+  if (command == "removeAllHydrogens") {
+    removeAllHydrogens();
+    return true;
+  }
+
+  return false;
 }
 
 } // namespace Avogadro::QtPlugins

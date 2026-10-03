@@ -110,6 +110,74 @@ TEST(PythonScriptTest, AsyncProgressScanning)
     pythonScript.asyncStandardError().contains("DEBUG library noise"));
 }
 
+namespace {
+// Run @p source asynchronously with progress scanning (as InterfaceScript
+// does) and wait for it to finish.
+void runAsyncScript(PythonScript& pythonScript, const QString& path,
+                    const QByteArray& source)
+{
+  QFile script(path);
+  ASSERT_TRUE(script.open(QIODevice::WriteOnly | QIODevice::Text));
+  ASSERT_EQ(script.write(source), source.size());
+  script.close();
+
+  pythonScript.setProgressScanning(true);
+  QSignalSpy finishedSpy(&pythonScript, &PythonScript::finished);
+  ASSERT_TRUE(pythonScript.asyncExecute({}, QByteArray(),
+                                        /* mergedChannels = */ false));
+  ASSERT_TRUE(finishedSpy.wait(30000));
+}
+} // namespace
+
+// A failing script must leave an explanation in errorList(), which is all that
+// the command dialog looks at; stderr chatter from a successful one must not.
+TEST(PythonScriptTest, AsyncNonZeroExitRecordsError)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+
+  PythonScript failing(temporaryDirectory.filePath("fail.py"));
+  runAsyncScript(failing, temporaryDirectory.filePath("fail.py"),
+                 "import sys\n"
+                 "sys.stderr.write('ModuleNotFoundError: no module xyz\\n')\n"
+                 "sys.exit(3)\n");
+  ASSERT_TRUE(failing.hasErrors());
+  const QString errors = failing.errorList().join("\n");
+  EXPECT_TRUE(errors.contains("error code 3")) << qPrintable(errors);
+  EXPECT_TRUE(errors.contains("ModuleNotFoundError")) << qPrintable(errors);
+}
+
+TEST(PythonScriptTest, AsyncSuccessWithStderrNoiseRecordsNoError)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+
+  PythonScript noisy(temporaryDirectory.filePath("noisy.py"));
+  runAsyncScript(noisy, temporaryDirectory.filePath("noisy.py"),
+                 "import sys\n"
+                 "sys.stderr.write('DeprecationWarning: harmless\\n')\n"
+                 "print('{}')\n");
+  EXPECT_FALSE(noisy.hasErrors());
+}
+
+#ifndef Q_OS_WIN
+TEST(PythonScriptTest, AsyncCrashRecordsError)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+
+  PythonScript crashing(temporaryDirectory.filePath("crash.py"));
+  runAsyncScript(crashing, temporaryDirectory.filePath("crash.py"),
+                 "import os, signal\n"
+                 "os.kill(os.getpid(), signal.SIGKILL)\n");
+  ASSERT_TRUE(crashing.hasErrors());
+  EXPECT_TRUE(crashing.errorList().join("\n").contains("crashed"));
+}
+#endif
+
 // Scripts must be able to tell whether Avogadro is listening: releases up to
 // 2.0.0 cannot parse output containing progress envelopes.
 TEST(PythonScriptTest, AdvertisesProgressProtocol)

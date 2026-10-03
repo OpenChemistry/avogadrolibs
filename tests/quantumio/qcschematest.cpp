@@ -251,3 +251,40 @@ TEST(QCSchemaTest, energyUnitComesFromTheFile)
   // Whatever it says, it has to name a unit rather than something arbitrary.
   EXPECT_EQ(unit, "Hartree");
 }
+
+// WebMO writes every optimization step, and the frequencies belong to the
+// last one (the top-level geometry), not to the starting structure.
+TEST(QCSchemaTest, vibrationsStayOnTheFinalGeometryStep)
+{
+  const char* input = R"({
+    "schema_name": "QC_JSON",
+    "symbols": ["H", "H"],
+    "geometry": [0.0, 0.0, 0.0, 0.0, 0.0, 0.74],
+    "properties": {
+      "geometry_sequence": {
+        "geometries": [
+          [0.0, 0.0, 0.0, 0.0, 0.0, 0.90],
+          [0.0, 0.0, 0.0, 0.0, 0.0, 0.80],
+          [0.0, 0.0, 0.0, 0.0, 0.0, 0.74]
+        ]
+      },
+      "vibrations": {
+        "frequencies": [4400.0],
+        "intensities": { "IR": [0.0] },
+        "displacement": [[0.0, 0.0, -0.7, 0.0, 0.0, 0.7]]
+      }
+    }
+  })";
+
+  QCSchema qcs;
+  Molecule molecule;
+  ASSERT_TRUE(qcs.readString(input, molecule));
+
+  ASSERT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(3));
+  EXPECT_EQ(molecule.coordinate3d(), 2);
+  EXPECT_NEAR(molecule.atomPositions3d()[1].z(), 0.74, 1e-9);
+  EXPECT_TRUE(molecule.hasVibrations());
+  EXPECT_TRUE(molecule.hasVibrations(2));
+  EXPECT_FALSE(molecule.hasVibrations(0));
+  EXPECT_EQ(molecule.vibrationFrequencies().size(), static_cast<size_t>(1));
+}

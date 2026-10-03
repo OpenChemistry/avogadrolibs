@@ -19,7 +19,10 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <QtCore/QMetaType>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QStringList>
+#include <QtCore/QVariant>
 
 namespace Avogadro::QtPlugins {
 
@@ -93,6 +96,19 @@ void FileFormatScript::readMetaData(const QVariantMap& metadata)
   for (const auto& mime : mimeList)
     m_mimeTypes.push_back(mime.toString().toStdString());
 
+  // Parse content patterns: a list of strings, or a single string. Blank
+  // entries are dropped, since an empty substring matches every line.
+  const QVariant patterns = metadata.value("patterns");
+  QStringList patternList;
+  if (patterns.metaType().id() == QMetaType::QString)
+    patternList.append(patterns.toString());
+  else
+    patternList = patterns.toStringList();
+  for (const QString& pattern : patternList) {
+    if (!pattern.trimmed().isEmpty())
+      m_contentPatterns.push_back(pattern.toStdString());
+  }
+
   // Check for bond-on-read
   if (metadata.contains("bond"))
     m_bondOnRead = metadata.value("bond").toBool();
@@ -129,6 +145,7 @@ void FileFormatScript::copyMetaDataFrom(const FileFormatScript& other)
   m_outputFormat = other.m_outputFormat;
   m_fileExtensions = other.m_fileExtensions;
   m_mimeTypes = other.m_mimeTypes;
+  m_contentPatterns = other.m_contentPatterns;
   m_bondOnRead = other.m_bondOnRead;
   m_inputModeFile = other.m_inputModeFile;
   m_outputModeFile = other.m_outputModeFile;
@@ -372,6 +389,7 @@ void FileFormatScript::resetMetaData()
   m_specificationUrl.clear();
   m_fileExtensions.clear();
   m_mimeTypes.clear();
+  m_contentPatterns.clear();
 }
 
 } // namespace Avogadro::QtPlugins
