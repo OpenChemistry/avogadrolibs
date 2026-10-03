@@ -62,6 +62,12 @@ public:
   const std::vector<TessellatedMesh>& meshes() const { return m_meshes; }
 
   /**
+   * Axis-aligned bounding box of all vertices in meshes().
+   * @return false (leaving the arguments untouched) if there are none.
+   */
+  bool bounds(Vector3f& minimum, Vector3f& maximum) const;
+
+  /**
    * Geometric tolerance in Angstrom: the largest distance between a
    * tessellated sphere or cylinder surface and the true surface. Unless fixed
    * explicitly (below), the sphere subdivision level and the cylinder side

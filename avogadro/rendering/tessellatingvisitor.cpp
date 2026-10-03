@@ -272,6 +272,28 @@ void TessellatingVisitor::clear()
   m_meshes.clear();
 }
 
+bool TessellatingVisitor::bounds(Vector3f& minimum, Vector3f& maximum) const
+{
+  bool any = false;
+  Vector3f lo = Vector3f::Zero(), hi = Vector3f::Zero();
+  for (const auto& mesh : m_meshes) {
+    for (const auto& p : mesh.positions) {
+      if (!any) {
+        lo = hi = p;
+        any = true;
+      } else {
+        lo = lo.cwiseMin(p);
+        hi = hi.cwiseMax(p);
+      }
+    }
+  }
+  if (any) {
+    minimum = lo;
+    maximum = hi;
+  }
+  return any;
+}
+
 void TessellatingVisitor::setTessellationTolerance(float angstrom)
 {
   if (std::isfinite(angstrom) && angstrom > 0.0f)
