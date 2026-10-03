@@ -64,6 +64,10 @@ namespace {
 #include <QGuiApplication>
 #include <QScreen>
 
+#include <algorithm>
+#include <numeric>
+#include <vector>
+
 using namespace tinycolormap;
 
 namespace Avogadro::QtPlugins {
@@ -83,6 +87,16 @@ public:
   gwavi_t* gwaviWriter = nullptr;
 };
 
+namespace {
+// The manager only takes ownership when registration succeeds; it refuses
+// duplicates (e.g. a second Surfaces instance), so free the rejected format.
+void registerQuantumFormat(Io::FileFormat* format)
+{
+  if (!Io::FileFormatManager::registerFormat(format))
+    delete format;
+}
+} // namespace
+
 Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
 {
   auto action = new QAction(this);
@@ -94,21 +108,24 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   m_actions.push_back(action);
 
   // Register quantum file formats
-  Io::FileFormatManager::registerFormat(new QuantumIO::GAMESSUSOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianFchk);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GaussianCube);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GenericJson);
-  Io::FileFormatManager::registerFormat(new QuantumIO::GenericOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::MoldenFile);
-  Io::FileFormatManager::registerFormat(new QuantumIO::MopacAux);
-  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemJson);
-  Io::FileFormatManager::registerFormat(new QuantumIO::NWChemLog);
-  Io::FileFormatManager::registerFormat(new QuantumIO::ORCAOutput);
-  Io::FileFormatManager::registerFormat(new QuantumIO::QCSchema);
+  registerQuantumFormat(new QuantumIO::GAMESSUSOutput);
+  registerQuantumFormat(new QuantumIO::GaussianFchk);
+  registerQuantumFormat(new QuantumIO::GaussianCube);
+  registerQuantumFormat(new QuantumIO::GenericJson);
+  registerQuantumFormat(new QuantumIO::GenericOutput);
+  registerQuantumFormat(new QuantumIO::MoldenFile);
+  registerQuantumFormat(new QuantumIO::MopacAux);
+  registerQuantumFormat(new QuantumIO::NWChemJson);
+  registerQuantumFormat(new QuantumIO::NWChemLog);
+  registerQuantumFormat(new QuantumIO::ORCAOutput);
+  registerQuantumFormat(new QuantumIO::QCSchema);
 }
 
 Surfaces::~Surfaces()
 {
+  // Parentless QThreads; ~MeshGenerator() waits for a running thread.
+  delete m_meshGenerator1;
+  delete m_meshGenerator2;
   delete d;
   // delete m_cube; // should be freed by the molecule
 }
@@ -301,6 +318,12 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh1 = nullptr;
   m_mesh2 = nullptr;
   m_molecule = mol;
+
+  if (mol == nullptr) {
+    m_basis = nullptr;
+    m_cubes.clear();
+    return;
+  }
 
   if (mol->basisSet()) {
     m_basis = mol->basisSet();
@@ -499,6 +522,12 @@ void Surfaces::calculateSurface()
   }
 }
 
+namespace {
+// Radius, in Angstrom, of the water-sized probe that rolls over the
+// van der Waals surface for solvent-accessible and solvent-excluded surfaces.
+constexpr double SolventProbeRadius = 1.4;
+} // namespace
+
 float inline square(float x)
 {
   return x * x;
@@ -523,6 +552,11 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   // Set this cube as the active cube for volume rendering
   m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
 
+  // Decide the resolution here, on the main thread, and remember it:
+  // performEDTStep() must erode with the grid spacing the cube was built with.
+  const float res = resolution(defaultResolution);
+  m_edtResolution = res;
+
   QFuture future = QtConcurrent::run([=]() {
     double probeRadius = 0.0;
     switch (type) {
@@ -530,10 +564,11 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         m_cube->setCubeType(Core::Cube::Type::VdW);
         break;
       case SolventAccessible:
+        probeRadius = SolventProbeRadius;
         m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
         break;
       case SolventExcluded:
-        probeRadius = 1.4;
+        probeRadius = SolventProbeRadius;
         m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
         break;
       default:
@@ -542,7 +577,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
     // first, make a list of all atom positions and radii
     Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    auto* atoms = new std::vector<std::pair<Vector3, double>>();
+    std::vector<std::pair<Vector3, double>> atoms;
     double max_radius = probeRadius;
     QtGui::RWLayerManager layerManager;
     for (size_t i = 0; i < m_molecule->atomCount(); i++) {
@@ -550,50 +585,75 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
         continue; // ignore invisible atoms
       auto radius =
         Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-      atoms->emplace_back(atomPositions[i], radius);
+      atoms.emplace_back(atomPositions[i], radius);
       if (radius > max_radius)
         max_radius = radius;
     }
 
     double padding = max_radius + probeRadius + 0.2;
-    m_cube->setLimits(*m_molecule, resolution(defaultResolution), padding);
+    m_cube->setLimits(*m_molecule, res, padding);
     m_cube->fill(-1.0);
 
-    const float res = resolution(defaultResolution);
     const Vector3 min = m_cube->min();
 
-    // then, for each atom, set cubes around it up to a certain radius
-    QFuture innerFuture =
-      QtConcurrent::map(*atoms, [=](std::pair<Vector3, double>& in) {
-        double startPosX = in.first(0) - in.second;
-        double endPosX = in.first(0) + in.second;
-        int startIndexX = (startPosX - min(0)) / res;
-        int endIndexX = (endPosX - min(0)) / res + 1;
-        for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-          double posX = indexX * res + min(0);
-          double radiusXsq = square(in.second) - square(posX - in.first(0));
-          if (radiusXsq < 0.0)
+    // Overlapping atom spheres touch the same voxels, so threads must not
+    // be handed atoms: two of them would write one voxel at the same time.
+    // Instead, bin each atom into every x slab (constant indexX) it covers,
+    // and give each slab to exactly one thread. A slab task only writes
+    // voxels with its own indexX, so no two threads ever share a voxel.
+    // Filling is idempotent (it only sets 1.0 over the -1.0 background), so
+    // the result is the same as filling atom by atom.
+    const Vector3i dims = m_cube->dimensions();
+    std::vector<std::vector<size_t>> slabAtoms(dims(0));
+    for (size_t a = 0; a < atoms.size(); ++a) {
+      const std::pair<Vector3, double>& in = atoms[a];
+      double startPosX = in.first(0) - in.second;
+      double endPosX = in.first(0) + in.second;
+      int startIndexX = (startPosX - min(0)) / res;
+      int endIndexX = (endPosX - min(0)) / res + 1;
+      // Slabs outside the cube have no voxels to write.
+      for (int indexX = std::max(startIndexX, 0);
+           indexX < std::min(endIndexX, dims(0)); indexX++)
+        slabAtoms[indexX].push_back(a);
+    }
+
+    std::vector<int> slabIndices(dims(0));
+    std::iota(slabIndices.begin(), slabIndices.end(), 0);
+
+    // then, for each slab, set cubes around its atoms up to a certain radius
+    QFuture innerFuture = QtConcurrent::map(slabIndices, [&](int indexX) {
+      const double posX = indexX * res + min(0);
+      for (size_t a : slabAtoms[indexX]) {
+        const std::pair<Vector3, double>& in = atoms[a];
+        double radiusXsq = square(in.second) - square(posX - in.first(0));
+        if (radiusXsq < 0.0)
+          continue;
+        double radiusX = sqrt(radiusXsq);
+        double startPosY = in.first(1) - radiusX;
+        double endPosY = in.first(1) + radiusX;
+        int startIndexY = (startPosY - min(1)) / res;
+        int endIndexY = (endPosY - min(1)) / res + 1;
+        // fillStripe() only checks the flat index, so keep y and z inside the
+        // cube; an overflow would spill into a neighbouring slab.
+        for (int indexY = std::max(startIndexY, 0);
+             indexY < std::min(endIndexY, dims(1)); indexY++) {
+          double posY = indexY * res + min(1);
+          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
+          if (lengthXYsq < 0.0)
             continue;
-          double radiusX = sqrt(radiusXsq);
-          double startPosY = in.first(1) - radiusX;
-          double endPosY = in.first(1) + radiusX;
-          int startIndexY = (startPosY - min(1)) / res;
-          int endIndexY = (endPosY - min(1)) / res + 1;
-          for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-            double posY = indexY * res + min(1);
-            double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-            if (lengthXYsq < 0.0)
-              continue;
-            double lengthXY = sqrt(lengthXYsq);
-            double startPosZ = in.first(2) - lengthXY;
-            double endPosZ = in.first(2) + lengthXY;
-            int startIndexZ = (startPosZ - min(2)) / res;
-            int endIndexZ = (endPosZ - min(2)) / res + 1;
-            m_cube->fillStripe(indexX, indexY, startIndexZ, endIndexZ - 1,
-                               1.0f);
-          }
+          double lengthXY = sqrt(lengthXYsq);
+          double startPosZ = in.first(2) - lengthXY;
+          double endPosZ = in.first(2) + lengthXY;
+          int startIndexZ = (startPosZ - min(2)) / res;
+          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          int firstZ = std::max(startIndexZ, 0);
+          int lastZ = std::min(endIndexZ - 1, dims(2) - 1);
+          if (firstZ > lastZ)
+            continue;
+          m_cube->fillStripe(indexX, indexY, firstZ, lastZ, 1.0f);
         }
-      });
+      }
+    });
 
     innerFuture.waitForFinished();
   });
@@ -609,17 +669,16 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 void Surfaces::performEDTStep()
 {
   QFuture future = QtConcurrent::run([=]() {
-    const double probeRadius = 1.4;
-    const double scaledProbeRadius = probeRadius / resolution();
+    const double scaledProbeRadius = SolventProbeRadius / m_edtResolution;
 
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
     // also make a list of all "inside" cubes
-    auto* insideIndices = new std::vector<Vector3i>;
+    std::vector<Vector3i> insideIndices;
     Vector3i size = m_cube->dimensions();
-    relativePositions.reserve(size(0) * size(1) * 4);    // O(n^2)
-    insideIndices->reserve(size(0) * size(1) * size(2)); // O(n^3)
+    relativePositions.reserve(size(0) * size(1) * 4);   // O(n^2)
+    insideIndices.reserve(size(0) * size(1) * size(2)); // O(n^3)
     for (int z = 0; z < size(2); z++) {
       int zp = std::max(z - 1, 0);
       int zn = std::min(z + 1, size(2) - 1);
@@ -628,7 +687,7 @@ void Surfaces::performEDTStep()
         int yn = std::min(y + 1, size(1) - 1);
         for (int x = 0; x < size(0); x++) {
           if (m_cube->value(x, y, z) > 0.0) {
-            insideIndices->emplace_back(x, y, z);
+            insideIndices.emplace_back(x, y, z);
             continue;
           }
           int xp = std::max(x - 1, 0);
@@ -646,13 +705,13 @@ void Surfaces::performEDTStep()
     NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
 
     // now, exclude all "inside" cubes too close to any "outside" cube
-    thread_local Array<Index>* neighbors = nullptr;
-    QFuture innerFuture = QtConcurrent::map(*insideIndices, [=](Vector3i& in) {
+    // The scratch list is per pool thread; getNeighborsInclusiveInPlace()
+    // clears it before refilling it.
+    QFuture innerFuture = QtConcurrent::map(insideIndices, [=](Vector3i& in) {
+      thread_local Array<Index> neighbors;
       Vector3 pos = in.cast<double>();
-      if (neighbors == nullptr)
-        neighbors = new Array<Index>;
-      perceiver.getNeighborsInclusiveInPlace(*neighbors, pos);
-      for (Index neighbor : *neighbors) {
+      perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
+      for (Index neighbor : neighbors) {
         const Vector3& npos = relativePositions[neighbor];
         float distance = (npos - pos).norm();
         if (distance <= scaledProbeRadius) {
