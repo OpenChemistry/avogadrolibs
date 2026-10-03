@@ -203,7 +203,7 @@ void SymmetryWidget::operationsSelectionChanged(
                             reflectionVariantList);
 
   /* A little bit ugly, but it'll do for now */
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void SymmetryWidget::subgroupsSelectionChanged(
@@ -289,7 +289,7 @@ void SymmetryWidget::equivalenceSelectionChanged(
   auto selectedAtom = reinterpret_cast<Index>(a->id);
   m_molecule->setAtomSelected(selectedAtom, true);
 
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Selection);
 }
 
 void SymmetryWidget::setRadius(double radius)
@@ -321,7 +321,7 @@ void SymmetryWidget::setSymmetryOperations(
   m_molecule->setProperty("SymmetryImproperRotationVariantList", QVariant());
   m_molecule->setProperty("SymmetryReflectionVariantList", QVariant());
   /* need another change event */
-  m_molecule->emitChanged(QtGui::Molecule::Atoms);
+  m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
 void SymmetryWidget::setEquivalenceSets(int esl,
