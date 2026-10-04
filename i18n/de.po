@@ -21,7 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
 "PO-Revision-Date: 2026-10-04 22:19+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -609,7 +610,7 @@ msgstr "Temperatur"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1312,7 +1313,7 @@ msgstr "Multiplizität"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Koordinaten"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
