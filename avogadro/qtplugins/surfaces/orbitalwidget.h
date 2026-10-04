@@ -42,6 +42,7 @@ public:
 
   double isovalue() { return m_isovalue; };
   OrbitalQuality defaultQuality() { return m_quality; };
+  OrbitalQuality quality() const;
 
   bool precalcLimit() { return m_precalc_limit; }
   int precalcRange() { return m_precalc_range; }
