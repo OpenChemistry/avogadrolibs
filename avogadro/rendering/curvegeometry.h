@@ -85,6 +85,29 @@ public:
                 size_t group, size_t id);
   const std::vector<Line*>& lines() const { return m_lines; };
 
+  /**
+   * Compute the triangle mesh (or, for flat lines, the centre-line polyline)
+   * for one line, without touching OpenGL. This is exactly the data uploaded
+   * to the GPU by render(), and honours the circleResolution(),
+   * appendCirclePoints() and computeScale() hooks of subclasses.
+   *
+   * @param lineIndex Index into lines().
+   * @param vertices Output vertices (cleared first). Empty if the line is too
+   * short to produce any geometry (or lineIndex is out of range).
+   * @param indices Output triangle list into @p vertices (cleared first).
+   * Empty for flat lines, see isFlatLine().
+   */
+  void tessellate(size_t lineIndex, std::vector<ColorNormalVertex>& vertices,
+                  std::vector<unsigned int>& indices) const;
+
+  /**
+   * @return true if the line is drawn on screen as a GL_LINE_STRIP of width
+   * -lines()[lineIndex]->radius pixels. For such lines tessellate() returns
+   * the polyline vertices along the curve (colour and a normal each) and no
+   * indices.
+   */
+  bool isFlatLine(size_t lineIndex) const;
+
   const static size_t SKIPPED;
 
 protected:

@@ -6,53 +6,63 @@
 #ifndef AVOGADRO_RENDERING_PLYVISITOR_H
 #define AVOGADRO_RENDERING_PLYVISITOR_H
 
-#include "visitor.h"
+#include "tessellatingvisitor.h"
 
-#include "avogadrorendering.h"
-#include "spheregeometry.h"
-#include "cylindergeometry.h"
-#include "linestripgeometry.h"
-#include "meshgeometry.h"
 #include "camera.h"
+
+#include <iosfwd>
 #include <string>
-#include <vector>
-#include <iostream>
-#include <ostream>
 
 namespace Avogadro {
 namespace Rendering {
 
 /**
  * @class PLYVisitor plyvisitor.h <avogadro/rendering/plyvisitor.h>
- * @brief Visitor that visits scene elements and creates a PLY input file.
+ * @brief Visitor that visits scene elements and creates an ASCII PLY file.
  *
- * This visitor will render elements in the scene to a text file that contains
- * elements that can be rendered as PLY.
+ * The scene is tessellated by TessellatingVisitor; write() and end() output
+ * all the resulting triangles as one PLY mesh with per-vertex positions,
+ * normals and RGBA colours (uchar).
+ *
+ * The default format is binary_little_endian, written byte by byte so it does
+ * not depend on the host byte order: 28 bytes per vertex (6 floats, 4 uchar)
+ * and 13 bytes per face (uchar 3, 3 uint). Detailed scenes have millions of
+ * vertices, so prefer write() to a stream over end(). ASCII is available with
+ * setBinary(false).
  */
 
-class AVOGADRORENDERING_EXPORT PLYVisitor : public Visitor
+class AVOGADRORENDERING_EXPORT PLYVisitor : public TessellatingVisitor
 {
 public:
   explicit PLYVisitor(const Camera& camera);
   ~PLYVisitor() override;
 
-  void begin();
-  std::string end();
+  /**
+   * Output transform, applied to positions when writing only:
+   * p_out = (p - center) * scale. Normals are unchanged. The tessellated
+   * meshes (and the tessellation tolerance) stay in Angstrom. The defaults
+   * (origin, 1) leave positions as they are. A non-finite or non-positive
+   * scale is ignored.
+   * @{
+   */
+  void setCenter(const Vector3f& center) { m_center = center; }
+  Vector3f center() const { return m_center; }
+  void setScale(float scale);
+  float scale() const { return m_scale; }
+  /** @} */
+
+  /** Binary little-endian (default) or ASCII output. */
+  void setBinary(bool binary) { m_binary = binary; }
+  bool binary() const { return m_binary; }
 
   /**
-   * The overloaded visit functions, the base versions of which do nothing.
+   * Stream the PLY file for everything visited since begin().
+   * @return false if the stream failed.
    */
-  void visit(Node&) override { return; }
-  void visit(GroupNode&) override { return; }
-  void visit(GeometryNode&) override { return; }
-  void visit(Drawable&) override;
-  void visit(SphereGeometry&) override;
-  void visit(CurveGeometry&) override { return; }
-  void visit(CylinderGeometry&) override;
-  void visit(MeshGeometry&) override;
-  void visit(TextLabel2D&) override { return; }
-  void visit(TextLabel3D&) override { return; }
-  void visit(LineStripGeometry& geometry) override;
+  bool write(std::ostream& out) const;
+
+  /** The whole PLY file in memory (via write()); binary data if binary(). */
+  std::string end();
 
   void setCamera(const Camera& c) { m_camera = c; }
   Camera camera() const { return m_camera; }
@@ -66,15 +76,9 @@ private:
   Vector3ub m_backgroundColor;
   Vector3ub m_ambientColor;
   float m_aspectRatio;
-  long m_vertexCount = 0;
-  long m_faceCount = 0;
-  std::string m_sceneVertices = "";
-  std::string m_sceneFaces = "";
-
-  void visitSphereIcosphereRecursionMethod(const SphereColor& geometry,
-                                           unsigned int subdivisions);
-  void visitCylinderLateralMethod(const CylinderColor& geometry,
-                                  unsigned int lateralFaces);
+  bool m_binary = true;
+  Vector3f m_center = Vector3f::Zero();
+  float m_scale = 1.0f;
 };
 
 } // End namespace Rendering

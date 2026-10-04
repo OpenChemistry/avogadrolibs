@@ -55,6 +55,9 @@ public:
   void visit(TextLabel3D& geometry) override;
   void visit(LineStripGeometry& geometry) override;
   void visit(WideLineGeometry& geometry) override;
+  void visit(DashedLineGeometry& geometry) override;
+  void visit(ArrowGeometry& geometry) override;
+  void visit(VolumeGeometry& geometry) override;
 
   void setCamera(const Camera& camera_) { m_camera = camera_; }
   Camera camera() const { return m_camera; }

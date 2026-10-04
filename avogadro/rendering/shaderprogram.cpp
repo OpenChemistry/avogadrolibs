@@ -86,7 +86,9 @@ inline GLenum lookupTextureUnit(GLint index)
 ShaderProgram::ShaderProgram()
   : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false)
 {
-  initializeTextureUnits();
+  // Texture units are queried lazily (see setTextureSampler), so that
+  // constructing a ShaderProgram - and every Drawable that owns one - needs no
+  // GL context.
 }
 
 ShaderProgram::~ShaderProgram()
@@ -283,6 +285,8 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
     // Not bound. Attempt to bind the texture to an available texture unit.
     // We'll leave GL_TEXTURE0 unbound, as it is used for manipulating
     // textures.
+    if (m_boundTextureUnits.empty())
+      initializeTextureUnits();
     auto begin = m_boundTextureUnits.begin() + 1;
     auto end = m_boundTextureUnits.end();
     auto available = std::find(begin, end, false);
