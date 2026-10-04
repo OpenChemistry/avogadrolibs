@@ -31,6 +31,20 @@ std::string readFixture(const std::string& path)
   return buffer.str();
 }
 
+// A minimal geometry section, laid out as readAtoms expects it.
+const std::string geometryBlock =
+  " Output coordinates in angstroms (scale by  1.889725989 to convert to "
+  "a.u.)\n"
+  "\n"
+  "  No.       Tag          Charge          X              Y              Z\n"
+  " ---- ---------------- ---------- -------------- -------------- "
+  "--------------\n"
+  "    1 o                    8.0000     0.00000000     0.00000000    "
+  "-0.30459770\n"
+  "    2 mg                  12.0000     0.00000000     1.75000000    "
+  "-0.30459770\n"
+  "\n";
+
 } // namespace
 
 // NWChem prints the modes of one Hessian in column blocks, so the frequency
@@ -100,4 +114,95 @@ TEST(NWChemLogTest, separateHessiansDoNotAccumulate)
 
   // And the active conformer shows one Hessian, not both concatenated.
   EXPECT_EQ(molecule.vibrationFrequencies().size(), expectedModes);
+}
+
+// Regression tests for GitHub issue #3104: the normal mode block of a
+// P.Frequency section used to be indexed by whatever each row happened to
+// contain, reading and writing out of bounds on malformed output.
+
+// The 20 byte input found by fuzzing. There is no geometry, so nothing can
+// be read, but it must not crash.
+TEST(NWChemLogTest, truncatedFrequencyBlockDoesNotOverrun)
+{
+  const char buf[] = "P.Frequency 9\n\n\0 1\n ";
+  const std::string input(buf, 20);
+  NWChemLog reader;
+  Molecule molecule;
+  reader.readString(input, molecule);
+  EXPECT_EQ(molecule.atomCount(), 0);
+  EXPECT_FALSE(molecule.hasVibrations());
+}
+
+// A later row with more values than the first used to write past the end
+// of the column storage.
+TEST(NWChemLogTest, wideFrequencyRowEndsTheBlock)
+{
+  const std::string input = geometryBlock +
+                            " P.Frequency        1.00        2.00\n"
+                            "\n"
+                            "           1     0.1     0.2\n"
+                            "           2     0.1     0.2\n"
+                            "           3     0.1     0.2     0.3     0.4\n"
+                            "\n";
+  NWChemLog reader;
+  Molecule molecule;
+  reader.readString(input, molecule);
+  EXPECT_EQ(molecule.atomCount(), 2);
+  // The wide row ends the block after two rows, which is not a whole number
+  // of atoms, so no modes are recorded.
+  EXPECT_FALSE(molecule.hasVibrations());
+  EXPECT_FALSE(reader.error().empty());
+}
+
+// More frequencies than columns of data used to index past the columns.
+TEST(NWChemLogTest, fewerColumnsThanFrequencies)
+{
+  const std::string input = geometryBlock +
+                            " P.Frequency        1.00        2.00        3.00\n"
+                            "\n"
+                            "           1     0.1\n"
+                            "           2     0.2\n"
+                            "           3     0.3\n"
+                            "\n";
+  NWChemLog reader;
+  Molecule molecule;
+  reader.readString(input, molecule);
+  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_FALSE(molecule.hasVibrations());
+}
+
+// A column that is not a multiple of three used to read past its end when
+// the components were gathered into vectors.
+TEST(NWChemLogTest, rowCountMustBeMultipleOfThree)
+{
+  const std::string input = geometryBlock +
+                            " P.Frequency        1.00        2.00\n"
+                            "\n"
+                            "           1     0.1     0.2\n"
+                            "           2     0.1     0.2\n"
+                            "           3     0.1     0.2\n"
+                            "           4     0.1     0.2\n"
+                            "\n";
+  NWChemLog reader;
+  Molecule molecule;
+  reader.readString(input, molecule);
+  EXPECT_FALSE(molecule.hasVibrations());
+  EXPECT_NE(reader.error().find("not a multiple of 3"), std::string::npos);
+}
+
+// A bad token in the middle of the frequencies is an error, not silently
+// accepted because the last one parsed.
+TEST(NWChemLogTest, badFrequencyTokenIsReported)
+{
+  const std::string input = geometryBlock +
+                            " P.Frequency        1.00        abc        3.00\n"
+                            "\n"
+                            "           1     0.1     0.2     0.3\n"
+                            "\n";
+  NWChemLog reader;
+  Molecule molecule;
+  reader.readString(input, molecule);
+  EXPECT_FALSE(molecule.hasVibrations());
+  EXPECT_NE(reader.error().find("Error reading frequencies"),
+            std::string::npos);
 }

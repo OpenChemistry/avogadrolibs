@@ -251,11 +251,12 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
 
   vector<double> frequencies;
 
-  for (size_t i = 1; i < parts.size(); ++i)
+  for (size_t i = 1; i < parts.size(); ++i) {
     frequencies.push_back(Core::lexicalCast<double>(parts[i], ok));
-  if (!ok) {
-    appendError("Error reading frequencies: " + firstLine);
-    return;
+    if (!ok) {
+      appendError("Error reading frequencies: " + firstLine);
+      return;
+    }
   }
 
   // Skip the blank line after the frequencies.
@@ -264,14 +265,15 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
   if (!Core::getLine(in, line))
     return;
   parts = Core::split(line, ' ');
-  if (parts.size() < 2)
+  // Each row is an index followed by one value per frequency.
+  if (parts.size() != frequencies.size() + 1)
     return;
 
   vector<vector<double>> cols;
-  cols.resize(parts.size() - 1);
+  cols.resize(frequencies.size());
 
   // Main block of numbers.
-  while (parts.size() >= 2) {
+  while (parts.size() == frequencies.size() + 1) {
     for (size_t i = 1; i < parts.size(); ++i) {
       cols[i - 1].push_back(Core::lexicalCast<double>(parts[i], ok));
       if (!ok) {
@@ -283,10 +285,19 @@ void NWChemLog::readFrequencies(const std::string& firstLine, std::istream& in,
       return;
     parts = Core::split(line, ' ');
   }
+
+  // Every mode needs three Cartesian components per atom.
+  size_t rows = cols.empty() ? 0 : cols[0].size();
+  if (rows == 0 || rows % 3 != 0) {
+    appendError("Normal mode block has " + std::to_string(rows) +
+                " rows, not a multiple of 3.");
+    return;
+  }
+
   for (size_t i = 0; i < frequencies.size(); ++i) {
     m_frequencies.push_back(frequencies[i]);
     Core::Array<Vector3> Lx;
-    for (size_t j = 0; j < cols[i].size(); j += 3) {
+    for (size_t j = 0; j + 2 < rows; j += 3) {
       Lx.push_back(Vector3(cols[i][j + 0], cols[i][j + 1], cols[i][j + 2]));
     }
     m_Lx.push_back(Lx);
