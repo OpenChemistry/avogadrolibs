@@ -33,7 +33,7 @@ runs:
         notes="Automated build on ${build_date} from ${GITHUB_SHA}"
 
         if gh release view "$tag" &>/dev/null; then
-          # only update the notes for the "continous" tag
+          # only update the notes for the "continuous" tag
           # so we don't break the release notes for other tags
           if [[ "$tag" == "${{ inputs.release_name }}" ]]; then
             echo "Updating existing release: $tag"
