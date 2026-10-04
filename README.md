@@ -4,6 +4,7 @@
 [![Download Count](https://avogadro.cc/downloads.svg?readme)](https://github.com/OpenChemistry/avogadrolibs/releases) [![Citation Count](https://avogadro.cc/citations.svg?readme)](http://doi.org/10.1186/1758-2946-4-17)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat&color=0bf)](https://github.com/OpenChemistry/avogadrolibs/graphs/contributors)  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
 [![Linux Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_linux.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![Windows Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_windows.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![macOS Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_mac.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions)
+
 ## Introduction
 
 Avogadro is an advanced molecular editor designed for cross-platform use in
