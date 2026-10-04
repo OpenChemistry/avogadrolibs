@@ -37,7 +37,7 @@ class cjson:
 
     def get_atoms_coords(self, filePath):
         """
-        It helps to get the co-coordinates of individual elements/atoms in the format
+        It helps to get the coordinates of individual elements/atoms in the format
         [
             x coordinate
             y coordinate
