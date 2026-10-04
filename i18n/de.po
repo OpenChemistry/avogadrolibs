@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
 "PO-Revision-Date: 2026-10-04 22:19+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -550,17 +550,17 @@ msgstr "Es wurde kein Dateiname im BackgroundFileFormat festgelegt!"
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Abstand %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Winkel %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Diederwinkel %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
@@ -588,7 +588,7 @@ msgstr ""
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
-msgstr "RMS Gradient"
+msgstr "RMS-Gradient"
 
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
@@ -1535,7 +1535,7 @@ msgstr ""
 
 #: qtgui/pythonscript.cpp:457
 msgid "The script crashed."
-msgstr ""
+msgstr "Das Skript ist abgestürzt."
 
 #: qtgui/pythonscript.cpp:466
 #, qt-format
@@ -10117,7 +10117,7 @@ msgstr "PDB"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:740
 #. i18n: ectx: property (text), widget (QLabel, label_reportInterval)
 msgid "Report Interval:"
-msgstr ""
+msgstr "Berichtsintervall:"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:760
 #. i18n: ectx: property (text), widget (QLabel, label_equilibriationSteps)
@@ -10312,7 +10312,7 @@ msgstr "Konstante Größe"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:21
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "Apply Color"
-msgstr ""
+msgstr "Farbe anwenden"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, SpectraDialog)
@@ -10935,6 +10935,15 @@ msgid ""
 "level is set in the spinbox on the right.</p><p>Default: off</p></body></"
 "html>"
 msgstr ""
+"<html><head/><body><p>Bevor Sie dieses Kästchen aktivieren, sollte das "
+"Ferminiveau bekannt sein. Sie können das Ferminiveau mit einer "
+"Zustandsdichteberechnung finden und sich die Daten anzeigen lassen (es "
+"befindet sich am Anfang der Daten). Zusätzlich zu einer "
+"Zustandsdichteberechnung wird das Ferminiveau automatisch auf den Wert gemäß "
+"der Ergebnisse dieser Zustandsdichteberechnung gesetzt. </p><p>Stellen Sie "
+"sicher, dass das korrekte Ferminiveau in der Spinbox auf der rechten Seite "
+"eingestellt ist, wenn Sie diese Box aktivieren. </p><p>Grundeinstellung: "
+"off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:58
 #. i18n: ectx: property (text), widget (QCheckBox, cb_plotFermi)
@@ -10948,6 +10957,9 @@ msgid ""
 "Only available if we are plotting the Fermi level.</p><p><br/></"
 "p><p>Default: off</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Die Energien so anpassen, dass das Nullniveau dem "
+"Ferminiveau entspricht? Dies ist nur für die graphische Darstellung des "
+"Ferminiveaus möglich.</p><p><br/></p><p>Grundzustand: off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:74
 #. i18n: ectx: property (text), widget (QCheckBox, cb_zeroFermi)
@@ -11013,6 +11025,10 @@ msgid ""
 "the special k-points. More of these k-points will smooth out the graph, but "
 "the calculation may take longer.</p><p>Default: 40</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Geben Sie die Anzahl k-Punkte an, die die speziellen k-"
+"Punkte verbinden werden. Eine höhere Anzahl dieser allgemeinen k-Punkte "
+"führt zu einer glatteren Kurve, erhöht jedoch insgesamt die nötige "
+"Rechenzeit.</p><p>Grundeinstellung: 40</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:178
 #. i18n: ectx: property (toolTip), widget (QCheckBox, cb_limitY)
