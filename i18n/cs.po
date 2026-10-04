@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-09-03 14:59+0000\n"
+"PO-Revision-Date: 2026-10-04 22:19+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.9\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3802,7 +3802,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:524
 #: qtplugins/forcefield/forcefield.cpp:549
 msgid "No molecule is open."
-msgstr ""
+msgstr "Není otevřena žádná molekula."
 
 #: qtplugins/forcefield/forcefield.cpp:390
 #: qtplugins/forcefield/forcefield.cpp:416
@@ -4674,7 +4674,7 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:764 qtplugins/select/select.cpp:638
 msgid "No molecule"
-msgstr ""
+msgstr "Žádná molekula"
 
 #: qtplugins/measuretool/measuretool.cpp:856
 msgid "atoms must list exactly 2 atom indices for a distance."
