@@ -3,7 +3,7 @@
 [![Latest Release](https://img.shields.io/github/v/release/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/releases) [![BSD License](https://img.shields.io/github/license/openchemistry/avogadrolibs)](https://github.com/OpenChemistry/avogadrolibs/blob/master/LICENSE) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/44bb12662c564ed8a27ee8a7fd89ed50)](https://app.codacy.com/gh/OpenChemistry/avogadrolibs/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Download Count](https://avogadro.cc/downloads.svg?readme)](https://github.com/OpenChemistry/avogadrolibs/releases) [![Citation Count](https://avogadro.cc/citations.svg?readme)](http://doi.org/10.1186/1758-2946-4-17)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![GitHub contributors](https://img.shields.io/github/contributors/openchemistry/avogadrolibs.svg?style=flat&color=0bf)](https://github.com/OpenChemistry/avogadrolibs/graphs/contributors)  [![OpenCollective Backers](https://img.shields.io/opencollective/all/open-chemistry)](https://opencollective.com/open-chemistry)
-[![Linux Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_linux.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![Windows Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_windows.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![macOS Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_mac.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions)
+[![Linux Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_linux.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![Windows Build]t(https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_windows.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions) [![macOS Build](https://img.shields.io/github/actions/workflow/status/openchemistry/avogadrolibs/build_mac.yml?branch=master)](https://github.com/OpenChemistry/avogadrolibs/actions)
 
 ## Introduction
 
@@ -48,7 +48,7 @@ actions for:
 
 We also maintain a
 [`beta` Flatpak](https://two.avogadro.cc/install/flatpak.html#install-flatpak-beta)
-for Linux that is updated with the lastest changes every week or two.
+for Linux that is updated with the latest changes every week or two.
 
 For full releases and an overview of all available ways to obtain Avogadro see
 the [overview][Install] on the Avogadro website.
