@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
      https://github.com/openbabel/openbabel/blob/master/data/resdata.txt
   */
   if (argc != 3) {
-    cout << "Incorrrect number of arguments specified. "
+    cout << "Incorrect number of arguments specified. "
          << "2 arguments expected, path to input txt, and output file name."
          << endl;
     return 1;
