@@ -71,14 +71,17 @@ jobs:
     # coverage flags reach them through CFLAGS/CXXFLAGS/LDFLAGS, which CMake
     # reads when each subproject is first configured. That happens during the
     # Build step, not here, so the same env must be set on both steps. Debug
-    # keeps asserts enabled (no -DNDEBUG).
+    # keeps asserts enabled (no -DNDEBUG). -fprofile-update=atomic because
+    # code such as Array's shared refcount runs on several threads, and
+    # GCC's default non-atomic counters then race and can go negative
+    # (GCC bug 68080), which gcovr rejects.
     - name: Configure
       shell: bash
       env: &coverage-env
         CC: gcc
         CXX: g++
-        CFLAGS: -O0 -g --coverage
-        CXXFLAGS: -O0 -g --coverage
+        CFLAGS: -O0 -g --coverage -fprofile-update=atomic
+        CXXFLAGS: -O0 -g --coverage -fprofile-update=atomic
         LDFLAGS: --coverage
       run: |
         mkdir -p "${{ runner.workspace }}/build"
@@ -121,7 +124,9 @@ jobs:
       run: ctest --output-on-failure -j "$(nproc)"
 
     # Absolute --filter patterns: relative ones resolve against the working
-    # directory rather than --root and silently match nothing.
+    # directory rather than --root and silently match nothing. Negative hit
+    # counts should be gone with atomic counters; if any remain, warn rather
+    # than lose the whole weekly report.
     - name: Generate coverage report
       shell: bash
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
@@ -131,6 +136,7 @@ jobs:
         gcovr -r "$src" . \
           --filter "$src/avogadro/(core|calc|io|quantumio|qtgui|rendering|qtplugins)/" \
           --exclude-unreachable-branches --exclude-throw-branches \
+          --gcov-ignore-parse-errors=negative_hits.warn_once_per_file \
           --json-summary coverage-summary.json --json-summary-pretty \
           --html-details coverage-html/index.html \
           -j "$(nproc)"
