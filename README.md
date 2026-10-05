@@ -48,7 +48,7 @@ actions for:
 
 We also maintain a
 [`beta` Flatpak](https://two.avogadro.cc/install/flatpak.html#install-flatpak-beta)
-for Linux that is updated with the lastest changes every week or two.
+for Linux that is updated with the latest changes every week or two.
 
 For full releases and an overview of all available ways to obtain Avogadro see
 the [overview][Install] on the Avogadro website.
