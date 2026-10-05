@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-09-26 19:52+0000\n"
+"PO-Revision-Date: 2026-10-04 02:51+0000\n"
 "Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.10.dev0\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4641,8 +4641,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:764 qtplugins/select/select.cpp:638
+#, fuzzy
 msgid "No molecule"
-msgstr ""
+msgstr "分子なし"
 
 #: qtplugins/measuretool/measuretool.cpp:856
 msgid "atoms must list exactly 2 atom indices for a distance."
@@ -4898,7 +4899,7 @@ msgstr "プロパティ (&P)"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:226
 msgid "Show molecular properties."
-msgstr ""
+msgstr "分子のプロパティーを表示"
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
@@ -5770,7 +5771,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:697
 msgid "There is no molecule."
-msgstr ""
+msgstr "分子がありません。"
 
 #: qtplugins/playertool/playertool.cpp:701
 msgid "The molecule has no coordinate sets."
@@ -5778,7 +5779,7 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:711
 msgid "index is required."
-msgstr ""
+msgstr "インデックスが必要"
 
 #: qtplugins/playertool/playertool.cpp:720
 #, qt-format
@@ -5877,7 +5878,7 @@ msgstr "エラーメッセージ: "
 
 #: qtplugins/plotpdf/plotpdf.cpp:211
 msgid "Show PDF plot."
-msgstr ""
+msgstr "PDFプロットを表示"
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -5915,7 +5916,7 @@ msgstr "エラー: "
 
 #: qtplugins/plotxrd/plotxrd.cpp:313
 msgid "Show XRD plot."
-msgstr ""
+msgstr "XRDプロットを表示"
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
@@ -6507,12 +6508,12 @@ msgstr ""
 #: qtplugins/select/select.cpp:696
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "不明な元素 \"%1\""
 
 #: qtplugins/select/select.cpp:700
 #, qt-format
 msgid "Atomic number %1 is out of range (1 to %2)."
-msgstr ""
+msgstr "原子番号 %1 は範囲外です (1から%2まで)。"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6801,7 +6802,7 @@ msgstr "スペクトルをプロット…"
 
 #: qtplugins/spectra/spectra.cpp:163
 msgid "Open spectra dialog."
-msgstr ""
+msgstr "スペクトルのダイアログを開く"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)

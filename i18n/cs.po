@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-09-03 14:59+0000\n"
+"PO-Revision-Date: 2026-10-05 16:45+0000\n"
 "Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.9\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -173,6 +173,8 @@ msgid ""
 "The z-matrix lists the atoms in a different order from the molecule, so atom "
 "numbers in this file do not match the ones shown in Avogadro."
 msgstr ""
+"Z-matice uvádí atomy v jiném pořadí než molekula, takže čísla atomů v tomto "
+"souboru neodpovídají číslům zobrazeným v Avogadru."
 
 #: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:795
 #, qt-format
@@ -183,6 +185,11 @@ msgid ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr ""
+"Lineární fragment ponechává úhel nebo torzní úhel na řádku (řádcích) %1 Z-"
+"matice neurčený. Geometrie je zapsána správně, ale tyto souřadnice nelze "
+"měnit a program, který z nich znovu sestavuje kartézské souřadnice, nemusí "
+"tuto strukturu reprodukovat přesně. Tomu lze předejít přidáním pomocného "
+"atomu mimo osu."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -549,26 +556,26 @@ msgstr "V BackgroundFileFormat není nastaven název souboru!"
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Vzdálenost %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Úhel %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Torzní úhel %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Omezení"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Snímek"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -579,11 +586,11 @@ msgstr "Čas"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Relativní energie"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
@@ -592,7 +599,7 @@ msgstr "RMS gradientu"
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Střední rychlost"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -608,7 +615,7 @@ msgstr "Teplota"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1100,20 +1107,22 @@ msgstr "Oganesson"
 
 #: qtgui/energyunitsdialog.cpp:25
 msgid "Convert Energy Units"
-msgstr ""
+msgstr "Převést jednotky energie"
 
 #: qtgui/energyunitsdialog.cpp:40 qtplugins/plotconformer/plotconformer.cpp:896
 msgid "This file records the units its energies are in."
-msgstr ""
+msgstr "Tento soubor uvádí jednotky, ve kterých jsou jeho energie."
 
 #: qtgui/energyunitsdialog.cpp:41
 msgid ""
 "Energies are read in the units the file used, which may not be recorded."
 msgstr ""
+"Energie se načítají v jednotkách použitých v souboru, které nemusí být "
+"uvedeny."
 
 #: qtgui/energyunitsdialog.cpp:49
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Převést energie z:"
 
 #: qtgui/energyunitsdialog.cpp:51 qtplugins/plotconformer/plotconformer.cpp:568
 msgid "to"
@@ -1187,7 +1196,7 @@ msgstr "Všechny soubory"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "Komprimované soubory"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1195,15 +1204,15 @@ msgstr "Všechny podporované formáty"
 
 #: qtgui/fragmenttools.cpp:309
 msgid "Adjust Distance"
-msgstr ""
+msgstr "Upravit vzdálenost"
 
 #: qtgui/fragmenttools.cpp:361
 msgid "Adjust Angle"
-msgstr ""
+msgstr "Upravit úhel"
 
 #: qtgui/fragmenttools.cpp:424
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "Upravit torzní úhel"
 
 #: qtgui/interfacescript.cpp:308
 #, qt-format
@@ -1306,7 +1315,7 @@ msgstr "Multiplicita"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Souřadnice"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
@@ -1479,8 +1488,8 @@ msgstr ""
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for start (%3)."
 msgstr ""
-"Chyba při běhu skriptu '%1 %2': při čekání na spuštění vypršel časový limit "
-"(%3)."
+"Chyba při spouštění skriptu '%1 %2': při čekání na spuštění vypršel časový "
+"limit (%3)."
 
 #: qtgui/pythonscript.cpp:285 qtgui/pythonscript.cpp:408
 #, qt-format
@@ -1488,15 +1497,15 @@ msgid ""
 "Error running script '%1 %2': failed to write to stdin (len=%3, wrote %4 "
 "bytes, QProcess error: %5)."
 msgstr ""
-"Chyba při běhu skriptu '%1 %2': nepodařilo se zapsat na stdin (délka=%3, "
-"zapsáno bajtů: %4, chyba QProcess: %5)."
+"Chyba při spouštění skriptu '%1 %2': nepodařilo se zapsat na stdin "
+"(délka=%3, zapsáno bajtů: %4, chyba QProcess: %5)."
 
 #: qtgui/pythonscript.cpp:299
 #, qt-format
 msgid "Error running script '%1 %2': Timed out waiting for finish (%3)."
 msgstr ""
-"Chyba při běhu skriptu '%1 %2': při čekání na dokončení vypršel časový limit "
-"(%3)."
+"Chyba při spouštění skriptu '%1 %2': při čekání na dokončení vypršel časový "
+"limit (%3)."
 
 #: qtgui/pythonscript.cpp:309
 #, qt-format
@@ -1506,7 +1515,7 @@ msgid ""
 "Output:\n"
 "%6"
 msgstr ""
-"Chyba při běhu skriptu '%1 %2': nestandardní stav ukončení %3 (%4: %5)\n"
+"Chyba při spouštění skriptu '%1 %2': nestandardní stav ukončení %3 (%4: %5)\n"
 "\n"
 "Výstup:\n"
 "%6"
@@ -1528,11 +1537,11 @@ msgstr ""
 #: qtgui/pythonscript.cpp:456
 #, qt-format
 msgid "The script exited with error code %1."
-msgstr ""
+msgstr "Skript skončil s chybovým kódem %1."
 
 #: qtgui/pythonscript.cpp:457
 msgid "The script crashed."
-msgstr ""
+msgstr "Skript havaroval."
 
 #: qtgui/pythonscript.cpp:466
 #, qt-format
@@ -1542,6 +1551,10 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"\n"
+"\n"
+"Standardní chybový výstup skriptu:\n"
+"%1"
 
 #: qtgui/pythonscript.cpp:575
 #, qt-format
@@ -1620,13 +1633,13 @@ msgstr "Vymazat atomy"
 
 #: qtgui/rwmolecule.cpp:155 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
-msgstr ""
+msgstr "Přeuspořádat atomy"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
 #: qtgui/rwmolecule.cpp:169 qtgui/rwmolecule.cpp:177:506
 msgid "Adjust Hydrogens"
-msgstr "Upravit Vodíky"
+msgstr "Upravit vodíkové atomy"
 
 #: qtgui/rwmolecule.cpp:205 qtplugins/alchemy/alchemy.cpp:74
 msgid "Change Elements"
@@ -2043,7 +2056,7 @@ msgstr "Chyba"
 #: qtplugins/apbs/apbsdialog.cpp:132
 #, qt-format
 msgid "Error running APBS: %1"
-msgstr "Chyba při běhu APBS: %1"
+msgstr "Chyba při spouštění APBS: %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:141
 msgid "Please specify PDB file"
@@ -2062,7 +2075,7 @@ msgstr "Vygenerováno %1"
 
 #: qtplugins/apbs/apbsdialog.cpp:166
 msgid "Error running PDB2PQR"
-msgstr "Chyba při běhu PDB2PQR"
+msgstr "Chyba při spouštění PDB2PQR"
 
 #: qtplugins/apbs/apbsdialog.cpp:174
 msgid "Save APBS Input File"
@@ -2316,31 +2329,31 @@ msgstr "Použít barvy schématu Shapely"
 
 #: qtplugins/applycolors/applycolors.cpp:611
 msgid "Apply a custom color to atoms."
-msgstr ""
+msgstr "Použít vlastní barvu pro atomy."
 
 #: qtplugins/applycolors/applycolors.cpp:614
 msgid "Reset atom colors to their default element colors."
-msgstr ""
+msgstr "Obnovit barvy atomů na výchozí barvy jejich prvků."
 
 #: qtplugins/applycolors/applycolors.cpp:616
 msgid "Apply a custom color to residues."
-msgstr ""
+msgstr "Použít vlastní barvu pro rezidua."
 
 #: qtplugins/applycolors/applycolors.cpp:618
 msgid "Color residues by their amino acid type."
-msgstr ""
+msgstr "Obarvit rezidua podle typu aminokyseliny."
 
 #: qtplugins/applycolors/applycolors.cpp:620
 msgid "Color residues using the Shapely color scheme."
-msgstr ""
+msgstr "Obarvit rezidua pomocí barevného schématu Shapely."
 
 #: qtplugins/applycolors/applycolors.cpp:622
 msgid "Color residues by secondary structure."
-msgstr ""
+msgstr "Obarvit rezidua podle sekundární struktury."
 
 #: qtplugins/applycolors/applycolors.cpp:624
 msgid "Reset residue colors to default chain colors."
-msgstr ""
+msgstr "Obnovit barvy reziduí na výchozí barvy řetězců."
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2378,7 +2391,7 @@ msgstr ""
 "Pravé tlačítko myši:\tPosunutí pohledu\n"
 "Dvojité kliknutí:\tObnovení pohledu\n"
 "\n"
-"Za běhu:\n"
+"Když je spuštěn:\n"
 "Levé tlačítko myši:\tKliknutím a tažením přesunete atomy.\n"
 "Pravé tlačítko myši:\tKliknutím a tažením atomy otočíte."
 
@@ -2634,17 +2647,18 @@ msgid ""
 "Add a dummy atom at the geometric center of the molecule or the selected "
 "atoms."
 msgstr ""
+"Přidat pomocný atom do geometrického středu molekuly nebo vybraných atomů."
 
 #: qtplugins/centroid/centroid.cpp:141
 msgid ""
 "Add a dummy atom at the center of mass of the molecule or the selected atoms."
-msgstr ""
+msgstr "Přidat pomocný atom do hmotného středu molekuly nebo vybraných atomů."
 
 #: qtplugins/centroid/centroid.cpp:145
 msgid ""
 "Add a dummy atom perpendicular to the plane of the molecule or the selected "
 "atoms."
-msgstr ""
+msgstr "Přidat pomocný atom kolmo k rovině molekuly nebo vybraných atomů."
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -2822,6 +2836,10 @@ msgid ""
 "[i, j, (k, (l))], \"value\": v}, …]}, with zero-based atom indices and value "
 "in Å for a distance or degrees for an angle or torsion."
 msgstr ""
+"Vypsat geometrická omezení aktuální molekuly. Bez možností. Vrací "
+"{\"constraints\": [{\"type\": \"distance\"|\"angle\"|\"torsion\", \"atoms\": "
+"[i, j, (k, (l))], \"value\": v}, …]}, s indexy atomů počítanými od nuly a "
+"hodnotou v Å pro vzdálenost nebo ve stupních pro úhel či torzní úhel."
 
 #: qtplugins/constraints/constraintsextension.cpp:162
 msgid ""
@@ -2834,62 +2852,79 @@ msgid ""
 "updated instead of adding a duplicate. Returns {\"type\": …, \"atoms\": […], "
 "\"value\": …, \"updated\": bool}."
 msgstr ""
+"Přidat nebo aktualizovat geometrické omezení zadané indexy atomů počítanými "
+"od nuly: {\"atoms\": [i, j]} pro vzdálenost, {\"atoms\": [i, j, k]} pro úhel "
+"nebo {\"atoms\": [i, j, k, l]} pro torzní úhel, spolu s volitelným "
+"{\"value\": …} v Å pro vzdálenost nebo ve stupních pro úhel či torzní úhel. "
+"Pokud je \"value\" vynecháno, změří se a použije aktuální geometrie těchto "
+"atomů. Pokud již pro stejné atomy existuje omezení (v kterémkoli z obou "
+"pořadí), jeho hodnota se aktualizuje místo přidání duplikátu. Vrací "
+"{\"type\": …, \"atoms\": […], \"value\": …, \"updated\": bool}."
 
 #: qtplugins/constraints/constraintsextension.cpp:173
 msgid ""
 "Remove the constraint on the given zero-based atom indices (in either "
 "order): {\"atoms\": [i, j, (k, (l))]}. Returns {\"removed\": count}."
 msgstr ""
+"Odstranit omezení pro zadané indexy atomů počítané od nuly (v kterémkoli z "
+"obou pořadí): {\"atoms\": [i, j, (k, (l))]}. Vrací {\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:178
 msgid ""
 "Remove all geometry constraints from the current molecule. No options. "
 "Returns {\"removed\": count}."
 msgstr ""
+"Odstranit všechna geometrická omezení aktuální molekuly. Bez možností. Vrací "
+"{\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:194
 msgid "There is no molecule to constrain."
 msgstr ""
+"Není k dispozici žádná molekula, pro kterou by bylo možné nastavit omezení."
 
 #: qtplugins/constraints/constraintsextension.cpp:251
 msgid "No constraint matches these atoms."
-msgstr ""
+msgstr "Těmto atomům neodpovídá žádné omezení."
 
 #: qtplugins/constraints/constraintsextension.cpp:287
 msgid "value must be a number: a distance in Å."
-msgstr ""
+msgstr "value musí být číslo: vzdálenost v Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:291
 msgid "value must be a number: an angle in degrees."
-msgstr ""
+msgstr "value musí být číslo: úhel ve stupních."
 
 #: qtplugins/constraints/constraintsextension.cpp:295
 msgid "value must be a number: a dihedral angle in degrees."
-msgstr ""
+msgstr "value musí být číslo: torzní úhel ve stupních."
 
 #: qtplugins/constraints/constraintsextension.cpp:309
 msgid "Could not measure the current geometry for these atoms."
-msgstr ""
+msgstr "Aktuální geometrii těchto atomů se nepodařilo změřit."
 
 #: qtplugins/constraints/constraintsextension.cpp:319
 #: qtplugins/measuretool/measuretool.cpp:791
 msgid "value must be a distance greater than 0 Å."
-msgstr ""
+msgstr "value musí být vzdálenost větší než 0 Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:324
 #: qtplugins/measuretool/measuretool.cpp:795
 msgid "value must be an angle from 0 to 180 degrees."
-msgstr ""
+msgstr "value musí být úhel od 0 do 180 stupňů."
 
 #: qtplugins/constraints/constraintsextension.cpp:370
 msgid ""
 "atoms must be a list of 2 (distance), 3 (angle) or 4 (torsion) zero-based "
 "atom indices."
 msgstr ""
+"atoms musí být seznam 2 (vzdálenost), 3 (úhel) nebo 4 (torzní úhel) indexů "
+"atomů počítaných od nuly."
 
 #: qtplugins/constraints/constraintsextension.cpp:377
 msgid "atoms must list 2 (distance), 3 (angle) or 4 (torsion) atom indices."
 msgstr ""
+"atoms musí obsahovat 2 (vzdálenost), 3 (úhel) nebo 4 (torzní úhel) indexy "
+"atomů."
 
 #: qtplugins/constraints/constraintsextension.cpp:388
 #: qtplugins/constraints/constraintsextension.cpp:394
@@ -2897,7 +2932,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:891
 #, qt-format
 msgid "atom index #%1 in atoms must be a whole number."
-msgstr ""
+msgstr "Index atomu #%1 v atoms musí být celé číslo."
 
 #: qtplugins/constraints/constraintsextension.cpp:398
 #: qtplugins/measuretool/measuretool.cpp:895
@@ -2905,12 +2940,13 @@ msgstr ""
 msgid ""
 "atom index #%1 in atoms is negative; atom indices must be zero or greater."
 msgstr ""
+"Index atomu #%1 v atoms je záporný; indexy atomů musí být nula nebo větší."
 
 #: qtplugins/constraints/constraintsextension.cpp:416
 #: qtplugins/measuretool/measuretool.cpp:913
 #, qt-format
 msgid "atom index %1 is repeated in atoms; each atom must be different."
-msgstr ""
+msgstr "Index atomu %1 se v atoms opakuje; každý atom musí být jiný."
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
@@ -3614,11 +3650,11 @@ msgstr "Molekulu z PDB se nepodařilo načíst: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
-msgstr ""
+msgstr "Stáhnout strukturu z databáze Protein Data Bank."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
-msgstr ""
+msgstr "fetchPDB vyžaduje neprázdný parametr 'code'."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:116
 msgid "The PDB code must be exactly 4 characters long."
@@ -3630,13 +3666,13 @@ msgstr "První znak kódu PDB musí být číslice 1–9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:128
 msgid "The PDB code must contain only letters and digits."
-msgstr ""
+msgstr "Kód PDB smí obsahovat pouze písmena a číslice."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:204
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
 #, qt-format
 msgid "Downloaded %1"
-msgstr ""
+msgstr "Staženo %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:212
 msgid "PDB Code"
@@ -3692,11 +3728,11 @@ msgstr "Zrušit zaměření"
 
 #: qtplugins/focus/focus.cpp:138
 msgid "Focus a selection"
-msgstr ""
+msgstr "Zaměřit na výběr"
 
 #: qtplugins/focus/focus.cpp:139
 msgid "Unfocus a focused selection"
-msgstr ""
+msgstr "Zrušit zaměření na výběr"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
@@ -3764,36 +3800,36 @@ msgstr "Rozvázat vybrané atomy"
 
 #: qtplugins/forcefield/forcefield.cpp:273
 msgid "List the force fields available for the current molecule."
-msgstr ""
+msgstr "Vypsat silová pole dostupná pro aktuální molekulu."
 
 #: qtplugins/forcefield/forcefield.cpp:275
 msgid "Compute the force field energy of the current molecule."
-msgstr ""
+msgstr "Vypočítat energii aktuální molekuly pomocí silového pole."
 
 #: qtplugins/forcefield/forcefield.cpp:277
 msgid "Compute the force field forces on the current molecule."
-msgstr ""
+msgstr "Vypočítat síly působící na aktuální molekulu pomocí silového pole."
 
 #: qtplugins/forcefield/forcefield.cpp:279
 msgid "Optimize the geometry of the current molecule."
-msgstr ""
+msgstr "Optimalizovat geometrii aktuální molekuly."
 
 #: qtplugins/forcefield/forcefield.cpp:282
 msgid "Freeze selected atoms during force field optimization."
-msgstr ""
+msgstr "Zmrazit vybrané atomy během optimalizace pomocí silového pole."
 
 #: qtplugins/forcefield/forcefield.cpp:283
 msgid "Unfreeze selected atoms."
-msgstr ""
+msgstr "Zrušit zmrazení vybraných atomů."
 
 #: qtplugins/forcefield/forcefield.cpp:285
 msgid "Freeze a specific axis (X, Y, or Z) of selected atoms."
-msgstr ""
+msgstr "Zmrazit konkrétní osu (X, Y nebo Z) vybraných atomů."
 
 #: qtplugins/forcefield/forcefield.cpp:379
 #, qt-format
 msgid "%1 force field(s) available."
-msgstr ""
+msgstr "Dostupná silová pole: %1."
 
 #: qtplugins/forcefield/forcefield.cpp:386
 #: qtplugins/forcefield/forcefield.cpp:412
@@ -3802,43 +3838,43 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:524
 #: qtplugins/forcefield/forcefield.cpp:549
 msgid "No molecule is open."
-msgstr ""
+msgstr "Není otevřena žádná molekula."
 
 #: qtplugins/forcefield/forcefield.cpp:390
 #: qtplugins/forcefield/forcefield.cpp:416
 #: qtplugins/forcefield/forcefield.cpp:442
 msgid "A force field calculation is already running."
-msgstr ""
+msgstr "Výpočet pomocí silového pole již probíhá."
 
 #: qtplugins/forcefield/forcefield.cpp:394
 msgid "No atoms provided for energy calculation."
-msgstr ""
+msgstr "Pro výpočet energie nebyly zadány žádné atomy."
 
 #: qtplugins/forcefield/forcefield.cpp:420
 msgid "No atoms provided for force calculation."
-msgstr ""
+msgstr "Pro výpočet sil nebyly zadány žádné atomy."
 
 #: qtplugins/forcefield/forcefield.cpp:446
 msgid "No atoms provided for optimization."
-msgstr ""
+msgstr "Pro optimalizaci nebyly zadány žádné atomy."
 
 #: qtplugins/forcefield/forcefield.cpp:466
 msgid "\"steps\" must be a positive integer."
-msgstr ""
+msgstr "\"steps\" musí být kladné celé číslo."
 
 #: qtplugins/forcefield/forcefield.cpp:476
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"gradientTolerance\" musí být konečné nezáporné číslo."
 
 #: qtplugins/forcefield/forcefield.cpp:486
 msgid "\"energyTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"energyTolerance\" musí být konečné nezáporné číslo."
 
 #: qtplugins/forcefield/forcefield.cpp:503
 #: qtplugins/forcefield/forcefield.cpp:528
 #: qtplugins/forcefield/forcefield.cpp:553
 msgid "No atoms are selected."
-msgstr ""
+msgstr "Nejsou vybrány žádné atomy."
 
 #: qtplugins/forcefield/forcefield.cpp:518
 #: qtplugins/forcefield/forcefield.cpp:600
@@ -3846,44 +3882,44 @@ msgstr ""
 msgctxt ""
 msgid "Froze %n atom(s)."
 msgid_plural "Froze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Zmrazen %n atom."
+msgstr[1] "Zmrazeny %n atomy."
+msgstr[2] "Zmrazeno %n atomů."
 
 #: qtplugins/forcefield/forcefield.cpp:543
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
 msgid_plural "Unfroze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Zrušeno zmrazení %n atomu."
+msgstr[1] "Zrušeno zmrazení %n atomů."
+msgstr[2] "Zrušeno zmrazení %n atomů."
 
 #: qtplugins/forcefield/forcefield.cpp:557
 msgid "No axis was given."
-msgstr ""
+msgstr "Nebyla zadána žádná osa."
 
 #: qtplugins/forcefield/forcefield.cpp:584
 msgid "Axis must be x, y, z or 0, 1, 2."
-msgstr ""
+msgstr "Osa musí být x, y, z nebo 0, 1, 2."
 
 #: qtplugins/forcefield/forcefield.cpp:822
 msgid "The force field calculation was interrupted."
-msgstr ""
+msgstr "Výpočet pomocí silového pole byl přerušen."
 
 #: qtplugins/forcefield/forcefield.cpp:892
 msgid "No force field is available for this molecule."
-msgstr ""
+msgstr "Pro tuto molekulu není dostupné žádné silové pole."
 
 #: qtplugins/forcefield/forcefield.cpp:913
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
-msgstr ""
+msgstr "Silové pole „%1“ není s touto molekulou kompatibilní."
 
 #: qtplugins/forcefield/forcefield.cpp:916
 #, qt-format
 msgid "Unknown force field \"%1\"."
-msgstr ""
+msgstr "Neznámé silové pole „%1“."
 
 #: qtplugins/forcefield/forcefield.cpp:932
 #: qtplugins/forcefield/forcefield.cpp:1215
@@ -3907,7 +3943,7 @@ msgstr "Pro optimalizaci nebyly zadány žádné atomy"
 #: qtplugins/forcefield/forcefield.cpp:1323
 #, qt-format
 msgid "Could not create a calculator for \"%1\"."
-msgstr ""
+msgstr "Nepodařilo se vytvořit výpočetní modul pro „%1“."
 
 #: qtplugins/forcefield/forcefield.cpp:1054
 #, qt-format
@@ -3917,7 +3953,7 @@ msgstr "Energie: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:1161
 msgid "The optimizer stopped without producing a result."
-msgstr ""
+msgstr "Optimalizátor se zastavil bez vytvoření výsledku."
 
 #: qtplugins/forcefield/forcefield.cpp:1178
 #: qtplugins/forcefield/forcefield.cpp:1273
@@ -3932,20 +3968,20 @@ msgstr "Pro výpočet energie nebyly zadány žádné atomy"
 #: qtplugins/forcefield/forcefield.cpp:1277
 #, qt-format
 msgid "%1 returned a non-finite energy."
-msgstr ""
+msgstr "%1: vrácená energie není konečná."
 
 #: qtplugins/forcefield/forcefield.cpp:1304
 msgid "No atoms provided for force calculation"
-msgstr "`Pro výpočet sil nebyly zadány žádné atomy"
+msgstr "Pro výpočet sil nebyly zadány žádné atomy"
 
 #: qtplugins/forcefield/forcefield.cpp:1359
 msgid "The molecule changed during the calculation."
-msgstr ""
+msgstr "Molekula se během výpočtu změnila."
 
 #: qtplugins/forcefield/forcefield.cpp:1372
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
-msgstr ""
+msgstr "%1: vrácený výsledek není konečný nebo je neúplný."
 
 #: qtplugins/forcefield/forcefield.cpp:1394
 #, qt-format
@@ -4140,25 +4176,28 @@ msgstr "&Vodíkové atomy"
 
 #: qtplugins/hydrogens/hydrogens.cpp:114
 msgid "Add any missing hydrogen atoms on atoms that have incomplete octets."
-msgstr ""
+msgstr "Přidat všechny chybějící vodíkové atomy k atomům s neúplnými oktety."
 
 #: qtplugins/hydrogens/hydrogens.cpp:118
 msgid "Remove any extra hydrogen atoms on atoms with overfull octets."
 msgstr ""
+"Odstranit všechny přebytečné vodíkové atomy z atomů s překročeným oktetem."
 
 #: qtplugins/hydrogens/hydrogens.cpp:122
 msgid ""
 "Add any missing hydrogen atoms, and remove any extra hydrogen atoms on any "
 "atoms that violate the octet rule."
 msgstr ""
+"Přidat všechny chybějící vodíkové atomy a odstranit všechny přebytečné "
+"vodíkové atomy u všech atomů, které porušují oktetové pravidlo."
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
-msgstr ""
+msgstr "Odstranit všechny vodíkové atomy z molekuly."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
-msgstr ""
+msgstr "Žádná molekula."
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -4544,6 +4583,15 @@ msgid ""
 "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Nástroj pro manipulaci\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tKliknutím a tažením atomy přesunete\n"
+"Pravé tlačítko myši:\tKliknutím a tažením atomy otočíte\n"
+"\n"
+"Klávesy se šipkami:\tPosouvání atomů\n"
+"Shift+šipky:\tOtáčení kolem os X/Y\n"
+"Ctrl+Shift+šipka vlevo/vpravo:\tOtáčení kolem osy Z\n"
+"Alt+<klávesa>:\tVětší kroky"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4572,6 +4620,15 @@ msgid ""
 "\n"
 "Values can also be typed into the tool panel to move the atoms."
 msgstr ""
+"Nástroj pro měření\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tVyberte až čtyři atomy.\n"
+"\tVzdálenosti se měří mezi 1-2 a 2-3\n"
+"\tÚhel se měří mezi 1-3 s bodem 2 jako společným bodem\n"
+"\tTorzní úhel se měří mezi 1-2-3-4\n"
+"Pravé tlačítko myši:\tResetovat měření.\n"
+"\n"
+"Hodnoty lze také zadávat do panelu nástroje a tím přesouvat atomy."
 
 #: qtplugins/measuretool/measuretool.cpp:426
 #: qtplugins/measuretool/measuretool.cpp:436
@@ -4586,27 +4643,29 @@ msgstr "Úhel:"
 #: qtplugins/measuretool/measuretool.cpp:602
 #: qtplugins/measuretool/measuretool.cpp:992
 msgid "One of these atoms no longer exists."
-msgstr ""
+msgstr "Jeden z těchto atomů již neexistuje."
 
 #: qtplugins/measuretool/measuretool.cpp:604
 msgid "That's not a value this can be set to."
-msgstr ""
+msgstr "Tuto hodnotu nelze nastavit."
 
 #: qtplugins/measuretool/measuretool.cpp:610
 #: qtplugins/measuretool/measuretool.cpp:1005
 msgid "These atoms are in the same place, so this distance isn't defined."
 msgstr ""
+"Tyto atomy jsou na stejném místě, takže tato vzdálenost není definována."
 
 #: qtplugins/measuretool/measuretool.cpp:613
 #: qtplugins/measuretool/measuretool.cpp:1010
 msgid ""
 "Three of these atoms are in a straight line, so this dihedral isn't defined."
 msgstr ""
+"Tři z těchto atomů leží na přímce, takže tento torzní úhel není definován."
 
 #: qtplugins/measuretool/measuretool.cpp:616
 #: qtplugins/measuretool/measuretool.cpp:1008
 msgid "These atoms are in a straight line, so this angle isn't defined."
-msgstr ""
+msgstr "Tyto atomy leží na přímce, takže tento úhel není definován."
 
 #: qtplugins/measuretool/measuretool.cpp:641
 #, qt-format
@@ -4614,6 +4673,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this dihedral can't change "
 "without distorting the ring."
 msgstr ""
+"Vazba mezi #%1 a #%2 je v kruhu, takže tento torzní úhel nelze změnit bez "
+"deformace kruhu."
 
 #: qtplugins/measuretool/measuretool.cpp:645
 #, qt-format
@@ -4621,6 +4682,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this angle can't change "
 "without distorting the ring."
 msgstr ""
+"Vazba mezi #%1 a #%2 je v kruhu, takže tento úhel nelze změnit bez deformace "
+"kruhu."
 
 #: qtplugins/measuretool/measuretool.cpp:680
 #, qt-format
@@ -4628,12 +4691,16 @@ msgid ""
 "#%1 and #%2 are connected through the molecule, so this can't change without "
 "distorting it. Try the Manipulate tool."
 msgstr ""
+"#%1 a #%2 jsou propojeny přes molekulu, takže toto nelze změnit bez její "
+"deformace. Zkuste nástroj pro manipulaci."
 
 #: qtplugins/measuretool/measuretool.cpp:694
 msgid ""
 "Measure the distance in Å between two atoms, given as zero-based indices: "
 "{\"atoms\": [i, j]}. Returns {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Změřit vzdálenost v Å mezi dvěma atomy zadanými jako indexy počítané od "
+"nuly: {\"atoms\": [i, j]}. Vrací {\"distance\": …, \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:699
 msgid ""
@@ -4641,6 +4708,9 @@ msgid ""
 "based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": …, \"atoms\": [i, "
 "j, k]}."
 msgstr ""
+"Změřit úhel ve stupních s vrcholem v prostředním ze tří atomů zadaných jako "
+"indexy počítané od nuly: {\"atoms\": [i, j, k]}. Vrací {\"angle\": …, "
+"\"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid ""
@@ -4648,6 +4718,9 @@ msgid ""
 "zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Změřit torzní úhel čtyř atomů ve stupních (-180 až 180), zadaných jako "
+"indexy počítané od nuly: {\"atoms\": [i, j, k, l]}. Vrací {\"dihedral\": …, "
+"\"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:709
 msgid ""
@@ -4655,6 +4728,10 @@ msgid ""
 "{\"atoms\": [i, j], \"value\": …}; the second atom and everything bonded to "
 "it on that side move. Returns the new {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Nastavit vzdálenost v Å mezi dvěma atomy zadanými jako indexy počítané od "
+"nuly: {\"atoms\": [i, j], \"value\": …}; druhý atom a vše, co je k němu na "
+"dané straně vázáno, se přesune. Vrací novou hodnotu {\"distance\": …, "
+"\"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
@@ -4663,6 +4740,10 @@ msgid ""
 "bonded to it on that side move. Returns the new {\"angle\": …, \"atoms\": "
 "[i, j, k]}."
 msgstr ""
+"Nastavit úhel ve stupních s vrcholem v prostředním ze tří atomů zadaných "
+"jako indexy počítané od nuly: {\"atoms\": [i, j, k], \"value\": …}; poslední "
+"atom a vše, co je k němu na dané straně vázáno, se přesune. Vrací novou "
+"hodnotu {\"angle\": …, \"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:721
 msgid ""
@@ -4671,42 +4752,46 @@ msgid ""
 "everything bonded to it on that side move. Returns the new {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Nastavit torzní úhel čtyř atomů ve stupních, zadaných jako indexy počítané "
+"od nuly: {\"atoms\": [i, j, k, l], \"value\": …}; poslední atom a vše, co je "
+"k němu na dané straně vázáno, se přesune. Vrací novou hodnotu {\"dihedral\": "
+"…, \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:764 qtplugins/select/select.cpp:638
 msgid "No molecule"
-msgstr ""
+msgstr "Žádná molekula"
 
 #: qtplugins/measuretool/measuretool.cpp:856
 msgid "atoms must list exactly 2 atom indices for a distance."
-msgstr ""
+msgstr "atoms musí obsahovat přesně 2 indexy atomů pro vzdálenost."
 
 #: qtplugins/measuretool/measuretool.cpp:859
 msgid "atoms must list exactly 3 atom indices for an angle."
-msgstr ""
+msgstr "atoms musí obsahovat přesně 3 indexy atomů pro úhel."
 
 #: qtplugins/measuretool/measuretool.cpp:862
 msgid "atoms must list exactly 4 atom indices for a dihedral."
-msgstr ""
+msgstr "atoms musí obsahovat přesně 4 indexy atomů pro torzní úhel."
 
 #: qtplugins/measuretool/measuretool.cpp:933
 msgid "value is required and must be a distance in Å."
-msgstr ""
+msgstr "value je povinné a musí být vzdálenost v Å."
 
 #: qtplugins/measuretool/measuretool.cpp:934
 msgid "value is required and must be an angle in degrees."
-msgstr ""
+msgstr "value je povinné a musí být úhel ve stupních."
 
 #: qtplugins/measuretool/measuretool.cpp:996
 msgid "That's not a value this distance can be set to."
-msgstr ""
+msgstr "Tuto vzdálenost nelze nastavit na tuto hodnotu."
 
 #: qtplugins/measuretool/measuretool.cpp:998
 msgid "That's not a value this angle can be set to."
-msgstr ""
+msgstr "Tento úhel nelze nastavit na tuto hodnotu."
 
 #: qtplugins/measuretool/measuretool.cpp:1000
 msgid "That's not a value this dihedral can be set to."
-msgstr ""
+msgstr "Tento torzní úhel nelze nastavit na tuto hodnotu."
 
 #: qtplugins/measuretool/measuretool.cpp:1021
 #, qt-format
@@ -4714,6 +4799,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this angle can't change "
 "without distorting it."
 msgstr ""
+"Vazba mezi atomy %1 a %2 je v kruhu, takže tento úhel nelze změnit bez jeho "
+"deformace."
 
 #: qtplugins/measuretool/measuretool.cpp:1025
 #, qt-format
@@ -4721,6 +4808,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this dihedral can't change "
 "without distorting it."
 msgstr ""
+"Vazba mezi atomy %1 a %2 je v kruhu, takže tento torzní úhel nelze změnit "
+"bez jeho deformace."
 
 #: qtplugins/measuretool/measuretool.cpp:1039
 #, qt-format
@@ -4728,6 +4817,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomy %1 a %2 jsou propojeny přes molekulu, takže tuto vzdálenost nelze "
+"změnit bez její deformace. Zkuste nástroj pro manipulaci."
 
 #: qtplugins/measuretool/measuretool.cpp:1045
 #, qt-format
@@ -4735,6 +4826,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this angle can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomy %1 a %2 jsou propojeny přes molekulu, takže tento úhel nelze změnit "
+"bez její deformace. Zkuste nástroj pro manipulaci."
 
 #: qtplugins/measuretool/measuretool.cpp:1051
 #, qt-format
@@ -4742,6 +4835,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this dihedral can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomy %1 a %2 jsou propojeny přes molekulu, takže tento torzní úhel nelze "
+"změnit bez její deformace. Zkuste nástroj pro manipulaci."
 
 #: qtplugins/measuretool/measuretool.h:39
 #: qtplugins/measuretool/measuretool.h:40
@@ -4753,10 +4848,12 @@ msgid ""
 "Click up to four atoms to measure them.\n"
 "Type a new value to move the atoms."
 msgstr ""
+"Kliknutím vyberte až čtyři atomy pro měření.\n"
+"Zadáním nové hodnoty atomy přesunete."
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 msgid "Distance 1–2"
-msgstr ""
+msgstr "Vzdálenost 1–2"
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 #: qtplugins/measuretool/measurewidget.cpp:36
@@ -4766,15 +4863,15 @@ msgstr " Å"
 
 #: qtplugins/measuretool/measurewidget.cpp:36
 msgid "Distance 2–3"
-msgstr ""
+msgstr "Vzdálenost 2-3"
 
 #: qtplugins/measuretool/measurewidget.cpp:38
 msgid "Distance 3–4"
-msgstr ""
+msgstr "Vzdálenost 3-4"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 msgid "Angle 1–2–3"
-msgstr ""
+msgstr "Úhel 1-2-3"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 #: qtplugins/measuretool/measurewidget.cpp:42
@@ -4784,16 +4881,16 @@ msgstr "°"
 
 #: qtplugins/measuretool/measurewidget.cpp:42
 msgid "Angle 2–3–4"
-msgstr ""
+msgstr "Úhel 2-3-4"
 
 #: qtplugins/measuretool/measurewidget.cpp:44
 msgid "Dihedral 1–2–3–4"
-msgstr ""
+msgstr "Torzní úhel 1-2-3-4"
 
 #: qtplugins/measuretool/measurewidget.cpp:145
 #, qt-format
 msgid "#1 stays fixed; edits move toward #%1."
-msgstr ""
+msgstr "#1 zůstává pevný; úpravy směřují k #%1."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:60
 msgid "(pending)"
@@ -4918,7 +5015,7 @@ msgstr "&Vlastnosti"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:226
 msgid "Show molecular properties."
-msgstr ""
+msgstr "Zobrazit molekulární vlastnosti."
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
@@ -4976,6 +5073,16 @@ msgid ""
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
+"Nástroj pro navigaci\t(%1)\n"
+"\n"
+"Levé tlačítko myši:\tKliknutím a tažením pohled otočíte.\n"
+"\tZahájíte-li tažení na atomu, pohled se otáčí kolem něj.\n"
+"Prostřední tlačítko myši:\tKliknutím a tažením pohled přiblížíte nebo "
+"oddálíte.\n"
+"Pravé tlačítko myši:\tKliknutím a tažením pohled přesunete.\n"
+"\n"
+"Alt(Option)+tažení:\tOtáčení/přibližování/posouvání z libovolného nástroje.\n"
+"Alt(Option)+levé tlačítko:\tPoužívá virtuální trackball."
 
 #: qtplugins/navigator/navigator.cpp:74
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4988,6 +5095,9 @@ msgid ""
 "unit of delta is roughly a 2% change in the camera's distance to the focal "
 "point."
 msgstr ""
+"Přiblížit nebo oddálit scénu. Kladná hodnota delta znamená pohyb směrem k "
+"molekule, záporná směrem od ní. Jednotková hodnota delta odpovídá přibližně "
+"2% změně vzdálenosti kamery od bodu zaměření."
 
 #: qtplugins/navigator/navigator.cpp:80
 msgid "Translate the scene."
@@ -5011,11 +5121,11 @@ msgstr "Nástroj pro navigaci"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
-msgstr ""
+msgstr "Stáhnout strukturu podle názvu z online databáze."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:78
 msgid "fetchByName requires a non-empty 'name' parameter."
-msgstr ""
+msgstr "fetchByName vyžaduje neprázdný parametr 'name'."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Chemical Name"
@@ -5098,7 +5208,7 @@ msgstr ""
 #: qtplugins/openbabel/openbabel.cpp:223
 #, qt-format
 msgid "An error occurred while running Open Babel (%1)."
-msgstr "Při běhu Open Babelu (%1) došlo k chybě."
+msgstr "Při spouštění Open Babelu (%1) došlo k chybě."
 
 #: qtplugins/openbabel/openbabel.cpp:233
 msgid "Error parsing openbabel output."
@@ -5388,20 +5498,20 @@ msgstr "Chyba: prázdná odpověď serveru."
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 #, qt-format
 msgid "Authors: %1"
-msgstr ""
+msgstr "Autoři: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:309
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%n stažení za poslední období (počet dnů: %1)"
+msgstr[1] "%n stažení za poslední období (počet dnů: %1)"
+msgstr[2] "%n stažení za poslední období (počet dnů: %1)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:358
 #, qt-format
@@ -5617,7 +5727,7 @@ msgstr "Popis"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:183
 msgid "Keywords"
-msgstr ""
+msgstr "Klíčová slova"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
@@ -5761,41 +5871,49 @@ msgid ""
 "Advance one coordinate set, looping to the first frame after the last. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Přejít na následující sadu souřadnic; po posledním snímku přejít na první. "
+"Vrací {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:673
 msgid ""
 "Step back one coordinate set, looping to the last frame before the first. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Přejít na předchozí sadu souřadnic; před prvním snímkem přejít na poslední. "
+"Vrací {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:677
 msgid ""
 "Jump to a coordinate set, given as a zero-based index: {\"index\": n}. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Přejít na sadu souřadnic zadanou indexem počítaným od nuly: {\"index\": n}. "
+"Vrací {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:681
 msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Vrátit aktuální snímek a počet sad souřadnic, aniž by se cokoli změnilo. "
+"Vrací {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:697
 msgid "There is no molecule."
-msgstr ""
+msgstr "Není k dispozici žádná molekula."
 
 #: qtplugins/playertool/playertool.cpp:701
 msgid "The molecule has no coordinate sets."
-msgstr ""
+msgstr "Molekula nemá žádné sady souřadnic."
 
 #: qtplugins/playertool/playertool.cpp:711
 msgid "index is required."
-msgstr ""
+msgstr "Je vyžadován index."
 
 #: qtplugins/playertool/playertool.cpp:720
 #, qt-format
 msgid "index must be a whole number from 0 to %1."
-msgstr ""
+msgstr "index musí být celé číslo od 0 do %1."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -5814,6 +5932,8 @@ msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
+"Vyberte 2, 3 nebo 4 atomy, abyste mohli sledovat vzdálenost, úhel nebo "
+"torzní úhel napříč konformery."
 
 #: qtplugins/plotconformer/plotconformer.cpp:519
 msgid "Conformer Analysis"
@@ -5821,19 +5941,19 @@ msgstr "Analýza konformerů"
 
 #: qtplugins/plotconformer/plotconformer.cpp:541
 msgid "Plot:"
-msgstr ""
+msgstr "Vykreslit:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:543
 msgid "vs"
-msgstr ""
+msgstr "v závislosti na"
 
 #: qtplugins/plotconformer/plotconformer.cpp:554
 msgid "Add from Selection"
-msgstr ""
+msgstr "Přidat z výběru"
 
 #: qtplugins/plotconformer/plotconformer.cpp:558
 msgid "Unwrap dihedral scans"
-msgstr ""
+msgstr "Rozvinout průběhy torzních úhlů"
 
 #: qtplugins/plotconformer/plotconformer.cpp:566
 msgid "Energy Units:"
@@ -5841,11 +5961,11 @@ msgstr "Jednotky energie:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:586
 msgid "Time between frames:"
-msgstr ""
+msgstr "Čas mezi snímky:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:592
 msgid " ps"
-msgstr ""
+msgstr " ps"
 
 #: qtplugins/plotconformer/plotconformer.cpp:594
 msgid ""
@@ -5853,17 +5973,21 @@ msgid ""
 "velocities and a temperature. Most trajectory files do not record it, so it "
 "starts at the value from the file where there is one and at 1 ps otherwise."
 msgstr ""
+"Interval mezi uloženými snímky, který se používá k výpočtu rychlostí a "
+"teploty z trajektorie. Většina souborů s trajektoriemi jej neuvádí, takže se "
+"jako počáteční hodnota použije hodnota ze souboru, pokud je v něm uvedena, "
+"jinak 1 ps."
 
 #: qtplugins/plotconformer/plotconformer.cpp:844
 #, qt-format
 msgid "Conformer %1 of %2 — use ← and → to step through them"
-msgstr ""
+msgstr "Konformer %1 z %2 — pro procházení použijte ← a →"
 
 #: qtplugins/plotconformer/plotconformer.cpp:897
 msgid ""
 "The units the energies in this file are in, which the file itself does not "
 "record."
-msgstr ""
+msgstr "Jednotky energií v tomto souboru, které samotný soubor neuvádí."
 
 #: qtplugins/plotconformer/plotconformer.h:46
 msgid "PlotConformer"
@@ -5872,6 +5996,7 @@ msgstr "Graf konformerů"
 #: qtplugins/plotconformer/plotconformer.h:176
 msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
 msgstr ""
+"Vytvářet a vykreslovat data konformerů (RMSD, energii nebo souřadnice skenu)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -5887,7 +6012,7 @@ msgstr "Chybová zpráva: "
 
 #: qtplugins/plotpdf/plotpdf.cpp:211
 msgid "Show PDF plot."
-msgstr ""
+msgstr "Zobrazit graf PDF."
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -5925,7 +6050,7 @@ msgstr "Chyba: "
 
 #: qtplugins/plotxrd/plotxrd.cpp:313
 msgid "Show XRD plot."
-msgstr ""
+msgstr "Zobrazit graf XRD."
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
@@ -6225,7 +6350,7 @@ msgstr "Přidat vlastnost…"
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr ""
+msgstr "Převést jednotky energie…"
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
@@ -6450,33 +6575,35 @@ msgstr "Vybrat reziduum"
 
 #: qtplugins/select/select.cpp:589
 msgid "Select all atoms."
-msgstr ""
+msgstr "Vybrat všechny atomy."
 
 #: qtplugins/select/select.cpp:591
 msgid "Deselect all atoms"
-msgstr ""
+msgstr "Zrušit výběr všech atomů"
 
 #: qtplugins/select/select.cpp:594
 msgid ""
 "Select all atoms which are not currently selected, and deselect all "
 "currently selected atoms."
 msgstr ""
+"Vybrat všechny atomy, které aktuálně nejsou vybrány, a zrušit výběr všech "
+"aktuálně vybraných atomů."
 
 #: qtplugins/select/select.cpp:598
 msgid "Select all atoms of a certain element type."
-msgstr ""
+msgstr "Vybrat všechny atomy určitého prvku."
 
 #: qtplugins/select/select.cpp:602
 msgid "Select all atoms that belong to amino acid backbones"
-msgstr ""
+msgstr "Vybrat všechny atomy, které patří k páteřím aminokyselin"
 
 #: qtplugins/select/select.cpp:606
 msgid "Select all atoms that belong to amino acid sidechains"
-msgstr ""
+msgstr "Vybrat všechny atomy, které patří k postranním řetězcům aminokyselin"
 
 #: qtplugins/select/select.cpp:608
 msgid "Select all water molecules"
-msgstr ""
+msgstr "Vybrat všechny molekuly vody"
 
 #: qtplugins/select/select.cpp:612
 msgid ""
@@ -6484,30 +6611,34 @@ msgid ""
 "all atoms next to a selected atom, and additionally all atoms that are next "
 "to those atoms."
 msgstr ""
+"Vybrat všechny atomy vzdálené od vybraného atomu nejvýše o 2 sousedské "
+"kroky. Jinými slovy vybrat všechny atomy sousedící s vybraným atomem a navíc "
+"všechny atomy sousedící s těmito atomy."
 
 #: qtplugins/select/select.cpp:618
 msgid "Shrink selection. Note: One shrink is equivalent to two enlarges!"
-msgstr ""
+msgstr "Zmenšit výběr. Poznámka: Jedno zmenšení odpovídá dvěma rozšířením!"
 
 #: qtplugins/select/select.cpp:621
 msgid "Separate the selected atoms into a new layer."
-msgstr ""
+msgstr "Oddělit vybrané atomy do nové vrstvy."
 
 #: qtplugins/select/select.cpp:678
 msgid ""
 "selectElement requires an \"element\" option (an element symbol or atomic "
 "number)."
 msgstr ""
+"selectElement vyžaduje volbu \"element\" (značku prvku nebo protonové číslo)."
 
 #: qtplugins/select/select.cpp:696
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "Neznámý prvek „%1“."
 
 #: qtplugins/select/select.cpp:700
 #, qt-format
 msgid "Atomic number %1 is out of range (1 to %2)."
-msgstr ""
+msgstr "Protonové číslo %1 je mimo rozsah (1 až %2)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6802,7 +6933,7 @@ msgstr "Vykreslit spektra…"
 
 #: qtplugins/spectra/spectra.cpp:163
 msgid "Open spectra dialog."
-msgstr ""
+msgstr "Otevřít dialog spekter."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -7111,37 +7242,39 @@ msgstr "Vykreslit datovou kostku dodanou se souborem."
 #: qtplugins/surfaces/surfaces.cpp:229
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
-msgstr ""
+msgstr "Tento soubor neobsahuje bázi, takže nelze vypočítat žádný orbital."
 
 #: qtplugins/surfaces/surfaces.cpp:235
 #, qt-format
 msgid "Orbital %1 is out of range."
-msgstr ""
+msgstr "Orbital %1 je mimo rozsah."
 
 #: qtplugins/surfaces/surfaces.cpp:245
 msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
 msgstr ""
+"Tento soubor neobsahuje bázi, takže nelze vypočítat elektronovou hustotu."
 
 #: qtplugins/surfaces/surfaces.cpp:255
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
-msgstr ""
+msgstr "Tento soubor neobsahuje bázi, takže nelze vypočítat spinovou hustotu."
 
 #: qtplugins/surfaces/surfaces.cpp:265
 msgid "This file does not contain any cube data."
-msgstr ""
+msgstr "Tento soubor neobsahuje žádná data v podobě datových kostek."
 
 #: qtplugins/surfaces/surfaces.cpp:275
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
 msgstr ""
+"Datová kostka %1 je mimo rozsah, počet datových kostek v tomto souboru: %2."
 
 #: qtplugins/surfaces/surfaces.cpp:281
 #, qt-format
 msgid "Cube %1 could not be read."
-msgstr ""
+msgstr "Datovou kostku %1 se nepodařilo přečíst."
 
 #: qtplugins/surfaces/surfaces.cpp:424
 #, qt-format
@@ -7164,7 +7297,7 @@ msgstr "Výpočet molekulového orbitalu %L1"
 
 #: qtplugins/surfaces/surfaces.cpp:855
 msgid "The calculation was interrupted."
-msgstr ""
+msgstr "Výpočet byl přerušen."
 
 #: qtplugins/surfaces/surfaces.cpp:1029
 msgctxt "finished rendering surface or molecular orbital"
@@ -7217,51 +7350,51 @@ msgstr "Symetrie…"
 
 #: qtplugins/symmetry/symmetry.cpp:216
 msgid "There is no molecule to analyze."
-msgstr ""
+msgstr "Není k dispozici žádná molekula k analýze."
 
 #: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
 msgid "The molecule has no 3D coordinates."
-msgstr ""
+msgstr "Molekula nemá 3D souřadnice."
 
 #: qtplugins/symmetry/symmetry.cpp:228
 msgid "The molecule has no atoms."
-msgstr ""
+msgstr "Molekula nemá žádné atomy."
 
 #: qtplugins/symmetry/symmetry.cpp:386
 msgid "There is no molecule to symmetrize."
-msgstr ""
+msgstr "Není k dispozici žádná molekula k symetrizaci."
 
 #: qtplugins/symmetry/symmetry.cpp:394
 msgid "A single atom is already symmetric."
-msgstr ""
+msgstr "Jediný atom je již symetrický."
 
 #: qtplugins/symmetry/symmetry.cpp:415
 #, qt-format
 msgid "libmsym returned %1 atoms for a molecule of %2."
-msgstr ""
+msgstr "libmsym: počet vrácených atomů %1, počet atomů molekuly %2."
 
 #: qtplugins/symmetry/symmetry.cpp:438
 msgid "Detect the point group of the molecule."
-msgstr ""
+msgstr "Zjistit bodovou grupu molekuly."
 
 #: qtplugins/symmetry/symmetry.cpp:440
 msgid "Snap the molecule onto its detected point group."
-msgstr ""
+msgstr "Přizpůsobit molekulu její zjištěné bodové grupě."
 
 #: qtplugins/symmetry/symmetry.cpp:457
 #, qt-format
 msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
-msgstr ""
+msgstr "Neznámá tolerance „%1“: očekává se tight, normal, loose nebo veryloose."
 
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr ""
+msgstr "Zjištěno %1"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
 msgid "Symmetrized to %1"
-msgstr ""
+msgstr "Symetrizováno podle %1"
 
 #: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
@@ -7466,7 +7599,7 @@ msgid ""
 "Yaehmop execution failed with the following error:\n"
 "%1"
 msgstr ""
-"Běh programu Yaehmop se nezdařil s následující chybou:\n"
+"Spouštění programu Yaehmop se nezdařilo s následující chybou:\n"
 "%1"
 
 #: qtplugins/yaehmop/yaehmop.cpp:309
@@ -7518,74 +7651,84 @@ msgstr "Provádět výpočty rozšířenou Hückelovou metodou pomocí yaehmop."
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:36
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:34
 msgid "Z-Matrix Editor"
-msgstr ""
+msgstr "Editor Z-matice"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
 msgid "Add Dummy Atoms"
-msgstr ""
+msgstr "Přidat pomocné atomy"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
-msgstr ""
+msgstr "Znovu sestavit geometrii"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:69
 msgid ""
 "Rebuild every atom position from the table. The molecule is not moved or "
 "reoriented."
 msgstr ""
+"Znovu sestavit polohu každého atomu podle tabulky. Molekula se neposouvá ani "
+"nepřeorientovává."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
-msgstr ""
+msgstr "Editor &Z-matice…"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:135
 msgid "Atoms renumbered into z-matrix order."
-msgstr ""
+msgstr "Atomy byly přečíslovány podle pořadí v Z-matici."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:137
 msgid "The atoms are already in z-matrix order."
-msgstr ""
+msgstr "Atomy již mají pořadí podle Z-matice."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:148
 msgid ""
 "Dummy atoms added beside the linear fragments. They are ordinary atoms of "
 "element Xx: delete them, or undo, when you are done with the matrix."
 msgstr ""
+"Vedle lineárních fragmentů byly přidány pomocné atomy. Jsou to běžné atomy "
+"prvku Xx: až s maticí skončíte, odstraňte je nebo vraťte změnu zpět."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
-msgstr ""
+msgstr "Zde není potřeba žádný pomocný atom."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
-msgstr ""
+msgstr "Geometrie byla znovu sestavena podle tabulky."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
 msgid "There is nothing to rebuild."
-msgstr ""
+msgstr "Není co znovu sestavit."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:187
 msgid "There is nothing to renumber."
-msgstr ""
+msgstr "Není co přečíslovat."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:190
 msgid ""
 "The atoms are already in z-matrix order: every atom already follows the "
 "atoms it is measured against, so renumbering them would change nothing."
 msgstr ""
+"Atomy již mají pořadí podle Z-matice: každý atom již následuje po atomech, "
+"vůči kterým se měří, takže jejich přečíslování by nic nezměnilo."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:195
 msgid ""
 "Renumber the atoms so that each one follows the atoms it is measured "
 "against. This changes the atom numbers the rest of the application uses."
 msgstr ""
+"Přečíslovat atomy tak, aby každý následoval po atomech, vůči kterým se měří. "
+"Tím se změní čísla atomů používaná ve zbytku aplikace."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:207
 msgid ""
 "Nothing here is straight enough to need one: every row already has real "
 "atoms off the axis to be measured against."
 msgstr ""
+"Nic zde není natolik přímé, aby byl potřeba: každý řádek již má skutečné "
+"atomy mimo osu, vůči kterým se měří."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:211
 msgid ""
@@ -7594,42 +7737,45 @@ msgid ""
 "atoms of the molecule: they are saved and exported with it until you delete "
 "them."
 msgstr ""
+"Přidat atom prvku Xx vedle každého lineárního fragmentu mimo osu, aby bylo "
+"možné měřit a upravovat jeho úhly a torzní úhly. Pomocné atomy jsou skutečné "
+"atomy molekuly: ukládají se a exportují spolu s ní, dokud je neodstraníte."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
-msgstr ""
+msgstr "Upravovat délky vazeb, úhly a torzní úhly v tabulce."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:127
 msgid "Distance (Å)"
-msgstr ""
+msgstr "Vzdálenost (Å)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:131
 msgid "Dihedral (°)"
-msgstr ""
+msgstr "Torzní úhel (°)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
 #, qt-format
 msgid "Constrained to %1 Å"
-msgstr ""
+msgstr "Omezeno na %1 Å"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:176
 #, qt-format
 msgid "Constrained to %1°"
-msgstr ""
+msgstr "Omezeno na %1°"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:364
 #, qt-format
 msgid "There is no atom %1."
-msgstr ""
+msgstr "Atom %1 neexistuje."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:367
 msgid "An atom cannot be measured against itself."
-msgstr ""
+msgstr "Atom nelze měřit vůči němu samému."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:373
 #, qt-format
 msgid "Atom %1 is already used by this row."
-msgstr ""
+msgstr "Atom %1 je již v tomto řádku použit."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:380
 #, qt-format
@@ -7637,18 +7783,20 @@ msgid ""
 "Atom %1 is placed after this one, so it cannot be measured against. Reorder "
 "the atoms first."
 msgstr ""
+"Atom %1 je zařazen za tímto atomem, takže jej nelze použít jako referenci "
+"pro měření. Nejprve přeuspořádejte atomy."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:735
 msgid "Rebuild from Z-matrix"
-msgstr ""
+msgstr "Znovu sestavit ze Z-matice"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:117
 msgid "Constrain Distance"
-msgstr ""
+msgstr "Omezit vzdálenost"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:123
 msgid "Constrain Dihedral"
-msgstr ""
+msgstr "Omezit torzní úhel"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -8447,12 +8595,12 @@ msgstr "Řád vazby:"
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:53
 #. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
 msgid "When possible, adjust bond lengths when changing atoms or bond orders"
-msgstr ""
+msgstr "Je-li to možné, upravit délky vazeb při změně atomů nebo řádů vazeb"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
 msgid "Adjust Bond Lengths"
-msgstr ""
+msgstr "Upravovat délky vazeb"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -9285,7 +9433,7 @@ msgstr "dipole"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:241
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
 msgid "ellipsoid"
-msgstr "elipsoid"
+msgstr "ellipsoid"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:246
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -9488,7 +9636,7 @@ msgstr "Počáteční rychlosti"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:728
 #. i18n: ectx: property (toolTip), widget (QComboBox, velocityDistCombo)
 msgid "Select the distribution of initial atom velocities."
-msgstr "Výběr rozložení počátečních rychlostí atomů."
+msgstr "Vyberte rozdělení počátečních rychlostí atomů."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:732
 #. i18n: ectx: property (text), item, widget (QComboBox, velocityDistCombo)
@@ -10183,17 +10331,17 @@ msgstr "Hledat pluginy…"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
 msgid "Plugin Information"
-msgstr ""
+msgstr "Informace o pluginu"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:122
 #. i18n: ectx: property (text), widget (QPushButton, bugTrackerButton)
 msgid "Report an Issue"
-msgstr ""
+msgstr "Nahlásit problém"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
 msgid "Open this plugin's bug tracker in your browser"
-msgstr ""
+msgstr "Otevřít systém sledování chyb tohoto pluginu ve vašem prohlížeči"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
@@ -11095,42 +11243,15 @@ msgstr "Zobrazit vstup pro Yaehmop?"
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-",Launchpad Contributions:,Vaclav Rehak,Vojtěch Trefný, ,Launchpad "
-"Contributions:,Vaclav Rehak,Vojtěch Trefný,milboy, ,Launchpad "
-"Contributions:,Avogadro Team,Vaclav Rehak,Vojtěch Trefný,milboy, ,Launchpad "
-"Contributions:,Avogadro Team,Vaclav Rehak,Vojtěch Trefný,milboy, Pavel "
-"Fric, ,Launchpad Contributions:,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Konki,Vaclav Rehak,Vojtěch Trefný,fri, ,Launchpad "
-"Contributions:,Avogadro Team,Jirka Emmer,Konki,Kuvaly [LCT],Milan "
-"Slovák,Vaclav Rehak,Vojtěch Trefný,Zdeněk Chalupský,fri, ,Launchpad "
-"Contributions:,Avogadro Team,Jirka Emmer,Konki,Kuvaly [LCT],Milan "
-"Slovák,Vaclav Rehak,Vojtěch Trefný,Zdeněk Chalupský,fri, ,Launchpad "
-"Contributions:,Avogadro Team,Jirka Emmer,Konki,Kuvaly [LCT],Milan "
-"Slovák,Vaclav Rehak,Vojtěch Trefný,Zdeněk Chalupský,fri"
+"Vaclav Rehak,Vojtěch Trefný,milboy,Avogadro Team,fri,Geoff Hutchison,Roman "
+"Horník,Zbyněk Schwarz,Pepa,Zdeněk Chalupský,Martin Slavík,Pavel "
+"Fric,Konki,Jirka Emmer,Kuvaly [LCT],Milan Slovák"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-",,venca.rehak@seznam.cz,vojtech.trefny@gmail.com,,,venca.rehak@seznam.cz,vojtech.trefny@gmail.com,,,,avogadro-"
-"devel@lists.sourceforge.net,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,roman.hornik@gmail.com,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,roman.hornik@gmail.com,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,,,,pavelfric@seznam.cz,,,avogadro-"
-"devel@lists.sourceforge.net,,,,,,,pavelfric@seznam.cz"
+"venca.rehak@seznam.cz,vojtech.trefny@gmail.com,,avogadro-"
+"devel@lists.sourceforge.net,pavelfric@seznam.cz,,roman.hornik@gmail.com"
 
 #, qt-format
 #~ msgid ""
