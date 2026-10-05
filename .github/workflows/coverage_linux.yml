@@ -1,0 +1,202 @@
+name: Linux Coverage
+
+# Weekly line and branch coverage for the avogadrolibs libraries, built with
+# GCC --coverage and measured with gcovr. The per-module table goes to the job
+# summary with the change since the previous run, and history.csv records the
+# trend.
+#
+# History is carried between runs as the "coverage-history" artifact: each run
+# downloads the previous successful master run's copy, appends its own rows
+# and uploads the result again. Artifacts expire after 90 days, so the history
+# survives as long as successful runs are less than 90 days apart; this weekly
+# schedule is what keeps it going. If it is ever lost, the next run simply
+# starts a new baseline.
+#
+# No compiler cache here, on purpose: coverage objects and their .gcno files
+# interact badly with ccache/sccache, and a weekly job gains little from one.
+
+on:
+  schedule:
+  - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  QT_VERSION: 6.8.3
+  FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+  # Without this, tests/{calc,io,quantumio} silently register no tests.
+  AVOGADRO_DATA_ROOT: ${{ github.workspace }}/openchemistry/avogadrodata
+  # Fewer tests than this means some were silently dropped.
+  MIN_TESTS: 100
+
+# Never cancel a running coverage job: a cancelled run publishes no history.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    name: Ubuntu GCC Coverage
+    # Keep forks from running the schedule on a timer; manual dispatch is
+    # allowed anywhere.
+    if: github.event_name == 'workflow_dispatch' || github.repository == 'OpenChemistry/avogadrolibs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
+        python3 -m venv "${RUNNER_TEMP}/venv"
+        "${RUNNER_TEMP}/venv/bin/pip" install --quiet gcovr
+        echo "${RUNNER_TEMP}/venv/bin" >> "${GITHUB_PATH}"
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    # The superbuild forwards only CMAKE_BUILD_TYPE to its subprojects, so the
+    # coverage flags reach them through CFLAGS/CXXFLAGS/LDFLAGS, which CMake
+    # reads when each subproject is first configured. That happens during the
+    # Build step, not here, so the same env must be set on both steps. Debug
+    # keeps asserts enabled (no -DNDEBUG).
+    - name: Configure
+      shell: bash
+      env: &coverage-env
+        CC: gcc
+        CXX: g++
+        CFLAGS: -O0 -g --coverage
+        CXXFLAGS: -O0 -g --coverage
+        LDFLAGS: --coverage
+      run: |
+        mkdir -p "${{ runner.workspace }}/build"
+        cd "${{ runner.workspace }}/build"
+        cmake "$GITHUB_WORKSPACE/openchemistry" -G Ninja ${{ env.FEATURES }} \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DUSE_SYSTEM_EIGEN=TRUE \
+          -DENABLE_TESTING=ON \
+          -DTEST_QTGL=OFF \
+          -DUSE_SYSTEM_ZLIB=ON
+
+    # Only avogadrolibs and its dependencies; the application is not tested
+    # here.
+    - name: Build
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+      env: *coverage-env
+      run: cmake --build . --target avogadrolibs
+
+    - name: Check the test count
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        count=$(ctest -N | sed -n 's/^Total Tests: *//p')
+        echo "ctest found ${count:-0} tests (minimum ${MIN_TESTS})"
+        if [ "${count:-0}" -lt "${MIN_TESTS}" ]; then
+          echo "::error::Only ${count:-0} tests registered; expected at least ${MIN_TESTS}. Check AVOGADRO_DATA_ROOT and the configure log."
+          exit 1
+        fi
+
+    # A failing test must not suppress the report, so this step is allowed to
+    # fail and the job is failed at the very end, after the uploads.
+    - name: Run tests
+      id: tests
+      continue-on-error: true
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: ctest --output-on-failure -j "$(nproc)"
+
+    # Absolute --filter patterns: relative ones resolve against the working
+    # directory rather than --root and silently match nothing.
+    - name: Generate coverage report
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        src="$GITHUB_WORKSPACE/openchemistry/avogadrolibs"
+        mkdir -p coverage-html
+        gcovr -r "$src" . \
+          --filter "$src/avogadro/(core|calc|io|quantumio|qtgui|rendering|qtplugins)/" \
+          --exclude-unreachable-branches --exclude-throw-branches \
+          --json-summary coverage-summary.json --json-summary-pretty \
+          --html-details coverage-html/index.html \
+          -j "$(nproc)"
+
+    - name: Download previous history
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p previous
+        # Not --status success: a week with failing tests still uploads its
+        # history and then fails the job, and skipping it would drop its row.
+        # Take the newest completed run whose artifact can be downloaded.
+        ids=$(gh run list --repo "${{ github.repository }}" --workflow coverage_linux.yml \
+                --branch master --status completed --limit 10 \
+                --json databaseId --jq '.[].databaseId' || true)
+        for id in $ids; do
+          [ "$id" = "$GITHUB_RUN_ID" ] && continue
+          if gh run download "$id" --repo "${{ github.repository }}" \
+               -n coverage-history -D previous 2>/dev/null; then
+            echo "Using history from run $id"
+            exit 0
+          fi
+        done
+        echo "No previous history found; this run is the baseline."
+
+    - name: Summarize coverage
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        if [ "${{ steps.tests.outcome }}" = "success" ]; then
+          status="passed"
+        else
+          status="FAILED"
+        fi
+        mkdir -p history
+        cp previous/history.csv history/history.csv 2>/dev/null || true
+        python3 "$GITHUB_WORKSPACE/openchemistry/avogadrolibs/scripts/coverage_summary.py" \
+          coverage-summary.json --history history/history.csv \
+          --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --tests "$status" \
+          | tee summary.md
+        cat summary.md >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Upload history
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: coverage-history
+        path: ${{ runner.workspace }}/build/avogadrolibs/history/history.csv
+        retention-days: 90
+        if-no-files-found: ignore
+
+    - name: Upload report
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: coverage-report
+        path: |
+          ${{ runner.workspace }}/build/avogadrolibs/coverage-html
+          ${{ runner.workspace }}/build/avogadrolibs/coverage-summary.json
+        retention-days: 30
+        if-no-files-found: ignore
+
+    - name: Fail if tests failed
+      if: ${{ steps.tests.outcome == 'failure' }}
+      run: |
+        echo "::error::Some tests failed; see the Run tests step. The coverage report was still published."
+        exit 1
