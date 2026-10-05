@@ -9,9 +9,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets Network Test REQUIRED)
 find_package(Python3 COMPONENTS Interpreter)
 
 # Setup config file with data location
-if(AVOGADRO_DATA_ROOT)
-  set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
-endif()
+set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/qtguitests.h" @ONLY)
 

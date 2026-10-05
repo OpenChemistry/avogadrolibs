@@ -58,6 +58,16 @@ find_path(AVOGADRO_DATA_ROOT .avogadro.data
   )
 mark_as_advanced(AVOGADRO_DATA_ROOT)
 
+# Fatal, or the data-dependent test directories silently drop their tests.
+if(NOT AVOGADRO_DATA_ROOT OR NOT EXISTS "${AVOGADRO_DATA_ROOT}/.avogadro.data")
+  message(FATAL_ERROR "ENABLE_TESTING is ON but the avogadrodata test data "
+    "was not found. Set AVOGADRO_DATA_ROOT (CMake variable or environment "
+    "variable) to an avogadrodata checkout "
+    "(https://github.com/OpenChemistry/avogadrodata), or turn ENABLE_TESTING "
+    "off. Without it the calc, io, quantumio and qtopengl tests would not be "
+    "registered.")
+endif()
+
 # Add the tests for each module.
 
 add_subdirectory(calc)

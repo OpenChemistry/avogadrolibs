@@ -36,12 +36,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
 endif()
 
 # we also read some example data files
-if(AVOGADRO_DATA_ROOT)
-  set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
-else()
-  message("No data root found, please set to run the tests.")
-  return()
-endif()
+set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/calctests.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/calctests.h" @ONLY)

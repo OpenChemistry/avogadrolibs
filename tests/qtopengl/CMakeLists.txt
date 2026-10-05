@@ -25,12 +25,7 @@ if(NOT "${VTK_FOUND}")
   include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 endif()
 
-if(AVOGADRO_DATA_ROOT)
-  set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
-else()
-  message("No data root found, please set to run the tests.")
-  return()
-endif()
+set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
 
 # Setup config file with data location
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtopengltests.h.in"

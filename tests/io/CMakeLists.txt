@@ -25,12 +25,7 @@ endif()
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
 	"${AvogadroLibs_BINARY_DIR}/avogadro/io")
 
-if(AVOGADRO_DATA_ROOT)
-  set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
-else()
-  message("No data root found, please set to run the tests.")
-  return()
-endif()
+set(AVOGADRO_DATA ${AVOGADRO_DATA_ROOT})
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/iotests.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/iotests.h" @ONLY)
