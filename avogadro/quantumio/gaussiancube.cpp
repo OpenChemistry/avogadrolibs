@@ -136,9 +136,13 @@ struct ResamplePlan
 // six decimals, so this only separates axis-aligned grids from skewed ones.
 constexpr double kAxisAlignedTolerance = 1.0e-6;
 
-bool isAxisAligned(const Matrix3& steps)
+// An axis with a single point never steps along its vector, so its step is
+// ignored: files often write zero for it (a plane or a line of values).
+bool isAxisAligned(const Matrix3& steps, const Vector3i& dim)
 {
   for (int i = 0; i < 3; ++i) {
+    if (dim(i) == 1)
+      continue;
     const double length = steps.col(i).norm();
     if (!(steps(i, i) > 0.0))
       return false;
@@ -161,10 +165,56 @@ bool isAxisAligned(const Matrix3& steps)
  * Its spacing is the shortest step, so no resolution is lost, and is
  * increased if that would give more than @p maxPoints points.
  */
-bool planResample(const Matrix3& steps, const Vector3i& dim,
+/**
+ * Replaces the step of each single-point axis with a unit vector (Angstrom)
+ * orthogonal to the steps of the other axes, so that whatever the file wrote
+ * for it cannot make the matrix singular or change the target spacing.
+ */
+Matrix3 effectiveSteps(const Matrix3& steps, const Vector3i& dim)
+{
+  Matrix3 result = steps;
+  // Orthonormal basis of the columns fixed so far.
+  Vector3 basis[3];
+  int count = 0;
+  auto residual = [&](Vector3 v) {
+    for (int k = 0; k < count; ++k)
+      v -= basis[k].dot(v) * basis[k];
+    return v;
+  };
+  for (int i = 0; i < 3; ++i) {
+    if (dim(i) == 1)
+      continue;
+    const Vector3 v = residual(steps.col(i));
+    const double length = v.norm();
+    if (count < 3 && length > 1.0e-6 * steps.col(i).norm())
+      basis[count++] = v / length;
+  }
+  for (int i = 0; i < 3; ++i) {
+    if (dim(i) != 1)
+      continue;
+    // Prefer this axis' own direction; one of the three always has a
+    // residual of at least 1/sqrt(3) against at most two basis vectors.
+    Vector3 best = Vector3::Zero();
+    for (int k = 0; k < 3; ++k) {
+      const Vector3 v = residual(Vector3::Unit((i + k) % 3));
+      if (v.norm() > best.norm() + 1.0e-12)
+        best = v;
+    }
+    best.normalize();
+    result.col(i) = best;
+    if (count < 3)
+      basis[count++] = best;
+  }
+  return result;
+}
+
+bool planResample(const Matrix3& fileSteps, const Vector3i& dim,
                   const Vector3& origin, size_t maxPoints, ResamplePlan& plan)
 {
-  if (!steps.allFinite() || !origin.allFinite())
+  if (!fileSteps.allFinite() || !origin.allFinite())
+    return false;
+  const Matrix3 steps = effectiveSteps(fileSteps, dim);
+  if (!steps.allFinite())
     return false;
 
   // A (nearly) singular matrix has no inverse to map positions back to the
@@ -187,8 +237,13 @@ bool planResample(const Matrix3& steps, const Vector3i& dim,
     hi = hi.cwiseMax(r);
   }
   const Vector3 extent = hi - lo;
-  double h =
-    std::min({ steps.col(0).norm(), steps.col(1).norm(), steps.col(2).norm() });
+  // Only axes with more than one point have a resolution to keep.
+  double h = std::numeric_limits<double>::infinity();
+  for (int i = 0; i < 3; ++i)
+    if (dim(i) > 1)
+      h = std::min(h, steps.col(i).norm());
+  if (std::isinf(h))
+    h = 1.0; // a single point: any spacing will do
   if (!extent.allFinite() || !std::isfinite(h) || !(h > 1.0e-9))
     return false;
 
@@ -472,7 +527,12 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   // Voxel axes that are not along x, y and z (or point backwards) cannot be
   // stored in a Core::Cube as they are: resample them onto an axis-aligned
   // grid (see ResamplePlan). Everything else is read as is.
-  const bool skewed = !isAxisAligned(steps);
+  const bool skewed = !isAxisAligned(steps, dim);
+  // A single-point axis may have a zero step, which Core::Cube rejects; its
+  // spacing is never used, so any positive value will do.
+  for (int i = 0; i < 3; ++i)
+    if (dim(i) == 1 && !(spacing(i) > 0.0))
+      spacing(i) = 1.0;
   ResamplePlan plan;
   std::vector<float> source;
   if (skewed) {

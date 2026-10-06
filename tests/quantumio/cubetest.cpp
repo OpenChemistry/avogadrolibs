@@ -398,6 +398,58 @@ TEST(GaussianCubeTest, singularGridRejected)
   EXPECT_NE(reader.error(), std::string());
 }
 
+// A single-point axis never steps along its vector, so a zero step there
+// (a plane of values) is neither singular nor skewed.
+TEST(GaussianCubeTest, singlePointAxisStepIgnored)
+{
+  GaussianCube reader;
+  Molecule molecule;
+  std::ostringstream out;
+  out << "Comment line\n";
+  out << "Second comment line\n";
+  out << "    1    0.000000    0.000000    0.000000\n";
+  out << "    2    0.100000    0.000000    0.000000\n";
+  out << "    2    0.000000    0.200000    0.000000\n";
+  out << "    1    0.000000    0.000000    0.000000\n";
+  out << "    1    1.000000    0.000000    0.000000    0.000000\n";
+  out << " 1.0 2.0 3.0 4.0\n";
+
+  ASSERT_TRUE(reader.readString(out.str(), molecule)) << reader.error();
+  const auto* cube = molecule.cube(0);
+  ASSERT_NE(cube, nullptr);
+  EXPECT_EQ(cube->dimensions(), Avogadro::Vector3i(2, 2, 1));
+  EXPECT_NEAR(cube->spacing()(0), 0.1 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  EXPECT_NEAR(cube->spacing()(1), 0.2 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  ASSERT_EQ(cube->data()->size(), static_cast<size_t>(4));
+  EXPECT_NEAR((*cube->data())[3], 4.0f, 1.0e-5);
+}
+
+// A skewed plane with a zero (or short) step on its single-point axis is
+// still resampled, at the spacing of the axes it actually has.
+TEST(GaussianCubeTest, skewedPlaneWithZeroStepIsResampled)
+{
+  GaussianCube reader;
+  Molecule molecule;
+  std::ostringstream out;
+  out << "Comment line\n";
+  out << "Second comment line\n";
+  out << "    1    0.000000    0.000000    0.000000\n";
+  out << "    3    0.200000    0.000000    0.000000\n";
+  out << "    3    0.100000    0.200000    0.000000\n";
+  out << "    1    0.000000    0.000000    0.000000\n";
+  out << "    1    1.000000    0.000000    0.000000    0.000000\n";
+  out << " 1 1 1 1 1 1 1 1 1\n";
+
+  ASSERT_TRUE(reader.readString(out.str(), molecule)) << reader.error();
+  const auto* cube = molecule.cube(0);
+  ASSERT_NE(cube, nullptr);
+  EXPECT_EQ(cube->dimensions()(2), 1);
+  EXPECT_NEAR(cube->spacing()(0), 0.2 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  // The corner at the origin is a source point, so it keeps its value.
+  ASSERT_FALSE(cube->data()->empty());
+  EXPECT_NEAR((*cube->data())[0], 1.0f, 1.0e-5);
+}
+
 namespace {
 
 // Switches the C locale to one with a comma as the decimal separator, and
