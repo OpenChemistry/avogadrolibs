@@ -169,8 +169,8 @@ void Cp2kInputDialog::connectBasic()
           SLOT(updatePreviewText()));
   connect(ui.ewaldgmaxSpin, SIGNAL(valueChanged(double)), this,
           SLOT(updatePreviewText()));
-  connect(ui.lsdcheckBox, SIGNAL(stateChanged(bool)), this,
-          SLOT(updatePreviewText()));
+  connect(ui.lsdcheckBox, &QCheckBox::toggled, this,
+          &Cp2kInputDialog::updatePreviewText);
   connect(ui.maxscfspinBox, SIGNAL(valueChanged(int)), this,
           SLOT(updatePreviewText()));
   connect(ui.epsscfSpinBox, SIGNAL(valueChanged(double)), this,
