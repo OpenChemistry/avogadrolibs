@@ -2277,3 +2277,144 @@ TEST(RWMoleculeTest, modifyMoleculeKeepsReplacementsOwnDisplayState)
   EXPECT_EQ(after->enable.count("Wireframe"), 1u);
   EXPECT_EQ(after->enable.count("Ball and Stick"), 0u);
 }
+
+namespace {
+
+// Four carbons in a chain with bonds 0-1, 1-2, 2-3 (unique ids 0, 1, 2).
+void buildChain(Molecule& mol)
+{
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6).setPosition3d(Vector3(1.5 * i, 0.0, 0.0));
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 1);
+  mol.addBond(2, 3, 1);
+}
+
+// Bonds as sorted (uniqueId, atomUid1, atomUid2) so the comparison does not
+// depend on storage order.
+std::vector<std::tuple<Index, Index, Index>> bondsByUniqueId(Molecule& mol)
+{
+  std::vector<std::tuple<Index, Index, Index>> result;
+  RWMolecule* rw = mol.undoMolecule();
+  for (Index i = 0; i < mol.bondCount(); ++i) {
+    auto pair = mol.bondPair(i);
+    Index a = rw->atomUniqueId(pair.first);
+    Index b = rw->atomUniqueId(pair.second);
+    result.emplace_back(rw->bondUniqueId(i), std::min(a, b), std::max(a, b));
+  }
+  std::sort(result.begin(), result.end());
+  return result;
+}
+
+// Every unique id must round-trip through its index, and no index may be out
+// of range.
+void expectIdsConsistent(Molecule& mol)
+{
+  RWMolecule* rw = mol.undoMolecule();
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    Index uid = rw->atomUniqueId(i);
+    ASSERT_NE(uid, Avogadro::MaxIndex) << "atom " << i;
+    auto atom = rw->atomByUniqueId(uid);
+    ASSERT_TRUE(atom.isValid()) << "atom uid " << uid;
+    EXPECT_EQ(atom.index(), i);
+  }
+  for (Index i = 0; i < mol.bondCount(); ++i) {
+    Index uid = rw->bondUniqueId(i);
+    ASSERT_NE(uid, Avogadro::MaxIndex) << "bond " << i;
+    auto bond = rw->bondByUniqueId(uid);
+    ASSERT_TRUE(bond.isValid()) << "bond uid " << uid;
+    EXPECT_EQ(bond.index(), i);
+    EXPECT_LT(mol.bondPair(i).first, mol.atomCount());
+    EXPECT_LT(mol.bondPair(i).second, mol.atomCount());
+  }
+}
+
+} // namespace
+
+// modifyMolecule() stores the live molecule for undo. Its copy constructor
+// used to renumber the unique ids, so undoing past it with a hole in the
+// bond table left earlier commands pointing at the wrong bond.
+TEST(RWMoleculeTest, modifyMoleculeUndoKeepsBondUniqueIds)
+{
+  Molecule mol;
+  buildChain(mol);
+  RWMolecule* rw = mol.undoMolecule();
+  const auto original = bondsByUniqueId(mol);
+  ASSERT_EQ(original.size(), 3u);
+
+  // Remove the first bond, leaving a hole at unique id 0
+  Index firstUid = rw->bondUniqueId(0);
+  ASSERT_TRUE(rw->removeBond(static_cast<Index>(0)));
+  ASSERT_EQ(mol.bondCount(), 2u);
+  const auto afterRemove = bondsByUniqueId(mol);
+
+  Molecule edited = mol;
+  edited.setAtomPosition3d(3, Vector3(9.0, 9.0, 9.0));
+  rw->modifyMolecule(edited, Molecule::Atoms | Molecule::Modified, "Edit");
+  const auto afterModify = bondsByUniqueId(mol);
+  EXPECT_EQ(mol.atomPosition3d(3), Vector3(9.0, 9.0, 9.0));
+
+  rw->undoStack().undo(); // the modification
+  EXPECT_EQ(bondsByUniqueId(mol), afterRemove);
+  EXPECT_EQ(mol.atomPosition3d(3), Vector3(4.5, 0.0, 0.0));
+  expectIdsConsistent(mol);
+
+  rw->undoStack().undo(); // the bond removal
+  ASSERT_EQ(mol.bondCount(), 3u);
+  EXPECT_EQ(bondsByUniqueId(mol), original);
+  EXPECT_TRUE(rw->bondByUniqueId(firstUid).isValid());
+  expectIdsConsistent(mol);
+
+  rw->undoStack().redo();
+  EXPECT_EQ(bondsByUniqueId(mol), afterRemove);
+  rw->undoStack().redo();
+  EXPECT_EQ(bondsByUniqueId(mol), afterModify);
+  EXPECT_EQ(mol.atomPosition3d(3), Vector3(9.0, 9.0, 9.0));
+  expectIdsConsistent(mol);
+}
+
+// The atom version: the crash-class path, since atom undo commands re-add the
+// atom at its unique id.
+TEST(RWMoleculeTest, modifyMoleculeUndoKeepsAtomUniqueIds)
+{
+  Molecule mol;
+  buildChain(mol);
+  RWMolecule* rw = mol.undoMolecule();
+  const Index removedUid = rw->atomUniqueId(static_cast<Index>(1));
+  ASSERT_EQ(removedUid, 1u);
+
+  // Removes atom 1 and its two bonds, leaving holes in both tables
+  ASSERT_TRUE(rw->removeAtom(static_cast<Index>(1)));
+  ASSERT_EQ(mol.atomCount(), 3u);
+  ASSERT_EQ(mol.bondCount(), 1u);
+  const auto afterRemove = bondsByUniqueId(mol);
+
+  Molecule edited = mol;
+  edited.setAtomPosition3d(0, Vector3(-5.0, 0.0, 0.0));
+  rw->modifyMolecule(edited, Molecule::Atoms | Molecule::Modified, "Edit");
+
+  rw->undoStack().undo(); // the modification
+  EXPECT_EQ(mol.atomCount(), 3u);
+  EXPECT_EQ(bondsByUniqueId(mol), afterRemove);
+  expectIdsConsistent(mol);
+
+  rw->undoStack().undo(); // the atom removal
+  ASSERT_EQ(mol.atomCount(), 4u);
+  ASSERT_EQ(mol.bondCount(), 3u);
+  auto restored = rw->atomByUniqueId(removedUid);
+  ASSERT_TRUE(restored.isValid());
+  EXPECT_EQ(restored.atomicNumber(), 6);
+  EXPECT_EQ(restored.position3d(), Vector3(1.5, 0.0, 0.0));
+  expectIdsConsistent(mol);
+  std::vector<std::tuple<Index, Index, Index>> bonds = bondsByUniqueId(mol);
+  EXPECT_EQ(bonds, (std::vector<std::tuple<Index, Index, Index>>{
+                     { 0, 0, 1 }, { 1, 1, 2 }, { 2, 2, 3 } }));
+  EXPECT_EQ(mol.atomPosition3d(0), Vector3(0.0, 0.0, 0.0));
+
+  rw->undoStack().redo();
+  rw->undoStack().redo();
+  EXPECT_EQ(mol.atomCount(), 3u);
+  EXPECT_EQ(mol.bondCount(), 1u);
+  EXPECT_EQ(mol.atomPosition3d(0), Vector3(-5.0, 0.0, 0.0));
+  expectIdsConsistent(mol);
+}
