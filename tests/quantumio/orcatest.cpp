@@ -9,6 +9,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/conformerquantity.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
@@ -20,6 +21,7 @@
 
 using Avogadro::Vector3;
 using Avogadro::Core::Atom;
+using Avogadro::Core::GaussianSet;
 using Avogadro::Core::Molecule;
 using Avogadro::Io::FileFormat;
 using Avogadro::QuantumIO::ORCAOutput;
@@ -294,5 +296,171 @@ TEST(OrcaTest, shortCoordinateSetIsSkipped)
     EXPECT_TRUE(stored == 0 || stored == molecule.atomCount())
       << "conformer " << i << " has " << stored << " of "
       << molecule.atomCount() << " atoms";
+  }
+}
+
+namespace {
+
+const std::string kOrcaTwoHydrogens =
+  "CARTESIAN COORDINATES (A.U.)\n"
+  "----------------------------\n"
+  "  NO LB      ZA    FRAG     MASS         X           Y           Z\n"
+  "   0 H     1.0000    0     1.008    0.000000    0.000000    0.000000\n"
+  "   1 H     1.0000    0     1.008    1.400000    0.000000    0.000000\n"
+  "\n";
+
+// The basis set section, with @p shells as the hydrogen basis.
+std::string orcaBasis(const std::string& shells)
+{
+  return "BASIS SET INFORMATION\n"
+         "---------------------\n"
+         "There are 1 groups of distinct atoms\n"
+         "\n"
+         " Group   1 Type H   : 1s contracted to 1s pattern {1}\n"
+         "\n"
+         "Atom   0H    basis set group =>   1\n"
+         "Atom   1H    basis set group =>   1\n"
+         "\n"
+         "-------------------------\n"
+         "BASIS SET IN INPUT FORMAT\n"
+         "-------------------------\n"
+         "\n"
+         " # Basis set for element : H \n"
+         " NewGTO H \n" +
+         shells +
+         "  end;\n"
+         "\n"
+         "\n"
+         "\n";
+}
+
+const std::string kOrcaSPShells = " S 1 \n"
+                                  "   1       1.2000000000      1.0000000000\n"
+                                  " P 1 \n"
+                                  "   1       0.8000000000      1.0000000000\n";
+
+// Reads, and without an exception caught by FileFormat's guard (which fuzz
+// builds compile out).
+::testing::AssertionResult readsCleanly(const std::string& input,
+                                        Molecule& molecule, ORCAOutput& format)
+{
+  bool ok = format.readString(input, molecule);
+  if (format.error().find("appears to be malformed") != std::string::npos)
+    return ::testing::AssertionFailure()
+           << "read threw an exception: " << format.error();
+  if (!ok)
+    return ::testing::AssertionFailure() << "read failed: " << format.error();
+  return ::testing::AssertionSuccess();
+}
+
+} // namespace
+
+// Sanity check for the inline basis set used below: S and P on each atom.
+TEST(OrcaTest, inlineBasisSet)
+{
+  ORCAOutput format;
+  Molecule molecule;
+  ASSERT_TRUE(readsCleanly(kOrcaTwoHydrogens + orcaBasis(kOrcaSPShells),
+                           molecule, format));
+  ASSERT_EQ(molecule.atomCount(), 2);
+  auto* basis = dynamic_cast<GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  ASSERT_EQ(basis->symmetry().size(), 4);
+  EXPECT_EQ(basis->symmetry()[0], GaussianSet::S);
+  EXPECT_EQ(basis->symmetry()[1], GaussianSet::P);
+  EXPECT_EQ(basis->atomIndices()[0], 0);
+  EXPECT_EQ(basis->atomIndices()[2], 1);
+  ASSERT_EQ(basis->gtoA().size(), 4);
+  EXPECT_DOUBLE_EQ(basis->gtoA()[0], 1.2);
+  EXPECT_DOUBLE_EQ(basis->gtoA()[1], 0.8);
+}
+
+// Regression test: ORCA never prints SP shells, so the reader never stores
+// their P coefficients, and an "SP" shell read past the end of them. The
+// basis set is now skipped; the geometry still reads.
+TEST(OrcaTest, spShellSkipsBasisSet)
+{
+  ORCAOutput format;
+  Molecule molecule;
+  ASSERT_TRUE(readsCleanly(
+    kOrcaTwoHydrogens +
+      orcaBasis(" SP 1 \n   1       0.8000000000      1.0000000000\n"),
+    molecule, format));
+  EXPECT_EQ(molecule.atomCount(), 2);
+  auto* basis = dynamic_cast<GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  EXPECT_TRUE(basis->symmetry().empty());
+  EXPECT_NE(format.error().find("basis set"), std::string::npos);
+}
+
+// A basis set on more atoms than the final geometry has (here a truncated
+// last geometry block) would put shells on atoms that do not exist.
+TEST(OrcaTest, basisOnMissingAtomSkipsBasisSet)
+{
+  ORCAOutput format;
+  Molecule molecule;
+  ASSERT_TRUE(readsCleanly(
+    kOrcaTwoHydrogens + orcaBasis(kOrcaSPShells) +
+      "CARTESIAN COORDINATES (A.U.)\n"
+      "----------------------------\n"
+      "  NO LB      ZA    FRAG     MASS         X           Y           Z\n"
+      "   0 H     1.0000    0     1.008    0.000000    0.000000    0.000000\n"
+      "\n",
+    molecule, format));
+  EXPECT_EQ(molecule.atomCount(), 1);
+  auto* basis = dynamic_cast<GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  EXPECT_TRUE(basis->symmetry().empty());
+}
+
+// Truncated basis set blocks read without throwing.
+TEST(OrcaTest, truncatedBasisSet)
+{
+  const std::vector<std::string> shells = {
+    // A shell cut off after its first primitive.
+    " S 3 \n   1       1.2000000000      1.0000000000\n",
+    // A primitive row with no coefficient.
+    " S 1 \n   1       1.2000000000\n",
+    // A shell header with no primitive count.
+    " S\n",
+  };
+  for (const auto& shell : shells) {
+    ORCAOutput format;
+    Molecule molecule;
+    EXPECT_TRUE(
+      readsCleanly(kOrcaTwoHydrogens + orcaBasis(shell), molecule, format))
+      << shell;
+    EXPECT_EQ(molecule.atomCount(), 2);
+  }
+  // A basis set cut off by the end of the file.
+  ORCAOutput format;
+  Molecule molecule;
+  std::string input = kOrcaTwoHydrogens + orcaBasis(kOrcaSPShells);
+  input.resize(input.find(" P 1"));
+  EXPECT_TRUE(readsCleanly(input, molecule, format));
+}
+
+// An MO block that ends on a pz row has no px/py rows to swap it with.
+TEST(OrcaTest, truncatedMOBlock)
+{
+  const std::string header = "------------------\n"
+                             "MOLECULAR ORBITALS\n"
+                             "------------------\n"
+                             "                      0         1\n"
+                             "                 -0.50000   0.20000\n"
+                             "                   2.00000   0.00000\n"
+                             "                  --------  --------\n";
+  for (const std::string rows : { "  0H   1s         0.900000  0.100000\n"
+                                  "  0H   1pz        0.100000  0.900000\n",
+                                  "  0H   1s         0.900000  0.100000\n"
+                                  "  0H   1pz        0.100000  0.900000\n"
+                                  "  0H   1px        0.200000  0.300000\n",
+                                  "  0H   1pz        0.100000  0.900000\n" }) {
+    ORCAOutput format;
+    Molecule molecule;
+    EXPECT_TRUE(readsCleanly(kOrcaTwoHydrogens + orcaBasis(kOrcaSPShells) +
+                               header + rows + "\n",
+                             molecule, format))
+      << rows;
   }
 }

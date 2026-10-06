@@ -49,7 +49,9 @@ private:
   void outputAll();
 
   void processLine(std::istream& in, Core::GaussianSet* basis);
-  void load(Core::GaussianSet* basis);
+  // Shells on atoms past @p atomCount, or with too few primitives, leave
+  // the basis set (and so the MO coefficients) empty.
+  void load(Core::GaussianSet* basis, Index atomCount);
   void clearBasisFunctions();
 
   void parseMCD();
