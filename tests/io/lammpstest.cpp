@@ -310,3 +310,91 @@ TEST(LammpsTest, scaledCoordinates)
     << format.error();
   EXPECT_EQ(molecule.atom(0).position3d(), Vector3(3.0, 2.5, 1.0));
 }
+
+namespace {
+
+// Fails, and through the parser's own error rather than an exception caught
+// by FileFormat's guard (which fuzz builds compile out).
+::testing::AssertionResult readFailsCleanly(const std::string& input)
+{
+  LammpsTrajectoryFormat format;
+  Molecule molecule;
+  if (format.readString(input, molecule))
+    return ::testing::AssertionFailure() << "read succeeded";
+  if (format.error().find("appears to be malformed") != std::string::npos)
+    return ::testing::AssertionFailure()
+           << "read threw an exception: " << format.error();
+  return ::testing::AssertionSuccess();
+}
+
+} // namespace
+
+// Orthogonal boxes have two-column bound rows; triclinic boxes add a tilt
+// factor as a third column. Both must give the right cell, and a two-column
+// row under a triclinic header (in any frame) must fail rather than throw.
+TEST(LammpsTest, boxBoundsColumns)
+{
+  const std::string head = "ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n1\n";
+  const std::string head2 = "ITEM: TIMESTEP\n10\nITEM: NUMBER OF ATOMS\n1\n";
+  const std::string atoms = "ITEM: ATOMS id type x y z\n1 1 0.5 0.5 0.5\n";
+  const std::string ortho =
+    "ITEM: BOX BOUNDS pp pp pp\n1.0 6.0\n-2.0 2.0\n0.0 3.5\n";
+  const std::string tri =
+    "ITEM: BOX BOUNDS xy xz yz pp pp pp\n0.0 5.5 0.5\n0.0 4.0 0.0\n"
+    "0.0 3.0 0.0\n";
+
+  // Two-column orthogonal rows.
+  {
+    LammpsTrajectoryFormat format;
+    Molecule molecule;
+    ASSERT_TRUE(format.readString(head + ortho + atoms, molecule))
+      << format.error();
+    ASSERT_NE(molecule.unitCell(), nullptr);
+    EXPECT_EQ(molecule.unitCell()->aVector(), Vector3(5.0, 0.0, 0.0));
+    EXPECT_EQ(molecule.unitCell()->bVector(), Vector3(0.0, 4.0, 0.0));
+    EXPECT_EQ(molecule.unitCell()->cVector(), Vector3(0.0, 0.0, 3.5));
+  }
+
+  // Three-column triclinic rows: the x bounding box shrinks by the tilt.
+  {
+    LammpsTrajectoryFormat format;
+    Molecule molecule;
+    ASSERT_TRUE(format.readString(head + tri + atoms, molecule))
+      << format.error();
+    ASSERT_NE(molecule.unitCell(), nullptr);
+    EXPECT_EQ(molecule.unitCell()->aVector(), Vector3(5.0, 0.0, 0.0));
+    EXPECT_EQ(molecule.unitCell()->bVector(), Vector3(0.5, 4.0, 0.0));
+    EXPECT_EQ(molecule.unitCell()->cVector(), Vector3(0.0, 0.0, 3.0));
+  }
+
+  // Triclinic header, but every row has only two columns.
+  const std::string triShort =
+    "ITEM: BOX BOUNDS xy xz yz pp pp pp\n0.0 5.0\n0.0 4.0\n0.0 3.0\n";
+  EXPECT_TRUE(readFailsCleanly(head + triShort + atoms));
+  // Only the z row is short.
+  EXPECT_TRUE(readFailsCleanly(head +
+                               "ITEM: BOX BOUNDS xy xz yz pp pp pp\n"
+                               "0.0 5.0 0.0\n0.0 4.0 0.0\n0.0 3.0\n" +
+                               atoms));
+  // The same in a later frame, triclinic and orthogonal.
+  EXPECT_TRUE(
+    readFailsCleanly(head + ortho + atoms + head2 + triShort + atoms));
+  EXPECT_TRUE(readFailsCleanly(head + ortho + atoms + head2 +
+                               "ITEM: BOX BOUNDS pp pp pp\n1.0 6.0\n-2.0\n"
+                               "0.0 3.5\n" +
+                               atoms));
+  // Box bounds cut off by the end of the file.
+  EXPECT_TRUE(readFailsCleanly(head + "ITEM: BOX BOUNDS pp pp pp\n1.0 6.0\n"));
+  EXPECT_TRUE(readFailsCleanly(
+    head + "ITEM: BOX BOUNDS xy xz yz pp pp pp\n0.0 5.5 0.5\n"));
+
+  // Sanity check: a two-frame file mixing both box kinds reads.
+  LammpsTrajectoryFormat valid;
+  Molecule molecule;
+  ASSERT_TRUE(
+    valid.readString(head + ortho + atoms + head2 + tri + atoms, molecule))
+    << valid.error();
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+  // The cell from the last frame read is the triclinic one.
+  EXPECT_EQ(molecule.unitCell()->bVector(), Vector3(0.5, 4.0, 0.0));
+}
