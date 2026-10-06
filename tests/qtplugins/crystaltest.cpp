@@ -73,6 +73,8 @@ protected:
   }
 
   Crystal m_crystal;
+  // Outlive the harness, whose destructor detaches the plugins
+  Bonding m_bonding;
   CommandTestHarness m_harness;
 };
 
@@ -247,11 +249,10 @@ TEST_F(CrystalCommandTest, undecidedNoUnitCellIsSilentNoOp)
 // The fuzzer's sequence: removeBonds, wrapUnitCell, undo, undo, redo. Deleting
 // bonds leaves holes in the unique id table, and wrapUnitCell's replacement
 // molecule used to be stored for undo with those ids renumbered, so the
-// second undo restored the wrong bonds. The harness attaches one plugin at a
-// time, so Bonding is attached for the first step and Crystal for the second.
+// second undo restored the wrong bonds. Crystal is attached by the fixture and
+// Bonding is attached alongside it.
 TEST_F(CrystalCommandTest, removeBondsThenWrapUndoUndoRedo)
 {
-  Bonding bonding;
   m_harness.buildMethanol();
   auto* mol = m_harness.molecule();
   // A 6 A cubic cell with H5 (the hydroxyl hydrogen) outside it
@@ -277,7 +278,7 @@ TEST_F(CrystalCommandTest, removeBondsThenWrapUndoUndoRedo)
   };
   ASSERT_EQ(bonds(), original);
 
-  m_harness.attach(&bonding);
+  m_harness.attach(&m_bonding);
   CommandOutcome out = m_harness.run("removeBonds");
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);
@@ -285,7 +286,6 @@ TEST_F(CrystalCommandTest, removeBondsThenWrapUndoUndoRedo)
   const BondList removed = { { 0, 2 }, { 0, 4 } };
   ASSERT_EQ(bonds(), removed);
 
-  m_harness.attach(&m_crystal);
   out = m_harness.run("wrapUnitCell");
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);

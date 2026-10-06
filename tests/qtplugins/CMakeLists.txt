@@ -75,6 +75,7 @@ endif()
 add_executable(AvogadroQtPluginsTests
   qtpluginstestmain.cpp
   commandtestharness.cpp
+  commandtestharnessgtest.cpp
   commandtestharnesstest.cpp
   ${testSrcs})
 target_include_directories(AvogadroQtPluginsTests PRIVATE ${pluginIncludes})

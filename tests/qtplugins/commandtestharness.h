@@ -115,6 +115,14 @@ struct CommandOutcome
 std::string describe(const CommandOutcome& outcome);
 
 /**
+ * Called by ~CommandTestHarness when a terminal signal arrived after the
+ * last command had settled. The harness itself does not depend on gtest, so
+ * that the in-process fuzz target can use it; the tests define this (in
+ * commandtestharnessgtest.cpp) as a gtest failure, the fuzzer as an abort.
+ */
+void reportLateSignals(const std::string& description);
+
+/**
  * Record, in the test XML, a behaviour that differs from the command
  * contract as decided (design note, "Decisions (Geoff, 2026-09-29)"). A
  * `knownDeviation...` test asserts the *current* behaviour, so it fails --
@@ -149,7 +157,13 @@ bool expectNear(const Vector3& actual, const Vector3& expected,
 class CommandTestHarness
 {
 public:
-  explicit CommandTestHarness(int timeoutMs = 5000);
+  /**
+   * @param timeoutMs How long to wait for an async command to terminate.
+   * @param graceMs How long to keep pumping events after a command has
+   * settled, to catch a late second terminal signal. The fuzz target shortens
+   * both; the tests keep the defaults.
+   */
+  explicit CommandTestHarness(int timeoutMs = 5000, int graceMs = 50);
   ~CommandTestHarness();
 
   CommandTestHarness(const CommandTestHarness&) = delete;
@@ -188,8 +202,12 @@ public:
   bool harnessMoleculeIsActive() const;
 
   /**
-   * Attach an ExtensionPlugin or ToolPlugin. Only one plugin at a time; the
-   * harness does not own it. The molecule is handed over immediately.
+   * Attach an ExtensionPlugin or ToolPlugin; the harness does not own it.
+   * The molecule is handed over immediately. Several plugins may be
+   * attached (the fuzz target does): run() then sends a command to the
+   * plugin(s) that registered it, or to every plugin if none did, which is
+   * how the application routes a command it does not recognize. With one
+   * plugin attached, every command goes to it, as before.
    */
   template <typename PluginType>
   void attach(PluginType* plugin);
@@ -231,7 +249,8 @@ public:
   // are tested through avogadroapp's RPC harness, not here.
 
 private:
-  void onRegistered(const QString& command, const QString& description);
+  void onRegistered(size_t handler, const QString& command,
+                    const QString& description);
   void onStarted();
   void onFinished(const QString& message, const QVariantMap& result);
   void onFailed(const QString& message);
@@ -248,11 +267,19 @@ private:
   std::unique_ptr<QtGui::Molecule> m_molecule;
   // Owns the lifecycle connections, so they die with the harness.
   std::unique_ptr<QObject> m_context;
-  QObject* m_plugin = nullptr;
-  std::function<bool(const QString&, const QVariantMap&)> m_handle;
-  std::function<void()> m_register;
-  std::function<void(QtGui::Molecule*)> m_setMolecule;
+
+  struct Handler
+  {
+    std::function<bool(const QString&, const QVariantMap&)> handle;
+    std::function<void()> registerAll;
+    std::function<void(QtGui::Molecule*)> setMolecule;
+  };
+  std::vector<Handler> m_handlers;
+  // Command name to the handlers that registered it.
+  QMap<QString, std::vector<size_t>> m_owners;
+  void setAllMolecules(QtGui::Molecule* molecule);
   int m_timeoutMs;
+  int m_graceMs;
 
   QMap<QString, QString> m_registered;
   QStringList m_registrationErrors;
@@ -270,17 +297,22 @@ private:
 template <typename PluginType>
 void CommandTestHarness::attach(PluginType* plugin)
 {
-  m_plugin = plugin;
-  m_handle = [plugin](const QString& command, const QVariantMap& options) {
+  const size_t index = m_handlers.size();
+  Handler handler;
+  handler.handle = [plugin](const QString& command,
+                            const QVariantMap& options) {
     return plugin->handleCommand(command, options);
   };
-  m_register = [plugin]() { plugin->registerCommands(); };
-  m_setMolecule = [plugin](QtGui::Molecule* mol) { plugin->setMolecule(mol); };
+  handler.registerAll = [plugin]() { plugin->registerCommands(); };
+  handler.setMolecule = [plugin](QtGui::Molecule* mol) {
+    plugin->setMolecule(mol);
+  };
+  m_handlers.push_back(std::move(handler));
 
   QObject* ctx = m_context.get();
   QObject::connect(plugin, &PluginType::registerCommand, ctx,
-                   [this](QString command, QString description) {
-                     onRegistered(command, description);
+                   [this, index](QString command, QString description) {
+                     onRegistered(index, command, description);
                    });
   QObject::connect(plugin, &PluginType::commandStarted, ctx,
                    [this]() { onStarted(); });
@@ -291,7 +323,7 @@ void CommandTestHarness::attach(PluginType* plugin)
   QObject::connect(plugin, &PluginType::commandFailed, ctx,
                    [this](const QString& message) { onFailed(message); });
 
-  m_setMolecule(m_molecule.get());
+  m_handlers[index].setMolecule(m_molecule.get());
 }
 
 } // namespace Avogadro::QtPluginsTests

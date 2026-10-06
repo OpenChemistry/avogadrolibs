@@ -18,16 +18,11 @@
 #include <algorithm>
 #include <ostream>
 
-#include <gtest/gtest.h>
+#include <cmath>
 
 namespace Avogadro::QtPluginsTests {
 
 namespace {
-
-// How long to keep pumping events after a command has settled, so that a
-// queued second terminal signal is attributed to the command that sent it
-// rather than showing up as a stray on the next one.
-constexpr int GracePeriodMs = 50;
 
 // addMolecule() is protected; the application reaches it through LayerModel,
 // which the harness has no use for otherwise.
@@ -59,27 +54,6 @@ std::string describe(const CommandOutcome& out)
   text +=
     ", violations: " + out.violations.join(QStringLiteral("; ")).toStdString();
   return text;
-}
-
-void recordKnownDeviation(const char* what)
-{
-  ::testing::Test::RecordProperty("known_deviation", what);
-}
-
-void recordUndecided(const char* what)
-{
-  ::testing::Test::RecordProperty("undecided", what);
-}
-
-bool expectNear(const Vector3& actual, const Vector3& expected,
-                double tolerance, const std::string& what)
-{
-  const bool near = (actual - expected).cwiseAbs().maxCoeff() <= tolerance;
-  EXPECT_TRUE(near) << what << ": got (" << actual.x() << ", " << actual.y()
-                    << ", " << actual.z() << "), expected (" << expected.x()
-                    << ", " << expected.y() << ", " << expected.z()
-                    << ") within " << tolerance;
-  return near;
 }
 
 const char* toString(CommandStatus status)
@@ -193,8 +167,9 @@ std::vector<Index> MoleculeSnapshot::selectedIndices() const
   return result;
 }
 
-CommandTestHarness::CommandTestHarness(int timeoutMs)
-  : m_context(std::make_unique<QObject>()), m_timeoutMs(timeoutMs)
+CommandTestHarness::CommandTestHarness(int timeoutMs, int graceMs)
+  : m_context(std::make_unique<QObject>()), m_timeoutMs(timeoutMs),
+    m_graceMs(graceMs)
 {
   resetMolecule();
 }
@@ -204,13 +179,18 @@ CommandTestHarness::~CommandTestHarness()
   // Catch a terminal signal that arrived after the last command settled.
   QCoreApplication::processEvents();
   if (!m_stray.isEmpty()) {
-    ADD_FAILURE() << "Signals after the last command settled: "
-                  << m_stray.join(QStringLiteral("; ")).toStdString();
+    reportLateSignals("Signals after the last command settled: " +
+                      m_stray.join(QStringLiteral("; ")).toStdString());
   }
   // Disconnect before the molecule goes, so nothing reaches a dead harness.
   m_context.reset();
-  if (m_setMolecule)
-    m_setMolecule(nullptr);
+  setAllMolecules(nullptr);
+}
+
+void CommandTestHarness::setAllMolecules(QtGui::Molecule* molecule)
+{
+  for (const Handler& handler : m_handlers)
+    handler.setMolecule(molecule);
 }
 
 void CommandTestHarness::resetMolecule()
@@ -219,8 +199,7 @@ void CommandTestHarness::resetMolecule()
   // What MainWindow does on a molecule change: make it the molecule the
   // layer GUI and PluginLayerManager act on.
   ActiveLayerMolecule().addMolecule(fresh.get());
-  if (m_setMolecule)
-    m_setMolecule(fresh.get());
+  setAllMolecules(fresh.get());
   m_molecule = std::move(fresh);
 }
 
@@ -277,22 +256,23 @@ bool CommandTestHarness::harnessMoleculeIsActive() const
 
 void CommandTestHarness::setPluginMolecule(QtGui::Molecule* molecule)
 {
-  if (m_setMolecule)
-    m_setMolecule(molecule);
+  setAllMolecules(molecule);
 }
 
 QMap<QString, QString> CommandTestHarness::registerCommands()
 {
   m_registered.clear();
   m_registrationErrors.clear();
-  if (m_register)
-    m_register();
+  m_owners.clear();
+  for (const Handler& handler : m_handlers)
+    handler.registerAll();
   return m_registered;
 }
 
-void CommandTestHarness::onRegistered(const QString& command,
+void CommandTestHarness::onRegistered(size_t handler, const QString& command,
                                       const QString& description)
 {
+  m_owners[command].push_back(handler);
   if (m_registered.contains(command)) {
     m_registrationErrors << QStringLiteral("%1 registered twice").arg(command);
   }
@@ -357,7 +337,7 @@ void CommandTestHarness::settle(bool waitForTerminal)
       },
       m_timeoutMs));
   }
-  QTest::qWait(GracePeriodMs);
+  QTest::qWait(m_graceMs);
 }
 
 CommandOutcome CommandTestHarness::run(const QString& command,
@@ -369,7 +349,7 @@ CommandOutcome CommandTestHarness::run(const QString& command,
   }
   m_stray.clear();
 
-  if (!m_handle) {
+  if (m_handlers.empty()) {
     out.violations << QStringLiteral("no plugin attached");
     return out;
   }
@@ -381,7 +361,19 @@ CommandOutcome CommandTestHarness::run(const QString& command,
   m_atFailure.reset();
   m_active = true;
 
-  out.claimed = m_handle(command, options);
+  // The plugin(s) that registered the command, or all of them if none did.
+  std::vector<size_t> targets;
+  const auto owners = m_owners.constFind(command);
+  if (owners != m_owners.constEnd()) {
+    targets = owners.value();
+  } else {
+    for (size_t i = 0; i < m_handlers.size(); ++i)
+      targets.push_back(i);
+  }
+  for (size_t target : targets) {
+    if (m_handlers[target].handle(command, options))
+      out.claimed = true;
+  }
 
   const bool startedInCall = std::find(m_events.begin(), m_events.end(),
                                        Event::Started) != m_events.end();
@@ -512,6 +504,14 @@ QStringList CommandTestHarness::checkInvariants() const
              .arg(i)
              .arg(size)
              .arg(n);
+  }
+
+  // Not a finite position: every distance computed from it is garbage and
+  // snapshots no longer compare equal to themselves (NaN != NaN).
+  for (Index i = 0; i < nPos; ++i) {
+    const Vector3 p = mol.atomPosition3d(i);
+    if (!std::isfinite(p.x()) || !std::isfinite(p.y()) || !std::isfinite(p.z()))
+      v << QStringLiteral("atom %1 has a non-finite position").arg(i);
   }
 
   const auto& pairs = mol.bondPairs();
