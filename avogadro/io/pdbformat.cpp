@@ -324,7 +324,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         // non-standard or old-school PDB file - try to parse the atom name
         element = trimmed(atomName);
         // remove any trailing digits
-        while (element.size() && std::isdigit(element.back()))
+        while (!element.empty() && std::isdigit(element.back()))
           element.pop_back();
 
         if (element == "SE") // For Sulphur

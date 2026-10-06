@@ -61,7 +61,7 @@ bool setJsonKey(json& j, Molecule& m, const std::string& key)
 
 bool isNumericArray(const json& j)
 {
-  if (j.is_array() && j.size() > 0) {
+  if (j.is_array() && !j.empty()) {
     for (const auto& v : j) {
       if (!v.is_number()) {
         return false;
@@ -74,7 +74,7 @@ bool isNumericArray(const json& j)
 
 bool isBooleanArray(const json& j)
 {
-  if (j.is_array() && j.size() > 0) {
+  if (j.is_array() && !j.empty()) {
     for (const auto& v : j) {
       if (!v.is_boolean()) {
         return false;
@@ -616,7 +616,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
   json atomicNumbers = elements["number"];
   // This represents our minimal spec for a molecule - atoms that have an
   // atomic number.
-  if (isNumericArray(atomicNumbers) && atomicNumbers.size() > 0) {
+  if (isNumericArray(atomicNumbers) && !atomicNumbers.empty()) {
     for (auto& atomicNumber : atomicNumbers) {
       if (!atomicNumber.is_number_integer() || atomicNumber < 0 ||
           atomicNumber >= Core::element_count) {
@@ -648,7 +648,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       // Check for coordinate sets, and read them in if found, e.g.
       // trajectories.
       json coordSets = atoms["coords"]["3dSets"];
-      if (coordSets.is_array() && coordSets.size()) {
+      if (coordSets.is_array() && !coordSets.empty()) {
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
           Array<Vector3> setArray;
           json set = coordSets[i];
@@ -1215,7 +1215,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           // coordinates when they exist, but have constant basis set, atom
           // types, etc.
           const json& orbSets = member(orbitals, "sets");
-          if (orbSets.is_array() && orbSets.size()) {
+          if (orbSets.is_array() && !orbSets.empty()) {
             for (unsigned int idx = 0; idx < orbSets.size(); ++idx) {
               // orbSets[idx] may not itself be an object in a hand-edited
               // file, so look its keys up with member() rather than
@@ -1782,7 +1782,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
   // check for spectra data
   // vibrations are separate
-  if (molecule.spectraTypes().size() != 0) {
+  if (!molecule.spectraTypes().empty()) {
     json spectra, electronic, nmr;
     bool hasElectronic = false;
     for (const auto& type : molecule.spectraTypes()) {
@@ -1848,7 +1848,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
     // This bit is slightly tricky, map from our index to primitives per
     // shell.
-    if (gaussian->gtoIndices().size() && gaussian->atomIndices().size()) {
+    if (!gaussian->gtoIndices().empty() && !gaussian->atomIndices().empty()) {
       auto gtoIndices = gaussian->gtoIndices();
       auto gtoA = gaussian->gtoA();
       json primitivesPerShell;
@@ -1900,14 +1900,14 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
     // Some energy, occupation, and number data potentially.
     auto energies = gaussian->moEnergy();
-    if (energies.size() > 0) {
+    if (!energies.empty()) {
       json energyData;
       for (double& energie : energies) {
         energyData.push_back(energie);
       }
 
       auto betaEnergies = gaussian->moEnergy(BasisSet::Beta);
-      if (betaEnergies.size() > 0) {
+      if (!betaEnergies.empty()) {
         json betaEnergyData;
         for (double& energie : betaEnergies) {
           betaEnergyData.push_back(energie);
@@ -1918,13 +1918,13 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
         root["orbitals"]["energies"] = energyData;
     }
     auto occ = gaussian->moOccupancy();
-    if (occ.size() > 0) {
+    if (!occ.empty()) {
       json occData;
       for (unsigned char& it : occ)
         occData.push_back(static_cast<int>(it));
 
       auto betaOcc = gaussian->moOccupancy(BasisSet::Beta);
-      if (betaOcc.size() > 0) {
+      if (!betaOcc.empty()) {
         json betaOccData;
         for (unsigned char& it : betaOcc)
           betaOccData.push_back(static_cast<int>(it));
@@ -1934,7 +1934,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
         root["orbitals"]["occupations"] = occData;
     }
     auto num = gaussian->moNumber();
-    if (num.size() > 0) {
+    if (!num.empty()) {
       json numData;
       for (unsigned int& it : num)
         numData.push_back(it);
@@ -2237,7 +2237,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   }
 
   // Create and populate any residue arrays
-  if (molecule.residues().size() > 0) {
+  if (!molecule.residues().empty()) {
     json residues; // array of objects
     Array residueLabels = molecule.residueLabels();
     for (auto residue : molecule.residues()) {

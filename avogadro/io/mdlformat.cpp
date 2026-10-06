@@ -489,7 +489,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       break;
     if (inValue) {
       // Use trimmed() to handle Windows CRLF line endings where \r remains
-      if (trimmed(buffer).empty() && dataName.length() > 0) {
+      if (trimmed(buffer).empty() && !dataName.empty()) {
         // check for partial charges
         if (dataName == "PUBCHEM_MMFF94_PARTIAL_CHARGES")
           handlePartialCharges(mol, dataValue);
@@ -509,7 +509,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
         dataValue.clear();
         inValue = false;
       } else {
-        if (dataValue.length())
+        if (!dataValue.empty())
           dataValue += "\n";
         dataValue += trimmed(buffer);
       }
@@ -938,7 +938,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       string key = trimmed(buffer.substr(3, buffer.length() - 4));
       string value;
       while (Core::getLine(in, buffer)) {
-        if (trimmed(buffer) == "")
+        if (trimmed(buffer).empty())
           break;
         value += buffer + "\n";
       }
