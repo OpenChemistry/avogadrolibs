@@ -791,12 +791,9 @@ bool MeasureTool::handleCommand(const QString& command,
   if (requiredCount == 2 &&
       !(value >= QtGui::FragmentTools::minimumChainDistance &&
         value <= QtGui::FragmentTools::maximumChainDistance)) {
-    // Deliberately not tr(): 2.1 is under a translation string freeze.
-    // Make this a tr() string after 2.1 ships.
-    emit commandFailed(
-      QStringLiteral("value must be a distance from %1 to %2 Å.")
-        .arg(QtGui::FragmentTools::minimumChainDistance)
-        .arg(QtGui::FragmentTools::maximumChainDistance));
+    emit commandFailed(tr("value must be a distance from %1 to %2 Å.")
+                         .arg(QtGui::FragmentTools::minimumChainDistance)
+                         .arg(QtGui::FragmentTools::maximumChainDistance));
     return true;
   }
   if (requiredCount == 3 && !(value >= 0.0 && value <= 180.0)) {
