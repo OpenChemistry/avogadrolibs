@@ -5,16 +5,22 @@
 
 #include "commandtestharness.h"
 
+#include "bonding.h"
 #include "crystal.h"
 
 #include <avogadro/core/unitcell.h>
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <utility>
+#include <vector>
+
 using Avogadro::Index;
 using Avogadro::Matrix3;
 using Avogadro::Vector3;
 using Avogadro::Core::UnitCell;
+using Avogadro::QtPlugins::Bonding;
 using Avogadro::QtPlugins::Crystal;
 using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
@@ -236,4 +242,68 @@ TEST_F(CrystalCommandTest, undecidedNoUnitCellIsSilentNoOp)
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
   EXPECT_EQ(m_harness.snapshot(), before);
+}
+
+// The fuzzer's sequence: removeBonds, wrapUnitCell, undo, undo, redo. Deleting
+// bonds leaves holes in the unique id table, and wrapUnitCell's replacement
+// molecule used to be stored for undo with those ids renumbered, so the
+// second undo restored the wrong bonds. The harness attaches one plugin at a
+// time, so Bonding is attached for the first step and Crystal for the second.
+TEST_F(CrystalCommandTest, removeBondsThenWrapUndoUndoRedo)
+{
+  Bonding bonding;
+  m_harness.buildMethanol();
+  auto* mol = m_harness.molecule();
+  // A 6 A cubic cell with H5 (the hydroxyl hydrogen) outside it
+  mol->setUnitCell(new UnitCell(Vector3(6.0, 0.0, 0.0), Vector3(0.0, 6.0, 0.0),
+                                Vector3(0.0, 0.0, 6.0)));
+  mol->setAtomPosition3d(5, Vector3(7.0, 1.0, 1.0));
+  mol->setAtomSelected(1, true);
+  mol->setAtomSelected(3, true);
+
+  using BondList = std::vector<std::pair<Index, Index>>;
+  auto bonds = [mol]() {
+    BondList result;
+    for (Index i = 0; i < mol->bondCount(); ++i) {
+      auto p = mol->bondPair(i);
+      result.emplace_back(std::min(p.first, p.second),
+                          std::max(p.first, p.second));
+    }
+    std::sort(result.begin(), result.end());
+    return result;
+  };
+  const BondList original = {
+    { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 1, 5 }
+  };
+  ASSERT_EQ(bonds(), original);
+
+  m_harness.attach(&bonding);
+  CommandOutcome out = m_harness.run("removeBonds");
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  // Every bond to a selected atom (1 or 3) is gone
+  const BondList removed = { { 0, 2 }, { 0, 4 } };
+  ASSERT_EQ(bonds(), removed);
+
+  m_harness.attach(&m_crystal);
+  out = m_harness.run("wrapUnitCell");
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  const BondList wrapped = bonds();
+  const Vector3 wrappedH = position(5);
+  EXPECT_NE(wrappedH, Vector3(7.0, 1.0, 1.0));
+
+  EXPECT_TRUE(m_harness.undo().isEmpty());
+  EXPECT_EQ(bonds(), removed);
+  EXPECT_EQ(position(5), Vector3(7.0, 1.0, 1.0));
+
+  EXPECT_TRUE(m_harness.undo().isEmpty());
+  EXPECT_EQ(bonds(), original);
+
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(bonds(), removed);
+
+  EXPECT_TRUE(m_harness.redo().isEmpty());
+  EXPECT_EQ(bonds(), wrapped);
+  EXPECT_EQ(position(5), wrappedH);
 }

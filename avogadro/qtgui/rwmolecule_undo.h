@@ -808,8 +808,20 @@ class ModifyMoleculeCommand : public RWMolecule::UndoCommand
 public:
   ModifyMoleculeCommand(RWMolecule& m, const Molecule& oldMolecule,
                         const Molecule& newMolecule)
-    : UndoCommand(m), m_oldMolecule(oldMolecule), m_newMolecule(newMolecule)
+    : UndoCommand(m), m_newMolecule(newMolecule)
   {
+    // The old molecule is the live one, and the undo commands pushed before
+    // this one refer to its atoms and bonds by unique id. Molecule's copy
+    // constructor renumbers the ids 0..n-1, which would make those commands
+    // hit the wrong atom (or an id already taken) once deletions have left
+    // holes in the tables. operator= copies the tables, so use it.
+    m_oldMolecule = oldMolecule;
+
+    // The new molecule is deliberately built with the copy constructor: it is
+    // an edited copy, and Core-level edits (CrystalTools re-perceiving bonds,
+    // building a supercell) change its atoms and bonds without touching the
+    // QtGui id tables, so those may be stale. The renumbering makes them
+    // consistent with its actual atom and bond counts.
   }
 
   // Assigning a molecule frees the basis set and cubes it replaces, which an
