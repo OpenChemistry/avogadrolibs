@@ -159,9 +159,12 @@ public:
    *
    * @return False, changing nothing, if an atom is invalid, if two of them
    * are the same, if a distance is not finite or outside minimumChainDistance
-   * to maximumChainDistance, or if the geometry is too degenerate to define the
-   * coordinate -- coincident atoms for a distance, a collinear arrangement
-   * for an angle or a torsion.
+   * to maximumChainDistance, if an angle is not finite or outside 0 to 180
+   * degrees, if an angle edit would bring the moved end atom closer than
+   * minimumChainDistance to the fixed end atom (unless it is already that
+   * close and the edit moves them apart), or if the geometry is too degenerate
+   * to define the coordinate -- coincident atoms for a distance, a collinear
+   * arrangement for an angle or a torsion.
    * @{
    */
   static bool setDistance(RWMolecule& molecule, Index atom, Index a,
@@ -231,7 +234,12 @@ public:
    *
    * setChainDistance() only accepts a finite @p length from
    * minimumChainDistance to maximumChainDistance inclusive; anything else
-   * returns InvalidValue and leaves the molecule untouched.
+   * returns InvalidValue and leaves the molecule untouched. setChainAngle()
+   * likewise returns InvalidValue, before anything else, for an angle outside
+   * 0 to 180 degrees, and for one that would fold the moving end atom to
+   * within minimumChainDistance of the fixed end atom while bringing them
+   * closer. Only that pair is checked, not the whole moving fragment against
+   * the rest of the molecule. Torsions wrap, so have no range.
    *
    * @return Ok on success. Otherwise a CoordinateEditResult describing why
    * nothing moved; see its documentation for what each value means.

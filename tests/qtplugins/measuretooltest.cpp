@@ -214,6 +214,26 @@ TEST_F(MeasureToolCommandTest, editAngleTo180IsAccepted)
   expectNear(position(3), Vector3(0.0, -1.5, 1.0), PosTol, "H3");
 }
 
+// An angle that would fold O2 onto the fixed H0 is refused, with the
+// molecule and the undo stack untouched. Make the two legs equal so that
+// 0 degrees puts O2 exactly on H0; an angle of 20 degrees leaves them about
+// 0.35 A apart, which is also too close.
+TEST_F(MeasureToolCommandTest, editAngleFoldingTheEndsTogetherIsRefused)
+{
+  m_harness.molecule()->setAtomPosition3d(2, Vector3(1.0, 0.0, 0.0));
+  m_harness.molecule()->setAtomPosition3d(3, Vector3(1.0, 0.0, 1.0));
+
+  for (const double bad : { 0.0, 20.0 })
+    expectRefused("editAngle",
+                  { { "atoms", atoms({ 0, 1, 2 }) }, { "value", bad } },
+                  "ends too close at " + std::to_string(bad));
+
+  // A wider angle is fine: 60 degrees leaves them 1.0 A apart.
+  const CommandOutcome out = m_harness.run(
+    "editAngle", { { "atoms", atoms({ 0, 1, 2 }) }, { "value", 60.0 } });
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+}
+
 // editDihedral turns the far side of the O1-O2 bond (O2, H3) about the bond.
 // From +90 to +60 is a 30 degree turn of H3 back towards H0: H3's offset
 // from O2, (0, 0, 1), becomes (0, sin 30, cos 30) = (0, 0.5, 0.866...).

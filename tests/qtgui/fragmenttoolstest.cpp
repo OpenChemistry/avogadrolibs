@@ -1100,3 +1100,164 @@ TEST(FragmentToolsTest, setDistanceEnforcesTheRangeDirectly)
   EXPECT_NEAR(1000.0, distance(mol.atomPosition3d(0), mol.atomPosition3d(1)),
               1e-9);
 }
+
+namespace {
+
+// Three bonded atoms in the xy-plane: atom 0 moves, atom 1 is the vertex at
+// the origin and atom 2 is the fixed end on the x axis. The legs are
+// vertex-atom = moved and vertex-b = fixed, at the given angle.
+void buildAngle(RWMolecule& mol, Real moved, Real fixed, Real degrees)
+{
+  const Real t = degrees * M_PI / 180.0;
+  mol.addAtom(8, Vector3(moved * std::cos(t), moved * std::sin(t), 0.0));
+  mol.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(8, Vector3(fixed, 0.0, 0.0));
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 1);
+}
+
+FragmentTools::CoordinateEditResult chainAngle(RWMolecule& mol, Real degrees)
+{
+  return FragmentTools::setChainAngle(
+    mol,
+    std::array<Index, 3>{ mol.atomUniqueId(2), mol.atomUniqueId(1),
+                          mol.atomUniqueId(0) },
+    degrees);
+}
+
+Real currentAngle(const RWMolecule& mol)
+{
+  return calculateAngle(mol.atomPosition3d(0), mol.atomPosition3d(1),
+                        mol.atomPosition3d(2));
+}
+
+// Run both entry points and expect both to refuse, changing nothing.
+void expectAngleRefused(RWMolecule& mol, Real degrees,
+                        FragmentTools::CoordinateEditResult expectedChain)
+{
+  const Array<Vector3> original = mol.atomPositions3d();
+  const int undoCount = mol.undoStack().count();
+  EXPECT_FALSE(FragmentTools::setAngle(mol, 0, 1, 2, degrees)) << degrees;
+  EXPECT_EQ(expectedChain, chainAngle(mol, degrees)) << degrees;
+  EXPECT_EQ(undoCount, mol.undoStack().count()) << degrees;
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_EQ(original[i], mol.atomPosition3d(i))
+      << "atom " << i << ", " << degrees;
+}
+
+} // namespace
+
+TEST(FragmentToolsTest, angleOutsideZeroTo180IsRefused)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildAngle(mol, 1.5, 1.5, 100.0);
+
+  for (const Real bad : { -0.001, 180.001, 200.0, -30.0 })
+    expectAngleRefused(mol, bad,
+                       FragmentTools::CoordinateEditResult::InvalidValue);
+}
+
+TEST(FragmentToolsTest, angleBoundsAreAccepted)
+{
+  // 180 is straight: the end atoms are 3 A apart.
+  {
+    Molecule m;
+    RWMolecule mol(m);
+    buildAngle(mol, 1.5, 1.5, 100.0);
+    ASSERT_TRUE(FragmentTools::setAngle(mol, 0, 1, 2, 180.0));
+    EXPECT_NEAR(180.0, currentAngle(mol), 1e-4);
+  }
+  // 0.5 degrees on 100 A legs leaves the ends about 0.87 A apart, so the
+  // spacing rule allows it.
+  {
+    Molecule m;
+    RWMolecule mol(m);
+    buildAngle(mol, 100.0, 100.0, 100.0);
+    ASSERT_TRUE(FragmentTools::setAngle(mol, 0, 1, 2, 0.5));
+    EXPECT_NEAR(0.5, currentAngle(mol), 1e-4);
+  }
+  {
+    Molecule m;
+    RWMolecule mol(m);
+    buildAngle(mol, 100.0, 100.0, 100.0);
+    ASSERT_EQ(FragmentTools::CoordinateEditResult::Ok, chainAngle(mol, 0.5));
+    EXPECT_NEAR(0.5, currentAngle(mol), 1e-4);
+    ASSERT_EQ(FragmentTools::CoordinateEditResult::Ok, chainAngle(mol, 180.0));
+    EXPECT_NEAR(180.0, currentAngle(mol), 1e-4);
+  }
+}
+
+// H-O-H with equal bonds: 0 degrees would put one H exactly on the other.
+TEST(FragmentToolsTest, angleFoldingTheEndsOntoEachOtherIsRefused)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildAngle(mol, 0.96, 0.96, 104.5);
+  expectAngleRefused(mol, 0.0,
+                     FragmentTools::CoordinateEditResult::InvalidValue);
+  EXPECT_NEAR(104.5, currentAngle(mol), 1e-9);
+}
+
+TEST(FragmentToolsTest, angleLeavingTheEndsTooCloseIsRefused)
+{
+  // 1 A legs: the ends are 2 sin(theta/2) apart, 0.5 A at 28.96 degrees.
+  Molecule m;
+  RWMolecule mol(m);
+  buildAngle(mol, 1.0, 1.0, 90.0);
+  // 23 degrees leaves them 0.40 A apart; 28.9 degrees leaves 0.499 A.
+  for (const Real bad : { 23.0, 28.9 })
+    expectAngleRefused(mol, bad,
+                       FragmentTools::CoordinateEditResult::InvalidValue);
+  // Just clear of the limit is fine.
+  ASSERT_TRUE(FragmentTools::setAngle(mol, 0, 1, 2, 29.0));
+  EXPECT_NEAR(29.0, currentAngle(mol), 1e-9);
+}
+
+// Already too close: opening the angle moves them apart and is allowed even
+// if it stays under the limit; closing it further is not.
+TEST(FragmentToolsTest, angleMovingTooCloseEndsApartIsAllowed)
+{
+  // 1 A legs at 17.26 degrees leave the ends 0.30 A apart.
+  {
+    Molecule m;
+    RWMolecule mol(m);
+    buildAngle(mol, 1.0, 1.0, 17.26);
+    // 26 degrees leaves them 0.45 A apart: still under 0.5, but wider.
+    ASSERT_TRUE(FragmentTools::setAngle(mol, 0, 1, 2, 26.0));
+    EXPECT_NEAR(26.0, currentAngle(mol), 1e-9);
+  }
+  {
+    Molecule m;
+    RWMolecule mol(m);
+    buildAngle(mol, 1.0, 1.0, 17.26);
+    ASSERT_EQ(FragmentTools::CoordinateEditResult::Ok, chainAngle(mol, 26.0));
+    EXPECT_NEAR(26.0, currentAngle(mol), 1e-9);
+  }
+  {
+    Molecule m;
+    RWMolecule mol(m);
+    buildAngle(mol, 1.0, 1.0, 17.26);
+    expectAngleRefused(mol, 10.0,
+                       FragmentTools::CoordinateEditResult::InvalidValue);
+  }
+}
+
+// Torsions wrap, so no value is out of range.
+TEST(FragmentToolsTest, torsionsWrapRatherThanBeingRefused)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  const Butane b = buildButane(mol);
+
+  const auto torsion = [&]() {
+    return calculateDihedral(mol.atomPosition3d(b.c4), mol.atomPosition3d(b.c3),
+                             mol.atomPosition3d(b.c2),
+                             mol.atomPosition3d(b.c1));
+  };
+
+  ASSERT_TRUE(FragmentTools::setTorsion(mol, b.c4, b.c3, b.c2, b.c1, 720.0));
+  EXPECT_NEAR(1.0, std::cos(torsion() * M_PI / 180.0), 1e-9);
+  ASSERT_TRUE(FragmentTools::setTorsion(mol, b.c4, b.c3, b.c2, b.c1, -540.0));
+  EXPECT_NEAR(-1.0, std::cos(torsion() * M_PI / 180.0), 1e-9);
+}
