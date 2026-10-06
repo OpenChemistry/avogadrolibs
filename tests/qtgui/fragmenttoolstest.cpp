@@ -1021,3 +1021,57 @@ TEST(FragmentToolsTest, chainEditIsASingleUndoStep)
     EXPECT_NEAR(0.0, distance(original[i], mol.atomPosition3d(i)), 1e-9)
       << "atom " << i;
 }
+
+// Distances are limited to [minimumChainDistance, maximumChainDistance]; the
+// bounds themselves are allowed and land exactly on the requested length.
+TEST(FragmentToolsTest, chainDistanceAcceptsTheBoundsExactly)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildEthane(mol);
+  const Index a0 = mol.atomUniqueId(0);
+  const Index a1 = mol.atomUniqueId(1);
+
+  EXPECT_EQ(0.5, FragmentTools::minimumChainDistance);
+  EXPECT_EQ(1000.0, FragmentTools::maximumChainDistance);
+
+  ASSERT_EQ(
+    FragmentTools::CoordinateEditResult::Ok,
+    FragmentTools::setChainDistance(mol, std::array<Index, 2>{ a0, a1 }, 0.5));
+  EXPECT_NEAR(0.5, distance(mol.atomPosition3d(0), mol.atomPosition3d(1)),
+              1e-9);
+
+  ASSERT_EQ(FragmentTools::CoordinateEditResult::Ok,
+            FragmentTools::setChainDistance(mol, std::array<Index, 2>{ a0, a1 },
+                                            1000.0));
+  EXPECT_NEAR(1000.0, distance(mol.atomPosition3d(0), mol.atomPosition3d(1)),
+              1e-9);
+}
+
+TEST(FragmentToolsTest, chainDistanceOutsideTheRangeIsRefusedUnchanged)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildEthane(mol);
+  const Index a0 = mol.atomUniqueId(0);
+  const Index a1 = mol.atomUniqueId(1);
+  const Array<Vector3> original = mol.atomPositions3d();
+  const int undoCount = mol.undoStack().count();
+  const Real inf = std::numeric_limits<Real>::infinity();
+  const Real nan = std::numeric_limits<Real>::quiet_NaN();
+
+  // The first two are the fuzzer's sequence (2.9e161, then 6.9e-323).
+  for (const Real bad : { 2.9e161, 6.9e-323, 0.4999, 1000.001, 0.0, -1.0, -0.5,
+                          nan, inf, -inf }) {
+    EXPECT_EQ(
+      FragmentTools::CoordinateEditResult::InvalidValue,
+      FragmentTools::setChainDistance(mol, std::array<Index, 2>{ a0, a1 }, bad))
+      << bad;
+    EXPECT_EQ(undoCount, mol.undoStack().count()) << bad;
+    for (Index i = 0; i < mol.atomCount(); ++i) {
+      EXPECT_TRUE(mol.atomPosition3d(i).allFinite()) << bad;
+      EXPECT_EQ(original[i], mol.atomPosition3d(i))
+        << "atom " << i << ", " << bad;
+    }
+  }
+}

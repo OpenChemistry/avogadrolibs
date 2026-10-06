@@ -302,9 +302,21 @@ bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
 
   direction /= current;
 
+  const Vector3 shift(direction * (length - current));
+  if (!shift.allFinite())
+    return false;
+
+  // Refuse before moving anything if the result would not be finite: a
+  // half-applied translation would leave NaN or infinite coordinates behind.
+  for (const Index uniqueId : fragment) {
+    const RWAtom member = molecule.atomByUniqueId(uniqueId);
+    if (member.isValid() && !(member.position3d() + shift).allFinite())
+      return false;
+  }
+
   Eigen::Affine3d transform;
   transform.setIdentity();
-  transform.translate(Vector3(direction * (length - current)));
+  transform.translate(shift);
 
   transformAtoms(molecule, fragment, transform, QObject::tr("Adjust Distance"));
   return true;
@@ -437,7 +449,8 @@ FragmentTools::CoordinateEditResult FragmentTools::setChainDistance(
 {
   if (!allDistinctAndValid(molecule, uniqueIds))
     return CoordinateEditResult::InvalidAtoms;
-  if (!isUsableValue(length) || length < 0.0)
+  if (!isUsableValue(length) || length < minimumChainDistance ||
+      length > maximumChainDistance)
     return CoordinateEditResult::InvalidValue;
 
   const RWAtom atomI = molecule.atomByUniqueId(uniqueIds[0]);

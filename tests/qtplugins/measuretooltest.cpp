@@ -6,8 +6,14 @@
 #include "commandtestharness.h"
 
 #include "measuretool.h"
+#include "measurewidget.h"
 
 #include <gtest/gtest.h>
+
+#include <avogadro/qtgui/fragmenttools.h>
+
+#include <QtTest/QSignalSpy>
+#include <QtWidgets/QDoubleSpinBox>
 
 #include <cmath>
 #include <limits>
@@ -294,6 +300,26 @@ TEST_F(MeasureToolCommandTest, invalidAtomListsAreRefused)
                 "measureDihedral with 3 atoms");
 }
 
+// The range is 0.5 to 1000 A inclusive. Includes the fuzzer's pair (2.9e161
+// then 6.9e-323), which used to leave atoms at inf/NaN.
+TEST_F(MeasureToolCommandTest, editDistanceRangeIsEnforced)
+{
+  const QVariantList pair = atoms({ 1, 2 });
+  for (const double bad : { 2.9e161, 6.9e-323, 0.4999, 0.1, 1000.001 }) {
+    expectRefused("editDistance", { { "atoms", pair }, { "value", bad } },
+                  "out of range " + std::to_string(bad));
+    for (Index i = 0; i < 4; ++i)
+      EXPECT_TRUE(position(i).allFinite()) << bad;
+  }
+
+  for (const double good : { 0.5, 1000.0 }) {
+    const CommandOutcome out =
+      m_harness.run("editDistance", { { "atoms", pair }, { "value", good } });
+    EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+    EXPECT_NEAR(out.result.value("distance").toDouble(), good, 1e-6);
+  }
+}
+
 TEST_F(MeasureToolCommandTest, invalidEditValuesAreRefused)
 {
   const double nan = std::numeric_limits<double>::quiet_NaN();
@@ -385,4 +411,35 @@ TEST_F(MeasureToolCommandTest, knownDeviationNoOpEditPushesUndoEntry)
   // When these fail, expect out.clean() and after == before.
   EXPECT_EQ(after.undoCount, before.undoCount + 1);
   EXPECT_FALSE(out.clean());
+}
+
+// The panel shows the measured value truthfully even when it is outside the
+// range an edit may set (overlapping atoms, or a huge cell), without that
+// display counting as an edit; the range snaps back once the value is in
+// range again.
+TEST(MeasureWidgetTest, outOfRangeMeasuredDistanceIsShownNotClamped)
+{
+  using Avogadro::QtGui::FragmentTools;
+  using Avogadro::QtPlugins::MeasureField;
+  using Avogadro::QtPlugins::MeasureWidget;
+
+  MeasureWidget widget;
+  widget.setAtomCount(2);
+  // Distance 1-2 is the first spin box created.
+  auto* spin = widget.findChildren<QDoubleSpinBox*>().first();
+  EXPECT_DOUBLE_EQ(spin->minimum(), FragmentTools::minimumChainDistance);
+  EXPECT_DOUBLE_EQ(spin->maximum(), FragmentTools::maximumChainDistance);
+
+  QSignalSpy edited(&widget, &MeasureWidget::valueEdited);
+  widget.setValue(MeasureField::Distance12, 0.1);
+  EXPECT_DOUBLE_EQ(spin->value(), 0.1);
+  widget.setValue(MeasureField::Distance12, 2500.0);
+  EXPECT_DOUBLE_EQ(spin->value(), 2500.0);
+  EXPECT_EQ(edited.count(), 0) << "displaying a value must not edit";
+
+  widget.setValue(MeasureField::Distance12, 1.5);
+  EXPECT_DOUBLE_EQ(spin->value(), 1.5);
+  EXPECT_DOUBLE_EQ(spin->minimum(), FragmentTools::minimumChainDistance);
+  EXPECT_DOUBLE_EQ(spin->maximum(), FragmentTools::maximumChainDistance);
+  EXPECT_EQ(edited.count(), 0);
 }

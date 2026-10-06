@@ -51,7 +51,8 @@ public:
    * failure:
    * - InvalidAtoms: an atom does not exist, or two of them are the same.
    * - InvalidValue: the requested length or angle is not a usable number
-   *   (NaN, infinite, or a negative length).
+   *   (NaN or infinite), or a length outside the range from
+   *   minimumChainDistance to maximumChainDistance.
    * - Ring: a bond on the chain exists but is part of a ring, so the side
    *   of it that would need to move cannot be separated from the rest.
    * - NotRigid: the end atoms share a molecule but nothing along the chain
@@ -69,6 +70,20 @@ public:
     NotRigid,
     Degenerate
   };
+
+  /**
+   * The shortest distance, in Angstroms, that setChainDistance() will set.
+   * A little shorter than an H-H bond; anything below it stacks atoms on
+   * top of each other.
+   */
+  static constexpr Real minimumChainDistance = 0.5;
+
+  /**
+   * The longest distance, in Angstroms, that setChainDistance() will set.
+   * Large enough for any supercell edge, small enough that a typo cannot
+   * fling atoms out to where the coordinates overflow.
+   */
+  static constexpr Real maximumChainDistance = 1000.0;
 
   /**
    * The atoms that move with @p startAtom when @p bond is manipulated, as
@@ -210,6 +225,10 @@ public:
    * "Different components" is decided on the two end atoms only, not on
    * every link, so a vertex bonded only to the fixed end still finds a
    * moving fragment on the other side.
+   *
+   * setChainDistance() only accepts a finite @p length from
+   * minimumChainDistance to maximumChainDistance inclusive; anything else
+   * returns InvalidValue and leaves the molecule untouched.
    *
    * @return Ok on success. Otherwise a CoordinateEditResult describing why
    * nothing moved; see its documentation for what each value means.

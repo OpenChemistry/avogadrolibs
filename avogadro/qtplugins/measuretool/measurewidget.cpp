@@ -5,6 +5,8 @@
 
 #include "measurewidget.h"
 
+#include <avogadro/qtgui/fragmenttools.h>
+
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
@@ -13,6 +15,9 @@
 #include <QtCore/QSignalBlocker>
 #include <QtGui/QColor>
 #include <QtGui/QPalette>
+
+#include <algorithm>
+#include <cmath>
 
 namespace Avogadro::QtPlugins {
 
@@ -28,15 +33,18 @@ MeasureWidget::MeasureWidget(QWidget* parent_)
   m_content = new QWidget(this);
 
   auto* grid = new QGridLayout;
-  // Distances: any positive length, up to a fairly generous ceiling -- big
-  // enough for a supercell edge, small enough that a fat-fingered "1000"
-  // doesn't fling an atom out of the universe.
-  addRow(MeasureField::Distance12, tr("Distance 1–2"), tr(" Å"), 0.001, 500.0,
-         0.01, false);
-  addRow(MeasureField::Distance23, tr("Distance 2–3"), tr(" Å"), 0.001, 500.0,
-         0.01, false);
-  addRow(MeasureField::Distance34, tr("Distance 3–4"), tr(" Å"), 0.001, 500.0,
-         0.01, false);
+  // Distances: the range FragmentTools will actually apply -- big enough for
+  // a supercell edge, small enough that a typo doesn't fling an atom out of
+  // the universe. setValue() widens a box when the measured value is outside.
+  addRow(MeasureField::Distance12, tr("Distance 1–2"), tr(" Å"),
+         QtGui::FragmentTools::minimumChainDistance,
+         QtGui::FragmentTools::maximumChainDistance, 0.01, false);
+  addRow(MeasureField::Distance23, tr("Distance 2–3"), tr(" Å"),
+         QtGui::FragmentTools::minimumChainDistance,
+         QtGui::FragmentTools::maximumChainDistance, 0.01, false);
+  addRow(MeasureField::Distance34, tr("Distance 3–4"), tr(" Å"),
+         QtGui::FragmentTools::minimumChainDistance,
+         QtGui::FragmentTools::maximumChainDistance, 0.01, false);
   addRow(MeasureField::Angle123, tr("Angle 1–2–3"), tr("°"), 0.0, 180.0, 1.0,
          false);
   addRow(MeasureField::Angle234, tr("Angle 2–3–4"), tr("°"), 0.0, 180.0, 1.0,
@@ -103,6 +111,8 @@ void MeasureWidget::addRow(MeasureField field, const QString& name,
   r.spinBox->setDecimals(3);
   r.spinBox->setSuffix(suffix);
   r.spinBox->setRange(minimum, maximum);
+  r.minimum = minimum;
+  r.maximum = maximum;
   r.spinBox->setSingleStep(singleStep);
   r.spinBox->setWrapping(wrap);
   r.spinBox->setAlignment(Qt::AlignRight);
@@ -152,6 +162,13 @@ void MeasureWidget::setValue(MeasureField field, double value)
   // like a user edit and triggers valueEdited() -- that would either loop
   // forever or apply a no-op edit for every refresh.
   const QSignalBlocker blocker(spinBox);
+  // QDoubleSpinBox::setValue() clamps, which would show a measured value
+  // outside the editable range (e.g. overlapping atoms) as the bound
+  // instead of the truth. Widen the range just enough to show it; any edit
+  // typed from here is still checked by FragmentTools and refused.
+  Row& r = row(field);
+  if (std::isfinite(value))
+    spinBox->setRange(std::min(r.minimum, value), std::max(r.maximum, value));
   spinBox->setValue(value);
 }
 

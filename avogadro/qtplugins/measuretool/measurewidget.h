@@ -88,6 +88,8 @@ private:
   {
     QLabel* label = nullptr;
     QDoubleSpinBox* spinBox = nullptr;
+    double minimum = 0.0; // the editable range; the box may be wider
+    double maximum = 0.0;
   };
 
   Row& row(MeasureField field);
