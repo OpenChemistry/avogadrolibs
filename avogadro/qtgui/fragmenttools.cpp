@@ -182,6 +182,10 @@ namespace {
 // between them carries no information.
 const Real coincidentTolerance = 1e-8;
 
+// The range of a bond angle, in degrees. Torsions have none: they wrap.
+const Real minimumAngle = 0.0;
+const Real maximumAngle = 180.0;
+
 // |sin| below which three points are treated as collinear, leaving no
 // well-defined plane to rotate in or about.
 const Real collinearTolerance = 1e-6;
@@ -261,6 +265,60 @@ bool isAngleDegenerate(const Vector3& atomPosition, const Vector3& aPosition,
          collinearTolerance;
 }
 
+bool isAngleInRange(Real degrees)
+{
+  return degrees >= minimumAngle && degrees <= maximumAngle;
+}
+
+// The rotation setAngle() applies to the moved atom: about the vertex, in the
+// plane of the three atoms, by the difference between the requested and the
+// current angle. Turning about toAtom x toB by a positive angle carries the
+// atom towards b, which closes the angle, so the rotation runs the other way.
+// Returns false if the three atoms do not define a plane.
+bool angleRotation(const Vector3& atomPosition, const Vector3& aPosition,
+                   const Vector3& bPosition, Real degrees,
+                   Eigen::AngleAxis<Real>& rotation)
+{
+  const Vector3 toAtom = atomPosition - aPosition;
+  const Vector3 toB = bPosition - aPosition;
+  if (toAtom.norm() < coincidentTolerance || toB.norm() < coincidentTolerance)
+    return false;
+
+  Vector3 axis = toAtom.normalized().cross(toB.normalized());
+  if (axis.norm() < collinearTolerance)
+    return false; // already straight, so there is no plane to open it in
+  axis.normalize();
+
+  const Real change =
+    (degrees - calculateAngle(atomPosition, aPosition, bPosition)) * DEG_TO_RAD;
+  rotation = Eigen::AngleAxis<Real>(-change, axis);
+  return true;
+}
+
+// True if setting the angle would fold the moved atom to within
+// minimumChainDistance of the fixed end atom b, closer than it already is.
+// An edit that moves an already-too-close pair apart is still fine.
+//
+// This deliberately checks only the moved end atom against the fixed end
+// atom -- the pair the angle itself brings together. It is not a clash check
+// of the whole moving fragment against the rest of the molecule, which would
+// cost O(moving * fixed) on every edit and is not what the limit is for.
+// Both setAngle() and setChainAngle() use it, so they agree on the answer.
+bool angleBringsEndsTooClose(const Vector3& atomPosition,
+                             const Vector3& aPosition, const Vector3& bPosition,
+                             Real degrees)
+{
+  Eigen::AngleAxis<Real> rotation;
+  if (!angleRotation(atomPosition, aPosition, bPosition, degrees, rotation))
+    return false; // degenerate; the caller reports that separately
+
+  const Vector3 moved = aPosition + rotation * (atomPosition - aPosition);
+  const Real newDistance = (moved - bPosition).norm();
+  const Real currentDistance = (atomPosition - bPosition).norm();
+  return newDistance < FragmentTools::minimumChainDistance &&
+         newDistance < currentDistance;
+}
+
 bool isTorsionDegenerate(const Vector3& atomPosition, const Vector3& aPosition,
                          const Vector3& bPosition, const Vector3& cPosition)
 {
@@ -285,8 +343,11 @@ bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
 {
   if (!distinctAndValid(molecule, { atom, a }))
     return false;
-  if (!isUsableValue(length) || length < 0.0)
-    return false; // a distance is never negative
+  // The range lives here, not only in setChainDistance(), so the z-matrix
+  // editor and any other direct caller get it too.
+  if (!isUsableValue(length) || length < minimumChainDistance ||
+      length > maximumChainDistance)
+    return false;
   if (!fragmentContains(molecule, fragment, atom))
     return false;
   // A translation moves everything given to it, so the fixed end must not
@@ -302,9 +363,21 @@ bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
 
   direction /= current;
 
+  const Vector3 shift(direction * (length - current));
+  if (!shift.allFinite())
+    return false;
+
+  // Refuse before moving anything if the result would not be finite: a
+  // half-applied translation would leave NaN or infinite coordinates behind.
+  for (const Index uniqueId : fragment) {
+    const RWAtom member = molecule.atomByUniqueId(uniqueId);
+    if (member.isValid() && !(member.position3d() + shift).allFinite())
+      return false;
+  }
+
   Eigen::Affine3d transform;
   transform.setIdentity();
-  transform.translate(Vector3(direction * (length - current)));
+  transform.translate(shift);
 
   transformAtoms(molecule, fragment, transform, QObject::tr("Adjust Distance"));
   return true;
@@ -322,8 +395,8 @@ bool FragmentTools::setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
 {
   if (!distinctAndValid(molecule, { atom, a, b }))
     return false;
-  if (!isUsableValue(degrees))
-    return false;
+  if (!isUsableValue(degrees) || !isAngleInRange(degrees))
+    return false; // an angle outside 0-180 would land on its supplement
   if (!fragmentContains(molecule, fragment, atom))
     return false;
   // The rotation only leaves the pivot a fixed, so the other reference atom
@@ -337,25 +410,16 @@ bool FragmentTools::setAngle(RWMolecule& molecule, Index atom, Index a, Index b,
   const Vector3 positionB = molecule.atomPosition3d(b);
 
   // The angle opens in the plane of the three atoms, about their vertex.
-  const Vector3 toAtom = position - positionA;
-  const Vector3 toB = positionB - positionA;
-  if (toAtom.norm() < coincidentTolerance || toB.norm() < coincidentTolerance)
+  Eigen::AngleAxis<Real> rotation;
+  if (!angleRotation(position, positionA, positionB, degrees, rotation))
     return false;
-
-  Vector3 axis = toAtom.normalized().cross(toB.normalized());
-  if (axis.norm() < collinearTolerance)
-    return false; // already straight, so there is no plane to open it in
-  axis.normalize();
-
-  // Turning about toAtom x toB by a positive angle carries the atom towards
-  // b, which closes the angle, so the rotation runs the other way.
-  const Real change =
-    (degrees - calculateAngle(position, positionA, positionB)) * DEG_TO_RAD;
+  if (angleBringsEndsTooClose(position, positionA, positionB, degrees))
+    return false;
 
   Eigen::Affine3d transform;
   transform.setIdentity();
   transform.translate(positionA);
-  transform.rotate(Eigen::AngleAxis<Real>(-change, axis));
+  transform.rotate(rotation);
   transform.translate(-positionA);
 
   transformAtoms(molecule, fragment, transform, QObject::tr("Adjust Angle"));
@@ -437,7 +501,8 @@ FragmentTools::CoordinateEditResult FragmentTools::setChainDistance(
 {
   if (!allDistinctAndValid(molecule, uniqueIds))
     return CoordinateEditResult::InvalidAtoms;
-  if (!isUsableValue(length) || length < 0.0)
+  if (!isUsableValue(length) || length < minimumChainDistance ||
+      length > maximumChainDistance)
     return CoordinateEditResult::InvalidValue;
 
   const RWAtom atomI = molecule.atomByUniqueId(uniqueIds[0]);
@@ -472,10 +537,10 @@ FragmentTools::CoordinateEditResult FragmentTools::setChainDistance(
 FragmentTools::CoordinateEditResult FragmentTools::setChainAngle(
   RWMolecule& molecule, const std::array<Index, 3>& uniqueIds, Real degrees)
 {
+  if (!isUsableValue(degrees) || !isAngleInRange(degrees))
+    return CoordinateEditResult::InvalidValue;
   if (!allDistinctAndValid(molecule, uniqueIds))
     return CoordinateEditResult::InvalidAtoms;
-  if (!isUsableValue(degrees))
-    return CoordinateEditResult::InvalidValue;
 
   const RWAtom atomI = molecule.atomByUniqueId(uniqueIds[0]);
   const RWAtom atomJ = molecule.atomByUniqueId(uniqueIds[1]);
@@ -489,6 +554,14 @@ FragmentTools::CoordinateEditResult FragmentTools::setChainAngle(
   if (isAngleDegenerate(molecule.atomPosition3d(k), molecule.atomPosition3d(j),
                         molecule.atomPosition3d(i)))
     return CoordinateEditResult::Degenerate;
+
+  // Folding k onto i is a bad value, not a rigidity problem, so it is told
+  // apart here with the same helper setAngle() uses: by the time setAngle()
+  // returns false below, it can only be a fragment problem.
+  if (angleBringsEndsTooClose(molecule.atomPosition3d(k),
+                              molecule.atomPosition3d(j),
+                              molecule.atomPosition3d(i), degrees))
+    return CoordinateEditResult::InvalidValue;
 
   // The end atoms decide first: with i and k in different molecules there is
   // no bond-side fragment to reason about, so all of k's molecule comes

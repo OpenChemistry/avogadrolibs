@@ -783,12 +783,17 @@ bool MeasureTool::handleCommand(const QString& command,
     return true;
   }
 
-  // Match the panel's spin box ranges. A zero distance would stack two atoms
-  // on top of each other, and an angle outside 0-180 degrees lands on the
-  // supplement, so the caller would get back a value it never asked for.
-  // Dihedrals wrap, so any value is meaningful.
-  if (requiredCount == 2 && !(value > 0.0)) {
-    emit commandFailed(tr("value must be a distance greater than 0 Å."));
+  // Match the panel's spin box ranges. A distance outside the supported
+  // range would stack atoms or fling them out of the universe (the fuzzer
+  // found values that overflowed to infinity), and an angle outside 0-180
+  // degrees lands on the supplement, so the caller would get back a value it
+  // never asked for. Dihedrals wrap, so any value is meaningful.
+  if (requiredCount == 2 &&
+      !(value >= QtGui::FragmentTools::minimumChainDistance &&
+        value <= QtGui::FragmentTools::maximumChainDistance)) {
+    emit commandFailed(tr("value must be a distance from %1 to %2 Å.")
+                         .arg(QtGui::FragmentTools::minimumChainDistance)
+                         .arg(QtGui::FragmentTools::maximumChainDistance));
     return true;
   }
   if (requiredCount == 3 && !(value >= 0.0 && value <= 180.0)) {

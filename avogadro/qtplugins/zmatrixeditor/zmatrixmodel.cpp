@@ -453,8 +453,8 @@ bool ZMatrixModel::setData(const QModelIndex& index_, const QVariant& value,
     case DistanceColumn: {
       bool ok = false;
       const double length = value.toDouble(&ok);
-      if (!ok || length <= 0.0)
-        return false;
+      if (!ok)
+        return false; // the range is enforced by setDistance()
       if (!FragmentTools::setDistance(*undoMolecule, atom, coordinate.a,
                                       length))
         return false;

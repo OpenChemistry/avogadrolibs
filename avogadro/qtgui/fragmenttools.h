@@ -51,7 +51,8 @@ public:
    * failure:
    * - InvalidAtoms: an atom does not exist, or two of them are the same.
    * - InvalidValue: the requested length or angle is not a usable number
-   *   (NaN, infinite, or a negative length).
+   *   (NaN or infinite), or a length outside the range from
+   *   minimumChainDistance to maximumChainDistance.
    * - Ring: a bond on the chain exists but is part of a ring, so the side
    *   of it that would need to move cannot be separated from the rest.
    * - NotRigid: the end atoms share a molecule but nothing along the chain
@@ -69,6 +70,22 @@ public:
     NotRigid,
     Degenerate
   };
+
+  /**
+   * The shortest distance, in Angstroms, that setDistance() and
+   * setChainDistance() will set.
+   * A little shorter than an H-H bond; anything below it stacks atoms on
+   * top of each other.
+   */
+  static constexpr Real minimumChainDistance = 0.5;
+
+  /**
+   * The longest distance, in Angstroms, that setDistance() and
+   * setChainDistance() will set.
+   * Large enough for any supercell edge, small enough that a typo cannot
+   * fling atoms out to where the coordinates overflow.
+   */
+  static constexpr Real maximumChainDistance = 1000.0;
 
   /**
    * The atoms that move with @p startAtom when @p bond is manipulated, as
@@ -141,9 +158,13 @@ public:
    * first atom, the one the row places, that moves.
    *
    * @return False, changing nothing, if an atom is invalid, if two of them
-   * are the same, or if the geometry is too degenerate to define the
-   * coordinate -- coincident atoms for a distance, a collinear arrangement
-   * for an angle or a torsion.
+   * are the same, if a distance is not finite or outside minimumChainDistance
+   * to maximumChainDistance, if an angle is not finite or outside 0 to 180
+   * degrees, if an angle edit would bring the moved end atom closer than
+   * minimumChainDistance to the fixed end atom (unless it is already that
+   * close and the edit moves them apart), or if the geometry is too degenerate
+   * to define the coordinate -- coincident atoms for a distance, a collinear
+   * arrangement for an angle or a torsion.
    * @{
    */
   static bool setDistance(RWMolecule& molecule, Index atom, Index a,
@@ -210,6 +231,15 @@ public:
    * "Different components" is decided on the two end atoms only, not on
    * every link, so a vertex bonded only to the fixed end still finds a
    * moving fragment on the other side.
+   *
+   * setChainDistance() only accepts a finite @p length from
+   * minimumChainDistance to maximumChainDistance inclusive; anything else
+   * returns InvalidValue and leaves the molecule untouched. setChainAngle()
+   * likewise returns InvalidValue, before anything else, for an angle outside
+   * 0 to 180 degrees, and for one that would fold the moving end atom to
+   * within minimumChainDistance of the fixed end atom while bringing them
+   * closer. Only that pair is checked, not the whole moving fragment against
+   * the rest of the molecule. Torsions wrap, so have no range.
    *
    * @return Ok on success. Otherwise a CoordinateEditResult describing why
    * nothing moved; see its documentation for what each value means.
