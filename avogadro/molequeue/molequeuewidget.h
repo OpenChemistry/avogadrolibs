@@ -178,7 +178,7 @@ private slots:
   void onLookupJobReply(int reqId, const QJsonObject& result);
 
   void onSubmissionSuccess(int localId, unsigned int moleQueueId);
-  void onSubmissionFailure(int localId, unsigned int, const QString& error);
+  void onSubmissionFailure(int localId, int errorCode, const QString& error);
 
   void onJobStateChange(unsigned int mqId, const QString& oldState,
                         const QString& newState);
