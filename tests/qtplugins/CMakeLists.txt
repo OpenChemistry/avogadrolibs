@@ -40,6 +40,34 @@ foreach(plugin ${plugins})
   list(APPEND pluginIncludes "${pluginDir}")
 endforeach()
 
+# Scene plugins whose per-layer settings are saved as text, covered together by
+# scenepluginserializetest.cpp rather than one test file each.
+set(scenePlugins
+  BallStick
+  Cartoons
+  Label
+  Licorice
+  VanDerWaals
+  Wireframe
+)
+set(haveScenePlugins ON)
+foreach(plugin ${scenePlugins})
+  if(NOT TARGET ${plugin})
+    message(STATUS "QtPlugins tests: no ${plugin} target, skipping the "
+                   "scene plugin serialize test.")
+    set(haveScenePlugins OFF)
+  endif()
+endforeach()
+if(haveScenePlugins)
+  message(STATUS "Adding scene plugin serialize test.")
+  list(APPEND testSrcs scenepluginserializetest.cpp)
+  foreach(plugin ${scenePlugins})
+    list(APPEND pluginTargets ${plugin})
+    get_target_property(pluginDir ${plugin} SOURCE_DIR)
+    list(APPEND pluginIncludes "${pluginDir}")
+  endforeach()
+endif()
+
 if(NOT testSrcs)
   return()
 endif()
@@ -68,9 +96,21 @@ if(TARGET Surfaces AND TARGET tinycolormap)
   target_link_libraries(AvogadroQtPluginsTests tinycolormap)
 endif()
 
-foreach(plugin CommandTestHarness ${pluginTargets})
+set(testNames CommandTestHarness)
+foreach(plugin ${pluginTargets})
+  if(NOT plugin IN_LIST scenePlugins OR NOT haveScenePlugins)
+    list(APPEND testNames ${plugin})
+  endif()
+endforeach()
+if(haveScenePlugins)
+  list(APPEND testNames ScenePluginSerialize)
+endif()
+
+foreach(plugin ${testNames})
   if(plugin STREQUAL "CommandTestHarness")
     set(filter "CommandTestHarnessTest.*")
+  elseif(plugin STREQUAL "ScenePluginSerialize")
+    set(filter "*ScenePluginSerializeTest.*")
   else()
     set(filter "${plugin}CommandTest.*")
   endif()
