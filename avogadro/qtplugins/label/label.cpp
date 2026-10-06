@@ -184,7 +184,8 @@ struct LayerLabel : Core::LayerData
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<float>(commaToDot(aux));
           v && std::isfinite(*v) && *v > 0.0f)
-        radiusScalar = *v;
+        // the "Distance from center" spin box range
+        radiusScalar = std::min(*v, 1.5f);
     }
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<int>(aux))

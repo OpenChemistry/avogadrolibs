@@ -97,7 +97,8 @@ struct LayerWireframe : Core::LayerData
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<float>(commaToDot(aux));
           v && std::isfinite(*v) && *v > 0.0f)
-        lineWidth = *v;
+        // the "Line width" spin box range in setupWidget()
+        lineWidth = std::clamp(*v, 0.5f, 5.0f);
     }
   }
 
