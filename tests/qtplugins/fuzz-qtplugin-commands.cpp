@@ -422,19 +422,6 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
     fail(trace, "command registration", harness.registrationViolations());
 
   bool attached = true;
-  // Set once a command that replaces the whole molecule (modifyMolecule())
-  // has run. Known finding, not fixed: after wrapUnitCell, undoing the
-  // command before it can restore the wrong bonds (the replacement molecule's
-  // bond unique ids are stale), so redo no longer matches. Skipping the
-  // undo-then-redo comparison from there on keeps that from hiding other
-  // findings; the structural invariants are still checked.
-  bool replacedMolecule = false;
-  // Set once an edit command has been given an absurd distance or angle.
-  // Known finding, not fixed: MeasureTool only requires a distance > 0, so
-  // editDistance accepts 1e161 and then 1e-323, and the second edit leaves
-  // atoms at inf/NaN. Once coordinates may be non-finite nothing after that
-  // is meaningful, so the input ends there instead of failing.
-  bool absurdEdit = false;
   for (int op = 0; op < operations && (op == 0 || reader.remaining() > 0);
        ++op) {
     const int kind = reader.u8() % 16;
@@ -452,17 +439,8 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
 
       const CommandOutcome outcome =
         harness.run(QString::fromStdString(command), options);
-      if (command == "wrapUnitCell" || command == "standardCrystalOrientation")
-        replacedMolecule = true;
-      if (command.compare(0, 4, "edit") == 0) {
-        const double value = options.value("value").toDouble();
-        if (!(std::abs(value) < 1e30) || std::abs(value) < 1e-30)
-          absurdEdit = true;
-      }
       QStringList violations;
       for (const QString& v : outcome.violations) {
-        if (absurdEdit && v.contains(QLatin1String("non-finite position")))
-          return 0;
         if (!isKnownDeviation(QString::fromStdString(command), v))
           violations << v;
       }
@@ -490,7 +468,7 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
         fail(trace, "after undo and redo", v);
       // Redoing what was just undone must give back the very same state.
       const QStringList changed = before.differences(harness.snapshot());
-      if (canUndo && !replacedMolecule && !changed.isEmpty()) {
+      if (canUndo && !changed.isEmpty()) {
         QStringList detail = changed;
         const MoleculeSnapshot after = harness.snapshot();
         auto bonds = [](const MoleculeSnapshot& s) {
