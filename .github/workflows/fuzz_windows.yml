@@ -530,7 +530,8 @@ jobs:
         # The same table as fuzz_linux.yml minus its qtgui line: this job
         # builds with USE_QT=OFF, because Qt is /MD and cannot join a static
         # CRT build (see the reconfigure step). When a target is added there,
-        # add it here too.
+        # add it here too -- except the qtplugins suite (fuzz_qtplugin_commands),
+        # which is Linux-only: it links the Qt plugins and the Qt GUI libraries.
         suites=(
           "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden nwchem orca qcjson=qcschema"
