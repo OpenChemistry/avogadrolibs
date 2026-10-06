@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <locale>
 #include <sstream>
 
@@ -168,23 +169,31 @@ struct LayerLabel : Core::LayerData
   // Bitmask fields (atomOptions/residueOptions/bondOptions) reject a negative
   // parse and keep the previous (default) value; a malformed or missing token
   // leaves the member untouched rather than throwing.
+  // An options value that does not fit the 16-bit field is rejected rather
+  // than wrapped into an arbitrary bitmask.
+  static bool fitsOptions(int value)
+  {
+    return value >= 0 && value <= std::numeric_limits<unsigned short>::max();
+  }
+
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
 
     if (ss >> aux) {
-      if (auto v = Core::lexicalCast<int>(aux); v && *v >= 0)
+      if (auto v = Core::lexicalCast<int>(aux); v && fitsOptions(*v))
         atomOptions = static_cast<unsigned short>(*v);
     }
     if (ss >> aux) {
-      if (auto v = Core::lexicalCast<int>(aux); v && *v >= 0)
+      if (auto v = Core::lexicalCast<int>(aux); v && fitsOptions(*v))
         residueOptions = static_cast<unsigned short>(*v);
     }
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<float>(commaToDot(aux));
           v && std::isfinite(*v) && *v > 0.0f)
-        radiusScalar = *v;
+        // the "Distance from center" spin box range
+        radiusScalar = std::min(*v, 1.5f);
     }
     if (ss >> aux) {
       if (auto v = Core::lexicalCast<int>(aux))
@@ -199,7 +208,7 @@ struct LayerLabel : Core::LayerData
         color[2] = static_cast<unsigned char>(std::clamp(*v, 0, 255));
     }
     if (ss >> aux) { // backwards compatibility
-      if (auto v = Core::lexicalCast<int>(aux); v && *v >= 0)
+      if (auto v = Core::lexicalCast<int>(aux); v && fitsOptions(*v))
         bondOptions = static_cast<unsigned short>(*v);
     }
     if (ss >> aux) { // backwards compatibility
