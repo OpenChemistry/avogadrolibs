@@ -233,23 +233,74 @@ bool GAMESSUSOutput::readEigenvectors(std::istream& in)
   bool ok(false);
   size_t numberOfMos(0);
   bool newBlock(true);
+
+  // Each MO has one coefficient per basis function. GAMESS always prints the
+  // full cartesian set, so count them from the shells read so far. If a shell
+  // type is not known, require every MO to match the first one instead.
+  size_t numBasisFunctions(0);
+  for (auto shellType : m_shellTypes) {
+    size_t count(0);
+    switch (shellType) {
+      case GaussianSet::S:
+        count = 1;
+        break;
+      case GaussianSet::SP:
+        count = 4;
+        break;
+      case GaussianSet::P:
+        count = 3;
+        break;
+      case GaussianSet::D:
+        count = 6;
+        break;
+      case GaussianSet::F:
+        count = 10;
+        break;
+      default:
+        break;
+    }
+    if (count == 0) {
+      numBasisFunctions = 0;
+      break;
+    }
+    numBasisFunctions += count;
+  }
+
+  // Check that every MO in a block is complete before keeping it.
+  auto appendBlock = [&]() {
+    for (auto& eigenvector : eigenvectors) {
+      if (numBasisFunctions == 0)
+        numBasisFunctions = eigenvector.size();
+      if (eigenvector.size() != numBasisFunctions) {
+        appendError("Incomplete eigenvector: expected " +
+                    std::to_string(numBasisFunctions) + " coefficients, read " +
+                    std::to_string(eigenvector.size()) + ".");
+        return false;
+      }
+    }
+    for (auto& eigenvector : eigenvectors)
+      for (double j : eigenvector)
+        m_MOcoeffs.push_back(j);
+    eigenvectors.clear();
+    return true;
+  };
+
   while (!Core::contains(buffer, "END OF") ||
          Core::contains(buffer, "--------")) {
     // Any line with actual information in it will contain >= 5 parts.
     if (parts.size() > 5 && buffer.substr(0, 16) != "                ") {
       if (newBlock) {
         // Reorder the columns/rows, add them and then prepare
-        for (auto& eigenvector : eigenvectors)
-          for (double j : eigenvector)
-            m_MOcoeffs.push_back(j);
-        eigenvectors.clear();
+        if (!appendBlock())
+          return false;
         eigenvectors.resize(parts.size() - 4);
         numberOfMos += eigenvectors.size();
         newBlock = false;
       }
       // Every row in a block has one column per MO in the block.
-      if (parts.size() - 4 > eigenvectors.size()) {
-        appendError("Eigenvector row has more columns than its block: " +
+      if (parts.size() - 4 != eigenvectors.size()) {
+        appendError("Eigenvector row does not match the columns of its "
+                    "block: " +
                     buffer);
         return false;
       }
@@ -267,15 +318,8 @@ bool GAMESSUSOutput::readEigenvectors(std::istream& in)
     parts = Core::split(buffer, ' ');
   }
   m_nMOs = numberOfMos;
-  for (auto& eigenvector : eigenvectors)
-    for (double j : eigenvector)
-      m_MOcoeffs.push_back(j);
-
-  // Now we just need to transpose the matrix, as GAMESS uses a different order.
-  // We know the number of columns (MOs), and the number of rows (primitives).
-  if (eigenvectors.size() != numberOfMos * m_a.size())
-    appendError("Incorrect number of eigenvectors loaded.");
-  return true;
+  // The final block is checked the same way as the others.
+  return appendBlock();
 }
 
 bool GAMESSUSOutput::load(GaussianSet* basis, Index atomCount)

@@ -161,3 +161,51 @@ TEST(GAMESSUSTest, eigenvectorRowWiderThanBlockFails)
     eigenvectors("    1  C  1 S    -0.000072   0.000000\n"
                  "    2  C  1 S     0.000036   0.000000   0.1   0.2\n")));
 }
+
+// An S and a P shell give four basis functions, so each MO needs four
+// coefficients.
+TEST(GAMESSUSTest, eigenvectorsMatchBasisFunctionCount)
+{
+  const std::string spShells =
+    "      1   S       1             2.9412494    1.000000000000\n"
+    "\n"
+    "      2   P       2             0.6834831    1.000000000000\n";
+  const std::string basis =
+    kCoordinates + kBasisHeader + " C\n\n" + spShells + kBasisEnd;
+
+  // Complete: both MOs load.
+  {
+    GAMESSUSOutput format;
+    Molecule molecule;
+    ASSERT_TRUE(format.readString(
+      basis + eigenvectors("    1  C  1 S    -0.000072   0.100000\n"
+                           "    2  C  1 X     0.000036   0.200000\n"
+                           "    3  C  1 Y     0.000036   0.300000\n"
+                           "    4  C  1 Z     0.000036   0.400000\n"),
+      molecule));
+    auto* gaussian = dynamic_cast<GaussianSet*>(molecule.basisSet());
+    ASSERT_NE(gaussian, nullptr);
+    EXPECT_EQ(gaussian->molecularOrbitalCount(), 2u);
+  }
+
+  // The final (only) block stops one row short.
+  EXPECT_TRUE(readFailsCleanly(
+    basis + eigenvectors("    1  C  1 S    -0.000072   0.100000\n"
+                         "    2  C  1 X     0.000036   0.200000\n"
+                         "    3  C  1 Y     0.000036   0.300000\n")));
+
+  // A row narrower than the block's first row.
+  EXPECT_TRUE(readFailsCleanly(
+    basis + "          ------------\n"
+            "          EIGENVECTORS\n"
+            "          ------------\n"
+            "\n"
+            "                      1          2          3\n"
+            "                   -2.3155    -0.7371     0.1000\n"
+            "                     A          A          A\n"
+            "    1  C  1 S    -0.000072   0.100000   0.1\n"
+            "    2  C  1 X     0.000036   0.200000\n"
+            "    3  C  1 Y     0.000036   0.300000   0.3\n"
+            "    4  C  1 Z     0.000036   0.400000   0.4\n"
+            " ...... END OF RHF CALCULATION ......\n"));
+}

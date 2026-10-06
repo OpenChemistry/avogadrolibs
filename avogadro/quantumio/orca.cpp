@@ -1447,9 +1447,9 @@ void ORCAOutput::load(GaussianSet* basis, Index atomCount)
   }
 
   // Now to load in the MO coefficients
-  if (m_MOcoeffs.size())
+  if (shellsValid && m_MOcoeffs.size())
     basis->setMolecularOrbitals(m_MOcoeffs);
-  if (m_BetaMOcoeffs.size())
+  if (shellsValid && m_BetaMOcoeffs.size())
     basis->setMolecularOrbitals(m_BetaMOcoeffs, Core::BasisSet::Beta);
 
   if (m_orbitalEnergy.size())
