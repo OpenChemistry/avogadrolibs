@@ -92,13 +92,15 @@ size_t backboneSegmentGroup(
 struct LayerCartoon : Core::LayerData
 {
   QWidget* widget;
-  bool showBackbone;
-  bool showTrace;
-  bool showTube;
-  bool showRibbon;
-  bool showSimpleCartoon;
-  bool showCartoon;
-  bool showRope;
+  // The defaults of the QSettings fallbacks in the constructor below, for the
+  // constructor that is handed a saved string.
+  bool showBackbone = false;
+  bool showTrace = false;
+  bool showTube = false;
+  bool showRibbon = false;
+  bool showSimpleCartoon = false;
+  bool showCartoon = true;
+  bool showRope = false;
 
   using JumpTable = void (Cartoons::*)(bool);
   JumpTable jumpTable[7];
@@ -110,24 +112,27 @@ struct LayerCartoon : Core::LayerData
            boolToString(showSimpleCartoon) + " " + boolToString(showCartoon) +
            " " + boolToString(showRope);
   }
+  // A field missing from the text keeps its current value, so an empty or
+  // truncated save leaves the remaining options alone instead of turning
+  // them off (or, once a token was read, repeating the last one).
   void deserialize(std::string text) final
   {
     std::stringstream ss(text);
     std::string aux;
-    ss >> aux;
-    showBackbone = stringToBool(aux);
-    ss >> aux;
-    showTrace = stringToBool(aux);
-    ss >> aux;
-    showTube = stringToBool(aux);
-    ss >> aux;
-    showRibbon = stringToBool(aux);
-    ss >> aux;
-    showSimpleCartoon = stringToBool(aux);
-    ss >> aux;
-    showCartoon = stringToBool(aux);
-    ss >> aux;
-    showRope = stringToBool(aux);
+    if (ss >> aux)
+      showBackbone = stringToBool(aux);
+    if (ss >> aux)
+      showTrace = stringToBool(aux);
+    if (ss >> aux)
+      showTube = stringToBool(aux);
+    if (ss >> aux)
+      showRibbon = stringToBool(aux);
+    if (ss >> aux)
+      showSimpleCartoon = stringToBool(aux);
+    if (ss >> aux)
+      showCartoon = stringToBool(aux);
+    if (ss >> aux)
+      showRope = stringToBool(aux);
   }
 
   void setupWidget(Cartoons* slot)
