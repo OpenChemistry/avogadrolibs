@@ -428,6 +428,31 @@ TEST_P(ScenePluginSerializeTest, badFieldsLeaveSaneData)
   }
 }
 
+// Label's atom, residue and bond options are 16-bit bitmasks. A saved value
+// that does not fit must be rejected (keeping the default), not wrapped into
+// an arbitrary set of options: 70000 would otherwise become 4464.
+TEST_P(ScenePluginSerializeTest, labelOptionsBeyond16BitsAreRejected)
+{
+  if (std::string(spec().label) != "Label")
+    GTEST_SKIP() << "Label only";
+
+  const Tokens given = split(spec().nonDefault);
+  const Tokens dflt = split(spec().defaults);
+  for (size_t field : { size_t(0), size_t(1), size_t(6) }) {
+    for (const std::string token : { "65536", "70000", "2147483647" }) {
+      Tokens text = given;
+      text[field] = token;
+      Tokens expected = given;
+      expected[field] = dflt[field];
+      EXPECT_EQ(restore(join(text)), join(expected))
+        << "field " << field << " = " << token;
+    }
+    Tokens text = given;
+    text[field] = "65535";
+    EXPECT_EQ(restore(join(text)), join(text)) << "field " << field;
+  }
+}
+
 TEST_P(ScenePluginSerializeTest, embeddedNulAndNewlineLeaveSaneData)
 {
   const std::string good = spec().nonDefault;
