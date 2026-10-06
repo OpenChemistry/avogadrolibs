@@ -121,3 +121,48 @@ foreach(plugin ${testNames})
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
 endforeach()
+
+# fuzz_qtplugin_commands: libFuzzer drives random command sequences through
+# CommandTestHarness, in-process (2.1 release plan, section 4.2). Same plugins
+# as the tests above, minus Surfaces: every Surfaces command starts a worker
+# thread and a grid computation sized by a caller-supplied resolution, which is
+# neither deterministic nor cheap, so it is exercised by the Surfaces tests
+# only. Linux-only in CI: the Windows fuzz job builds with USE_QT=OFF.
+if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
+  set(fuzzPlugins AlignTool Bonding Crystal Focus MeasureTool Select)
+  set(fuzzIncludes "")
+  set(fuzzReady TRUE)
+  foreach(plugin ${fuzzPlugins})
+    if(TARGET ${plugin})
+      get_target_property(pluginDir ${plugin} SOURCE_DIR)
+      list(APPEND fuzzIncludes "${pluginDir}")
+    else()
+      set(fuzzReady FALSE)
+    endif()
+  endforeach()
+
+  if(fuzzReady AND TARGET Avogadro::Rendering)
+    add_executable(fuzz_qtplugin_commands
+      fuzz-qtplugin-commands.cpp
+      commandtestharness.cpp)
+    target_include_directories(fuzz_qtplugin_commands
+      PRIVATE ${fuzzIncludes} ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(fuzz_qtplugin_commands
+      PRIVATE ${fuzzPlugins} Avogadro::QtGui Avogadro::Rendering
+      Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+    if(DEFINED ENV{LIB_FUZZING_ENGINE})
+      target_link_libraries(fuzz_qtplugin_commands
+        PRIVATE $ENV{LIB_FUZZING_ENGINE})
+    else()
+      target_compile_options(fuzz_qtplugin_commands
+        PRIVATE ${AvogadroLibs_FUZZ_COMPILE_OPTIONS})
+      target_link_options(fuzz_qtplugin_commands
+        PRIVATE ${AvogadroLibs_FUZZ_LINK_OPTIONS})
+      target_link_libraries(fuzz_qtplugin_commands
+        PRIVATE ${AvogadroLibs_FUZZ_LINK_LIBS})
+    endif()
+  else()
+    message(STATUS "Skipping fuzz_qtplugin_commands: a plugin target is "
+      "missing.")
+  endif()
+endif()

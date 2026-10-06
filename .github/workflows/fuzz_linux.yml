@@ -218,12 +218,22 @@ jobs:
         # "name=subdir", when the target name and the data directory differ.
         # To fuzz a new class, add its name here and to the matching list in
         # tests/<suite>/CMakeLists.txt.
+        #
+        # A target may also keep its seeds and dictionary in this repository,
+        # next to its source: tests/<suite>/fuzz/<seed name>/ (seed files) and
+        # tests/<suite>/fuzz/<seed name>.dict. qtplugins/qtplugin_commands does:
+        # its seeds are in its own byte format, written by
+        # tests/qtplugins/fuzz/generate_seeds.py, and are not data files.
+        #
+        # fuzz_windows.yml has no qtplugins entry on purpose: it builds with
+        # USE_QT=OFF, and this target needs Qt and the in-tree static plugins.
         suites=(
           "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden nwchem orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "calc|fuzz_calc_|calc|forcefield"
           "qtgui|fuzz_qtgui_|qtgui|rwmolecule generichighlighter jsonwidget interfacescript-json layermanager"
+          "qtplugins|fuzz_||qtplugin_commands"
         )
 
         # Targets with known, pre-existing failures. They still run and still
@@ -372,16 +382,21 @@ jobs:
             # recurse into subdirectories, so flatten the tree into one dir.
             seed_root="${AVOGADRO_DATA_ROOT}/data${corpus_sub:+/${corpus_sub}}/${seed_name}"
             seed_dir="${RUNNER_TEMP}/fuzz-seeds/${suite}/${target}"
+            local_fuzz="${GITHUB_WORKSPACE}/openchemistry/avogadrolibs/tests/${suite}/fuzz"
             seed_args=()
             seed_count=0
-            if [ -d "${seed_root}" ]; then
-              rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+            rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+            for root in "${seed_root}" "${local_fuzz}/${seed_name}"; do
+              [ -d "${root}" ] || continue
               while IFS= read -r -d '' f; do
                 cp "${f}" "${seed_dir}/$(sha1sum "${f}" | cut -c1-40)"
-              done < <(find "${seed_root}" -type f ! -name 'README*' -print0)
-              seed_count=$(find "${seed_dir}" -type f | wc -l)
-              [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
-            fi
+              done < <(find "${root}" -type f ! -name 'README*' -print0)
+            done
+            seed_count=$(find "${seed_dir}" -type f | wc -l)
+            [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
+
+            dict_args=()
+            [ -f "${local_fuzz}/${seed_name}.dict" ] && dict_args=("-dict=${local_fuzz}/${seed_name}.dict")
 
             # libFuzzer writes newly discovered units to the *first* corpus
             # directory only, so the restored corpus grows and the seed
@@ -396,6 +411,7 @@ jobs:
             fuzz_pass() {
               "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
                 "${memory_limits[@]}" \
+                ${dict_args[@]+"${dict_args[@]}"} \
                 -artifact_prefix="${artifact_dir}/" \
                 "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
                 | tee "${artifact_dir}/run.log"
