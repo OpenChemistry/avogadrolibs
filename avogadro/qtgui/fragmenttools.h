@@ -72,14 +72,16 @@ public:
   };
 
   /**
-   * The shortest distance, in Angstroms, that setChainDistance() will set.
+   * The shortest distance, in Angstroms, that setDistance() and
+   * setChainDistance() will set.
    * A little shorter than an H-H bond; anything below it stacks atoms on
    * top of each other.
    */
   static constexpr Real minimumChainDistance = 0.5;
 
   /**
-   * The longest distance, in Angstroms, that setChainDistance() will set.
+   * The longest distance, in Angstroms, that setDistance() and
+   * setChainDistance() will set.
    * Large enough for any supercell edge, small enough that a typo cannot
    * fling atoms out to where the coordinates overflow.
    */
@@ -156,7 +158,8 @@ public:
    * first atom, the one the row places, that moves.
    *
    * @return False, changing nothing, if an atom is invalid, if two of them
-   * are the same, or if the geometry is too degenerate to define the
+   * are the same, if a distance is not finite or outside minimumChainDistance
+   * to maximumChainDistance, or if the geometry is too degenerate to define the
    * coordinate -- coincident atoms for a distance, a collinear arrangement
    * for an angle or a torsion.
    * @{

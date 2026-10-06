@@ -285,8 +285,11 @@ bool FragmentTools::setDistance(RWMolecule& molecule, Index atom, Index a,
 {
   if (!distinctAndValid(molecule, { atom, a }))
     return false;
-  if (!isUsableValue(length) || length < 0.0)
-    return false; // a distance is never negative
+  // The range lives here, not only in setChainDistance(), so the z-matrix
+  // editor and any other direct caller get it too.
+  if (!isUsableValue(length) || length < minimumChainDistance ||
+      length > maximumChainDistance)
+    return false;
   if (!fragmentContains(molecule, fragment, atom))
     return false;
   // A translation moves everything given to it, so the fixed end must not

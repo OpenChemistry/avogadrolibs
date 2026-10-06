@@ -1075,3 +1075,28 @@ TEST(FragmentToolsTest, chainDistanceOutsideTheRangeIsRefusedUnchanged)
     }
   }
 }
+
+// The z-matrix editor calls setDistance() directly, so the range has to be
+// enforced there and not only in setChainDistance().
+TEST(FragmentToolsTest, setDistanceEnforcesTheRangeDirectly)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildEthane(mol);
+  const Array<Vector3> original = mol.atomPositions3d();
+  const int undoCount = mol.undoStack().count();
+
+  for (const Real bad : { 0.4999, 1000.001, 0.0, -1.0 }) {
+    EXPECT_FALSE(FragmentTools::setDistance(mol, 1, 0, bad)) << bad;
+    EXPECT_EQ(undoCount, mol.undoStack().count()) << bad;
+    for (Index i = 0; i < mol.atomCount(); ++i)
+      EXPECT_EQ(original[i], mol.atomPosition3d(i)) << bad;
+  }
+
+  ASSERT_TRUE(FragmentTools::setDistance(mol, 1, 0, 0.5));
+  EXPECT_NEAR(0.5, distance(mol.atomPosition3d(0), mol.atomPosition3d(1)),
+              1e-9);
+  ASSERT_TRUE(FragmentTools::setDistance(mol, 1, 0, 1000.0));
+  EXPECT_NEAR(1000.0, distance(mol.atomPosition3d(0), mol.atomPosition3d(1)),
+              1e-9);
+}
