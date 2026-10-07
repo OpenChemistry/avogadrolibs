@@ -516,6 +516,27 @@ void gridG9(const Avogadro::Core::ShellInfo& shell, int mo,
   }
 }
 
+// True for the shell types GaussianSet::initCalculation() normalizes and the
+// evaluators below handle (the same set as the switches in evaluateMOGrid()
+// and calculateValues()). Every other type (h, i, ...) owns no entries in the
+// normalized coefficient array and contributes nothing to any value.
+bool isEvaluatedShell(int type)
+{
+  switch (type) {
+    case Avogadro::Core::GaussianSet::S:
+    case Avogadro::Core::GaussianSet::P:
+    case Avogadro::Core::GaussianSet::D:
+    case Avogadro::Core::GaussianSet::D5:
+    case Avogadro::Core::GaussianSet::F:
+    case Avogadro::Core::GaussianSet::F7:
+    case Avogadro::Core::GaussianSet::G:
+    case Avogadro::Core::GaussianSet::G9:
+      return true;
+    default:
+      return false;
+  }
+}
+
 } // anonymous namespace
 
 namespace Avogadro::Core {
@@ -569,8 +590,10 @@ void GaussianSetTools::buildShellData()
     s.centerBohr[1] = atomPosBohr(1, s.atomIndex);
     s.centerBohr[2] = atomPosBohr(2, s.atomIndex);
 
-    // Calculate per-shell cutoff
-    s.cutoffSquared = calculateShellCutoff(s);
+    // Calculate per-shell cutoff. Shells that are never evaluated (h, i)
+    // have no normalized coefficients, so there is nothing to measure: a zero
+    // cutoff makes both evaluators skip them.
+    s.cutoffSquared = isEvaluatedShell(s.type) ? calculateShellCutoff(s) : 0.0;
   }
 }
 
@@ -578,6 +601,10 @@ double GaussianSetTools::calculateShellCutoff(const ShellInfo& shell) const
 {
   const double threshold = 0.03 * 0.001; // 0.1% of a typical isovalue
   const double maxDistance = 100.0;
+
+  // A shell without normalized coefficients has no extent.
+  if (shell.cStart >= m_gtoCN.size())
+    return 0.0;
 
   double maxR2 = 0.0;
   const double coeff = std::abs(m_gtoCN[shell.cStart]);
