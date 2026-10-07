@@ -12,6 +12,7 @@
 #include "vector.h"
 
 #include <string>
+#include <vector>
 
 namespace Avogadro::Core {
 
@@ -62,6 +63,29 @@ public:
    * not guessed: 0 is returned. See internationalNumberFromString().
    */
   static unsigned short hallNumber(const std::string& spaceGroup);
+
+  /**
+   * @return the hall number of the space group whose symmetry operations are
+   * exactly @p operations, or 0 if no entry of the table has this set.
+   *
+   * This is how most crystallography programs resolve a setting: the symmetry
+   * operations a CIF file lists identify the origin choice and axes (which an
+   * H-M symbol often leaves out), and cannot disagree with the coordinates.
+   *
+   * Each operation is written like "x,y,z", "-x+1/2,y,-z", "1/2+x,y,z" or
+   * "x-y,x,z+1/6". Letters may be upper case, spaces and quotes are ignored,
+   * and constants may be decimals (0.5, 0.3333, 0.6667) if they are close to a
+   * multiple of 1/12. Translations are taken modulo one. The order of the
+   * operations and repeats do not matter. All operations must be present and
+   * none may be extra. Text that is not an operation, or an empty list,
+   * gives 0.
+   *
+   * Three pairs of entries in the table (hall numbers 322 and 324, 326 and 328,
+   * 330 and 332, all group 68) have the same operations and the same Hall
+   * symbol, and differ only in a setting label. The lower number is returned.
+   */
+  static unsigned short hallNumberFromTransforms(
+    const std::vector<std::string>& operations);
 
   /**
    * @return the international table number (1-230) that the string refers to,

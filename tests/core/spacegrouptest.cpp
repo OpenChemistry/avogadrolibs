@@ -12,9 +12,18 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
+#include <algorithm>
+#include <cctype>
 #include <map>
+#include <random>
 #include <string>
 #include <vector>
+
+// The table of operations is private to the library. Include its data in a
+// namespace of its own so that these arrays are not the library's symbols.
+namespace SpaceGroupTable {
+#include <avogadro/core/spacegroupdata.h>
+}
 
 using Avogadro::Matrix3;
 using Avogadro::Vector3;
@@ -774,4 +783,280 @@ TEST(SpaceGroupTest, garbageSymbols)
   EXPECT_EQ(SpaceGroups::internationalNumberFromString("abc"), 0);
   EXPECT_EQ(SpaceGroups::internationalNumberFromString("231"), 0);
   EXPECT_EQ(SpaceGroups::internationalNumberFromString("0"), 0);
+}
+
+namespace {
+
+std::vector<std::string> tableOperationStrings(unsigned short hall)
+{
+  std::vector<std::string> ops;
+  std::string current;
+  for (const char* c =
+         SpaceGroupTable::Avogadro::Core::space_group_transforms[hall];
+       ; ++c) {
+    if (*c == ' ' || *c == '\0') {
+      if (!current.empty())
+        ops.push_back(current);
+      current.clear();
+      if (*c == '\0')
+        break;
+    } else {
+      current.push_back(*c);
+    }
+  }
+  return ops;
+}
+
+// The hall number a table entry is expected to resolve to. Three pairs of
+// entries (group 68) have identical operations and Hall symbols; the lower of
+// each pair is returned. Every other entry has a unique set of operations.
+unsigned short expectedHall(unsigned short hall)
+{
+  switch (hall) {
+    case 324:
+      return 322;
+    case 328:
+      return 326;
+    case 332:
+      return 330;
+    default:
+      return hall;
+  }
+}
+
+// Respell "-x+1/2,y,1/2-z" with the terms of every coordinate reversed, and
+// optionally with decimals, upper case, spaces and quotes.
+std::string respell(const std::string& op, bool decimals, bool upper,
+                    bool spaced, bool quoted, bool shiftByOne)
+{
+  std::vector<std::string> coordinates;
+  std::string current;
+  for (char c : op) {
+    if (c == ',') {
+      coordinates.push_back(current);
+      current.clear();
+    } else {
+      current.push_back(c);
+    }
+  }
+  coordinates.push_back(current);
+
+  std::string result;
+  for (std::string coordinate : coordinates) {
+    // split into signed terms
+    std::vector<std::string> terms;
+    std::string term;
+    for (char c : coordinate) {
+      if ((c == '+' || c == '-') && !term.empty()) {
+        terms.push_back(term);
+        term.clear();
+      }
+      term.push_back(c);
+    }
+    terms.push_back(term);
+    std::reverse(terms.begin(), terms.end());
+
+    std::string text;
+    bool hasConstant = false;
+    for (std::string t : terms) {
+      std::string sign = "+";
+      if (t[0] == '-' || t[0] == '+') {
+        sign = std::string(1, t[0]);
+        t = t.substr(1);
+      }
+      if (std::isdigit(static_cast<unsigned char>(t[0]))) {
+        hasConstant = true;
+        if (decimals) {
+          static const std::map<std::string, std::string> values = {
+            { "1/2", "0.5" },    { "1/4", "0.25" },   { "3/4", "0.75" },
+            { "1/3", "0.3333" }, { "2/3", "0.6667" }, { "1/6", "0.1667" },
+            { "5/6", "0.8333" }
+          };
+          t = values.at(t);
+        }
+      }
+      text += sign + t;
+    }
+    if (shiftByOne && !hasConstant)
+      text += "+1";
+    if (text[0] == '+')
+      text = text.substr(1);
+    if (!result.empty())
+      result += spaced ? " , " : ",";
+    result += text;
+  }
+  if (upper)
+    std::transform(result.begin(), result.end(), result.begin(), [](char c) {
+      return static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+    });
+  if (spaced)
+    result = "  " + result + " ";
+  if (quoted)
+    result = "'" + result + "'";
+  return result;
+}
+
+} // namespace
+
+TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
+{
+  for (unsigned short hall = 1; hall <= 530; ++hall) {
+    std::vector<std::string> ops = tableOperationStrings(hall);
+    ASSERT_FALSE(ops.empty()) << hall;
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+      << hall << " " << SpaceGroups::hallSymbol(hall);
+  }
+}
+
+TEST(SpaceGroupTest, transformsInAnyOrderAndSpelling)
+{
+  std::mt19937 rng(20261006);
+  for (unsigned short hall = 1; hall <= 530; ++hall) {
+    std::vector<std::string> base = tableOperationStrings(hall);
+
+    // shuffled
+    std::vector<std::string> ops = base;
+    std::shuffle(ops.begin(), ops.end(), rng);
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+      << "shuffled " << hall;
+
+    // repeated operations do not matter
+    ops = base;
+    ops.insert(ops.end(), base.begin(), base.end());
+    std::shuffle(ops.begin(), ops.end(), rng);
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+      << "repeated " << hall;
+
+    // terms reversed ("1/2+x" -> "x+1/2")
+    ops.clear();
+    for (const std::string& op : base)
+      ops.push_back(respell(op, false, false, false, false, false));
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+      << "reversed " << hall;
+
+    // decimals, upper case, spaces, quotes, in a few combinations
+    for (int style = 1; style < 16; ++style) {
+      ops.clear();
+      for (const std::string& op : base)
+        ops.push_back(
+          respell(op, style & 1, style & 2, style & 4, style & 8, false));
+      std::shuffle(ops.begin(), ops.end(), rng);
+      EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+        << "style " << style << " " << hall;
+    }
+
+    // a full lattice translation added to some constants
+    ops.clear();
+    for (const std::string& op : base)
+      ops.push_back(respell(op, true, true, true, true, true));
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+      << "shifted " << hall;
+  }
+}
+
+TEST(SpaceGroupTest, transformsCifSpellings)
+{
+  // as written by CIF files: quoted, spaced, leading constants, decimals
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { "'x, y, z'", "'-x, y+1/2, -z+1/2'", "'-x, -y, -z'",
+                "'x, -y+1/2, z+1/2'" }),
+            SpaceGroups::hallNumber("P 1 21/c 1"));
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { "x,y,z", "-x,y+0.5,-z+0.5", "-x,-y,-z", "x,-y+0.5,z+0.5" }),
+            SpaceGroups::hallNumber("P 1 21/c 1"));
+  // hexagonal operations with a combination of axes
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { "X,Y,Z", "-Y,X-Y,Z+1/3", "-X+Y,-X,Z+2/3" }),
+            SpaceGroups::hallNumber("P 3_1"));
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { "x,y,z", "-y,x-y,z+0.3333", "-x+y,-x,z+0.6667" }),
+            SpaceGroups::hallNumber("P 3_1"));
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { "x,y,z", "-y,x-y,z+2/3", "-x+y,-x,z+1/3" }),
+            SpaceGroups::hallNumber("P 3_2"));
+  // translations outside [0, 1) are reduced
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ "x,y,z", "-x,-y,-z" }), 2);
+  EXPECT_EQ(
+    SpaceGroups::hallNumberFromTransforms({ "x+1,y-1,z+2", "-x+1,-y,-z-3" }),
+    2);
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ "x,y,z" }), 1);
+}
+
+TEST(SpaceGroupTest, transformsWrongSetsAreNotMatched)
+{
+  for (unsigned short hall = 2; hall <= 530; ++hall) {
+    std::vector<std::string> base = tableOperationStrings(hall);
+
+    // one fewer operation: either not a space group or a different one
+    for (std::size_t i = 0; i < base.size(); i += 1 + base.size() / 5) {
+      std::vector<std::string> ops = base;
+      ops.erase(ops.begin() + i);
+      unsigned short found = SpaceGroups::hallNumberFromTransforms(ops);
+      EXPECT_NE(found, hall) << hall << " minus " << base[i];
+      EXPECT_NE(found, expectedHall(hall)) << hall << " minus " << base[i];
+    }
+
+    // one operation too many (a quarter step the table never contains)
+    std::vector<std::string> ops = base;
+    ops.push_back("x+1/12,y,z");
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), 0) << hall;
+
+    // one operation changed
+    ops = base;
+    ops.back() = "x,y,z+1/12";
+    EXPECT_NE(SpaceGroups::hallNumberFromTransforms(ops), hall) << hall;
+  }
+
+  // a set that is not a group
+  EXPECT_EQ(
+    SpaceGroups::hallNumberFromTransforms({ "x,y,z", "-x,y,-z", "-x,-y,-z" }),
+    0);
+  // an inversion alone is not a space group in the table either
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ "-x,-y,-z" }), 0);
+}
+
+TEST(SpaceGroupTest, transformsGarbage)
+{
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({}), 0);
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ "" }), 0);
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ "x,y,z", "" }), 0);
+  for (const char* garbage : { "garbage",
+                               "x,y",
+                               "x,y,z,x",
+                               "x,,z",
+                               ",,",
+                               "x,y,",
+                               "-",
+                               "x,y,-",
+                               "x,y,z+",
+                               "x,y,2z",
+                               "2x,y,z",
+                               "x,y,w",
+                               "x,y,1/0",
+                               "x,y,z+1/",
+                               "x,y,z+.",
+                               "x,y,z+0.1",
+                               "x,y,z+1/5",
+                               "x,y,z+1e3",
+                               "x*2,y,z",
+                               "(x,y,z)",
+                               "x;y;z",
+                               "'",
+                               "\"\"",
+                               "x y z",
+                               "x,y,z+99999999999999999999",
+                               "x,y,xxxxxxx",
+                               "x,y,0" }) {
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ "x,y,z", garbage }), 0)
+      << "'" << garbage << "'";
+    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms({ garbage }), 0)
+      << "'" << garbage << "'";
+  }
+  // very long input must not misbehave
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { std::string(100000, 'x') + ",y,z" }),
+            0);
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(
+              { std::string(100000, '1') + ",y,z" }),
+            0);
 }

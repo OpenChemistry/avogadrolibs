@@ -12,7 +12,7 @@
 #include "utilities.h"
 
 #include <algorithm> // for std::count()
-#include <cassert>
+#include <array>
 #include <cctype> // for isdigit(), tolower()
 #include <cmath>  // for floor()
 #include <iostream>
@@ -456,74 +456,278 @@ unsigned short SpaceGroups::transformsCount(unsigned short hallNumber)
   }
 }
 
-Real readTransformCoordinate(const std::string& coordinate, const Vector3& v)
-{
-  // The coordinate should be at least 1 character
-  assert(coordinate.size() != 0);
+namespace {
 
-  Real ret = 0.0;
-  Index i = 0;
+// One term of a coordinate expression such as "1/2-x": either a signed
+// fractional coordinate (variable 0, 1 or 2 for x, y, z) or a constant.
+struct CoordinateTerm
+{
+  int variable = -1; // 0, 1, 2 for x, y, z; -1 for a constant
+  bool negative = false;
+  Real constant = 0.0; // signed value, used for constants only
+};
+
+bool isCoordinateDigit(char c)
+{
+  return c >= '0' && c <= '9';
+}
+
+// Read an unsigned number: "1", "0.5", ".25", "1/2" (a ratio of two integers).
+bool readCoordinateNumber(const std::string& s, std::size_t& i, Real& value)
+{
+  Real numerator = 0.0;
+  bool haveDigits = false;
+  while (i < s.size() && isCoordinateDigit(s[i])) {
+    numerator = numerator * 10.0 + (s[i] - '0');
+    haveDigits = true;
+    ++i;
+  }
+  if (i < s.size() && s[i] == '.') {
+    ++i;
+    Real scale = 0.1;
+    while (i < s.size() && isCoordinateDigit(s[i])) {
+      numerator += scale * (s[i] - '0');
+      scale *= 0.1;
+      haveDigits = true;
+      ++i;
+    }
+  }
+  if (!haveDigits)
+    return false;
+
+  Real denominator = 1.0;
+  if (i < s.size() && s[i] == '/') {
+    ++i;
+    denominator = 0.0;
+    bool haveDenominator = false;
+    while (i < s.size() && isCoordinateDigit(s[i])) {
+      denominator = denominator * 10.0 + (s[i] - '0');
+      haveDenominator = true;
+      ++i;
+    }
+    if (!haveDenominator || denominator == 0.0)
+      return false;
+  }
+  value = numerator / denominator;
+  return true;
+}
+
+// Split a coordinate expression ("x", "-y+1/2", "x-y", "0.5+z") into terms.
+// Letters are case insensitive. Anything else is rejected, including a number
+// that is directly followed by a letter ("2x"), which is not a translation.
+bool parseCoordinate(const std::string& coordinate,
+                     std::vector<CoordinateTerm>& terms)
+{
+  terms.clear();
+  std::size_t i = 0;
   while (i < coordinate.size()) {
     bool isNeg = false;
-    if (coordinate[i] == '-') {
-      isNeg = true;
+    if (coordinate[i] == '-' || coordinate[i] == '+') {
+      isNeg = (coordinate[i] == '-');
       ++i;
-      assert(i < coordinate.size());
-    }
-    // We assume we are adding, so no need for a boolean here
-    else if (coordinate[i] == '+') {
-      ++i;
-      assert(i < coordinate.size());
+      if (i >= coordinate.size())
+        return false;
     }
 
-    // Check to see if we have a digit
-    if (isdigit(coordinate[i])) {
-      // We SHOULD have a fraction. Also, we SHOULD only deal with single
-      // digit numbers. Add assertions to make sure this is the case.
-      assert(i + 2 < coordinate.size());
-      assert(coordinate[i + 1] == '/');
-      assert(isdigit(coordinate[i + 2]));
-      // Assert that this is a single digit number
-      if (coordinate.size() > i + 3)
-        assert(!isdigit(coordinate[i + 3]));
-      // Ancient methods used by our forefathers to cast a char to an int
-      Real numerator = coordinate[i] - '0';
-      Real denominator = coordinate[i + 2] - '0';
-      Real fraction = numerator / denominator;
-      fraction *= (isNeg) ? -1.0 : 1.0;
-
-      ret += fraction;
-      i += 3;
-    } else if (coordinate[i] == 'x') {
-      ret += (isNeg) ? -1.0 * v[0] : v[0];
-      ++i;
-    } else if (coordinate[i] == 'y') {
-      ret += (isNeg) ? -1.0 * v[1] : v[1];
-      ++i;
-    } else if (coordinate[i] == 'z') {
-      ret += (isNeg) ? -1.0 * v[2] : v[2];
-      ++i;
+    CoordinateTerm term;
+    term.negative = isNeg;
+    char c = coordinate[i];
+    if (isCoordinateDigit(c) || c == '.') {
+      Real value = 0.0;
+      if (!readCoordinateNumber(coordinate, i, value))
+        return false;
+      if (i < coordinate.size()) {
+        char next = static_cast<char>(
+          std::tolower(static_cast<unsigned char>(coordinate[i])));
+        if (next == 'x' || next == 'y' || next == 'z')
+          return false;
+      }
+      term.constant = isNeg ? -value : value;
     } else {
-      std::cerr << "In " << __FUNCTION__ << ", error reading string: '"
-                << coordinate << "'\n";
-      return 0;
+      c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+      if (c == 'x')
+        term.variable = 0;
+      else if (c == 'y')
+        term.variable = 1;
+      else if (c == 'z')
+        term.variable = 2;
+      else
+        return false;
+      ++i;
     }
+    terms.push_back(term);
+  }
+  return !terms.empty();
+}
+
+Real readTransformCoordinate(const std::string& coordinate, const Vector3& v)
+{
+  std::vector<CoordinateTerm> terms;
+  if (!parseCoordinate(coordinate, terms)) {
+    std::cerr << "In " << __FUNCTION__ << ", error reading string: '"
+              << coordinate << "'\n";
+    return 0;
+  }
+
+  Real ret = 0.0;
+  for (const CoordinateTerm& term : terms) {
+    if (term.variable < 0)
+      ret += term.constant;
+    else
+      ret += term.negative ? -1.0 * v[term.variable] : v[term.variable];
   }
   return ret;
 }
 
 Vector3 getSingleTransform(const std::string& transform, const Vector3& v)
 {
-  Vector3 ret;
+  Vector3 ret = Vector3::Zero();
   std::vector<std::string> coordinates = split(transform, ',');
 
   // This should be 3 in size. Something very bad happened if it is not.
-  assert(coordinates.size() == 3);
+  if (coordinates.size() != 3) {
+    std::cerr << "In " << __FUNCTION__ << ", error reading string: '"
+              << transform << "'\n";
+    return ret;
+  }
 
   ret[0] = readTransformCoordinate(coordinates[0], v);
   ret[1] = readTransformCoordinate(coordinates[1], v);
   ret[2] = readTransformCoordinate(coordinates[2], v);
   return ret;
+}
+
+// A symmetry operation reduced to what identifies it: the integer rotation
+// part (row-major) and the translation modulo one in twelfths. Every
+// translation in the table is a multiple of 1/12 (halves, thirds, quarters,
+// sixths).
+struct SymmetryOperation
+{
+  std::array<signed char, 9> rotation = {};
+  std::array<signed char, 3> translation = {};
+
+  bool operator<(const SymmetryOperation& other) const
+  {
+    if (rotation != other.rotation)
+      return rotation < other.rotation;
+    return translation < other.translation;
+  }
+  bool operator==(const SymmetryOperation& other) const
+  {
+    return rotation == other.rotation && translation == other.translation;
+  }
+};
+
+// Decimals such as 0.33, 0.3333 and 0.6667 are accepted when they are this
+// close to a multiple of 1/12. Neighboring multiples are 0.083 apart.
+constexpr Real operationTranslationTolerance = 1.0e-2;
+
+// Parse "x,y,z"-style text. Quotes and whitespace are ignored. Returns false
+// if the text is not an operation made of three coordinate expressions with
+// every translation within tolerance of a multiple of 1/12.
+bool parseSymmetryOperation(const std::string& text, SymmetryOperation& op)
+{
+  std::string s;
+  s.reserve(text.size());
+  for (char c : text) {
+    if (c == '\'' || c == '"' || std::isspace(static_cast<unsigned char>(c)))
+      continue;
+    s.push_back(c);
+  }
+
+  std::vector<std::string> coordinates = split(s, ',', false);
+  if (coordinates.size() != 3)
+    return false;
+
+  std::vector<CoordinateTerm> terms;
+  for (int row = 0; row < 3; ++row) {
+    if (!parseCoordinate(coordinates[row], terms))
+      return false;
+
+    int rotation[3] = { 0, 0, 0 };
+    Real translation = 0.0;
+    for (const CoordinateTerm& term : terms) {
+      if (term.variable < 0)
+        translation += term.constant;
+      else
+        rotation[term.variable] += term.negative ? -1 : 1;
+    }
+
+    // Every constant must be a multiple of 1/12, give or take rounding in the
+    // file. Reduce it modulo one, in twelfths.
+    Real twelfths = translation * 12.0;
+    Real nearest = std::round(twelfths);
+    if (std::abs(nearest) > 1.0e6 ||
+        std::abs(twelfths - nearest) > 12.0 * operationTranslationTolerance)
+      return false;
+    long reduced = static_cast<long>(nearest) % 12;
+    if (reduced < 0)
+      reduced += 12;
+
+    for (int column = 0; column < 3; ++column) {
+      if (rotation[column] < -2 || rotation[column] > 2)
+        return false;
+      op.rotation[row * 3 + column] =
+        static_cast<signed char>(rotation[column]);
+    }
+    op.translation[row] = static_cast<signed char>(reduced);
+  }
+  return true;
+}
+
+// Sort and remove repeated operations so sets can be compared.
+void normalizeOperations(std::vector<SymmetryOperation>& ops)
+{
+  std::sort(ops.begin(), ops.end());
+  ops.erase(std::unique(ops.begin(), ops.end()), ops.end());
+}
+
+// The operations of every table entry, parsed once with the same grammar that
+// is used for the input.
+const std::vector<std::vector<SymmetryOperation>>& tableOperations()
+{
+  static const std::vector<std::vector<SymmetryOperation>> table = [] {
+    std::vector<std::vector<SymmetryOperation>> result(531);
+    for (unsigned short hall = 1; hall <= 530; ++hall) {
+      for (const std::string& text : split(space_group_transforms[hall], ' ')) {
+        SymmetryOperation op;
+        if (parseSymmetryOperation(text, op))
+          result[hall].push_back(op);
+      }
+      normalizeOperations(result[hall]);
+    }
+    return result;
+  }();
+  return table;
+}
+
+} // namespace
+
+unsigned short SpaceGroups::hallNumberFromTransforms(
+  const std::vector<std::string>& operations)
+{
+  if (operations.empty())
+    return 0;
+
+  std::vector<SymmetryOperation> ops;
+  ops.reserve(operations.size());
+  for (const std::string& text : operations) {
+    SymmetryOperation op;
+    if (!parseSymmetryOperation(text, op))
+      return 0;
+    ops.push_back(op);
+  }
+  normalizeOperations(ops);
+
+  // Entries that share one operation set (the three pairs of origin choices
+  // of group 68 that have the same Hall symbol) are indistinguishable by their
+  // operations; the first, lowest numbered, is the answer.
+  const auto& table = tableOperations();
+  for (unsigned short hall = 1; hall <= 530; ++hall) {
+    if (table[hall] == ops)
+      return hall;
+  }
+  return 0;
 }
 
 Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
