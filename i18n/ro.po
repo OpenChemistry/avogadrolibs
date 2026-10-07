@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-10-04 22:19+0000\n"
+"PO-Revision-Date: 2026-10-08 16:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -1544,11 +1544,11 @@ msgstr ""
 #: qtgui/pythonscript.cpp:456
 #, qt-format
 msgid "The script exited with error code %1."
-msgstr ""
+msgstr "Scriptul a returnat codul de eroare %1."
 
 #: qtgui/pythonscript.cpp:457
 msgid "The script crashed."
-msgstr ""
+msgstr "Scriptul s-a blocat."
 
 #: qtgui/pythonscript.cpp:466
 #, qt-format
@@ -1558,6 +1558,10 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"\n"
+"\n"
+"Eroare standard de script:\n"
+"%1"
 
 #: qtgui/pythonscript.cpp:575
 #, qt-format
@@ -2332,31 +2336,31 @@ msgstr "Aplică culori modelatoare"
 
 #: qtplugins/applycolors/applycolors.cpp:611
 msgid "Apply a custom color to atoms."
-msgstr ""
+msgstr "Aplică o culoare personalizată atomilor."
 
 #: qtplugins/applycolors/applycolors.cpp:614
 msgid "Reset atom colors to their default element colors."
-msgstr ""
+msgstr "Restabilește culorile atomilor la culorile implicite ale elementelor."
 
 #: qtplugins/applycolors/applycolors.cpp:616
 msgid "Apply a custom color to residues."
-msgstr ""
+msgstr "Aplică o culoare personalizată reziduurilor."
 
 #: qtplugins/applycolors/applycolors.cpp:618
 msgid "Color residues by their amino acid type."
-msgstr ""
+msgstr "Colorează reziduurile în funcție de tipul de aminoacid."
 
 #: qtplugins/applycolors/applycolors.cpp:620
 msgid "Color residues using the Shapely color scheme."
-msgstr ""
+msgstr "Colorează reziduurile folosind schema de culori Shapely."
 
 #: qtplugins/applycolors/applycolors.cpp:622
 msgid "Color residues by secondary structure."
-msgstr ""
+msgstr "Colorează reziduurile în funcție de structura secundară."
 
 #: qtplugins/applycolors/applycolors.cpp:624
 msgid "Reset residue colors to default chain colors."
-msgstr ""
+msgstr "Restabilește culorile reziduurilor la culorile implicite ale lanțului."
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2857,6 +2861,11 @@ msgid ""
 "[i, j, (k, (l))], \"value\": v}, …]}, with zero-based atom indices and value "
 "in Å for a distance or degrees for an angle or torsion."
 msgstr ""
+"Afișează constrângerile geometrice ale moleculei curente. Fără opțiuni. "
+"Returnează {\"constraints\": [{\"type\": \"distance\"|\"angle\"|\"torsion\", "
+"\"atoms\": [i, j, (k, (l))], \"value\": v}, …]}, cu indici ai atomilor "
+"începând de la zero și valoarea exprimată în Å pentru distanță sau în grade "
+"pentru unghi sau torsiune."
 
 #: qtplugins/constraints/constraintsextension.cpp:162
 msgid ""
@@ -2869,42 +2878,56 @@ msgid ""
 "updated instead of adding a duplicate. Returns {\"type\": …, \"atoms\": […], "
 "\"value\": …, \"updated\": bool}."
 msgstr ""
+"Adaugă sau actualizează o constrângere geometrică, specificată sub forma "
+"unor indici de atomi cu bază zero: {\"atoms\": [i, j]} pentru o distanță, "
+"{\"atoms\": [i, j, k] pentru un unghi sau {\"atoms\": [i, j, k, l]} pentru o "
+"torsiune, plus o valoare {\"value\": …} opțională exprimată în Å pentru o "
+"distanță sau în grade pentru un unghi sau o torsiune. Dacă valoarea „value” "
+"este omisă, se măsoară și se utilizează geometria curentă a acelor atomi. "
+"Dacă există deja o constrângere pentru aceiași atomi (în orice ordine), "
+"valoarea acesteia este actualizată în loc să se adauge o duplicare. "
+"Returnează {\"type\": …, \"atoms\": […], \"value\": …, \"updated\": bool}}."
 
 #: qtplugins/constraints/constraintsextension.cpp:173
 msgid ""
 "Remove the constraint on the given zero-based atom indices (in either "
 "order): {\"atoms\": [i, j, (k, (l))]}. Returns {\"removed\": count}."
 msgstr ""
+"Elimină constrângerea pentru indicii de atomi specificați (numerotați de la "
+"zero, în orice ordine): {\"atoms\": [i, j, (k, (l))]}. Returnează "
+"{\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:178
 msgid ""
 "Remove all geometry constraints from the current molecule. No options. "
 "Returns {\"removed\": count}."
 msgstr ""
+"Elimină toate constrângerile geometrice din molecula curentă. Fără opțiuni. "
+"Returnează {\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:194
 msgid "There is no molecule to constrain."
-msgstr ""
+msgstr "Nu există nicio moleculă de constrâns."
 
 #: qtplugins/constraints/constraintsextension.cpp:251
 msgid "No constraint matches these atoms."
-msgstr ""
+msgstr "Nicio constrângere nu corespunde acestor atomi."
 
 #: qtplugins/constraints/constraintsextension.cpp:287
 msgid "value must be a number: a distance in Å."
-msgstr ""
+msgstr "valoarea trebuie să fie un număr: o distanță exprimată în Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:291
 msgid "value must be a number: an angle in degrees."
-msgstr ""
+msgstr "valoarea trebuie să fie un număr: un unghi exprimat în grade."
 
 #: qtplugins/constraints/constraintsextension.cpp:295
 msgid "value must be a number: a dihedral angle in degrees."
-msgstr ""
+msgstr "valoarea trebuie să fie un număr: un unghi diedru exprimat în grade."
 
 #: qtplugins/constraints/constraintsextension.cpp:309
 msgid "Could not measure the current geometry for these atoms."
-msgstr ""
+msgstr "Nu s-a putut determina geometria curentă a acestor atomi."
 
 #: qtplugins/constraints/constraintsextension.cpp:319
 #: qtplugins/measuretool/measuretool.cpp:791
@@ -2921,10 +2944,14 @@ msgid ""
 "atoms must be a list of 2 (distance), 3 (angle) or 4 (torsion) zero-based "
 "atom indices."
 msgstr ""
+"atomii trebuie să fie o listă formată din 2 (distanță), 3 (unghi) sau 4 "
+"(torsiune) indici de atomi cu numărare începând de la zero."
 
 #: qtplugins/constraints/constraintsextension.cpp:377
 msgid "atoms must list 2 (distance), 3 (angle) or 4 (torsion) atom indices."
 msgstr ""
+"atomii trebuie să aibă 2 (distanță), 3 (unghi) sau 4 (torsiune) indici de "
+"atom."
 
 #: qtplugins/constraints/constraintsextension.cpp:388
 #: qtplugins/constraints/constraintsextension.cpp:394
@@ -3808,23 +3835,25 @@ msgstr "Separă atomii selectați"
 
 #: qtplugins/forcefield/forcefield.cpp:273
 msgid "List the force fields available for the current molecule."
-msgstr ""
+msgstr "Listează câmpurile de forță disponibile pentru molecula curentă."
 
 #: qtplugins/forcefield/forcefield.cpp:275
 msgid "Compute the force field energy of the current molecule."
-msgstr ""
+msgstr "Calculează energia câmpului de forță al moleculei date."
 
 #: qtplugins/forcefield/forcefield.cpp:277
 msgid "Compute the force field forces on the current molecule."
 msgstr ""
+"Calculează forțele câmpului de forță care acționează asupra moleculei "
+"actuale."
 
 #: qtplugins/forcefield/forcefield.cpp:279
 msgid "Optimize the geometry of the current molecule."
-msgstr ""
+msgstr "Optimizează geometria moleculei actuale."
 
 #: qtplugins/forcefield/forcefield.cpp:282
 msgid "Freeze selected atoms during force field optimization."
-msgstr ""
+msgstr "Îngheață atomii selectați în timpul optimizării câmpului de forță."
 
 #: qtplugins/forcefield/forcefield.cpp:283
 msgid "Unfreeze selected atoms."
