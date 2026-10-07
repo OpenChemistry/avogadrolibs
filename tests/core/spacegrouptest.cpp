@@ -1007,7 +1007,7 @@ TEST(SpaceGroupTest, transformsWrongSetsAreNotMatched)
       EXPECT_NE(found, expectedHall(hall)) << hall << " minus " << base[i];
     }
 
-    // one operation too many (a quarter step the table never contains)
+    // one operation too many (a twelfth step the table never contains)
     std::vector<std::string> ops = base;
     ops.push_back("x+1/12,y,z");
     EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), 0) << hall;
