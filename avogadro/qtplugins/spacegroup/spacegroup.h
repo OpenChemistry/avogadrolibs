@@ -49,8 +49,10 @@ private slots:
   void setTolerance();
 
 private:
-  // Where a request to fill the cell comes from. Only a menu action may
-  // ask the user questions; the other two must not block on a dialog.
+  // Where a request to fill the cell comes from. Only a menu action, or an
+  // automatic fill when a user is there to answer, may ask questions; a
+  // command, and an automatic fill in a scripted session, must not block on a
+  // dialog.
   enum class FillSource
   {
     Menu,      // the user chose the action
@@ -75,9 +77,10 @@ private:
   // Check if the cell appears to be primitive but the space group expects
   // a centered cell. Warns the user and optionally conventionalizes.
   // Returns true if we should proceed with filling, false if user canceled.
-  // Only asks the user for FillSource::Menu.
-  bool checkPrimitiveCell(unsigned short hallNumber,
-                          FillSource source = FillSource::Menu);
+  // Asks the user only if @p mayPrompt. Without one, a command goes ahead
+  // and an automatic fill does not.
+  bool checkPrimitiveCell(unsigned short hallNumber, bool mayPrompt,
+                          FillSource source);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;

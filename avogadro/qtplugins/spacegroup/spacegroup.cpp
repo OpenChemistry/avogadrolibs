@@ -15,9 +15,9 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/richtextdelegate.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <QAction>
-#include <QCoreApplication>
 #include <QDebug>
 #include <QtWidgets/QAbstractItemView>
 #include <QtWidgets/QDialogButtonBox>
@@ -49,29 +49,74 @@ namespace Avogadro::QtPlugins {
 
 namespace {
 
-// avogadroapp sets this application property when it runs without a user
-// (--skip-dialogs, --rpc-name): nothing may wait for an answer then.
-bool dialogsSkipped()
-{
-  QCoreApplication* app = QCoreApplication::instance();
-  return app != nullptr && app->property("avogadro.skipDialogs").toBool();
-}
-
 // The international table number that a file reader kept because the file
 // did not say which setting of the space group it uses (0 if none).
 unsigned short knownInternationalNumber(const Molecule* molecule)
 {
   if (molecule == nullptr)
     return 0;
-  const char* key = Core::SpaceGroups::internationalNumberKey();
-  if (!molecule->hasData(key))
-    return 0;
-  const Core::Variant& value = molecule->data(key);
+  // a missing key gives a null variant, which is not an int either
+  const Core::Variant value =
+    molecule->data(Core::SpaceGroups::internationalNumberKey());
   if (value.type() != Core::Variant::Int)
     return 0;
   int number = value.toInt();
   return (number >= 1 && number <= 230) ? static_cast<unsigned short>(number)
                                         : 0;
+}
+
+// The space group that the options of a command name: the hallNumber or the
+// spaceGroup option. Without either, @p hallNumber is 0 and the molecule has
+// to know its space group already. Returns false, with @p error set, if the
+// options are invalid. An invalid one is an error, not a reason to fall back
+// on the space group of the molecule.
+bool hallNumberFromOptions(const QVariantMap& options,
+                           unsigned short& hallNumber, QString& error)
+{
+  hallNumber = 0;
+  const bool hasHallNumber = options.contains(QStringLiteral("hallNumber"));
+  const bool hasSpaceGroup = options.contains(QStringLiteral("spaceGroup"));
+
+  if (hasHallNumber && hasSpaceGroup) {
+    error = QStringLiteral("Give either hallNumber or spaceGroup, not both.");
+    return false;
+  }
+
+  if (hasHallNumber) {
+    const QVariant value = options.value(QStringLiteral("hallNumber"));
+    const int type = value.typeId();
+    const bool isNumber = type == QMetaType::Int || type == QMetaType::UInt ||
+                          type == QMetaType::LongLong ||
+                          type == QMetaType::ULongLong ||
+                          type == QMetaType::Double || type == QMetaType::Float;
+    double number = isNumber ? value.toDouble() : 0.0;
+    if (!isNumber || number != std::floor(number) || number < 1.0 ||
+        number > Core::SpaceGroups::lastHallNumber) {
+      error = QStringLiteral("hallNumber must be an integer from 1 to %1.")
+                .arg(Core::SpaceGroups::lastHallNumber);
+      return false;
+    }
+    hallNumber = static_cast<unsigned short>(number);
+  } else if (hasSpaceGroup) {
+    const QVariant value = options.value(QStringLiteral("spaceGroup"));
+    if (value.typeId() != QMetaType::QString) {
+      error =
+        QStringLiteral("spaceGroup must be a space group symbol (a string).");
+      return false;
+    }
+    const QString symbol = value.toString();
+    hallNumber = Core::SpaceGroups::hallNumber(symbol.toStdString());
+    if (hallNumber == 0) {
+      error = QStringLiteral("spaceGroup \"%1\" does not name a single space "
+                             "group setting; use hallNumber (1 to %2) or a "
+                             "symbol that includes the setting, e.g. \"F d "
+                             "-3 m :2\".")
+                .arg(symbol)
+                .arg(Core::SpaceGroups::lastHallNumber);
+      return false;
+    }
+  }
+  return true;
 }
 
 } // namespace
@@ -175,62 +220,16 @@ bool SpaceGroup::handleCommand(const QString& command,
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.
 
-  // An explicit hallNumber or spaceGroup wins over the one of the molecule,
-  // and an invalid one is an error, not a reason to use the stored one.
+  // An explicit hallNumber or spaceGroup wins over the one of the molecule.
   // Without either, the molecule has to know its space group already: a
   // command never asks the user.
   unsigned short hallNumber = 0;
-  const bool hasHallNumber = options.contains(QStringLiteral("hallNumber"));
-  const bool hasSpaceGroup = options.contains(QStringLiteral("spaceGroup"));
-
-  if (hasHallNumber && hasSpaceGroup) {
-    emit commandFailed(
-      QStringLiteral("Give either hallNumber or spaceGroup, not both."));
-    return true;
-  }
-
-  if (hasHallNumber) {
-    const QVariant value = options.value(QStringLiteral("hallNumber"));
-    const int type = value.typeId();
-    const bool isNumber = type == QMetaType::Int || type == QMetaType::UInt ||
-                          type == QMetaType::LongLong ||
-                          type == QMetaType::ULongLong ||
-                          type == QMetaType::Double || type == QMetaType::Float;
-    double number = isNumber ? value.toDouble() : 0.0;
-    if (!isNumber || number != std::floor(number) || number < 1.0 ||
-        number > 530.0) {
-      emit commandFailed(
-        QStringLiteral("hallNumber must be an integer from 1 to 530."));
-      return true;
-    }
-    hallNumber = static_cast<unsigned short>(number);
-  } else if (hasSpaceGroup) {
-    const QVariant value = options.value(QStringLiteral("spaceGroup"));
-    if (value.typeId() != QMetaType::QString) {
-      emit commandFailed(
-        QStringLiteral("spaceGroup must be a space group symbol (a string)."));
-      return true;
-    }
-    const QString symbol = value.toString();
-    hallNumber = Core::SpaceGroups::hallNumber(symbol.toStdString());
-    if (hallNumber == 0) {
-      emit commandFailed(
-        QStringLiteral("spaceGroup \"%1\" does not name a single space "
-                       "group setting; use hallNumber (1 to 530) or a "
-                       "symbol that includes the setting, e.g. \"F d -3 m "
-                       ":2\".")
-          .arg(symbol));
-      return true;
-    }
-  }
-
   QString error;
-  if (!performFill(command == "fillUnitCell", FillSource::Command, hallNumber,
+  if (!hallNumberFromOptions(options, hallNumber, error) ||
+      !performFill(command == "fillUnitCell", FillSource::Command, hallNumber,
                    &error)) {
     emit commandFailed(error);
-    return true;
   }
-
   return true;
 }
 
@@ -615,21 +614,31 @@ bool SpaceGroup::performFill(bool allCopies, FillSource source,
     return false;
   }
 
+  // Only a menu action, or an automatic fill with a user to answer, may ask
+  // questions; a command never does.
+  const bool mayPrompt =
+    source == FillSource::Menu ||
+    (source == FillSource::Heuristic && !QtGui::Utilities::dialogsSkipped());
+
   // an explicit request wins over what the molecule knows
   unsigned short hallNumber =
     requestedHall != 0 ? requestedHall : m_molecule->hallNumber();
 
   if (hallNumber == 0) {
-    if (source == FillSource::Command) {
-      if (errorMessage)
-        *errorMessage = QStringLiteral(
-          "The space group of the molecule is not known: give the "
-          "hallNumber (1 to 530) or spaceGroup parameter.");
-      return false;
-    }
-    if (source == FillSource::Heuristic && dialogsSkipped()) {
-      qDebug() << "SpaceGroup: not filling the unit cell, the space group "
-                  "is unknown and dialogs are skipped.";
+    if (!mayPrompt) {
+      // A command is told what it left out; an automatic fill just does not
+      // happen.
+      if (source == FillSource::Command) {
+        if (errorMessage)
+          *errorMessage =
+            QStringLiteral("The space group of the molecule is not known: "
+                           "give the hallNumber (1 to %1) or spaceGroup "
+                           "parameter.")
+              .arg(Core::SpaceGroups::lastHallNumber);
+      } else {
+        qDebug() << "SpaceGroup: not filling the unit cell, the space group "
+                    "is unknown and dialogs are skipped.";
+      }
       return false;
     }
 
@@ -641,7 +650,7 @@ bool SpaceGroup::performFill(bool allCopies, FillSource source,
   if (hallNumber == 0)
     return false;
 
-  if (!checkPrimitiveCell(hallNumber, source))
+  if (!checkPrimitiveCell(hallNumber, mayPrompt, source))
     return false;
 
   // allCopies fills all copies, including edges and corners
@@ -740,7 +749,7 @@ const QString SpaceGroup::crystalSystem(unsigned short hallNumber)
   }
 }
 
-bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber,
+bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber, bool mayPrompt,
                                     FillSource source)
 {
   // Check if the cell appears to be primitive but the space group expects
@@ -765,22 +774,17 @@ bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber,
                                      (std::abs(gamma - 90.0) > tolerance);
 
         if (nonConventionalAngles) {
-          // Nobody to ask. A command asked for this space group, so use it
-          // on the cell as it is (the answer "No" below). An automatic fill
-          // does nothing rather than add atoms that may be wrong.
-          if (source == FillSource::Command) {
+          if (!mayPrompt) {
+            // Nobody to ask. A command asked for this space group, so use it
+            // on the cell as it is (the answer "No" below). An automatic fill
+            // does nothing rather than add atoms that may be wrong.
+            const bool proceed = source == FillSource::Command;
             qWarning() << "SpaceGroup: the cell looks primitive but space "
                           "group"
-                       << hallSymbol.c_str()
-                       << "is centered; filling without conventionalizing.";
-            return true;
-          }
-          if (source == FillSource::Heuristic && dialogsSkipped()) {
-            qWarning() << "SpaceGroup: the cell looks primitive but space "
-                          "group"
-                       << hallSymbol.c_str()
-                       << "is centered; not filling automatically.";
-            return false;
+                       << hallSymbol.c_str() << "is centered;"
+                       << (proceed ? "filling without conventionalizing."
+                                   : "not filling automatically.");
+            return proceed;
           }
 
           QMessageBox::StandardButton reply;

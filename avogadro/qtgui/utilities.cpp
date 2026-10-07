@@ -18,6 +18,9 @@ namespace Avogadro::QtGui::Utilities {
 
 namespace {
 
+// The application property that holds the setting (see dialogsSkipped()).
+constexpr const char* skipDialogsProperty = "avogadro.skipDialogs";
+
 // Open Babel installs its data and plugins into a versioned directory, e.g.
 // "share/openbabel/3.2.0". An install tree that has been reused across Open
 // Babel updates can hold several of these, so take the highest version rather
@@ -175,6 +178,18 @@ QStringList findExecutablePaths(QStringList programs)
   }
 
   return result;
+}
+
+bool dialogsSkipped()
+{
+  const QCoreApplication* app = QCoreApplication::instance();
+  return app != nullptr && app->property(skipDialogsProperty).toBool();
+}
+
+void setDialogsSkipped(bool skipped)
+{
+  if (QCoreApplication* app = QCoreApplication::instance())
+    app->setProperty(skipDialogsProperty, skipped);
 }
 
 } // namespace Avogadro::QtGui::Utilities

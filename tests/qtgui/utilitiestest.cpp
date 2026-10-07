@@ -12,7 +12,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QTemporaryDir>
 
+using Avogadro::QtGui::Utilities::dialogsSkipped;
 using Avogadro::QtGui::Utilities::findExecutablePath;
+using Avogadro::QtGui::Utilities::setDialogsSkipped;
 
 namespace {
 
@@ -159,4 +161,24 @@ TEST(UtilitiesTest, emptyPathEntriesAreIgnored)
 
   EXPECT_EQ(QDir(findExecutablePath(fakeProgram)).absolutePath(),
             QDir(binDir).absolutePath());
+}
+
+TEST(UtilitiesTest, dialogsSkippedIsTheApplicationProperty)
+{
+  QCoreApplication* app = ensureApp();
+  const QVariant before = app->property("avogadro.skipDialogs");
+
+  setDialogsSkipped(false);
+  EXPECT_FALSE(dialogsSkipped());
+
+  // what avogadroapp sets directly is what the helper reads, and vice versa
+  app->setProperty("avogadro.skipDialogs", true);
+  EXPECT_TRUE(dialogsSkipped());
+  setDialogsSkipped(false);
+  EXPECT_FALSE(app->property("avogadro.skipDialogs").toBool());
+  setDialogsSkipped(true);
+  EXPECT_TRUE(app->property("avogadro.skipDialogs").toBool());
+  EXPECT_TRUE(dialogsSkipped());
+
+  app->setProperty("avogadro.skipDialogs", before);
 }
