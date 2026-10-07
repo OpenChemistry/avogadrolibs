@@ -947,6 +947,137 @@ TEST(SpaceGroupTest, originChoiceWithPermutedAxes)
   EXPECT_EQ(SpaceGroups::hallNumber("C 2/c:1"), 0);
 }
 
+namespace {
+
+// The pre-2002 names of the groups with an "e" glide, as gemmi writes its
+// extended H-M names (the origin choice is the part after the colon).
+struct OldNameCase
+{
+  unsigned short hall;
+  const char* name;
+  const char* origin;
+};
+
+// clang-format off
+const OldNameCase oldNameCases[] = {
+  {191, "A b m 2", ""},
+  {192, "B m a 2", ""},
+  {193, "B 2 c m", ""},
+  {194, "C 2 m b", ""},
+  {195, "C m 2 a", ""},
+  {196, "A c 2 m", ""},
+  {203, "A b a 2", ""},
+  {204, "B b a 2", ""},
+  {205, "B 2 c b", ""},
+  {206, "C 2 c b", ""},
+  {207, "C c 2 a", ""},
+  {208, "A c 2 a", ""},
+  {304, "C m c a", ""},
+  {305, "C c m b", ""},
+  {306, "A b m a", ""},
+  {307, "A c a m", ""},
+  {308, "B b c m", ""},
+  {309, "B m a b", ""},
+  {316, "C m m a", ""},
+  {317, "C m m b", ""},
+  {318, "A b m m", ""},
+  {319, "A c m m", ""},
+  {320, "B m c m", ""},
+  {321, "B m a m", ""},
+  {322, "C c c a", "1"},
+  {323, "C c c a", "2"},
+  {324, "C c c a", "1"},
+  {325, "C c c b", "2"},
+  {326, "A b a a", "1"},
+  {327, "A b a a", "2"},
+  {328, "A b a a", "1"},
+  {329, "A c a a", "2"},
+  {330, "B b c b", "1"},
+  {331, "B b c b", "2"},
+  {332, "B b c b", "1"},
+  {333, "B b a b", "2"},
+};
+// clang-format on
+
+} // namespace
+
+TEST(SpaceGroupTest, preTwoThousandTwoGlideNames)
+{
+  for (const auto& test : oldNameCases) {
+    const unsigned short hall = test.hall;
+    const std::string origin = test.origin;
+    const std::string symbol =
+      origin.empty() ? test.name : std::string(test.name) + ":" + origin;
+    const std::string ops =
+      SpaceGroupTable::Avogadro::Core::space_group_transforms[hall];
+
+    const unsigned short found = SpaceGroups::hallNumber(symbol);
+    ASSERT_NE(found, 0) << symbol;
+    EXPECT_EQ(found, expectedHall(hall)) << symbol;
+    EXPECT_EQ(SpaceGroupTable::Avogadro::Core::space_group_transforms[found],
+              ops)
+      << symbol;
+    EXPECT_EQ(SpaceGroups::internationalNumber(found),
+              SpaceGroups::internationalNumber(hall))
+      << symbol;
+    EXPECT_EQ(SpaceGroups::internationalNumberFromString(symbol),
+              SpaceGroups::internationalNumber(hall))
+      << symbol;
+
+    // the setting may have spaces around it
+    if (!origin.empty()) {
+      EXPECT_EQ(
+        SpaceGroups::hallNumber(std::string(test.name) + " : " + origin),
+        expectedHall(hall))
+        << symbol;
+    }
+    // the name alone, when no origin choice is given
+    EXPECT_EQ(SpaceGroups::internationalNumberFromString(test.name),
+              SpaceGroups::internationalNumber(hall))
+      << symbol;
+    int sharing = 0;
+    for (const auto& other : oldNameCases) {
+      if (std::string(other.name) == test.name)
+        ++sharing;
+    }
+    if (sharing == 1) {
+      EXPECT_EQ(SpaceGroups::hallNumber(test.name), hall) << symbol;
+    } else if (std::string(test.name) != "B b c b") {
+      // shared by several origin choices: do not guess
+      EXPECT_EQ(SpaceGroups::hallNumber(test.name), 0) << symbol;
+    }
+  }
+
+  // 'e' is not a wildcard: these two settings share "C m m e" in the table
+  EXPECT_EQ(SpaceGroups::hallNumber("C m m a"), 316);
+  EXPECT_EQ(SpaceGroups::hallNumber("C m m b"), 317);
+  EXPECT_EQ(SpaceGroups::hallNumber("C m m e"), 316);
+  EXPECT_EQ(SpaceGroups::hallNumber("C m m c"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("C m c c"), 0);
+
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("C m c a"), 64);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("C m c e"), 64);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("C c c a"), 68);
+  EXPECT_EQ(SpaceGroups::hallNumber("C c c a:1"), 322);
+  EXPECT_EQ(SpaceGroups::hallNumber("C c c a:2"), 323);
+  EXPECT_EQ(SpaceGroups::hallNumber("C c c b:2"), 325);
+  EXPECT_EQ(SpaceGroups::hallNumber("A b a a:1"), 326);
+  EXPECT_EQ(SpaceGroups::hallNumber("B b c b:1"), 330);
+  EXPECT_EQ(SpaceGroups::hallNumber("B b c b:2"), 331);
+  // (the table spells 331 "B b c b" and keeps finding it for the bare name)
+  EXPECT_EQ(SpaceGroups::hallNumber("B b c b"), 331);
+
+  // the 2002 spelling works with the same settings
+  EXPECT_EQ(SpaceGroups::hallNumber("C c c e:1"), 322);
+  EXPECT_EQ(SpaceGroups::hallNumber("C c c e:2"), 323);
+
+  // symbols that are not old names of these groups
+  EXPECT_EQ(SpaceGroups::hallNumber("C m m c"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("A b m e"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("C c c a:3"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("C m c a:1"), 0);
+}
+
 TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
 {
   for (unsigned short hall = 1; hall <= 530; ++hall) {

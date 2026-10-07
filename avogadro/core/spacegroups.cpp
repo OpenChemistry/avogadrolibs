@@ -187,9 +187,85 @@ bool parseBareNumber(const std::string& s, unsigned short& number)
   return true;
 }
 
+// The table spells the groups with a double glide plane "e" (Nos. 39, 41, 64,
+// 67 and 68) with the 2002 symbols, e.g. "C m c e". Many files still use the
+// older names, which write the glide as "a", "b" or "c" ("C m c a"). These are
+// the older ITA symbols as written by gemmi's extended H-M names, listed for
+// every Hall number of these groups whose table name contains an "e"; the
+// ":1"/":2" origin choice that gemmi appends is matched as the setting. 'e'
+// cannot be treated as a wildcard: Hall numbers 316 ("C m m a") and 317
+// ("C m m b") both read "C m m e" in the table and are different settings.
+// Hall number 331 is already spelled "B b c b" in the table; it is listed
+// so that 330 and 332 can be found along with it.
+// No old name equals a table name (full, alternative or compact) of another
+// group. Within a group the names are shared by several settings
+// ("C c c a" is Nos. 322-324); the setting then selects one.
+struct OldName
+{
+  unsigned short hall;
+  const char* symbol;
+};
+
+// clang-format off
+constexpr OldName oldNames[] = {
+  // No. 39
+  {191, "A b m 2"}, // A e m 2
+  {192, "B m a 2"}, // B m e 2, setting ba-c
+  {193, "B 2 c m"}, // B 2 e m, setting cab
+  {194, "C 2 m b"}, // C 2 m e, setting -cba
+  {195, "C m 2 a"}, // C m 2 e, setting bca
+  {196, "A c 2 m"}, // A e 2 m, setting a-cb
+  // No. 41
+  {203, "A b a 2"}, // A e a 2
+  {204, "B b a 2"}, // B b e 2, setting ba-c
+  {205, "B 2 c b"}, // B 2 e b, setting cab
+  {206, "C 2 c b"}, // C 2 c e, setting -cba
+  {207, "C c 2 a"}, // C c 2 e, setting bca
+  {208, "A c 2 a"}, // A e 2 a, setting a-cb
+  // No. 64
+  {304, "C m c a"}, // C m c e
+  {305, "C c m b"}, // C c m e, setting ba-c
+  {306, "A b m a"}, // A e m a, setting cab
+  {307, "A c a m"}, // A e a m, setting -cba
+  {308, "B b c m"}, // B b e m, setting bca
+  {309, "B m a b"}, // B m e b, setting a-cb
+  // No. 67
+  {316, "C m m a"}, // C m m e
+  {317, "C m m b"}, // C m m e, setting ba-c
+  {318, "A b m m"}, // A e m m, setting cab
+  {319, "A c m m"}, // A e m m, setting -cba
+  {320, "B m c m"}, // B m e m, setting bca
+  {321, "B m a m"}, // B m e m, setting a-cb
+  // No. 68
+  {322, "C c c a"}, // C c c e, setting 1
+  {323, "C c c a"}, // C c c e, setting 2
+  {324, "C c c a"}, // C c c e, setting 1ba-c
+  {325, "C c c b"}, // C c c e, setting 2ba-c
+  {326, "A b a a"}, // A e a a, setting 1cab
+  {327, "A b a a"}, // A e a a, setting 2cab
+  {328, "A b a a"}, // A e a a, setting 1-cba
+  {329, "A c a a"}, // A e a a, setting 2-cba
+  {330, "B b c b"}, // B b e b, setting 1bca
+  {331, "B b c b"}, // B b c b, setting 2bca
+  {332, "B b c b"}, // B b e b, setting 1a-cb
+  {333, "B b a b"}, // B b e b, setting 2a-cb
+};
+// clang-format on
+
+// The Hall numbers whose pre-2002 name is the (normalized) symbol.
+std::vector<unsigned short> oldNameHalls(const std::string& key)
+{
+  std::vector<unsigned short> halls;
+  for (const auto& name : oldNames) {
+    if (normalizeSymbol(name.symbol) == key)
+      halls.push_back(name.hall);
+  }
+  return halls;
+}
+
 // Find the Hall numbers that a (setting-less) symbol can refer to. The full
 // symbol is the most specific, then the alternative spellings, then the
-// compact one. The first tier with a match wins.
+// compact one, then the pre-2002 names. The first tier with a match wins.
 std::vector<unsigned short> matchSymbol(const std::string& symbol)
 {
   const auto& table = symbolTable();
@@ -220,7 +296,10 @@ std::vector<unsigned short> matchSymbol(const std::string& symbol)
     if (table[i].compact == symbol)
       matches.push_back(i);
   }
-  return matches;
+  if (!matches.empty())
+    return matches;
+
+  return oldNameHalls(key);
 }
 
 // Everything but the exact matches: bare numbers, screw axes without
@@ -268,7 +347,17 @@ Resolved resolveSymbol(const std::string& sg)
   result.number = number;
 
   if (!setting.empty()) {
-    const std::vector<unsigned short>& candidates = matches;
+    // Hall number 331 is spelled "B b c b" in the table, which is also the
+    // pre-2002 name of 330 and 332 ("B b c b:1"). Without them the setting
+    // could not select between the three.
+    std::vector<unsigned short> candidates = matches;
+    for (unsigned short hall : oldNameHalls(normalizeSymbol(symbol))) {
+      if (table[hall].number == number &&
+          std::find(candidates.begin(), candidates.end(), hall) ==
+            candidates.end())
+        candidates.push_back(hall);
+    }
+    std::sort(candidates.begin(), candidates.end());
 
     std::vector<unsigned short> filtered;
     for (unsigned short hall : candidates) {
