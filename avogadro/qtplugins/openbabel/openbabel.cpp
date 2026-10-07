@@ -590,7 +590,7 @@ void OpenBabel::onGenerateConformers()
   }
 
   if (m_conformerSearchDialog == nullptr) {
-    return; // should't happen
+    return; // shouldn't happen
   }
 
   QSettings settings;

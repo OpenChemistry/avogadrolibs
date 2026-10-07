@@ -182,7 +182,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
         bool isXEnd = (i == m_dim.x() - 2);
 
         unsigned char caseId = calcCubeCase(
-          ec0[i], ec1[i], ec2[i], ec3[i]); // todo cubeCase not decleared
+          ec0[i], ec1[i], ec2[i], ec3[i]); // todo cubeCase not declared
         curCubeCaseIds[i] = caseId;
 
         if (caseId == 0 || caseId == 255) {

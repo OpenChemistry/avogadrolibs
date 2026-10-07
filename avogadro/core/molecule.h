@@ -1146,9 +1146,9 @@ public:
   void addBonds(const Array<std::pair<Index, Index>>& bonds,
                 const Array<unsigned char>& orders);
 
-  // chenge the bond index position
+  // change the bond index position
   void swapBond(Index a, Index b);
-  // channge the Atom index position
+  // change the Atom index position
   void swapAtom(Index a, Index b);
 
   /**
@@ -1193,7 +1193,7 @@ public:
   }
 
   /**
-   * Calculte and return bounding box of the whole molecule or selected atoms
+   * Calculate and return bounding box of the whole molecule or selected atoms
    * only.
    * @param boxMin [out] the minimum corner (first end of the box diagonal)
    * @param boxMax [out] the maximum corner (second end of the box diagonal)

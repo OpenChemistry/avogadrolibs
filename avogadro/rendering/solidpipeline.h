@@ -111,7 +111,7 @@ public:
   void setDofStrength(float strength) { m_dofStrength = strength; }
 
   /**
-   * @brief Set positon of dof
+   * @brief Set position of dof
    */
   float getDofPosition() { return m_dofPosition; }
   void setDofPosition(float position) { m_dofPosition = position; }

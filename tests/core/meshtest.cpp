@@ -79,7 +79,7 @@ TEST_F(MeshTest, copy)
   EXPECT_NE(m_testMesh.lock(), copy.lock());
 }
 
-TEST_F(MeshTest, assigment)
+TEST_F(MeshTest, assignment)
 {
   Mesh assign = m_testMesh;
 

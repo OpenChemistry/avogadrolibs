@@ -282,7 +282,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
           betaOccupancy[ib] = 1.0;
           ++ib;
         } else {
-          // Fill less occupied spin orbitals if degenrate. In same conditions, alpha first 
+          // Fill less occupied spin orbitals if degenerate. In same conditions, alpha first 
           if (ia <= ib) {
             alphaOccupancy[ia] = 1.0;
             ++ia;

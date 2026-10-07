@@ -82,7 +82,7 @@ QWidget* AlignTool::toolWidget() const
     labelAxis->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     labelAxis->setMaximumHeight(15);
 
-    // Combo box to select desired aixs to align to
+    // Combo box to select desired axis to align to
     auto* comboAxis = new QComboBox(m_toolWidget);
     comboAxis->addItem("x");
     comboAxis->addItem("y");

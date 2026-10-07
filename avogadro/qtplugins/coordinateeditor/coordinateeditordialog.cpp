@@ -523,7 +523,7 @@ void CoordinateEditorDialog::validateInputWorker()
     }
   }
 
-  // Reenable validation.
+  // Re-enable validation.
   listenForTextEditChanges(true);
 
   // If we're not at the end, post this method back into the event loop.
