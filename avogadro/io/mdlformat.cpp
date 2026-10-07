@@ -10,6 +10,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/kekulize.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/stereo.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
@@ -989,7 +990,8 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
       // skip some keys
-      if (key == "modelView" || key == "projection")
+      if (key == "modelView" || key == "projection" ||
+          key == Core::SpaceGroups::internationalNumberKey())
         continue;
 
       out << "> <" << key << ">\n";
@@ -1083,7 +1085,8 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
     const auto dataMap = mol.dataMap();
     for (const auto& key : dataMap.names()) {
       // skip some keys
-      if (key == "modelView" || key == "projection")
+      if (key == "modelView" || key == "projection" ||
+          key == Core::SpaceGroups::internationalNumberKey())
         continue;
 
       out << "> <" << key << ">\n";

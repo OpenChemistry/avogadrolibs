@@ -13,6 +13,7 @@
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 
 #include <avogadro/io/cjsonformat.h>
@@ -26,6 +27,7 @@ using Avogadro::Core::Bond;
 using Avogadro::Core::Constraint;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
+using Avogadro::Core::SpaceGroups;
 using Avogadro::Core::UnitCell;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CjsonFormat;
@@ -1160,4 +1162,80 @@ TEST(CjsonTest, defaultOutputUnchangedWithoutCubes)
   std::string b;
   ASSERT_TRUE(noCubes.writeString(b, molecule)) << noCubes.error();
   EXPECT_EQ(a, b);
+}
+
+namespace {
+
+// A cubic crystal as Open Babel writes it, with the given "spaceGroup"
+std::string crystalWithSpaceGroup(const std::string& spaceGroupJson)
+{
+  return R"({"chemicalJson": 1,
+    "unitCell": {"a": 5.0, "b": 5.0, "c": 5.0,
+                 "alpha": 90.0, "beta": 90.0, "gamma": 90.0,
+                 "spaceGroup": )" +
+         spaceGroupJson + R"(},
+    "atoms": {"elements": {"number": [11]},
+              "coords": {"3dFractional": [0.0, 0.0, 0.0]}}})";
+}
+
+} // namespace
+
+TEST(CjsonTest, spaceGroupFromOpenBabel)
+{
+  CjsonFormat cjson;
+
+  // a spelling that is not the table's: screw axis without underscore
+  Molecule molecule;
+  ASSERT_TRUE(
+    cjson.readString(crystalWithSpaceGroup("\"P 63/m m c\""), molecule));
+  EXPECT_EQ(molecule.hallNumber(), 488);
+  EXPECT_FALSE(molecule.hasData(SpaceGroups::internationalNumberKey()));
+
+  // a symbol with a setting suffix
+  Molecule suffixed;
+  ASSERT_TRUE(
+    cjson.readString(crystalWithSpaceGroup("\"F d -3 m :2\""), suffixed));
+  EXPECT_EQ(suffixed.hallNumber(), 526);
+
+  // a bare number with one setting is resolved ...
+  Molecule unique;
+  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"229\""), unique));
+  EXPECT_EQ(unique.hallNumber(), 529);
+  EXPECT_FALSE(unique.hasData(SpaceGroups::internationalNumberKey()));
+
+  // ... a number with several is not guessed, but is remembered
+  Molecule ambiguous;
+  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"74\""), ambiguous));
+  EXPECT_EQ(ambiguous.hallNumber(), 0);
+  ASSERT_TRUE(ambiguous.hasData(SpaceGroups::internationalNumberKey()));
+  EXPECT_EQ(ambiguous.data(SpaceGroups::internationalNumberKey()).toInt(), 74);
+
+  // the same for a number that is a JSON number
+  Molecule asNumber;
+  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("74"), asNumber));
+  EXPECT_EQ(asNumber.hallNumber(), 0);
+  ASSERT_TRUE(asNumber.hasData(SpaceGroups::internationalNumberKey()));
+  EXPECT_EQ(asNumber.data(SpaceGroups::internationalNumberKey()).toInt(), 74);
+
+  // a symbol that fits several origins: the number is known as well
+  Molecule noOrigin;
+  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"P n 3 m\""), noOrigin));
+  EXPECT_EQ(noOrigin.hallNumber(), 0);
+  ASSERT_TRUE(noOrigin.hasData(SpaceGroups::internationalNumberKey()));
+  EXPECT_EQ(noOrigin.data(SpaceGroups::internationalNumberKey()).toInt(), 224);
+
+  // nonsense leaves nothing
+  Molecule nonsense;
+  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"C 1\""), nonsense));
+  EXPECT_EQ(nonsense.hallNumber(), 0);
+  EXPECT_FALSE(nonsense.hasData(SpaceGroups::internationalNumberKey()));
+
+  // the remembered number is not written out
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, ambiguous));
+  EXPECT_EQ(output.find("internationalNumber"), std::string::npos) << output;
+  Molecule roundTrip;
+  ASSERT_TRUE(cjson.readString(output, roundTrip));
+  EXPECT_FALSE(roundTrip.hasData(SpaceGroups::internationalNumberKey()));
+  EXPECT_EQ(roundTrip.hallNumber(), 0);
 }

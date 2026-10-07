@@ -9,6 +9,7 @@
 
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/io/cmlformat.h>
@@ -19,6 +20,7 @@ using Avogadro::Vector3;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::SpaceGroups;
 using Avogadro::Core::Variant;
 using Avogadro::Io::CmlFormat;
 using namespace std::string_literals;
@@ -430,4 +432,54 @@ TEST(CmlTest, malformedFractionalConformerIsRejected)
 
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(1));
   EXPECT_EQ(molecule.coordinate3dCount(), static_cast<size_t>(0));
+}
+
+namespace {
+
+std::string cmlCrystal(const std::string& spaceGroup)
+{
+  return "<?xml version=\"1.0\"?>"
+         "<molecule xmlns=\"http://www.xml-cml.org/schema\">"
+         "<crystal>"
+         "<scalar title=\"a\" units=\"units:angstrom\">5.0</scalar>"
+         "<scalar title=\"b\" units=\"units:angstrom\">5.0</scalar>"
+         "<scalar title=\"c\" units=\"units:angstrom\">5.0</scalar>"
+         "<scalar title=\"alpha\" units=\"units:degree\">90.0</scalar>"
+         "<scalar title=\"beta\" units=\"units:degree\">90.0</scalar>"
+         "<scalar title=\"gamma\" units=\"units:degree\">90.0</scalar>"
+         "<symmetry spaceGroup=\"" +
+         spaceGroup +
+         "\"/>"
+         "</crystal>"
+         "<atomArray>"
+         "<atom id=\"a\" elementType=\"Na\" "
+         "xFract=\"0.0\" yFract=\"0.0\" zFract=\"0.0\"/>"
+         "</atomArray>"
+         "</molecule>";
+}
+
+} // namespace
+
+TEST(CmlTest, spaceGroupSpellings)
+{
+  CmlFormat cml;
+
+  Molecule screw;
+  ASSERT_TRUE(cml.readString(cmlCrystal("P 63/m m c"), screw));
+  EXPECT_EQ(screw.hallNumber(), 488);
+
+  Molecule setting;
+  ASSERT_TRUE(cml.readString(cmlCrystal("R -3 m :R"), setting));
+  EXPECT_EQ(setting.hallNumber(), 459);
+
+  Molecule ambiguous;
+  ASSERT_TRUE(cml.readString(cmlCrystal("74"), ambiguous));
+  EXPECT_EQ(ambiguous.hallNumber(), 0);
+  ASSERT_TRUE(ambiguous.hasData(SpaceGroups::internationalNumberKey()));
+  EXPECT_EQ(ambiguous.data(SpaceGroups::internationalNumberKey()).toInt(), 74);
+
+  // not written to the file
+  std::string output;
+  ASSERT_TRUE(cml.writeString(output, ambiguous));
+  EXPECT_EQ(output.find("internationalNumber"), std::string::npos) << output;
 }
