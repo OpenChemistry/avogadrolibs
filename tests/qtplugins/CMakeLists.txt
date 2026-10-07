@@ -20,6 +20,7 @@ set(plugins
   MeasureTool
   ScriptFileFormats
   Select
+  SpaceGroup
   Surfaces
 )
 

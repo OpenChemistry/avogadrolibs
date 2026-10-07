@@ -139,13 +139,11 @@ public:
       // look for space group, e.g.
       // <symmetry spaceGroup="F -4 2 3">
       xml_node symmetry = node.child("symmetry");
-      unsigned short hall = 0;
+      std::string spaceGroup;
       if (symmetry) {
-        xml_attribute spaceGroup = symmetry.attribute("spaceGroup");
-        if (spaceGroup) {
-          // look for space group in the space group table
-          hall = Core::SpaceGroups::hallNumber(std::string(spaceGroup.value()));
-        }
+        xml_attribute spaceGroupAttribute = symmetry.attribute("spaceGroup");
+        if (spaceGroupAttribute)
+          spaceGroup = spaceGroupAttribute.value();
       }
 
       auto* cell = new UnitCell;
@@ -156,8 +154,9 @@ public:
         return false;
       }
       molecule->setUnitCell(cell);
-      if (hall != 0)
-        molecule->setHallNumber(hall);
+      // look for the space group in the space group table; if several
+      // settings may fit, the table number is kept for later
+      Core::SpaceGroups::setSpaceGroup(*molecule, spaceGroup);
     }
     return true;
   }
@@ -754,7 +753,8 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     const std::string& name_ = (*it).first;
 
     // Skip names that are handled elsewhere:
-    if (name_ == "inchi")
+    if (name_ == "inchi" ||
+        name_ == Core::SpaceGroups::internationalNumberKey())
       continue;
 
     const Variant& var = (*it).second;

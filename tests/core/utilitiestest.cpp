@@ -10,12 +10,16 @@
 #include <clocale>
 #include <cmath>
 #include <limits>
+#include <string>
+#include <vector>
 
+using Avogadro::Core::caseInsensitiveEquals;
 using Avogadro::Core::contains;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::parseDouble;
 using Avogadro::Core::parseFloat;
 using Avogadro::Core::split;
+using Avogadro::Core::splitWhitespace;
 using Avogadro::Core::startsWith;
 using Avogadro::Core::toLower;
 using Avogadro::Core::trimmed;
@@ -74,6 +78,30 @@ TEST(UtilitiesTest, splitEmpty)
 {
   string test(" trim white space    ");
   EXPECT_EQ(split(test, ' ', false).size(), 7);
+}
+
+TEST(UtilitiesTest, splitWhitespace)
+{
+  using Tokens = std::vector<string>;
+
+  EXPECT_EQ(splitWhitespace(""), Tokens());
+  EXPECT_EQ(splitWhitespace(" \t\r\n  \n"), Tokens());
+
+  EXPECT_EQ(splitWhitespace("token"), Tokens({ "token" }));
+  EXPECT_EQ(splitWhitespace("  lead"), Tokens({ "lead" }));
+  EXPECT_EQ(splitWhitespace("trail  "), Tokens({ "trail" }));
+  EXPECT_EQ(splitWhitespace("  a   b  c  "), Tokens({ "a", "b", "c" }));
+
+  EXPECT_EQ(splitWhitespace("a\tb"), Tokens({ "a", "b" }));
+  EXPECT_EQ(splitWhitespace("a\r\nb\n"), Tokens({ "a", "b" }));
+  EXPECT_EQ(splitWhitespace("\t a \t\r\n b \n\n"), Tokens({ "a", "b" }));
+
+  // A Hall symbol as it might come from a file.
+  EXPECT_EQ(splitWhitespace("  -P   2yn \n"), Tokens({ "-P", "2yn" }));
+
+  // split() takes a single delimiter, so tabs stay inside the tokens.
+  EXPECT_EQ(split("a\tb c", ' '), Tokens({ "a\tb", "c" }));
+  EXPECT_EQ(splitWhitespace("a\tb c"), Tokens({ "a", "b", "c" }));
 }
 
 TEST(UtilitiesTest, trimmed)
@@ -402,4 +430,31 @@ TEST(UtilitiesTest, toLower)
   // Bytes above 127, including UTF-8 sequences, are left alone: only ASCII
   // 'T' lower-cases, the two-byte 'É' (0xC3 0x89) passes through untouched.
   EXPECT_EQ(toLower("\xC3\x89T"), "\xC3\x89t");
+}
+
+TEST(UtilitiesTest, caseInsensitiveEquals)
+{
+  EXPECT_TRUE(caseInsensitiveEquals("cif", "cif"));
+  EXPECT_TRUE(caseInsensitiveEquals("cif", "CIF"));
+  EXPECT_TRUE(caseInsensitiveEquals("CiF", "cIf"));
+  EXPECT_FALSE(caseInsensitiveEquals("cif", "cim"));
+  // Different lengths, including a prefix of the other string.
+  EXPECT_FALSE(caseInsensitiveEquals("cif", "cifs"));
+  EXPECT_FALSE(caseInsensitiveEquals("CIFS", "cif"));
+  // Empty strings.
+  EXPECT_TRUE(caseInsensitiveEquals("", ""));
+  EXPECT_FALSE(caseInsensitiveEquals("", "a"));
+  EXPECT_FALSE(caseInsensitiveEquals("a", ""));
+  // Digits and punctuation compare exactly; the characters just outside the
+  // letter ranges ('@' and '[' around 'A'-'Z', '`' and '{' around 'a'-'z')
+  // are not folded into one another.
+  EXPECT_TRUE(caseInsensitiveEquals("H2O-1.5", "h2o-1.5"));
+  EXPECT_FALSE(caseInsensitiveEquals("H2O", "H3O"));
+  EXPECT_FALSE(caseInsensitiveEquals("a-b", "a_b"));
+  EXPECT_FALSE(caseInsensitiveEquals("@", "`"));
+  EXPECT_FALSE(caseInsensitiveEquals("[", "{"));
+  // Bytes above 127 are left as they are: "Ä" (0xC3 0x84) and "ä" (0xC3 0xA4)
+  // differ, while the ASCII letters around them still fold.
+  EXPECT_FALSE(caseInsensitiveEquals("\xC3\x84", "\xC3\xA4"));
+  EXPECT_TRUE(caseInsensitiveEquals("\xC3\x84T", "\xC3\x84t"));
 }

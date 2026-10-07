@@ -12,6 +12,7 @@
 #include "vector.h"
 
 #include <string>
+#include <vector>
 
 namespace Avogadro::Core {
 
@@ -48,10 +49,102 @@ public:
   ~SpaceGroups() = default;
 
   /**
+   * The highest Hall number. The Hall numbers run from 1 to this value; 0 means
+   * "no space group" throughout this class.
+   */
+  static constexpr unsigned short lastHallNumber = 530;
+
+  /**
    * @return The hall number of the matching space group string or 0 if not
    * found
+   *
+   * Besides the strings in the table (Hall symbol, international symbols),
+   * this accepts the spellings other programs write: screw axes without the
+   * underscore ("P 63 m c", "P 1 21/c 1"), a trailing setting that selects an
+   * origin choice or the hexagonal / rhombohedral axes ("F d -3 m :2",
+   * "R -3 m :H"), the pre-1983 cubic notation ("I m 3 m") and a bare
+   * international table number ("229").
+   *
+   * A symbol or number that fits several settings (origin choice, axes) is
+   * not guessed: 0 is returned. See internationalNumberFromString().
    */
   static unsigned short hallNumber(const std::string& spaceGroup);
+
+  /**
+   * @return the hall number whose Hall symbol is exactly @p hallSymbol, or 0
+   * if there is none.
+   *
+   * Unlike hallNumber(), the international symbols and numbers are not
+   * accepted: a string that is not a Hall symbol of the table gives 0. Runs of
+   * white space are collapsed and a double quote is read as '=', as in the
+   * table, so "-P  2yn" and "P 3 2\"" (the table's "P 3 2=") match.
+   */
+  static unsigned short hallNumberFromHallSymbol(const std::string& hallSymbol);
+
+  /**
+   * @return @p hallSymbol in the spelling of the table: runs of white space
+   * (spaces, tabs and line endings) collapsed to one space, the ends trimmed,
+   * and '=' where a file has a double quote. The result is not checked against
+   * the table.
+   */
+  static std::string normalizeHallSymbol(const std::string& hallSymbol);
+
+  /**
+   * @return the hall number of the space group whose symmetry operations are
+   * exactly @p operations, or 0 if no entry of the table has this set.
+   *
+   * This is how most crystallography programs resolve a setting: the symmetry
+   * operations a CIF file lists identify the origin choice and axes (which an
+   * H-M symbol often leaves out), and cannot disagree with the coordinates.
+   *
+   * Each operation is written like "x,y,z", "-x+1/2,y,-z", "1/2+x,y,z" or
+   * "x-y,x,z+1/6". Letters may be upper case, spaces and quotes are ignored,
+   * and constants may be decimals (0.5, 0.3333, 0.6667) if they are close to a
+   * multiple of 1/12. Translations are taken modulo one. The order of the
+   * operations and repeats do not matter. All operations must be present and
+   * none may be extra. Text that is not an operation, or an empty list,
+   * gives 0.
+   *
+   * Three pairs of entries in the table (hall numbers 322 and 324, 326 and 328,
+   * 330 and 332, all group 68) have the same operations and the same Hall
+   * symbol, and differ only in a setting label. The lower number is returned.
+   */
+  static unsigned short hallNumberFromTransforms(
+    const std::vector<std::string>& operations);
+
+  /**
+   * @return the international table number (1-230) that the string refers to,
+   * even if hallNumber() cannot pick one setting for it (e.g. "74"), or 0 if
+   * the string is not recognized.
+   */
+  static unsigned short internationalNumberFromString(
+    const std::string& spaceGroup);
+
+  /**
+   * Record the space group that a file gives as a string (a symbol, with or
+   * without a setting, or a bare international table number) in @p molecule.
+   *
+   * If the string identifies one setting, the Hall number of the molecule is
+   * set (see hallNumber()). If it only identifies the group, because several
+   * settings fit (origin choice, axes), the international table number is
+   * kept in the data map under internationalNumberKey(), so that the user can
+   * be asked for just those settings. A Hall number set later removes it.
+   *
+   * The string is resolved once. A space group that is not recognized leaves
+   * the molecule unchanged.
+   *
+   * @return true if the Hall number or the international number was set.
+   */
+  static bool setSpaceGroup(Molecule& molecule, const std::string& spaceGroup);
+
+  /**
+   * @return the key of the Molecule data map entry (an int) in which file
+   * readers keep the international table number of a space group whose Hall
+   * number is ambiguous. Molecule::setHallNumber() removes it once a Hall
+   * number is known. It is never written to files: the file writers and the
+   * molecular properties table skip it.
+   */
+  static const char* internationalNumberKey();
 
   /**
    * @return an enum representing the crystal system for a given hall number.

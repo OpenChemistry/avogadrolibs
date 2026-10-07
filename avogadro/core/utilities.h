@@ -48,6 +48,8 @@ inline bool getLine(std::istream& in, std::string& line)
  * @param delimiter The delimiter to split the string by.
  * @param skipEmpty If true any empty items will be skipped.
  * @return A vector containing the items.
+ *
+ * For whitespace-separated text use splitWhitespace().
  */
 inline std::vector<std::string> split(const std::string& string, char delimiter,
                                       bool skipEmpty = true)
@@ -61,6 +63,39 @@ inline std::vector<std::string> split(const std::string& string, char delimiter,
     elements.push_back(item);
   }
   return elements;
+}
+
+/**
+ * @brief Split @p input into tokens separated by runs of white space.
+ * @param input The string to be split up.
+ * @return A vector containing the tokens, never any empty ones.
+ *
+ * Unlike split(), which takes one delimiter character, any run of ' ', '\t',
+ * '\r' or '\n' (the set trimmed() uses) separates tokens, so tabs and line
+ * endings never end up inside them. split(s, ' ') leaves "2yn\n" as a token
+ * and keeps "a\tb" whole; split() also keeps the empty field between adjacent
+ * delimiters when skipEmpty is false, which suits delimited formats. Use
+ * splitWhitespace() for free-format, whitespace-separated text such as
+ * symbols, keywords and columns that may be separated by tabs.
+ *
+ * For example, "  -P   2yn \n" gives {"-P", "2yn"}, and "a\tb c" gives
+ * {"a", "b", "c"} where split("a\tb c", ' ') gives {"a\tb", "c"}.
+ */
+inline std::vector<std::string> splitWhitespace(const std::string& input)
+{
+  constexpr const char* whitespace = " \t\r\n";
+  std::vector<std::string> tokens;
+  std::string::size_type start = input.find_first_not_of(whitespace);
+  while (start != std::string::npos) {
+    std::string::size_type end = input.find_first_of(whitespace, start);
+    if (end == std::string::npos) {
+      tokens.push_back(input.substr(start));
+      break;
+    }
+    tokens.push_back(input.substr(start, end - start));
+    start = input.find_first_not_of(whitespace, end);
+  }
+  return tokens;
 }
 
 /**
@@ -123,6 +158,34 @@ inline std::string toLower(std::string input)
       c = static_cast<char>(c - 'A' + 'a');
   }
   return input;
+}
+
+/**
+ * @brief Whether @p a and @p b are equal, ignoring the case of ASCII letters.
+ * @param a First string to compare.
+ * @param b Second string to compare.
+ * @return True if the strings have the same length and differ at most in the
+ * case of the letters A-Z, false otherwise.
+ *
+ * Like toLower(), this is independent of the C locale: every byte other than
+ * A-Z, including UTF-8 sequences, must match exactly ("\xC3\x84" and
+ * "\xC3\xA4", i.e. "Ä" and "ä", are different).
+ */
+inline bool caseInsensitiveEquals(const std::string& a, const std::string& b)
+{
+  if (a.size() != b.size())
+    return false;
+  for (std::string::size_type i = 0; i < a.size(); ++i) {
+    char x = a[i];
+    char y = b[i];
+    if (x >= 'A' && x <= 'Z')
+      x = static_cast<char>(x - 'A' + 'a');
+    if (y >= 'A' && y <= 'Z')
+      y = static_cast<char>(y - 'A' + 'a');
+    if (x != y)
+      return false;
+  }
+  return true;
 }
 
 /**

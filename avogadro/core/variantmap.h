@@ -69,6 +69,12 @@ public:
   bool hasValue(const std::string& name) const;
 
   /**
+   * Removes the entry for @p name from the map. Nothing happens if there is no
+   * such entry.
+   */
+  void remove(const std::string& name);
+
+  /**
    * Clears the map.
    */
   void clear() { m_map.clear(); }

@@ -8,6 +8,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QDebug>
@@ -371,7 +372,8 @@ void MolecularModel::updateTable(unsigned int flags)
   for (const auto& key : properties.names()) {
     if (key == "formula" || key == "name" || key == "fileName" ||
         key == "energies" || key == "markup_name" || key == "totalCharge" ||
-        key == "totalSpinMultiplicity")
+        key == "totalSpinMultiplicity" ||
+        key == Core::SpaceGroups::internationalNumberKey())
       continue; // skip these
 
     if (properties.value(key).toString().empty())

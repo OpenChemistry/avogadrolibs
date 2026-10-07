@@ -1020,11 +1020,16 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
             if (*hallNumber > 0 && *hallNumber < 531)
               molecule.setHallNumber(*hallNumber);
           }
-        } else if (unitCell["spaceGroup"].is_string()) {
-          auto hallNumber =
-            Core::SpaceGroups::hallNumber(unitCell["spaceGroup"]);
-          if (hallNumber != 0)
-            molecule.setHallNumber(hallNumber);
+        } else if (unitCell["spaceGroup"].is_string() ||
+                   unitCell["spaceGroup"].is_number_integer()) {
+          // Open Babel writes a symbol or a bare international table number
+          std::string spaceGroup =
+            unitCell["spaceGroup"].is_string()
+              ? unitCell["spaceGroup"].get<std::string>()
+              : std::to_string(unitCell["spaceGroup"].get<long long>());
+          // Maybe several settings fit (e.g. "74"): then only the number is
+          // kept, so the user can be asked for just those. It is not written.
+          Core::SpaceGroups::setSpaceGroup(molecule, spaceGroup);
         }
       }
     }
@@ -1209,7 +1214,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
             basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
             openShell = true;
           } else {
-            std::cout << "No orbital cofficients found!" << std::endl;
+            std::cout << "No orbital coefficients found!" << std::endl;
           }
           // Check for orbital coefficient sets, these are paired with
           // coordinates when they exist, but have constant basis set, atom
@@ -1696,7 +1701,8 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   // loop through all other properties
   const auto map = molecule.dataMap();
   for (const auto& element : map) {
-    if (element.first == "name" || element.first == "inchi")
+    if (element.first == "name" || element.first == "inchi" ||
+        element.first == Core::SpaceGroups::internationalNumberKey())
       continue;
 
     // check for "inputParameters" and handle it separately

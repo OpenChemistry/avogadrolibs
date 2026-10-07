@@ -7,6 +7,11 @@
 
 #include "obprocess.h"
 
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
+#include <avogadro/core/utilities.h>
+#include <avogadro/io/cifsymmetry.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
@@ -16,6 +21,71 @@
 using namespace std::string_literals;
 
 namespace Avogadro::QtPlugins {
+
+namespace {
+
+// Open Babel reduces the space group of a CIF file to a symbol, which often
+// leaves out the origin choice or the axes (the IZA zeolites write 'F d 3 m'
+// for origin choice 2) and sometimes disagrees with the file's own symmetry
+// operations. Resolve the setting from the operations, which are not
+// ambiguous, and then from an exact Hall symbol. Whatever the reader found is
+// kept if neither of them identifies an entry of the table.
+//
+// This re-scan of the file is needed because Open Babel's CJSON writer emits
+// only the space group symbol; it can go once Open Babel writes the hall
+// number.
+void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
+{
+  if (molecule.unitCell() == nullptr)
+    return;
+
+  const Io::CifSymmetry symmetry = Io::readCifSymmetry(cifText);
+  const unsigned short found = symmetry.hallNumber();
+  if (found == 0)
+    return;
+
+  if (symmetry.hallFromOperations != 0 && symmetry.hallFromSymbol != 0 &&
+      symmetry.hallFromOperations != symmetry.hallFromSymbol) {
+    qDebug() << "CIF space group: the symmetry operations give Hall number"
+             << symmetry.hallFromOperations << "but the Hall symbol"
+             << symmetry.hallSymbol.c_str() << "gives"
+             << symmetry.hallFromSymbol << "- using the operations";
+  }
+
+  const char* key = Core::SpaceGroups::internationalNumberKey();
+  const unsigned short previous = molecule.hallNumber();
+  // read before setHallNumber() below, which removes the key
+  const bool hadNumber = molecule.hasData(key);
+
+  // Only the identity is listed (or the Hall symbol is "P 1"), yet the reader
+  // found a larger group. Either every atom is already in the file, so
+  // expanding with that group adds nothing, or the operations were stripped
+  // from the file, and P1 would drop the symmetry-related atoms. The group
+  // that the file names is right, or harmless, in both cases.
+  if (found == 1 && ((previous != 0 && previous != 1) || hadNumber)) {
+    qDebug() << "CIF space group: only the identity is listed but the file"
+             << "names Hall number" << previous << "- keeping the latter";
+    return;
+  }
+
+  if (previous != found) {
+    qDebug() << "CIF space group: Hall number" << found
+             << "from the symmetry in the file, replacing" << previous;
+  }
+
+  molecule.setHallNumber(found);
+}
+
+bool isCifFormat(const std::vector<std::string>& extensions)
+{
+  for (const std::string& extension : extensions) {
+    if (Core::caseInsensitiveEquals(extension, "cif"))
+      return true;
+  }
+  return false;
+}
+
+} // namespace
 
 /**
  * @brief The ProcessListener class allows synchronous use of OBProcess.
@@ -115,6 +185,11 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   stringOption("format", formatOption);
   QString format = QString::fromStdString(formatOption);
 
+  // The text of a CIF file, to read its symmetry operations: Open Babel's
+  // conversion keeps only the space group symbol.
+  const bool isCif = isCifFormat(m_fileExtensions);
+  QByteArray cifText;
+
   if (!m_fileOnly) {
     // Determine length of data
     in.seekg(0, std::ios_base::end);
@@ -130,6 +205,8 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
       appendError("Error reading stream into buffer!");
       return false;
     }
+    if (isCif)
+      cifText = input;
 
     // Perform the conversion.
     if (!proc.convert(input, QString::fromStdString(m_fileExtensions.front()),
@@ -209,6 +286,13 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     }
   } else {
     return false; // unknown format
+  }
+
+  if (!cifText.isEmpty()) {
+    resolveCifSpaceGroup(
+      std::string_view(cifText.constData(),
+                       static_cast<std::size_t>(cifText.size())),
+      molecule);
   }
 
   return true;

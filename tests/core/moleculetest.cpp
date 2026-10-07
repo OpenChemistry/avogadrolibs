@@ -23,6 +23,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/propertymap.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
@@ -3469,4 +3470,28 @@ TEST_F(MoleculeTest, AtomPositionAndForceDefaultToZero)
   EXPECT_EQ(molecule.atomPosition3d(1), Vector3::Zero());
   EXPECT_EQ(molecule.atomPosition2d(1), Vector2::Zero());
   EXPECT_EQ(molecule.forceVector(1), Vector3::Zero());
+}
+
+TEST_F(MoleculeTest, hallNumberSupersedesInternationalNumber)
+{
+  const char* key = Avogadro::Core::SpaceGroups::internationalNumberKey();
+  Molecule molecule;
+  molecule.setData("name", std::string("keep me"));
+  molecule.setData(key, 74);
+  ASSERT_TRUE(molecule.hasData(key));
+
+  // 0 means "no space group": the number that a reader kept stays
+  molecule.setHallNumber(0);
+  EXPECT_TRUE(molecule.hasData(key));
+  EXPECT_EQ(molecule.hallNumber(), 0);
+
+  // a Hall number makes it obsolete, and only it is removed
+  molecule.setHallNumber(5);
+  EXPECT_FALSE(molecule.hasData(key));
+  EXPECT_EQ(molecule.hallNumber(), 5);
+  EXPECT_TRUE(molecule.hasData("name"));
+
+  // nothing to remove the second time
+  molecule.setHallNumber(6);
+  EXPECT_EQ(molecule.hallNumber(), 6);
 }
