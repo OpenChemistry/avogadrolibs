@@ -17,6 +17,7 @@
 #include <avogadro/qtgui/richtextdelegate.h>
 
 #include <QAction>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QtWidgets/QAbstractItemView>
 #include <QtWidgets/QDialogButtonBox>
@@ -29,6 +30,7 @@
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
 
+#include <QtCore/QRegularExpression>
 #include <QtCore/QSet>
 #include <QtCore/QSortFilterProxyModel>
 #include <QtCore/QStringList>
@@ -44,6 +46,35 @@ using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::RichTextDelegate;
 
 namespace Avogadro::QtPlugins {
+
+namespace {
+
+// avogadroapp sets this application property when it runs without a user
+// (--skip-dialogs, --rpc-name): nothing may wait for an answer then.
+bool dialogsSkipped()
+{
+  QCoreApplication* app = QCoreApplication::instance();
+  return app != nullptr && app->property("avogadro.skipDialogs").toBool();
+}
+
+// The international table number that a file reader kept because the file
+// did not say which setting of the space group it uses (0 if none).
+unsigned short knownInternationalNumber(const Molecule* molecule)
+{
+  if (molecule == nullptr)
+    return 0;
+  const char* key = Core::SpaceGroups::internationalNumberKey();
+  if (!molecule->hasData(key))
+    return 0;
+  const Core::Variant& value = molecule->data(key);
+  if (value.type() != Core::Variant::Int)
+    return 0;
+  int number = value.toInt();
+  return (number >= 1 && number <= 230) ? static_cast<unsigned short>(number)
+                                        : 0;
+}
+
+} // namespace
 
 SpaceGroup::SpaceGroup(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
@@ -136,19 +167,71 @@ void SpaceGroup::registerCommands()
 }
 
 bool SpaceGroup::handleCommand(const QString& command,
-                               [[maybe_unused]] const QVariantMap& options)
+                               const QVariantMap& options)
 {
+  if (command != "fillUnitCell" && command != "fillTranslationalCell")
+    return false;
+
   if (m_molecule == nullptr)
     return false; // No molecule to handle the command.
 
-  if (command == "fillUnitCell") {
-    fillUnitCell();
-    return true;
-  } else if (command == "fillTranslationalCell") {
-    fillTranslationalCell();
+  // An explicit hallNumber or spaceGroup wins over the one of the molecule,
+  // and an invalid one is an error, not a reason to use the stored one.
+  // Without either, the molecule has to know its space group already: a
+  // command never asks the user.
+  unsigned short hallNumber = 0;
+  const bool hasHallNumber = options.contains(QStringLiteral("hallNumber"));
+  const bool hasSpaceGroup = options.contains(QStringLiteral("spaceGroup"));
+
+  if (hasHallNumber && hasSpaceGroup) {
+    emit commandFailed(
+      QStringLiteral("Give either hallNumber or spaceGroup, not both."));
     return true;
   }
-  return false;
+
+  if (hasHallNumber) {
+    const QVariant value = options.value(QStringLiteral("hallNumber"));
+    const int type = value.typeId();
+    const bool isNumber = type == QMetaType::Int || type == QMetaType::UInt ||
+                          type == QMetaType::LongLong ||
+                          type == QMetaType::ULongLong ||
+                          type == QMetaType::Double || type == QMetaType::Float;
+    double number = isNumber ? value.toDouble() : 0.0;
+    if (!isNumber || number != std::floor(number) || number < 1.0 ||
+        number > 530.0) {
+      emit commandFailed(
+        QStringLiteral("hallNumber must be an integer from 1 to 530."));
+      return true;
+    }
+    hallNumber = static_cast<unsigned short>(number);
+  } else if (hasSpaceGroup) {
+    const QVariant value = options.value(QStringLiteral("spaceGroup"));
+    if (value.typeId() != QMetaType::QString) {
+      emit commandFailed(
+        QStringLiteral("spaceGroup must be a space group symbol (a string)."));
+      return true;
+    }
+    const QString symbol = value.toString();
+    hallNumber = Core::SpaceGroups::hallNumber(symbol.toStdString());
+    if (hallNumber == 0) {
+      emit commandFailed(
+        QStringLiteral("spaceGroup \"%1\" does not name a single space "
+                       "group setting; use hallNumber (1 to 530) or a "
+                       "symbol that includes the setting, e.g. \"F d -3 m "
+                       ":2\".")
+          .arg(symbol));
+      return true;
+    }
+  }
+
+  QString error;
+  if (!performFill(command == "fillUnitCell", FillSource::Command, hallNumber,
+                   &error)) {
+    emit commandFailed(error);
+    return true;
+  }
+
+  return true;
 }
 
 const QString SpaceGroup::toleranceToString()
@@ -320,7 +403,7 @@ void SpaceGroup::fillHeuristic()
 
     if (m_molecule->atomCount() <= 250 &&
         (m_molecule->atomCount() <= 5 || !(hasCarbon && hasHydrogen))) {
-      fillUnitCell();
+      performFill(true, FillSource::Heuristic);
     }
   }
 }
@@ -519,41 +602,63 @@ void SpaceGroup::symmetrize()
   }
 }
 
-void SpaceGroup::fillUnitCell()
+bool SpaceGroup::performFill(bool allCopies, FillSource source,
+                             unsigned short requestedHall,
+                             QString* errorMessage)
 {
-  unsigned short hallNumber = m_molecule->hallNumber();
+  if (m_molecule == nullptr)
+    return false;
 
-  // If it's not set, ask the user to select a space group
-  if (hallNumber == 0)
-    hallNumber = selectSpaceGroup();
+  if (!m_molecule->unitCell()) {
+    if (errorMessage)
+      *errorMessage = QStringLiteral("The molecule has no unit cell.");
+    return false;
+  }
+
+  // an explicit request wins over what the molecule knows
+  unsigned short hallNumber =
+    requestedHall != 0 ? requestedHall : m_molecule->hallNumber();
+
+  if (hallNumber == 0) {
+    if (source == FillSource::Command) {
+      if (errorMessage)
+        *errorMessage = QStringLiteral(
+          "The space group of the molecule is not known: give the "
+          "hallNumber (1 to 530) or spaceGroup parameter.");
+      return false;
+    }
+    if (source == FillSource::Heuristic && dialogsSkipped()) {
+      qDebug() << "SpaceGroup: not filling the unit cell, the space group "
+                  "is unknown and dialogs are skipped.";
+      return false;
+    }
+
+    // If it's not set, ask the user to select a space group. If the file
+    // gave the number, only its settings are listed first.
+    hallNumber = selectSpaceGroup(knownInternationalNumber(m_molecule));
+  }
   // If the hall number is zero, the user canceled
   if (hallNumber == 0)
-    return;
+    return false;
 
-  if (!checkPrimitiveCell(hallNumber))
-    return;
+  if (!checkPrimitiveCell(hallNumber, source))
+    return false;
 
-  // true here to fill all copies, including edges and corners
+  // allCopies fills all copies, including edges and corners
   // 0.25 indicates the distance in A that two atoms must be apart
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, 0.25, true);
+  return m_molecule->undoMolecule()->fillUnitCell(hallNumber, 0.25, allCopies);
+}
+
+void SpaceGroup::fillUnitCell()
+{
+  if (m_molecule)
+    performFill(true, FillSource::Menu);
 }
 
 void SpaceGroup::fillTranslationalCell()
 {
-  unsigned short hallNumber = m_molecule->hallNumber();
-
-  // If it's not set, ask the user to select a space group
-  if (hallNumber == 0)
-    hallNumber = selectSpaceGroup();
-  // If the hall number is zero, the user canceled
-  if (hallNumber == 0)
-    return;
-
-  if (!checkPrimitiveCell(hallNumber))
-    return;
-
-  // 0.25 indicates the distance in A that two atoms must be apart
-  m_molecule->undoMolecule()->fillUnitCell(hallNumber, 0.25);
+  if (m_molecule)
+    performFill(false, FillSource::Menu);
 }
 
 void SpaceGroup::reduceToAsymmetricUnit()
@@ -635,7 +740,8 @@ const QString SpaceGroup::crystalSystem(unsigned short hallNumber)
   }
 }
 
-bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber)
+bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber,
+                                    FillSource source)
 {
   // Check if the cell appears to be primitive but the space group expects
   // a centered cell. This can cause unexpected atom duplication.
@@ -659,6 +765,24 @@ bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber)
                                      (std::abs(gamma - 90.0) > tolerance);
 
         if (nonConventionalAngles) {
+          // Nobody to ask. A command asked for this space group, so use it
+          // on the cell as it is (the answer "No" below). An automatic fill
+          // does nothing rather than add atoms that may be wrong.
+          if (source == FillSource::Command) {
+            qWarning() << "SpaceGroup: the cell looks primitive but space "
+                          "group"
+                       << hallSymbol.c_str()
+                       << "is centered; filling without conventionalizing.";
+            return true;
+          }
+          if (source == FillSource::Heuristic && dialogsSkipped()) {
+            qWarning() << "SpaceGroup: the cell looks primitive but space "
+                          "group"
+                       << hallSymbol.c_str()
+                       << "is centered; not filling automatically.";
+            return false;
+          }
+
           QMessageBox::StandardButton reply;
           reply = QMessageBox::warning(
             nullptr, tr("Primitive Cell Detected"),
@@ -689,7 +813,7 @@ bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber)
   return true;
 }
 
-unsigned short SpaceGroup::selectSpaceGroup()
+unsigned short SpaceGroup::selectSpaceGroup(unsigned short internationalNumber)
 {
   QStandardItemModel spacegroups;
   QStringList modelHeader;
@@ -732,8 +856,11 @@ unsigned short SpaceGroup::selectSpaceGroup()
   auto* searchBox = new QLineEdit;
   searchBox->setClearButtonEnabled(true);
 
-  // Pre-filter by crystal system based on unit cell parameters
-  if (m_molecule && m_molecule->unitCell()) {
+  // Pre-filter by crystal system based on unit cell parameters, unless the
+  // file already told us the international number
+  if (internationalNumber != 0) {
+    searchBox->setText(QString::number(internationalNumber));
+  } else if (m_molecule && m_molecule->unitCell()) {
     Core::UnitCell* uc = m_molecule->unitCell();
     double a = uc->a();
     double b = uc->b();
@@ -798,11 +925,21 @@ unsigned short SpaceGroup::selectSpaceGroup()
   view->setMinimumWidth(view->horizontalHeader()->length() +
                         view->verticalScrollBar()->sizeHint().width());
 
-  // Connect search box to filter
+  // Connect search box to filter: once the user types, any column matches
   QObject::connect(searchBox, &QLineEdit::textChanged, &proxyModel,
-                   &QSortFilterProxyModel::setFilterFixedString);
+                   [&proxyModel](const QString& text) {
+                     proxyModel.setFilterKeyColumn(-1);
+                     proxyModel.setFilterFixedString(text);
+                   });
   // Apply the pre-populated filter
-  proxyModel.setFilterFixedString(searchBox->text());
+  if (internationalNumber != 0) {
+    // exactly this number in the first column: "74" is not "174"
+    proxyModel.setFilterKeyColumn(0);
+    proxyModel.setFilterRegularExpression(QRegularExpression(
+      QStringLiteral("^%1$").arg(QString::number(internationalNumber))));
+  } else {
+    proxyModel.setFilterFixedString(searchBox->text());
+  }
   if (proxyModel.rowCount() > 0)
     view->selectRow(0);
 

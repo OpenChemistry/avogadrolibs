@@ -1223,7 +1223,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
             basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
             openShell = true;
           } else {
-            std::cout << "No orbital cofficients found!" << std::endl;
+            std::cout << "No orbital coefficients found!" << std::endl;
           }
           // Check for orbital coefficient sets, these are paired with
           // coordinates when they exist, but have constant basis set, atom

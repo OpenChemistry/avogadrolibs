@@ -49,15 +49,36 @@ private slots:
   void setTolerance();
 
 private:
+  // Where a request to fill the cell comes from. Only a menu action may
+  // ask the user questions; the other two must not block on a dialog.
+  enum class FillSource
+  {
+    Menu,      // the user chose the action
+    Heuristic, // automatically, after a crystal was loaded
+    Command    // a script or RPC command
+  };
+
+  // Fill the cell using the given Hall number, or the one of the molecule if
+  // it is 0. Returns false if nothing was done; for commands, errorMessage
+  // then says why.
+  bool performFill(bool allCopies, FillSource source,
+                   unsigned short requestedHall = 0,
+                   QString* errorMessage = nullptr);
+
   // Pop up a dialog box and ask the user to select a space group.
   // Returns the hall number for the selected space group.
   // Returns 0 if the user canceled.
-  unsigned short selectSpaceGroup();
+  // If the international table number is known (but not the setting), only
+  // the settings of that number are shown at first.
+  unsigned short selectSpaceGroup(unsigned short internationalNumber = 0);
 
   // Check if the cell appears to be primitive but the space group expects
   // a centered cell. Warns the user and optionally conventionalizes.
   // Returns true if we should proceed with filling, false if user canceled.
-  bool checkPrimitiveCell(unsigned short hallNumber);
+  // Only asks the user for FillSource::Menu.
+  bool checkPrimitiveCell(unsigned short hallNumber,
+                          FillSource source = FillSource::Menu);
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   double m_spgTol;
