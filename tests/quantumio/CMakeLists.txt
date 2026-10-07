@@ -3,6 +3,7 @@ set(tests
   cube
   densitycube
   fchk
+  gamessus
   gaussiansettools
   genericoutput
   molden
@@ -11,7 +12,6 @@ set(tests
   orca
   qcschema
   # TODO
-  # GAMESS US
   # GAMESS UK
   # NWChem JSON
 )
@@ -53,6 +53,9 @@ foreach(TestName ${tests})
   elseif(TestName STREQUAL "fchk")
     add_test(NAME "QuantumIo-fchk"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianFchkTest.*")
+  elseif(TestName STREQUAL "gamessus")
+    add_test(NAME "QuantumIo-gamessus"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=GAMESSUSTest.*")
   elseif(TestName STREQUAL "gaussiansettools")
     add_test(NAME "QuantumIo-gaussiansettools"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianSetToolsTest.*")

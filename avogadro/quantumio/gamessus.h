@@ -62,13 +62,15 @@ private:
 
   /**
    * Read in the molecular orbitals.
+   * @return False if a coefficient row is wider than its block.
    */
-  void readEigenvectors(std::istream& in);
+  bool readEigenvectors(std::istream& in);
 
   /**
    * Reorder the molecular orbitals.
+   * @return False if there are too few coefficients for the shells read.
    */
-  void reorderMOs();
+  bool reorderMOs();
 
   /**
    * Outpull all known properties that have been read, useful for debugging.
@@ -77,8 +79,12 @@ private:
 
   /**
    * Load the basis with the properties read in from the file.
+   * @param basis The basis set to fill.
+   * @param atomCount The number of atoms in the molecule; every shell must be
+   * on one of them.
+   * @return False if the shells read are inconsistent.
    */
-  void load(Core::GaussianSet* basis);
+  bool load(Core::GaussianSet* basis, Index atomCount);
 
   double m_coordFactor;
   int m_electrons = 0;
