@@ -13,6 +13,7 @@
 #include "mesh.h"
 #include "neighborperceiver.h"
 #include "residue.h"
+#include "spacegroups.h"
 #include "unitcell.h"
 
 #include <algorithm>
@@ -667,6 +668,13 @@ void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
   if (axis >= 0 && axis < 3 && base <= m_frozenAtomMask.rows() - 3) {
     m_frozenAtomMask[base + axis] = value;
   }
+}
+
+void Molecule::setHallNumber(unsigned short hallNumber)
+{
+  m_hallNumber = hallNumber;
+  if (hallNumber != 0)
+    m_data.remove(SpaceGroups::internationalNumberKey());
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)

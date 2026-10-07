@@ -91,6 +91,22 @@ void handlePartialCharges(Core::Molecule& mol, std::string data,
 
   mol.setPartialCharges(name, charges);
 }
+
+// The "> <key>" data blocks that follow a molecule, one per entry of the data
+// map except for the ones that are not properties of the file.
+void writeDataBlocks(std::ostream& out, const Core::VariantMap& dataMap)
+{
+  for (const auto& key : dataMap.names()) {
+    // skip some keys
+    if (key == "modelView" || key == "projection" ||
+        key == Core::SpaceGroups::internationalNumberKey())
+      continue;
+
+    out << "> <" << key << ">\n";
+    out << dataMap.value(key).toString() << "\n";
+    out << "\n"; // empty line between data blocks
+  }
+}
 } // namespace
 
 bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
@@ -987,17 +1003,7 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
 
   // TODO: isotopes, radicals, etc.
   if (m_writeProperties) {
-    const auto dataMap = mol.dataMap();
-    for (const auto& key : dataMap.names()) {
-      // skip some keys
-      if (key == "modelView" || key == "projection" ||
-          key == Core::SpaceGroups::internationalNumberKey())
-        continue;
-
-      out << "> <" << key << ">\n";
-      out << dataMap.value(key).toString() << "\n";
-      out << "\n"; // empty line between data blocks
-    }
+    writeDataBlocks(out, mol.dataMap());
   }
 
   if (m_writeProperties || isMode(FileFormat::MultiMolecule))
@@ -1082,17 +1088,7 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out << "M  END\n";
   // Data block
   if (m_writeProperties) {
-    const auto dataMap = mol.dataMap();
-    for (const auto& key : dataMap.names()) {
-      // skip some keys
-      if (key == "modelView" || key == "projection" ||
-          key == Core::SpaceGroups::internationalNumberKey())
-        continue;
-
-      out << "> <" << key << ">\n";
-      out << dataMap.value(key).toString() << "\n";
-      out << "\n"; // empty line between data blocks
-    }
+    writeDataBlocks(out, mol.dataMap());
   }
 
   if (m_writeProperties || isMode(FileFormat::MultiMolecule))

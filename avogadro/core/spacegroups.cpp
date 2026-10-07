@@ -544,6 +544,22 @@ unsigned short SpaceGroups::internationalNumberFromString(
   return lookup(spaceGroup).number;
 }
 
+bool SpaceGroups::setSpaceGroup(Molecule& molecule,
+                                const std::string& spaceGroup)
+{
+  const Resolved resolved = lookup(spaceGroup);
+  if (resolved.hall != 0) {
+    molecule.setHallNumber(resolved.hall);
+    return true;
+  }
+  if (resolved.number != 0) {
+    molecule.setData(internationalNumberKey(),
+                     static_cast<int>(resolved.number));
+    return true;
+  }
+  return false;
+}
+
 const char* SpaceGroups::internationalNumberKey()
 {
   return "spaceGroup.internationalNumber";

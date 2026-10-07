@@ -54,6 +54,7 @@ void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
 
   const char* key = Core::SpaceGroups::internationalNumberKey();
   const unsigned short previous = molecule.hallNumber();
+  // read before setHallNumber() below, which removes the key
   const bool hadNumber = molecule.hasData(key);
 
   // Only the identity is listed (or the Hall symbol is "P 1"), yet the reader
@@ -72,8 +73,6 @@ void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
              << "from the symmetry in the file, replacing" << previous;
   }
 
-  // The international number that was kept because the setting was unknown is
-  // inert once a Hall number is set.
   molecule.setHallNumber(found);
 }
 
@@ -289,7 +288,7 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     return false; // unknown format
   }
 
-  if (isCif && !cifText.isEmpty()) {
+  if (!cifText.isEmpty()) {
     resolveCifSpaceGroup(
       std::string_view(cifText.constData(),
                        static_cast<std::size_t>(cifText.size())),

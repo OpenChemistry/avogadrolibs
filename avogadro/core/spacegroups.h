@@ -121,9 +121,27 @@ public:
     const std::string& spaceGroup);
 
   /**
+   * Record the space group that a file gives as a string (a symbol, with or
+   * without a setting, or a bare international table number) in @p molecule.
+   *
+   * If the string identifies one setting, the Hall number of the molecule is
+   * set (see hallNumber()). If it only identifies the group, because several
+   * settings fit (origin choice, axes), the international table number is
+   * kept in the data map under internationalNumberKey(), so that the user can
+   * be asked for just those settings. A Hall number set later removes it.
+   *
+   * The string is resolved once. A space group that is not recognized leaves
+   * the molecule unchanged.
+   *
+   * @return true if the Hall number or the international number was set.
+   */
+  static bool setSpaceGroup(Molecule& molecule, const std::string& spaceGroup);
+
+  /**
    * @return the key of the Molecule data map entry (an int) in which file
    * readers keep the international table number of a space group whose Hall
-   * number is ambiguous. It is never written to files: the file writers and the
+   * number is ambiguous. Molecule::setHallNumber() removes it once a Hall
+   * number is known. It is never written to files: the file writers and the
    * molecular properties table skip it.
    */
   static const char* internationalNumberKey();

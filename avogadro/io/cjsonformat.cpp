@@ -1027,18 +1027,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
             unitCell["spaceGroup"].is_string()
               ? unitCell["spaceGroup"].get<std::string>()
               : std::to_string(unitCell["spaceGroup"].get<long long>());
-          auto hallNumber = Core::SpaceGroups::hallNumber(spaceGroup);
-          if (hallNumber != 0) {
-            molecule.setHallNumber(hallNumber);
-          } else {
-            // Maybe several settings fit (e.g. "74"): keep the number, so
-            // the user can be asked for just those. It is not written out.
-            int number =
-              Core::SpaceGroups::internationalNumberFromString(spaceGroup);
-            if (number != 0)
-              molecule.setData(Core::SpaceGroups::internationalNumberKey(),
-                               number);
-          }
+          // Maybe several settings fit (e.g. "74"): then only the number is
+          // kept, so the user can be asked for just those. It is not written.
+          Core::SpaceGroups::setSpaceGroup(molecule, spaceGroup);
         }
       }
     }

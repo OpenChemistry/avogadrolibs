@@ -139,19 +139,11 @@ public:
       // look for space group, e.g.
       // <symmetry spaceGroup="F -4 2 3">
       xml_node symmetry = node.child("symmetry");
-      unsigned short hall = 0;
-      unsigned short spaceGroupNumber = 0;
+      std::string spaceGroup;
       if (symmetry) {
-        xml_attribute spaceGroup = symmetry.attribute("spaceGroup");
-        if (spaceGroup) {
-          // look for space group in the space group table
-          hall = Core::SpaceGroups::hallNumber(std::string(spaceGroup.value()));
-          if (hall == 0) {
-            // several settings may fit: keep the table number for later
-            spaceGroupNumber = Core::SpaceGroups::internationalNumberFromString(
-              std::string(spaceGroup.value()));
-          }
-        }
+        xml_attribute spaceGroupAttribute = symmetry.attribute("spaceGroup");
+        if (spaceGroupAttribute)
+          spaceGroup = spaceGroupAttribute.value();
       }
 
       auto* cell = new UnitCell;
@@ -162,12 +154,9 @@ public:
         return false;
       }
       molecule->setUnitCell(cell);
-      if (hall != 0) {
-        molecule->setHallNumber(hall);
-      } else if (spaceGroupNumber != 0) {
-        molecule->setData(Core::SpaceGroups::internationalNumberKey(),
-                          static_cast<int>(spaceGroupNumber));
-      }
+      // look for the space group in the space group table; if several
+      // settings may fit, the table number is kept for later
+      Core::SpaceGroups::setSpaceGroup(*molecule, spaceGroup);
     }
     return true;
   }

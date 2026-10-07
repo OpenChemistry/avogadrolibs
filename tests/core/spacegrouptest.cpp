@@ -1342,3 +1342,43 @@ TEST(SpaceGroupTest, transformsGarbage)
               { std::string(100000, '1') + ",y,z" }),
             0);
 }
+
+TEST(SpaceGroupTest, setSpaceGroup)
+{
+  const char* key = SpaceGroups::internationalNumberKey();
+
+  // one setting: the Hall number
+  Molecule exact;
+  EXPECT_TRUE(SpaceGroups::setSpaceGroup(exact, "P 63/m m c"));
+  EXPECT_EQ(exact.hallNumber(), 488);
+  EXPECT_FALSE(exact.hasData(key));
+
+  // a spelling that resolves through the setting rules
+  Molecule suffixed;
+  EXPECT_TRUE(SpaceGroups::setSpaceGroup(suffixed, "F d -3 m :2"));
+  EXPECT_EQ(suffixed.hallNumber(), 526);
+
+  // several settings: only the international number is kept
+  Molecule ambiguous;
+  EXPECT_TRUE(SpaceGroups::setSpaceGroup(ambiguous, "74"));
+  EXPECT_EQ(ambiguous.hallNumber(), 0);
+  ASSERT_TRUE(ambiguous.hasData(key));
+  EXPECT_EQ(ambiguous.data(key).toInt(), 74);
+
+  // a Hall number found later replaces it
+  EXPECT_TRUE(SpaceGroups::setSpaceGroup(ambiguous, "F d -3 m :2"));
+  EXPECT_EQ(ambiguous.hallNumber(), 526);
+  EXPECT_FALSE(ambiguous.hasData(key));
+
+  // not a space group: nothing changes
+  Molecule nonsense;
+  EXPECT_FALSE(SpaceGroups::setSpaceGroup(nonsense, "C 1"));
+  EXPECT_FALSE(SpaceGroups::setSpaceGroup(nonsense, ""));
+  EXPECT_EQ(nonsense.hallNumber(), 0);
+  EXPECT_FALSE(nonsense.hasData(key));
+
+  Molecule known;
+  known.setHallNumber(5);
+  EXPECT_FALSE(SpaceGroups::setSpaceGroup(known, "C 1"));
+  EXPECT_EQ(known.hallNumber(), 5);
+}

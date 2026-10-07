@@ -45,6 +45,11 @@ bool VariantMap::hasValue(const std::string& name) const
   return m_map.find(name) != m_map.end();
 }
 
+void VariantMap::remove(const std::string& name)
+{
+  m_map.erase(name);
+}
+
 VariantMap::iterator VariantMap::begin()
 {
   return m_map.begin();
