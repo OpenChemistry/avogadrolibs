@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <initializer_list>
 #include <map>
 #include <random>
 #include <string>
@@ -549,6 +550,59 @@ bool isOriginOrAxisSetting(const std::string& setting)
                               setting == "H" || setting == "R");
 }
 
+// The hall number a table entry is expected to resolve to. Three pairs of
+// entries (group 68) have identical operations and Hall symbols; the lower of
+// each pair is returned. Every other entry has a unique set of operations.
+unsigned short expectedHall(unsigned short hall)
+{
+  switch (hall) {
+    case 324:
+      return 322;
+    case 328:
+      return 326;
+    case 332:
+      return 330;
+    default:
+      return hall;
+  }
+}
+
+// A symbol and what it is expected to resolve to (see the checks below).
+struct SymbolCase
+{
+  const char* symbol;
+  unsigned short expected;
+};
+
+// hallNumber() of each symbol is the expected Hall number (0 if the symbol
+// does not name one setting).
+void expectHallNumbers(std::initializer_list<SymbolCase> cases)
+{
+  for (const auto& test : cases)
+    EXPECT_EQ(SpaceGroups::hallNumber(test.symbol), test.expected)
+      << "'" << test.symbol << "'";
+}
+
+// The international table number of the hallNumber() of each symbol is the
+// expected one.
+void expectGroupNumbers(std::initializer_list<SymbolCase> cases)
+{
+  for (const auto& test : cases)
+    EXPECT_EQ(
+      SpaceGroups::internationalNumber(SpaceGroups::hallNumber(test.symbol)),
+      test.expected)
+      << "'" << test.symbol << "'";
+}
+
+// internationalNumberFromString() of each symbol is the expected number.
+void expectNumbersFromStrings(std::initializer_list<SymbolCase> cases)
+{
+  for (const auto& test : cases)
+    EXPECT_EQ(SpaceGroups::internationalNumberFromString(test.symbol),
+              test.expected)
+      << "'" << test.symbol << "'";
+}
+
 } // namespace
 
 TEST(SpaceGroupTest, tableEntriesMapToThemselves)
@@ -556,18 +610,16 @@ TEST(SpaceGroupTest, tableEntriesMapToThemselves)
   // Every Hall symbol finds an entry with that Hall symbol. They are unique
   // but for three pairs (322/324, 326/328, 330/332: the same operations in
   // two descriptions of the same setting), where the first one is found.
-  for (unsigned short i = 1; i <= 530; ++i) {
+  for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
     unsigned short hall = SpaceGroups::hallNumber(SpaceGroups::hallSymbol(i));
-    EXPECT_LE(hall, i) << "hall symbol of " << i;
+    EXPECT_EQ(hall, expectedHall(i)) << "hall symbol of " << i;
     EXPECT_STREQ(SpaceGroups::hallSymbol(hall), SpaceGroups::hallSymbol(i))
       << "hall symbol of " << i;
-    if (i != 324 && i != 328 && i != 332)
-      EXPECT_EQ(hall, i) << "hall symbol of " << i;
   }
 
   // The other strings in the table: an exact match was and is the first
   // entry of the table with that string, which has the right number.
-  for (unsigned short i = 1; i <= 530; ++i) {
+  for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
     for (const std::string& symbol :
          { std::string(SpaceGroups::international(i)),
            std::string(SpaceGroups::internationalFull(i)),
@@ -587,10 +639,10 @@ TEST(SpaceGroupTest, openBabelStyleSymbols)
   // How many entries share each full symbol (origin choices and axis
   // permutations of the same group do).
   std::map<std::string, int> fullCount;
-  for (unsigned short i = 1; i <= 530; ++i)
+  for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i)
     ++fullCount[SpaceGroups::internationalFull(i)];
 
-  for (unsigned short i = 1; i <= 530; ++i) {
+  for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
     const std::string full = SpaceGroups::internationalFull(i);
     const std::string setting = SpaceGroups::setting(i);
     std::string spelled = withoutUnderscores(full);
@@ -632,116 +684,90 @@ TEST(SpaceGroupTest, openBabelStyleSymbols)
 TEST(SpaceGroupTest, screwAxesAndSettingsFromFiles)
 {
   // P 2_1/c with its three cell choices
-  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21/c 1"), 81);
-  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21/n 1"), 82);
-  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21/a 1"), 83);
-  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21 1"), 6);
-  EXPECT_EQ(SpaceGroups::hallNumber("P 21/c"), 81);
+  expectHallNumbers({ { "P 1 21/c 1", 81 },
+                      { "P 1 21/n 1", 82 },
+                      { "P 1 21/a 1", 83 },
+                      { "P 1 21 1", 6 },
+                      { "P 21/c", 81 } });
 
   // hexagonal, trigonal and tetragonal screw axes
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63/m m c")),
-    194);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63 m c")), 186);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63 c m")), 185);
-  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63")),
-            173);
-  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63/m")),
-            176);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 62 2 2")), 180);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 31 2 1")), 152);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 32 1 2")), 153);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 32 2 1")), 154);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 41 2 2")), 91);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 4 21 2")), 90);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 41 21 2")), 92);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 42/m n m")),
-    136);
+  expectGroupNumbers({ { "P 63/m m c", 194 },
+                       { "P 63 m c", 186 },
+                       { "P 63 c m", 185 },
+                       { "P 63", 173 },
+                       { "P 63/m", 176 },
+                       { "P 62 2 2", 180 },
+                       { "P 31 2 1", 152 },
+                       { "P 32 1 2", 153 },
+                       { "P 32 2 1", 154 },
+                       { "P 41 2 2", 91 },
+                       { "P 4 21 2", 90 },
+                       { "P 41 21 2", 92 },
+                       { "P 42/m n m", 136 } });
   // P 4_2/n m c has two origin choices, which the symbol does not tell
-  EXPECT_EQ(SpaceGroups::hallNumber("P 42/n m c"), 0);
-  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P 42/n m c"), 137);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 42/n m c :2")),
-    137);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("C 2 2 21")), 20);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P m n 21")), 31);
-  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 21 3")),
-            198);
-  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("I 21 3")),
-            199);
+  expectHallNumbers({ { "P 42/n m c", 0 } });
+  expectNumbersFromStrings({ { "P 42/n m c", 137 } });
+  expectGroupNumbers({ { "P 42/n m c :2", 137 },
+                       { "C 2 2 21", 20 },
+                       { "P m n 21", 31 },
+                       { "P 21 3", 198 },
+                       { "I 21 3", 199 } });
 
   // settings: origin choices and hexagonal / rhombohedral axes
-  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d :1"), 426);
-  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d :2"), 427);
-  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d:2"), 427);
-  EXPECT_EQ(SpaceGroups::hallNumber("F d -3 m :1"), 525);
-  EXPECT_EQ(SpaceGroups::hallNumber("F d -3 m :2"), 526);
-  EXPECT_EQ(SpaceGroups::hallNumber("R -3 m :H"), 458);
-  EXPECT_EQ(SpaceGroups::hallNumber("R -3 m :R"), 459);
-  EXPECT_EQ(SpaceGroups::hallNumber("R -3 :H"), 436);
-  EXPECT_EQ(SpaceGroups::hallNumber("R -3 :R"), 437);
-  EXPECT_EQ(SpaceGroups::hallNumber("R 3 :R"), 434);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("R -3 c :H")),
-    167);
-  EXPECT_EQ(
-    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("R 3 m :H")), 160);
+  expectHallNumbers({ { "I 41/a m d :1", 426 },
+                      { "I 41/a m d :2", 427 },
+                      { "I 41/a m d:2", 427 },
+                      { "F d -3 m :1", 525 },
+                      { "F d -3 m :2", 526 },
+                      { "R -3 m :H", 458 },
+                      { "R -3 m :R", 459 },
+                      { "R -3 :H", 436 },
+                      { "R -3 :R", 437 },
+                      { "R 3 :R", 434 } });
+  expectGroupNumbers({ { "R -3 c :H", 167 }, { "R 3 m :H", 160 } });
 
   // a setting that the group does not have
-  EXPECT_EQ(SpaceGroups::hallNumber("P n m a :1"), 0);
-  EXPECT_EQ(SpaceGroups::hallNumber("R -3 m :X"), 0);
+  expectHallNumbers({ { "P n m a :1", 0 }, { "R -3 m :X", 0 } });
 
   // Several origin choices and no setting: the new lookup does not guess.
-  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d"), 0);
-  EXPECT_EQ(SpaceGroups::internationalNumberFromString("I 41/a m d"), 141);
+  expectHallNumbers({ { "I 41/a m d", 0 } });
+  expectNumbersFromStrings({ { "I 41/a m d", 141 } });
   // (A string that matches the table exactly keeps its old result, the first
   // entry of the table, which is origin choice 1.)
-  EXPECT_EQ(SpaceGroups::hallNumber("I 4_1/a m d"), 426);
+  expectHallNumbers({ { "I 4_1/a m d", 426 } });
 }
 
 TEST(SpaceGroupTest, oldCubicNotation)
 {
   // Pre-1983 symbols and this table write "3" for the centrosymmetric
   // cubic groups that IT writes with -3
-  EXPECT_EQ(SpaceGroups::hallNumber("I m 3 m"), 529);
-  EXPECT_EQ(SpaceGroups::hallNumber("I m -3 m"), 529);
-  EXPECT_EQ(SpaceGroups::hallNumber("P m 3 m"), 517);
-  EXPECT_EQ(SpaceGroups::hallNumber("F m 3 m"), 523);
-  EXPECT_EQ(SpaceGroups::hallNumber("I m -3"), 500);
-  EXPECT_EQ(SpaceGroups::hallNumber("I a -3"), 502);
-  EXPECT_EQ(SpaceGroups::hallNumber("P a -3"), 501);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n 3 m :1"), 521);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n -3 m :2"), 522);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n -3 :1"), 495);
-  EXPECT_EQ(SpaceGroups::hallNumber("F d -3 :2"), 499);
+  expectHallNumbers({ { "I m 3 m", 529 },
+                      { "I m -3 m", 529 },
+                      { "P m 3 m", 517 },
+                      { "F m 3 m", 523 },
+                      { "I m -3", 500 },
+                      { "I a -3", 502 },
+                      { "P a -3", 501 },
+                      { "P n 3 m :1", 521 },
+                      { "P n -3 m :2", 522 },
+                      { "P n -3 :1", 495 },
+                      { "F d -3 :2", 499 } });
   // origin choice needed
-  EXPECT_EQ(SpaceGroups::hallNumber("P n 3 m"), 0);
-  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P n 3 m"), 224);
+  expectHallNumbers({ { "P n 3 m", 0 } });
+  expectNumbersFromStrings({ { "P n 3 m", 224 } });
 
   // the non-centrosymmetric cubic groups must keep their plain 3
-  EXPECT_EQ(SpaceGroups::hallNumber("P 2 3"), 489);
-  EXPECT_EQ(SpaceGroups::hallNumber("P 4 3 2"), 503);
-  EXPECT_EQ(SpaceGroups::hallNumber("P -4 3 m"), 511);
-  EXPECT_EQ(SpaceGroups::hallNumber("F -4 3 m"), 512);
-  EXPECT_EQ(SpaceGroups::hallNumber("I -4 3 d"), 516);
+  expectHallNumbers({ { "P 2 3", 489 },
+                      { "P 4 3 2", 503 },
+                      { "P -4 3 m", 511 },
+                      { "F -4 3 m", 512 },
+                      { "I -4 3 d", 516 } });
 }
 
 TEST(SpaceGroupTest, internationalNumbers)
 {
   std::map<unsigned short, std::vector<unsigned short>> halls;
-  for (unsigned short i = 1; i <= 530; ++i)
+  for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i)
     halls[SpaceGroups::internationalNumber(i)].push_back(i);
   ASSERT_EQ(halls.size(), 230u);
 
@@ -793,23 +819,6 @@ std::vector<std::string> tableOperationStrings(unsigned short hall)
 {
   return split(SpaceGroupTable::Avogadro::Core::space_group_transforms[hall],
                ' ');
-}
-
-// The hall number a table entry is expected to resolve to. Three pairs of
-// entries (group 68) have identical operations and Hall symbols; the lower of
-// each pair is returned. Every other entry has a unique set of operations.
-unsigned short expectedHall(unsigned short hall)
-{
-  switch (hall) {
-    case 324:
-      return 322;
-    case 328:
-      return 326;
-    case 332:
-      return 330;
-    default:
-      return hall;
-  }
 }
 
 // Respell "-x+1/2,y,1/2-z" with the terms of every coordinate reversed, and
@@ -879,7 +888,7 @@ std::string respell(const std::string& op, bool decimals, bool upper,
 TEST(SpaceGroupTest, hallSymbolLookup)
 {
   // every Hall symbol of the table finds an entry with that symbol
-  for (unsigned short hall = 1; hall <= 530; ++hall) {
+  for (unsigned short hall = 1; hall <= SpaceGroups::lastHallNumber; ++hall) {
     unsigned short found =
       SpaceGroups::hallNumberFromHallSymbol(SpaceGroups::hallSymbol(hall));
     EXPECT_STREQ(SpaceGroups::hallSymbol(found), SpaceGroups::hallSymbol(hall))
@@ -918,33 +927,32 @@ TEST(SpaceGroupTest, originChoiceWithPermutedAxes)
 {
   // The table's setting is "1cab", "2cab", ... where the symbol has permuted
   // axes; a file only gives the origin choice
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:1"), 235);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:2"), 236);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b :2"), 236);
-  EXPECT_EQ(SpaceGroups::hallNumber("P c n a:1"), 237);
-  EXPECT_EQ(SpaceGroups::hallNumber("P c n a:2"), 238);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n m m:1"), 280);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n m m:2"), 281);
-  EXPECT_EQ(SpaceGroups::hallNumber("P m n m:1"), 282);
-  EXPECT_EQ(SpaceGroups::hallNumber("P m n m:2"), 283);
-  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P m n m:2"), 59);
+  expectHallNumbers({ { "P n c b:1", 235 },
+                      { "P n c b:2", 236 },
+                      { "P n c b :2", 236 },
+                      { "P c n a:1", 237 },
+                      { "P c n a:2", 238 },
+                      { "P n m m:1", 280 },
+                      { "P n m m:2", 281 },
+                      { "P m n m:1", 282 },
+                      { "P m n m:2", 283 } });
+  expectNumbersFromStrings({ { "P m n m:2", 59 } });
 
   // a digit that matches no setting, or no digit at all
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:3"), 0);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:0"), 0);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:12"), 0);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:cab"), 0);
-  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P n c b:3"), 50);
+  expectHallNumbers({ { "P n c b:3", 0 },
+                      { "P n c b:0", 0 },
+                      { "P n c b:12", 0 },
+                      { "P n c b:cab", 0 } });
+  expectNumbersFromStrings({ { "P n c b:3", 50 } });
 
   // an exact setting still wins over the first-digit rule
-  EXPECT_EQ(SpaceGroups::hallNumber("P b a n:1"), 233);
-  EXPECT_EQ(SpaceGroups::hallNumber("P b a n:2"), 234);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:1cab"), 235);
-  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:2cab"), 236);
+  expectHallNumbers({ { "P b a n:1", 233 },
+                      { "P b a n:2", 234 },
+                      { "P n c b:1cab", 235 },
+                      { "P n c b:2cab", 236 } });
 
   // other symbols and settings are not affected
-  EXPECT_EQ(SpaceGroups::hallNumber("P n m a:1"), 0);
-  EXPECT_EQ(SpaceGroups::hallNumber("C 2/c:1"), 0);
+  expectHallNumbers({ { "P n m a:1", 0 }, { "C 2/c:1", 0 } });
 }
 
 namespace {
@@ -1014,9 +1022,11 @@ TEST(SpaceGroupTest, preTwoThousandTwoGlideNames)
     const unsigned short found = SpaceGroups::hallNumber(symbol);
     ASSERT_NE(found, 0) << symbol;
     EXPECT_EQ(found, expectedHall(hall)) << symbol;
-    EXPECT_EQ(SpaceGroupTable::Avogadro::Core::space_group_transforms[found],
-              ops)
-      << symbol;
+    // the lower number of 322/324-style pairs has the same operations
+    if (found != hall)
+      EXPECT_EQ(SpaceGroupTable::Avogadro::Core::space_group_transforms[found],
+                ops)
+        << symbol;
     EXPECT_EQ(SpaceGroups::internationalNumber(found),
               SpaceGroups::internationalNumber(hall))
       << symbol;
@@ -1154,13 +1164,6 @@ TEST(SpaceGroupTest, spglibHallSymbolSpellings)
   for (const auto& test : hallAliasCases) {
     EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol(test.symbol), test.hall)
       << test.symbol;
-    // the same operations as the table entry
-    const unsigned short found =
-      SpaceGroups::hallNumberFromHallSymbol(test.symbol);
-    EXPECT_EQ(
-      SpaceGroupTable::Avogadro::Core::space_group_transforms[found],
-      SpaceGroupTable::Avogadro::Core::space_group_transforms[test.hall])
-      << test.symbol;
     // spacing is not significant
     EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol(
                 "  " + std::string(test.symbol) + " \n"),
@@ -1187,7 +1190,7 @@ TEST(SpaceGroupTest, spglibHallSymbolSpellings)
 
 TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
 {
-  for (unsigned short hall = 1; hall <= 530; ++hall) {
+  for (unsigned short hall = 1; hall <= SpaceGroups::lastHallNumber; ++hall) {
     std::vector<std::string> ops = tableOperationStrings(hall);
     ASSERT_FALSE(ops.empty()) << hall;
     EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
@@ -1198,7 +1201,7 @@ TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
 TEST(SpaceGroupTest, transformsInAnyOrderAndSpelling)
 {
   std::mt19937 rng(20261006);
-  for (unsigned short hall = 1; hall <= 530; ++hall) {
+  for (unsigned short hall = 1; hall <= SpaceGroups::lastHallNumber; ++hall) {
     std::vector<std::string> base = tableOperationStrings(hall);
 
     auto expectResolved = [&](const std::vector<std::string>& ops,
@@ -1267,7 +1270,7 @@ TEST(SpaceGroupTest, transformsCifSpellings)
 
 TEST(SpaceGroupTest, transformsWrongSetsAreNotMatched)
 {
-  for (unsigned short hall = 2; hall <= 530; ++hall) {
+  for (unsigned short hall = 2; hall <= SpaceGroups::lastHallNumber; ++hall) {
     std::vector<std::string> base = tableOperationStrings(hall);
 
     // one fewer operation: either not a space group or a different one

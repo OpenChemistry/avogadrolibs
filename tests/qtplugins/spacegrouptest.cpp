@@ -9,8 +9,8 @@
 
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/qtgui/utilities.h>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QAbstractButton>
@@ -33,6 +33,7 @@ using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
 using Avogadro::QtPluginsTests::describe;
 using Avogadro::QtPluginsTests::MoleculeSnapshot;
+namespace Utilities = Avogadro::QtGui::Utilities;
 
 namespace {
 
@@ -90,23 +91,18 @@ protected:
   bool m_seen = false;
 };
 
-// Sets the property avogadroapp sets for --skip-dialogs, restores it after
+// Sets what avogadroapp sets for --skip-dialogs, restores it after
 class SkipDialogs
 {
 public:
-  explicit SkipDialogs(bool skip)
-    : m_previous(QCoreApplication::instance()->property("avogadro.skipDialogs"))
+  explicit SkipDialogs(bool skip) : m_previous(Utilities::dialogsSkipped())
   {
-    QCoreApplication::instance()->setProperty("avogadro.skipDialogs", skip);
+    Utilities::setDialogsSkipped(skip);
   }
-  ~SkipDialogs()
-  {
-    QCoreApplication::instance()->setProperty("avogadro.skipDialogs",
-                                              m_previous);
-  }
+  ~SkipDialogs() { Utilities::setDialogsSkipped(m_previous); }
 
 private:
-  QVariant m_previous;
+  bool m_previous;
 };
 
 class SpaceGroupCommandTest : public ::testing::Test
@@ -171,8 +167,41 @@ protected:
     EXPECT_EQ(m_harness.molecule()->hallNumber(), hallBefore);
   }
 
+  // The primitive (60 degree) fcc cell of lattice constant NaClA with one Zn
+  // atom, which a centered space group does not expect.
+  void buildPrimitiveFcc(unsigned short hallNumber)
+  {
+    m_harness.buildEmpty();
+    auto* mol = m_harness.molecule();
+    const double h = 0.5 * NaClA;
+    mol->setUnitCell(
+      new UnitCell(Vector3(0.0, h, h), Vector3(h, 0.0, h), Vector3(h, h, 0.0)));
+    mol->addAtom(30, Vector3(0.0, 0.0, 0.0));
+    mol->setHallNumber(hallNumber);
+  }
+
+  // Run a command that has to succeed without a dialog, leaving the molecule
+  // with @p atoms atoms (and the space group @p hall, unless that is 0).
+  void expectFilled(const QString& command, const QVariantMap& options,
+                    unsigned int atoms, unsigned short hall = 0,
+                    const std::string& what = std::string())
+  {
+    bool dialogSeen = false;
+    const CommandOutcome out = runWatched(command, options, &dialogSeen);
+    EXPECT_FALSE(dialogSeen) << what;
+    EXPECT_EQ(out.status, CommandStatus::Finished)
+      << what << ": " << describe(out);
+    EXPECT_TRUE(out.clean()) << what << ": " << describe(out);
+    EXPECT_EQ(atomCount(), atoms) << what;
+    if (hall != 0)
+      EXPECT_EQ(m_harness.molecule()->hallNumber(), hall) << what;
+  }
+
   SpaceGroup m_plugin;
-  CommandTestHarness m_harness;
+  // Every command of the plugin finishes before run() returns, so there are
+  // no late signals to wait for: the harness only needs to process events
+  // once after each command, not for its default grace period (50 ms).
+  CommandTestHarness m_harness{ 5000, 1 };
 };
 
 } // namespace
@@ -199,28 +228,16 @@ TEST_F(SpaceGroupCommandTest, fillWithHallNumber)
   buildNaCl();
   EXPECT_EQ(SpaceGroups::internationalNumber(NaClHall), 225);
 
-  bool dialogSeen = false;
   QVariantMap options;
   options["hallNumber"] = NaClHall;
-  CommandOutcome out =
-    runWatched("fillTranslationalCell", options, &dialogSeen);
-  EXPECT_FALSE(dialogSeen);
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_TRUE(out.clean()) << describe(out);
   // 4 Na + 4 Cl: the fcc translations of each atom, nothing on the boundary
-  EXPECT_EQ(atomCount(), 8u);
-  EXPECT_EQ(m_harness.molecule()->hallNumber(), NaClHall);
+  expectFilled("fillTranslationalCell", options, 8u, NaClHall);
 
   // fillUnitCell also copies the atoms on the cell boundary: Na (0,0,0) gets
   // 7 copies, the three Na at a face centre 1 each, the three Cl on an edge
   // centre 3 each, and Cl (1/2,1/2,1/2) none: 8 + 7 + 3 + 9 = 27.
   buildNaCl();
-  out = runWatched("fillUnitCell", options, &dialogSeen);
-  EXPECT_FALSE(dialogSeen);
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_TRUE(out.clean()) << describe(out);
-  EXPECT_EQ(atomCount(), 27u);
-  EXPECT_EQ(m_harness.molecule()->hallNumber(), NaClHall);
+  expectFilled("fillUnitCell", options, 27u, NaClHall);
 
   // and it is one step on the undo stack
   EXPECT_TRUE(m_harness.undo().isEmpty());
@@ -231,36 +248,19 @@ TEST_F(SpaceGroupCommandTest, fillWithSpaceGroupSymbol)
 {
   for (const char* symbol : { "F m -3 m", "F m 3 m", "Fm-3m", "225" }) {
     buildNaCl();
-    bool dialogSeen = false;
     QVariantMap options;
     options["spaceGroup"] = QString(symbol);
-    const CommandOutcome out =
-      runWatched("fillTranslationalCell", options, &dialogSeen);
-    EXPECT_FALSE(dialogSeen) << symbol;
-    EXPECT_EQ(out.status, CommandStatus::Finished)
-      << symbol << ": " << describe(out);
-    EXPECT_EQ(atomCount(), 8u) << symbol;
-    EXPECT_EQ(m_harness.molecule()->hallNumber(), NaClHall) << symbol;
+    expectFilled("fillTranslationalCell", options, 8u, NaClHall, symbol);
   }
 }
 
 TEST_F(SpaceGroupCommandTest, storedHallNumberNeedsNoParameter)
 {
   buildNaCl(NaClHall);
-  bool dialogSeen = false;
-  const CommandOutcome out =
-    runWatched("fillTranslationalCell", QVariantMap(), &dialogSeen);
-  EXPECT_FALSE(dialogSeen);
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_TRUE(out.clean()) << describe(out);
-  EXPECT_EQ(atomCount(), 8u);
+  expectFilled("fillTranslationalCell", QVariantMap(), 8u);
 
   buildNaCl(NaClHall);
-  const CommandOutcome out2 =
-    runWatched("fillUnitCell", QVariantMap(), &dialogSeen);
-  EXPECT_FALSE(dialogSeen);
-  EXPECT_EQ(out2.status, CommandStatus::Finished) << describe(out2);
-  EXPECT_EQ(atomCount(), 27u);
+  expectFilled("fillUnitCell", QVariantMap(), 27u);
 }
 
 TEST_F(SpaceGroupCommandTest, explicitParameterWinsOverStoredHallNumber)
@@ -269,18 +269,12 @@ TEST_F(SpaceGroupCommandTest, explicitParameterWinsOverStoredHallNumber)
   buildNaCl(1);
   QVariantMap options;
   options["hallNumber"] = NaClHall;
-  const CommandOutcome out = m_harness.run("fillTranslationalCell", options);
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_EQ(atomCount(), 8u);
-  EXPECT_EQ(m_harness.molecule()->hallNumber(), NaClHall);
+  expectFilled("fillTranslationalCell", options, 8u, NaClHall);
 
   buildNaCl(1);
   QVariantMap symbolOptions;
   symbolOptions["spaceGroup"] = QString("F m -3 m");
-  const CommandOutcome out2 =
-    m_harness.run("fillTranslationalCell", symbolOptions);
-  EXPECT_EQ(out2.status, CommandStatus::Finished) << describe(out2);
-  EXPECT_EQ(atomCount(), 8u);
+  expectFilled("fillTranslationalCell", symbolOptions, 8u);
 }
 
 TEST_F(SpaceGroupCommandTest, missingSpaceGroupFailsWithoutDialog)
@@ -308,9 +302,9 @@ TEST_F(SpaceGroupCommandTest, invalidHallNumberFails)
   for (unsigned short stored : { 0, 523 }) {
     buildNaCl(stored);
     for (const QVariant& value :
-         { QVariant(0), QVariant(531), QVariant(-1), QVariant(1000),
-           QVariant(523.5), QVariant(QString("abc")), QVariant(true),
-           QVariant(QString("523")), QVariant() }) {
+         { QVariant(0), QVariant(SpaceGroups::lastHallNumber + 1), QVariant(-1),
+           QVariant(1000), QVariant(523.5), QVariant(QString("abc")),
+           QVariant(true), QVariant(QString("523")), QVariant() }) {
       QVariantMap options;
       options["hallNumber"] = value;
       expectFailure("fillTranslationalCell", options, "hallNumber");
@@ -357,19 +351,10 @@ TEST_F(SpaceGroupCommandTest, primitiveCellDoesNotAskFromCommand)
 {
   ASSERT_EQ(SpaceGroups::hallSymbol(ZincBlendeHall)[0], 'F');
   // fcc primitive cell (60 degree angles) with a centered space group
-  auto buildPrimitive = [this](unsigned short hallNumber) {
-    m_harness.buildEmpty();
-    auto* mol = m_harness.molecule();
-    const double h = 0.5 * NaClA;
-    mol->setUnitCell(
-      new UnitCell(Vector3(0.0, h, h), Vector3(h, 0.0, h), Vector3(h, h, 0.0)));
-    mol->addAtom(30, Vector3(0.0, 0.0, 0.0));
-    mol->setHallNumber(hallNumber);
-  };
 
   // The menu action asks whether to conventionalize first (here the watcher
   // cancels it): that is the dialog a command must not show.
-  buildPrimitive(ZincBlendeHall);
+  buildPrimitiveFcc(ZincBlendeHall);
   QAction* action = actionWithPriority(185); // Fill Unit Cell...
   ASSERT_NE(action, nullptr);
   action->setEnabled(true);
@@ -380,7 +365,7 @@ TEST_F(SpaceGroupCommandTest, primitiveCellDoesNotAskFromCommand)
   }
   EXPECT_EQ(atomCount(), 1u);
 
-  buildPrimitive(ZincBlendeHall);
+  buildPrimitiveFcc(ZincBlendeHall);
   bool dialogSeen = false;
   const CommandOutcome out =
     runWatched("fillUnitCell", QVariantMap(), &dialogSeen);
@@ -417,17 +402,11 @@ TEST_F(SpaceGroupCommandTest, noPromptWhenDialogsAreSkipped)
 
   // A centered space group on what looks like a primitive cell would ask
   // whether to conventionalize: with dialogs skipped, nothing is filled.
-  m_harness.buildEmpty();
-  auto* mol = m_harness.molecule();
-  const double h = 0.5 * NaClA;
-  mol->setUnitCell(
-    new UnitCell(Vector3(0.0, h, h), Vector3(h, 0.0, h), Vector3(h, h, 0.0)));
-  mol->addAtom(30, Vector3(0.0, 0.0, 0.0));
-  mol->setHallNumber(ZincBlendeHall);
+  buildPrimitiveFcc(ZincBlendeHall);
   {
     DialogWatcher watcher;
     m_harness.setPluginMolecule(nullptr);
-    m_harness.setPluginMolecule(mol);
+    m_harness.setPluginMolecule(m_harness.molecule());
     dialogSeen = watcher.dialogSeen();
   }
   EXPECT_FALSE(dialogSeen);

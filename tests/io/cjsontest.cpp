@@ -1184,51 +1184,46 @@ TEST(CjsonTest, spaceGroupFromOpenBabel)
 {
   CjsonFormat cjson;
 
-  // a spelling that is not the table's: screw axis without underscore
-  Molecule molecule;
-  ASSERT_TRUE(
-    cjson.readString(crystalWithSpaceGroup("\"P 63/m m c\""), molecule));
-  EXPECT_EQ(molecule.hallNumber(), 488);
-  EXPECT_FALSE(molecule.hasData(SpaceGroups::internationalNumberKey()));
+  // What a "spaceGroup" in the unit cell gives: the Hall number if one
+  // setting fits, otherwise the international number that is kept (0: none).
+  struct Case
+  {
+    const char* description;
+    const char* spaceGroupJson;
+    unsigned short hallNumber;
+    int keptNumber;
+  };
+  const Case cases[] = {
+    // a spelling that is not the table's: screw axis without underscore
+    { "screw axis without underscore", "\"P 63/m m c\"", 488, 0 },
+    // a symbol with a setting suffix
+    { "setting suffix", "\"F d -3 m :2\"", 526, 0 },
+    // a bare number with one setting is resolved ...
+    { "number with one setting", "\"229\"", 529, 0 },
+    // ... a number with several is not guessed, but is remembered
+    { "number with several settings", "\"74\"", 0, 74 },
+    // the same for a number that is a JSON number
+    { "JSON number", "74", 0, 74 },
+    // a symbol that fits several origins: the number is known as well
+    { "symbol with several origins", "\"P n 3 m\"", 0, 224 },
+    // nonsense leaves nothing
+    { "nonsense", "\"C 1\"", 0, 0 },
+  };
+  for (const Case& test : cases) {
+    SCOPED_TRACE(test.description);
+    Molecule molecule;
+    ASSERT_TRUE(
+      cjson.readString(crystalWithSpaceGroup(test.spaceGroupJson), molecule));
+    EXPECT_EQ(molecule.hallNumber(), test.hallNumber);
+    const char* key = SpaceGroups::internationalNumberKey();
+    EXPECT_EQ(molecule.hasData(key), test.keptNumber != 0);
+    if (test.keptNumber != 0)
+      EXPECT_EQ(molecule.data(key).toInt(), test.keptNumber);
+  }
 
-  // a symbol with a setting suffix
-  Molecule suffixed;
-  ASSERT_TRUE(
-    cjson.readString(crystalWithSpaceGroup("\"F d -3 m :2\""), suffixed));
-  EXPECT_EQ(suffixed.hallNumber(), 526);
-
-  // a bare number with one setting is resolved ...
-  Molecule unique;
-  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"229\""), unique));
-  EXPECT_EQ(unique.hallNumber(), 529);
-  EXPECT_FALSE(unique.hasData(SpaceGroups::internationalNumberKey()));
-
-  // ... a number with several is not guessed, but is remembered
   Molecule ambiguous;
   ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"74\""), ambiguous));
-  EXPECT_EQ(ambiguous.hallNumber(), 0);
   ASSERT_TRUE(ambiguous.hasData(SpaceGroups::internationalNumberKey()));
-  EXPECT_EQ(ambiguous.data(SpaceGroups::internationalNumberKey()).toInt(), 74);
-
-  // the same for a number that is a JSON number
-  Molecule asNumber;
-  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("74"), asNumber));
-  EXPECT_EQ(asNumber.hallNumber(), 0);
-  ASSERT_TRUE(asNumber.hasData(SpaceGroups::internationalNumberKey()));
-  EXPECT_EQ(asNumber.data(SpaceGroups::internationalNumberKey()).toInt(), 74);
-
-  // a symbol that fits several origins: the number is known as well
-  Molecule noOrigin;
-  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"P n 3 m\""), noOrigin));
-  EXPECT_EQ(noOrigin.hallNumber(), 0);
-  ASSERT_TRUE(noOrigin.hasData(SpaceGroups::internationalNumberKey()));
-  EXPECT_EQ(noOrigin.data(SpaceGroups::internationalNumberKey()).toInt(), 224);
-
-  // nonsense leaves nothing
-  Molecule nonsense;
-  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"C 1\""), nonsense));
-  EXPECT_EQ(nonsense.hallNumber(), 0);
-  EXPECT_FALSE(nonsense.hasData(SpaceGroups::internationalNumberKey()));
 
   // the remembered number is not written out
   std::string output;
