@@ -15,40 +15,36 @@
 #include <array>
 #include <cctype> // for isdigit(), tolower()
 #include <cmath>  // for floor()
+#include <functional>
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 namespace Avogadro::Core {
 
 namespace {
 
-// The hall numbers run from 1 to 530; the table has an empty entry 0.
-constexpr unsigned short lastHallNumber = 530;
-
 // The "international" column holds the short symbol followed by equivalent
-// spellings, e.g. "P 2_1/c = P 1 2_1/c 1".
+// spellings, e.g. "P 2_1/c = P 1 2_1/c 1". The table number and the compact
+// symbol ("P2_1/c") are read straight from the arrays of the table.
 struct SymbolEntry
 {
   std::string full;                 // normalized international_full
   std::vector<std::string> aliases; // normalized parts of international
-  std::string compact;              // international_short, e.g. "P2_1/c"
   std::string setting;
-  unsigned short number = 0; // international table number
 };
 
-// The spelling of a Hall symbol in the table: runs of white space collapsed to
-// one space, the ends trimmed, and '=' where a file has a double quote.
-std::string normalizeHallSymbol(const std::string& symbol)
+// The tokens of a symbol, separated by single spaces.
+std::string joinTokens(const std::vector<std::string>& tokens)
 {
   std::string result;
-  for (const auto& token : splitWhitespace(symbol)) {
+  for (const auto& token : tokens) {
     if (!result.empty())
       result.push_back(' ');
     result += token;
   }
-  std::replace(result.begin(), result.end(), '"', '=');
   return result;
 }
 
@@ -86,25 +82,17 @@ std::string normalizeSymbol(const std::string& symbol)
     tokens[2] = "-3";
   }
 
-  std::string result;
-  for (const auto& token : tokens) {
-    if (!result.empty())
-      result.push_back(' ');
-    result += token;
-  }
-  return result;
+  return joinTokens(tokens);
 }
 
 const std::vector<SymbolEntry>& symbolTable()
 {
   static const std::vector<SymbolEntry> table = [] {
-    std::vector<SymbolEntry> entries(531);
-    for (unsigned short i = 1; i < 531; ++i) {
+    std::vector<SymbolEntry> entries(SpaceGroups::lastHallNumber + 1);
+    for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
       SymbolEntry& entry = entries[i];
       entry.full = normalizeSymbol(space_group_international_full[i]);
-      entry.compact = space_group_international_short[i];
       entry.setting = space_group_setting[i];
-      entry.number = space_group_international_number[i];
 
       const std::string international = space_group_international[i];
       const std::string separator = " = ";
@@ -123,13 +111,29 @@ const std::vector<SymbolEntry>& symbolTable()
   return table;
 }
 
+// The digit that starts the setting of an origin choice ("1", "2", "1cab").
+bool isOriginDigit(char c)
+{
+  return c == '1' || c == '2';
+}
+
 // Settings that select an origin choice or a hexagonal/rhombohedral axis
 // system ("1", "2", "1cab", "H", "R", ...). Unlike the cell choices of the
 // monoclinic groups, these have no conventional default we may assume.
 bool isOriginOrAxisSetting(const std::string& setting)
 {
-  return !setting.empty() && (setting[0] == '1' || setting[0] == '2' ||
-                              setting == "H" || setting == "R");
+  return !setting.empty() &&
+         (isOriginDigit(setting[0]) || setting == "H" || setting == "R");
+}
+
+// Whether all of the (non-empty list of) entries have the same Hall symbol,
+// and so the same operations.
+bool sameHallSymbol(const std::vector<unsigned short>& halls)
+{
+  return std::all_of(halls.begin(), halls.end(), [&](unsigned short hall) {
+    return std::string(space_group_hall_symbol[hall]) ==
+           space_group_hall_symbol[halls.front()];
+  });
 }
 
 // spglib spells 57 of the Hall symbols differently from the table, e.g.
@@ -206,10 +210,26 @@ constexpr HallAlias hallAliases[] = {
 };
 // clang-format on
 
-// The Hall number of one of the spglib spellings above, or 0. The symbol has
-// to be spelled as in the list (white space is not normalized here).
-unsigned short aliasHallNumber(const std::string& symbol)
+// The first Hall number whose entry in this column of the table is exactly
+// the symbol, or 0.
+unsigned short firstExactMatch(const char* const* column,
+                               const std::string& symbol)
 {
+  for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
+    if (symbol == column[i])
+      return i;
+  }
+  return 0;
+}
+
+// The Hall number of a Hall symbol of the table, or of one of the spglib
+// spellings above, or 0. The symbol has to be spelled as in the table or the
+// list (white space is not normalized here).
+unsigned short exactHallSymbol(const std::string& symbol)
+{
+  if (unsigned short hall = firstExactMatch(space_group_hall_symbol, symbol))
+    return hall;
+
   for (const auto& alias : hallAliases) {
     if (symbol == alias.symbol)
       return alias.hall;
@@ -217,39 +237,19 @@ unsigned short aliasHallNumber(const std::string& symbol)
   return 0;
 }
 
-// Exact comparison against the strings in the table
+// Exact comparison against the strings in the table. The first matching entry
+// of a column wins, and the columns are tried in this order.
 unsigned short exactHallNumber(const std::string& sg)
 {
-  const unsigned short hall_count = 531; // 530 but first one is empty
-
-  // space_group_hall_symbol
-  for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_hall_symbol[i])
-      return i;
-  }
-
-  // the spellings of spglib's Hall symbols that differ from the table
-  if (unsigned short hall = aliasHallNumber(sg))
+  if (unsigned short hall = exactHallSymbol(sg))
     return hall;
 
-  // space_group_international
-  for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_international[i])
-      return i;
+  for (const char* const* column :
+       { space_group_international, space_group_international_short,
+         space_group_international_full }) {
+    if (unsigned short hall = firstExactMatch(column, sg))
+      return hall;
   }
-
-  // space_group_international_short
-  for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_international_short[i])
-      return i;
-  }
-
-  // space_group_international_full
-  for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_international_full[i])
-      return i;
-  }
-
   return 0;
 }
 
@@ -341,13 +341,25 @@ constexpr OldName oldNames[] = {
 };
 // clang-format on
 
+// The pre-2002 names, normalized once, with their Hall numbers.
+const std::vector<std::pair<std::string, unsigned short>>& normalizedOldNames()
+{
+  static const std::vector<std::pair<std::string, unsigned short>> names = [] {
+    std::vector<std::pair<std::string, unsigned short>> result;
+    for (const auto& name : oldNames)
+      result.emplace_back(normalizeSymbol(name.symbol), name.hall);
+    return result;
+  }();
+  return names;
+}
+
 // The Hall numbers whose pre-2002 name is the (normalized) symbol.
 std::vector<unsigned short> oldNameHalls(const std::string& key)
 {
   std::vector<unsigned short> halls;
-  for (const auto& name : oldNames) {
-    if (normalizeSymbol(name.symbol) == key)
-      halls.push_back(name.hall);
+  for (const auto& name : normalizedOldNames()) {
+    if (name.first == key)
+      halls.push_back(name.second);
   }
   return halls;
 }
@@ -359,34 +371,28 @@ std::vector<unsigned short> matchSymbol(const std::string& symbol)
 {
   const auto& table = symbolTable();
   const std::string key = normalizeSymbol(symbol);
-  std::vector<unsigned short> matches;
   if (key.empty())
-    return matches;
+    return {};
 
-  for (unsigned short i = 1; i < 531; ++i) {
-    if (table[i].full == key)
-      matches.push_back(i);
-  }
-  if (!matches.empty())
-    return matches;
-
-  for (unsigned short i = 1; i < 531; ++i) {
-    for (const auto& alias : table[i].aliases) {
-      if (alias == key) {
+  const std::array<std::function<bool(unsigned short)>, 3> tiers = { {
+    [&](unsigned short i) { return table[i].full == key; },
+    [&](unsigned short i) {
+      return std::find(table[i].aliases.begin(), table[i].aliases.end(), key) !=
+             table[i].aliases.end();
+    },
+    [&](unsigned short i) {
+      return symbol == space_group_international_short[i];
+    },
+  } };
+  for (const auto& isMatch : tiers) {
+    std::vector<unsigned short> matches;
+    for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
+      if (isMatch(i))
         matches.push_back(i);
-        break;
-      }
     }
+    if (!matches.empty())
+      return matches;
   }
-  if (!matches.empty())
-    return matches;
-
-  for (unsigned short i = 1; i < 531; ++i) {
-    if (table[i].compact == symbol)
-      matches.push_back(i);
-  }
-  if (!matches.empty())
-    return matches;
 
   return oldNameHalls(key);
 }
@@ -402,8 +408,8 @@ Resolved resolveSymbol(const std::string& sg)
   if (parseBareNumber(sg, bare)) {
     result.number = bare;
     unsigned short count = 0;
-    for (unsigned short i = 1; i < 531; ++i) {
-      if (table[i].number == bare) {
+    for (unsigned short i = 1; i <= SpaceGroups::lastHallNumber; ++i) {
+      if (space_group_international_number[i] == bare) {
         ++count;
         result.hall = i;
       }
@@ -423,14 +429,15 @@ Resolved resolveSymbol(const std::string& sg)
     setting = trimmed(sg.substr(colon + 1));
   }
 
-  std::vector<unsigned short> matches = matchSymbol(symbol);
+  const std::vector<unsigned short> matches = matchSymbol(symbol);
   if (matches.empty())
     return result;
 
   // the symbol has to agree on the table number, or it is not a symbol
-  unsigned short number = table[matches.front()].number;
+  const unsigned short number =
+    space_group_international_number[matches.front()];
   for (unsigned short hall : matches) {
-    if (table[hall].number != number)
+    if (space_group_international_number[hall] != number)
       return result;
   }
   result.number = number;
@@ -438,50 +445,38 @@ Resolved resolveSymbol(const std::string& sg)
   if (!setting.empty()) {
     // Hall number 331 is spelled "B b c b" in the table, which is also the
     // pre-2002 name of 330 and 332 ("B b c b:1"). Without them the setting
-    // could not select between the three.
-    std::vector<unsigned short> candidates = matches;
-    for (unsigned short hall : oldNameHalls(normalizeSymbol(symbol))) {
-      if (table[hall].number == number &&
-          std::find(candidates.begin(), candidates.end(), hall) ==
-            candidates.end())
-        candidates.push_back(hall);
-    }
-    std::sort(candidates.begin(), candidates.end());
+    // could not select between the three. No pre-2002 name is the name of
+    // another group in the table, so the list of old names, in ascending
+    // order, is complete whenever there is one.
+    const std::vector<unsigned short> oldHalls =
+      oldNameHalls(normalizeSymbol(symbol));
+    const std::vector<unsigned short>& candidates =
+      oldHalls.empty() ? matches : oldHalls;
 
     std::vector<unsigned short> filtered;
     for (unsigned short hall : candidates) {
       if (caseInsensitiveEquals(table[hall].setting, setting))
         filtered.push_back(hall);
     }
-    if (filtered.size() == 1) {
-      result.hall = filtered.front();
-      return result;
-    }
-    if (!filtered.empty())
-      return result;
 
     // An origin choice written as just "1" or "2" with a symbol whose table
     // setting also permutes the axes ("P n c b:1" for "1cab"). The symbol has
     // already narrowed the candidates to one axis permutation (or to
     // permutations with the same operations), so the digit is enough to
-    // select the origin. If the origin is still shared by settings with the
-    // same Hall symbol (and so the same operations, as for "A b a a:1" = 326
-    // and 328) the first of them is used, as elsewhere.
-    if (setting.size() == 1 && (setting[0] == '1' || setting[0] == '2')) {
+    // select the origin.
+    if (filtered.empty() && setting.size() == 1 && isOriginDigit(setting[0])) {
       for (unsigned short hall : candidates) {
         if (!table[hall].setting.empty() &&
             table[hall].setting[0] == setting[0])
           filtered.push_back(hall);
       }
-      bool sameOperations = !filtered.empty();
-      for (unsigned short hall : filtered) {
-        if (std::string(space_group_hall_symbol[hall]) !=
-            space_group_hall_symbol[filtered.front()])
-          sameOperations = false;
-      }
-      if (sameOperations)
-        result.hall = filtered.front();
     }
+
+    // If the origin is still shared by settings with the same Hall symbol
+    // (and so the same operations, as for "A b a a:1" = 326 and 328) the
+    // first of them is used, as elsewhere.
+    if (!filtered.empty() && sameHallSymbol(filtered))
+      result.hall = filtered.front();
     return result;
   }
 
@@ -501,19 +496,36 @@ Resolved resolveSymbol(const std::string& sg)
   return result;
 }
 
-} // namespace
-
-unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
+// Resolve a space group string once: the exact strings of the table first,
+// then everything resolveSymbol() understands. The hall number is 0 if the
+// string fits several settings; the number is 0 if it is not recognized.
+Resolved lookup(const std::string& spaceGroup)
 {
   // some files use " instead of = for the space group symbol
   std::string sg = trimmed(spaceGroup);
   std::replace(sg.begin(), sg.end(), '"', '=');
 
-  unsigned short hall = exactHallNumber(sg);
-  if (hall != 0)
-    return hall;
+  if (unsigned short hall = exactHallNumber(sg)) {
+    Resolved result;
+    result.hall = hall;
+    result.number = space_group_international_number[hall];
+    return result;
+  }
+  return resolveSymbol(sg);
+}
 
-  return resolveSymbol(sg).hall;
+} // namespace
+
+unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
+{
+  return lookup(spaceGroup).hall;
+}
+
+std::string SpaceGroups::normalizeHallSymbol(const std::string& hallSymbol)
+{
+  std::string result = joinTokens(splitWhitespace(hallSymbol));
+  std::replace(result.begin(), result.end(), '"', '=');
+  return result;
 }
 
 unsigned short SpaceGroups::hallNumberFromHallSymbol(
@@ -523,24 +535,13 @@ unsigned short SpaceGroups::hallNumberFromHallSymbol(
   if (symbol.empty())
     return 0;
 
-  for (unsigned short i = 1; i <= lastHallNumber; ++i) {
-    if (symbol == space_group_hall_symbol[i])
-      return i;
-  }
-  return aliasHallNumber(symbol);
+  return exactHallSymbol(symbol);
 }
 
 unsigned short SpaceGroups::internationalNumberFromString(
   const std::string& spaceGroup)
 {
-  std::string sg = trimmed(spaceGroup);
-  std::replace(sg.begin(), sg.end(), '"', '=');
-
-  unsigned short hall = exactHallNumber(sg);
-  if (hall != 0)
-    return internationalNumber(hall);
-
-  return resolveSymbol(sg).number;
+  return lookup(spaceGroup).number;
 }
 
 const char* SpaceGroups::internationalNumberKey()
@@ -881,8 +882,9 @@ void normalizeOperations(std::vector<SymmetryOperation>& ops)
 const std::vector<std::vector<SymmetryOperation>>& tableOperations()
 {
   static const std::vector<std::vector<SymmetryOperation>> table = [] {
-    std::vector<std::vector<SymmetryOperation>> result(lastHallNumber + 1);
-    for (unsigned short hall = 1; hall <= lastHallNumber; ++hall) {
+    std::vector<std::vector<SymmetryOperation>> result(
+      SpaceGroups::lastHallNumber + 1);
+    for (unsigned short hall = 1; hall <= SpaceGroups::lastHallNumber; ++hall) {
       for (const std::string& text : split(space_group_transforms[hall], ' ')) {
         SymmetryOperation op;
         if (parseSymmetryOperation(text, op))

@@ -182,24 +182,16 @@ bool isHallTag(const std::string& tag)
          tag == "_space_group_name_hall" || tag == "_space_group.name_hall";
 }
 
-// The Hall symbol as it is kept in CifSymmetry: runs of white space collapsed
-// to one space, the ends trimmed, and a double quote written as the table does.
+// The Hall symbol as it is kept in CifSymmetry: the spelling of the table (see
+// SpaceGroups::normalizeHallSymbol()), where a form feed or a vertical tab,
+// which the tokenizer also treats as white space, separates words as well.
 // The lookup in the table does its own normalization.
-std::string normalizeHallSymbol(const std::string& symbol)
+std::string cifHallSymbol(std::string symbol)
 {
-  std::string result;
-  bool pendingSpace = false;
-  for (char c : symbol) {
-    if (isSpace(c)) {
-      pendingSpace = !result.empty();
-      continue;
-    }
-    if (pendingSpace)
-      result.push_back(' ');
-    pendingSpace = false;
-    result.push_back(c == '"' ? '=' : c);
-  }
-  return result;
+  std::replace_if(
+    symbol.begin(), symbol.end(), [](char c) { return c == '\f' || c == '\v'; },
+    ' ');
+  return Core::SpaceGroups::normalizeHallSymbol(symbol);
 }
 
 // The operations in the values of a one-column loop. Unquoted operations may
@@ -264,7 +256,7 @@ CifSymmetry readCifSymmetry(std::string_view cifText)
         result.operations.push_back(token.text);
         haveOperations = true;
       } else if (isHallTag(tag) && !haveHall) {
-        result.hallSymbol = normalizeHallSymbol(token.text);
+        result.hallSymbol = cifHallSymbol(token.text);
         result.hallFromSymbol =
           Core::SpaceGroups::hallNumberFromHallSymbol(token.text);
         haveHall = true;

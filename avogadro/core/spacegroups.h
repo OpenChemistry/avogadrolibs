@@ -49,6 +49,12 @@ public:
   ~SpaceGroups() = default;
 
   /**
+   * The highest Hall number. The Hall numbers run from 1 to this value; 0 means
+   * "no space group" throughout this class.
+   */
+  static constexpr unsigned short lastHallNumber = 530;
+
+  /**
    * @return The hall number of the matching space group string or 0 if not
    * found
    *
@@ -74,6 +80,14 @@ public:
    * table, so "-P  2yn" and "P 3 2\"" (the table's "P 3 2=") match.
    */
   static unsigned short hallNumberFromHallSymbol(const std::string& hallSymbol);
+
+  /**
+   * @return @p hallSymbol in the spelling of the table: runs of white space
+   * (spaces, tabs and line endings) collapsed to one space, the ends trimmed,
+   * and '=' where a file has a double quote. The result is not checked against
+   * the table.
+   */
+  static std::string normalizeHallSymbol(const std::string& hallSymbol);
 
   /**
    * @return the hall number of the space group whose symmetry operations are
