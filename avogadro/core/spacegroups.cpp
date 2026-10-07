@@ -23,6 +23,9 @@ namespace Avogadro::Core {
 
 namespace {
 
+// The hall numbers run from 1 to 530; the table has an empty entry 0.
+constexpr unsigned short lastHallNumber = 530;
+
 // The "international" column holds the short symbol followed by equivalent
 // spellings, e.g. "P 2_1/c = P 1 2_1/c 1".
 struct SymbolEntry
@@ -60,6 +63,20 @@ std::vector<std::string> splitTokens(const std::string& s)
   if (!current.empty())
     tokens.push_back(current);
   return tokens;
+}
+
+// The spelling of a Hall symbol in the table: runs of white space collapsed to
+// one space, the ends trimmed, and '=' where a file has a double quote.
+std::string normalizeHallSymbol(const std::string& symbol)
+{
+  std::string result;
+  for (const auto& token : splitTokens(symbol)) {
+    if (!result.empty())
+      result.push_back(' ');
+    result += token;
+  }
+  std::replace(result.begin(), result.end(), '"', '=');
+  return result;
 }
 
 // A screw axis written without the underscore: "21", "63", "41/a", ...
@@ -331,6 +348,20 @@ unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
   return resolveSymbol(sg).hall;
 }
 
+unsigned short SpaceGroups::hallNumberFromHallSymbol(
+  const std::string& hallSymbol)
+{
+  const std::string symbol = normalizeHallSymbol(hallSymbol);
+  if (symbol.empty())
+    return 0;
+
+  for (unsigned short i = 1; i <= lastHallNumber; ++i) {
+    if (symbol == space_group_hall_symbol[i])
+      return i;
+  }
+  return 0;
+}
+
 unsigned short SpaceGroups::internationalNumberFromString(
   const std::string& spaceGroup)
 {
@@ -467,17 +498,12 @@ struct CoordinateTerm
   Real constant = 0.0; // signed value, used for constants only
 };
 
-bool isCoordinateDigit(char c)
-{
-  return c >= '0' && c <= '9';
-}
-
 // Read an unsigned number: "1", "0.5", ".25", "1/2" (a ratio of two integers).
 bool readCoordinateNumber(const std::string& s, std::size_t& i, Real& value)
 {
   Real numerator = 0.0;
   bool haveDigits = false;
-  while (i < s.size() && isCoordinateDigit(s[i])) {
+  while (i < s.size() && std::isdigit(static_cast<unsigned char>(s[i]))) {
     numerator = numerator * 10.0 + (s[i] - '0');
     haveDigits = true;
     ++i;
@@ -485,7 +511,7 @@ bool readCoordinateNumber(const std::string& s, std::size_t& i, Real& value)
   if (i < s.size() && s[i] == '.') {
     ++i;
     Real scale = 0.1;
-    while (i < s.size() && isCoordinateDigit(s[i])) {
+    while (i < s.size() && std::isdigit(static_cast<unsigned char>(s[i]))) {
       numerator += scale * (s[i] - '0');
       scale *= 0.1;
       haveDigits = true;
@@ -500,7 +526,7 @@ bool readCoordinateNumber(const std::string& s, std::size_t& i, Real& value)
     ++i;
     denominator = 0.0;
     bool haveDenominator = false;
-    while (i < s.size() && isCoordinateDigit(s[i])) {
+    while (i < s.size() && std::isdigit(static_cast<unsigned char>(s[i]))) {
       denominator = denominator * 10.0 + (s[i] - '0');
       haveDenominator = true;
       ++i;
@@ -532,7 +558,7 @@ bool parseCoordinate(const std::string& coordinate,
     CoordinateTerm term;
     term.negative = isNeg;
     char c = coordinate[i];
-    if (isCoordinateDigit(c) || c == '.') {
+    if (std::isdigit(static_cast<unsigned char>(c)) || c == '.') {
       Real value = 0.0;
       if (!readCoordinateNumber(coordinate, i, value))
         return false;
@@ -608,13 +634,13 @@ struct SymmetryOperation
 
   bool operator<(const SymmetryOperation& other) const
   {
-    if (rotation != other.rotation)
-      return rotation < other.rotation;
-    return translation < other.translation;
+    return std::tie(rotation, translation) <
+           std::tie(other.rotation, other.translation);
   }
   bool operator==(const SymmetryOperation& other) const
   {
-    return rotation == other.rotation && translation == other.translation;
+    return std::tie(rotation, translation) ==
+           std::tie(other.rotation, other.translation);
   }
 };
 
@@ -687,8 +713,8 @@ void normalizeOperations(std::vector<SymmetryOperation>& ops)
 const std::vector<std::vector<SymmetryOperation>>& tableOperations()
 {
   static const std::vector<std::vector<SymmetryOperation>> table = [] {
-    std::vector<std::vector<SymmetryOperation>> result(531);
-    for (unsigned short hall = 1; hall <= 530; ++hall) {
+    std::vector<std::vector<SymmetryOperation>> result(lastHallNumber + 1);
+    for (unsigned short hall = 1; hall <= lastHallNumber; ++hall) {
       for (const std::string& text : split(space_group_transforms[hall], ' ')) {
         SymmetryOperation op;
         if (parseSymmetryOperation(text, op))
@@ -723,7 +749,7 @@ unsigned short SpaceGroups::hallNumberFromTransforms(
   // of group 68 that have the same Hall symbol) are indistinguishable by their
   // operations; the first, lowest numbered, is the answer.
   const auto& table = tableOperations();
-  for (unsigned short hall = 1; hall <= 530; ++hall) {
+  for (unsigned short hall = 1; hall <= lastHallNumber; ++hall) {
     if (table[hall] == ops)
       return hall;
   }

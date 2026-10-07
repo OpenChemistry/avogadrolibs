@@ -10,6 +10,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
 #include <algorithm>
@@ -30,6 +31,7 @@ using Avogadro::Vector3;
 using Avogadro::Core::AvoSpglib;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::SpaceGroups;
+using Avogadro::Core::split;
 using Avogadro::Core::UnitCell;
 using namespace std::string_literals;
 
@@ -789,22 +791,8 @@ namespace {
 
 std::vector<std::string> tableOperationStrings(unsigned short hall)
 {
-  std::vector<std::string> ops;
-  std::string current;
-  for (const char* c =
-         SpaceGroupTable::Avogadro::Core::space_group_transforms[hall];
-       ; ++c) {
-    if (*c == ' ' || *c == '\0') {
-      if (!current.empty())
-        ops.push_back(current);
-      current.clear();
-      if (*c == '\0')
-        break;
-    } else {
-      current.push_back(*c);
-    }
-  }
-  return ops;
+  return split(SpaceGroupTable::Avogadro::Core::space_group_transforms[hall],
+               ' ');
 }
 
 // The hall number a table entry is expected to resolve to. Three pairs of
@@ -829,17 +817,7 @@ unsigned short expectedHall(unsigned short hall)
 std::string respell(const std::string& op, bool decimals, bool upper,
                     bool spaced, bool quoted, bool shiftByOne)
 {
-  std::vector<std::string> coordinates;
-  std::string current;
-  for (char c : op) {
-    if (c == ',') {
-      coordinates.push_back(current);
-      current.clear();
-    } else {
-      current.push_back(c);
-    }
-  }
-  coordinates.push_back(current);
+  const std::vector<std::string> coordinates = split(op, ',', false);
 
   std::string result;
   for (std::string coordinate : coordinates) {
@@ -898,6 +876,44 @@ std::string respell(const std::string& op, bool decimals, bool upper,
 
 } // namespace
 
+TEST(SpaceGroupTest, hallSymbolLookup)
+{
+  // every Hall symbol of the table finds an entry with that symbol
+  for (unsigned short hall = 1; hall <= 530; ++hall) {
+    unsigned short found =
+      SpaceGroups::hallNumberFromHallSymbol(SpaceGroups::hallSymbol(hall));
+    EXPECT_STREQ(SpaceGroups::hallSymbol(found), SpaceGroups::hallSymbol(hall))
+      << hall;
+  }
+
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("-P 2yn"),
+            SpaceGroups::hallNumber("-P 2yn"));
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 1"), 1);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("-P 1"), 2);
+
+  // spacing is not significant
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("  -P   2yn \n"),
+            SpaceGroups::hallNumberFromHallSymbol("-P 2yn"));
+  EXPECT_NE(SpaceGroups::hallNumberFromHallSymbol("-P 2yn"), 0);
+
+  // a double quote is how files write the table's '='
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 3 2\""),
+            SpaceGroups::hallNumberFromHallSymbol("P 3 2="));
+  EXPECT_NE(SpaceGroups::hallNumberFromHallSymbol("P 3 2\""), 0);
+
+  // international symbols and numbers are not Hall symbols
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 21/c"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 1 21/c 1"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("14"), 0);
+
+  // anything else
+  for (const char* garbage :
+       { "", "   ", "garbage", "?", "P 2yb x", "-P 4c 2 (x,y+1/2,z)" }) {
+    EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol(garbage), 0)
+      << "'" << garbage << "'";
+  }
+}
+
 TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
 {
   for (unsigned short hall = 1; hall <= 530; ++hall) {
@@ -914,43 +930,39 @@ TEST(SpaceGroupTest, transformsInAnyOrderAndSpelling)
   for (unsigned short hall = 1; hall <= 530; ++hall) {
     std::vector<std::string> base = tableOperationStrings(hall);
 
+    auto expectResolved = [&](const std::vector<std::string>& ops,
+                              const std::string& what) {
+      EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
+        << what << " " << hall;
+    };
+
     // shuffled
     std::vector<std::string> ops = base;
     std::shuffle(ops.begin(), ops.end(), rng);
-    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
-      << "shuffled " << hall;
+    expectResolved(ops, "shuffled");
 
     // repeated operations do not matter
     ops = base;
     ops.insert(ops.end(), base.begin(), base.end());
     std::shuffle(ops.begin(), ops.end(), rng);
-    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
-      << "repeated " << hall;
+    expectResolved(ops, "repeated");
 
-    // terms reversed ("1/2+x" -> "x+1/2")
-    ops.clear();
-    for (const std::string& op : base)
-      ops.push_back(respell(op, false, false, false, false, false));
-    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
-      << "reversed " << hall;
-
-    // decimals, upper case, spaces, quotes, in a few combinations
-    for (int style = 1; style < 16; ++style) {
+    // terms reversed ("1/2+x" -> "x+1/2") is style 0; the others add
+    // decimals, upper case, spaces and quotes in every combination
+    for (int style = 0; style < 16; ++style) {
       ops.clear();
       for (const std::string& op : base)
         ops.push_back(
           respell(op, style & 1, style & 2, style & 4, style & 8, false));
       std::shuffle(ops.begin(), ops.end(), rng);
-      EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
-        << "style " << style << " " << hall;
+      expectResolved(ops, "style " + std::to_string(style));
     }
 
     // a full lattice translation added to some constants
     ops.clear();
     for (const std::string& op : base)
       ops.push_back(respell(op, true, true, true, true, true));
-    EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), expectedHall(hall))
-      << "shifted " << hall;
+    expectResolved(ops, "shifted");
   }
 }
 
@@ -992,7 +1004,6 @@ TEST(SpaceGroupTest, transformsWrongSetsAreNotMatched)
       std::vector<std::string> ops = base;
       ops.erase(ops.begin() + i);
       unsigned short found = SpaceGroups::hallNumberFromTransforms(ops);
-      EXPECT_NE(found, hall) << hall << " minus " << base[i];
       EXPECT_NE(found, expectedHall(hall)) << hall << " minus " << base[i];
     }
 

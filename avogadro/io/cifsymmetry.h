@@ -9,6 +9,7 @@
 #include "avogadroioexport.h"
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace Avogadro::Io {
@@ -65,7 +66,7 @@ struct CifSymmetry
  * Text that is not a CIF, or that has no symmetry information, gives an
  * empty result. This never fails.
  */
-AVOGADROIO_EXPORT CifSymmetry readCifSymmetry(const std::string& cifText);
+AVOGADROIO_EXPORT CifSymmetry readCifSymmetry(std::string_view cifText);
 
 } // namespace Avogadro::Io
 

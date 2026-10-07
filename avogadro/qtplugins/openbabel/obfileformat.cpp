@@ -9,13 +9,11 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/spacegroups.h>
-#include <avogadro/core/variant.h>
-#include <avogadro/core/variantmap.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/io/cifsymmetry.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTimer>
@@ -32,7 +30,11 @@ namespace {
 // operations. Resolve the setting from the operations, which are not
 // ambiguous, and then from an exact Hall symbol. Whatever the reader found is
 // kept if neither of them identifies an entry of the table.
-void resolveCifSpaceGroup(const std::string& cifText, Core::Molecule& molecule)
+//
+// This re-scan of the file is needed because Open Babel's CJSON writer emits
+// only the space group symbol; it can go once Open Babel writes the hall
+// number.
+void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
 {
   if (molecule.unitCell() == nullptr)
     return;
@@ -70,22 +72,15 @@ void resolveCifSpaceGroup(const std::string& cifText, Core::Molecule& molecule)
              << "from the symmetry in the file, replacing" << previous;
   }
 
+  // The international number that was kept because the setting was unknown is
+  // inert once a Hall number is set.
   molecule.setHallNumber(found);
-  if (hadNumber) {
-    // the number was only kept because the setting was unknown
-    Core::VariantMap data;
-    for (const auto& entry : molecule.dataMap()) {
-      if (entry.first != key)
-        data.setValue(entry.first, entry.second);
-    }
-    molecule.setDataMap(data);
-  }
 }
 
 bool isCifFormat(const std::vector<std::string>& extensions)
 {
   for (const std::string& extension : extensions) {
-    if (extension == "cif" || extension == "CIF")
+    if (Core::toLower(extension) == "cif")
       return true;
   }
   return false;
@@ -244,20 +239,12 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
       tmpFile.write(input.data());
       tmpFile.close();
       filename = tmpFile.fileName();
-      if (isCif)
-        cifText = input;
     }
 
     if (!QFileInfo(filename).isAbsolute()) {
       appendError("Internal error -- filename must be absolute! " +
                   filename.toStdString());
       return false;
-    }
-
-    if (isCif && cifText.isEmpty()) {
-      QFile cifFile(filename);
-      if (cifFile.open(QIODevice::ReadOnly))
-        cifText = cifFile.readAll();
     }
 
     // Perform the conversion.
@@ -303,9 +290,10 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   }
 
   if (isCif && !cifText.isEmpty()) {
-    resolveCifSpaceGroup(std::string(cifText.constData(),
-                                     static_cast<std::size_t>(cifText.size())),
-                         molecule);
+    resolveCifSpaceGroup(
+      std::string_view(cifText.constData(),
+                       static_cast<std::size_t>(cifText.size())),
+      molecule);
   }
 
   return true;

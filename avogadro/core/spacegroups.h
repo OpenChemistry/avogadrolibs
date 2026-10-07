@@ -65,6 +65,17 @@ public:
   static unsigned short hallNumber(const std::string& spaceGroup);
 
   /**
+   * @return the hall number whose Hall symbol is exactly @p hallSymbol, or 0
+   * if there is none.
+   *
+   * Unlike hallNumber(), the international symbols and numbers are not
+   * accepted: a string that is not a Hall symbol of the table gives 0. Runs of
+   * white space are collapsed and a double quote is read as '=', as in the
+   * table, so "-P  2yn" and "P 3 2\"" (the table's "P 3 2=") match.
+   */
+  static unsigned short hallNumberFromHallSymbol(const std::string& hallSymbol);
+
+  /**
    * @return the hall number of the space group whose symmetry operations are
    * exactly @p operations, or 0 if no entry of the table has this set.
    *
