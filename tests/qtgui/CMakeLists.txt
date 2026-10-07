@@ -39,6 +39,12 @@ set(tests
   Utilities
 )
 
+# GLWidget lives in QtOpenGL, which is only built with USE_OPENGL.
+if(TARGET Avogadro::QtOpenGL)
+  list(APPEND tests GLWidgetMolecule)
+  set(QtOpenGLLink Avogadro::QtOpenGL)
+endif()
+
 if(Python3_EXECUTABLE)
   list(APPEND tests
     InterfaceScript
@@ -77,7 +83,8 @@ endforeach()
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroQtGuiTests ${testSrcs})
-target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui ${MoleQueueLink}
+target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui ${QtOpenGLLink}
+ ${MoleQueueLink}
  ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB}
  Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
 
