@@ -914,6 +914,39 @@ TEST(SpaceGroupTest, hallSymbolLookup)
   }
 }
 
+TEST(SpaceGroupTest, originChoiceWithPermutedAxes)
+{
+  // The table's setting is "1cab", "2cab", ... where the symbol has permuted
+  // axes; a file only gives the origin choice
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:1"), 235);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:2"), 236);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b :2"), 236);
+  EXPECT_EQ(SpaceGroups::hallNumber("P c n a:1"), 237);
+  EXPECT_EQ(SpaceGroups::hallNumber("P c n a:2"), 238);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n m m:1"), 280);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n m m:2"), 281);
+  EXPECT_EQ(SpaceGroups::hallNumber("P m n m:1"), 282);
+  EXPECT_EQ(SpaceGroups::hallNumber("P m n m:2"), 283);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P m n m:2"), 59);
+
+  // a digit that matches no setting, or no digit at all
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:3"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:0"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:12"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:cab"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P n c b:3"), 50);
+
+  // an exact setting still wins over the first-digit rule
+  EXPECT_EQ(SpaceGroups::hallNumber("P b a n:1"), 233);
+  EXPECT_EQ(SpaceGroups::hallNumber("P b a n:2"), 234);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:1cab"), 235);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n c b:2cab"), 236);
+
+  // other symbols and settings are not affected
+  EXPECT_EQ(SpaceGroups::hallNumber("P n m a:1"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("C 2/c:1"), 0);
+}
+
 TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
 {
   for (unsigned short hall = 1; hall <= 530; ++hall) {

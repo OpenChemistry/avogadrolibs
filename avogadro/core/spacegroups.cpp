@@ -268,13 +268,42 @@ Resolved resolveSymbol(const std::string& sg)
   result.number = number;
 
   if (!setting.empty()) {
+    const std::vector<unsigned short>& candidates = matches;
+
     std::vector<unsigned short> filtered;
-    for (unsigned short hall : matches) {
+    for (unsigned short hall : candidates) {
       if (caseInsensitiveEquals(table[hall].setting, setting))
         filtered.push_back(hall);
     }
-    if (filtered.size() == 1)
+    if (filtered.size() == 1) {
       result.hall = filtered.front();
+      return result;
+    }
+    if (!filtered.empty())
+      return result;
+
+    // An origin choice written as just "1" or "2" with a symbol whose table
+    // setting also permutes the axes ("P n c b:1" for "1cab"). The symbol has
+    // already narrowed the candidates to one axis permutation (or to
+    // permutations with the same operations), so the digit is enough to
+    // select the origin. If the origin is still shared by settings with the
+    // same Hall symbol (and so the same operations, as for "A b a a:1" = 326
+    // and 328) the first of them is used, as elsewhere.
+    if (setting.size() == 1 && (setting[0] == '1' || setting[0] == '2')) {
+      for (unsigned short hall : candidates) {
+        if (!table[hall].setting.empty() &&
+            table[hall].setting[0] == setting[0])
+          filtered.push_back(hall);
+      }
+      bool sameOperations = !filtered.empty();
+      for (unsigned short hall : filtered) {
+        if (std::string(space_group_hall_symbol[hall]) !=
+            space_group_hall_symbol[filtered.front()])
+          sameOperations = false;
+      }
+      if (sameOperations)
+        result.hall = filtered.front();
+    }
     return result;
   }
 
