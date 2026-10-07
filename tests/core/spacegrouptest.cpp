@@ -1078,6 +1078,113 @@ TEST(SpaceGroupTest, preTwoThousandTwoGlideNames)
   EXPECT_EQ(SpaceGroups::hallNumber("C m c a:1"), 0);
 }
 
+namespace {
+
+// spglib's spellings of Hall symbols that differ from the table's, each with
+// the Hall number it stands for.
+struct HallAliasCase
+{
+  unsigned short hall;
+  const char* symbol;
+};
+
+// clang-format off
+const HallAliasCase hallAliasCases[] = {
+  {40, "A -2yab"},
+  {43, "C -2yac"},
+  {46, "B -2ab"},
+  {49, "A -2ab"},
+  {52, "C -2xac"},
+  {55, "B -2xab"},
+  {91, "-A 2yab"},
+  {94, "-C 2yac"},
+  {97, "-B 2ab"},
+  {100, "-A 2ab"},
+  {103, "-C 2xac"},
+  {106, "-B 2xab"},
+  {191, "A 2 -2b"},
+  {192, "B 2 -2a"},
+  {193, "B -2a 2"},
+  {194, "C -2a 2"},
+  {195, "C -2a -2a"},
+  {196, "A -2b -2b"},
+  {203, "A 2 -2ab"},
+  {204, "B 2 -2ab"},
+  {205, "B -2ab 2"},
+  {206, "C -2ac 2"},
+  {207, "C -2ac -2ac"},
+  {208, "A -2ab -2ab"},
+  {304, "-C 2ac 2"},
+  {305, "-C 2ac 2ac"},
+  {306, "-A 2ab 2ab"},
+  {307, "-A 2 2ab"},
+  {308, "-B 2 2ab"},
+  {309, "-B 2ab 2"},
+  {316, "-C 2a 2"},
+  {317, "-C 2a 2a"},
+  {318, "-A 2b 2b"},
+  {319, "-A 2 2b"},
+  {320, "-B 2 2a"},
+  {321, "-B 2a 2"},
+  {322, "C 2 2 -1ac"},
+  {323, "-C 2a 2ac"},
+  {325, "-C 2a 2c"},
+  {326, "A 2 2 -1ab"},
+  {327, "-A 2a 2b"},
+  {329, "-A 2ab 2b"},
+  {330, "B 2 2 -1ab"},
+  {331, "-B 2ab 2b"},
+  {333, "-B 2b 2ab"},
+  {440, "P 31 2 (0 0 4)"},
+  {442, "P 32 2 (0 0 2)"},
+  {472, "P 61 2 (0 0 5)"},
+  {474, "P 62 2 (0 0 4)"},
+  {475, "P 64 2 (0 0 2)"},
+  {515, "F -4a 2 3"},
+  {524, "-F 4a 2 3"},
+  {527, "F 4d 2 3 -1ad"},
+  {528, "-F 4ud 2vw 3"},
+};
+// clang-format on
+
+} // namespace
+
+TEST(SpaceGroupTest, spglibHallSymbolSpellings)
+{
+  for (const auto& test : hallAliasCases) {
+    EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol(test.symbol), test.hall)
+      << test.symbol;
+    // the same operations as the table entry
+    const unsigned short found =
+      SpaceGroups::hallNumberFromHallSymbol(test.symbol);
+    EXPECT_EQ(
+      SpaceGroupTable::Avogadro::Core::space_group_transforms[found],
+      SpaceGroupTable::Avogadro::Core::space_group_transforms[test.hall])
+      << test.symbol;
+    // spacing is not significant
+    EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol(
+                "  " + std::string(test.symbol) + " \n"),
+              test.hall)
+      << test.symbol;
+    // the general lookup takes them as well
+    EXPECT_EQ(SpaceGroups::hallNumber(test.symbol), test.hall) << test.symbol;
+  }
+
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("A -2yab"), 40);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("A -2yac"), 40);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 31 2 (0 0 4)"), 440);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 31 2c (0 0 1)"), 440);
+
+  // identical operations in the table: the lower number of each pair
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("C 2 2 -1ac"), 322);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("A 2 2 -1ab"), 326);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("B 2 2 -1ab"), 330);
+
+  // not Hall symbols
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("A -2yaa"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumberFromHallSymbol("P 31 2 (0 0 3)"), 0);
+}
+
 TEST(SpaceGroupTest, transformsResolveToTheirOwnEntry)
 {
   for (unsigned short hall = 1; hall <= 530; ++hall) {

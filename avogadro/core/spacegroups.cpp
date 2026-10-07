@@ -132,6 +132,91 @@ bool isOriginOrAxisSetting(const std::string& setting)
                               setting == "H" || setting == "R");
 }
 
+// spglib spells 57 of the Hall symbols differently from the table, e.g.
+// "A -2yab" where the table has "A -2yac", or "P 31 2 (0 0 4)" for the table's
+// "P 31 2c (0 0 1)". These are spglib's spellings of the same operator sets;
+// the operations generated from each spelling were verified to be identical to
+// those of the table entry. Hall numbers 322/324, 326/328 and 330/332 have
+// identical Hall symbols and operations in the table, so (as for the table
+// symbols) the lower number of each pair is listed.
+// No alias equals a Hall symbol or an international symbol of the table, and
+// no alias maps to two different Hall numbers.
+struct HallAlias
+{
+  const char* symbol;
+  unsigned short hall;
+};
+
+// clang-format off
+constexpr HallAlias hallAliases[] = {
+  {"A -2yab", 40},
+  {"C -2yac", 43},
+  {"B -2ab", 46},
+  {"A -2ab", 49},
+  {"C -2xac", 52},
+  {"B -2xab", 55},
+  {"-A 2yab", 91},
+  {"-C 2yac", 94},
+  {"-B 2ab", 97},
+  {"-A 2ab", 100},
+  {"-C 2xac", 103},
+  {"-B 2xab", 106},
+  {"A 2 -2b", 191},
+  {"B 2 -2a", 192},
+  {"B -2a 2", 193},
+  {"C -2a 2", 194},
+  {"C -2a -2a", 195},
+  {"A -2b -2b", 196},
+  {"A 2 -2ab", 203},
+  {"B 2 -2ab", 204},
+  {"B -2ab 2", 205},
+  {"C -2ac 2", 206},
+  {"C -2ac -2ac", 207},
+  {"A -2ab -2ab", 208},
+  {"-C 2ac 2", 304},
+  {"-C 2ac 2ac", 305},
+  {"-A 2ab 2ab", 306},
+  {"-A 2 2ab", 307},
+  {"-B 2 2ab", 308},
+  {"-B 2ab 2", 309},
+  {"-C 2a 2", 316},
+  {"-C 2a 2a", 317},
+  {"-A 2b 2b", 318},
+  {"-A 2 2b", 319},
+  {"-B 2 2a", 320},
+  {"-B 2a 2", 321},
+  {"C 2 2 -1ac", 322},
+  {"-C 2a 2ac", 323},
+  {"-C 2a 2c", 325},
+  {"A 2 2 -1ab", 326},
+  {"-A 2a 2b", 327},
+  {"-A 2ab 2b", 329},
+  {"B 2 2 -1ab", 330},
+  {"-B 2ab 2b", 331},
+  {"-B 2b 2ab", 333},
+  {"P 31 2 (0 0 4)", 440},
+  {"P 32 2 (0 0 2)", 442},
+  {"P 61 2 (0 0 5)", 472},
+  {"P 62 2 (0 0 4)", 474},
+  {"P 64 2 (0 0 2)", 475},
+  {"F -4a 2 3", 515},
+  {"-F 4a 2 3", 524},
+  {"F 4d 2 3 -1ad", 527},
+  {"-F 4ud 2vw 3", 528},
+};
+// clang-format on
+
+// The Hall number of one of the spglib spellings above, or 0. The symbol has
+// to be spelled as in the list (white space is not normalized here).
+unsigned short aliasHallNumber(const std::string& symbol)
+{
+  for (const auto& alias : hallAliases) {
+    if (symbol == alias.symbol)
+      return alias.hall;
+  }
+  return 0;
+}
+
 // Exact comparison against the strings in the table
 unsigned short exactHallNumber(const std::string& sg)
 {
@@ -142,6 +227,10 @@ unsigned short exactHallNumber(const std::string& sg)
     if (sg == space_group_hall_symbol[i])
       return i;
   }
+
+  // the spellings of spglib's Hall symbols that differ from the table
+  if (unsigned short hall = aliasHallNumber(sg))
+    return hall;
 
   // space_group_international
   for (unsigned short i = 0; i < hall_count; ++i) {
@@ -438,7 +527,7 @@ unsigned short SpaceGroups::hallNumberFromHallSymbol(
     if (symbol == space_group_hall_symbol[i])
       return i;
   }
-  return 0;
+  return aliasHallNumber(symbol);
 }
 
 unsigned short SpaceGroups::internationalNumberFromString(
