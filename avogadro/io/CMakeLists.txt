@@ -1,6 +1,7 @@
 add_library(IO)
 
 avogadro_headers(IO
+  cifsymmetry.h
   cjsonformat.h
   cmlformat.h
   compressedstream.h
@@ -24,6 +25,7 @@ avogadro_headers(IO
 
 target_sources(IO PRIVATE
   binaryblock_p.h
+  cifsymmetry.cpp
   cjsonformat.cpp
   cmlformat.cpp
   compressedstream.cpp
