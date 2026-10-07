@@ -13,50 +13,340 @@
 
 #include <algorithm> // for std::count()
 #include <cassert>
-#include <cctype> // for isdigit()
+#include <cctype> // for isdigit(), tolower()
 #include <cmath>  // for floor()
 #include <iostream>
+#include <string>
 #include <vector>
 
 namespace Avogadro::Core {
 
-unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
+namespace {
+
+// The "international" column holds the short symbol followed by equivalent
+// spellings, e.g. "P 2_1/c = P 1 2_1/c 1".
+struct SymbolEntry
 {
-  unsigned short hall = 0;               // can't find anything
+  std::string full;                 // normalized international_full
+  std::vector<std::string> aliases; // normalized parts of international
+  std::string compact;              // international_short, e.g. "P2_1/c"
+  std::string setting;
+  unsigned short number = 0; // international table number
+};
+
+std::string trimWhitespace(const std::string& s)
+{
+  const char* whitespace = " \t\r\n";
+  std::string::size_type first = s.find_first_not_of(whitespace);
+  if (first == std::string::npos)
+    return std::string();
+  std::string::size_type last = s.find_last_not_of(whitespace);
+  return s.substr(first, last - first + 1);
+}
+
+std::vector<std::string> splitTokens(const std::string& s)
+{
+  std::vector<std::string> tokens;
+  std::string current;
+  for (char c : s) {
+    if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
+      if (!current.empty())
+        tokens.push_back(current);
+      current.clear();
+    } else {
+      current.push_back(c);
+    }
+  }
+  if (!current.empty())
+    tokens.push_back(current);
+  return tokens;
+}
+
+// A screw axis written without the underscore: "21", "63", "41/a", ...
+// Only N in {2, 3, 4, 6} with 1 <= M < N is a screw axis N_M.
+std::string normalizeScrewAxis(const std::string& token)
+{
+  if (token.size() >= 2 && (token.size() == 2 || token[2] == '/') &&
+      std::isdigit(static_cast<unsigned char>(token[0])) &&
+      std::isdigit(static_cast<unsigned char>(token[1]))) {
+    int n = token[0] - '0';
+    int m = token[1] - '0';
+    if ((n == 2 || n == 3 || n == 4 || n == 6) && m >= 1 && m < n)
+      return std::string(1, token[0]) + "_" + token[1] + token.substr(2);
+  }
+  return token;
+}
+
+// Spelling shared by the table and the symbols found in files:
+//  - screw axes get their underscore ("P 63 m c" -> "P 6_3 m c")
+//  - in a cubic symbol with a single plane letter in the second position, the
+//    three-fold axis is written "-3" ("I m 3 m" -> "I m -3 m"). Both the
+//    pre-1983 notation and this table use a plain "3" for these centro-
+//    symmetric groups, which can never be confused with a rotation group
+//    because those have a digit (2, 4, -4, 4_1, ...) in the second position.
+std::string normalizeSymbol(const std::string& symbol)
+{
+  std::vector<std::string> tokens = splitTokens(symbol);
+  for (auto& token : tokens)
+    token = normalizeScrewAxis(token);
+
+  if (tokens.size() >= 3 && (tokens[2] == "3" || tokens[2] == "-3") &&
+      tokens[1].size() == 1 &&
+      std::string("mnabcd").find(tokens[1][0]) != std::string::npos) {
+    tokens[2] = "-3";
+  }
+
+  std::string result;
+  for (const auto& token : tokens) {
+    if (!result.empty())
+      result.push_back(' ');
+    result += token;
+  }
+  return result;
+}
+
+const std::vector<SymbolEntry>& symbolTable()
+{
+  static const std::vector<SymbolEntry> table = [] {
+    std::vector<SymbolEntry> entries(531);
+    for (unsigned short i = 1; i < 531; ++i) {
+      SymbolEntry& entry = entries[i];
+      entry.full = normalizeSymbol(space_group_international_full[i]);
+      entry.compact = space_group_international_short[i];
+      entry.setting = space_group_setting[i];
+      entry.number = space_group_international_number[i];
+
+      const std::string international = space_group_international[i];
+      const std::string separator = " = ";
+      std::string::size_type start = 0;
+      while (true) {
+        std::string::size_type pos = international.find(separator, start);
+        entry.aliases.push_back(normalizeSymbol(international.substr(
+          start, pos == std::string::npos ? std::string::npos : pos - start)));
+        if (pos == std::string::npos)
+          break;
+        start = pos + separator.size();
+      }
+    }
+    return entries;
+  }();
+  return table;
+}
+
+// Settings that select an origin choice or a hexagonal/rhombohedral axis
+// system ("1", "2", "1cab", "H", "R", ...). Unlike the cell choices of the
+// monoclinic groups, these have no conventional default we may assume.
+bool isOriginOrAxisSetting(const std::string& setting)
+{
+  return !setting.empty() && (setting[0] == '1' || setting[0] == '2' ||
+                              setting == "H" || setting == "R");
+}
+
+bool equalsIgnoreCase(const std::string& a, const std::string& b)
+{
+  if (a.size() != b.size())
+    return false;
+  for (std::string::size_type i = 0; i < a.size(); ++i) {
+    if (std::tolower(static_cast<unsigned char>(a[i])) !=
+        std::tolower(static_cast<unsigned char>(b[i])))
+      return false;
+  }
+  return true;
+}
+
+// Exact comparison against the strings in the table
+unsigned short exactHallNumber(const std::string& sg)
+{
   const unsigned short hall_count = 531; // 530 but first one is empty
-  // some files use " instead of = for the space group symbol
-  std::string sg = spaceGroup;
-  std::replace(sg.begin(), sg.end(), '"', '=');
 
   // space_group_hall_symbol
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_hall_symbol[i]) {
-      return i; // found a match
-    }
+    if (sg == space_group_hall_symbol[i])
+      return i;
   }
 
   // space_group_international
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_international[i]) {
-      return i; // found a match
-    }
+    if (sg == space_group_international[i])
+      return i;
   }
 
   // space_group_international_short
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_international_short[i]) {
-      return i; // found a match
-    }
+    if (sg == space_group_international_short[i])
+      return i;
   }
 
   // space_group_international_full
   for (unsigned short i = 0; i < hall_count; ++i) {
-    if (sg == space_group_international_full[i]) {
-      return i; // found a match
-    }
+    if (sg == space_group_international_full[i])
+      return i;
   }
 
-  return hall; // can't find anything
+  return 0;
+}
+
+struct Resolved
+{
+  unsigned short hall = 0;
+  unsigned short number = 0;
+};
+
+// Parse a bare international table number, e.g. "74".
+bool parseBareNumber(const std::string& s, unsigned short& number)
+{
+  if (s.empty() || s.size() > 3)
+    return false;
+  unsigned int value = 0;
+  for (char c : s) {
+    if (!std::isdigit(static_cast<unsigned char>(c)))
+      return false;
+    value = value * 10 + static_cast<unsigned int>(c - '0');
+  }
+  if (value < 1 || value > 230)
+    return false;
+  number = static_cast<unsigned short>(value);
+  return true;
+}
+
+// Find the Hall numbers that a (setting-less) symbol can refer to. The full
+// symbol is the most specific, then the alternative spellings, then the
+// compact one. The first tier with a match wins.
+std::vector<unsigned short> matchSymbol(const std::string& symbol)
+{
+  const auto& table = symbolTable();
+  const std::string key = normalizeSymbol(symbol);
+  std::vector<unsigned short> matches;
+  if (key.empty())
+    return matches;
+
+  for (unsigned short i = 1; i < 531; ++i) {
+    if (table[i].full == key)
+      matches.push_back(i);
+  }
+  if (!matches.empty())
+    return matches;
+
+  for (unsigned short i = 1; i < 531; ++i) {
+    for (const auto& alias : table[i].aliases) {
+      if (alias == key) {
+        matches.push_back(i);
+        break;
+      }
+    }
+  }
+  if (!matches.empty())
+    return matches;
+
+  for (unsigned short i = 1; i < 531; ++i) {
+    if (table[i].compact == symbol)
+      matches.push_back(i);
+  }
+  return matches;
+}
+
+// Everything but the exact matches: bare numbers, screw axes without
+// underscores, setting suffixes (":H", ":1"), old cubic notation.
+Resolved resolveSymbol(const std::string& sg)
+{
+  Resolved result;
+  const auto& table = symbolTable();
+
+  unsigned short bare = 0;
+  if (parseBareNumber(sg, bare)) {
+    result.number = bare;
+    unsigned short count = 0;
+    for (unsigned short i = 1; i < 531; ++i) {
+      if (table[i].number == bare) {
+        ++count;
+        result.hall = i;
+      }
+    }
+    // Several settings (axes, cell or origin choice): do not guess one
+    if (count != 1)
+      result.hall = 0;
+    return result;
+  }
+
+  // a trailing setting, e.g. "F d -3 m :2" or "R -3 m:H"
+  std::string symbol = sg;
+  std::string setting;
+  std::string::size_type colon = sg.rfind(':');
+  if (colon != std::string::npos) {
+    symbol = trimWhitespace(sg.substr(0, colon));
+    setting = trimWhitespace(sg.substr(colon + 1));
+  }
+
+  std::vector<unsigned short> matches = matchSymbol(symbol);
+  if (matches.empty())
+    return result;
+
+  // the symbol has to agree on the table number, or it is not a symbol
+  unsigned short number = table[matches.front()].number;
+  for (unsigned short hall : matches) {
+    if (table[hall].number != number)
+      return result;
+  }
+  result.number = number;
+
+  if (!setting.empty()) {
+    std::vector<unsigned short> filtered;
+    for (unsigned short hall : matches) {
+      if (equalsIgnoreCase(table[hall].setting, setting))
+        filtered.push_back(hall);
+    }
+    if (filtered.size() == 1)
+      result.hall = filtered.front();
+    return result;
+  }
+
+  if (matches.size() == 1) {
+    result.hall = matches.front();
+    return result;
+  }
+
+  // Several settings share this symbol. Cell/axis choices of the same symbol
+  // (e.g. "P 2_1/c") have a conventional default, which is the first one in
+  // the table. An origin choice or hexagonal/rhombohedral axes do not.
+  for (unsigned short hall : matches) {
+    if (isOriginOrAxisSetting(table[hall].setting))
+      return result;
+  }
+  result.hall = matches.front();
+  return result;
+}
+
+} // namespace
+
+unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
+{
+  // some files use " instead of = for the space group symbol
+  std::string sg = trimWhitespace(spaceGroup);
+  std::replace(sg.begin(), sg.end(), '"', '=');
+
+  unsigned short hall = exactHallNumber(sg);
+  if (hall != 0)
+    return hall;
+
+  return resolveSymbol(sg).hall;
+}
+
+unsigned short SpaceGroups::internationalNumberFromString(
+  const std::string& spaceGroup)
+{
+  std::string sg = trimWhitespace(spaceGroup);
+  std::replace(sg.begin(), sg.end(), '"', '=');
+
+  unsigned short hall = exactHallNumber(sg);
+  if (hall != 0)
+    return internationalNumber(hall);
+
+  return resolveSymbol(sg).number;
+}
+
+const char* SpaceGroups::internationalNumberKey()
+{
+  return "spaceGroup.internationalNumber";
 }
 
 CrystalSystem SpaceGroups::crystalSystem(unsigned short hallNumber)

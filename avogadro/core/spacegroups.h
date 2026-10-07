@@ -50,8 +50,34 @@ public:
   /**
    * @return The hall number of the matching space group string or 0 if not
    * found
+   *
+   * Besides the strings in the table (Hall symbol, international symbols),
+   * this accepts the spellings other programs write: screw axes without the
+   * underscore ("P 63 m c", "P 1 21/c 1"), a trailing setting that selects an
+   * origin choice or the hexagonal / rhombohedral axes ("F d -3 m :2",
+   * "R -3 m :H"), the pre-1983 cubic notation ("I m 3 m") and a bare
+   * international table number ("229").
+   *
+   * A symbol or number that fits several settings (origin choice, axes) is
+   * not guessed: 0 is returned. See internationalNumberFromString().
    */
   static unsigned short hallNumber(const std::string& spaceGroup);
+
+  /**
+   * @return the international table number (1-230) that the string refers to,
+   * even if hallNumber() cannot pick one setting for it (e.g. "74"), or 0 if
+   * the string is not recognized.
+   */
+  static unsigned short internationalNumberFromString(
+    const std::string& spaceGroup);
+
+  /**
+   * @return the key of the Molecule data map entry (an int) in which file
+   * readers keep the international table number of a space group whose Hall
+   * number is ambiguous. It is never written to files: the file writers and the
+   * molecular properties table skip it.
+   */
+  static const char* internationalNumberKey();
 
   /**
    * @return an enum representing the crystal system for a given hall number.

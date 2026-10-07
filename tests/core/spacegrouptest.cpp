@@ -12,6 +12,10 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
+#include <map>
+#include <string>
+#include <vector>
+
 using Avogadro::Matrix3;
 using Avogadro::Vector3;
 using Avogadro::Core::AvoSpglib;
@@ -494,4 +498,280 @@ TEST(SpaceGroupTest, reduceToAsymmetricUnit)
   // It should have 4 atoms again and 4 atom types
   ASSERT_EQ(mol2.atomCount(), 4);
   ASSERT_EQ(mol2.atomicNumbers().size(), 4);
+}
+
+namespace {
+
+// Write a symbol the way Open Babel and many CIFs do: screw axes without the
+// underscore ("P 6_3/m m c" -> "P 63/m m c").
+std::string withoutUnderscores(std::string symbol)
+{
+  std::string result;
+  for (char c : symbol) {
+    if (c != '_')
+      result.push_back(c);
+  }
+  return result;
+}
+
+// The parts of the "international" column: "P 2_1/c = P 1 2_1/c 1"
+std::vector<std::string> aliasesOf(unsigned short hall)
+{
+  std::vector<std::string> aliases;
+  const std::string international = SpaceGroups::international(hall);
+  const std::string separator = " = ";
+  std::string::size_type start = 0;
+  while (true) {
+    std::string::size_type pos = international.find(separator, start);
+    aliases.push_back(international.substr(
+      start, pos == std::string::npos ? std::string::npos : pos - start));
+    if (pos == std::string::npos)
+      break;
+    start = pos + separator.size();
+  }
+  return aliases;
+}
+
+bool isOriginOrAxisSetting(const std::string& setting)
+{
+  return !setting.empty() && (setting[0] == '1' || setting[0] == '2' ||
+                              setting == "H" || setting == "R");
+}
+
+} // namespace
+
+TEST(SpaceGroupTest, tableEntriesMapToThemselves)
+{
+  // Every Hall symbol finds an entry with that Hall symbol. They are unique
+  // but for three pairs (322/324, 326/328, 330/332: the same operations in
+  // two descriptions of the same setting), where the first one is found.
+  for (unsigned short i = 1; i <= 530; ++i) {
+    unsigned short hall = SpaceGroups::hallNumber(SpaceGroups::hallSymbol(i));
+    EXPECT_LE(hall, i) << "hall symbol of " << i;
+    EXPECT_STREQ(SpaceGroups::hallSymbol(hall), SpaceGroups::hallSymbol(i))
+      << "hall symbol of " << i;
+    if (i != 324 && i != 328 && i != 332)
+      EXPECT_EQ(hall, i) << "hall symbol of " << i;
+  }
+
+  // The other strings in the table: an exact match was and is the first
+  // entry of the table with that string, which has the right number.
+  for (unsigned short i = 1; i <= 530; ++i) {
+    for (const std::string& symbol :
+         { std::string(SpaceGroups::international(i)),
+           std::string(SpaceGroups::internationalFull(i)),
+           std::string(SpaceGroups::internationalShort(i)) }) {
+      unsigned short hall = SpaceGroups::hallNumber(symbol);
+      ASSERT_NE(hall, 0) << symbol << " (" << i << ")";
+      EXPECT_LE(hall, i) << symbol;
+      EXPECT_EQ(SpaceGroups::internationalNumber(hall),
+                SpaceGroups::internationalNumber(i))
+        << symbol;
+    }
+  }
+}
+
+TEST(SpaceGroupTest, openBabelStyleSymbols)
+{
+  // How many entries share each full symbol (origin choices and axis
+  // permutations of the same group do).
+  std::map<std::string, int> fullCount;
+  for (unsigned short i = 1; i <= 530; ++i)
+    ++fullCount[SpaceGroups::internationalFull(i)];
+
+  for (unsigned short i = 1; i <= 530; ++i) {
+    const std::string full = SpaceGroups::internationalFull(i);
+    const std::string setting = SpaceGroups::setting(i);
+    std::string spelled = withoutUnderscores(full);
+    // the setting is only needed when the symbol does not tell
+    if (fullCount[full] > 1)
+      spelled += " :" + setting;
+    EXPECT_EQ(SpaceGroups::hallNumber(spelled), i) << spelled;
+
+    // and without the space, as found in some files
+    if (fullCount[full] > 1) {
+      std::string glued = withoutUnderscores(full) + ":" + setting;
+      EXPECT_EQ(SpaceGroups::hallNumber(glued), i) << glued;
+    }
+
+    // Open Babel appends ":1", ":2", ":H" and ":R" to the short symbols
+    // (the "international" column)
+    for (const std::string& alias : aliasesOf(i)) {
+      std::string spelled2 = withoutUnderscores(alias);
+      unsigned short hall = SpaceGroups::hallNumber(spelled2);
+      // whatever it resolves to, it must be the same group
+      if (hall != 0) {
+        EXPECT_EQ(SpaceGroups::internationalNumber(hall),
+                  SpaceGroups::internationalNumber(i))
+          << spelled2;
+      }
+      EXPECT_EQ(SpaceGroups::internationalNumberFromString(spelled2),
+                SpaceGroups::internationalNumber(i))
+        << spelled2;
+
+      if (isOriginOrAxisSetting(setting)) {
+        // a hall number is only found for the exact origin / axes
+        std::string withSetting = spelled2 + " :" + setting;
+        EXPECT_EQ(SpaceGroups::hallNumber(withSetting), i) << withSetting;
+      }
+    }
+  }
+}
+
+TEST(SpaceGroupTest, screwAxesAndSettingsFromFiles)
+{
+  // P 2_1/c with its three cell choices
+  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21/c 1"), 81);
+  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21/n 1"), 82);
+  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21/a 1"), 83);
+  EXPECT_EQ(SpaceGroups::hallNumber("P 1 21 1"), 6);
+  EXPECT_EQ(SpaceGroups::hallNumber("P 21/c"), 81);
+
+  // hexagonal, trigonal and tetragonal screw axes
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63/m m c")),
+    194);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63 m c")), 186);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63 c m")), 185);
+  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63")),
+            173);
+  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 63/m")),
+            176);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 62 2 2")), 180);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 31 2 1")), 152);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 32 1 2")), 153);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 32 2 1")), 154);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 41 2 2")), 91);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 4 21 2")), 90);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 41 21 2")), 92);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 42/m n m")),
+    136);
+  // P 4_2/n m c has two origin choices, which the symbol does not tell
+  EXPECT_EQ(SpaceGroups::hallNumber("P 42/n m c"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P 42/n m c"), 137);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 42/n m c :2")),
+    137);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("C 2 2 21")), 20);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P m n 21")), 31);
+  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("P 21 3")),
+            198);
+  EXPECT_EQ(SpaceGroups::internationalNumber(SpaceGroups::hallNumber("I 21 3")),
+            199);
+
+  // settings: origin choices and hexagonal / rhombohedral axes
+  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d :1"), 426);
+  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d :2"), 427);
+  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d:2"), 427);
+  EXPECT_EQ(SpaceGroups::hallNumber("F d -3 m :1"), 525);
+  EXPECT_EQ(SpaceGroups::hallNumber("F d -3 m :2"), 526);
+  EXPECT_EQ(SpaceGroups::hallNumber("R -3 m :H"), 458);
+  EXPECT_EQ(SpaceGroups::hallNumber("R -3 m :R"), 459);
+  EXPECT_EQ(SpaceGroups::hallNumber("R -3 :H"), 436);
+  EXPECT_EQ(SpaceGroups::hallNumber("R -3 :R"), 437);
+  EXPECT_EQ(SpaceGroups::hallNumber("R 3 :R"), 434);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("R -3 c :H")),
+    167);
+  EXPECT_EQ(
+    SpaceGroups::internationalNumber(SpaceGroups::hallNumber("R 3 m :H")), 160);
+
+  // a setting that the group does not have
+  EXPECT_EQ(SpaceGroups::hallNumber("P n m a :1"), 0);
+  EXPECT_EQ(SpaceGroups::hallNumber("R -3 m :X"), 0);
+
+  // Several origin choices and no setting: the new lookup does not guess.
+  EXPECT_EQ(SpaceGroups::hallNumber("I 41/a m d"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("I 41/a m d"), 141);
+  // (A string that matches the table exactly keeps its old result, the first
+  // entry of the table, which is origin choice 1.)
+  EXPECT_EQ(SpaceGroups::hallNumber("I 4_1/a m d"), 426);
+}
+
+TEST(SpaceGroupTest, oldCubicNotation)
+{
+  // Pre-1983 symbols and this table write "3" for the centrosymmetric
+  // cubic groups that IT writes with -3
+  EXPECT_EQ(SpaceGroups::hallNumber("I m 3 m"), 529);
+  EXPECT_EQ(SpaceGroups::hallNumber("I m -3 m"), 529);
+  EXPECT_EQ(SpaceGroups::hallNumber("P m 3 m"), 517);
+  EXPECT_EQ(SpaceGroups::hallNumber("F m 3 m"), 523);
+  EXPECT_EQ(SpaceGroups::hallNumber("I m -3"), 500);
+  EXPECT_EQ(SpaceGroups::hallNumber("I a -3"), 502);
+  EXPECT_EQ(SpaceGroups::hallNumber("P a -3"), 501);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n 3 m :1"), 521);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n -3 m :2"), 522);
+  EXPECT_EQ(SpaceGroups::hallNumber("P n -3 :1"), 495);
+  EXPECT_EQ(SpaceGroups::hallNumber("F d -3 :2"), 499);
+  // origin choice needed
+  EXPECT_EQ(SpaceGroups::hallNumber("P n 3 m"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("P n 3 m"), 224);
+
+  // the non-centrosymmetric cubic groups must keep their plain 3
+  EXPECT_EQ(SpaceGroups::hallNumber("P 2 3"), 489);
+  EXPECT_EQ(SpaceGroups::hallNumber("P 4 3 2"), 503);
+  EXPECT_EQ(SpaceGroups::hallNumber("P -4 3 m"), 511);
+  EXPECT_EQ(SpaceGroups::hallNumber("F -4 3 m"), 512);
+  EXPECT_EQ(SpaceGroups::hallNumber("I -4 3 d"), 516);
+}
+
+TEST(SpaceGroupTest, internationalNumbers)
+{
+  std::map<unsigned short, std::vector<unsigned short>> halls;
+  for (unsigned short i = 1; i <= 530; ++i)
+    halls[SpaceGroups::internationalNumber(i)].push_back(i);
+  ASSERT_EQ(halls.size(), 230u);
+
+  for (const auto& entry : halls) {
+    std::string number = std::to_string(entry.first);
+    EXPECT_EQ(SpaceGroups::internationalNumberFromString(number), entry.first);
+    if (entry.second.size() == 1) {
+      // a single setting: nothing to guess
+      EXPECT_EQ(SpaceGroups::hallNumber(number), entry.second.front())
+        << number;
+    } else {
+      // axes, cell or origin choice: the number does not tell
+      EXPECT_EQ(SpaceGroups::hallNumber(number), 0) << number;
+    }
+  }
+
+  EXPECT_EQ(SpaceGroups::hallNumber("1"), 1);
+  EXPECT_EQ(SpaceGroups::hallNumber(" 2 "), 2);
+  EXPECT_EQ(SpaceGroups::hallNumber("229"), 529);
+  EXPECT_EQ(SpaceGroups::hallNumber("74"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("74"), 74);
+  EXPECT_EQ(SpaceGroups::hallNumber("227"), 0);
+}
+
+TEST(SpaceGroupTest, garbageSymbols)
+{
+  for (const char* garbage : { "",        " ",
+                               ":",       "::",
+                               "abc",     "0",
+                               "231",     "1000",
+                               "-1",      "74a",
+                               "7 4",     "P",
+                               "P 99 99", "P 1 21/c 1 :zz",
+                               "C 1",     "P 6_3 m c :H",
+                               ":H",      "P 22 2",
+                               "P 2_3 2", "R 3 m 3",
+                               "Q 1 2 3" }) {
+    EXPECT_EQ(SpaceGroups::hallNumber(garbage), 0) << "'" << garbage << "'";
+  }
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString(""), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("abc"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("231"), 0);
+  EXPECT_EQ(SpaceGroups::internationalNumberFromString("0"), 0);
 }
