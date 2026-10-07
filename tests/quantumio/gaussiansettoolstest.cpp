@@ -738,3 +738,149 @@ TEST(GaussianSetToolsTest, coDiatomic)
   EXPECT_FALSE(std::isnan(rhoAtMid));
   EXPECT_GT(rhoAtMid, 1e-3) << "Density at bond midpoint should be significant";
 }
+
+// ---------------------------------------------------------------------------
+// h and i shells: not evaluated, but must not crash
+// ---------------------------------------------------------------------------
+
+// GaussianSet::initCalculation() does not normalize h or i shells, so they
+// own no entries in the normalized coefficient array. Building the per-shell
+// cutoff used to read one of those entries anyway: one past the end for a
+// trailing h/i shell, which libc++ hardening traps. CO in the cc-pV6Z basis
+// ends its shell list with spherical h and i shells on the oxygen.
+TEST(GaussianSetToolsTest, coSixZetaWithHAndIShells)
+{
+  Molecule molecule;
+  ASSERT_TRUE(loadFchk(AVOGADRO_DATA "/data/fchk/CO-cc-6Z.fchk", molecule));
+
+  auto* basis = dynamic_cast<GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+
+  bool hasH = false;
+  bool hasI = false;
+  for (int sym : basis->symmetry()) {
+    if (sym == GaussianSet::H || sym == GaussianSet::H11)
+      hasH = true;
+    if (sym == GaussianSet::I || sym == GaussianSet::I13)
+      hasI = true;
+  }
+  ASSERT_TRUE(hasH) << "CO-cc-6Z should contain h shells";
+  ASSERT_TRUE(hasI) << "CO-cc-6Z should contain i shells";
+
+  GaussianSetTools tools(&molecule);
+  ASSERT_TRUE(tools.isValid());
+
+  int homo = static_cast<int>(basis->electronCount(BasisSet::Paired)) / 2 - 1;
+  ASSERT_GE(homo, 0);
+
+  // A coarse grid: a few thousand points is plenty to reach every shell.
+  Cube cube;
+  cube.setLimits(molecule, 0.4f, 3.0f);
+  ASSERT_GT(cube.data()->size(), 0u);
+  ASSERT_LT(cube.data()->size(), 20000u);
+
+  EXPECT_TRUE(tools.calculateMolecularOrbital(cube, homo));
+
+  bool nonzero = false;
+  for (float value : *cube.data()) {
+    EXPECT_TRUE(std::isfinite(value));
+    if (value != 0.0f)
+      nonzero = true;
+  }
+  EXPECT_TRUE(nonzero) << "The HOMO of CO should not vanish everywhere";
+
+  // The point evaluators go through the same shell data.
+  for (const auto& pt : generateTestPoints(molecule)) {
+    EXPECT_TRUE(std::isfinite(tools.calculateMolecularOrbital(pt, homo)))
+      << "at " << pt.transpose();
+    EXPECT_TRUE(std::isfinite(tools.calculateElectronDensity(pt)))
+      << "at " << pt.transpose();
+  }
+}
+
+namespace {
+
+// Two-atom basis of s shells with the given (possibly empty) h/i shell
+// placed after each s shell. The first molecular orbital puts weight 0.7 and
+// 0.3 on the two s functions and an arbitrary non-zero weight on every h/i
+// function, so any contribution from those shells would show up in its value.
+// The molecule takes ownership of the returned basis set.
+GaussianSet* buildSAndHiBasis(Molecule& molecule, bool withHi)
+{
+  molecule.addAtom(6, Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(8, Vector3(1.2, 0.0, 0.0));
+
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+
+  std::vector<double> column;
+
+  auto add = [&](unsigned int atom, GaussianSet::orbital type, double alpha,
+                 unsigned int functions, double weight) {
+    unsigned int s = basis->addBasis(atom, type);
+    basis->addGto(s, 1.0, alpha);
+    for (unsigned int i = 0; i < functions; ++i)
+      column.push_back(weight);
+  };
+
+  add(0, GaussianSet::S, 1.3, 1, 0.7);
+  if (withHi)
+    add(0, GaussianSet::H11, 0.9, 11, 0.5);
+  add(1, GaussianSet::S, 0.8, 1, 0.3);
+  if (withHi)
+    add(1, GaussianSet::I13, 0.6, 13, 0.9); // the last shell of the basis
+
+  // Only the first MO matters: pad the matrix with zero columns.
+  const size_t n = column.size();
+  std::vector<double> mos(n * n, 0.0);
+  for (size_t i = 0; i < n; ++i)
+    mos[i] = column[i];
+  basis->setMolecularOrbitals(mos, BasisSet::Paired);
+
+  molecule.setBasisSet(basis);
+  return basis;
+}
+
+} // anonymous namespace
+
+TEST(GaussianSetToolsTest, hAndIShellsDoNotContribute)
+{
+  Molecule withHi;
+  Molecule withoutHi;
+  buildSAndHiBasis(withHi, true);
+  buildSAndHiBasis(withoutHi, false);
+
+  GaussianSetTools toolsWith(&withHi);
+  GaussianSetTools toolsWithout(&withoutHi);
+  ASSERT_TRUE(toolsWith.isValid());
+  ASSERT_TRUE(toolsWithout.isValid());
+
+  const Vector3 points[] = { Vector3(0.0, 0.0, 0.0),  Vector3(0.6, 0.0, 0.0),
+                             Vector3(1.2, 0.0, 0.0),  Vector3(0.3, 0.5, -0.4),
+                             Vector3(-1.0, 0.7, 0.2), Vector3(2.0, 1.0, 1.0),
+                             Vector3(0.0, 3.0, 0.0),  Vector3(8.0, 8.0, 8.0) };
+  bool nonzero = false;
+  for (const auto& pt : points) {
+    double with = toolsWith.calculateMolecularOrbital(pt, 0);
+    double without = toolsWithout.calculateMolecularOrbital(pt, 0);
+    EXPECT_TRUE(std::isfinite(with)) << "at " << pt.transpose();
+    EXPECT_DOUBLE_EQ(with, without) << "at " << pt.transpose();
+    if (without != 0.0)
+      nonzero = true;
+  }
+  EXPECT_TRUE(nonzero);
+
+  // The grid path must agree too.
+  Cube cubeWith;
+  Cube cubeWithout;
+  cubeWith.setLimits(withHi, 0.5f, 2.0f);
+  cubeWithout.setLimits(withoutHi, 0.5f, 2.0f);
+  ASSERT_EQ(cubeWith.data()->size(), cubeWithout.data()->size());
+  EXPECT_TRUE(toolsWith.calculateMolecularOrbital(cubeWith, 0));
+  EXPECT_TRUE(toolsWithout.calculateMolecularOrbital(cubeWithout, 0));
+  for (size_t i = 0; i < cubeWith.data()->size(); ++i) {
+    EXPECT_TRUE(std::isfinite((*cubeWith.data())[i]));
+    EXPECT_FLOAT_EQ((*cubeWith.data())[i], (*cubeWithout.data())[i])
+      << "at cube index " << i;
+  }
+}
