@@ -80,7 +80,7 @@ void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
 bool isCifFormat(const std::vector<std::string>& extensions)
 {
   for (const std::string& extension : extensions) {
-    if (Core::toLower(extension) == "cif")
+    if (Core::caseInsensitiveEquals(extension, "cif"))
       return true;
   }
   return false;

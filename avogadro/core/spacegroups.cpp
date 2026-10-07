@@ -37,40 +37,12 @@ struct SymbolEntry
   unsigned short number = 0; // international table number
 };
 
-std::string trimWhitespace(const std::string& s)
-{
-  const char* whitespace = " \t\r\n";
-  std::string::size_type first = s.find_first_not_of(whitespace);
-  if (first == std::string::npos)
-    return std::string();
-  std::string::size_type last = s.find_last_not_of(whitespace);
-  return s.substr(first, last - first + 1);
-}
-
-std::vector<std::string> splitTokens(const std::string& s)
-{
-  std::vector<std::string> tokens;
-  std::string current;
-  for (char c : s) {
-    if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
-      if (!current.empty())
-        tokens.push_back(current);
-      current.clear();
-    } else {
-      current.push_back(c);
-    }
-  }
-  if (!current.empty())
-    tokens.push_back(current);
-  return tokens;
-}
-
 // The spelling of a Hall symbol in the table: runs of white space collapsed to
 // one space, the ends trimmed, and '=' where a file has a double quote.
 std::string normalizeHallSymbol(const std::string& symbol)
 {
   std::string result;
-  for (const auto& token : splitTokens(symbol)) {
+  for (const auto& token : splitWhitespace(symbol)) {
     if (!result.empty())
       result.push_back(' ');
     result += token;
@@ -103,7 +75,7 @@ std::string normalizeScrewAxis(const std::string& token)
 //    because those have a digit (2, 4, -4, 4_1, ...) in the second position.
 std::string normalizeSymbol(const std::string& symbol)
 {
-  std::vector<std::string> tokens = splitTokens(symbol);
+  std::vector<std::string> tokens = splitWhitespace(symbol);
   for (auto& token : tokens)
     token = normalizeScrewAxis(token);
 
@@ -157,18 +129,6 @@ bool isOriginOrAxisSetting(const std::string& setting)
 {
   return !setting.empty() && (setting[0] == '1' || setting[0] == '2' ||
                               setting == "H" || setting == "R");
-}
-
-bool equalsIgnoreCase(const std::string& a, const std::string& b)
-{
-  if (a.size() != b.size())
-    return false;
-  for (std::string::size_type i = 0; i < a.size(); ++i) {
-    if (std::tolower(static_cast<unsigned char>(a[i])) !=
-        std::tolower(static_cast<unsigned char>(b[i])))
-      return false;
-  }
-  return true;
 }
 
 // Exact comparison against the strings in the table
@@ -290,8 +250,8 @@ Resolved resolveSymbol(const std::string& sg)
   std::string setting;
   std::string::size_type colon = sg.rfind(':');
   if (colon != std::string::npos) {
-    symbol = trimWhitespace(sg.substr(0, colon));
-    setting = trimWhitespace(sg.substr(colon + 1));
+    symbol = trimmed(sg.substr(0, colon));
+    setting = trimmed(sg.substr(colon + 1));
   }
 
   std::vector<unsigned short> matches = matchSymbol(symbol);
@@ -309,7 +269,7 @@ Resolved resolveSymbol(const std::string& sg)
   if (!setting.empty()) {
     std::vector<unsigned short> filtered;
     for (unsigned short hall : matches) {
-      if (equalsIgnoreCase(table[hall].setting, setting))
+      if (caseInsensitiveEquals(table[hall].setting, setting))
         filtered.push_back(hall);
     }
     if (filtered.size() == 1)
@@ -338,7 +298,7 @@ Resolved resolveSymbol(const std::string& sg)
 unsigned short SpaceGroups::hallNumber(const std::string& spaceGroup)
 {
   // some files use " instead of = for the space group symbol
-  std::string sg = trimWhitespace(spaceGroup);
+  std::string sg = trimmed(spaceGroup);
   std::replace(sg.begin(), sg.end(), '"', '=');
 
   unsigned short hall = exactHallNumber(sg);
@@ -365,7 +325,7 @@ unsigned short SpaceGroups::hallNumberFromHallSymbol(
 unsigned short SpaceGroups::internationalNumberFromString(
   const std::string& spaceGroup)
 {
-  std::string sg = trimWhitespace(spaceGroup);
+  std::string sg = trimmed(spaceGroup);
   std::replace(sg.begin(), sg.end(), '"', '=');
 
   unsigned short hall = exactHallNumber(sg);
