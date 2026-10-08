@@ -348,7 +348,7 @@ void SpectraDialog::changeSpectra()
 
   // only show for NMR
   m_ui->elementCombo->hide();
-  // todo: some spectra might want to swtich units
+  // todo: some spectra might want to switch units
 
   m_transitions.clear();
   m_intensities.clear();

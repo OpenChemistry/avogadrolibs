@@ -183,7 +183,7 @@ void OBMMEnergy::setMolecule(Core::Molecule* mol)
   setupProcess();
 
   // start the process
-  // we need a tempory file to write the molecule
+  // we need a temporary file to write the molecule
   // get a temporary filename
   QString tempPath = QDir::tempPath();
   if (!tempPath.endsWith(QDir::separator()))

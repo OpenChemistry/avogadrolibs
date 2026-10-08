@@ -167,7 +167,7 @@ void ConstraintsDialog::updateConstraints()
     if (not assigned)
       return;
 
-    // Set corrrect order
+    // Set correct order
     selectedAtoms[0] = i1;
     selectedAtoms[1] = i2;
     selectedAtoms[2] = i3;
@@ -205,7 +205,7 @@ void ConstraintsDialog::updateConstraints()
     if (not assigned)
       return;
 
-    // Set corrrect order
+    // Set correct order
     selectedAtoms[0] = i1;
     selectedAtoms[1] = i2;
     selectedAtoms[2] = i3;

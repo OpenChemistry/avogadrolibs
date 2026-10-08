@@ -108,7 +108,7 @@ public:
   QStringList errorList() const { return m_errors; }
 
   /**
-   * Reset the python interpretor path. The following are checked, in order:
+   * Reset the python interpreter path. The following are checked, in order:
    * - The AVO_PYTHON_INTERPRETER environment variable
    * - The "interpreters/python" QSettings value
    * - The path specified in avogadropython.h.

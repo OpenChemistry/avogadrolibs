@@ -178,7 +178,7 @@ void MolecularProperties::showDialog()
 {
   if (m_dialog == nullptr) {
     // create it
-    // copied from the propeties dialog
+    // copied from the properties dialog
     m_dialog = new QDialog(qobject_cast<QWidget*>(parent()));
     auto* layout = new QVBoxLayout(m_dialog);
     m_dialog->setLayout(layout);

@@ -18,7 +18,7 @@ BandDialog::BandDialog(QWidget* aParent, YaehmopSettings& yaehmopSettings)
   m_ui->setupUi(this);
 }
 
-// Destructor must be defined after Ui::BandDialog has been resovled
+// Destructor must be defined after Ui::BandDialog has been resolved
 BandDialog::~BandDialog() = default;
 
 int BandDialog::exec()

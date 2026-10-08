@@ -677,7 +677,7 @@ public:
   void setCamera(const Matrix4f& modelView, const Matrix4f& projection);
 
   /**
-   * Finish processing an aynchronous command script
+   * Finish processing an asynchronous command script
    */
   bool processCommand(Core::Molecule* mol);
 

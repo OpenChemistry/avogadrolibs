@@ -194,7 +194,7 @@ void SVG::paintBonds(QPainter& painter, const SVGAtom& atom, unsigned int i,
     if (m_idToindex[j] <= i) {
       continue;
     }
-    // calculate the inicial and final position, considering the atom middle
+    // calculate the initial and final position, considering the atom middle
     // and the middle of the pen width
     auto mol_to = m_atoms[m_idToindex[j]].pos_image;
     Eigen::Vector2f from(atom.pos_image[0] - (m_penWidthBond / 2.0f),
