@@ -11,7 +11,8 @@ import struct
 import sys
 
 KEYS = ["atoms", "id", "index", "element", "axis", "value", "tolerance",
-        "atom", "indices", "resolution"]
+        "atom", "indices", "resolution", "position", "bondTo", "bondOrder",
+        "order", "mode"]
 
 
 def u8(v):
@@ -196,6 +197,34 @@ SEEDS = {
         command("centerAtom", options(id=boolean(True), index=null())),
         command("editDistance", options(atoms=ix(0, 1), value=text("1.5"))),
         command("alignAtom", options(axis=lst(small(0)), id=small(0)))]),
+    "select_atoms_modes": seed(0, [
+        command("selectAtoms", options(indices=ix(0, 1))),
+        command("selectAtoms", options(indices=ix(2), mode=text("add"))),
+        command("selectAtoms", options(indices=ix(0), mode=text("remove"))),
+        command("selectAtoms", options(indices=ix(0, 99))),
+        command("selectAtoms", options(indices=lst(special_double(0)),
+                                       mode=small(1))),
+        UNDO_REDO]),
+    "editor_add_remove": seed(1, [
+        command("addAtom", options(element=text("C"),
+                                   position=lst(f64(1.0), f64(2.0),
+                                                f64(3.0)),
+                                   bondTo=small(0), bondOrder=small(2))),
+        command("addBond", options(atoms=ix(0, 3), order=small(1))),
+        command("removeBond", options(atoms=ix(0, 3))),
+        command("removeSelectedAtoms"), UNDO, REDO]),
+    "editor_malformed": seed(0, [
+        command("addAtom", options(element=text("C"),
+                                   position=lst(special_double(0), small(0),
+                                                small(0)))),
+        command("addAtom", options(element=small(6),
+                                   position=lst(special_double(1), small(0),
+                                                small(0)))),
+        command("addAtom", options(element=text("C"))),
+        command("addBond", options(atoms=ix(0, 0))),
+        command("addBond", options(atoms=ix(0, 99), order=small(7))),
+        command("removeBond", options(atoms=ix(-1, 2))),
+        command("removeBond", options(atoms=boolean(True)))]),
 }
 
 

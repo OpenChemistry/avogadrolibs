@@ -14,6 +14,7 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
+#include <QtCore/QPointer>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -40,8 +41,7 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override
   {
-    if (mol)
-      m_molecule = mol->undoMolecule();
+    m_molecule = mol ? mol->undoMolecule() : nullptr;
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
@@ -60,6 +60,10 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
+  void registerCommands() override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
 
@@ -75,6 +79,23 @@ private:
    */
   void reset();
 
+  /** Which neighbours of an edited atom count as touched by the edit. */
+  enum class Neighbors
+  {
+    None,      ///< only the atoms themselves
+    Hydrogens, ///< also bonded hydrogens (automatic hydrogen adjustment)
+    All        ///< also every bonded atom (deleting removes those bonds)
+  };
+
+  /**
+   * @return true if @p atom, or a neighbour selected by @p scope, is in a
+   * locked layer; an edit that touches it must be refused.
+   */
+  bool touchesLockedAtom(Index atom, Neighbors scope) const;
+
+  /** @return true if either end of bond @p bondIndex touches a locked atom. */
+  bool bondTouchesLockedAtom(Index bondIndex) const;
+
   void emptyLeftClick(QMouseEvent* e);
   void atomLeftClick(QMouseEvent* e);
   void bondLeftClick(QMouseEvent* e);
@@ -88,7 +109,9 @@ private:
   QtGui::RWMolecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
   Rendering::GLRenderer* m_renderer;
-  EditorToolWidget* m_toolWidget;
+  // Parentless when the tool has no widget parent (tests, fuzzing); the
+  // tool dock may also own and delete it first, hence the guard.
+  QPointer<EditorToolWidget> m_toolWidget;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;
   Rendering::Identifier m_bondedAtom;
@@ -97,6 +120,9 @@ private:
   unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
   bool m_fixValenceLater;
+  // The drag is over a locked atom and has changed nothing: the release
+  // drops its undo entry.
+  bool m_dragCancelled;
   QString m_keyPressBuffer;
   QtGui::PluginLayerManager m_layerManager;
 
