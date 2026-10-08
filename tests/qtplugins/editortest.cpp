@@ -343,3 +343,114 @@ TEST_F(EditorCommandTest, buildMoleculeFromEmpty)
   EXPECT_EQ(out.result.value("index").toInt(), 1);
   EXPECT_EQ(m_harness.snapshot().bondPairs.size(), 1u);
 }
+
+// Layer locks: like the mouse handlers, the commands refuse every edit while
+// the active layer is locked.
+namespace {
+void setActiveLayerLocked(CommandTestHarness& harness, bool locked)
+{
+  auto info = harness.molecule()->layerInfo();
+  info->locked[harness.molecule()->layer().activeLayer()] = locked;
+}
+} // namespace
+
+TEST_F(EditorCommandTest, lockedActiveLayerRefusesEdits)
+{
+  m_harness.molecule()->setAtomSelected(1, true);
+  setActiveLayerLocked(m_harness, true);
+  const std::vector<std::pair<const char*, QVariantMap>> commands = {
+    { "addAtom", { { "element", "C" }, { "position", list({ 0, 0, 0 }) } } },
+    { "addAtom",
+      { { "element", "C" },
+        { "position", list({ 0, 0, 0 }) },
+        { "bondTo", 0 } } },
+    { "addBond", { { "atoms", ids({ 0, 3 }) } } },
+    { "removeBond", { { "atoms", ids({ 1, 2 }) } } },
+    { "removeSelectedAtoms", {} },
+  };
+  for (const auto& [name, options] : commands)
+    expectRefused(name, options, name);
+}
+
+TEST_F(EditorCommandTest, lockedActiveLayerStillAllowsEmptyRemoval)
+{
+  setActiveLayerLocked(m_harness, true);
+  const MoleculeSnapshot before = m_harness.snapshot();
+  const CommandOutcome out = m_harness.run("removeSelectedAtoms");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(out.result.value("removed").toInt(), 0);
+  EXPECT_EQ(m_harness.snapshot(), before);
+}
+
+TEST_F(EditorCommandTest, unlockingLetsTheSameCommandSucceed)
+{
+  setActiveLayerLocked(m_harness, true);
+  const QVariantMap options = { { "atoms", ids({ 0, 3 }) } };
+  expectRefused("addBond", options, "locked");
+  setActiveLayerLocked(m_harness, false);
+  const CommandOutcome out = m_harness.run("addBond", options);
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(m_harness.snapshot().bondPairs.size(), 4u);
+}
+
+// Atom 3 is put in a second, locked layer while layer 0 stays active and
+// unlocked: edits that touch atom 3 must be refused, edits that do not must
+// still work.
+namespace {
+void lockAtomInOtherLayer(CommandTestHarness& harness, Index atom)
+{
+  auto info = harness.molecule()->layerInfo();
+  info->layer.addLayer();
+  info->locked.push_back(true);
+  info->visible.push_back(true);
+  harness.molecule()->setLayer(atom, 1);
+}
+} // namespace
+
+TEST_F(EditorCommandTest, lockedAtomRefusesEveryCommandTouchingIt)
+{
+  lockAtomInOtherLayer(m_harness, 3);
+  const std::vector<std::pair<const char*, QVariantMap>> commands = {
+    { "addAtom",
+      { { "element", "C" },
+        { "position", list({ 0, 0, 0 }) },
+        { "bondTo", 3 } } },
+    { "addBond", { { "atoms", ids({ 0, 3 }) } } },
+    { "addBond", { { "atoms", ids({ 3, 0 }) } } },
+    { "removeBond", { { "atoms", ids({ 2, 3 }) } } },
+    { "removeBond", { { "atoms", ids({ 3, 2 }) } } },
+  };
+  for (const auto& [name, options] : commands)
+    expectRefused(name, options, name);
+}
+
+TEST_F(EditorCommandTest, lockedAtomRefusesDeletingItOrItsNeighbours)
+{
+  lockAtomInOtherLayer(m_harness, 3);
+  // The locked atom itself, and unlocked O2 which is bonded to it.
+  for (Index selected : { Index(3), Index(2) }) {
+    m_harness.molecule()->setAtomSelected(selected, true);
+    expectRefused("removeSelectedAtoms", {},
+                  "select " + std::to_string(selected));
+    m_harness.molecule()->setAtomSelected(selected, false);
+  }
+  // A selection that includes one safe and one unsafe atom is not partially
+  // deleted.
+  m_harness.molecule()->setAtomSelected(0, true);
+  m_harness.molecule()->setAtomSelected(2, true);
+  expectRefused("removeSelectedAtoms", {}, "mixed selection");
+}
+
+TEST_F(EditorCommandTest, lockedAtomLeavesUntouchedAtomsEditable)
+{
+  lockAtomInOtherLayer(m_harness, 3);
+  // H0 is two bonds away from the locked atom.
+  m_harness.molecule()->setAtomSelected(0, true);
+  CommandOutcome out = m_harness.run("removeSelectedAtoms");
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(out.result.value("removed").toInt(), 1);
+  // New atoms go into the active (unlocked) layer.
+  out = m_harness.run(
+    "addAtom", { { "element", "C" }, { "position", list({ 5, 0, 0 }) } });
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+}

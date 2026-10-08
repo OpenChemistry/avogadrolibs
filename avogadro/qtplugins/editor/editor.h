@@ -78,6 +78,23 @@ private:
    */
   void reset();
 
+  /** Which neighbours of an edited atom count as touched by the edit. */
+  enum class Neighbors
+  {
+    None,      ///< only the atoms themselves
+    Hydrogens, ///< also bonded hydrogens (automatic hydrogen adjustment)
+    All        ///< also every bonded atom (deleting removes those bonds)
+  };
+
+  /**
+   * @return true if @p atom, or a neighbour selected by @p scope, is in a
+   * locked layer; an edit that touches it must be refused.
+   */
+  bool touchesLockedAtom(Index atom, Neighbors scope) const;
+
+  /** @return true if either end of bond @p bondIndex touches a locked atom. */
+  bool bondTouchesLockedAtom(Index bondIndex) const;
+
   void emptyLeftClick(QMouseEvent* e);
   void atomLeftClick(QMouseEvent* e);
   void bondLeftClick(QMouseEvent* e);
