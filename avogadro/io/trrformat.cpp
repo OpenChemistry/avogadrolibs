@@ -64,7 +64,7 @@ int isDouble(map<string, int>& header)
   for (auto& headerKey : headerKeys) {
     if (header[headerKey] != 0) {
       if (headerKey == "box_size") {
-        size = (int)(header[headerKey] / DIM * DIM);
+        size = (int)(header[headerKey] / (DIM * DIM));
         break;
       } else {
         // natoms is read from the file, and this is integer division: a
@@ -139,26 +139,14 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                 &headval[8], &headval[9], &headval[10], &headval[11],
                 &headval[12]);
   for (int i = 0; i < 13; ++i) {
-    header.insert(pair<string, int>(HEADITEMS[i], headval[i]));
+    header[HEADITEMS[i]] = headval[i];
   }
 
-  // Reading timestep and lambda
+  // Skip the timestep and lambda. Nothing uses them, and converting a
+  // NaN or out-of-range value from the file to int is undefined.
   doubleStatus = isDouble(header);
-  if (doubleStatus) {
-    double header0, header1;
-    snprintf(fmt, sizeof(fmt), "%c2d", endian);
-    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-    struct_unpack(buff.data(), fmt, &header0, &header1);
-    header.insert(pair<string, int>("time", header0));
-    header.insert(pair<string, int>("lambda", header1));
-  } else {
-    float header0, header1;
-    snprintf(fmt, sizeof(fmt), "%c2f", endian);
-    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-    struct_unpack(buff.data(), fmt, &header0, &header1);
-    header.insert(pair<string, int>("time", header0));
-    header.insert(pair<string, int>("lambda", header1));
-  }
+  snprintf(fmt, sizeof(fmt), "%c2%c", endian, doubleStatus ? 'd' : 'f');
+  readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
 
   // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
   for (auto& _kid : keyCheck) {
@@ -202,6 +190,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                     mat[2][2] * NM_TO_ANGSTROM));
           if (!uc->isRegular()) {
             appendError("lattice vectors are not linear independent");
+            delete uc;
             return false;
           }
           mol.setUnitCell(uc);
@@ -276,6 +265,7 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
   }
   mol.setCoordinate3d(mol.atomPositions3d(), 0);
+  const int firstFrameAtoms = header["natoms"];
 
   // Do we have an animation?
   // tellg() returns -1 once the stream is exhausted, which never equals
@@ -301,7 +291,11 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
     readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
     struct_unpack(buff.data(), fmt, &slen0, &slen1);
 
-    // Reading trajectory version string
+    // Reading trajectory version string, bounded as for the first frame.
+    if (slen0 < 1 || slen0 > static_cast<int>(sizeof(raw))) {
+      appendError("TRR file declares an implausible version string length.");
+      return false;
+    }
     snprintf(fmt, sizeof(fmt), "%c%ds", endian, slen0 - 1);
     readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
     struct_unpack(buff.data(), fmt, raw);
@@ -321,26 +315,14 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
                   &headval[7], &headval[8], &headval[9], &headval[10],
                   &headval[11], &headval[12]);
     for (int i = 0; i < 13; ++i) {
-      header.insert(pair<string, int>(HEADITEMS[i], headval[i]));
+      header[HEADITEMS[i]] = headval[i];
     }
 
-    // Reading timestep and lambda
+    // Skip the timestep and lambda. Nothing uses them, and converting a
+    // NaN or out-of-range value from the file to int is undefined.
     doubleStatus = isDouble(header);
-    if (doubleStatus) {
-      double header0, header1;
-      snprintf(fmt, sizeof(fmt), "%c2d", endian);
-      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-      struct_unpack(buff.data(), fmt, &header0, &header1);
-      header.insert(pair<string, int>("time", header0));
-      header.insert(pair<string, int>("lambda", header1));
-    } else {
-      float header0, header1;
-      snprintf(fmt, sizeof(fmt), "%c2f", endian);
-      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-      struct_unpack(buff.data(), fmt, &header0, &header1);
-      header.insert(pair<string, int>("time", header0));
-      header.insert(pair<string, int>("lambda", header1));
-    }
+    snprintf(fmt, sizeof(fmt), "%c2%c", endian, doubleStatus ? 'd' : 'f');
+    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
 
     // Reading matrices corresponding to "box_size", "vir_size", "pres_size"
     for (auto& _kid : keyCheck) {
@@ -394,6 +376,11 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
       }
     }
 
+    // Every frame describes the atoms of the first one.
+    if (header["natoms"] != firstFrameAtoms) {
+      appendError("TRR frame atom count differs from the first frame.");
+      return false;
+    }
     natoms = header["natoms"];
     Array<Vector3> positions;
     positions.reserve(natoms);
@@ -432,7 +419,10 @@ bool TrrFormat::read(std::istream& inStream, Core::Molecule& mol)
         }
       }
     }
-    mol.setCoordinate3d(positions, coordSet++);
+    // Frames may carry only velocities or forces (nstvout, nstfout), and
+    // those are no coordinate set.
+    if (header["x_size"] != 0)
+      mol.setCoordinate3d(positions, coordSet++);
     positions.clear();
   }
   return true;
