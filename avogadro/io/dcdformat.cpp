@@ -15,7 +15,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <istream>
+#include <memory>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -32,121 +34,261 @@ using Core::Atom;
 using Core::Molecule;
 using Core::UnitCell;
 
-#ifndef _WIN32
-#endif
+namespace {
 
-#define DCD_EOF (-1)
 constexpr int DCD_MAGIC = 84;
-constexpr int DCD_IS_CHARMM = 0x01;
 // CHARMM -- and NAMD, which writes the CHARMM flavour -- records DELTA in AKMA
 // time units, where one unit is 48.88821 fs (CHARMM's TIMFAC). X-PLOR records
 // it in picoseconds already, which is why the two are read at different
 // widths below.
 constexpr double AkmaToPicoseconds = 0.04888821;
-constexpr int DCD_HAS_4DIMS = 0x02;
-constexpr int DCD_HAS_EXTRA_BLOCK = 0x04;
 
-int swap_integer(int inp)
+enum class RecordStatus
 {
-  return (((inp << 24) & 0xff000000) | ((inp << 8) & 0x00ff0000) |
-          ((inp >> 8) & 0x0000ff00) | ((inp >> 24) & 0x000000ff));
+  Ok,
+  Truncated, // the file ended inside the record
+  BadMarker  // the leading and trailing length markers are inconsistent
+};
+
+// Everything the per-frame reader needs to know about the file.
+struct DcdLayout
+{
+  char endian = '>';
+  bool hasCell = false;     // CHARMM unit-cell record before the coordinates
+  bool hasFourDims = false; // CHARMM fourth-dimension record after them
+  int numAtoms = 0;
+  int numFixed = 0;
+  std::vector<int> freeIndexes; // zero-based; only used when numFixed > 0
+};
+
+int unpackInt(const char* data, char endian)
+{
+  const char fmt[] = { endian, '1', 'i', '\0' };
+  int value = 0;
+  struct_unpack(data, fmt, &value);
+  return value;
 }
 
-char swap_endian(char endian)
+float unpackFloat(const char* data, char endian)
 {
-  if (endian == '>')
-    return '<';
-  else
-    return '>';
+  const char fmt[] = { endian, '1', 'f', '\0' };
+  float value = 0.0f;
+  struct_unpack(data, fmt, &value);
+  return value;
 }
+
+double unpackDouble(const char* data, char endian)
+{
+  const char fmt[] = { endian, '1', 'd', '\0' };
+  double value = 0.0;
+  struct_unpack(data, fmt, &value);
+  return value;
+}
+
+/**
+ * Read one Fortran-style record: a 4-byte length marker, the payload, and the
+ * same marker again. The payload is left in @a payload. If @a expectedBytes is
+ * not negative, the marker must equal it.
+ */
+RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
+                        std::vector<char>& payload, int expectedBytes,
+                        int* length = nullptr)
+{
+  std::vector<char> marker(sizeof(int32_t));
+  if (!readBlock(in, marker, 4, fileLen))
+    return RecordStatus::Truncated;
+  const int bytes = unpackInt(marker.data(), endian);
+  if (bytes < 0 || (expectedBytes >= 0 && bytes != expectedBytes))
+    return RecordStatus::BadMarker;
+
+  if (!readBlock(in, payload, bytes, fileLen))
+    return RecordStatus::Truncated;
+  if (!readBlock(in, marker, 4, fileLen))
+    return RecordStatus::Truncated;
+  if (unpackInt(marker.data(), endian) != bytes)
+    return RecordStatus::BadMarker;
+
+  if (length != nullptr)
+    *length = bytes;
+  return RecordStatus::Ok;
+}
+
+// Read a record of @a count float32 values.
+RecordStatus readFloats(std::istream& in, char endian, std::streamoff fileLen,
+                        std::vector<char>& payload, std::size_t count,
+                        std::vector<float>& values)
+{
+  if (count > static_cast<std::size_t>(fileLen) / 4)
+    return RecordStatus::Truncated;
+  const RecordStatus status =
+    readRecord(in, endian, fileLen, payload, static_cast<int>(count * 4));
+  if (status != RecordStatus::Ok)
+    return status;
+  values.resize(count);
+  for (std::size_t i = 0; i < count; ++i)
+    values[i] = unpackFloat(payload.data() + 4 * i, endian);
+  return RecordStatus::Ok;
+}
+
+/**
+ * Convert the six doubles of a CHARMM unit-cell record (A, gamma, B, beta,
+ * alpha, C) into a cell. The angles are cosines in CHARMM and many NAMD files
+ * and degrees otherwise; UnitCell wants radians.
+ */
+std::unique_ptr<UnitCell> cellFromRecord(double uc[6])
+{
+  if (uc[1] >= -1.0 && uc[1] <= 1.0 && uc[3] >= -1.0 && uc[3] <= 1.0 &&
+      uc[4] >= -1.0 && uc[4] <= 1.0) {
+    // This formulation improves rounding behavior for orthogonal cells
+    // so that the angles end up at precisely 90 degrees, unlike acos()
+    uc[4] = M_PI_2 - asin(uc[4]); /* cosBC */
+    uc[3] = M_PI_2 - asin(uc[3]); /* cosAC */
+    uc[1] = M_PI_2 - asin(uc[1]); /* cosAB */
+  } else {
+    const double toRadians = M_PI / 180.0;
+    uc[4] *= toRadians;
+    uc[3] *= toRadians;
+    uc[1] *= toRadians;
+  }
+  return std::make_unique<UnitCell>(uc[0], uc[2], uc[5], uc[4], uc[3], uc[1]);
+}
+
+/**
+ * Read one frame: [unit cell], X, Y, Z, [fourth dimension].
+ *
+ * @param first True for frame 0, which holds every atom even when some are
+ * fixed. Later frames hold only the free atoms.
+ * @param positions On entry the positions to start from (the first frame's, so
+ * fixed atoms stay put); on success the frame's positions.
+ * @param cell Receives the unit cell record, if the file has one.
+ */
+RecordStatus readFrame(std::istream& in, const DcdLayout& layout,
+                       std::streamoff fileLen, std::vector<char>& payload,
+                       bool first, Array<Vector3>& positions,
+                       std::unique_ptr<UnitCell>* cell)
+{
+  RecordStatus status;
+  if (layout.hasCell) {
+    status = readRecord(in, layout.endian, fileLen, payload, 48);
+    if (status != RecordStatus::Ok)
+      return status;
+    double uc[6];
+    for (int i = 0; i < 6; ++i)
+      uc[i] = unpackDouble(payload.data() + 8 * i, layout.endian);
+    if (cell != nullptr)
+      *cell = cellFromRecord(uc);
+  }
+
+  const bool freeOnly = !first && layout.numFixed > 0;
+  const std::size_t count = static_cast<std::size_t>(
+    freeOnly ? layout.numAtoms - layout.numFixed : layout.numAtoms);
+
+  std::vector<float> axis[3];
+  for (auto& values : axis) {
+    status = readFloats(in, layout.endian, fileLen, payload, count, values);
+    if (status != RecordStatus::Ok)
+      return status;
+  }
+
+  if (layout.hasFourDims) {
+    status = readRecord(in, layout.endian, fileLen, payload, -1);
+    if (status != RecordStatus::Ok)
+      return status;
+  }
+
+  positions.resize(static_cast<std::size_t>(layout.numAtoms), Vector3::Zero());
+  for (std::size_t i = 0; i < count; ++i) {
+    const std::size_t atom =
+      freeOnly ? static_cast<std::size_t>(layout.freeIndexes[i]) : i;
+    positions[atom] = Vector3(axis[0][i], axis[1][i], axis[2][i]);
+  }
+  return RecordStatus::Ok;
+}
+
+std::string recordError(RecordStatus status, const std::string& what)
+{
+  if (status == RecordStatus::BadMarker)
+    return "DCD " + what + " has inconsistent record length markers.";
+  return "Unexpected end of DCD file.";
+}
+
+} // namespace
 
 bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 {
-  /** Endian type, Buffer and Format char containers for unpacking and storing
-   * data using struct library */
-  char endian = '>';
   std::vector<char> buff(BUFSIZ);
-  char fmt[BUFSIZ];
+  DcdLayout layout;
 
-  /** Variables to store various components from the binary data unpacked using
-   * the struct library */
-  char raw[84] = {};
-  double DELTA = 0.0;
-  int magic = 0;
-  int charmm = 0;
-  int NAMNF = 0;
-  int NTITLE = 0;
-  int ISTART = 0;
-  int NSAVC = 0;
-  int lenRemarks = 0;
-  int NATOMS = 0;
-  int blockSize = 0;
-
-  // Determining size of file
+  // Determining size of file. A failed tellg() is -1, which is not a length.
   inStream.seekg(0, inStream.end);
-  int fileLen = inStream.tellg();
+  const std::streamoff fileLen = inStream.tellg();
   inStream.seekg(0, inStream.beg);
+  if (fileLen < 0 || !inStream.good()) {
+    appendError("Unable to determine the size of the DCD file.");
+    return false;
+  }
 
-  // Reading magic number
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+  // Reading magic number: the byte order is whichever one makes it 84.
+  if (!readBlock(inStream, buff, 4, fileLen)) {
     appendError("Unexpected end of DCD file.");
     return false;
   }
-  struct_unpack(buff.data(), fmt, &magic);
-  if (magic != DCD_MAGIC) {
-    magic = swap_integer(magic);
-    endian = swap_endian(endian);
-    if (magic != DCD_MAGIC) {
-      appendError("File does not start with magic number 84.");
-      return false;
-    }
+  if (unpackInt(buff.data(), '>') == DCD_MAGIC) {
+    layout.endian = '>';
+  } else if (unpackInt(buff.data(), '<') == DCD_MAGIC) {
+    layout.endian = '<';
+  } else {
+    appendError("File does not start with magic number 84.");
+    return false;
   }
+  const char endian = layout.endian;
 
-  // CORD
-  snprintf(fmt, sizeof(fmt), "%c%ds", endian, magic);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
+  // CORD plus the rest of the 84 byte header, and its trailing marker. The
+  // payload stays raw bytes in the file's byte order, so every field is
+  // decoded through the endian-aware path below, never by a pointer cast.
+  if (!readBlock(inStream, buff, DCD_MAGIC, fileLen)) {
     appendError("Unexpected end of DCD file.");
     return false;
   }
-  struct_unpack(buff.data(), fmt, raw);
+  char raw[DCD_MAGIC] = {};
+  std::copy(buff.begin(), buff.begin() + DCD_MAGIC, raw);
   if (raw[0] != 'C' || raw[1] != 'O' || raw[2] != 'R' || raw[3] != 'D') {
     appendError("Keyword CORD not found.");
     return false;
   }
+  if (!readBlock(inStream, buff, 4, fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  if (unpackInt(buff.data(), endian) != DCD_MAGIC) {
+    appendError("DCD header has inconsistent record length markers.");
+    return false;
+  }
 
-  // Determining whether the trajectory file is from CHARMM or not
-  if (*(reinterpret_cast<int*>(raw + 80)) != 0) {
-    charmm = DCD_IS_CHARMM;
-    if (*(reinterpret_cast<int*>(raw + 44)) != 0)
-      charmm |= DCD_HAS_EXTRA_BLOCK;
-
-    if (*(reinterpret_cast<int*>(raw + 48)) == 1)
-      charmm |= DCD_HAS_4DIMS;
-  } else {
-    charmm = 0;
+  // Determining whether the trajectory file is from CHARMM or not: a nonzero
+  // version number in the last header word. Only CHARMM files can carry the
+  // unit-cell and fourth-dimension records.
+  const bool charmm = unpackInt(raw + 80, endian) != 0;
+  if (charmm) {
+    layout.hasCell = unpackInt(raw + 44, endian) != 0;
+    layout.hasFourDims = unpackInt(raw + 48, endian) == 1;
   }
 
   // First integration step written, and how many steps apart the frames are.
-  // The header block came back as raw bytes, so its integers still carry the
-  // file's byte order -- unpack them through the same endian-aware path the
-  // rest of the file uses rather than reading them in the host's.
-  snprintf(fmt, sizeof(fmt), "%c2i", endian);
-  struct_unpack(raw + 8, fmt, &ISTART, &NSAVC);
+  const int ISTART = unpackInt(raw + 8, endian);
+  const int NSAVC = unpackInt(raw + 12, endian);
 
   // number of fixed atoms
-  NAMNF = *(reinterpret_cast<int*>(raw + 36));
+  layout.numFixed = unpackInt(raw + 36, endian);
 
   // DELTA (timestep) is stored as a double, in picoseconds, with X-PLOR, but
   // as a float in AKMA time units with CHARMM. Both end up in picoseconds.
-  if (charmm & DCD_IS_CHARMM) {
-    float ftmp;
-    ftmp = *(reinterpret_cast<float*>(raw + 40));
-
-    DELTA = static_cast<double>(ftmp) * AkmaToPicoseconds;
-  } else {
-    (DELTA) = *(reinterpret_cast<double*>(raw + 40));
-  }
+  double DELTA = 0.0;
+  if (charmm)
+    DELTA =
+      static_cast<double>(unpackFloat(raw + 40, endian)) * AkmaToPicoseconds;
+  else
+    DELTA = unpackDouble(raw + 40, endian);
 
   // DELTA is the integration timestep, but only every NSAVC-th step was
   // written, so that -- not DELTA -- is how far apart the frames in this file
@@ -155,261 +297,86 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   const double frameInterval = DELTA * (NSAVC > 0 ? NSAVC : 1);
   const double startTime = DELTA * (ISTART > 0 ? ISTART : 0);
 
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
+  // Title record: NTITLE, then NTITLE 80-character strings.
+  int titleBytes = 0;
+  RecordStatus status =
+    readRecord(inStream, endian, fileLen, buff, -1, &titleBytes);
+  if (status != RecordStatus::Ok) {
+    appendError(recordError(status, "title block"));
     return false;
   }
-  struct_unpack(buff.data(), fmt, &magic);
-
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  struct_unpack(buff.data(), fmt, &blockSize);
-
-  if (((blockSize - 4) % 80) == 0) {
-    // Read NTITLE, the number of 80 character title strings
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    struct_unpack(buff.data(), fmt, &NTITLE);
-    // NTITLE comes from the file, so check the product rather than trusting
-    // it: 80 * NTITLE overflows int for NTITLE > ~26.8M, and the result was
-    // handed straight to malloc.
-    if (NTITLE < 0 || NTITLE > fileLen / 80) {
-      appendError("DCD file declares an implausible title count.");
-      return false;
-    }
-    lenRemarks = NTITLE * 80;
-    std::vector<char> remarks(static_cast<size_t>(lenRemarks));
-    snprintf(fmt, sizeof(fmt), "%c%ds", endian, lenRemarks);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    struct_unpack(buff.data(), fmt, remarks.data());
-
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    int endSize;
-    struct_unpack(buff.data(), fmt, &endSize);
-  } else {
+  if (titleBytes < 4 || ((titleBytes - 4) % 80) != 0) {
     appendError("Block size must be 4 plus a multiple of 80.");
     return false;
   }
-
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  int fourInput;
-  struct_unpack(buff.data(), fmt, &fourInput);
-  if (fourInput != 4) {
-    // Error
-  }
-
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  struct_unpack(buff.data(), fmt, &NATOMS);
-
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  struct_unpack(buff.data(), fmt, &fourInput);
-  if (fourInput != 4) {
-    appendError("Expected token 4. Read token " + to_string(fourInput));
+  // NTITLE comes from the file, so check it against the block that holds the
+  // strings rather than trusting it.
+  const int NTITLE = unpackInt(buff.data(), endian);
+  if (NTITLE < 0 || NTITLE > (titleBytes - 4) / 80) {
+    appendError("DCD file declares an implausible title count.");
     return false;
   }
 
-  if (NAMNF != 0) {
-    // This was calloc((NATOMS - NAMNF), sizeof(int)) cast to int**, with the
-    // null check written as *FREEINDEXES rather than FREEINDEXES -- so on the
-    // zeroed block it read back as a null pointer and this branch always
-    // failed, meaning a DCD with fixed atoms never loaded at all.
-    if (NAMNF < 0 || NAMNF > NATOMS) {
-      appendError("DCD file declares an implausible fixed atom count.");
-      return false;
-    }
-    std::vector<int> freeIndexes(static_cast<size_t>(NATOMS - NAMNF));
-
-    /* Read in index array size */
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    int arrSize = 0;
-    struct_unpack(buff.data(), fmt, &arrSize);
-
-    if (arrSize != (NATOMS - NAMNF) * 4) {
-      appendError("DCD file contains bad format.");
-      return false;
-    }
-
-    snprintf(fmt, sizeof(fmt), "%c%di", endian, (NATOMS - NAMNF));
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    struct_unpack(buff.data(), fmt, freeIndexes.data());
-
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    struct_unpack(buff.data(), fmt, &arrSize);
-
-    if (arrSize != (NATOMS - NAMNF) * 4) {
-      appendError("DCD file contains bad format.");
-      return false;
-    }
+  // NATOMS record
+  status = readRecord(inStream, endian, fileLen, buff, 4);
+  if (status != RecordStatus::Ok) {
+    appendError(recordError(status, "atom count"));
+    return false;
   }
+  layout.numAtoms = unpackInt(buff.data(), endian);
 
-  // CHARMM trajectories have an extra block to be read, that contains
-  // information about the unit cell
-  if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    int leadingNum;
-    struct_unpack(buff.data(), fmt, &leadingNum);
-
-    if (leadingNum == 48) {
-      double unitcell[6];
-      for (double& aa : unitcell) {
-        snprintf(fmt, sizeof(fmt), "%c%dd", endian, 1);
-        if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-          appendError("Unexpected end of DCD file.");
-          return false;
-        }
-        struct_unpack(buff.data(), fmt, &aa);
-      }
-      if (unitcell[1] >= -1.0 && unitcell[1] <= 1.0 && unitcell[3] >= -1.0 &&
-          unitcell[3] <= 1.0 && unitcell[4] >= -1.0 && unitcell[4] <= 1.0) {
-        // CHARMM and certain NAMD files have the cosines instead of angles
-        // This formulation improves rounding behavior for orthogonal cells
-        // so that the angles end up at precisely 90 degrees, unlike acos()
-        unitcell[4] = M_PI_2 - asin(unitcell[4]); /* cosBC */
-        unitcell[3] = M_PI_2 - asin(unitcell[3]); /* cosAC */
-        unitcell[1] = M_PI_2 - asin(unitcell[1]); /* cosAB */
-      }
-
-      auto* cell = new UnitCell(unitcell[0], unitcell[2], unitcell[5],
-                                unitcell[4], unitcell[3], unitcell[1]);
-      if (!cell->isRegular()) {
-        appendError("cell matrix is singular");
-        delete cell;
-        return false;
-      }
-      mol.setUnitCell(cell);
-    } else {
-      if (!readBlock(inStream, buff, leadingNum, fileLen)) {
-        appendError("Unexpected end of DCD file.");
-        return false;
-      }
-    }
-    if (!readBlock(inStream, buff, sizeof(int), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-  }
-
-  // NATOMS is file-derived and sizes three arrays below. Each atom needs at
-  // least a float per axis, so a count larger than the file cannot be real.
-  if (NATOMS < 0 || NATOMS > fileLen) {
+  // NATOMS is file-derived and sizes arrays below. Each atom needs at least a
+  // float per axis, so a count larger than the file cannot be real.
+  if (layout.numAtoms < 0 || layout.numAtoms > fileLen) {
     appendError("DCD file declares an implausible atom count.");
     return false;
   }
 
-  // Reading the atom coordinates
-  int formatint[6] = {};
-  Array<float> cx, cy, cz;
-  cx.resize(NATOMS);
-  cy.resize(NATOMS);
-  cz.resize(NATOMS);
-
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  struct_unpack(buff.data(), fmt, &formatint[0]);
-
-  for (int i = 0; i < NATOMS; ++i) {
-    // X coordinates
-    snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
+  if (layout.numFixed != 0) {
+    if (layout.numFixed < 0 || layout.numFixed > layout.numAtoms) {
+      appendError("DCD file declares an implausible fixed atom count.");
       return false;
     }
-    struct_unpack(buff.data(), fmt, &cx[i]);
-    /* code */
-  }
-
-  snprintf(fmt, sizeof(fmt), "%c2i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  struct_unpack(buff.data(), fmt, &formatint[1], &formatint[2]);
-
-  for (int i = 0; i < NATOMS; ++i) {
-    // Y coordinates
-    snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
+    // One-based indices of the atoms that move in every frame after the first.
+    const int numFree = layout.numAtoms - layout.numFixed;
+    status = readRecord(inStream, endian, fileLen, buff, numFree * 4);
+    if (status != RecordStatus::Ok) {
+      appendError(recordError(status, "free atom index block"));
       return false;
     }
-    struct_unpack(buff.data(), fmt, &cy[i]);
+    layout.freeIndexes.resize(static_cast<std::size_t>(numFree));
+    for (int i = 0; i < numFree; ++i) {
+      const int index = unpackInt(buff.data() + 4 * i, endian);
+      if (index < 1 || index > layout.numAtoms) {
+        appendError("DCD file has a free atom index out of range.");
+        return false;
+      }
+      layout.freeIndexes[static_cast<std::size_t>(i)] = index - 1;
+    }
   }
 
-  snprintf(fmt, sizeof(fmt), "%c2i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
+  // The first frame. A cell is stored per frame in the file, but Molecule
+  // holds one, so only the first frame's is kept.
+  Array<Vector3> positions;
+  std::unique_ptr<UnitCell> cell;
+  status = readFrame(inStream, layout, fileLen, buff, true, positions, &cell);
+  if (status != RecordStatus::Ok) {
+    appendError(recordError(status, "frame"));
     return false;
   }
-  struct_unpack(buff.data(), fmt, &formatint[3], &formatint[4]);
-
-  for (int i = 0; i < NATOMS; ++i) {
-    // Z coordinates
-    snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
+  if (cell != nullptr) {
+    if (!cell->isRegular()) {
+      appendError("cell matrix is singular");
       return false;
     }
-    struct_unpack(buff.data(), fmt, &cz[i]);
+    mol.setUnitCell(cell.release());
   }
-
-  snprintf(fmt, sizeof(fmt), "%c1i", endian);
-  if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  struct_unpack(buff.data(), fmt, &formatint[5]);
 
   typedef map<string, unsigned char> AtomTypeMap;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
 
-  for (int i = 0; i < NATOMS; ++i) {
-    Vector3 pos(cx[i], cy[i], cz[i]);
-
+  for (int i = 0; i < layout.numAtoms; ++i) {
     AtomTypeMap::const_iterator it;
     atomTypes.insert(std::make_pair(to_string(i), customElementCounter++));
     it = atomTypes.find(to_string(i));
@@ -418,31 +385,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     //   return false;
     // }
     Atom newAtom = mol.addAtom(it->second);
-    newAtom.setPosition3d(pos);
+    newAtom.setPosition3d(positions[static_cast<std::size_t>(i)]);
   }
 
   mol.setTimeStep(startTime, 0);
-
-  // Skipping fourth dimension block
-  if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    if (!readBlock(inStream, buff, struct_calcsize(fmt), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-    int sizeToRead;
-    struct_unpack(buff.data(), fmt, &sizeToRead);
-
-    if (!readBlock(inStream, buff, sizeToRead, fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-
-    if (!readBlock(inStream, buff, sizeof(int), fileLen)) {
-      appendError("Unexpected end of DCD file.");
-      return false;
-    }
-  }
 
   // Set the custom element map if needed
   if (!atomTypes.empty()) {
@@ -456,71 +402,33 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   mol.setCoordinate3d(mol.atomPositions3d(), 0);
 
-  // Do we have an animation?
+  // Do we have an animation? Frames run to the end of the file. Fixed atoms
+  // keep the first frame's positions, so each later frame starts from them.
+  const Array<Vector3> firstFrame = positions;
   int coordSet = 1;
-  while ((static_cast<int>(inStream.tellg()) != fileLen) &&
-         (static_cast<int>(inStream.tellg()) != DCD_EOF)) {
-    // Reading the atom coordinates
-    Array<Vector3> positions;
-    positions.resize(NATOMS);
+  while (true) {
+    const std::streampos here = inStream.tellg();
+    if (here == std::streampos(-1) ||
+        static_cast<std::streamoff>(here) >= fileLen)
+      break;
 
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-    struct_unpack(buff.data(), fmt, &formatint[0]);
-
-    for (int i = 0; i < NATOMS; ++i) {
-      // X coordinates
-      snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-      struct_unpack(buff.data(), fmt, &cx[i]);
+    Array<Vector3> framePositions = firstFrame;
+    status = readFrame(inStream, layout, fileLen, buff, false, framePositions,
+                       nullptr);
+    if (status == RecordStatus::Truncated) {
+      // Keep the complete frames; a partly written last frame is common when
+      // a simulation is still running or was killed.
+      appendError("DCD file ends in the middle of frame " +
+                  to_string(coordSet) + "; the incomplete frame was ignored.");
+      break;
     }
-
-    snprintf(fmt, sizeof(fmt), "%c2i", endian);
-    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-    struct_unpack(buff.data(), fmt, &formatint[1], &formatint[2]);
-
-    for (int i = 0; i < NATOMS; ++i) {
-      // Y coordinates
-      snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-      struct_unpack(buff.data(), fmt, &cy[i]);
-    }
-
-    snprintf(fmt, sizeof(fmt), "%c2i", endian);
-    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-    struct_unpack(buff.data(), fmt, &formatint[3], &formatint[4]);
-
-    for (int i = 0; i < NATOMS; ++i) {
-      // Z coordinates
-      snprintf(fmt, sizeof(fmt), "%c%df", endian, 1);
-      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-      struct_unpack(buff.data(), fmt, &cz[i]);
-    }
-
-    snprintf(fmt, sizeof(fmt), "%c1i", endian);
-    readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-    struct_unpack(buff.data(), fmt, &formatint[5]);
-
-    for (int i = 0; i < NATOMS; ++i) {
-      Vector3 pos(cx[i], cy[i], cz[i]);
-      positions.push_back(pos);
+    if (status != RecordStatus::Ok) {
+      appendError(recordError(status, "frame " + to_string(coordSet)));
+      return false;
     }
 
     mol.setTimeStep(startTime + frameInterval * coordSet, coordSet);
-
-    // Skipping fourth dimension block
-    if ((charmm & DCD_IS_CHARMM) && (charmm & DCD_HAS_EXTRA_BLOCK)) {
-      snprintf(fmt, sizeof(fmt), "%c1i", endian);
-      readBlock(inStream, buff, struct_calcsize(fmt), fileLen);
-      int sizeToRead;
-      struct_unpack(buff.data(), fmt, &sizeToRead);
-
-      readBlock(inStream, buff, sizeToRead, fileLen);
-
-      readBlock(inStream, buff, sizeof(int), fileLen);
-    }
-
-    mol.setCoordinate3d(positions, coordSet++);
+    mol.setCoordinate3d(framePositions, coordSet++);
   }
 
   return true;
