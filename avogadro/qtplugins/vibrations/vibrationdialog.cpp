@@ -161,7 +161,7 @@ QString VibrationDialog::modeSummary(const QList<int>& modes) const
   QStringList parts;
   for (int mode : modes) {
     const QVariant frequency =
-      model ? model->data(model->index(mode, 0), Qt::DisplayRole) : QVariant();
+      model ? model->data(model->index(mode, 0), Qt::UserRole) : QVariant();
     bool isNumber = false;
     const double value = frequency.toDouble(&isNumber);
     if (isNumber)
