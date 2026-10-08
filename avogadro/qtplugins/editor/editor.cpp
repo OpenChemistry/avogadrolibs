@@ -34,6 +34,7 @@
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QUndoStack>
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
@@ -145,7 +146,7 @@ Editor::Editor(QObject* parent_)
     m_toolWidget(new EditorToolWidget(qobject_cast<QWidget*>(parent_))),
     m_pressedButtons(Qt::NoButton),
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
-    m_fixValenceLater(false), m_layerManager("Editor")
+    m_fixValenceLater(false), m_dragCancelled(false), m_layerManager("Editor")
 {
   QString shortcut = tr("Ctrl+2", "control-key 2");
   m_activateAction->setText(tr("Draw"));
@@ -253,16 +254,29 @@ QUndoCommand* Editor::mouseReleaseEvent(QMouseEvent* e)
     return nullptr;
 
   switch (e->button()) {
-    case Qt::LeftButton:
+    case Qt::LeftButton: {
+      const bool cancelled = m_dragCancelled;
       reset();
       e->accept();
       m_molecule->endMergeMode();
+      if (cancelled) {
+        // Revert the drag's provisional edits, then drop the entry: an
+        // obsolete command is deleted by redo() instead of re-applied.
+        QUndoStack& stack = m_molecule->undoStack();
+        if (stack.canUndo()) {
+          stack.undo();
+          const_cast<QUndoCommand*>(stack.command(stack.index()))
+            ->setObsolete(true);
+          stack.redo();
+        }
+      }
       // Let's cover all possible changes - the undo stack won't update
       // without this
       m_molecule->emitChanged(Molecule::Atoms | Molecule::Bonds |
                               Molecule::Added | Molecule::Removed |
                               Molecule::Modified);
       break;
+    }
     case Qt::RightButton: {
       // Only delete on release if this was a click, not a drag: a
       // right-drag is reserved for camera navigation, so the deletion that
@@ -456,6 +470,7 @@ void Editor::reset()
   m_pressedButtons = Qt::NoButton;
   m_clickedAtomicNumber = INVALID_ATOMIC_NUMBER;
   m_bondAdded = false;
+  m_dragCancelled = false;
 
   m_bondDistance = 0.0f;
   emit drawablesChanged();
@@ -746,6 +761,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 {
   // Always accept move events when atoms are clicked:
   e->accept();
+  m_dragCancelled = false;
 
   // Build up a MoleculeChanges bitfield
   Molecule::MoleculeChanges changes = Molecule::NoChange;
@@ -810,6 +826,12 @@ void Editor::atomLeftDrag(QMouseEvent* e)
         changes |= Molecule::Atoms | Molecule::Modified;
       }
       m_molecule->emitChanged(changes);
+    }
+    // Over a locked atom with the clicked atom's element unchanged, the drag
+    // adds nothing: no hydrogen fix-up, and the release drops the undo entry.
+    if (overLockedAtom && m_clickedAtomicNumber == INVALID_ATOMIC_NUMBER) {
+      m_fixValenceLater = false;
+      m_dragCancelled = true;
     }
 
     // If there is nothing to undo, do nothing.

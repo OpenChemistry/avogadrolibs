@@ -117,6 +117,9 @@ private:
   unsigned char m_clickedAtomicNumber;
   bool m_bondAdded;
   bool m_fixValenceLater;
+  // The drag is over a locked atom and has changed nothing: the release
+  // drops its undo entry.
+  bool m_dragCancelled;
   QString m_keyPressBuffer;
   QtGui::PluginLayerManager m_layerManager;
 
