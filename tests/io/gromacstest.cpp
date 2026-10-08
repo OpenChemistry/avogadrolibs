@@ -14,6 +14,7 @@
 
 #include <avogadro/io/gromacsformat.h>
 
+#include <map>
 #include <string>
 
 using Avogadro::Core::Molecule;
@@ -158,4 +159,53 @@ TEST(GromacsTest, unknownResidueFirstLetterRule)
   EXPECT_EQ(molecule.atomicNumber(0), 6);
   EXPECT_EQ(molecule.atomicNumber(1), 6);
   EXPECT_EQ(molecule.atomicNumber(2), 1);
+}
+
+TEST(GromacsTest, proteinBoxFile)
+{
+  GromacsFormat gro;
+  Molecule molecule;
+  ASSERT_TRUE(gro.readFile(
+    std::string(AVOGADRO_DATA) + "/data/gro/protein/complex.gro", molecule))
+    << gro.error();
+
+  EXPECT_EQ(molecule.atomCount(), 1860);
+  EXPECT_EQ(molecule.residueCount(), 180);
+  EXPECT_TRUE(molecule.customElementMap().empty());
+
+  std::map<unsigned char, size_t> counts;
+  for (size_t i = 0; i < molecule.atomCount(); ++i)
+    ++counts[molecule.atomicNumber(i)];
+  EXPECT_EQ(counts[1], 940u);
+  EXPECT_EQ(counts[6], 520u);
+  EXPECT_EQ(counts[7], 200u);
+  EXPECT_EQ(counts[8], 180u);
+  EXPECT_EQ(counts[16], 20u);
+  EXPECT_EQ(counts.size(), 5u);
+
+  // box line: 4.14510 4.13010 1.40740 nm
+  ASSERT_NE(molecule.unitCell(), nullptr);
+  EXPECT_NEAR(molecule.unitCell()->a(), 41.4510, 1e-4);
+  EXPECT_NEAR(molecule.unitCell()->b(), 41.3010, 1e-4);
+  EXPECT_NEAR(molecule.unitCell()->c(), 14.0740, 1e-4);
+
+  const Residue& first = molecule.residues()[0];
+  EXPECT_EQ(first.residueName(), "CYS");
+  auto ca = first.atomByName("CA");
+  ASSERT_TRUE(ca.isValid());
+  EXPECT_EQ(ca.atomicNumber(), 6);
+  EXPECT_EQ(first.atomName(ca), "CA");
+
+  // 20 peptides of 93 atoms, each a tree of 92 bonds, would give 1840 bonds
+  // in 20 molecules. Known artifact of this file: Packmol left HG (atom 662)
+  // 1.94 A from SG (atom 1684) of another peptide, and distance-based
+  // perception bonds them, joining two peptides.
+  EXPECT_EQ(molecule.bondCount(), 1841u);
+  const auto components = molecule.graph().connectedComponents();
+  EXPECT_EQ(components.size(), 19u);
+  std::map<size_t, size_t> componentSizes;
+  for (const auto& component : components)
+    ++componentSizes[component.size()];
+  EXPECT_EQ(componentSizes[93], 18u);
+  EXPECT_EQ(componentSizes[186], 1u);
 }
