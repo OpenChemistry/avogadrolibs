@@ -5,24 +5,24 @@
 
 #include "dcdformat.h"
 #include "binaryblock_p.h"
-#include "struct.h"
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <istream>
 #include <memory>
 #include <ostream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
-using std::map;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -57,32 +57,37 @@ struct DcdLayout
   bool hasCell = false;     // CHARMM unit-cell record before the coordinates
   bool hasFourDims = false; // CHARMM fourth-dimension record after them
   int numAtoms = 0;
-  int numFixed = 0;
-  std::vector<int> freeIndexes; // zero-based; only used when numFixed > 0
+  // Zero-based indices of the atoms that move after the first frame. Only
+  // meaningful when hasFixedAtoms (which can leave it empty if every atom is
+  // fixed).
+  bool hasFixedAtoms = false;
+  std::vector<int> freeIndexes;
 };
+
+// Every length marker is a 4-byte int32.
+constexpr std::streamsize MarkerBytes = 4;
+
+// Decode a T (int32_t, float or double) stored in the file's byte order,
+// '>' for big-endian and '<' for little-endian, independent of the host's.
+// Going through the integer bits keeps -0.0, denormals, inf and NaN exact.
+template <typename T>
+T unpack(const char* data, char endian)
+{
+  using Bits = std::conditional_t<sizeof(T) == 4, uint32_t, uint64_t>;
+  Bits bits = 0;
+  for (std::size_t i = 0; i < sizeof(Bits); ++i) {
+    const std::size_t shift = endian == '>' ? sizeof(Bits) - 1 - i : i;
+    bits |= static_cast<Bits>(static_cast<unsigned char>(data[i]))
+            << (8 * shift);
+  }
+  T value;
+  std::memcpy(&value, &bits, sizeof(T));
+  return value;
+}
 
 int unpackInt(const char* data, char endian)
 {
-  const char fmt[] = { endian, '1', 'i', '\0' };
-  int value = 0;
-  struct_unpack(data, fmt, &value);
-  return value;
-}
-
-float unpackFloat(const char* data, char endian)
-{
-  const char fmt[] = { endian, '1', 'f', '\0' };
-  float value = 0.0f;
-  struct_unpack(data, fmt, &value);
-  return value;
-}
-
-double unpackDouble(const char* data, char endian)
-{
-  const char fmt[] = { endian, '1', 'd', '\0' };
-  double value = 0.0;
-  struct_unpack(data, fmt, &value);
-  return value;
+  return unpack<int32_t>(data, endian);
 }
 
 /**
@@ -94,8 +99,8 @@ RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
                         std::vector<char>& payload, int expectedBytes,
                         int* length = nullptr)
 {
-  std::vector<char> marker(sizeof(int32_t));
-  if (!readBlock(in, marker, 4, fileLen))
+  std::vector<char> marker(MarkerBytes);
+  if (!readBlock(in, marker, MarkerBytes, fileLen))
     return RecordStatus::Truncated;
   const int bytes = unpackInt(marker.data(), endian);
   if (bytes < 0 || (expectedBytes >= 0 && bytes != expectedBytes))
@@ -103,7 +108,7 @@ RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
 
   if (!readBlock(in, payload, bytes, fileLen))
     return RecordStatus::Truncated;
-  if (!readBlock(in, marker, 4, fileLen))
+  if (!readBlock(in, marker, MarkerBytes, fileLen))
     return RecordStatus::Truncated;
   if (unpackInt(marker.data(), endian) != bytes)
     return RecordStatus::BadMarker;
@@ -113,24 +118,27 @@ RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
   return RecordStatus::Ok;
 }
 
-// Read a record of @a count float32 values.
-RecordStatus readFloats(std::istream& in, char endian, std::streamoff fileLen,
-                        std::vector<char>& payload, std::size_t count,
-                        std::vector<float>& values)
+// Read one record of @a count float32 values into axis @a axis of
+// @a positions, where value i goes to atom indexes[i] (or i if there is no
+// index list).
+RecordStatus readAxis(std::istream& in, char endian, std::streamoff fileLen,
+                      std::vector<char>& payload, std::size_t count, int axis,
+                      const std::vector<int>* indexes,
+                      Array<Vector3>& positions)
 {
   // Record markers are int32, so no valid record exceeds INT32_MAX bytes;
   // checking before the multiply keeps count * 4 from wrapping.
   if (count > static_cast<std::size_t>(INT32_MAX / 4))
     return RecordStatus::BadMarker;
-  if (count > static_cast<std::size_t>(fileLen) / 4)
-    return RecordStatus::Truncated;
   const RecordStatus status =
     readRecord(in, endian, fileLen, payload, static_cast<int>(count * 4));
   if (status != RecordStatus::Ok)
     return status;
-  values.resize(count);
-  for (std::size_t i = 0; i < count; ++i)
-    values[i] = unpackFloat(payload.data() + 4 * i, endian);
+  for (std::size_t i = 0; i < count; ++i) {
+    const std::size_t atom =
+      indexes != nullptr ? static_cast<std::size_t>((*indexes)[i]) : i;
+    positions[atom][axis] = unpack<float>(payload.data() + 4 * i, endian);
+  }
   return RecordStatus::Ok;
 }
 
@@ -149,10 +157,9 @@ std::unique_ptr<UnitCell> cellFromRecord(double uc[6])
     uc[3] = M_PI_2 - asin(uc[3]); /* cosAC */
     uc[1] = M_PI_2 - asin(uc[1]); /* cosAB */
   } else {
-    const double toRadians = M_PI / 180.0;
-    uc[4] *= toRadians;
-    uc[3] *= toRadians;
-    uc[1] *= toRadians;
+    uc[4] *= DEG_TO_RAD_D;
+    uc[3] *= DEG_TO_RAD_D;
+    uc[1] *= DEG_TO_RAD_D;
   }
   return std::make_unique<UnitCell>(uc[0], uc[2], uc[5], uc[4], uc[3], uc[1]);
 }
@@ -161,51 +168,47 @@ std::unique_ptr<UnitCell> cellFromRecord(double uc[6])
  * Read one frame: [unit cell], X, Y, Z, [fourth dimension].
  *
  * @param first True for frame 0, which holds every atom even when some are
- * fixed. Later frames hold only the free atoms.
- * @param positions On entry the positions to start from (the first frame's, so
- * fixed atoms stay put); on success the frame's positions.
- * @param cell Receives the unit cell record, if the file has one.
+ * fixed and is the only one whose unit cell is decoded (Molecule holds a
+ * single cell). Later frames hold only the free atoms.
+ * @param positions On entry, empty or the positions to start from (the first
+ * frame's, so fixed atoms stay put); on success the frame's positions.
+ * @param cell Receives the unit cell record of the first frame, if any.
  */
 RecordStatus readFrame(std::istream& in, const DcdLayout& layout,
                        std::streamoff fileLen, std::vector<char>& payload,
                        bool first, Array<Vector3>& positions,
-                       std::unique_ptr<UnitCell>* cell)
+                       std::unique_ptr<UnitCell>& cell)
 {
   RecordStatus status;
   if (layout.hasCell) {
     status = readRecord(in, layout.endian, fileLen, payload, 48);
     if (status != RecordStatus::Ok)
       return status;
-    double uc[6];
-    for (int i = 0; i < 6; ++i)
-      uc[i] = unpackDouble(payload.data() + 8 * i, layout.endian);
-    if (cell != nullptr)
-      *cell = cellFromRecord(uc);
+    if (first) {
+      double uc[6];
+      for (int i = 0; i < 6; ++i)
+        uc[i] = unpack<double>(payload.data() + 8 * i, layout.endian);
+      // All three lengths zero means the file has no cell (VMD does the
+      // same); that is checked on the lengths, before any angle conversion.
+      if (uc[0] != 0.0 || uc[2] != 0.0 || uc[5] != 0.0)
+        cell = cellFromRecord(uc);
+    }
   }
 
-  const bool freeOnly = !first && layout.numFixed > 0;
-  const std::size_t count = static_cast<std::size_t>(
-    freeOnly ? layout.numAtoms - layout.numFixed : layout.numAtoms);
-
-  std::vector<float> axis[3];
-  for (auto& values : axis) {
-    status = readFloats(in, layout.endian, fileLen, payload, count, values);
-    if (status != RecordStatus::Ok)
-      return status;
-  }
-
-  if (layout.hasFourDims) {
-    status = readRecord(in, layout.endian, fileLen, payload, -1);
-    if (status != RecordStatus::Ok)
-      return status;
-  }
-
+  const bool freeOnly = !first && layout.hasFixedAtoms;
+  const std::size_t count = freeOnly
+                              ? layout.freeIndexes.size()
+                              : static_cast<std::size_t>(layout.numAtoms);
   positions.resize(static_cast<std::size_t>(layout.numAtoms), Vector3::Zero());
-  for (std::size_t i = 0; i < count; ++i) {
-    const std::size_t atom =
-      freeOnly ? static_cast<std::size_t>(layout.freeIndexes[i]) : i;
-    positions[atom] = Vector3(axis[0][i], axis[1][i], axis[2][i]);
+  for (int axis = 0; axis < 3; ++axis) {
+    status = readAxis(in, layout.endian, fileLen, payload, count, axis,
+                      freeOnly ? &layout.freeIndexes : nullptr, positions);
+    if (status != RecordStatus::Ok)
+      return status;
   }
+
+  if (layout.hasFourDims)
+    return readRecord(in, layout.endian, fileLen, payload, -1);
   return RecordStatus::Ok;
 }
 
@@ -233,7 +236,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
 
   // Reading magic number: the byte order is whichever one makes it 84.
-  if (!readBlock(inStream, buff, 4, fileLen)) {
+  if (!readBlock(inStream, buff, MarkerBytes, fileLen)) {
     appendError("Unexpected end of DCD file.");
     return false;
   }
@@ -254,20 +257,13 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     appendError("Unexpected end of DCD file.");
     return false;
   }
-  char raw[DCD_MAGIC] = {};
-  std::copy(buff.begin(), buff.begin() + DCD_MAGIC, raw);
+  const char* raw = buff.data();
   if (raw[0] != 'C' || raw[1] != 'O' || raw[2] != 'R' || raw[3] != 'D') {
     appendError("Keyword CORD not found.");
     return false;
   }
-  if (!readBlock(inStream, buff, 4, fileLen)) {
-    appendError("Unexpected end of DCD file.");
-    return false;
-  }
-  if (unpackInt(buff.data(), endian) != DCD_MAGIC) {
-    appendError("DCD header has inconsistent record length markers.");
-    return false;
-  }
+  // (The trailing marker is checked after the fields are decoded, since
+  // reading it reuses the buffer.)
 
   // Determining whether the trajectory file is from CHARMM or not: a nonzero
   // version number in the last header word. Only CHARMM files can carry the
@@ -283,16 +279,16 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   const int NSAVC = unpackInt(raw + 12, endian);
 
   // number of fixed atoms
-  layout.numFixed = unpackInt(raw + 36, endian);
+  const int numFixed = unpackInt(raw + 36, endian);
 
   // DELTA (timestep) is stored as a double, in picoseconds, with X-PLOR, but
   // as a float in AKMA time units with CHARMM. Both end up in picoseconds.
   double DELTA = 0.0;
   if (charmm)
     DELTA =
-      static_cast<double>(unpackFloat(raw + 40, endian)) * AkmaToPicoseconds;
+      static_cast<double>(unpack<float>(raw + 40, endian)) * AkmaToPicoseconds;
   else
-    DELTA = unpackDouble(raw + 40, endian);
+    DELTA = unpack<double>(raw + 40, endian);
 
   // DELTA is the integration timestep, but only every NSAVC-th step was
   // written, so that -- not DELTA -- is how far apart the frames in this file
@@ -300,6 +296,16 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // keeps successive frames at distinct times.
   const double frameInterval = DELTA * (NSAVC > 0 ? NSAVC : 1);
   const double startTime = DELTA * (ISTART > 0 ? ISTART : 0);
+
+  std::vector<char> marker(MarkerBytes);
+  if (!readBlock(inStream, marker, MarkerBytes, fileLen)) {
+    appendError("Unexpected end of DCD file.");
+    return false;
+  }
+  if (unpackInt(marker.data(), endian) != DCD_MAGIC) {
+    appendError("DCD header has inconsistent record length markers.");
+    return false;
+  }
 
   // Title record: NTITLE, then NTITLE 80-character strings.
   int titleBytes = 0;
@@ -337,13 +343,14 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     return false;
   }
 
-  if (layout.numFixed != 0) {
-    if (layout.numFixed < 0 || layout.numFixed > layout.numAtoms) {
+  if (numFixed != 0) {
+    if (numFixed < 0 || numFixed > layout.numAtoms) {
       appendError("DCD file declares an implausible fixed atom count.");
       return false;
     }
     // One-based indices of the atoms that move in every frame after the first.
-    const int numFree = layout.numAtoms - layout.numFixed;
+    const int numFree = layout.numAtoms - numFixed;
+    layout.hasFixedAtoms = true;
     if (numFree > INT32_MAX / 4) {
       appendError("DCD file declares an implausible free atom count.");
       return false;
@@ -368,7 +375,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // holds one, so only the first frame's is kept.
   Array<Vector3> positions;
   std::unique_ptr<UnitCell> cell;
-  status = readFrame(inStream, layout, fileLen, buff, true, positions, &cell);
+  status = readFrame(inStream, layout, fileLen, buff, true, positions, cell);
   if (status != RecordStatus::Ok) {
     appendError(recordError(status, "frame"));
     return false;
@@ -381,39 +388,24 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     mol.setUnitCell(cell.release());
   }
 
-  typedef map<string, unsigned char> AtomTypeMap;
-  AtomTypeMap atomTypes;
-  unsigned char customElementCounter = CustomElementMin;
-
+  // Every atom is its own custom element ("Atom <index>"). The element value
+  // wraps around if there are more atoms than custom slots.
+  Molecule::CustomElementMap elementMap;
   for (int i = 0; i < layout.numAtoms; ++i) {
-    AtomTypeMap::const_iterator it;
-    atomTypes.insert(std::make_pair(to_string(i), customElementCounter++));
-    it = atomTypes.find(to_string(i));
-    // if (customElementCounter > CustomElementMax) {
-    //   appendError("Custom element type limit exceeded.");
-    //   return false;
-    // }
-    Atom newAtom = mol.addAtom(it->second);
+    const auto element = static_cast<unsigned char>(CustomElementMin + i);
+    Atom newAtom = mol.addAtom(element);
     newAtom.setPosition3d(positions[static_cast<std::size_t>(i)]);
+    elementMap.emplace(element, "Atom " + to_string(i));
   }
+  if (layout.numAtoms > 0)
+    mol.setCustomElementMap(elementMap);
 
   mol.setTimeStep(startTime, 0);
-
-  // Set the custom element map if needed
-  if (!atomTypes.empty()) {
-    Molecule::CustomElementMap elementMap;
-    for (const auto& atomType : atomTypes) {
-      elementMap.insert(
-        std::make_pair(atomType.second, "Atom " + atomType.first));
-    }
-    mol.setCustomElementMap(elementMap);
-  }
-
   mol.setCoordinate3d(mol.atomPositions3d(), 0);
 
   // Do we have an animation? Frames run to the end of the file. Fixed atoms
-  // keep the first frame's positions, so each later frame starts from them.
-  const Array<Vector3> firstFrame = positions;
+  // keep the first frame's positions, so only then does a later frame start
+  // from them; otherwise every position is overwritten.
   int coordSet = 1;
   while (true) {
     const std::streampos here = inStream.tellg();
@@ -421,9 +413,11 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
         static_cast<std::streamoff>(here) >= fileLen)
       break;
 
-    Array<Vector3> framePositions = firstFrame;
-    status = readFrame(inStream, layout, fileLen, buff, false, framePositions,
-                       nullptr);
+    Array<Vector3> framePositions;
+    if (layout.hasFixedAtoms)
+      framePositions = positions;
+    status =
+      readFrame(inStream, layout, fileLen, buff, false, framePositions, cell);
     if (status == RecordStatus::Truncated) {
       // Keep the complete frames; a partly written last frame is common when
       // a simulation is still running or was killed.
@@ -431,9 +425,11 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
                   to_string(coordSet) + "; the incomplete frame was ignored.");
       break;
     }
-    if (status != RecordStatus::Ok) {
-      appendError(recordError(status, "frame " + to_string(coordSet)));
-      return false;
+    if (status == RecordStatus::BadMarker) {
+      appendError("DCD frame " + to_string(coordSet) +
+                  " has inconsistent record length markers; it and any later "
+                  "frames were ignored.");
+      break;
     }
 
     mol.setTimeStep(startTime + frameInterval * coordSet, coordSet);

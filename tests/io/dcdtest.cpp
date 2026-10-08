@@ -19,6 +19,7 @@
 #include <cstring>
 #include <fstream>
 #include <iterator>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -84,8 +85,10 @@ struct DcdBuilder
   // Frame 0 holds every atom; with fixed atoms, later frames hold only the
   // free ones.
   std::vector<Frame> frames;
-  // If >= 0, add this to the trailing marker of frame 0's X record.
+  // If >= 0, add this to the trailing marker of the X record of frame
+  // corruptFrame.
   int corruptXTrailer = -1;
+  size_t corruptFrame = 0;
 
   std::string out;
 
@@ -115,12 +118,14 @@ struct DcdBuilder
     }
   }
 
-  void writeAxis(int axis, const Frame& frame, int trailerDelta)
+  // A record of floats; @a trailerDelta corrupts the trailing marker.
+  void writeFloatRecord(const Frame& frame, int axis, int trailerDelta = 0)
   {
-    put32(static_cast<int32_t>(frame.size() * 4));
+    const auto bytes = static_cast<int32_t>(frame.size() * 4);
+    put32(bytes);
     for (const auto& atom : frame)
-      putFloat(atom[axis]);
-    put32(static_cast<int32_t>(frame.size() * 4) + trailerDelta);
+      putFloat(axis >= 0 ? atom[axis] : -1.0f);
+    put32(bytes + trailerDelta);
   }
 
   std::string build()
@@ -146,8 +151,7 @@ struct DcdBuilder
       put32(extraBlock ? 1 : 0);
       put32(fourDims ? 1 : 0);
     } else {
-      put32(0); // second half of the double is already written above
-      out.resize(out.size() - 4);
+      // The double covers bytes 40-47, so only the 4-dims slot is left.
       put32(0);
     }
     while (out.size() - start < 80)
@@ -178,16 +182,13 @@ struct DcdBuilder
           putDouble(v);
         put32(48);
       }
-      writeAxis(0, frames[f],
-                f == 0 && corruptXTrailer >= 0 ? corruptXTrailer : 0);
-      writeAxis(1, frames[f], 0);
-      writeAxis(2, frames[f], 0);
-      if (charmm && fourDims) {
-        put32(static_cast<int32_t>(frames[f].size() * 4));
-        for (size_t i = 0; i < frames[f].size(); ++i)
-          putFloat(-1.0f);
-        put32(static_cast<int32_t>(frames[f].size() * 4));
-      }
+      writeFloatRecord(
+        frames[f], 0,
+        f == corruptFrame && corruptXTrailer >= 0 ? corruptXTrailer : 0);
+      writeFloatRecord(frames[f], 1);
+      writeFloatRecord(frames[f], 2);
+      if (charmm && fourDims)
+        writeFloatRecord(frames[f], -1); // fourth dimension, ignored
     }
     return out;
   }
@@ -327,9 +328,7 @@ TEST(DcdTest, readTrajectory)
 {
   DcdFormat dcd;
   Molecule molecule;
-  ASSERT_TRUE(dcd.readFile(
-    std::string(AVOGADRO_DATA) + "/data/dcd/villin_N68H.dcd", molecule))
-    << dcd.error();
+  ASSERT_TRUE(dcd.readFile(villinPath(), molecule)) << dcd.error();
 
   EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(8867));
   // A trajectory, so every frame should have been picked up.
@@ -347,9 +346,7 @@ TEST(DcdTest, timeStepsInPicoseconds)
 {
   DcdFormat dcd;
   Molecule molecule;
-  ASSERT_TRUE(dcd.readFile(
-    std::string(AVOGADRO_DATA) + "/data/dcd/villin_N68H.dcd", molecule))
-    << dcd.error();
+  ASSERT_TRUE(dcd.readFile(villinPath(), molecule)) << dcd.error();
 
   // This file is the CHARMM flavour, so its header DELTA is in AKMA time
   // units: 0.04090966 AKMA is the 2 fs integration step it was run with. Every
@@ -427,17 +424,9 @@ TEST(DcdTest, readTruncatedTrajectory)
 {
   DcdFormat reference;
   Molecule full;
-  ASSERT_TRUE(reference.readFile(
-    std::string(AVOGADRO_DATA) + "/data/dcd/villin_N68H.dcd", full));
+  ASSERT_TRUE(reference.readFile(villinPath(), full));
 
-  std::string contents;
-  {
-    std::ifstream in(std::string(AVOGADRO_DATA) + "/data/dcd/villin_N68H.dcd",
-                     std::ios::binary);
-    ASSERT_TRUE(in.good());
-    contents.assign((std::istreambuf_iterator<char>(in)),
-                    std::istreambuf_iterator<char>());
-  }
+  const std::string contents = readVillinBytes();
   ASSERT_FALSE(contents.empty());
 
   // A spread of cut points rather than every offset, to keep the test quick.
@@ -536,7 +525,9 @@ TEST(DcdTest, syntheticByteOrdersAgree)
   bool ok = false;
   // CHARMM: delta 0.5 AKMA * 0.04888821 ps; frames 10 steps apart from step 20.
   EXPECT_NEAR(readings[1].timeStep(0, ok), 0.5 * 0.04888821 * 20, 1e-6);
+  EXPECT_TRUE(ok);
   EXPECT_NEAR(readings[1].timeStep(3, ok), 0.5 * 0.04888821 * (20 + 30), 1e-6);
+  EXPECT_TRUE(ok);
 }
 
 TEST(DcdTest, xplorDoubleDelta)
@@ -680,6 +671,17 @@ TEST(DcdTest, recordMarkerMismatchRejected)
   EXPECT_FALSE(dcd.readString(b.build(), mol));
   EXPECT_FALSE(dcd.error().empty());
 
+  // The same corruption in a later frame keeps the frames before it.
+  DcdBuilder later = syntheticTrajectory(4, 4);
+  later.corruptXTrailer = 4;
+  later.corruptFrame = 2;
+  DcdFormat dcdLater;
+  Molecule molLater;
+  ASSERT_TRUE(dcdLater.readString(later.build(), molLater));
+  EXPECT_NE(dcdLater.error().find("frame 2"), std::string::npos);
+  later.frames.resize(2);
+  expectMatchesBuilder(molLater, later);
+
   // A leading marker that disagrees with the expected cell size.
   DcdBuilder c = syntheticTrajectory(4, 2);
   c.extraBlock = true;
@@ -745,4 +747,61 @@ TEST(DcdTest, rejectsWrappingAtomCount)
   Molecule mol;
   EXPECT_FALSE(dcd.readString(data, mol));
   EXPECT_EQ(mol.atomCount(), static_cast<size_t>(0));
+}
+
+// Special float values must survive exactly in either byte order: negative
+// zero, a denormal, and the largest finite float.
+TEST(DcdTest, specialFloatValuesRoundTrip)
+{
+  for (int big = 0; big < 2; ++big) {
+    DcdBuilder b;
+    b.bigEndian = big == 1;
+    b.natoms = 2;
+    const float denormal = 1.0e-40f;
+    const float largest = std::numeric_limits<float>::max();
+    b.frames.push_back(
+      { { -0.0f, denormal, -denormal }, { largest, 0.0f, -largest } });
+    DcdFormat dcd;
+    Molecule mol;
+    ASSERT_TRUE(dcd.readString(b.build(), mol)) << dcd.error();
+    const auto pos = mol.coordinate3d(0);
+    ASSERT_EQ(pos.size(), static_cast<size_t>(2));
+    EXPECT_EQ(pos[0].x(), 0.0);
+    EXPECT_TRUE(std::signbit(pos[0].x())) << "big " << big;
+    EXPECT_EQ(pos[0].y(), static_cast<double>(denormal));
+    EXPECT_EQ(pos[0].z(), static_cast<double>(-denormal));
+    EXPECT_EQ(pos[1].x(), static_cast<double>(largest));
+    EXPECT_EQ(pos[1].y(), 0.0);
+    EXPECT_FALSE(std::signbit(pos[1].y()));
+    EXPECT_EQ(pos[1].z(), static_cast<double>(-largest));
+  }
+}
+
+// An all-zero cell record (CHARMM with the flag set but no periodic box) means
+// there is no cell, not a singular one.
+TEST(DcdTest, allZeroCellMeansNoCell)
+{
+  for (int big = 0; big < 2; ++big) {
+    DcdBuilder b = syntheticTrajectory(4, 3);
+    b.bigEndian = big == 1;
+    b.extraBlock = true;
+    b.cell = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    DcdFormat dcd;
+    Molecule mol;
+    ASSERT_TRUE(dcd.readString(b.build(), mol)) << dcd.error();
+    EXPECT_TRUE(dcd.error().empty()) << dcd.error();
+    EXPECT_EQ(mol.unitCell(), nullptr);
+    expectMatchesBuilder(mol, b);
+  }
+}
+
+// Any other singular cell is still rejected.
+TEST(DcdTest, singularCellRejected)
+{
+  DcdBuilder b = syntheticTrajectory(4, 2);
+  b.extraBlock = true;
+  b.cell = { 10.0, 0.0, 0.0, 0.0, 0.0, 10.0 };
+  DcdFormat dcd;
+  Molecule mol;
+  EXPECT_FALSE(dcd.readString(b.build(), mol));
 }
