@@ -16,6 +16,7 @@ set(plugins
   AlignTool
   Bonding
   Crystal
+  Editor
   Focus
   MeasureTool
   ScriptFileFormats
@@ -130,7 +131,7 @@ endforeach()
 # neither deterministic nor cheap, so it is exercised by the Surfaces tests
 # only. Linux-only in CI: the Windows fuzz job builds with USE_QT=OFF.
 if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
-  set(fuzzPlugins AlignTool Bonding Crystal Focus MeasureTool Select)
+  set(fuzzPlugins AlignTool Bonding Crystal Editor Focus MeasureTool Select)
   set(fuzzIncludes "")
   set(fuzzReady TRUE)
   foreach(plugin ${fuzzPlugins})

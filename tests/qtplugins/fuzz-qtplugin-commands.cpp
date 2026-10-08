@@ -9,8 +9,8 @@
 // molecule invariants after every call). Any violation aborts, so libFuzzer
 // keeps the input as a crash artifact.
 //
-// Plugins: Select, Bonding, Crystal, AlignTool, MeasureTool, Focus. Surfaces
-// is left out on purpose (see tests/qtplugins/CMakeLists.txt).
+// Plugins: Select, Bonding, Crystal, AlignTool, MeasureTool, Editor, Focus.
+// Surfaces is left out on purpose (see tests/qtplugins/CMakeLists.txt).
 //
 // Input format (all multi-byte values little-endian, reads past the end give
 // zeros), read front to back so that seeds can be written by hand; see
@@ -49,6 +49,7 @@
 #include "aligntool.h"
 #include "bonding.h"
 #include "crystal.h"
+#include "editor.h"
 #include "focus.h"
 #include "measuretool.h"
 #include "select.h"
@@ -106,9 +107,10 @@ constexpr int kMaxListLength = 6;
 
 // The option keys the commands read (atoms, id, index, element, axis, value),
 // plus decoys, so that most keys in a map are ones some command looks at.
-const char* const kKeys[] = { "atoms",   "id",        "index",     "element",
-                              "axis",    "value",     "tolerance", "atom",
-                              "indices", "resolution" };
+const char* const kKeys[] = { "atoms",     "id",         "index",     "element",
+                              "axis",      "value",      "tolerance", "atom",
+                              "indices",   "resolution", "position",  "bondTo",
+                              "bondOrder", "order",      "mode" };
 constexpr int kKeyCount = sizeof(kKeys) / sizeof(kKeys[0]);
 
 // Front-to-back reader over FuzzedDataProvider. FuzzedDataProvider's own
@@ -396,6 +398,7 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
   QtPlugins::Crystal crystal;
   QtPlugins::AlignTool alignTool;
   QtPlugins::MeasureTool measureTool;
+  QtPlugins::Editor editor;
   QtPlugins::Focus focus;
   focus.setCamera(&camera);
   focus.setScene(&scene);
@@ -410,6 +413,7 @@ extern "C" __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(
   harness.attach(&crystal);
   harness.attach(&alignTool);
   harness.attach(&measureTool);
+  harness.attach(&editor);
   harness.attach(&focus);
 
   std::vector<std::string> trace;

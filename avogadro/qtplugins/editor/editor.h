@@ -40,8 +40,7 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override
   {
-    if (mol)
-      m_molecule = mol->undoMolecule();
+    m_molecule = mol ? mol->undoMolecule() : nullptr;
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
@@ -59,6 +58,10 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
+
+  void registerCommands() override;
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
 
 private slots:
   void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }

@@ -49,7 +49,81 @@
 namespace {
 const unsigned char INVALID_ATOMIC_NUMBER =
   std::numeric_limits<unsigned char>::max();
+
+// Helpers for the RPC commands. Options arrive from JSON, so numbers may be
+// of any numeric QVariant type.
+// TODO: tr() after 2.1 (string freeze) for the messages below.
+bool isNumber(const QVariant& value)
+{
+  switch (value.typeId()) {
+    case QMetaType::Double:
+    case QMetaType::Float:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
+      return true;
+    default:
+      return false;
+  }
 }
+
+// A whole number in [0, limit), compared as doubles so huge values cannot
+// overflow Index.
+bool toIndex(const QVariant& value, Avogadro::Index limit,
+             Avogadro::Index& index)
+{
+  if (!isNumber(value))
+    return false;
+  const double raw = value.toDouble();
+  if (std::isnan(raw) || std::floor(raw) != raw || raw < 0.0 ||
+      !(raw < static_cast<double>(limit)))
+    return false;
+  index = static_cast<Avogadro::Index>(raw);
+  return true;
+}
+
+// Parse "atoms": [i, j] for a pair of distinct, valid atoms.
+bool parseAtomPair(const QVariantMap& options, Avogadro::Index atomCount,
+                   Avogadro::Index& first, Avogadro::Index& second,
+                   QString& error)
+{
+  const QVariant value = options.value(QStringLiteral("atoms"));
+  if (value.typeId() != QMetaType::QVariantList || value.toList().size() != 2) {
+    error = QStringLiteral("atoms must list exactly 2 atom indices.");
+    return false;
+  }
+  const QVariantList list = value.toList();
+  if (!toIndex(list[0], atomCount, first) ||
+      !toIndex(list[1], atomCount, second)) {
+    error = QStringLiteral(
+      "atoms must be whole-number atom indices within the molecule.");
+    return false;
+  }
+  if (first == second) {
+    error = QStringLiteral("atoms must be two different atoms.");
+    return false;
+  }
+  return true;
+}
+
+// Parse an optional bond order (1-3, default 1) stored under @p key.
+bool parseBondOrder(const QVariantMap& options, const QString& key,
+                    unsigned char& order, QString& error)
+{
+  order = 1;
+  if (!options.contains(key))
+    return true;
+  const QVariant value = options.value(key);
+  const double raw = isNumber(value) ? value.toDouble() : 0.0;
+  if (!isNumber(value) || raw != std::floor(raw) || raw < 1.0 || raw > 3.0) {
+    error = QStringLiteral("%1 must be 1, 2 or 3.").arg(key);
+    return false;
+  }
+  order = static_cast<unsigned char>(raw);
+  return true;
+}
+} // namespace
 
 namespace Avogadro::QtPlugins {
 
@@ -834,6 +908,195 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
   m_molecule->emitChanged(changes);
   return;
+}
+
+void Editor::registerCommands()
+{
+  // TODO: tr() after 2.1 (string freeze)
+  emit registerCommand(
+    "addAtom",
+    QStringLiteral("Add an atom. Options: \"element\" (symbol or atomic "
+                   "number), \"position\" ([x, y, z] in Angstroms), "
+                   "optional \"bondTo\" (atom index) and \"bondOrder\" "
+                   "(1-3). Returns the new atom \"index\"."));
+  emit registerCommand(
+    "addBond",
+    QStringLiteral("Add a bond between two unbonded atoms. Options: "
+                   "\"atoms\" ([i, j]) and optional \"order\" (1-3). "
+                   "Returns the bond \"index\"."));
+  emit registerCommand("removeBond",
+                       QStringLiteral("Remove the bond between two atoms. "
+                                      "Options: \"atoms\" ([i, j])."));
+  emit registerCommand(
+    "removeSelectedAtoms",
+    QStringLiteral("Remove the selected atoms and their bonds. Returns the "
+                   "number \"removed\"."));
+}
+
+bool Editor::handleCommand(const QString& command, const QVariantMap& options)
+{
+  const bool isAddAtom = command == QLatin1String("addAtom");
+  const bool isAddBond = command == QLatin1String("addBond");
+  const bool isRemoveBond = command == QLatin1String("removeBond");
+  const bool isRemoveSelected = command == QLatin1String("removeSelectedAtoms");
+  if (!isAddAtom && !isAddBond && !isRemoveBond && !isRemoveSelected)
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
+
+  // TODO: tr() after 2.1 (string freeze)
+  const Molecule::MoleculeChanges allChanges =
+    Molecule::Atoms | Molecule::Bonds | Molecule::Added | Molecule::Removed |
+    Molecule::Modified;
+  QString error;
+
+  if (isAddAtom) {
+    if (!options.contains(QStringLiteral("element"))) {
+      emit commandFailed(QStringLiteral(
+        "addAtom requires an \"element\" option (an element symbol or "
+        "atomic number)."));
+      return true;
+    }
+    const QVariant elementData = options.value(QStringLiteral("element"));
+    int atomicNum = InvalidElement;
+    if (elementData.typeId() == QMetaType::QString) {
+      atomicNum = Core::Elements::atomicNumberFromSymbol(
+        elementData.toString().toStdString());
+    }
+    if (atomicNum == InvalidElement) {
+      const double raw = isNumber(elementData) ? elementData.toDouble() : 0.0;
+      if (!isNumber(elementData) || raw != std::floor(raw)) {
+        emit commandFailed(QStringLiteral("Unknown element \"%1\".")
+                             .arg(elementData.toString()));
+        return true;
+      }
+      if (raw < 1.0 || !(raw < Core::Elements::elementCount())) {
+        emit commandFailed(
+          QStringLiteral("Atomic number %1 is out of range (1 to %2).")
+            .arg(raw, 0, 'f', 0)
+            .arg(Core::Elements::elementCount() - 1));
+        return true;
+      }
+      atomicNum = static_cast<int>(raw);
+    }
+
+    const QVariant positionData = options.value(QStringLiteral("position"));
+    if (positionData.typeId() != QMetaType::QVariantList ||
+        positionData.toList().size() != 3) {
+      emit commandFailed(QStringLiteral(
+        "position must be a list of 3 numbers [x, y, z] in Angstroms."));
+      return true;
+    }
+    Vector3 position = Vector3::Zero();
+    const QVariantList coords = positionData.toList();
+    for (int i = 0; i < 3; ++i) {
+      if (!isNumber(coords[i]) || !std::isfinite(coords[i].toDouble())) {
+        emit commandFailed(QStringLiteral(
+          "position must be a list of 3 finite numbers [x, y, z]."));
+        return true;
+      }
+      position[i] = coords[i].toDouble();
+    }
+
+    bool bonded = false;
+    Index bondTo = 0;
+    unsigned char order = 1;
+    if (options.contains(QStringLiteral("bondTo"))) {
+      if (!toIndex(options.value(QStringLiteral("bondTo")),
+                   m_molecule->atomCount(), bondTo)) {
+        emit commandFailed(QStringLiteral(
+          "bondTo must be the index of an atom in the molecule."));
+        return true;
+      }
+      bonded = true;
+    }
+    if (!parseBondOrder(options, QStringLiteral("bondOrder"), order, error)) {
+      emit commandFailed(error);
+      return true;
+    }
+
+    m_molecule->beginMergeMode(tr("Draw Atom"));
+    RWAtom newAtom =
+      m_molecule->addAtom(static_cast<unsigned char>(atomicNum), position);
+    if (bonded)
+      m_molecule->addBond(newAtom.index(), bondTo, order);
+    m_molecule->endMergeMode();
+    m_molecule->emitChanged(allChanges);
+
+    QVariantMap result;
+    result[QStringLiteral("index")] = static_cast<qlonglong>(newAtom.index());
+    emit commandFinished(QString(), result);
+    return true;
+  }
+
+  if (isAddBond || isRemoveBond) {
+    Index first = 0;
+    Index second = 0;
+    if (!parseAtomPair(options, m_molecule->atomCount(), first, second,
+                       error)) {
+      emit commandFailed(error);
+      return true;
+    }
+
+    if (isRemoveBond) {
+      if (!m_molecule->bond(first, second).isValid()) {
+        emit commandFailed(
+          QStringLiteral("There is no bond between those atoms."));
+        return true;
+      }
+      m_molecule->beginMergeMode(tr("Remove Bond"));
+      m_molecule->removeBond(first, second);
+      m_molecule->endMergeMode();
+      m_molecule->emitChanged(allChanges);
+      emit commandFinished(QString(), QVariantMap());
+      return true;
+    }
+
+    unsigned char order = 1;
+    if (!parseBondOrder(options, QStringLiteral("order"), order, error)) {
+      emit commandFailed(error);
+      return true;
+    }
+    // RWMolecule::addBond() would quietly change an existing bond's order;
+    // this command must refuse instead.
+    if (m_molecule->bond(first, second).isValid()) {
+      emit commandFailed(QStringLiteral("Those atoms are already bonded."));
+      return true;
+    }
+    m_molecule->beginMergeMode(tr("Draw"));
+    RWBond bond = m_molecule->addBond(first, second, order);
+    m_molecule->endMergeMode();
+    m_molecule->emitChanged(allChanges);
+
+    QVariantMap result;
+    result[QStringLiteral("index")] = static_cast<qlonglong>(bond.index());
+    emit commandFinished(QString(), result);
+    return true;
+  }
+
+  // removeSelectedAtoms: same approach as CopyPaste::clear(), removing from
+  // the largest index down so the remaining indices stay valid.
+  qlonglong removed = 0;
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i))
+      ++removed;
+  }
+  if (removed > 0) {
+    m_molecule->beginMergeMode(tr("Remove Atom"));
+    for (Index i = m_molecule->atomCount(); i > 0; --i) {
+      if (m_molecule->atomSelected(i - 1))
+        m_molecule->removeAtom(i - 1);
+    }
+    m_molecule->endMergeMode();
+    m_molecule->emitChanged(allChanges);
+  }
+  QVariantMap result;
+  result[QStringLiteral("removed")] = removed;
+  emit commandFinished(QString(), result);
+  return true;
 }
 
 } // namespace Avogadro::QtPlugins
