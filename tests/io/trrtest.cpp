@@ -24,7 +24,7 @@ namespace {
 const char* trrPath()
 {
   static const std::string path =
-    std::string(AVOGADRO_DATA) + "/data/lysozyme_nvt.trr";
+    std::string(AVOGADRO_DATA) + "/data/trr/lysozyme_nvt.trr";
   return path.c_str();
 }
 

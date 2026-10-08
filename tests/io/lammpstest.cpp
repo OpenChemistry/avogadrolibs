@@ -29,7 +29,7 @@ using Avogadro::Io::LammpsTrajectoryFormat;
 TEST(LammpsTest, read)
 {
   LammpsTrajectoryFormat multi;
-  multi.open(AVOGADRO_DATA "/data/silicon_bulk.dump",
+  multi.open(AVOGADRO_DATA "/data/lammps/silicon_bulk.dump",
              FileFormat::Read | FileFormat::MultiMolecule);
   Molecule molecule, molecule2;
 
@@ -93,13 +93,13 @@ TEST(LammpsTest, modes)
 {
   // This tests some of the mode setting/checking code
   LammpsTrajectoryFormat format;
-  format.open(AVOGADRO_DATA "/data/silicon_bulk.dump", FileFormat::Read);
+  format.open(AVOGADRO_DATA "/data/lammps/silicon_bulk.dump", FileFormat::Read);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.mode() & FileFormat::Read);
   EXPECT_FALSE(format.isMode(FileFormat::Write));
 
   // Try some combinations now.
-  format.open(AVOGADRO_DATA "/data/silicon_bulk.dump",
+  format.open(AVOGADRO_DATA "/data/lammps/silicon_bulk.dump",
               FileFormat::Read | FileFormat::MultiMolecule);
   EXPECT_TRUE(format.isMode(FileFormat::Read));
   EXPECT_TRUE(format.isMode(FileFormat::Read | FileFormat::MultiMolecule));
