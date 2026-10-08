@@ -38,6 +38,12 @@ public:
   QWidget* setupWidget() override;
   bool hasSetupWidget() const override { return true; }
 
+  // Only draws when a unit cell is present, so it is harmless to enable.
+  DefaultBehavior defaultBehavior() const override
+  {
+    return DefaultBehavior::True;
+  }
+
 private slots:
   void setColor(const QColor& color);
   void setLineWidth(double width);
