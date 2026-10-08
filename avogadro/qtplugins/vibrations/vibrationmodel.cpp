@@ -7,6 +7,8 @@
 
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtCore/QLocale>
+
 namespace Avogadro::QtPlugins {
 
 VibrationModel::VibrationModel(QObject* p)
@@ -80,32 +82,32 @@ QVariant VibrationModel::data(const QModelIndex& idx, int role) const
     return QVariant();
   }
 
-  if (role == Qt::DisplayRole) {
-    switch (idx.column()) {
-      case 0:
-        if (static_cast<int>(m_molecule->vibrationFrequencies().size()) >
-            idx.row())
-          return m_molecule->vibrationFrequencies()[idx.row()];
-        else
-          return "No value";
-      case 1:
-        if (static_cast<int>(m_molecule->vibrationIRIntensities().size()) >
-            idx.row())
-          return m_molecule->vibrationIRIntensities()[idx.row()];
-        else
-          return "No value";
-      case 2:
-        if (static_cast<int>(m_molecule->vibrationRamanIntensities().size()) >
-            idx.row())
-          return m_molecule->vibrationRamanIntensities()[idx.row()];
-        else
-          return "No value";
-      default:
-        return "Invalid";
-    }
+  if (role != Qt::DisplayRole && role != Qt::UserRole)
+    return QVariant();
+
+  Core::Array<double> values;
+  switch (idx.column()) {
+    case 0:
+      values = m_molecule->vibrationFrequencies();
+      break;
+    case 1:
+      values = m_molecule->vibrationIRIntensities();
+      break;
+    case 2:
+      values = m_molecule->vibrationRamanIntensities();
+      break;
+    default:
+      return role == Qt::DisplayRole ? QVariant("Invalid") : QVariant();
   }
 
-  return QVariant();
+  if (static_cast<int>(values.size()) <= idx.row())
+    return role == Qt::DisplayRole ? QVariant("No value") : QVariant();
+
+  const double value = values[idx.row()];
+  // UserRole carries the raw value for callers that need a number
+  if (role == Qt::UserRole)
+    return value;
+  return QLocale().toString(value, 'f', 2);
 }
 
 QModelIndex VibrationModel::index(int row, int column,
