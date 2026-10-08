@@ -728,3 +728,21 @@ TEST(DcdTest, truncatedFirstFrameRejected)
   Molecule mol;
   EXPECT_FALSE(dcd.readString(full.substr(0, full.size() - 5), mol));
 }
+
+// NATOMS * 4 wraps a 32-bit int: 2^30 + 1 atoms would make the expected X
+// record size 4. A matching 4-byte record must not be accepted as coordinates.
+// (The 12-bytes-per-atom plausibility check rejects this first; the record
+// size guard itself needs a file over 4 GB to reach, so it is not unit tested.)
+TEST(DcdTest, rejectsWrappingAtomCount)
+{
+  DcdBuilder b;
+  b.natoms = 1073741825;
+  b.frames.push_back(Frame());
+  std::string data = b.build();
+  // Replace the empty first frame with a 4-byte X record.
+  data += std::string("\x04\0\0\0\0\0\0\0\x04\0\0\0", 12);
+  DcdFormat dcd;
+  Molecule mol;
+  EXPECT_FALSE(dcd.readString(data, mol));
+  EXPECT_EQ(mol.atomCount(), static_cast<size_t>(0));
+}

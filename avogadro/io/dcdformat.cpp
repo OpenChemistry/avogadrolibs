@@ -118,6 +118,10 @@ RecordStatus readFloats(std::istream& in, char endian, std::streamoff fileLen,
                         std::vector<char>& payload, std::size_t count,
                         std::vector<float>& values)
 {
+  // Record markers are int32, so no valid record exceeds INT32_MAX bytes;
+  // checking before the multiply keeps count * 4 from wrapping.
+  if (count > static_cast<std::size_t>(INT32_MAX / 4))
+    return RecordStatus::BadMarker;
   if (count > static_cast<std::size_t>(fileLen) / 4)
     return RecordStatus::Truncated;
   const RecordStatus status =
@@ -327,7 +331,8 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // NATOMS is file-derived and sizes arrays below. Each atom needs at least a
   // float per axis, so a count larger than the file cannot be real.
-  if (layout.numAtoms < 0 || layout.numAtoms > fileLen) {
+  // (Three floats, 12 bytes, in the first frame alone.)
+  if (layout.numAtoms < 0 || layout.numAtoms > fileLen / 12) {
     appendError("DCD file declares an implausible atom count.");
     return false;
   }
@@ -339,6 +344,10 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
     // One-based indices of the atoms that move in every frame after the first.
     const int numFree = layout.numAtoms - layout.numFixed;
+    if (numFree > INT32_MAX / 4) {
+      appendError("DCD file declares an implausible free atom count.");
+      return false;
+    }
     status = readRecord(inStream, endian, fileLen, buff, numFree * 4);
     if (status != RecordStatus::Ok) {
       appendError(recordError(status, "free atom index block"));
