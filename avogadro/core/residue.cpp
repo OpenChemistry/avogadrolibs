@@ -130,6 +130,21 @@ int Residue::atomicNumber(std::string name) const
   return 0;
 }
 
+int Residue::atomicNumberFromResidueData(const std::string& residueName,
+                                         const std::string& atomName)
+{
+  auto residue = residueDict.find(residueName);
+  if (residue == residueDict.end())
+    return 0;
+
+  const auto& atoms = residue->second.residueAtoms();
+  auto atom = atoms.find(atomName);
+  if (atom == atoms.end())
+    return 0;
+
+  return atom->second;
+}
+
 void Residue::setColor(const Vector3ub color)
 {
   m_customColorSet = true;
