@@ -14,6 +14,7 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
+#include <QtCore/QPointer>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -108,7 +109,9 @@ private:
   QtGui::RWMolecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
   Rendering::GLRenderer* m_renderer;
-  EditorToolWidget* m_toolWidget;
+  // Parentless when the tool has no widget parent (tests, fuzzing); the
+  // tool dock may also own and delete it first, hence the guard.
+  QPointer<EditorToolWidget> m_toolWidget;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;
   Rendering::Identifier m_bondedAtom;

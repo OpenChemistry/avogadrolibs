@@ -159,7 +159,10 @@ Editor::Editor(QObject* parent_)
   reset();
 }
 
-Editor::~Editor() {}
+Editor::~Editor()
+{
+  delete m_toolWidget;
+}
 
 void Editor::setIcon(bool darkTheme)
 {
