@@ -75,6 +75,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     OUTCAR
     dump
     gro
+    trr
   )
   foreach(fuzzName ${fuzz})
     add_executable(fuzz_${fuzzName} fuzztest.cpp)

@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/io/trrformat.h>
 
@@ -24,7 +25,7 @@ namespace {
 const char* trrPath()
 {
   static const std::string path =
-    std::string(AVOGADRO_DATA) + "/data/lysozyme_nvt.trr";
+    std::string(AVOGADRO_DATA) + "/data/trr/lysozyme_nvt.trr";
   return path.c_str();
 }
 
@@ -140,4 +141,94 @@ TEST(TrrTest, readTruncatedTrajectory)
     trr.readString(contents.substr(0, contents.size() / denom), molecule);
     EXPECT_LE(molecule.atomCount(), full.atomCount()) << "1/" << denom;
   }
+}
+
+// Small hand-built trajectories: a water molecule in a 1.5 nm box, with atom
+// 0 moved 0.01 nm along x per step. isDouble() used to compute
+// box_size / DIM * DIM, which is 72 rather than 8, so every double-precision
+// file with a box was read as single precision.
+TEST(TrrTest, readWaterVariants)
+{
+  struct Case
+  {
+    const char* file;
+    size_t frames;
+    double lastX; // Angstrom, atom 0 in the last coordinate set
+  };
+  for (const Case& c : { Case{ "water-float-xv.trr", 2, 0.1 },
+                         Case{ "water-float-velocity-only-frame.trr", 2, 0.2 },
+                         Case{ "water-double-xvf.trr", 2, 0.1 },
+                         Case{ "water-float-little-endian.trr", 1, 0.0 },
+                         Case{ "water-float-virial.trr", 1, 0.0 } }) {
+    TrrFormat trr;
+    Molecule molecule;
+    ASSERT_TRUE(trr.readFile(std::string(AVOGADRO_DATA) + "/data/trr/" + c.file,
+                             molecule))
+      << c.file << ": " << trr.error();
+
+    EXPECT_EQ(molecule.atomCount(), static_cast<size_t>(3)) << c.file;
+    EXPECT_EQ(molecule.coordinate3dCount(), c.frames) << c.file;
+    ASSERT_NE(molecule.unitCell(), nullptr) << c.file;
+    EXPECT_NEAR(molecule.unitCell()->a(), 15.0, 1e-5) << c.file;
+    EXPECT_NEAR(molecule.unitCell()->c(), 15.0, 1e-5) << c.file;
+
+    // nm --> Angstrom
+    const auto first = molecule.coordinate3d(0);
+    EXPECT_NEAR(first[1].x(), 0.957, 1e-5) << c.file;
+    EXPECT_NEAR(first[2].y(), 0.927, 1e-5) << c.file;
+    // A frame with only velocities is no coordinate set, so the second set
+    // of water-float-velocity-only-frame.trr is step 2.
+    EXPECT_NEAR(molecule.coordinate3d(c.frames - 1)[0].x(), c.lastX, 1e-5)
+      << c.file;
+  }
+}
+
+namespace {
+
+std::string readWaterFile(const char* name)
+{
+  std::ifstream in(std::string(AVOGADRO_DATA) + "/data/trr/" + name,
+                   std::ios::binary);
+  return std::string((std::istreambuf_iterator<char>(in)),
+                     std::istreambuf_iterator<char>());
+}
+
+void setBE32(std::string& data, size_t offset, int32_t value)
+{
+  std::string bytes;
+  appendBE32(bytes, value);
+  data.replace(offset, 4, bytes);
+}
+
+// water-float-xv.trr holds two frames of this many bytes each
+const size_t waterFrameSize = 192;
+
+} // namespace
+
+// Found by fuzzing: the version string length was bounds-checked only in the
+// first frame, so a later frame could overflow the stack buffer it unpacks to.
+TEST(TrrTest, rejectsOversizedVersionStringInLaterFrame)
+{
+  std::string data = readWaterFile("water-float-xv.trr");
+  ASSERT_EQ(data.size(), 2 * waterFrameSize);
+  for (int32_t slen0 : { 1001, 5000, 0, -1 }) {
+    std::string bad = data;
+    setBE32(bad, waterFrameSize + 4, slen0);
+    TrrFormat trr;
+    Molecule molecule;
+    EXPECT_FALSE(trr.readString(bad, molecule)) << "slen0 " << slen0;
+  }
+}
+
+// Later frames used to keep the first frame's header, because std::map::insert
+// does not replace an existing key, so a changed atom count went unnoticed.
+TEST(TrrTest, rejectsChangedAtomCountInLaterFrame)
+{
+  std::string data = readWaterFile("water-float-xv.trr");
+  ASSERT_EQ(data.size(), 2 * waterFrameSize);
+  // natoms is the 11th of the 13 header ints, which start at byte 24
+  setBE32(data, waterFrameSize + 24 + 10 * 4, 2);
+  TrrFormat trr;
+  Molecule molecule;
+  EXPECT_FALSE(trr.readString(data, molecule));
 }

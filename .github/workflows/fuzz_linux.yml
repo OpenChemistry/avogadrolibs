@@ -228,7 +228,7 @@ jobs:
         # fuzz_windows.yml has no qtplugins entry on purpose: it builds with
         # USE_QT=OFF, and this target needs Qt and the in-tree static plugins.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden nwchem orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "calc|fuzz_calc_|calc|forcefield"
