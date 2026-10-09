@@ -218,7 +218,7 @@ static void unpack_int32_t(const unsigned char** bp, int32_t* dst, int endian)
     val |= (uint32_t)(*((*bp)++)) << 16;
     val |= (uint32_t)(*((*bp)++)) << 24;
   } else {
-    val = *((*bp)++) << 24;
+    val = (uint32_t)(*((*bp)++)) << 24;
     val |= (uint32_t)(*((*bp)++)) << 16;
     val |= (uint32_t)(*((*bp)++)) << 8;
     val |= (uint32_t)(*((*bp)++));
@@ -238,7 +238,7 @@ static void unpack_uint32_t(const unsigned char** bp, uint32_t* dst, int endian)
     *dst |= (uint32_t)(*((*bp)++)) << 16;
     *dst |= (uint32_t)(*((*bp)++)) << 24;
   } else {
-    *dst = *((*bp)++) << 24;
+    *dst = (uint32_t)(*((*bp)++)) << 24;
     *dst |= (uint32_t)(*((*bp)++)) << 16;
     *dst |= (uint32_t)(*((*bp)++)) << 8;
     *dst |= (uint32_t)(*((*bp)++));

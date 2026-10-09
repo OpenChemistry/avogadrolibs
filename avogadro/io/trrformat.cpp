@@ -13,6 +13,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cstdint>
 #include <istream>
 #include <ostream>
 #include <string>
@@ -41,8 +42,11 @@ string HEADITEMS[] = { "ir_size",   "e_size",   "box_size", "vir_size",
 
 int swapInteger(int inp)
 {
-  return (((inp << 24) & 0xff000000) | ((inp << 8) & 0x00ff0000) |
-          ((inp >> 8) & 0x0000ff00) | ((inp >> 24) & 0x000000ff));
+  // Swap as unsigned: shifting a negative int left is undefined, and the
+  // magic number read in the wrong byte order is often negative.
+  const auto u = static_cast<uint32_t>(inp);
+  return static_cast<int>(((u << 24) & 0xff000000U) | ((u << 8) & 0x00ff0000U) |
+                          ((u >> 8) & 0x0000ff00U) | ((u >> 24) & 0x000000ffU));
 }
 
 char swapEndian(char endian)
@@ -71,7 +75,9 @@ int isDouble(map<string, int>& header)
         // declared count of zero used to raise SIGFPE right here.
         if (header["natoms"] <= 0)
           return 0;
-        size = (int)(header[headerKey] / (header["natoms"] * DIM));
+        // 64-bit, since natoms * DIM overflows int for a huge declared count
+        size = static_cast<int>(header[headerKey] /
+                                (static_cast<int64_t>(header["natoms"]) * DIM));
         break;
       }
     }
