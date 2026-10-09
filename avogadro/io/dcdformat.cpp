@@ -14,13 +14,10 @@
 #include <avogadro/core/vector.h>
 
 #include <cmath>
-#include <cstdint>
-#include <cstring>
 #include <istream>
 #include <memory>
 #include <ostream>
 #include <string>
-#include <type_traits>
 #include <vector>
 
 using std::string;
@@ -53,7 +50,7 @@ enum class RecordStatus
 // Everything the per-frame reader needs to know about the file.
 struct DcdLayout
 {
-  char endian = '>';
+  Core::ByteOrder endian = Core::ByteOrder::BigEndian;
   bool hasCell = false;     // CHARMM unit-cell record before the coordinates
   bool hasFourDims = false; // CHARMM fourth-dimension record after them
   int numAtoms = 0;
@@ -67,42 +64,19 @@ struct DcdLayout
 // Every length marker is a 4-byte int32.
 constexpr std::streamsize MarkerBytes = 4;
 
-// Decode a T (int32_t, float or double) stored in the file's byte order,
-// '>' for big-endian and '<' for little-endian, independent of the host's.
-// Going through the integer bits keeps -0.0, denormals, inf and NaN exact.
-template <typename T>
-T unpack(const char* data, char endian)
-{
-  using Bits = std::conditional_t<sizeof(T) == 4, uint32_t, uint64_t>;
-  Bits bits = 0;
-  for (std::size_t i = 0; i < sizeof(Bits); ++i) {
-    const std::size_t shift = endian == '>' ? sizeof(Bits) - 1 - i : i;
-    bits |= static_cast<Bits>(static_cast<unsigned char>(data[i]))
-            << (8 * shift);
-  }
-  T value;
-  std::memcpy(&value, &bits, sizeof(T));
-  return value;
-}
-
-int unpackInt(const char* data, char endian)
-{
-  return unpack<int32_t>(data, endian);
-}
-
 /**
  * Read one Fortran-style record: a 4-byte length marker, the payload, and the
  * same marker again. The payload is left in @a payload. If @a expectedBytes is
  * not negative, the marker must equal it.
  */
-RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
-                        std::vector<char>& payload, int expectedBytes,
-                        int* length = nullptr)
+RecordStatus readRecord(std::istream& in, Core::ByteOrder endian,
+                        std::streamoff fileLen, std::vector<char>& payload,
+                        int expectedBytes, int* length = nullptr)
 {
   std::vector<char> marker(MarkerBytes);
   if (!readBlock(in, marker, MarkerBytes, fileLen))
     return RecordStatus::Truncated;
-  const int bytes = unpackInt(marker.data(), endian);
+  const int bytes = Core::unpackInt32(marker.data(), endian);
   if (bytes < 0 || (expectedBytes >= 0 && bytes != expectedBytes))
     return RecordStatus::BadMarker;
 
@@ -110,7 +84,7 @@ RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
     return RecordStatus::Truncated;
   if (!readBlock(in, marker, MarkerBytes, fileLen))
     return RecordStatus::Truncated;
-  if (unpackInt(marker.data(), endian) != bytes)
+  if (Core::unpackInt32(marker.data(), endian) != bytes)
     return RecordStatus::BadMarker;
 
   if (length != nullptr)
@@ -121,8 +95,9 @@ RecordStatus readRecord(std::istream& in, char endian, std::streamoff fileLen,
 // Read one record of @a count float32 values into axis @a axis of
 // @a positions, where value i goes to atom indexes[i] (or i if there is no
 // index list).
-RecordStatus readAxis(std::istream& in, char endian, std::streamoff fileLen,
-                      std::vector<char>& payload, std::size_t count, int axis,
+RecordStatus readAxis(std::istream& in, Core::ByteOrder endian,
+                      std::streamoff fileLen, std::vector<char>& payload,
+                      std::size_t count, int axis,
                       const std::vector<int>* indexes,
                       Array<Vector3>& positions)
 {
@@ -137,7 +112,7 @@ RecordStatus readAxis(std::istream& in, char endian, std::streamoff fileLen,
   for (std::size_t i = 0; i < count; ++i) {
     const std::size_t atom =
       indexes != nullptr ? static_cast<std::size_t>((*indexes)[i]) : i;
-    positions[atom][axis] = unpack<float>(payload.data() + 4 * i, endian);
+    positions[atom][axis] = Core::unpackFloat(payload.data() + 4 * i, endian);
   }
   return RecordStatus::Ok;
 }
@@ -187,7 +162,7 @@ RecordStatus readFrame(std::istream& in, const DcdLayout& layout,
     if (first) {
       double uc[6];
       for (int i = 0; i < 6; ++i)
-        uc[i] = unpack<double>(payload.data() + 8 * i, layout.endian);
+        uc[i] = Core::unpackDouble(payload.data() + 8 * i, layout.endian);
       // All three lengths zero means the file has no cell (VMD does the
       // same); that is checked on the lengths, before any angle conversion.
       if (uc[0] != 0.0 || uc[2] != 0.0 || uc[5] != 0.0)
@@ -240,15 +215,16 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     appendError("Unexpected end of DCD file.");
     return false;
   }
-  if (unpackInt(buff.data(), '>') == DCD_MAGIC) {
-    layout.endian = '>';
-  } else if (unpackInt(buff.data(), '<') == DCD_MAGIC) {
-    layout.endian = '<';
+  if (Core::unpackInt32(buff.data(), Core::ByteOrder::BigEndian) == DCD_MAGIC) {
+    layout.endian = Core::ByteOrder::BigEndian;
+  } else if (Core::unpackInt32(buff.data(), Core::ByteOrder::LittleEndian) ==
+             DCD_MAGIC) {
+    layout.endian = Core::ByteOrder::LittleEndian;
   } else {
     appendError("File does not start with magic number 84.");
     return false;
   }
-  const char endian = layout.endian;
+  const Core::ByteOrder endian = layout.endian;
 
   // CORD plus the rest of the 84 byte header, and its trailing marker. The
   // payload stays raw bytes in the file's byte order, so every field is
@@ -268,27 +244,27 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   // Determining whether the trajectory file is from CHARMM or not: a nonzero
   // version number in the last header word. Only CHARMM files can carry the
   // unit-cell and fourth-dimension records.
-  const bool charmm = unpackInt(raw + 80, endian) != 0;
+  const bool charmm = Core::unpackInt32(raw + 80, endian) != 0;
   if (charmm) {
-    layout.hasCell = unpackInt(raw + 44, endian) != 0;
-    layout.hasFourDims = unpackInt(raw + 48, endian) == 1;
+    layout.hasCell = Core::unpackInt32(raw + 44, endian) != 0;
+    layout.hasFourDims = Core::unpackInt32(raw + 48, endian) == 1;
   }
 
   // First integration step written, and how many steps apart the frames are.
-  const int ISTART = unpackInt(raw + 8, endian);
-  const int NSAVC = unpackInt(raw + 12, endian);
+  const int ISTART = Core::unpackInt32(raw + 8, endian);
+  const int NSAVC = Core::unpackInt32(raw + 12, endian);
 
   // number of fixed atoms
-  const int numFixed = unpackInt(raw + 36, endian);
+  const int numFixed = Core::unpackInt32(raw + 36, endian);
 
   // DELTA (timestep) is stored as a double, in picoseconds, with X-PLOR, but
   // as a float in AKMA time units with CHARMM. Both end up in picoseconds.
   double DELTA = 0.0;
   if (charmm)
-    DELTA =
-      static_cast<double>(unpack<float>(raw + 40, endian)) * AkmaToPicoseconds;
+    DELTA = static_cast<double>(Core::unpackFloat(raw + 40, endian)) *
+            AkmaToPicoseconds;
   else
-    DELTA = unpack<double>(raw + 40, endian);
+    DELTA = Core::unpackDouble(raw + 40, endian);
 
   // DELTA is the integration timestep, but only every NSAVC-th step was
   // written, so that -- not DELTA -- is how far apart the frames in this file
@@ -302,7 +278,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     appendError("Unexpected end of DCD file.");
     return false;
   }
-  if (unpackInt(marker.data(), endian) != DCD_MAGIC) {
+  if (Core::unpackInt32(marker.data(), endian) != DCD_MAGIC) {
     appendError("DCD header has inconsistent record length markers.");
     return false;
   }
@@ -321,7 +297,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
   }
   // NTITLE comes from the file, so check it against the block that holds the
   // strings rather than trusting it.
-  const int NTITLE = unpackInt(buff.data(), endian);
+  const int NTITLE = Core::unpackInt32(buff.data(), endian);
   if (NTITLE < 0 || NTITLE > (titleBytes - 4) / 80) {
     appendError("DCD file declares an implausible title count.");
     return false;
@@ -333,7 +309,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     appendError(recordError(status, "atom count"));
     return false;
   }
-  layout.numAtoms = unpackInt(buff.data(), endian);
+  layout.numAtoms = Core::unpackInt32(buff.data(), endian);
 
   // NATOMS is file-derived and sizes arrays below. Each atom needs at least a
   // float per axis, so a count larger than the file cannot be real.
@@ -362,7 +338,7 @@ bool DcdFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
     layout.freeIndexes.resize(static_cast<std::size_t>(numFree));
     for (int i = 0; i < numFree; ++i) {
-      const int index = unpackInt(buff.data() + 4 * i, endian);
+      const int index = Core::unpackInt32(buff.data() + 4 * i, endian);
       if (index < 1 || index > layout.numAtoms) {
         appendError("DCD file has a free atom index out of range.");
         return false;

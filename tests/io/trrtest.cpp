@@ -12,10 +12,13 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/io/trrformat.h>
 
+#include <cmath>
 #include <cstdint>
 #include <fstream>
 #include <iterator>
+#include <limits>
 #include <string>
+#include <vector>
 
 using Avogadro::Core::Molecule;
 using Avogadro::Io::TrrFormat;
@@ -36,6 +39,33 @@ void appendBE32(std::string& out, int32_t value)
   out.push_back(static_cast<char>((v >> 16) & 0xff));
   out.push_back(static_cast<char>((v >> 8) & 0xff));
   out.push_back(static_cast<char>(v & 0xff));
+}
+
+void appendBEFloat(std::string& out, uint32_t bits)
+{
+  appendBE32(out, static_cast<int32_t>(bits));
+}
+
+/**
+ * A big-endian single precision TRR with no box, @a bits holding the raw
+ * IEEE 754 bit patterns of the coordinates (3 per atom, in nm).
+ */
+std::string singlePrecisionTrr(const std::vector<uint32_t>& bits)
+{
+  const int32_t natoms = static_cast<int32_t>(bits.size() / 3);
+  std::string data;
+  appendBE32(data, 1993); // GROMACS magic
+  appendBE32(data, 13);
+  appendBE32(data, 12);
+  data += "GMX_trn_file";
+  // The 13 header ints: ten block sizes (only x is set), natoms, step, nre
+  for (int32_t v : { 0, 0, 0, 0, 0, 0, 0, 3 * 4 * natoms, 0, 0, natoms, 0, 0 })
+    appendBE32(data, v);
+  appendBEFloat(data, 0); // time (0.0f)
+  appendBEFloat(data, 0); // lambda (0.0f)
+  for (uint32_t b : bits)
+    appendBEFloat(data, b);
+  return data;
 }
 
 /**
@@ -231,4 +261,38 @@ TEST(TrrTest, rejectsChangedAtomCountInLaterFrame)
   TrrFormat trr;
   Molecule molecule;
   EXPECT_FALSE(trr.readString(data, molecule));
+}
+
+// Coordinates are decoded bit for bit: -0.0 keeps its sign and a denormal
+// survives. The old struct-based decoder gave about -5.9e-39 for -0.0 and
+// mangled denormals.
+TEST(TrrTest, exactSinglePrecisionCoordinates)
+{
+  const std::vector<uint32_t> bits = {
+    0x80000000u, // -0.0f
+    0x3f800000u, // 1.0f
+    0x00000001u, // smallest denormal
+    0x00800000u, // FLT_MIN
+    0xbf800000u, // -1.0f
+    0x80000001u  // -smallest denormal
+  };
+  TrrFormat trr;
+  Molecule molecule;
+  ASSERT_TRUE(trr.readString(singlePrecisionTrr(bits), molecule))
+    << trr.error();
+  ASSERT_EQ(molecule.atomCount(), static_cast<size_t>(2));
+
+  constexpr float tiny = std::numeric_limits<float>::denorm_min();
+  const Avogadro::Vector3 a = molecule.atomPosition3d(0);
+  const Avogadro::Vector3 b = molecule.atomPosition3d(1);
+  EXPECT_EQ(a.x(), 0.0);
+  EXPECT_TRUE(std::signbit(a.x()));
+  EXPECT_EQ(a.y(), 10.0);
+  // nm to Angstrom is a multiplication by 10 in single precision
+  EXPECT_EQ(a.z(), static_cast<double>(tiny * 10.0f));
+  EXPECT_GT(a.z(), 0.0);
+  EXPECT_EQ(b.x(),
+            static_cast<double>(std::numeric_limits<float>::min() * 10.0f));
+  EXPECT_EQ(b.y(), -10.0);
+  EXPECT_EQ(b.z(), static_cast<double>(-tiny * 10.0f));
 }

@@ -8,7 +8,10 @@
 #include <fast_float/fast_float.h>
 
 #include <cmath>
+#include <cstdint>
+#include <cstring>
 #include <limits>
+#include <type_traits>
 #include <system_error>
 
 namespace Avogadro::Core {
@@ -72,6 +75,25 @@ const char* parseFloating(const char* first, const char* last, T& value)
   return result.ptr;
 }
 
+// Decode a T (int32_t, float or double) stored in the given byte order,
+// independent of the host's.
+// Going through the integer bits keeps -0.0, denormals, inf and NaN exact.
+template <typename T>
+T unpackValue(const char* data, ByteOrder byteOrder)
+{
+  using Bits = std::conditional_t<sizeof(T) == 4, uint32_t, uint64_t>;
+  Bits bits = 0;
+  for (std::size_t i = 0; i < sizeof(Bits); ++i) {
+    const std::size_t shift =
+      byteOrder == ByteOrder::BigEndian ? sizeof(Bits) - 1 - i : i;
+    bits |= static_cast<Bits>(static_cast<unsigned char>(data[i]))
+            << (8 * shift);
+  }
+  T value;
+  std::memcpy(&value, &bits, sizeof(T));
+  return value;
+}
+
 } // namespace
 
 const char* parseDouble(const char* first, const char* last, double& value)
@@ -82,6 +104,21 @@ const char* parseDouble(const char* first, const char* last, double& value)
 const char* parseFloat(const char* first, const char* last, float& value)
 {
   return parseFloating(first, last, value);
+}
+
+int32_t unpackInt32(const char* data, ByteOrder byteOrder)
+{
+  return unpackValue<int32_t>(data, byteOrder);
+}
+
+float unpackFloat(const char* data, ByteOrder byteOrder)
+{
+  return unpackValue<float>(data, byteOrder);
+}
+
+double unpackDouble(const char* data, ByteOrder byteOrder)
+{
+  return unpackValue<double>(data, byteOrder);
 }
 
 } // namespace Avogadro::Core
