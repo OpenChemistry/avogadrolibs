@@ -103,6 +103,15 @@ public:
   int atomicNumber(std::string name) const;
 
   /**
+   * Look up an atom name in the residue dictionary, without needing a Residue
+   * instance.
+   * \return the atomic number of atom @p atomName in residue type
+   * @p residueName (e.g., "CYS", "SG" = 16), or 0 if either is unknown.
+   */
+  static int atomicNumberFromResidueData(const std::string& residueName,
+                                         const std::string& atomName);
+
+  /**
    * \return the name of @p atom or an empty string if not in this residue
    */
   std::string atomName(const Atom atom) const;

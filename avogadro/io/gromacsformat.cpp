@@ -15,6 +15,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/utilities.h>
 
+#include <cctype>
 #include <iostream>
 
 #include <string>
@@ -42,6 +43,53 @@ std::vector<std::string> GromacsFormat::mimeTypes() const
   return std::vector<std::string>(1, "chemical/x-gro"s);
 }
 
+namespace {
+
+// GRO atom names are not column-justified like PDB, so the element has to be
+// guessed from the name. Returns 0 if no valid element is found.
+int atomicNumberFromGroName(const std::string& atomName,
+                            const std::string& residueName)
+{
+  // strip leading digits (e.g., "1HB")
+  size_t start = 0;
+  while (start < atomName.size() &&
+         std::isdigit(static_cast<unsigned char>(atomName[start])))
+    ++start;
+  std::string letters;
+  for (size_t i = start; i < atomName.size(); ++i) {
+    if (std::isalpha(static_cast<unsigned char>(atomName[i])))
+      letters += atomName[i];
+    else
+      break;
+  }
+  if (letters.empty())
+    return 0;
+
+  // Ion convention: atom name equals residue name (NA/NA, CL/CL, ZN/ZN)
+  if (letters.size() == 2 && letters == residueName) {
+    std::string symbol;
+    symbol +=
+      static_cast<char>(std::toupper(static_cast<unsigned char>(letters[0])));
+    symbol +=
+      static_cast<char>(std::tolower(static_cast<unsigned char>(letters[1])));
+    unsigned char num = Elements::atomicNumberFromSymbol(symbol);
+    if (num != 255 && num != 0)
+      return num;
+  }
+
+  // Otherwise the first letter is the element: CA -> C, HG -> H, SG -> S.
+  // Known ambiguity: a two-letter element in a non-ion residue (e.g., "CL1" in
+  // a ligand) reads as the first-letter element (carbon).
+  std::string symbol(
+    1, static_cast<char>(std::toupper(static_cast<unsigned char>(letters[0]))));
+  unsigned char num = Elements::atomicNumberFromSymbol(symbol);
+  if (num != 255 && num != 0)
+    return num;
+  return 0;
+}
+
+} // namespace
+
 bool GromacsFormat::read(std::istream& in, Molecule& molecule)
 {
   // Allow ADL ofr string
@@ -51,6 +99,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
   string value;
   Residue* r = nullptr;
   size_t currentResidueId = 0;
+  string currentResidueName;
 
   // Title
   Core::getLine(in, buffer);
@@ -116,45 +165,39 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
       return false;
     }
 
-    if (residueId != currentResidueId) {
+    // The residue number wraps at 99999, so a change of name also starts a
+    // new residue.
+    const string residueName = trimmed(buffer.substr(5, 5));
+    if (r == nullptr || residueId != currentResidueId ||
+        residueName != currentResidueName) {
       currentResidueId = residueId;
-
-      auto residueName = lexicalCast<string>(buffer.substr(5, 5), ok);
-      if (!ok) {
-        appendError("Failed to parse residue name: " + buffer.substr(5, 5));
-        return false;
-      }
+      currentResidueName = residueName;
 
       // gro files do not have a chain ID. So we use a makeshift dummy ID
       char dummyChainId = '0';
-      r = &molecule.addResidue(residueName, currentResidueId, dummyChainId);
+      string nameCopy = residueName;
+      r = &molecule.addResidue(nameCopy, currentResidueId, dummyChainId);
     }
 
     // Atom name:
-    value = trimmed(buffer.substr(10, 5));
+    const string atomName = trimmed(buffer.substr(10, 5));
     Atom atom;
-    int atomicNum = 0;
-    if (r != nullptr)
-      r->atomicNumber(value);
-    if (atomicNum) {
-      atom = molecule.addAtom(atomicNum);
+    int atomicNum = Residue::atomicNumberFromResidueData(residueName, atomName);
+    if (atomicNum == 0)
+      atomicNum = atomicNumberFromGroName(atomName, residueName);
+    if (atomicNum != 0) {
+      atom = molecule.addAtom(static_cast<unsigned char>(atomicNum));
     } else {
-      unsigned char atomicNumFromSymbol =
-        Elements::atomicNumberFromSymbol(value);
-      if (atomicNumFromSymbol != 255) {
-        atom = molecule.addAtom(atomicNumFromSymbol);
-      } else {
-        auto it = atomTypes.find(value);
-        if (it == atomTypes.end()) {
-          atomTypes.insert(std::make_pair(value, customElementCounter++));
-          it = atomTypes.find(value);
-          if (customElementCounter > CustomElementMax) {
-            appendError("Custom element type limit exceeded.");
-            return false;
-          }
+      auto it = atomTypes.find(atomName);
+      if (it == atomTypes.end()) {
+        atomTypes.insert(std::make_pair(atomName, customElementCounter++));
+        it = atomTypes.find(atomName);
+        if (customElementCounter > CustomElementMax) {
+          appendError("Custom element type limit exceeded.");
+          return false;
         }
-        atom = molecule.addAtom(it->second);
       }
+      atom = molecule.addAtom(it->second);
     }
 
     // Coords
@@ -170,7 +213,7 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     }
     atom.setPosition3d(pos * static_cast<Real>(10.0)); // nm --> Angstrom
     if (r) {
-      r->addResidueAtom(value, atom);
+      r->addResidueAtom(atomName, atom);
     }
   }
 
@@ -220,6 +263,9 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     return false;
   }
   molecule.setUnitCell(cell);
+
+  molecule.perceiveBondsSimple();
+  molecule.perceiveBondsFromResidueData();
 
   return true;
 }
