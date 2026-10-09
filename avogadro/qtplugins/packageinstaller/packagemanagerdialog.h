@@ -52,6 +52,9 @@ private slots:
   void removeSelected();
   void installFromDirectory();
   void onPackagesInstalled();
+  void onPackageInstalled(const QString& packageDir);
+  void onPackageInstallFailed(const QString& packageDir,
+                              const QString& message);
   void handleRedirect();
 
 private:

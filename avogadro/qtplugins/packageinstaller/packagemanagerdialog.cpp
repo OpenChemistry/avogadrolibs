@@ -126,6 +126,12 @@ PackageManagerDialog::PackageManagerDialog(QWidget* parent)
   connect(QtGui::PackageManager::instance(),
           &QtGui::PackageManager::packagesInstalled, this,
           &PackageManagerDialog::onPackagesInstalled);
+  connect(QtGui::PackageManager::instance(),
+          &QtGui::PackageManager::packageInstalled, this,
+          &PackageManagerDialog::onPackageInstalled);
+  connect(QtGui::PackageManager::instance(),
+          &QtGui::PackageManager::packageInstallFailed, this,
+          &PackageManagerDialog::onPackageInstallFailed);
 
   // Load installed packages immediately (without waiting for the network)
   m_model->mergeInstalledPackages();
@@ -626,9 +632,22 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
   downloadNext();
 }
 
+void PackageManagerDialog::onPackageInstalled(const QString& packageDir)
+{
+  Q_UNUSED(packageDir);
+  m_ui->readmeBrowser->append(tr("Installation complete.\n"));
+}
+
+void PackageManagerDialog::onPackageInstallFailed(const QString& packageDir,
+                                                  const QString& message)
+{
+  m_ui->readmeBrowser->append(
+    tr("Installation failed for %1: %2\n")
+      .arg(QFileInfo(packageDir).fileName(), message));
+}
+
 void PackageManagerDialog::onPackagesInstalled()
 {
-  m_ui->readmeBrowser->append(tr("Installation complete.\n"));
   m_model->mergeInstalledPackages();
 }
 
@@ -691,6 +710,7 @@ void PackageManagerDialog::removeSelected()
     PackageModel::PackageEntry& e = m_model->entry(row);
     const QString packageKey = e.packageKey.isEmpty() ? e.name : e.packageKey;
     QtGui::PackageManager::instance()->unregisterPackage(packageKey);
+    QtGui::PackageManager::instance()->clearInstallFailure(e.installedDir);
     if (deleteFiles && !e.installedDir.isEmpty()) {
       if (QFileInfo{ e.installedDir }.isSymLink())
         QFile(e.installedDir).remove();
