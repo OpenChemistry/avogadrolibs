@@ -74,6 +74,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     POSCAR
     OUTCAR
     dump
+    gro
     trr
   )
   foreach(fuzzName ${fuzz})
