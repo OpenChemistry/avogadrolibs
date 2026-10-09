@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cerrno>
 #include <cmath>
+#include <cstdint>
 #include <cstdlib>
 #include <istream>
 #include <limits>
@@ -257,6 +258,44 @@ AVOGADROCORE_EXPORT const char* parseDouble(const char* first, const char* last,
  */
 AVOGADROCORE_EXPORT const char* parseFloat(const char* first, const char* last,
                                            float& value);
+
+/**
+ * @brief The byte order of binary data read from a file.
+ */
+enum class ByteOrder
+{
+  BigEndian,
+  LittleEndian
+};
+
+/**
+ * @brief Decode a 32-bit signed integer stored in a given byte order.
+ *
+ * The result does not depend on the host's byte order.
+ *
+ * @param data Must point at at least 4 readable bytes.
+ * @param byteOrder The byte order of the stored value.
+ */
+AVOGADROCORE_EXPORT int32_t unpackInt32(const char* data, ByteOrder byteOrder);
+
+/**
+ * @brief Decode an IEEE 754 single precision float stored in a given byte
+ * order.
+ *
+ * The bits are copied, not converted, so -0.0, denormals, infinities and NaNs
+ * are exact.
+ *
+ * @param data Must point at at least 4 readable bytes.
+ * @param byteOrder The byte order of the stored value.
+ */
+AVOGADROCORE_EXPORT float unpackFloat(const char* data, ByteOrder byteOrder);
+
+/**
+ * @brief Double precision version of unpackFloat().
+ *
+ * @param data Must point at at least 8 readable bytes.
+ */
+AVOGADROCORE_EXPORT double unpackDouble(const char* data, ByteOrder byteOrder);
 
 /**
  * @brief Whether @p pos ends a number that was parsed up to @p last.

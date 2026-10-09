@@ -9,6 +9,8 @@
 
 #include <clocale>
 #include <cmath>
+#include <cstdint>
+#include <cstring>
 #include <limits>
 #include <string>
 #include <vector>
@@ -457,4 +459,101 @@ TEST(UtilitiesTest, caseInsensitiveEquals)
   // differ, while the ASCII letters around them still fold.
   EXPECT_FALSE(caseInsensitiveEquals("\xC3\x84", "\xC3\xA4"));
   EXPECT_TRUE(caseInsensitiveEquals("\xC3\x84T", "\xC3\x84t"));
+}
+
+namespace {
+
+// The bytes of a 32- or 64-bit pattern in the requested byte order.
+template <typename Bits>
+std::string bytesOf(Bits bits, Avogadro::Core::ByteOrder endian)
+{
+  std::string out(sizeof(Bits), '\0');
+  for (std::size_t i = 0; i < sizeof(Bits); ++i) {
+    const std::size_t shift =
+      endian == Avogadro::Core::ByteOrder::BigEndian ? sizeof(Bits) - 1 - i : i;
+    out[i] = static_cast<char>((bits >> (8 * shift)) & 0xff);
+  }
+  return out;
+}
+
+float decodeFloat(uint32_t bits, Avogadro::Core::ByteOrder endian)
+{
+  return Avogadro::Core::unpackFloat(bytesOf(bits, endian).data(), endian);
+}
+
+double decodeDouble(uint64_t bits, Avogadro::Core::ByteOrder endian)
+{
+  return Avogadro::Core::unpackDouble(bytesOf(bits, endian).data(), endian);
+}
+
+} // namespace
+
+TEST(UtilitiesTest, unpackInt32)
+{
+  using Avogadro::Core::unpackInt32;
+  const char big[] = { 0x00, 0x00, 0x07, static_cast<char>(0xc9) };
+  EXPECT_EQ(unpackInt32(big, Avogadro::Core::ByteOrder::BigEndian), 1993);
+  EXPECT_EQ(unpackInt32(big, Avogadro::Core::ByteOrder::LittleEndian),
+            static_cast<int32_t>(0xc9070000u));
+  const char neg[] = { static_cast<char>(0xff), static_cast<char>(0xff),
+                       static_cast<char>(0xff), static_cast<char>(0xfe) };
+  EXPECT_EQ(unpackInt32(neg, Avogadro::Core::ByteOrder::BigEndian), -2);
+  const char negLittle[] = { static_cast<char>(0xfe), static_cast<char>(0xff),
+                             static_cast<char>(0xff), static_cast<char>(0xff) };
+  EXPECT_EQ(unpackInt32(negLittle, Avogadro::Core::ByteOrder::LittleEndian),
+            -2);
+  const char minInt[] = { static_cast<char>(0x80), 0, 0, 0 };
+  EXPECT_EQ(unpackInt32(minInt, Avogadro::Core::ByteOrder::BigEndian),
+            std::numeric_limits<int32_t>::min());
+}
+
+TEST(UtilitiesTest, unpackFloat)
+{
+  for (auto endian : { Avogadro::Core::ByteOrder::BigEndian,
+                       Avogadro::Core::ByteOrder::LittleEndian }) {
+    EXPECT_EQ(decodeFloat(0x3fc00000u, endian), 1.5f);
+    EXPECT_EQ(decodeFloat(0xc2f6e979u, endian), -123.456f);
+
+    const float negZero = decodeFloat(0x80000000u, endian);
+    EXPECT_EQ(negZero, 0.0f);
+    EXPECT_TRUE(std::signbit(negZero));
+    const float posZero = decodeFloat(0x00000000u, endian);
+    EXPECT_EQ(posZero, 0.0f);
+    EXPECT_FALSE(std::signbit(posZero));
+
+    EXPECT_EQ(decodeFloat(0x00000001u, endian),
+              std::numeric_limits<float>::denorm_min());
+    EXPECT_EQ(decodeFloat(0x00800000u, endian),
+              std::numeric_limits<float>::min());
+    EXPECT_EQ(decodeFloat(0x007fffffu, endian),
+              std::nextafter(std::numeric_limits<float>::min(), 0.0f));
+    EXPECT_EQ(decodeFloat(0x7f800000u, endian),
+              std::numeric_limits<float>::infinity());
+    EXPECT_EQ(decodeFloat(0xff800000u, endian),
+              -std::numeric_limits<float>::infinity());
+    EXPECT_TRUE(std::isnan(decodeFloat(0x7fc00000u, endian)));
+  }
+}
+
+TEST(UtilitiesTest, unpackDouble)
+{
+  for (auto endian : { Avogadro::Core::ByteOrder::BigEndian,
+                       Avogadro::Core::ByteOrder::LittleEndian }) {
+    EXPECT_EQ(decodeDouble(0x3ff8000000000000ull, endian), 1.5);
+    EXPECT_EQ(decodeDouble(0xc05edd2f1a9fbe77ull, endian), -123.456);
+
+    const double negZero = decodeDouble(0x8000000000000000ull, endian);
+    EXPECT_EQ(negZero, 0.0);
+    EXPECT_TRUE(std::signbit(negZero));
+
+    EXPECT_EQ(decodeDouble(0x0000000000000001ull, endian),
+              std::numeric_limits<double>::denorm_min());
+    EXPECT_EQ(decodeDouble(0x0010000000000000ull, endian),
+              std::numeric_limits<double>::min());
+    EXPECT_EQ(decodeDouble(0x7ff0000000000000ull, endian),
+              std::numeric_limits<double>::infinity());
+    EXPECT_EQ(decodeDouble(0xfff0000000000000ull, endian),
+              -std::numeric_limits<double>::infinity());
+    EXPECT_TRUE(std::isnan(decodeDouble(0x7ff8000000000000ull, endian)));
+  }
 }
