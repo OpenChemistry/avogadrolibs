@@ -246,7 +246,7 @@ inline unsigned int BasisSet::lumo(ElectronType type) const
 {
   if (type == Beta) {
     // check if we have occupancy data
-    if (m_moOccupancy[1].size() > 0) {
+    if (!m_moOccupancy[1].empty()) {
       for (unsigned int i = 0; i < m_moOccupancy[1].size(); ++i) {
         if (m_moOccupancy[1][i] == 0)
           return i;
@@ -255,7 +255,7 @@ inline unsigned int BasisSet::lumo(ElectronType type) const
   } else {
     // alpha or paired
     // check if we have occupancy data - more accurate
-    if (m_moOccupancy[0].size() > 0) {
+    if (!m_moOccupancy[0].empty()) {
       for (unsigned int i = 0; i < m_moOccupancy[0].size(); ++i) {
         if (m_moOccupancy[0][i] == 0)
           return i;

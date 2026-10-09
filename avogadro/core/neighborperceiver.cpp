@@ -14,7 +14,7 @@ NeighborPerceiver::NeighborPerceiver(const Array<Vector3> points,
                                      float maxDistance)
   : m_maxDistance(maxDistance), m_binSize(maxDistance)
 {
-  if (!points.size())
+  if (points.empty())
     return;
 
   if (m_maxDistance <= 0 || !std::isfinite(m_maxDistance))

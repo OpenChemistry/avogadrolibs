@@ -551,7 +551,7 @@ int Graph::createNewSubgraph() const
 {
   // Try to find an empty subgraph to reuse
   for (size_t i = 0; i < m_subgraphToVertices.size(); i++) {
-    if (!m_subgraphToVertices[i].size()) {
+    if (m_subgraphToVertices[i].empty()) {
       m_subgraphDirty[i] = false;
       return int(i);
     }
@@ -593,7 +593,7 @@ void Graph::checkSplitSubgraph(int subgraph) const
           verticesToVisit.insert(verticesToVisit.end(), neighborList.begin(),
                                  neighborList.end());
         }
-      } while (verticesToVisit.size());
+      } while (!verticesToVisit.empty());
       currentSubgraph = -1;
     }
   }

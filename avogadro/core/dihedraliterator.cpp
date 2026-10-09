@@ -49,7 +49,7 @@ Dihedral DihedralIterator::operator++()
       const auto& neighbors1 = graph.neighbors(bond.atom1().index());
       const auto& neighbors2 = graph.neighbors(bond.atom2().index());
 
-      if (neighbors1.size() < 1 || neighbors2.size() < 1)
+      if (neighbors1.empty() || neighbors2.empty())
         continue; // need to have at least one neighbor
 
       m_jk = i;
@@ -138,7 +138,7 @@ Dihedral DihedralIterator::operator++()
       const auto& newNeighbors1 = graph.neighbors(bondI.atom1().index());
       const auto& newNeighbors2 = graph.neighbors(bondI.atom2().index());
 
-      if (newNeighbors1.size() < 1 || newNeighbors2.size() < 1)
+      if (newNeighbors1.empty() || newNeighbors2.empty())
         continue; // need to have at least one neighbor
 
       m_jk = i;
