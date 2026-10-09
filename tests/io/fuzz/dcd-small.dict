@@ -1,0 +1,17 @@
+# Fortran record markers and header words for the DCD reader.
+"CORD"
+# 84 (header record length) as int32, both byte orders
+"\x00\x00\x00T"
+"T\x00\x00\x00"
+# 164 = 4 + 2 * 80 (a two-line title record)
+"\x00\x00\x00\xa4"
+"\xa4\x00\x00\x00"
+# 48 (unit-cell record length)
+"\x00\x00\x000"
+"0\x00\x00\x00"
+# NTITLE = 2
+"\x00\x00\x00\x02"
+"\x02\x00\x00\x00"
+# CHARMM version word (24)
+"\x00\x00\x00\x18"
+"\x18\x00\x00\x00"
