@@ -527,13 +527,16 @@ jobs:
         #   suite | binary prefix | seed dir under $AVOGADRO_DATA_ROOT/data | targets
         # A target is either "name" -- seeds come from <seed dir>/name -- or
         # "name=subdir", when the target name and the data directory differ.
+        # dcd=dcd-small: data/dcd holds a 1 MB trajectory that would inflate
+        # max_len, so dcd takes its small in-repo seeds from
+        # tests/io/fuzz/dcd-small/ instead (no such data directory exists).
         # The same table as fuzz_linux.yml minus its qtgui line: this job
         # builds with USE_QT=OFF, because Qt is /MD and cannot join a static
         # CRT build (see the reconfigure step). When a target is added there,
         # add it here too -- except the qtplugins suite (fuzz_qtplugin_commands),
         # which is Linux-only: it links the Qt plugins and the Qt GUI libraries.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr dcd=dcd-small smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden nwchem orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
         )
@@ -613,16 +616,24 @@ jobs:
             # recurse into subdirectories, so flatten the tree into one dir.
             seed_root="${data_root}/data${corpus_sub:+/${corpus_sub}}/${seed_name}"
             seed_dir="${runner_temp}/fuzz-seeds/${suite}/${target}"
+            # A target may also keep seeds and a dictionary in this repository
+            # (tests/<suite>/fuzz/<seed name>/ and <seed name>.dict), as the
+            # Linux job does. A missing seed directory is simply skipped.
+            local_fuzz="$(cygpath -m "${GITHUB_WORKSPACE}")/openchemistry/avogadrolibs/tests/${suite}/fuzz"
             seed_args=()
             seed_count=0
-            if [ -d "${seed_root}" ]; then
-              rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+            rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+            for root in "${seed_root}" "${local_fuzz}/${seed_name}"; do
+              [ -d "${root}" ] || continue
               while IFS= read -r -d '' f; do
                 cp "${f}" "${seed_dir}/$(sha1sum "${f}" | cut -c1-40)"
-              done < <(find "${seed_root}" -type f ! -name 'README*' -print0)
-              seed_count=$(find "${seed_dir}" -type f | wc -l)
-              [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
-            fi
+              done < <(find "${root}" -type f ! -name 'README*' -print0)
+            done
+            seed_count=$(find "${seed_dir}" -type f | wc -l)
+            [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
+
+            dict_args=()
+            [ -f "${local_fuzz}/${seed_name}.dict" ] && dict_args=("-dict=${local_fuzz}/${seed_name}.dict")
 
             # libFuzzer writes newly discovered units to the *first* corpus
             # directory only, so the restored corpus grows and the seed
@@ -630,6 +641,7 @@ jobs:
             # instrumented code is slow enough that 10s produces false hangs.
             echo "::group::Fuzzing ${name}"
             if "${binary}" -max_total_time="${FUZZ_SECONDS}" -timeout=30 \
+                 ${dict_args[@]+"${dict_args[@]}"} \
                  -artifact_prefix="${artifact_dir}/" \
                  "${corpus_dir}" ${seed_args[@]+"${seed_args[@]}"} 2>&1 \
                  | tee "${artifact_dir}/run.log"; then

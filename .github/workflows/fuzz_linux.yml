@@ -225,10 +225,15 @@ jobs:
         # its seeds are in its own byte format, written by
         # tests/qtplugins/fuzz/generate_seeds.py, and are not data files.
         #
+        # dcd=dcd-small: data/dcd holds a 1 MB trajectory that would inflate
+        # max_len, so dcd takes its small in-repo seeds from
+        # tests/io/fuzz/dcd-small/ (written by generate_dcd_seeds.py); no
+        # data/dcd-small directory exists, and a missing one is skipped.
+        #
         # fuzz_windows.yml has no qtplugins entry on purpose: it builds with
         # USE_QT=OFF, and this target needs Qt and the in-tree static plugins.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr dcd=dcd-small smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||cube fchk molden nwchem orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
           "calc|fuzz_calc_|calc|forcefield"
