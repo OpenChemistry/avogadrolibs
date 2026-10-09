@@ -34,8 +34,7 @@ public:
    * @param scriptFilePath_ Absolute path to python script.
    * @{
    */
-  explicit PythonScript(const QString& scriptFilePath_,
-                        QObject* parent_ = nullptr);
+  explicit PythonScript(QString scriptFilePath_, QObject* parent_ = nullptr);
   explicit PythonScript(QObject* parent_ = nullptr);
   /**@}*/
 

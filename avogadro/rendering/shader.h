@@ -34,7 +34,7 @@ public:
     Unknown   /**< Unknown (default) */
   };
 
-  explicit Shader(Type type = Unknown, const std::string& source = "");
+  explicit Shader(Type type = Unknown, std::string source = "");
   ~Shader();
 
   /** Set the shader type. */

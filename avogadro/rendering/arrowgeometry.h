@@ -9,6 +9,7 @@
 #include "drawable.h"
 
 #include <avogadro/core/array.h>
+#include <utility>
 
 namespace Avogadro {
 namespace Rendering {
@@ -29,8 +30,8 @@ public:
     Vector3f end;
     Vector3ub color;
 
-    Arrow(const Vector3f& s, const Vector3f& e, const Vector3ub& c)
-      : start(s), end(e), color(c)
+    Arrow(Vector3f s, Vector3f e, Vector3ub c)
+      : start(std::move(s)), end(std::move(e)), color(std::move(c))
     {
     }
   };

@@ -8,6 +8,7 @@
 
 #include "drawable.h"
 
+#include <utility>
 #include <vector>
 
 namespace Avogadro {
@@ -15,9 +16,10 @@ namespace Rendering {
 
 struct CylinderColor
 {
-  CylinderColor(const Vector3f& pos1, const Vector3f& pos2, float r,
-                const Vector3ub& c, const Vector3ub& c2 = Vector3ub::Zero())
-    : end1(pos1), end2(pos2), radius(r), color(c), color2(c2)
+  CylinderColor(Vector3f pos1, Vector3f pos2, float r, Vector3ub c,
+                Vector3ub c2 = Vector3ub::Zero())
+    : end1(std::move(pos1)), end2(std::move(pos2)), radius(r),
+      color(std::move(c)), color2(std::move(c2))
   {
   }
 
