@@ -646,11 +646,11 @@ void MoldenFile::outputAll()
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i)
     cout << i << ": type = " << m_shellTypes.at(i)
          << ", number = " << m_shellNums.at(i)
-         << ", atom = " << m_shelltoAtom.at(i) << endl;
+         << ", atom = " << m_shelltoAtom.at(i) << '\n';
   cout << "MO coefficients:\n";
   for (double m_MOcoeff : m_MOcoeffs)
     cout << m_MOcoeff << "\t";
-  cout << endl;
+  cout << '\n';
 }
 
 bool MoldenFile::write(std::ostream& out, const Core::Molecule& molecule)
