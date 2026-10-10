@@ -369,7 +369,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       size_t entryCount(lexicalCast<int>(buffer.substr(6, 3), ok));
       if (buffer.length() < 17 + 8 * (entryCount - 1)) {
         appendError("Error parsing charge block.");
-        std::cout << " " << entryCount << " " << buffer.length() << std::endl;
+        std::cout << " " << entryCount << " " << buffer.length() << '\n';
         return false;
       }
 

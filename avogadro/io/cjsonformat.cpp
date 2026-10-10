@@ -1214,7 +1214,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
             basis->setMolecularOrbitals(coeffsB, BasisSet::Beta);
             openShell = true;
           } else {
-            std::cout << "No orbital coefficients found!" << std::endl;
+            std::cout << "No orbital coefficients found!" << '\n';
           }
           // Check for orbital coefficient sets, these are paired with
           // coordinates when they exist, but have constant basis set, atom
@@ -1477,7 +1477,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         } else {
           std::cout << " cannot store property: " << element.key() << " = "
                     << element.value() << " type "
-                    << element.value().type_name() << std::endl;
+                    << element.value().type_name() << '\n';
         }
       }
     }

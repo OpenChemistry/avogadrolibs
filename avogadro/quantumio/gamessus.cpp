@@ -68,7 +68,7 @@ bool GAMESSUSOutput::read(std::istream& in, Core::Molecule& molecule)
       if (parts.size() == 2)
         m_electrons = Core::lexicalCast<int>(parts[1]).value_or(0);
       else
-        cout << "error" << buffer << endl;
+        cout << "error" << buffer << '\n';
     }
     /*else if (Core::contains(buffer, "NUMBER OF OCCUPIED ORBITALS (ALPHA)")) {
       cout << "Found alpha orbitals\n";
@@ -475,27 +475,27 @@ void GAMESSUSOutput::outputAll()
 {
   switch (m_scftype) {
     case Rhf:
-      cout << "SCF type = RHF" << endl;
+      cout << "SCF type = RHF" << '\n';
       break;
     case Uhf:
-      cout << "SCF type = UHF" << endl;
+      cout << "SCF type = UHF" << '\n';
       break;
     case Rohf:
-      cout << "SCF type = ROHF" << endl;
+      cout << "SCF type = ROHF" << '\n';
       break;
     default:
-      cout << "SCF typ = Unknown" << endl;
+      cout << "SCF typ = Unknown" << '\n';
   }
   cout << "Shell mappings\n";
   for (unsigned int i = 0; i < m_shellTypes.size(); ++i) {
     cout << i << ": type = " << m_shellTypes[i]
          << ", number = " << m_shellNums[i] << ", atom = " << m_shelltoAtom[i]
-         << endl;
+         << '\n';
   }
   int nGTOs = 0;
   if (!m_MOcoeffs.empty() && m_nMOs > 0) {
     nGTOs = m_MOcoeffs.size() / m_nMOs;
-    cout << m_nMOs << " MOs, " << nGTOs << " GTOs" << endl;
+    cout << m_nMOs << " MOs, " << nGTOs << " GTOs" << '\n';
   }
 
   // Dump the first few coefficients of the first few MOs, bounded by both the
