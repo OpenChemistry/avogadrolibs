@@ -23,6 +23,8 @@
 #include <QtCore/QJsonParseError>
 #include <QtCore/QSettings>
 
+#include <memory>
+
 using namespace Qt::StringLiterals;
 
 namespace Avogadro::QtGui {
@@ -585,6 +587,44 @@ bool PackageManager::removeSupersededVenv(const QString& packageDir,
   return true;
 }
 
+// Settings group that remembers install attempts that failed. It is kept apart
+// from "plugins/" on purpose: that group lists registered packages, and a
+// package that never installed must not look like one.
+static QString failureSettingsKey(const QString& packageDir)
+{
+  // Packages live side by side in the plugin directory, so the directory name
+  // identifies one. Keep it free of '/' so it stays a single settings group.
+  static const QRegularExpression unsafe(QStringLiteral("[^A-Za-z0-9._-]+"));
+  QString key = QDir(packageDir).dirName();
+  key.replace(unsafe, QStringLiteral("_"));
+  return QStringLiteral("pluginInstallFailures/") + key + '/';
+}
+
+static QByteArray currentTomlHash(const QString& packageDir)
+{
+  QFile tomlFile(packageDir + QStringLiteral("/pyproject.toml"));
+  if (!tomlFile.open(QIODevice::ReadOnly))
+    return {};
+  return QCryptographicHash::hash(tomlFile.readAll(),
+                                  QCryptographicHash::Sha256)
+    .toHex();
+}
+
+// The last few lines of a process's stderr, enough to show why it failed.
+static QString lastLines(const QByteArray& text, int count = 10)
+{
+  QStringList lines = QString::fromUtf8(text).trimmed().split('\n');
+  while (lines.size() > count)
+    lines.removeFirst();
+  return lines.join('\n').trimmed();
+}
+
+static void setError(QString* errorMessage, const QString& message)
+{
+  if (errorMessage)
+    *errorMessage = message;
+}
+
 // Run a package's *-setup command (e.g. to download ML model weights).
 // This is called regardless of whether the package has defined one or not.
 static void runSetupScript(const QString& packageDir, const QString& setupCmd,
@@ -623,13 +663,16 @@ static void runSetupScript(const QString& packageDir, const QString& setupCmd,
 // can afterwards be run from its pixi environment.
 static bool installWithPixi(const QString& packageDir,
                             const PackageCommands& commands,
-                            const QString& pixiExe, int timeoutMs)
+                            const QString& pixiExe, int timeoutMs,
+                            QString* errorMessage)
 {
   // Without a workspace of its own, pixi would install an ancestor's
   // environment and report success, leaving this package unrunnable.
   if (!PackageManager::hasPixiManifest(packageDir)) {
     qWarning() << "PackageManager:" << packageDir
                << "declares no pixi workspace, installing with pip instead";
+    setError(errorMessage, QObject::tr("pixi: the package declares no pixi "
+                                       "workspace"));
     return false;
   }
 
@@ -648,11 +691,15 @@ static bool installWithPixi(const QString& packageDir,
   if (!installProc.waitForFinished(timeoutMs)) {
     qWarning() << "pixi install timed out for" << packageDir;
     installProc.kill();
+    setError(errorMessage, QObject::tr("pixi install timed out"));
     return false;
   }
   if (installProc.exitCode() != 0) {
+    const QByteArray err = installProc.readAllStandardError();
     qWarning() << "pixi install failed for" << packageDir << ":"
-               << QString::fromUtf8(installProc.readAllStandardError());
+               << QString::fromUtf8(err);
+    setError(errorMessage,
+             QObject::tr("pixi install failed:\n%1").arg(lastLines(err)));
     return false;
   }
 
@@ -662,6 +709,9 @@ static bool installWithPixi(const QString& packageDir,
       PackageManager::pixiScriptPath(packageDir, commands.command).isEmpty()) {
     qWarning() << "pixi install reported success but did not provide"
                << commands.command << "in" << packageDir;
+    setError(
+      errorMessage,
+      QObject::tr("pixi install did not provide %1").arg(commands.command));
     return false;
   }
 
@@ -679,7 +729,8 @@ static bool installWithPixi(const QString& packageDir,
 // package's command can afterwards be run from that environment.
 static bool installWithPip(const QString& packageDir,
                            const PackageCommands& commands,
-                           const QString& pythonExe, int timeoutMs)
+                           const QString& pythonExe, int timeoutMs,
+                           QString* errorMessage)
 {
   // Step 1: create a venv
   QProcess venvProc;
@@ -689,11 +740,17 @@ static bool installWithPip(const QString& packageDir,
   if (!venvProc.waitForFinished(timeoutMs)) {
     qWarning() << "venv creation timed out for" << packageDir;
     venvProc.kill();
+    setError(errorMessage, QObject::tr("pip: creating the virtual environment "
+                                       "timed out"));
     return false;
   }
   if (venvProc.exitCode() != 0) {
+    const QByteArray err = venvProc.readAllStandardError();
     qWarning() << "venv creation failed for" << packageDir << ":"
-               << venvProc.readAllStandardError();
+               << QString::fromUtf8(err);
+    setError(errorMessage,
+             QObject::tr("pip: creating the virtual environment failed:\n%1")
+               .arg(lastLines(err)));
     return false;
   }
 
@@ -710,11 +767,15 @@ static bool installWithPip(const QString& packageDir,
   if (!installProc.waitForFinished(timeoutMs)) {
     qWarning() << "pip install timed out for" << packageDir;
     installProc.kill();
+    setError(errorMessage, QObject::tr("pip install timed out"));
     return false;
   }
   if (installProc.exitCode() != 0) {
+    const QByteArray err = installProc.readAllStandardError();
     qWarning() << "pip install failed for" << packageDir << ":"
-               << installProc.readAllStandardError();
+               << QString::fromUtf8(err);
+    setError(errorMessage,
+             QObject::tr("pip install failed:\n%1").arg(lastLines(err)));
     return false;
   }
 
@@ -724,6 +785,9 @@ static bool installWithPip(const QString& packageDir,
       PackageManager::venvScriptPath(packageDir, commands.command).isEmpty()) {
     qWarning() << "pip install reported success but did not provide"
                << commands.command << "in" << packageDir;
+    setError(
+      errorMessage,
+      QObject::tr("pip install did not provide %1").arg(commands.command));
     return false;
   }
 
@@ -744,49 +808,120 @@ void PackageManager::installPackages(const QStringList& packageDirs)
   if (!pythons.isEmpty())
     pythonExe = pythons.constFirst();
 
-  // Pre-read entry-point names on the main thread so the install thread
-  // doesn't need to re-parse pyproject.toml (parsePackage() reads it again
-  // later).
+  // Pre-read entry-point names and the manifest hash on the main thread so the
+  // install thread doesn't need to re-parse pyproject.toml (parsePackage()
+  // reads it again later). The hash is of what we are about to install, so a
+  // recorded failure can be tied to exactly that manifest.
   QMap<QString, PackageCommands> packageCommands;
-  for (const QString& dir : packageDirs)
+  QMap<QString, QByteArray> packageHashes;
+  for (const QString& dir : packageDirs) {
     packageCommands[dir] = readScriptCommands(dir);
-  QThread* installThread =
-    QThread::create([pixiExe, pythonExe, packageDirs, packageCommands]() {
+    packageHashes[dir] = currentTomlHash(dir);
+  }
+
+  auto outcomes = std::make_shared<QList<InstallOutcome>>();
+  QThread* installThread = QThread::create(
+    [pixiExe, pythonExe, packageDirs, packageCommands, outcomes]() {
       constexpr int installTimeoutMs = 10 * 60 * 1000; // 10 minutes
       for (const QString& packageDir : packageDirs) {
         const PackageCommands commands = packageCommands.value(packageDir);
-        bool installed = false;
+        InstallOutcome outcome;
+        outcome.packageDir = packageDir;
+        QString pixiError, pipError;
 
         if (!pixiExe.isEmpty()) {
-          installed =
-            installWithPixi(packageDir, commands, pixiExe, installTimeoutMs);
+          outcome.installed = installWithPixi(packageDir, commands, pixiExe,
+                                              installTimeoutMs, &pixiError);
+          outcome.pixiFailed = !outcome.installed;
         }
 
         // pixi is preferred, but it cannot install a package that declares no
         // workspace of its own, and an install that leaves the command
         // missing is no install at all. Either way pip can still do it.
-        if (!installed && !pythonExe.isEmpty()) {
-          installed =
-            installWithPip(packageDir, commands, pythonExe, installTimeoutMs);
+        if (!outcome.installed && !pythonExe.isEmpty()) {
+          outcome.installed = installWithPip(packageDir, commands, pythonExe,
+                                             installTimeoutMs, &pipError);
         }
 
-        if (!installed) {
+        if (!outcome.installed) {
+          QStringList reasons;
+          if (!pixiError.isEmpty())
+            reasons << pixiError;
+          if (!pipError.isEmpty())
+            reasons << pipError;
+          if (pixiExe.isEmpty() && pythonExe.isEmpty())
+            reasons << QObject::tr("neither pixi nor Python was found");
+          outcome.message = reasons.join(QStringLiteral("\n"));
           qWarning() << "PackageManager: could not install" << packageDir;
         }
+        outcomes->append(outcome);
       }
     });
 
   connect(
     installThread, &QThread::finished, this,
-    [this, packageDirs, installThread]() {
-      for (const QString& packageDir : packageDirs)
-        registerPackage(packageDir);
+    [this, outcomes, packageHashes, installThread]() {
+      for (const InstallOutcome& outcome : *outcomes) {
+        const QString& packageDir = outcome.packageDir;
+        const QString failKey = failureSettingsKey(packageDir);
+        const QByteArray hash = packageHashes.value(packageDir);
+
+        if (outcome.installed) {
+          // Clear first: re-registering also clears, and nothing written
+          // below may be lost to it.
+          clearInstallFailure(packageDir);
+          registerPackage(packageDir);
+          QSettings settings;
+          // Remember if pixi failed, so a package that works from .venv is
+          // not offered again on every launch just because pixi cannot
+          // install it.
+          if (outcome.pixiFailed)
+            settings.setValue(failKey + "pixiFailedHash", hash);
+          settings.sync();
+          emit packageInstalled(packageDir);
+          continue;
+        }
+
+        // An update that fails must not take away a package that still runs.
+        // Keep an existing registration only if one of its environments can
+        // still run the command; otherwise its features could never work, so
+        // withdraw them rather than leave dead menu entries.
+        const QStringList known = registeredPackages();
+        for (const QString& name : known) {
+          const PackageInfo info = packageInfo(name);
+          if (QDir(info.directory) != QDir(packageDir))
+            continue;
+          if (pixiScriptPath(packageDir, info.command).isEmpty() &&
+              venvScriptPath(packageDir, info.command).isEmpty())
+            unregisterPackage(name); // also clears failure records
+        }
+
+        // Record the failure last, so that nothing above can clear it.
+        QSettings settings;
+        if (!hash.isEmpty()) {
+          if (outcome.pixiFailed)
+            settings.setValue(failKey + "pixiFailedHash", hash);
+          settings.setValue(failKey + "installFailedHash", hash);
+        }
+        settings.setValue(failKey + "message", outcome.message);
+        settings.sync();
+        emit packageInstallFailed(packageDir, outcome.message);
+      }
       emit packagesInstalled();
       installThread->deleteLater();
     },
     Qt::QueuedConnection);
 
   installThread->start();
+}
+
+void PackageManager::clearInstallFailure(const QString& packageDir)
+{
+  if (packageDir.isEmpty())
+    return;
+  QSettings settings;
+  settings.remove(failureSettingsKey(packageDir).chopped(1));
+  settings.sync();
 }
 
 // ---------------------------------------------------------------------------
@@ -823,6 +958,9 @@ bool PackageManager::unregisterPackage(const QString& packageName)
     emit featureRemoved(f.type, info.directory, info.command, f.identifier);
 
   removeFromCache(packageName);
+  // A removed package starts afresh: forget any failed attempts so that
+  // installing it again is not suppressed.
+  clearInstallFailure(info.directory);
   return true;
 }
 
@@ -840,6 +978,9 @@ bool PackageManager::unregisterPackage(const QString& packageName)
 // workspace of its own can never be moved off .venv, so pixi being merely
 // present must not be treated as a reason to reinstall it: that would re-offer
 // the install on every launch, for ever.
+//
+// pixiUsable must already be false if pixi has failed to install this very
+// pyproject.toml: reinstalling would only fail again, the same way.
 static bool environmentNeedsInstall(const QString& packageDir,
                                     const QString& command, bool pixiUsable,
                                     bool canInstall)
@@ -895,8 +1036,21 @@ QStringList PackageManager::scanDirectory(const QString& directoryPath)
         .toHex();
     tomlFile.close();
 
-    // pixi can only install a package that brings its own workspace.
-    const bool pixiUsable = pixiAvailable && hasPixiManifest(packageDir);
+    // An install that already failed for exactly this pyproject.toml would
+    // fail again, so stay quiet until the manifest changes. Installing from
+    // Manage Plugins goes through installPackages() and still retries.
+    QSettings failures;
+    const QString failKey = failureSettingsKey(packageDir);
+    if (failures.value(failKey + "installFailedHash").toByteArray() ==
+        currentHash)
+      continue;
+    const bool pixiFailedBefore =
+      failures.value(failKey + "pixiFailedHash").toByteArray() == currentHash;
+
+    // pixi can only install a package that brings its own workspace, and is
+    // not worth trying again where it has already failed.
+    const bool pixiUsable =
+      pixiAvailable && !pixiFailedBefore && hasPixiManifest(packageDir);
     const bool canInstall = pixiUsable || pythonAvailable;
 
     // Several cache entries can name the same directory: a package renamed

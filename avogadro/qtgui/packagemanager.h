@@ -211,8 +211,12 @@ public:
 
   /**
    * Asynchronously run pixi (preferred) or pip install in each directory,
-   * then call registerPackage() for each.
-   * Emits packagesInstalled() when the background thread finishes.
+   * then call registerPackage() for each package that installed.
+   * Emits packageInstalled() or packageInstallFailed() for each package, then
+   * packagesInstalled() when the background thread finishes. A failure is
+   * remembered (see scanDirectory()) and the package is not registered; a
+   * previously registered package is kept only while one of its environments
+   * can still run its command.
    * Safe to call from the main thread.
    */
   void installPackages(const QStringList& packageDirs);
@@ -232,6 +236,12 @@ public:
    */
   static bool removeSupersededVenv(const QString& packageDir,
                                    const QString& command);
+
+  /**
+   * Forget recorded install failures for @p packageDir, so that
+   * scanDirectory() offers it again.
+   */
+  static void clearInstallFailure(const QString& packageDir);
 
   // --- Registration ---
 
@@ -265,6 +275,9 @@ public:
    * pyproject.toml; new or modified packages are returned as a list of
    * absolute directory paths. The caller is responsible for calling
    * registerPackage() on any directories it wants to install.
+   * A package whose install already failed for the current pyproject.toml is
+   * not returned again until that file changes; likewise pixi is not retried
+   * for a package that pip-installed after pixi failed.
    * @return list of package directories that are new or have been modified.
    */
   QStringList scanDirectory(const QString& directoryPath);
@@ -282,10 +295,20 @@ public:
 
 signals:
   /**
-   * Emitted after installPackages() finishes installing and registering
-   * all requested packages.
+   * Emitted after installPackages() finishes with all requested packages,
+   * whether or not each succeeded. See packageInstalled() and
+   * packageInstallFailed() for the outcome of each.
    */
   void packagesInstalled();
+
+  /** Emitted for each package installPackages() installed and registered. */
+  void packageInstalled(const QString& packageDir);
+
+  /**
+   * Emitted for each package installPackages() could not install.
+   * @param message  Which backend(s) failed and the tail of their stderr.
+   */
+  void packageInstallFailed(const QString& packageDir, const QString& message);
 
   /**
    * Emitted for each feature found in a package.
@@ -314,6 +337,15 @@ signals:
 
 private:
   explicit PackageManager(QObject* parent = nullptr);
+
+  /** Result of installing one package, produced on the install thread. */
+  struct InstallOutcome
+  {
+    QString packageDir;
+    bool installed = false;
+    bool pixiFailed = false; ///< pixi was tried and did not install it
+    QString message;         ///< why it failed, empty on success
+  };
 
   /** Internal representation of a single feature entry. */
   struct FeatureEntry
