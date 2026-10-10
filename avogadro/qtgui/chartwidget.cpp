@@ -248,7 +248,7 @@ void ChartWidget::resetZoom()
 
 void ChartWidget::plotClicked(double x, double y,
                               Qt::KeyboardModifiers modifiers,
-                              Qt::MouseButton button)
+                              Qt::MouseButton /*button*/)
 {
   emit clicked(x, y, modifiers);
 }
@@ -397,7 +397,8 @@ void ChartWidget::setAxisDigits(Axis a, int digits)
     m_impl->plot->getYAxis()->setLabelDigits(digits);
 }
 
-void ChartWidget::labelPeaks(int yColumn, float threshold, int window)
+void ChartWidget::labelPeaks(int /*yColumn*/, float /*threshold*/,
+                             int /*window*/)
 {
   std::vector<std::pair<float, float>> peaks;
 

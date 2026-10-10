@@ -73,8 +73,8 @@ void ConstraintsDialog::setMolecule(QtGui::Molecule* molecule)
           SLOT(updateConstraints()));
 }
 
-void ConstraintsDialog::highlightSelected(const QModelIndex& newIndex,
-                                          const QModelIndex& oldIndex)
+void ConstraintsDialog::highlightSelected(const QModelIndex& /*newIndex*/,
+                                          const QModelIndex& /*oldIndex*/)
 {
   // get the selected row in the table
   auto row = ui->constraintsTableView->currentIndex().row();

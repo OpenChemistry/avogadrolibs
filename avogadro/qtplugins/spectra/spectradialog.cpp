@@ -262,7 +262,7 @@ void SpectraDialog::changeEvent(QEvent* event)
   QDialog::changeEvent(event);
 }
 
-void SpectraDialog::mouseDoubleClickEvent(QMouseEvent* e)
+void SpectraDialog::mouseDoubleClickEvent(QMouseEvent* /*e*/)
 {
   auto* chart = chartWidget();
   if (chart)

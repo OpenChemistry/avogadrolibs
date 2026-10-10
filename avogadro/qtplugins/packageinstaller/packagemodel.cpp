@@ -132,8 +132,8 @@ QVariant PackageModel::data(const QModelIndex& index, int role) const
   return {};
 }
 
-bool PackageModel::setData(const QModelIndex& index, const QVariant& value,
-                           int role)
+bool PackageModel::setData(const QModelIndex& index, const QVariant& /*value*/,
+                           int /*role*/)
 {
   if (!index.isValid() || index.row() >= m_entries.size())
     return false;
