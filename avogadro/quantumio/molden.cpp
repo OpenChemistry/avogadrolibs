@@ -85,7 +85,7 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
   molecule.setBasisSet(basis);
   basis->setMolecule(&molecule);
 
-  if (m_frequencies.size() > 0 &&
+  if (!m_frequencies.empty() &&
       m_frequencies.size() == m_vibDisplacements.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
     molecule.setVibrationLx(m_vibDisplacements);
@@ -98,7 +98,7 @@ bool MoldenFile::read(std::istream& in, Core::Molecule& molecule)
     }
     molecule.setVibrationIRIntensities(m_IRintensities);
 
-    if (m_RamanIntensities.size())
+    if (!m_RamanIntensities.empty())
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
@@ -612,28 +612,28 @@ bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
     basis->setScfType(Core::Uhf);
 
     // Alpha orbitals (stored in m_MOcoeffs)
-    if (m_MOcoeffs.size())
+    if (!m_MOcoeffs.empty())
       basis->setMolecularOrbitals(m_MOcoeffs, BasisSet::Alpha);
-    if (m_orbitalEnergy.size())
+    if (!m_orbitalEnergy.empty())
       basis->setMolecularOrbitalEnergy(m_orbitalEnergy, BasisSet::Alpha);
-    if (m_symmetryLabels.size())
+    if (!m_symmetryLabels.empty())
       basis->setSymmetryLabels(m_symmetryLabels, BasisSet::Alpha);
 
     // Beta orbitals
-    if (m_betaMOcoeffs.size())
+    if (!m_betaMOcoeffs.empty())
       basis->setMolecularOrbitals(m_betaMOcoeffs, BasisSet::Beta);
-    if (m_betaOrbitalEnergy.size())
+    if (!m_betaOrbitalEnergy.empty())
       basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
-    if (m_betaSymmetryLabels.size())
+    if (!m_betaSymmetryLabels.empty())
       basis->setSymmetryLabels(m_betaSymmetryLabels, BasisSet::Beta);
   } else {
     // Closed-shell (RHF) - use Paired type
     basis->setScfType(Core::Rhf);
-    if (m_MOcoeffs.size())
+    if (!m_MOcoeffs.empty())
       basis->setMolecularOrbitals(m_MOcoeffs);
-    if (m_orbitalEnergy.size())
+    if (!m_orbitalEnergy.empty())
       basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
-    if (m_symmetryLabels.size())
+    if (!m_symmetryLabels.empty())
       basis->setSymmetryLabels(m_symmetryLabels);
   }
 
@@ -702,7 +702,7 @@ bool MoldenFile::write(std::ostream& out, const Core::Molecule& molecule)
   }
 
   // Write vibrational data if available
-  if (molecule.vibrationFrequencies().size() > 0) {
+  if (!molecule.vibrationFrequencies().empty()) {
     writeFrequencies(out, molecule);
   }
 
@@ -876,7 +876,7 @@ void MoldenFile::writeFrequencies(std::ostream& out,
   Core::Array<double> irIntensities = molecule.vibrationIRIntensities();
   Core::Array<double> ramanIntensities = molecule.vibrationRamanIntensities();
 
-  if (frequencies.size() == 0)
+  if (frequencies.empty())
     return;
 
   // Write frequencies
@@ -910,7 +910,7 @@ void MoldenFile::writeFrequencies(std::ostream& out,
   }
 
   // Write intensities if available
-  if (irIntensities.size() > 0) {
+  if (!irIntensities.empty()) {
     out << "[INT]\n";
     for (size_t i = 0; i < irIntensities.size(); ++i) {
       out << std::setw(18) << irIntensities[i];

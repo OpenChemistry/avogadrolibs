@@ -240,7 +240,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
-  if (m_electronicTransitions.size() > 0 &&
+  if (!m_electronicTransitions.empty() &&
       m_electronicTransitions.size() == m_electronicIntensities.size()) {
     MatrixX electronicData(m_electronicTransitions.size(), 2);
     for (size_t i = 0; i < m_electronicTransitions.size(); ++i) {
@@ -259,7 +259,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
-  if (m_magneticTransitions.size() > 0 &&
+  if (!m_magneticTransitions.empty() &&
       m_magneticTransitions.size() == m_magneticCD.size()) {
     MatrixX magneticData(m_magneticTransitions.size(), 2);
     for (size_t i = 0; i < m_magneticTransitions.size(); ++i) {
@@ -269,7 +269,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
     molecule.setSpectra("MagneticCD", magneticData);
   }
 
-  if (m_nmrShifts.size() > 0) {
+  if (!m_nmrShifts.empty()) {
     MatrixX nmrData(m_nmrShifts.size(), 2);
     // nmr_shifts has an entry for every atom even if not computed
     for (size_t i = 0; i < m_nmrShifts.size(); ++i) {
@@ -280,7 +280,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   }
 
   // check bonds from calculated bond orders
-  if (m_bondOrders.size() > 0) {
+  if (!m_bondOrders.empty()) {
     for (unsigned int i = 0; i < m_bondOrders.size(); i++) {
       // m_bondOrders[i][0] is the first atom
       // m_bondOrders[i][1] is the second atom
@@ -303,7 +303,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
   // because those automatically clear partial charges and data
 
   // add the partial charges
-  if (m_partialCharges.size() > 0) {
+  if (!m_partialCharges.empty()) {
     for (auto it = m_partialCharges.begin(); it != m_partialCharges.end();
          ++it) {
       molecule.setPartialCharges(it->first, it->second);
@@ -340,7 +340,7 @@ void ORCAOutput::processLine(std::istream& in,
     m_coordFactor = 1.; // leave the coords in BOHR ....
     m_currentMode = Atoms;
     // if there are any current coordinates, push them back
-    if (m_atomPos.size() > 0) {
+    if (!m_atomPos.empty()) {
       m_coordSets.push_back(m_atomPos);
     }
     m_atomPos.clear();
@@ -1156,7 +1156,7 @@ void ORCAOutput::processLine(std::istream& in,
           key = Core::trimmed(key);
 
           list = Core::split(key, ' ');
-          if (list.size() == 0)
+          if (list.empty())
             break; // unexpected structure - suppose no more NewGTOs
         }
 
@@ -1226,7 +1226,7 @@ void ORCAOutput::processLine(std::istream& in,
             m_MOcoeffs.reserve(static_cast<std::size_t>(expectedRows) *
                                expectedRows);
           }
-          while (list.size() > 0) {
+          while (!list.empty()) {
             // get the '2s' or '1dx2y2' piece from the line (the orbital label)
             // so we can re-order the orbitals later
             orcaOrbitals.push_back(nthSpaceToken(key, 1));
@@ -1316,7 +1316,7 @@ void ORCAOutput::processLine(std::istream& in,
               m_BetaMOcoeffs.reserve(static_cast<std::size_t>(expectedRows) *
                                      expectedRows);
             }
-            while (list.size() > 0) {
+            while (!list.empty()) {
               // get the '2s' or '1dx2y2' piece from the line (orbital label)
               // so we can re-order the orbitals later
               orcaOrbitals.push_back(nthSpaceToken(key, 1));
@@ -1446,14 +1446,14 @@ void ORCAOutput::load(GaussianSet* basis, Index atomCount)
   }
 
   // Now to load in the MO coefficients
-  if (shellsValid && m_MOcoeffs.size())
+  if (shellsValid && !m_MOcoeffs.empty())
     basis->setMolecularOrbitals(m_MOcoeffs);
-  if (shellsValid && m_BetaMOcoeffs.size())
+  if (shellsValid && !m_BetaMOcoeffs.empty())
     basis->setMolecularOrbitals(m_BetaMOcoeffs, Core::BasisSet::Beta);
 
-  if (m_orbitalEnergy.size())
+  if (!m_orbitalEnergy.empty())
     basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
-  if (m_betaOrbitalEnergy.size())
+  if (!m_betaOrbitalEnergy.empty())
     basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, Core::BasisSet::Beta);
 
   // TODO: set orbital symmetries
@@ -1493,7 +1493,7 @@ void ORCAOutput::parseMCD()
 
     // if frequency goes down, we are done
     // (or we hit the end of the file)
-    if (m_magneticTransitions.size() > 0 &&
+    if (!m_magneticTransitions.empty() &&
         frequency < m_magneticTransitions.back())
       break;
 

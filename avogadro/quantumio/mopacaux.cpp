@@ -120,7 +120,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   molecule.setData("DeltaH", m_heatOfFormation * KCAL_TO_KJ);
   molecule.setData("Area", m_area);
   molecule.setData("Volume", m_volume);
-  if (m_energies.size() > 0) {
+  if (!m_energies.empty()) {
     for (auto& e : m_energies)
       e *= KCAL_TO_KJ;
     molecule.setData("energies", m_energies);
@@ -128,7 +128,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
   // What the values are, not what MOPAC printed: the loop above has already
   // taken them out of kcal/mol.
   Core::setEnergyUnit(molecule, "kJ/mol");
-  if (m_forces.size() > 0) {
+  if (!m_forces.empty()) {
     // MOPAC reports the gradient norm (GRADIENT_NORM); convert to an RMS
     // gradient (norm / sqrt(3N)) so it is comparable across molecule sizes
     // and matches the convention used elsewhere for per-conformer forces.
@@ -141,7 +141,7 @@ bool MopacAux::read(std::istream& in, Core::Molecule& molecule)
     molecule.setData("forces", m_forces);
   }
 
-  if (m_partialCharges.size() > 0) {
+  if (!m_partialCharges.empty()) {
     MatrixX charges(m_partialCharges.size(), 1);
     for (size_t i = 0; i < m_partialCharges.size(); ++i)
       charges(i, 0) = m_partialCharges[i];
@@ -374,7 +374,7 @@ bool MopacAux::processLine(std::istream& in)
 
 void MopacAux::load(SlaterSet* basis)
 {
-  if (m_atomPos.size() == 0) {
+  if (m_atomPos.empty()) {
     cout << "No atoms found in .aux file. Bailing out." << endl;
     // basis->setIsValid(false);
     return;

@@ -100,13 +100,13 @@ bool GaussianFchk::read(std::istream& in, Core::Molecule& molecule)
                             m_aPos[offset + 2] * BOHR_TO_ANGSTROM));
   }
 
-  if (m_frequencies.size() > 0 &&
+  if (!m_frequencies.empty() &&
       m_frequencies.size() == m_vibDisplacements.size() &&
       m_frequencies.size() == m_IRintensities.size()) {
     molecule.setVibrationFrequencies(m_frequencies);
     molecule.setVibrationIRIntensities(m_IRintensities);
     molecule.setVibrationLx(m_vibDisplacements);
-    if (m_RamanIntensities.size())
+    if (!m_RamanIntensities.empty())
       molecule.setVibrationRamanIntensities(m_RamanIntensities);
   }
 
@@ -623,12 +623,12 @@ void GaussianFchk::load(GaussianSet* basis)
     if (m_spinDensity.rows())
       basis->setSpinDensityMatrix(m_spinDensity);
 
-    if (m_orbitalEnergy.size()) // restricted calculation
+    if (!m_orbitalEnergy.empty()) // restricted calculation
       basis->setMolecularOrbitalEnergy(m_orbitalEnergy);
     else {
-      if (m_alphaOrbitalEnergy.size())
+      if (!m_alphaOrbitalEnergy.empty())
         basis->setMolecularOrbitalEnergy(m_alphaOrbitalEnergy, BasisSet::Alpha);
-      if (m_betaOrbitalEnergy.size())
+      if (!m_betaOrbitalEnergy.empty())
         basis->setMolecularOrbitalEnergy(m_betaOrbitalEnergy, BasisSet::Beta);
     }
   } else {
@@ -1019,19 +1019,19 @@ void GaussianFchk::outputAll()
     cout << i << " : type = " << m_shellTypes.at(i)
          << ", number = " << m_shellNums.at(i)
          << ", atom = " << m_shelltoAtom.at(i) << endl;
-  if (m_MOcoeffs.size()) {
+  if (!m_MOcoeffs.empty()) {
     cout << "MO coefficients:\n";
     for (double m_MOcoeff : m_MOcoeffs)
       cout << m_MOcoeff << "\t";
     cout << endl << endl;
   }
-  if (m_alphaMOcoeffs.size()) {
+  if (!m_alphaMOcoeffs.empty()) {
     cout << "Alpha MO coefficients:\n";
     for (double m_alphaMOcoeff : m_alphaMOcoeffs)
       cout << m_alphaMOcoeff << "\t";
     cout << endl << endl;
   }
-  if (m_betaMOcoeffs.size()) {
+  if (!m_betaMOcoeffs.empty()) {
     cout << "Beta MO coefficients:\n";
     for (double m_betaMOcoeff : m_betaMOcoeffs)
       cout << m_betaMOcoeff << "\t";
