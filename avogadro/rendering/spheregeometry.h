@@ -11,15 +11,13 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-#include <utility>
-
 namespace Avogadro {
 namespace Rendering {
 
 struct SphereColor
 {
   SphereColor(Vector3f centre, float r, Vector3ub c)
-    : center(std::move(centre)), radius(r), color(std::move(c))
+    : center(centre), radius(r), color(c)
   {
   }
   Vector3f center;

@@ -13,8 +13,6 @@
 #include "matrix.h"
 #include "vector.h"
 
-#include <utility>
-
 namespace Avogadro::Core {
 
 /**
@@ -27,7 +25,7 @@ public:
   UnitCell();
   UnitCell(Real a, Real b, Real c, Real alpha, Real beta, Real gamma);
   UnitCell(const Vector3& a, const Vector3& b, const Vector3& c);
-  explicit UnitCell(Matrix3 cellMatrix);
+  explicit UnitCell(const Matrix3& cellMatrix);
   UnitCell(const UnitCell& other);
   ~UnitCell() = default;
   UnitCell& operator=(UnitCell other);
@@ -176,8 +174,8 @@ inline UnitCell::UnitCell(const Vector3& a_, const Vector3& b_,
   computeFractionalMatrix();
 }
 
-inline UnitCell::UnitCell(Matrix3 cellMatrix_)
-  : m_cellMatrix(std::move(cellMatrix_))
+inline UnitCell::UnitCell(const Matrix3& cellMatrix_)
+  : m_cellMatrix(cellMatrix_)
 {
   computeFractionalMatrix();
 }
