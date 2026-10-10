@@ -550,29 +550,27 @@ void Orbitals::renderOrbital(unsigned int orbital,
            << " electronType: " << static_cast<int>(electronType);
 #endif
 
-  // Find the most recent calc matching the selected orbital and electron type:
+  double targetResolution =
+    OrbitalWidget::OrbitalQualityToDouble(m_dialog->quality());
+
+  // Find the completed calc matching the selected orbital, electron type, and target resolution:
   calcInfo calc;
   int index = -1;
-  // in the event of ties, pick the best resolution
-  double resolution = OrbitalWidget::OrbitalQualityToDouble(0);
   for (int i = 0; i < m_queue.size(); i++) {
     calc = m_queue[i];
     if (calc.orbital == orbital && calc.electronType == electronType &&
         calc.state == Completed) {
-      if (calc.resolution <= resolution) {
-        resolution = calc.resolution;
+      if (std::abs(calc.resolution - targetResolution) < 1e-6) {
         index = i;
+        break;
       }
     }
   }
 
   // calculate the meshes
   if (index == -1) {
-    // need to calculate the cube first
-    calculateOrbitalFromWidget(
-      orbital,
-      OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
-      electronType);
+    // need to calculate the cube first with the selected quality resolution
+    calculateOrbitalFromWidget(orbital, targetResolution, electronType);
   } else {
     // Set this cube as the active cube for volume rendering
     Core::Cube* activeCube = m_queue[index].cube;

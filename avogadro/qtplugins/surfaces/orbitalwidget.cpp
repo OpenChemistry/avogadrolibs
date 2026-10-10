@@ -50,6 +50,11 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
   // TODO: Implement configure dialog
   ui.push_configure->setVisible(false);
   connect(ui.push_configure, SIGNAL(clicked()), this, SLOT(configureClicked()));
+  connect(ui.combo_quality, QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this, [this](int idx) {
+            m_quality = OrbitalQuality(idx);
+            writeSettings();
+          });
   readSettings();
 }
 
@@ -58,14 +63,21 @@ OrbitalWidget::~OrbitalWidget()
   writeSettings();
 }
 
+OrbitalWidget::OrbitalQuality OrbitalWidget::quality() const
+{
+  return OrbitalQuality(ui.combo_quality->currentIndex());
+}
+
 void OrbitalWidget::readSettings()
 {
   QSettings settings;
   settings.beginGroup("orbitals");
   m_quality = OrbitalQuality(settings.value("defaultQuality", 1).toInt());
   m_isovalue = settings.value("isoValue", 0.03).toDouble();
-  ui.combo_quality->setCurrentIndex(
-    settings.value("selectedQuality", 1).toInt());
+  int selectedQuality =
+    settings.value("selectedQuality", static_cast<int>(m_quality)).toInt();
+  ui.combo_quality->setCurrentIndex(selectedQuality);
+  m_quality = OrbitalQuality(selectedQuality);
   m_sortedTableModel->HOMOFirst(settings.value("HOMOFirst", false).toBool());
   m_precalc_limit = settings.value("precalc/limit", true).toBool();
   m_precalc_range = settings.value("precalc/range", 10).toInt();
@@ -76,7 +88,7 @@ void OrbitalWidget::writeSettings()
 {
   QSettings settings;
   settings.beginGroup("orbitals");
-  settings.setValue("defaultQuality", m_quality);
+  settings.setValue("defaultQuality", static_cast<int>(m_quality));
   settings.setValue("isoValue", m_isovalue);
   settings.setValue("selectedQuality", ui.combo_quality->currentIndex());
   settings.setValue("HOMOFirst", m_sortedTableModel->isHOMOFirst());
