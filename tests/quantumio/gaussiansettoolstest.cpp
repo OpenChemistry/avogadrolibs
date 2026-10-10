@@ -61,9 +61,9 @@ std::vector<Vector3> generateTestPoints(const Molecule& molecule)
   // Slightly offset from each atom (0.1 Angstrom in each direction)
   for (Avogadro::Index i = 0; i < molecule.atomCount(); ++i) {
     Vector3 pos = molecule.atomPosition3d(i);
-    points.push_back(pos + Vector3(0.1, 0.0, 0.0));
-    points.push_back(pos + Vector3(0.0, 0.1, 0.0));
-    points.push_back(pos + Vector3(0.0, 0.0, 0.1));
+    points.emplace_back(pos + Vector3(0.1, 0.0, 0.0));
+    points.emplace_back(pos + Vector3(0.0, 0.1, 0.0));
+    points.emplace_back(pos + Vector3(0.0, 0.0, 0.1));
   }
 
   // Bond midpoints (between first atom and all others, if more than one atom)
@@ -71,18 +71,18 @@ std::vector<Vector3> generateTestPoints(const Molecule& molecule)
     Vector3 p0 = molecule.atomPosition3d(0);
     for (Avogadro::Index i = 1; i < molecule.atomCount(); ++i) {
       Vector3 pi = molecule.atomPosition3d(i);
-      points.push_back(0.5 * (p0 + pi));
+      points.emplace_back(0.5 * (p0 + pi));
     }
   }
 
   // Far-field points (3-5 Angstroms away from origin — diffuse region)
-  points.push_back(Vector3(3.0, 0.0, 0.0));
-  points.push_back(Vector3(0.0, 3.0, 0.0));
-  points.push_back(Vector3(0.0, 0.0, 3.0));
-  points.push_back(Vector3(5.0, 5.0, 5.0));
+  points.emplace_back(3.0, 0.0, 0.0);
+  points.emplace_back(0.0, 3.0, 0.0);
+  points.emplace_back(0.0, 0.0, 3.0);
+  points.emplace_back(5.0, 5.0, 5.0);
 
   // Origin
-  points.push_back(Vector3(0.0, 0.0, 0.0));
+  points.emplace_back(0.0, 0.0, 0.0);
 
   return points;
 }

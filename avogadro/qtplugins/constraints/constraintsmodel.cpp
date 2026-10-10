@@ -150,7 +150,7 @@ void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d,
                                      double value)
 {
   beginInsertRows(QModelIndex(), m_constraints.size(), m_constraints.size());
-  m_constraints.push_back(Constraint(a, b, c, d, value));
+  m_constraints.emplace_back(a, b, c, d, value);
   endInsertRows();
 }
 

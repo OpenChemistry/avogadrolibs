@@ -744,9 +744,9 @@ TEST_F(EnergyCalculatorTest, SetAndGetConstraints)
 TEST_F(EnergyCalculatorTest, SetMultipleConstraintTypes)
 {
   std::vector<Constraint> constraints;
-  constraints.push_back(Constraint(0, 1, MaxIndex, MaxIndex, 1.5));
-  constraints.push_back(Constraint(0, 1, 2, MaxIndex, 109.5));
-  constraints.push_back(Constraint(0, 1, 2, 3, 180.0));
+  constraints.emplace_back(0, 1, MaxIndex, MaxIndex, 1.5);
+  constraints.emplace_back(0, 1, 2, MaxIndex, 109.5);
+  constraints.emplace_back(0, 1, 2, 3, 180.0);
 
   calculator->setConstraints(constraints);
   auto retrieved = calculator->constraints();
@@ -757,7 +757,7 @@ TEST_F(EnergyCalculatorTest, SetMultipleConstraintTypes)
 TEST_F(EnergyCalculatorTest, ClearConstraints)
 {
   std::vector<Constraint> constraints;
-  constraints.push_back(Constraint(0, 1, MaxIndex, MaxIndex, 1.5));
+  constraints.emplace_back(0, 1, MaxIndex, MaxIndex, 1.5);
   calculator->setConstraints(constraints);
 
   // Clear by setting empty vector
@@ -774,7 +774,7 @@ TEST_F(EnergyCalculatorTest, ConstraintEnergies)
   x << 0.0, 0.0, 0.0, 1.5, 0.0, 0.0;
 
   std::vector<Constraint> constraints;
-  constraints.push_back(Constraint(0, 1, MaxIndex, MaxIndex, 1.5));
+  constraints.emplace_back(0, 1, MaxIndex, MaxIndex, 1.5);
   calculator->setConstraints(constraints);
 
   Real energy = calculator->constraintEnergies(x);
@@ -791,7 +791,7 @@ TEST_F(EnergyCalculatorTest, ConstraintGradients)
   grad.setZero();
 
   std::vector<Constraint> constraints;
-  constraints.push_back(Constraint(0, 1, MaxIndex, MaxIndex, 1.5));
+  constraints.emplace_back(0, 1, MaxIndex, MaxIndex, 1.5);
   calculator->setConstraints(constraints);
 
   EXPECT_NO_THROW(calculator->constraintGradients(x, grad));

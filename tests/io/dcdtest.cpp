@@ -739,7 +739,7 @@ TEST(DcdTest, rejectsWrappingAtomCount)
 {
   DcdBuilder b;
   b.natoms = 1073741825;
-  b.frames.push_back(Frame());
+  b.frames.emplace_back();
   std::string data = b.build();
   // Replace the empty first frame with a 4-byte X record.
   data += std::string("\x04\0\0\0\0\0\0\0\x04\0\0\0", 12);

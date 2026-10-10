@@ -1090,7 +1090,7 @@ void SpectraDialog::importData()
       double y = parts[1].trimmed().toDouble(&ok2);
 
       if (ok1 && ok2) {
-        tempData.push_back({ x, y });
+        tempData.emplace_back(x, y);
       }
     }
     firstLine = in.readLine();

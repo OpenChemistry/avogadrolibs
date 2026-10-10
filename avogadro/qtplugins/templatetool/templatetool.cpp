@@ -821,12 +821,12 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       // Create arrays with the points to align and apply Kabsch algorithm
       std::vector<Vector3> templateLigandPositions;
       for (size_t index : templateLigandIndices)
-        templateLigandPositions.push_back(
+        templateLigandPositions.emplace_back(
           templateMolecule.atomPosition3d(index) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
       std::vector<Vector3> moleculeLigandPositions;
       for (size_t UID : selectedUIDs)
-        moleculeLigandPositions.push_back(
+        moleculeLigandPositions.emplace_back(
           m_molecule->atomPosition3d(m_molecule->atomByUniqueId(UID).index()) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
       Matrix3 rotation =
