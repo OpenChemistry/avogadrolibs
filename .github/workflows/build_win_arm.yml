@@ -119,7 +119,7 @@ jobs:
           # as unavailable at runtime rather than failing to configure.
           SENTRY_ARGS="-DUSE_SENTRY=ON -DSENTRY_DSN=${SENTRY_DSN} -DSENTRY_ENVIRONMENT=nightly"
         fi
-        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}} $SENTRY_ARGS
+        CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} ${{ startsWith(github.ref, 'refs/tags/') && '-DAVOGADRO_RELEASE_BUILD=ON' || '' }} -DCMAKE_BUILD_TYPE=${{matrix.config.build_type}} ${{matrix.config.cmake_flags}} $SENTRY_ARGS
       shell: bash
       env:
         USE_SENTRY: ${{ matrix.config.sentry }}
