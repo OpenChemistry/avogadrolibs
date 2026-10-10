@@ -1142,6 +1142,17 @@ QByteArray sha256Hex(const QByteArray& data)
   return QCryptographicHash::hash(data, QCryptographicHash::Sha256).toHex();
 }
 
+// The hash of the manifest as written: Text mode turns "\n" into "\r\n" on
+// Windows, so hashing the in-memory bytes would not match what
+// scanDirectory() reads.
+QByteArray fileSha256Hex(const QString& path)
+{
+  QFile file(path);
+  if (!file.open(QIODevice::ReadOnly))
+    return {};
+  return sha256Hex(file.readAll());
+}
+
 // What installPackages() records; the key is the package directory's name.
 void recordFailure(const QString& key, const QString& name,
                    const QByteArray& hash)
@@ -1160,7 +1171,8 @@ TEST_F(PackageManagerTest, scanDirectorySkipsPackageWithRecordedFailure)
   ASSERT_FALSE(pkgDir.isEmpty());
   auto* pm = PackageManager::instance();
 
-  recordFailure("test-plugin", "installFailedHash", sha256Hex(sampleToml()));
+  recordFailure("test-plugin", "installFailedHash",
+                fileSha256Hex(pkgDir + "/pyproject.toml"));
 
   EXPECT_FALSE(pm->scanDirectory(scanDir).contains(pkgDir));
   // A failed package is not a registered one.
@@ -1174,7 +1186,8 @@ TEST_F(PackageManagerTest, scanDirectoryOffersFailedPackageAgainOnceTomlChanges)
   ASSERT_FALSE(pkgDir.isEmpty());
   auto* pm = PackageManager::instance();
 
-  recordFailure("test-plugin", "installFailedHash", sha256Hex(sampleToml()));
+  recordFailure("test-plugin", "installFailedHash",
+                fileSha256Hex(pkgDir + "/pyproject.toml"));
   ASSERT_FALSE(pm->scanDirectory(scanDir).contains(pkgDir));
 
   ASSERT_FALSE(
@@ -1190,7 +1203,8 @@ TEST_F(PackageManagerTest, clearInstallFailureOffersPackageAgain)
   ASSERT_FALSE(pkgDir.isEmpty());
   auto* pm = PackageManager::instance();
 
-  recordFailure("test-plugin", "installFailedHash", sha256Hex(sampleToml()));
+  recordFailure("test-plugin", "installFailedHash",
+                fileSha256Hex(pkgDir + "/pyproject.toml"));
   ASSERT_FALSE(pm->scanDirectory(scanDir).contains(pkgDir));
 
   PackageManager::clearInstallFailure(pkgDir);
@@ -1205,7 +1219,8 @@ TEST_F(PackageManagerTest, unregisterPackageClearsInstallFailure)
   auto* pm = PackageManager::instance();
 
   ASSERT_TRUE(pm->registerPackage(pkgDir));
-  recordFailure("test-plugin", "installFailedHash", sha256Hex(sampleToml()));
+  recordFailure("test-plugin", "installFailedHash",
+                fileSha256Hex(pkgDir + "/pyproject.toml"));
   ASSERT_TRUE(pm->unregisterPackage("test-plugin"));
 
   EXPECT_TRUE(pm->scanDirectory(scanDir).contains(pkgDir));
@@ -1224,7 +1239,8 @@ TEST_F(PackageManagerTest, scanDirectoryKeepsVenvPackageWherePixiFailed)
   ASSERT_TRUE(pm->registerPackage(pkgDir));
   ASSERT_TRUE(
     createConsoleScript(pkgDir + venvBinDir(), "avogadro-test-plugin"));
-  recordFailure("test-plugin", "pixiFailedHash", sha256Hex(toml));
+  recordFailure("test-plugin", "pixiFailedHash",
+                fileSha256Hex(pkgDir + "/pyproject.toml"));
 
   // pip got it working after pixi failed: don't try pixi on every launch.
   EXPECT_FALSE(pm->scanDirectory(scanDir).contains(pkgDir));
