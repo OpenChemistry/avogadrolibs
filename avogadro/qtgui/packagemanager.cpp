@@ -898,9 +898,11 @@ void PackageManager::installPackages(const QStringList& packageDirs)
 
         // Record the failure last, so that nothing above can clear it.
         QSettings settings;
-        if (outcome.pixiFailed)
-          settings.setValue(failKey + "pixiFailedHash", hash);
-        settings.setValue(failKey + "installFailedHash", hash);
+        if (!hash.isEmpty()) {
+          if (outcome.pixiFailed)
+            settings.setValue(failKey + "pixiFailedHash", hash);
+          settings.setValue(failKey + "installFailedHash", hash);
+        }
         settings.setValue(failKey + "message", outcome.message);
         settings.sync();
         emit packageInstallFailed(packageDir, outcome.message);

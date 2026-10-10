@@ -634,8 +634,8 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
 
 void PackageManagerDialog::onPackageInstalled(const QString& packageDir)
 {
-  Q_UNUSED(packageDir);
-  m_ui->readmeBrowser->append(tr("Installation complete.\n"));
+  m_ui->readmeBrowser->append(tr("Installation complete for %1.\n")
+                                .arg(QFileInfo(packageDir).fileName()));
 }
 
 void PackageManagerDialog::onPackageInstallFailed(const QString& packageDir,
