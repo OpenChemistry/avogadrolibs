@@ -11,8 +11,6 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
-#include <utility>
-
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
@@ -204,8 +202,8 @@ private:
   std::string m_ident;
 
 public:
-  Format(std::string ident, Operations ops)
-    : FileFormat(), m_ops(ops), m_ident(std::move(ident))
+  Format(const std::string& ident, Operations ops)
+    : FileFormat(), m_ops(ops), m_ident(ident)
   {
   }
   Operations supportedOperations() const override { return m_ops; }

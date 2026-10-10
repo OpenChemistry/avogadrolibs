@@ -7,12 +7,11 @@
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/molecule.h>
-#include <utility>
 
 namespace Avogadro::Calc {
 
 // Base class constructors are called automatically
-DefaultModel::DefaultModel(std::string id) : m_identifier(std::move(id))
+DefaultModel::DefaultModel(const std::string& id) : m_identifier(id)
 {
   // we don't know which elements are in the molecule
   // but we can just say all of them are okay

@@ -12,7 +12,6 @@
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/qtgui/molecule.h>
 #include <map>
-#include <utility>
 #include <vector>
 
 namespace Avogadro {
@@ -52,7 +51,7 @@ private:
     unsigned int id;
 
     SVGAtom(Vector3f m, Vector3f v, unsigned int i, unsigned int bonds)
-      : pos_model(std::move(m)), pos_view(std::move(v)), id(i)
+      : pos_model(m), pos_view(v), id(i)
     {
       radius = (bonds <= 0 ? 1 : bonds);
     }

@@ -9,7 +9,6 @@
 
 #include <QUndoCommand>
 #include <cassert>
-#include <utility>
 
 namespace Avogadro {
 namespace QtGui {
@@ -173,9 +172,9 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
 
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
-                    Vector3 pos)
+                    const Vector3& pos)
     : UndoCommand(m), m_atomId(atomId), m_atomUid(uid), m_atomicNumber(aN),
-      m_position3d(std::move(pos))
+      m_position3d(pos)
   {
   }
 
@@ -532,8 +531,8 @@ class SetAtomColorCommand : public RWMolecule::UndoCommand
 public:
   SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
                       Vector3ub newColor)
-    : UndoCommand(m), m_atomId(atomId), m_oldColor(std::move(oldColor)),
-      m_newColor(std::move(newColor))
+    : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
+      m_newColor(newColor)
   {
   }
 
@@ -551,8 +550,8 @@ class SetResidueColorCommand : public RWMolecule::UndoCommand
 public:
   SetResidueColorCommand(RWMolecule& m, Index residueId, Vector3ub oldColor,
                          Vector3ub newColor)
-    : UndoCommand(m), m_residueId(residueId), m_oldColor(std::move(oldColor)),
-      m_newColor(std::move(newColor))
+    : UndoCommand(m), m_residueId(residueId), m_oldColor(oldColor),
+      m_newColor(newColor)
   {
   }
 
@@ -917,8 +916,8 @@ class ModifyAtomLabelCommand : public RWMolecule::UndoCommand
   std::string m_oldLabel;
 
 public:
-  ModifyAtomLabelCommand(RWMolecule& m, Index atomId, std::string label)
-    : UndoCommand(m), m_atomId(atomId), m_newLabel(std::move(label))
+  ModifyAtomLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
+    : UndoCommand(m), m_atomId(atomId), m_newLabel(label)
   {
     m_oldLabel = m_mol.molecule().atomLabel(m_atomId);
   }
@@ -937,8 +936,8 @@ class ModifyBondLabelCommand : public RWMolecule::UndoCommand
   std::string m_oldLabel;
 
 public:
-  ModifyBondLabelCommand(RWMolecule& m, Index bondId, std::string label)
-    : UndoCommand(m), m_bondId(bondId), m_newLabel(std::move(label))
+  ModifyBondLabelCommand(RWMolecule& m, Index bondId, const std::string& label)
+    : UndoCommand(m), m_bondId(bondId), m_newLabel(label)
   {
     m_oldLabel = m_mol.molecule().bondLabel(m_bondId);
   }

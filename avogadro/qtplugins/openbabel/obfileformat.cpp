@@ -17,7 +17,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTimer>
-#include <utility>
 
 using namespace std::string_literals;
 
@@ -131,17 +130,18 @@ private:
   QByteArray m_output;
 };
 
-OBFileFormat::OBFileFormat(std::string name_, std::string identifier_,
-                           std::string description_,
-                           std::string specificationUrl_,
+OBFileFormat::OBFileFormat(const std::string& name_,
+                           const std::string& identifier_,
+                           const std::string& description_,
+                           const std::string& specificationUrl_,
                            const std::vector<std::string> fileExtensions_,
                            const std::vector<std::string> mimeTypes_,
-                           std::string defaultFormat_, bool fileOnly_)
-  : Io::FileFormat(), m_description(std::move(description_)),
+                           const std::string& defaultFormat_, bool fileOnly_)
+  : Io::FileFormat(), m_description(description_),
     m_fileExtensions(fileExtensions_), m_mimeTypes(mimeTypes_),
-    m_identifier(std::move(identifier_)), m_name(std::move(name_)),
-    m_specificationUrl(std::move(specificationUrl_)),
-    m_defaultFormat(std::move(defaultFormat_)), m_fileOnly(fileOnly_)
+    m_identifier(identifier_), m_name(name_),
+    m_specificationUrl(specificationUrl_), m_defaultFormat(defaultFormat_),
+    m_fileOnly(fileOnly_)
 {
 }
 

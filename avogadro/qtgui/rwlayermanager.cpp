@@ -12,7 +12,6 @@
 #include <QUndoCommand>
 #include <QUndoStack>
 #include <cassert>
-#include <utility>
 
 namespace Avogadro::QtGui {
 
@@ -30,7 +29,7 @@ class AddLayerCommand : public QUndoCommand
 {
 public:
   AddLayerCommand(shared_ptr<MoleculeInfo> mol)
-    : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(std::move(mol))
+    : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol)
   {
     m_visible = true;
     m_locked = false;
@@ -183,8 +182,8 @@ class ActiveLayerCommand : public QUndoCommand
 {
 public:
   ActiveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer)
-    : QUndoCommand(QObject::tr("Modify Layers")),
-      m_moleculeInfo(std::move(mol)), m_newActiveLayer(layer)
+    : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol),
+      m_newActiveLayer(layer)
   {
     m_oldActiveLayer = m_moleculeInfo->layer.activeLayer();
   }
@@ -210,8 +209,8 @@ class RemoveLayerCommand : public QUndoCommand
 public:
   RemoveLayerCommand(shared_ptr<MoleculeInfo> mol, size_t layer,
                      RWMolecule* rwmolecule)
-    : QUndoCommand(QObject::tr("Modify Layers")),
-      m_moleculeInfo(std::move(mol)), m_layer(layer), m_rwmolecule(rwmolecule)
+    : QUndoCommand(QObject::tr("Modify Layers")), m_moleculeInfo(mol),
+      m_layer(layer), m_rwmolecule(rwmolecule)
   {
   }
 
