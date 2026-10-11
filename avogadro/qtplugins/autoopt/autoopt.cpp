@@ -258,7 +258,7 @@ QWidget* AutoOpt::toolWidget() const
   QSettings settings;
   if (!m_toolWidget && m_molecule) {
     m_toolWidget = new QWidget();
-    m_toolWidget->setWindowTitle("AutoOptimization");
+    m_toolWidget->setWindowTitle(tr("AutoOptimization"));
 
     // set up a form layout
     QFormLayout* form = new QFormLayout(m_toolWidget);

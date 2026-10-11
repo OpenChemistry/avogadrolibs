@@ -148,7 +148,7 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
           new QProgressDialog(qobject_cast<QWidget*>(parent()));
 
       // generate positive mesh
-      m_progressDialog->setLabelText("Generating Positive Potential Mesh");
+      m_progressDialog->setLabelText(tr("Generating Positive Potential Mesh"));
       m_progressDialog->setRange(0, 100);
       m_progressDialog->setValue(1);
       qApp->processEvents();
@@ -162,7 +162,7 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       meshGenerator->run();
 
       // generate negative mesh
-      m_progressDialog->setLabelText("Generating Negative Potential Mesh");
+      m_progressDialog->setLabelText(tr("Generating Negative Potential Mesh"));
       m_progressDialog->setRange(0, 100);
       m_progressDialog->setValue(1);
       qApp->processEvents();
