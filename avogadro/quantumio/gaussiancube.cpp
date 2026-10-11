@@ -25,6 +25,12 @@ constexpr int kMaxAtomCount = 1000000;
 constexpr unsigned int kMaxCubeCount = 128;
 constexpr size_t kMaxCubeValues = 64ull * 1024 * 1024;       // 64M values
 constexpr size_t kMaxTotalCubeValues = 128ull * 1024 * 1024; // 128M values
+// The resampled grid of a skewed cube may hold at most this many points per
+// source value, so the cost of resampling stays proportional to the data
+// actually read. A real skewed cell's bounding box is a few times its volume
+// (4x for an fcc primitive cell); a grid that would exceed this is coarsened,
+// not rejected.
+constexpr size_t kMaxResampleRatio = 8;
 
 bool hasMinimumRemainingBytes(std::istream& in, size_t minBytes)
 {
@@ -537,7 +543,8 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   std::vector<float> source;
   if (skewed) {
     const size_t maxPoints =
-      std::min(kMaxCubeValues, kMaxTotalCubeValues / cubeCount);
+      std::min({ kMaxCubeValues, kMaxTotalCubeValues / cubeCount,
+                 kMaxResampleRatio * valueCount });
     if (!planResample(steps, dim, min, maxPoints, plan)) {
       appendError("Invalid cube grid specification: the voxel axes are "
                   "degenerate or the resampled grid is too large.");
