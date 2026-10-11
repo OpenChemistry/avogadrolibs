@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-09-08 16:08+0000\n"
+"PO-Revision-Date: 2026-10-11 23:17+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.9.1\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -175,6 +175,9 @@ msgid ""
 "The z-matrix lists the atoms in a different order from the molecule, so atom "
 "numbers in this file do not match the ones shown in Avogadro."
 msgstr ""
+"Matriks Z mencantumkan atom dalam urutan yang berbeda dari molekul, sehingga "
+"nomor atom dalam berkas ini tidak sesuai dengan nomor yang ditampilkan di "
+"Avogadro."
 
 #: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:795
 #, qt-format
@@ -185,6 +188,11 @@ msgid ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr ""
+"Fragmen linear menyebabkan sudut atau torsi pada baris %1 dalam matriks Z "
+"tidak dapat ditentukan. Geometri ditulis dengan benar, tetapi koordinat ini "
+"tidak dapat diubah, dan program yang membangun kembali koordinat Kartesius "
+"dari koordinat tersebut mungkin tidak dapat mereproduksi struktur ini secara "
+"persis. Menambahkan atom dummy di luar sumbu dapat menghindari masalah ini."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -538,26 +546,26 @@ msgstr "Tidak ada nama file yang ditetapkan dalam BackgroundFileFormat!"
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Jarak %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Sudut %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Sudut Dihedral %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Kendala"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Bingkai"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -568,11 +576,11 @@ msgstr "Waktu"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Energi Relatif"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
@@ -581,7 +589,7 @@ msgstr "Gradien RMS"
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Kelajuan Rata-rata"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -597,7 +605,7 @@ msgstr "Suhu"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1089,20 +1097,22 @@ msgstr "Oganesson"
 
 #: qtgui/energyunitsdialog.cpp:25
 msgid "Convert Energy Units"
-msgstr ""
+msgstr "Konversi Satuan Energi"
 
 #: qtgui/energyunitsdialog.cpp:40 qtplugins/plotconformer/plotconformer.cpp:896
 msgid "This file records the units its energies are in."
-msgstr ""
+msgstr "Berkas ini mencatat satuan energi yang digunakan."
 
 #: qtgui/energyunitsdialog.cpp:41
 msgid ""
 "Energies are read in the units the file used, which may not be recorded."
 msgstr ""
+"Energi dibaca dalam satuan yang digunakan oleh berkas, yang mungkin tidak "
+"dicatat."
 
 #: qtgui/energyunitsdialog.cpp:49
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Konversi energi dari:"
 
 #: qtgui/energyunitsdialog.cpp:51 qtplugins/plotconformer/plotconformer.cpp:568
 msgid "to"
@@ -1181,7 +1191,7 @@ msgstr "Semua file"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "Berkas terkompresi"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1189,15 +1199,15 @@ msgstr "Semua format yang didukung"
 
 #: qtgui/fragmenttools.cpp:309
 msgid "Adjust Distance"
-msgstr ""
+msgstr "Sesuaikan Jarak"
 
 #: qtgui/fragmenttools.cpp:361
 msgid "Adjust Angle"
-msgstr ""
+msgstr "Sesuaikan Sudut"
 
 #: qtgui/fragmenttools.cpp:424
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "Sesuaikan Torsi"
 
 #: qtgui/interfacescript.cpp:308
 #, qt-format
@@ -1301,7 +1311,7 @@ msgstr "Keragaman"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Koordinat"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
@@ -1524,11 +1534,11 @@ msgstr ""
 #: qtgui/pythonscript.cpp:456
 #, qt-format
 msgid "The script exited with error code %1."
-msgstr ""
+msgstr "Skrip berhenti dengan kode kesalahan %1."
 
 #: qtgui/pythonscript.cpp:457
 msgid "The script crashed."
-msgstr ""
+msgstr "Skrip mengalami crash."
 
 #: qtgui/pythonscript.cpp:466
 #, qt-format
@@ -1538,6 +1548,10 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"\n"
+"\n"
+"Keluaran kesalahan standar skrip:\n"
+"%1"
 
 #: qtgui/pythonscript.cpp:575
 #, qt-format
@@ -1616,7 +1630,7 @@ msgstr "Atom-atom yang jernih"
 
 #: qtgui/rwmolecule.cpp:155 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
-msgstr ""
+msgstr "Urutkan Ulang Atom"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -2304,31 +2318,31 @@ msgstr "Terapkan Warna Shapely"
 
 #: qtplugins/applycolors/applycolors.cpp:611
 msgid "Apply a custom color to atoms."
-msgstr ""
+msgstr "Terapkan warna khusus pada atom."
 
 #: qtplugins/applycolors/applycolors.cpp:614
 msgid "Reset atom colors to their default element colors."
-msgstr ""
+msgstr "Kembalikan warna atom ke warna unsur bawaannya."
 
 #: qtplugins/applycolors/applycolors.cpp:616
 msgid "Apply a custom color to residues."
-msgstr ""
+msgstr "Terapkan warna khusus pada residu."
 
 #: qtplugins/applycolors/applycolors.cpp:618
 msgid "Color residues by their amino acid type."
-msgstr ""
+msgstr "Warnai residu berdasarkan jenis asam aminonya."
 
 #: qtplugins/applycolors/applycolors.cpp:620
 msgid "Color residues using the Shapely color scheme."
-msgstr ""
+msgstr "Warnai residu menggunakan skema warna Shapely."
 
 #: qtplugins/applycolors/applycolors.cpp:622
 msgid "Color residues by secondary structure."
-msgstr ""
+msgstr "Warnai residu berdasarkan struktur sekunder."
 
 #: qtplugins/applycolors/applycolors.cpp:624
 msgid "Reset residue colors to default chain colors."
-msgstr ""
+msgstr "Kembalikan warna residu ke warna rantai bawaan."
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2623,18 +2637,20 @@ msgstr "Tambahkan Tegak Lurus"
 msgid ""
 "Add a dummy atom at the geometric center of the molecule or the selected "
 "atoms."
-msgstr ""
+msgstr "Tambahkan atom dummy di pusat geometris molekul atau atom yang dipilih."
 
 #: qtplugins/centroid/centroid.cpp:141
 msgid ""
 "Add a dummy atom at the center of mass of the molecule or the selected atoms."
-msgstr ""
+msgstr "Tambahkan atom dummy di pusat massa molekul atau atom yang dipilih."
 
 #: qtplugins/centroid/centroid.cpp:145
 msgid ""
 "Add a dummy atom perpendicular to the plane of the molecule or the selected "
 "atoms."
 msgstr ""
+"Tambahkan atom dummy pada posisi tegak lurus terhadap bidang molekul atau "
+"atom yang dipilih."
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -2815,6 +2831,11 @@ msgid ""
 "[i, j, (k, (l))], \"value\": v}, …]}, with zero-based atom indices and value "
 "in Å for a distance or degrees for an angle or torsion."
 msgstr ""
+"Cantumkan kendala geometri pada molekul saat ini. Tidak ada opsi. "
+"Mengembalikan {\"constraints\": [{\"type\": "
+"\"distance\"|\"angle\"|\"torsion\", \"atoms\": [i, j, (k, (l))], \"value\": "
+"v}, …]}, dengan indeks atom berbasis nol dan nilai dalam Å untuk jarak atau "
+"derajat untuk sudut atau torsi."
 
 #: qtplugins/constraints/constraintsextension.cpp:162
 msgid ""
@@ -2827,62 +2848,77 @@ msgid ""
 "updated instead of adding a duplicate. Returns {\"type\": …, \"atoms\": […], "
 "\"value\": …, \"updated\": bool}."
 msgstr ""
+"Tambahkan atau perbarui kendala geometri yang diberikan sebagai indeks atom "
+"berbasis nol: {\"atoms\": [i, j]} untuk jarak, {\"atoms\": [i, j, k]} untuk "
+"sudut, atau {\"atoms\": [i, j, k, l]} untuk torsi, serta {\"value\": …} "
+"opsional dalam Å untuk jarak atau derajat untuk sudut atau torsi. Jika "
+"\"value\" tidak disertakan, geometri saat ini dari atom tersebut diukur dan "
+"digunakan. Jika kendala sudah ada pada atom yang sama (dalam urutan mana pun)"
+", nilainya diperbarui alih-alih menambahkan duplikat. Mengembalikan "
+"{\"type\": …, \"atoms\": […], \"value\": …, \"updated\": bool}."
 
 #: qtplugins/constraints/constraintsextension.cpp:173
 msgid ""
 "Remove the constraint on the given zero-based atom indices (in either "
 "order): {\"atoms\": [i, j, (k, (l))]}. Returns {\"removed\": count}."
 msgstr ""
+"Hapus kendala pada indeks atom berbasis nol yang diberikan (dalam urutan "
+"mana pun): {\"atoms\": [i, j, (k, (l))]}. Mengembalikan {\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:178
 msgid ""
 "Remove all geometry constraints from the current molecule. No options. "
 "Returns {\"removed\": count}."
 msgstr ""
+"Hapus semua kendala geometri dari molekul saat ini. Tidak ada opsi. "
+"Mengembalikan {\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:194
 msgid "There is no molecule to constrain."
-msgstr ""
+msgstr "Tidak ada molekul untuk diberi kendala."
 
 #: qtplugins/constraints/constraintsextension.cpp:251
 msgid "No constraint matches these atoms."
-msgstr ""
+msgstr "Tidak ada kendala yang cocok dengan atom ini."
 
 #: qtplugins/constraints/constraintsextension.cpp:287
 msgid "value must be a number: a distance in Å."
-msgstr ""
+msgstr "value harus berupa angka: jarak dalam Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:291
 msgid "value must be a number: an angle in degrees."
-msgstr ""
+msgstr "value harus berupa angka: sudut dalam derajat."
 
 #: qtplugins/constraints/constraintsextension.cpp:295
 msgid "value must be a number: a dihedral angle in degrees."
-msgstr ""
+msgstr "value harus berupa angka: sudut dihedral dalam derajat."
 
 #: qtplugins/constraints/constraintsextension.cpp:309
 msgid "Could not measure the current geometry for these atoms."
-msgstr ""
+msgstr "Tidak dapat mengukur geometri saat ini untuk atom ini."
 
 #: qtplugins/constraints/constraintsextension.cpp:319
 #: qtplugins/measuretool/measuretool.cpp:791
 msgid "value must be a distance greater than 0 Å."
-msgstr ""
+msgstr "value harus berupa jarak yang lebih besar dari 0 Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:324
 #: qtplugins/measuretool/measuretool.cpp:795
 msgid "value must be an angle from 0 to 180 degrees."
-msgstr ""
+msgstr "value harus berupa sudut dari 0 hingga 180 derajat."
 
 #: qtplugins/constraints/constraintsextension.cpp:370
 msgid ""
 "atoms must be a list of 2 (distance), 3 (angle) or 4 (torsion) zero-based "
 "atom indices."
 msgstr ""
+"atoms harus berupa daftar berisi 2 (jarak), 3 (sudut), atau 4 (torsi) indeks "
+"atom berbasis nol."
 
 #: qtplugins/constraints/constraintsextension.cpp:377
 msgid "atoms must list 2 (distance), 3 (angle) or 4 (torsion) atom indices."
 msgstr ""
+"atoms harus mencantumkan 2 (jarak), 3 (sudut), atau 4 (torsi) indeks atom."
 
 #: qtplugins/constraints/constraintsextension.cpp:388
 #: qtplugins/constraints/constraintsextension.cpp:394
@@ -2890,7 +2926,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:891
 #, qt-format
 msgid "atom index #%1 in atoms must be a whole number."
-msgstr ""
+msgstr "Indeks atom ke-%1 dalam atoms harus berupa bilangan bulat."
 
 #: qtplugins/constraints/constraintsextension.cpp:398
 #: qtplugins/measuretool/measuretool.cpp:895
@@ -2898,12 +2934,14 @@ msgstr ""
 msgid ""
 "atom index #%1 in atoms is negative; atom indices must be zero or greater."
 msgstr ""
+"Indeks atom ke-%1 dalam atoms bernilai negatif; indeks atom harus bernilai "
+"nol atau lebih besar."
 
 #: qtplugins/constraints/constraintsextension.cpp:416
 #: qtplugins/measuretool/measuretool.cpp:913
 #, qt-format
 msgid "atom index %1 is repeated in atoms; each atom must be different."
-msgstr ""
+msgstr "Indeks atom %1 berulang dalam atoms; setiap atom harus berbeda."
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
@@ -3608,11 +3646,11 @@ msgstr "Tidak dapat membaca molekul PDB: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
-msgstr ""
+msgstr "Unduh struktur dari Protein Data Bank."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
-msgstr ""
+msgstr "fetchPDB memerlukan parameter 'code' yang tidak kosong."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:116
 msgid "The PDB code must be exactly 4 characters long."
@@ -3624,13 +3662,13 @@ msgstr "Huruf pertama kode PDB harus berupa angka 1-9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:128
 msgid "The PDB code must contain only letters and digits."
-msgstr ""
+msgstr "Kode PDB hanya boleh berisi huruf dan angka."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:204
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
 #, qt-format
 msgid "Downloaded %1"
-msgstr ""
+msgstr "%1 telah diunduh"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:212
 msgid "PDB Code"
@@ -3686,11 +3724,11 @@ msgstr "Tidak fokus"
 
 #: qtplugins/focus/focus.cpp:138
 msgid "Focus a selection"
-msgstr ""
+msgstr "Fokuskan pilihan"
 
 #: qtplugins/focus/focus.cpp:139
 msgid "Unfocus a focused selection"
-msgstr ""
+msgstr "Batalkan fokus pada pilihan yang difokuskan"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
@@ -3758,36 +3796,36 @@ msgstr "Lepaskan atom yang dipilih"
 
 #: qtplugins/forcefield/forcefield.cpp:273
 msgid "List the force fields available for the current molecule."
-msgstr ""
+msgstr "Cantumkan medan gaya yang tersedia untuk molekul saat ini."
 
 #: qtplugins/forcefield/forcefield.cpp:275
 msgid "Compute the force field energy of the current molecule."
-msgstr ""
+msgstr "Hitung energi medan gaya molekul saat ini."
 
 #: qtplugins/forcefield/forcefield.cpp:277
 msgid "Compute the force field forces on the current molecule."
-msgstr ""
+msgstr "Hitung gaya dari medan gaya pada molekul saat ini."
 
 #: qtplugins/forcefield/forcefield.cpp:279
 msgid "Optimize the geometry of the current molecule."
-msgstr ""
+msgstr "Optimalkan geometri molekul saat ini."
 
 #: qtplugins/forcefield/forcefield.cpp:282
 msgid "Freeze selected atoms during force field optimization."
-msgstr ""
+msgstr "Bekukan atom yang dipilih selama optimasi medan gaya."
 
 #: qtplugins/forcefield/forcefield.cpp:283
 msgid "Unfreeze selected atoms."
-msgstr ""
+msgstr "Batalkan pembekuan atom yang dipilih."
 
 #: qtplugins/forcefield/forcefield.cpp:285
 msgid "Freeze a specific axis (X, Y, or Z) of selected atoms."
-msgstr ""
+msgstr "Bekukan sumbu tertentu (X, Y, atau Z) pada atom yang dipilih."
 
 #: qtplugins/forcefield/forcefield.cpp:379
 #, qt-format
 msgid "%1 force field(s) available."
-msgstr ""
+msgstr "%1 medan gaya tersedia."
 
 #: qtplugins/forcefield/forcefield.cpp:386
 #: qtplugins/forcefield/forcefield.cpp:412
@@ -3796,43 +3834,44 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:524
 #: qtplugins/forcefield/forcefield.cpp:549
 msgid "No molecule is open."
-msgstr ""
+msgstr "Tidak ada molekul yang terbuka."
 
 #: qtplugins/forcefield/forcefield.cpp:390
 #: qtplugins/forcefield/forcefield.cpp:416
 #: qtplugins/forcefield/forcefield.cpp:442
 msgid "A force field calculation is already running."
-msgstr ""
+msgstr "Perhitungan medan gaya sedang berlangsung."
 
 #: qtplugins/forcefield/forcefield.cpp:394
 msgid "No atoms provided for energy calculation."
-msgstr ""
+msgstr "Tidak ada atom yang diberikan untuk perhitungan energi."
 
 #: qtplugins/forcefield/forcefield.cpp:420
 msgid "No atoms provided for force calculation."
-msgstr ""
+msgstr "Tidak ada atom yang diberikan untuk perhitungan gaya."
 
 #: qtplugins/forcefield/forcefield.cpp:446
 msgid "No atoms provided for optimization."
-msgstr ""
+msgstr "Tidak ada atom yang diberikan untuk optimasi."
 
 #: qtplugins/forcefield/forcefield.cpp:466
 msgid "\"steps\" must be a positive integer."
-msgstr ""
+msgstr "\"steps\" harus berupa bilangan bulat positif."
 
 #: qtplugins/forcefield/forcefield.cpp:476
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
 msgstr ""
+"\"gradientTolerance\" harus berupa bilangan berhingga yang tidak negatif."
 
 #: qtplugins/forcefield/forcefield.cpp:486
 msgid "\"energyTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"energyTolerance\" harus berupa bilangan berhingga yang tidak negatif."
 
 #: qtplugins/forcefield/forcefield.cpp:503
 #: qtplugins/forcefield/forcefield.cpp:528
 #: qtplugins/forcefield/forcefield.cpp:553
 msgid "No atoms are selected."
-msgstr ""
+msgstr "Tidak ada atom yang dipilih."
 
 #: qtplugins/forcefield/forcefield.cpp:518
 #: qtplugins/forcefield/forcefield.cpp:600
@@ -3840,40 +3879,40 @@ msgstr ""
 msgctxt ""
 msgid "Froze %n atom(s)."
 msgid_plural "Froze %n atom(s)."
-msgstr[0] ""
+msgstr[0] "%n atom telah dibekukan."
 
 #: qtplugins/forcefield/forcefield.cpp:543
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
 msgid_plural "Unfroze %n atom(s)."
-msgstr[0] ""
+msgstr[0] "Pembekuan %n atom telah dibatalkan."
 
 #: qtplugins/forcefield/forcefield.cpp:557
 msgid "No axis was given."
-msgstr ""
+msgstr "Tidak ada sumbu yang diberikan."
 
 #: qtplugins/forcefield/forcefield.cpp:584
 msgid "Axis must be x, y, z or 0, 1, 2."
-msgstr ""
+msgstr "Sumbu harus berupa x, y, z atau 0, 1, 2."
 
 #: qtplugins/forcefield/forcefield.cpp:822
 msgid "The force field calculation was interrupted."
-msgstr ""
+msgstr "Perhitungan medan gaya terhenti."
 
 #: qtplugins/forcefield/forcefield.cpp:892
 msgid "No force field is available for this molecule."
-msgstr ""
+msgstr "Tidak ada medan gaya yang tersedia untuk molekul ini."
 
 #: qtplugins/forcefield/forcefield.cpp:913
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
-msgstr ""
+msgstr "Medan gaya \"%1\" tidak kompatibel dengan molekul ini."
 
 #: qtplugins/forcefield/forcefield.cpp:916
 #, qt-format
 msgid "Unknown force field \"%1\"."
-msgstr ""
+msgstr "Medan gaya \"%1\" tidak dikenal."
 
 #: qtplugins/forcefield/forcefield.cpp:932
 #: qtplugins/forcefield/forcefield.cpp:1215
@@ -3897,7 +3936,7 @@ msgstr "Tidak ada atom yang disediakan untuk optimasi"
 #: qtplugins/forcefield/forcefield.cpp:1323
 #, qt-format
 msgid "Could not create a calculator for \"%1\"."
-msgstr ""
+msgstr "Tidak dapat membuat kalkulator untuk \"%1\"."
 
 #: qtplugins/forcefield/forcefield.cpp:1054
 #, qt-format
@@ -3907,7 +3946,7 @@ msgstr "Energi: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:1161
 msgid "The optimizer stopped without producing a result."
-msgstr ""
+msgstr "Pengoptimal berhenti tanpa menghasilkan hasil."
 
 #: qtplugins/forcefield/forcefield.cpp:1178
 #: qtplugins/forcefield/forcefield.cpp:1273
@@ -3922,7 +3961,7 @@ msgstr "Tidak ada atom yang diberikan untuk perhitungan energi"
 #: qtplugins/forcefield/forcefield.cpp:1277
 #, qt-format
 msgid "%1 returned a non-finite energy."
-msgstr ""
+msgstr "%1 mengembalikan energi yang tidak berhingga."
 
 #: qtplugins/forcefield/forcefield.cpp:1304
 msgid "No atoms provided for force calculation"
@@ -3930,12 +3969,12 @@ msgstr "Tidak ada atom yang diberikan untuk perhitungan gaya"
 
 #: qtplugins/forcefield/forcefield.cpp:1359
 msgid "The molecule changed during the calculation."
-msgstr ""
+msgstr "Molekul berubah selama perhitungan."
 
 #: qtplugins/forcefield/forcefield.cpp:1372
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
-msgstr ""
+msgstr "%1 mengembalikan hasil yang tidak berhingga atau tidak lengkap."
 
 #: qtplugins/forcefield/forcefield.cpp:1394
 #, qt-format
@@ -4131,24 +4170,28 @@ msgstr "&Hidrogen"
 #: qtplugins/hydrogens/hydrogens.cpp:114
 msgid "Add any missing hydrogen atoms on atoms that have incomplete octets."
 msgstr ""
+"Tambahkan atom hidrogen yang kurang pada atom dengan oktet yang belum "
+"lengkap."
 
 #: qtplugins/hydrogens/hydrogens.cpp:118
 msgid "Remove any extra hydrogen atoms on atoms with overfull octets."
-msgstr ""
+msgstr "Hapus atom hidrogen berlebih pada atom dengan oktet yang terlalu penuh."
 
 #: qtplugins/hydrogens/hydrogens.cpp:122
 msgid ""
 "Add any missing hydrogen atoms, and remove any extra hydrogen atoms on any "
 "atoms that violate the octet rule."
 msgstr ""
+"Tambahkan atom hidrogen yang kurang dan hapus atom hidrogen berlebih pada "
+"atom yang melanggar aturan oktet."
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
-msgstr ""
+msgstr "Hapus semua atom hidrogen dalam molekul."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
-msgstr ""
+msgstr "Tidak ada molekul."
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -4532,6 +4575,15 @@ msgid ""
 "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Alat Manipulasi(%1)\n"
+"\n"
+"Tombol Kiri Mouse:Klik dan seret untuk memindahkan atom\n"
+"Tombol Kanan Mouse:Klik dan seret untuk memutar atom\n"
+"\n"
+"Tombol Panah:Geser atom\n"
+"Shift+Panah:Putar mengelilingi sumbu X/Y\n"
+"Ctrl+Shift+Kiri/Kanan:Putar mengelilingi sumbu Z\n"
+"Alt+<tombol>:Langkah lebih besar"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
@@ -4560,6 +4612,15 @@ msgid ""
 "\n"
 "Values can also be typed into the tool panel to move the atoms."
 msgstr ""
+"Alat Ukur(%1)\n"
+"\n"
+"Tombol Kiri Mouse:Pilih hingga empat atom.\n"
+"Jarak diukur antara 1-2 dan 2-3\n"
+"Sudut diukur antara 1-3 dengan 2 sebagai titik pertemuan\n"
+"Sudut dihedral diukur antara 1-2-3-4\n"
+"Tombol Kanan Mouse:Atur ulang pengukuran.\n"
+"\n"
+"Nilai juga dapat diketik pada panel alat untuk memindahkan atom."
 
 #: qtplugins/measuretool/measuretool.cpp:426
 #: qtplugins/measuretool/measuretool.cpp:436
@@ -4574,27 +4635,31 @@ msgstr "Sudut:"
 #: qtplugins/measuretool/measuretool.cpp:602
 #: qtplugins/measuretool/measuretool.cpp:992
 msgid "One of these atoms no longer exists."
-msgstr ""
+msgstr "Salah satu atom ini sudah tidak ada."
 
 #: qtplugins/measuretool/measuretool.cpp:604
 msgid "That's not a value this can be set to."
-msgstr ""
+msgstr "Nilai ini tidak dapat digunakan untuk pengaturan tersebut."
 
 #: qtplugins/measuretool/measuretool.cpp:610
 #: qtplugins/measuretool/measuretool.cpp:1005
 msgid "These atoms are in the same place, so this distance isn't defined."
 msgstr ""
+"Atom ini berada di posisi yang sama, sehingga jarak ini tidak terdefinisi."
 
 #: qtplugins/measuretool/measuretool.cpp:613
 #: qtplugins/measuretool/measuretool.cpp:1010
 msgid ""
 "Three of these atoms are in a straight line, so this dihedral isn't defined."
 msgstr ""
+"Tiga dari atom ini berada pada satu garis lurus, sehingga sudut dihedral ini "
+"tidak terdefinisi."
 
 #: qtplugins/measuretool/measuretool.cpp:616
 #: qtplugins/measuretool/measuretool.cpp:1008
 msgid "These atoms are in a straight line, so this angle isn't defined."
 msgstr ""
+"Atom ini berada pada satu garis lurus, sehingga sudut ini tidak terdefinisi."
 
 #: qtplugins/measuretool/measuretool.cpp:641
 #, qt-format
@@ -4602,6 +4667,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this dihedral can't change "
 "without distorting the ring."
 msgstr ""
+"Ikatan antara #%1 dan #%2 berada dalam cincin, sehingga sudut dihedral ini "
+"tidak dapat diubah tanpa mendistorsi cincin."
 
 #: qtplugins/measuretool/measuretool.cpp:645
 #, qt-format
@@ -4609,6 +4676,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this angle can't change "
 "without distorting the ring."
 msgstr ""
+"Ikatan antara #%1 dan #%2 berada dalam cincin, sehingga sudut ini tidak "
+"dapat diubah tanpa mendistorsi cincin."
 
 #: qtplugins/measuretool/measuretool.cpp:680
 #, qt-format
@@ -4616,12 +4685,16 @@ msgid ""
 "#%1 and #%2 are connected through the molecule, so this can't change without "
 "distorting it. Try the Manipulate tool."
 msgstr ""
+"#%1 dan #%2 terhubung melalui molekul, sehingga pengaturan ini tidak dapat "
+"diubah tanpa mendistorsi molekul. Coba gunakan alat Manipulasi."
 
 #: qtplugins/measuretool/measuretool.cpp:694
 msgid ""
 "Measure the distance in Å between two atoms, given as zero-based indices: "
 "{\"atoms\": [i, j]}. Returns {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Ukur jarak dalam Å antara dua atom yang diberikan sebagai indeks berbasis "
+"nol: {\"atoms\": [i, j]}. Mengembalikan {\"distance\": …, \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:699
 msgid ""
@@ -4629,6 +4702,9 @@ msgid ""
 "based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": …, \"atoms\": [i, "
 "j, k]}."
 msgstr ""
+"Ukur sudut dalam derajat pada atom tengah dari tiga atom yang diberikan "
+"sebagai indeks berbasis nol: {\"atoms\": [i, j, k]}. Mengembalikan "
+"{\"angle\": …, \"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid ""
@@ -4636,6 +4712,9 @@ msgid ""
 "zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Ukur sudut dihedral dalam derajat (-180 hingga 180) dari empat atom yang "
+"diberikan sebagai indeks berbasis nol: {\"atoms\": [i, j, k, l]}. "
+"Mengembalikan {\"dihedral\": …, \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:709
 msgid ""
@@ -4643,6 +4722,10 @@ msgid ""
 "{\"atoms\": [i, j], \"value\": …}; the second atom and everything bonded to "
 "it on that side move. Returns the new {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Atur jarak dalam Å antara dua atom yang diberikan sebagai indeks berbasis "
+"nol: {\"atoms\": [i, j], \"value\": …}; atom kedua dan semua yang terikat "
+"padanya di sisi tersebut akan bergerak. Mengembalikan nilai baru "
+"{\"distance\": …, \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
@@ -4651,6 +4734,10 @@ msgid ""
 "bonded to it on that side move. Returns the new {\"angle\": …, \"atoms\": "
 "[i, j, k]}."
 msgstr ""
+"Atur sudut dalam derajat pada atom tengah dari tiga atom yang diberikan "
+"sebagai indeks berbasis nol: {\"atoms\": [i, j, k], \"value\": …}; atom "
+"terakhir dan semua yang terikat padanya di sisi tersebut akan bergerak. "
+"Mengembalikan nilai baru {\"angle\": …, \"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:721
 msgid ""
@@ -4659,42 +4746,46 @@ msgid ""
 "everything bonded to it on that side move. Returns the new {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Atur sudut dihedral dalam derajat dari empat atom yang diberikan sebagai "
+"indeks berbasis nol: {\"atoms\": [i, j, k, l], \"value\": …}; atom terakhir "
+"dan semua yang terikat padanya di sisi tersebut akan bergerak. Mengembalikan "
+"nilai baru {\"dihedral\": …, \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:764 qtplugins/select/select.cpp:638
 msgid "No molecule"
-msgstr ""
+msgstr "Tidak ada molekul"
 
 #: qtplugins/measuretool/measuretool.cpp:856
 msgid "atoms must list exactly 2 atom indices for a distance."
-msgstr ""
+msgstr "atoms harus mencantumkan tepat 2 indeks atom untuk jarak."
 
 #: qtplugins/measuretool/measuretool.cpp:859
 msgid "atoms must list exactly 3 atom indices for an angle."
-msgstr ""
+msgstr "atoms harus mencantumkan tepat 3 indeks atom untuk sudut."
 
 #: qtplugins/measuretool/measuretool.cpp:862
 msgid "atoms must list exactly 4 atom indices for a dihedral."
-msgstr ""
+msgstr "atoms harus mencantumkan tepat 4 indeks atom untuk sudut dihedral."
 
 #: qtplugins/measuretool/measuretool.cpp:933
 msgid "value is required and must be a distance in Å."
-msgstr ""
+msgstr "value wajib diberikan dan harus berupa jarak dalam Å."
 
 #: qtplugins/measuretool/measuretool.cpp:934
 msgid "value is required and must be an angle in degrees."
-msgstr ""
+msgstr "value wajib diberikan dan harus berupa sudut dalam derajat."
 
 #: qtplugins/measuretool/measuretool.cpp:996
 msgid "That's not a value this distance can be set to."
-msgstr ""
+msgstr "Nilai ini tidak dapat digunakan untuk mengatur jarak ini."
 
 #: qtplugins/measuretool/measuretool.cpp:998
 msgid "That's not a value this angle can be set to."
-msgstr ""
+msgstr "Nilai ini tidak dapat digunakan untuk mengatur sudut ini."
 
 #: qtplugins/measuretool/measuretool.cpp:1000
 msgid "That's not a value this dihedral can be set to."
-msgstr ""
+msgstr "Nilai ini tidak dapat digunakan untuk mengatur sudut dihedral ini."
 
 #: qtplugins/measuretool/measuretool.cpp:1021
 #, qt-format
@@ -4702,6 +4793,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this angle can't change "
 "without distorting it."
 msgstr ""
+"Ikatan antara atom %1 dan %2 berada dalam cincin, sehingga sudut ini tidak "
+"dapat diubah tanpa mendistorsi cincin."
 
 #: qtplugins/measuretool/measuretool.cpp:1025
 #, qt-format
@@ -4709,6 +4802,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this dihedral can't change "
 "without distorting it."
 msgstr ""
+"Ikatan antara atom %1 dan %2 berada dalam cincin, sehingga sudut dihedral "
+"ini tidak dapat diubah tanpa mendistorsi cincin."
 
 #: qtplugins/measuretool/measuretool.cpp:1039
 #, qt-format
@@ -4716,6 +4811,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atom %1 dan %2 terhubung melalui molekul, sehingga jarak ini tidak dapat "
+"diubah tanpa mendistorsi molekul. Coba gunakan alat Manipulasi."
 
 #: qtplugins/measuretool/measuretool.cpp:1045
 #, qt-format
@@ -4723,6 +4820,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this angle can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atom %1 dan %2 terhubung melalui molekul, sehingga sudut ini tidak dapat "
+"diubah tanpa mendistorsi molekul. Coba gunakan alat Manipulasi."
 
 #: qtplugins/measuretool/measuretool.cpp:1051
 #, qt-format
@@ -4730,6 +4829,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this dihedral can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atom %1 dan %2 terhubung melalui molekul, sehingga sudut dihedral ini tidak "
+"dapat diubah tanpa mendistorsi molekul. Coba gunakan alat Manipulasi."
 
 #: qtplugins/measuretool/measuretool.h:39
 #: qtplugins/measuretool/measuretool.h:40
@@ -4741,10 +4842,12 @@ msgid ""
 "Click up to four atoms to measure them.\n"
 "Type a new value to move the atoms."
 msgstr ""
+"Klik hingga empat atom untuk mengukurnya.\n"
+"Ketik nilai baru untuk memindahkan atom."
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 msgid "Distance 1–2"
-msgstr ""
+msgstr "Jarak 1–2"
 
 #: qtplugins/measuretool/measurewidget.cpp:34
 #: qtplugins/measuretool/measurewidget.cpp:36
@@ -4754,15 +4857,15 @@ msgstr " Å"
 
 #: qtplugins/measuretool/measurewidget.cpp:36
 msgid "Distance 2–3"
-msgstr ""
+msgstr "Jarak 2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:38
 msgid "Distance 3–4"
-msgstr ""
+msgstr "Jarak 3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 msgid "Angle 1–2–3"
-msgstr ""
+msgstr "Sudut 1–2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:40
 #: qtplugins/measuretool/measurewidget.cpp:42
@@ -4772,16 +4875,16 @@ msgstr "°"
 
 #: qtplugins/measuretool/measurewidget.cpp:42
 msgid "Angle 2–3–4"
-msgstr ""
+msgstr "Sudut 2–3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:44
 msgid "Dihedral 1–2–3–4"
-msgstr ""
+msgstr "Sudut Dihedral 1–2–3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:145
 #, qt-format
 msgid "#1 stays fixed; edits move toward #%1."
-msgstr ""
+msgstr "#1 tetap di tempat; perubahan menggerakkan atom ke arah #%1."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:60
 msgid "(pending)"
@@ -4906,7 +5009,7 @@ msgstr "&Properti"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:226
 msgid "Show molecular properties."
-msgstr ""
+msgstr "Tampilkan sifat molekul."
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
@@ -4964,6 +5067,16 @@ msgid ""
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
+"Alat Navigasi(%1)\n"
+"\n"
+"Tombol Kiri Mouse:Klik dan seret untuk memutar tampilan.\n"
+"Memulai seretan pada atom akan memutar tampilan mengelilingi atom tersebut.\n"
+"Tombol Tengah Mouse:Klik dan seret untuk memperbesar atau memperkecil "
+"tampilan.\n"
+"Tombol Kanan Mouse:Klik dan seret untuk menggeser tampilan.\n"
+"\n"
+"Alt(Option)+Seret:Putar/perbesar/perkecil/geser tampilan dari alat apa pun.\n"
+"Alt(Option)+Kiri:Menggunakan trackball virtual."
 
 #: qtplugins/navigator/navigator.cpp:74
 msgid "Rotate the scene along the x, y, or z axes."
@@ -4976,6 +5089,9 @@ msgid ""
 "unit of delta is roughly a 2% change in the camera's distance to the focal "
 "point."
 msgstr ""
+"Perbesar atau perkecil tampilan. Delta positif mendekatkan tampilan ke "
+"molekul, sedangkan delta negatif menjauhkannya. Satu satuan delta kira-kira "
+"setara dengan perubahan 2% pada jarak kamera ke titik fokus."
 
 #: qtplugins/navigator/navigator.cpp:80
 msgid "Translate the scene."
@@ -5001,11 +5117,11 @@ msgstr "Alat navigasi"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
-msgstr ""
+msgstr "Unduh struktur berdasarkan nama dari basis data daring."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:78
 msgid "fetchByName requires a non-empty 'name' parameter."
-msgstr ""
+msgstr "fetchByName memerlukan parameter 'name' yang tidak kosong."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:114
 msgid "Chemical Name"
@@ -5378,18 +5494,18 @@ msgstr "Kesalahan: respons kosong dari server."
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 #, qt-format
 msgid "Authors: %1"
-msgstr ""
+msgstr "Penulis: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:309
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] ""
+msgstr[0] "%n unduhan dalam %1 hari terakhir"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:358
 #, qt-format
@@ -5602,7 +5718,7 @@ msgstr "Deskripsi"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:183
 msgid "Keywords"
-msgstr ""
+msgstr "Kata Kunci"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
@@ -5746,41 +5862,49 @@ msgid ""
 "Advance one coordinate set, looping to the first frame after the last. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Maju satu set koordinat, kembali ke bingkai pertama setelah bingkai "
+"terakhir. Mengembalikan {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:673
 msgid ""
 "Step back one coordinate set, looping to the last frame before the first. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Mundur satu set koordinat, kembali ke bingkai terakhir sebelum bingkai "
+"pertama. Mengembalikan {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:677
 msgid ""
 "Jump to a coordinate set, given as a zero-based index: {\"index\": n}. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Beralih ke set koordinat yang diberikan sebagai indeks berbasis nol: "
+"{\"index\": n}. Mengembalikan {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:681
 msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Laporkan bingkai saat ini dan jumlah set koordinat tanpa mengubah apa pun. "
+"Mengembalikan {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:697
 msgid "There is no molecule."
-msgstr ""
+msgstr "Tidak ada molekul."
 
 #: qtplugins/playertool/playertool.cpp:701
 msgid "The molecule has no coordinate sets."
-msgstr ""
+msgstr "Molekul tidak memiliki set koordinat."
 
 #: qtplugins/playertool/playertool.cpp:711
 msgid "index is required."
-msgstr ""
+msgstr "index wajib diberikan."
 
 #: qtplugins/playertool/playertool.cpp:720
 #, qt-format
 msgid "index must be a whole number from 0 to %1."
-msgstr ""
+msgstr "index harus berupa bilangan bulat dari 0 hingga %1."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -5799,6 +5923,8 @@ msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
+"Pilih 2, 3, atau 4 atom untuk melacak jarak, sudut, atau sudut dihedral pada "
+"seluruh konformer."
 
 #: qtplugins/plotconformer/plotconformer.cpp:519
 msgid "Conformer Analysis"
@@ -5806,19 +5932,19 @@ msgstr "Analisis Konformer"
 
 #: qtplugins/plotconformer/plotconformer.cpp:541
 msgid "Plot:"
-msgstr ""
+msgstr "Grafik:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:543
 msgid "vs"
-msgstr ""
+msgstr "terhadap"
 
 #: qtplugins/plotconformer/plotconformer.cpp:554
 msgid "Add from Selection"
-msgstr ""
+msgstr "Tambahkan dari Pilihan"
 
 #: qtplugins/plotconformer/plotconformer.cpp:558
 msgid "Unwrap dihedral scans"
-msgstr ""
+msgstr "Hilangkan diskontinuitas pemindaian sudut dihedral"
 
 #: qtplugins/plotconformer/plotconformer.cpp:566
 msgid "Energy Units:"
@@ -5826,11 +5952,11 @@ msgstr "Satuan Energi:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:586
 msgid "Time between frames:"
-msgstr ""
+msgstr "Waktu antarbingkai:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:592
 msgid " ps"
-msgstr ""
+msgstr " ps"
 
 #: qtplugins/plotconformer/plotconformer.cpp:594
 msgid ""
@@ -5838,17 +5964,22 @@ msgid ""
 "velocities and a temperature. Most trajectory files do not record it, so it "
 "starts at the value from the file where there is one and at 1 ps otherwise."
 msgstr ""
+"Interval antara bingkai yang disimpan, digunakan untuk menghitung kecepatan "
+"dan suhu dari lintasan. Sebagian besar berkas lintasan tidak mencatat "
+"interval ini, sehingga nilai awalnya diambil dari berkas jika tersedia, atau "
+"ditetapkan sebesar 1 ps jika tidak tersedia."
 
 #: qtplugins/plotconformer/plotconformer.cpp:844
 #, qt-format
 msgid "Conformer %1 of %2 — use ← and → to step through them"
-msgstr ""
+msgstr "Konformer %1 dari %2 — gunakan ← dan → untuk berpindah antar konformer"
 
 #: qtplugins/plotconformer/plotconformer.cpp:897
 msgid ""
 "The units the energies in this file are in, which the file itself does not "
 "record."
 msgstr ""
+"Satuan energi dalam berkas ini, yang tidak dicatat oleh berkas itu sendiri."
 
 #: qtplugins/plotconformer/plotconformer.h:46
 msgid "PlotConformer"
@@ -5857,6 +5988,8 @@ msgstr "PlotKonformer"
 #: qtplugins/plotconformer/plotconformer.h:176
 msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
 msgstr ""
+"Hasilkan dan tampilkan grafik data konformer (RMSD, energi, atau koordinat "
+"pemindaian)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -5872,7 +6005,7 @@ msgstr "Pesan kesalahan: "
 
 #: qtplugins/plotpdf/plotpdf.cpp:211
 msgid "Show PDF plot."
-msgstr ""
+msgstr "Tampilkan grafik PDF."
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -5910,7 +6043,7 @@ msgstr "Kesalahan: "
 
 #: qtplugins/plotxrd/plotxrd.cpp:313
 msgid "Show XRD plot."
-msgstr ""
+msgstr "Tampilkan grafik XRD."
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
@@ -6208,7 +6341,7 @@ msgstr "Tambahkan Properti…"
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr ""
+msgstr "Konversi Satuan Energi…"
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
@@ -6433,33 +6566,35 @@ msgstr "Pilih Sisa"
 
 #: qtplugins/select/select.cpp:589
 msgid "Select all atoms."
-msgstr ""
+msgstr "Pilih semua atom."
 
 #: qtplugins/select/select.cpp:591
 msgid "Deselect all atoms"
-msgstr ""
+msgstr "Batalkan pilihan semua atom"
 
 #: qtplugins/select/select.cpp:594
 msgid ""
 "Select all atoms which are not currently selected, and deselect all "
 "currently selected atoms."
 msgstr ""
+"Pilih semua atom yang saat ini tidak dipilih dan batalkan pilihan semua atom "
+"yang saat ini dipilih."
 
 #: qtplugins/select/select.cpp:598
 msgid "Select all atoms of a certain element type."
-msgstr ""
+msgstr "Pilih semua atom dari jenis unsur tertentu."
 
 #: qtplugins/select/select.cpp:602
 msgid "Select all atoms that belong to amino acid backbones"
-msgstr ""
+msgstr "Pilih semua atom yang termasuk dalam rantai utama asam amino"
 
 #: qtplugins/select/select.cpp:606
 msgid "Select all atoms that belong to amino acid sidechains"
-msgstr ""
+msgstr "Pilih semua atom yang termasuk dalam rantai samping asam amino"
 
 #: qtplugins/select/select.cpp:608
 msgid "Select all water molecules"
-msgstr ""
+msgstr "Pilih semua molekul air"
 
 #: qtplugins/select/select.cpp:612
 msgid ""
@@ -6467,30 +6602,36 @@ msgid ""
 "all atoms next to a selected atom, and additionally all atoms that are next "
 "to those atoms."
 msgstr ""
+"Pilih semua atom dalam jarak dua atom dari atom yang dipilih. Dengan kata "
+"lain, pilih semua atom yang bersebelahan dengan atom yang dipilih, serta "
+"semua atom yang bersebelahan dengan atom-atom tersebut."
 
 #: qtplugins/select/select.cpp:618
 msgid "Shrink selection. Note: One shrink is equivalent to two enlarges!"
 msgstr ""
+"Perkecil pilihan. Catatan: Satu kali pengecilan setara dengan dua kali "
+"perluasan!"
 
 #: qtplugins/select/select.cpp:621
 msgid "Separate the selected atoms into a new layer."
-msgstr ""
+msgstr "Pisahkan atom yang dipilih ke lapisan baru."
 
 #: qtplugins/select/select.cpp:678
 msgid ""
 "selectElement requires an \"element\" option (an element symbol or atomic "
 "number)."
 msgstr ""
+"selectElement memerlukan opsi \"element\" (simbol unsur atau nomor atom)."
 
 #: qtplugins/select/select.cpp:696
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "Unsur \"%1\" tidak dikenal."
 
 #: qtplugins/select/select.cpp:700
 #, qt-format
 msgid "Atomic number %1 is out of range (1 to %2)."
-msgstr ""
+msgstr "Nomor atom %1 berada di luar rentang (1 hingga %2)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6787,7 +6928,7 @@ msgstr "Plot Spektrum…"
 
 #: qtplugins/spectra/spectra.cpp:163
 msgid "Open spectra dialog."
-msgstr ""
+msgstr "Buka dialog spektrum."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -7207,51 +7348,53 @@ msgstr "Simetri…"
 
 #: qtplugins/symmetry/symmetry.cpp:216
 msgid "There is no molecule to analyze."
-msgstr ""
+msgstr "Tidak ada molekul untuk dianalisis."
 
 #: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
 msgid "The molecule has no 3D coordinates."
-msgstr ""
+msgstr "Molekul tidak memiliki koordinat 3D."
 
 #: qtplugins/symmetry/symmetry.cpp:228
 msgid "The molecule has no atoms."
-msgstr ""
+msgstr "Molekul tidak memiliki atom."
 
 #: qtplugins/symmetry/symmetry.cpp:386
 msgid "There is no molecule to symmetrize."
-msgstr ""
+msgstr "Tidak ada molekul untuk disimetriskan."
 
 #: qtplugins/symmetry/symmetry.cpp:394
 msgid "A single atom is already symmetric."
-msgstr ""
+msgstr "Atom tunggal sudah simetris."
 
 #: qtplugins/symmetry/symmetry.cpp:415
 #, qt-format
 msgid "libmsym returned %1 atoms for a molecule of %2."
-msgstr ""
+msgstr "libmsym mengembalikan %1 atom untuk molekul yang memiliki %2 atom."
 
 #: qtplugins/symmetry/symmetry.cpp:438
 msgid "Detect the point group of the molecule."
-msgstr ""
+msgstr "Deteksi grup titik molekul."
 
 #: qtplugins/symmetry/symmetry.cpp:440
 msgid "Snap the molecule onto its detected point group."
-msgstr ""
+msgstr "Sesuaikan molekul agar tepat mengikuti grup titik yang terdeteksi."
 
 #: qtplugins/symmetry/symmetry.cpp:457
 #, qt-format
 msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
 msgstr ""
+"Toleransi \"%1\" tidak dikenal: nilai yang diharapkan adalah tight, normal, "
+"loose, atau veryloose."
 
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr ""
+msgstr "%1 terdeteksi"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
 msgid "Symmetrized to %1"
-msgstr ""
+msgstr "Disimetriskan menjadi %1"
 
 #: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
@@ -7508,74 +7651,88 @@ msgstr "Lakukan perhitungan Hückel yang diperluas dengan yaehmop."
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:36
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:34
 msgid "Z-Matrix Editor"
-msgstr ""
+msgstr "Editor Matriks Z"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
 msgid "Add Dummy Atoms"
-msgstr ""
+msgstr "Tambahkan Atom Dummy"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
-msgstr ""
+msgstr "Bangun Ulang Geometri"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:69
 msgid ""
 "Rebuild every atom position from the table. The molecule is not moved or "
 "reoriented."
 msgstr ""
+"Bangun ulang posisi setiap atom dari tabel. Molekul tidak dipindahkan atau "
+"diubah orientasinya."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
-msgstr ""
+msgstr "&Editor Matriks Z…"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:135
 msgid "Atoms renumbered into z-matrix order."
-msgstr ""
+msgstr "Atom telah dinomori ulang sesuai urutan matriks Z."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:137
 msgid "The atoms are already in z-matrix order."
-msgstr ""
+msgstr "Atom sudah dalam urutan matriks Z."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:148
 msgid ""
 "Dummy atoms added beside the linear fragments. They are ordinary atoms of "
 "element Xx: delete them, or undo, when you are done with the matrix."
 msgstr ""
+"Atom dummy telah ditambahkan di samping fragmen linear. Atom tersebut "
+"merupakan atom biasa dari unsur Xx: hapus atom tersebut, atau batalkan "
+"tindakan, setelah selesai menggunakan matriks."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
-msgstr ""
+msgstr "Tidak ada bagian di sini yang memerlukan atom dummy."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
-msgstr ""
+msgstr "Geometri telah dibangun ulang dari tabel."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
 msgid "There is nothing to rebuild."
-msgstr ""
+msgstr "Tidak ada yang perlu dibangun ulang."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:187
 msgid "There is nothing to renumber."
-msgstr ""
+msgstr "Tidak ada yang perlu dinomori ulang."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:190
 msgid ""
 "The atoms are already in z-matrix order: every atom already follows the "
 "atoms it is measured against, so renumbering them would change nothing."
 msgstr ""
+"Atom sudah dalam urutan matriks Z: setiap atom sudah berada setelah atom "
+"yang menjadi acuan pengukurannya, sehingga penomoran ulang tidak akan "
+"mengubah apa pun."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:195
 msgid ""
 "Renumber the atoms so that each one follows the atoms it is measured "
 "against. This changes the atom numbers the rest of the application uses."
 msgstr ""
+"Nomori ulang atom agar setiap atom berada setelah atom yang menjadi acuan "
+"pengukurannya. Tindakan ini mengubah nomor atom yang digunakan oleh bagian "
+"lain aplikasi."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:207
 msgid ""
 "Nothing here is straight enough to need one: every row already has real "
 "atoms off the axis to be measured against."
 msgstr ""
+"Tidak ada bagian di sini yang cukup lurus hingga memerlukan atom dummy: "
+"setiap baris sudah memiliki atom nyata di luar sumbu sebagai acuan "
+"pengukuran."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:211
 msgid ""
@@ -7584,42 +7741,46 @@ msgid ""
 "atoms of the molecule: they are saved and exported with it until you delete "
 "them."
 msgstr ""
+"Tambahkan atom unsur Xx di samping setiap fragmen linear, di luar sumbu, "
+"agar sudut dan sudut dihedralnya dapat diukur dan diedit. Atom dummy "
+"merupakan atom nyata dalam molekul: atom ini disimpan dan diekspor bersama "
+"molekul hingga Anda menghapusnya."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
-msgstr ""
+msgstr "Edit panjang ikatan, sudut, dan torsi dalam tabel."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:127
 msgid "Distance (Å)"
-msgstr ""
+msgstr "Jarak (Å)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:131
 msgid "Dihedral (°)"
-msgstr ""
+msgstr "Sudut Dihedral (°)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
 #, qt-format
 msgid "Constrained to %1 Å"
-msgstr ""
+msgstr "Dibatasi pada %1 Å"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:176
 #, qt-format
 msgid "Constrained to %1°"
-msgstr ""
+msgstr "Dibatasi pada %1°"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:364
 #, qt-format
 msgid "There is no atom %1."
-msgstr ""
+msgstr "Tidak ada atom %1."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:367
 msgid "An atom cannot be measured against itself."
-msgstr ""
+msgstr "Atom tidak dapat diukur dengan dirinya sendiri sebagai acuan."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:373
 #, qt-format
 msgid "Atom %1 is already used by this row."
-msgstr ""
+msgstr "Atom %1 sudah digunakan oleh baris ini."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:380
 #, qt-format
@@ -7627,18 +7788,20 @@ msgid ""
 "Atom %1 is placed after this one, so it cannot be measured against. Reorder "
 "the atoms first."
 msgstr ""
+"Atom %1 berada setelah atom ini, sehingga tidak dapat digunakan sebagai "
+"acuan pengukuran. Urutkan ulang atom terlebih dahulu."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:735
 msgid "Rebuild from Z-matrix"
-msgstr ""
+msgstr "Bangun Ulang dari Matriks Z"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:117
 msgid "Constrain Distance"
-msgstr ""
+msgstr "Batasi Jarak"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:123
 msgid "Constrain Dihedral"
-msgstr ""
+msgstr "Batasi Sudut Dihedral"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -8437,11 +8600,13 @@ msgstr "Orde Ikatan:"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
 msgid "When possible, adjust bond lengths when changing atoms or bond orders"
 msgstr ""
+"Jika memungkinkan, sesuaikan panjang ikatan saat mengubah atom atau orde "
+"ikatan"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
 msgid "Adjust Bond Lengths"
-msgstr ""
+msgstr "Sesuaikan Panjang Ikatan"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -10172,17 +10337,17 @@ msgstr "Cari plugin…"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
 msgid "Plugin Information"
-msgstr ""
+msgstr "Informasi Plugin"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:122
 #. i18n: ectx: property (text), widget (QPushButton, bugTrackerButton)
 msgid "Report an Issue"
-msgstr ""
+msgstr "Laporkan Masalah"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
 msgid "Open this plugin's bug tracker in your browser"
-msgstr ""
+msgstr "Buka pelacak bug plugin ini di peramban Anda"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
