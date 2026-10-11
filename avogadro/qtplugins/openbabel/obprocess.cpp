@@ -21,12 +21,13 @@ namespace Avogadro::QtPlugins {
 
 OBProcess::OBProcess(QObject* parent_)
   : QObject(parent_), m_processLocked(false), m_aborted(false),
-    m_process(new QProcess(this)), m_obabelExecutable("obabel"),
+    m_process(new QProcess(this)),
 #if defined(_WIN32)
-    m_obabelExecutable("obabel.exe")
+    m_obabelExecutable("obabel.exe"),
 #else
-    m_conformerOutputFile(nullptr)
+    m_obabelExecutable("obabel"),
 #endif
+    m_conformerOutputFile(nullptr)
 {
   // Read the AVO_OBABEL_EXECUTABLE env var to optionally override the
   // executable used for obabel.
