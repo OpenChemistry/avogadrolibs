@@ -66,7 +66,7 @@ QList<QAction*> InsertPeptide::actions() const
   return m_actions;
 }
 
-QStringList InsertPeptide::menuPath(QAction* action) const
+QStringList InsertPeptide::menuPath(QAction* /*action*/) const
 {
   return QStringList() << tr("&Build") << tr("&Insert");
 }

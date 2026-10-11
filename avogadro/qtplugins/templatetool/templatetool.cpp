@@ -211,7 +211,7 @@ QUndoCommand* TemplateTool::mouseReleaseEvent(QMouseEvent* e)
   return nullptr;
 }
 
-QUndoCommand* TemplateTool::mouseMoveEvent(QMouseEvent* e)
+QUndoCommand* TemplateTool::mouseMoveEvent(QMouseEvent* /*e*/)
 {
   return nullptr;
 }

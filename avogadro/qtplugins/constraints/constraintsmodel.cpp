@@ -146,7 +146,7 @@ QVariant ConstraintsModel::headerData(int section, Qt::Orientation orientation,
   return section + 1;
 }
 
-void ConstraintsModel::addConstraint(int type, int a, int b, int c, int d,
+void ConstraintsModel::addConstraint(int /*type*/, int a, int b, int c, int d,
                                      double value)
 {
   beginInsertRows(QModelIndex(), m_constraints.size(), m_constraints.size());
