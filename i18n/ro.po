@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-10-08 16:51+0000\n"
+"PO-Revision-Date: 2026-10-10 19:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
@@ -3857,16 +3857,16 @@ msgstr "Îngheață atomii selectați în timpul optimizării câmpului de forț
 
 #: qtplugins/forcefield/forcefield.cpp:283
 msgid "Unfreeze selected atoms."
-msgstr ""
+msgstr "Dezgheață atomii selectați."
 
 #: qtplugins/forcefield/forcefield.cpp:285
 msgid "Freeze a specific axis (X, Y, or Z) of selected atoms."
-msgstr ""
+msgstr "Îngheață o anumită axă (X, Y sau Z) a atomilor selectați."
 
 #: qtplugins/forcefield/forcefield.cpp:379
 #, qt-format
 msgid "%1 force field(s) available."
-msgstr ""
+msgstr "%1 câmp(uri) de forță disponibil(e)."
 
 #: qtplugins/forcefield/forcefield.cpp:386
 #: qtplugins/forcefield/forcefield.cpp:412
@@ -3881,37 +3881,37 @@ msgstr "Nicio moleculă nu este deschisă."
 #: qtplugins/forcefield/forcefield.cpp:416
 #: qtplugins/forcefield/forcefield.cpp:442
 msgid "A force field calculation is already running."
-msgstr ""
+msgstr "Se execută deja o calculare a câmpului de forță."
 
 #: qtplugins/forcefield/forcefield.cpp:394
 msgid "No atoms provided for energy calculation."
-msgstr ""
+msgstr "Nu au fost furnizați atomi pentru calcularea energiei."
 
 #: qtplugins/forcefield/forcefield.cpp:420
 msgid "No atoms provided for force calculation."
-msgstr ""
+msgstr "Nu au fost furnizați atomi pentru calcularea forței."
 
 #: qtplugins/forcefield/forcefield.cpp:446
 msgid "No atoms provided for optimization."
-msgstr ""
+msgstr "Nu au fost furnizați atomi pentru optimizare."
 
 #: qtplugins/forcefield/forcefield.cpp:466
 msgid "\"steps\" must be a positive integer."
-msgstr ""
+msgstr "\"steps\" trebuie să fie un număr întreg pozitiv."
 
 #: qtplugins/forcefield/forcefield.cpp:476
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"gradientTolerance\" trebuie să fie un număr finit, nenegativ."
 
 #: qtplugins/forcefield/forcefield.cpp:486
 msgid "\"energyTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"energyTolerance\" trebuie să fie un număr finit, nenegativ."
 
 #: qtplugins/forcefield/forcefield.cpp:503
 #: qtplugins/forcefield/forcefield.cpp:528
 #: qtplugins/forcefield/forcefield.cpp:553
 msgid "No atoms are selected."
-msgstr ""
+msgstr "Nu este selectat niciun atom."
 
 #: qtplugins/forcefield/forcefield.cpp:518
 #: qtplugins/forcefield/forcefield.cpp:600
@@ -3919,44 +3919,44 @@ msgstr ""
 msgctxt ""
 msgid "Froze %n atom(s)."
 msgid_plural "Froze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "A înghețat %n atom."
+msgstr[1] "Au înghețat %n atomi."
+msgstr[2] "Au înghețat %n de atomi."
 
 #: qtplugins/forcefield/forcefield.cpp:543
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
 msgid_plural "Unfroze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "S-a dezghețat %n atom."
+msgstr[1] "S-au dezghețat %n atomi."
+msgstr[2] "S-au dezghețat %n de atomi."
 
 #: qtplugins/forcefield/forcefield.cpp:557
 msgid "No axis was given."
-msgstr ""
+msgstr "Nu s-a specificat nicio axă."
 
 #: qtplugins/forcefield/forcefield.cpp:584
 msgid "Axis must be x, y, z or 0, 1, 2."
-msgstr ""
+msgstr "Axa trebuie să fie x, y, z sau 0, 1, 2."
 
 #: qtplugins/forcefield/forcefield.cpp:822
 msgid "The force field calculation was interrupted."
-msgstr ""
+msgstr "Calcularea câmpului de forță a fost întreruptă."
 
 #: qtplugins/forcefield/forcefield.cpp:892
 msgid "No force field is available for this molecule."
-msgstr ""
+msgstr "Pentru această moleculă nu este disponibil niciun câmp de forță."
 
 #: qtplugins/forcefield/forcefield.cpp:913
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
-msgstr ""
+msgstr "Câmpul de forță „%1” nu este compatibil cu această moleculă."
 
 #: qtplugins/forcefield/forcefield.cpp:916
 #, qt-format
 msgid "Unknown force field \"%1\"."
-msgstr ""
+msgstr "Câmp de forță necunoscut „%1”."
 
 #: qtplugins/forcefield/forcefield.cpp:932
 #: qtplugins/forcefield/forcefield.cpp:1215
@@ -3980,7 +3980,7 @@ msgstr "Nu au fost furnizați atomi pentru optimizare"
 #: qtplugins/forcefield/forcefield.cpp:1323
 #, qt-format
 msgid "Could not create a calculator for \"%1\"."
-msgstr ""
+msgstr "Nu s-a putut crea un calculator pentru „%1”."
 
 #: qtplugins/forcefield/forcefield.cpp:1054
 #, qt-format
@@ -3990,7 +3990,7 @@ msgstr "Energie: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:1161
 msgid "The optimizer stopped without producing a result."
-msgstr ""
+msgstr "Optimizatorul s-a oprit fără a genera un rezultat."
 
 #: qtplugins/forcefield/forcefield.cpp:1178
 #: qtplugins/forcefield/forcefield.cpp:1273
@@ -4005,7 +4005,7 @@ msgstr "Nu au fost furnizați atomi pentru calcularea energiei"
 #: qtplugins/forcefield/forcefield.cpp:1277
 #, qt-format
 msgid "%1 returned a non-finite energy."
-msgstr ""
+msgstr "%1 a returnat o energie nefinită."
 
 #: qtplugins/forcefield/forcefield.cpp:1304
 msgid "No atoms provided for force calculation"
@@ -4013,12 +4013,12 @@ msgstr "Nu au fost furnizați atomi pentru calcularea forței"
 
 #: qtplugins/forcefield/forcefield.cpp:1359
 msgid "The molecule changed during the calculation."
-msgstr ""
+msgstr "Molecula s-a modificat în timpul calculului."
 
 #: qtplugins/forcefield/forcefield.cpp:1372
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
-msgstr ""
+msgstr "%1 a returnat un rezultat nefinit sau incomplet."
 
 #: qtplugins/forcefield/forcefield.cpp:1394
 #, qt-format
@@ -4213,25 +4213,28 @@ msgstr "&Hidrogeni"
 
 #: qtplugins/hydrogens/hydrogens.cpp:114
 msgid "Add any missing hydrogen atoms on atoms that have incomplete octets."
-msgstr ""
+msgstr "Adaugă atomii de hidrogen care lipsesc la atomii cu octet incomplet."
 
 #: qtplugins/hydrogens/hydrogens.cpp:118
 msgid "Remove any extra hydrogen atoms on atoms with overfull octets."
 msgstr ""
+"Elimină atomii de hidrogen în plus de pe atomii cu octeturi supraîncărcate."
 
 #: qtplugins/hydrogens/hydrogens.cpp:122
 msgid ""
 "Add any missing hydrogen atoms, and remove any extra hydrogen atoms on any "
 "atoms that violate the octet rule."
 msgstr ""
+"Adaugă atomii de hidrogen care lipsesc și elimină atomii de hidrogen în plus "
+"de pe atomii care încalcă regula octetului."
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
-msgstr ""
+msgstr "Elimină toți atomii de hidrogen din moleculă."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
-msgstr ""
+msgstr "Nicio moleculă."
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -4741,6 +4744,8 @@ msgid ""
 "Measure the distance in Å between two atoms, given as zero-based indices: "
 "{\"atoms\": [i, j]}. Returns {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Măsoară distanța în Å dintre doi atomi, indicați prin indici de la zero: "
+"{\"atoms\": [i, j]}. Returnează {\"distance\": ..., \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:699
 msgid ""
@@ -4748,6 +4753,9 @@ msgid ""
 "based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": …, \"atoms\": [i, "
 "j, k]}."
 msgstr ""
+"Măsoară unghiul, în grade, la atomul din mijloc al trei atomi, indicați prin "
+"indici de la zero: {\"atoms\": [i, j, k]}. Returnează {\"angle\": ..., "
+"\"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid ""
@@ -4755,6 +4763,9 @@ msgid ""
 "zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Măsoară unghiul diedru, în grade (-180 până la 180), al celor patru atomi, "
+"indicați prin indici de la zero: {\"atoms\": [i, j, k, l]}. Returnează "
+"{\"dihedral\": ..., \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:709
 msgid ""
@@ -4762,6 +4773,10 @@ msgid ""
 "{\"atoms\": [i, j], \"value\": …}; the second atom and everything bonded to "
 "it on that side move. Returns the new {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Stabilește distanța, în Å, dintre doi atomi indicați prin indici de la zero: "
+"{\"atoms\": [i, j], \"value\": ...}; al doilea atom și tot ce este legat de "
+"el pe acea parte se deplasează. Returnează noua structură {\"distance\": "
+"..., \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
@@ -4770,6 +4785,10 @@ msgid ""
 "bonded to it on that side move. Returns the new {\"angle\": …, \"atoms\": "
 "[i, j, k]}."
 msgstr ""
+"Stabilește unghiul, în grade, la atomul din mijloc acelor trei atomi "
+"indicați prin indici de la zero: {\"atoms\": [i, j, k], \"value\": ...}; "
+"ultimul atom și tot ce este legat de el pe acea parte se deplasează. "
+"Returnează noua structură {\"angle\": ..., \"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:721
 msgid ""
@@ -4778,6 +4797,10 @@ msgid ""
 "everything bonded to it on that side move. Returns the new {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Stabilește unghiul diedru, în grade, al celor patru atomi indicați prin "
+"indici de la zero: {\"atoms\": [i, j, k, l], \"value\": ...}; ultimul atom "
+"și tot ce este legat de el pe acea parte se deplasează. Returnează noua "
+"structură {\"dihedral\": ..., \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:764 qtplugins/select/select.cpp:638
 msgid "No molecule"
@@ -5038,7 +5061,7 @@ msgstr "&Proprietăți"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:226
 msgid "Show molecular properties."
-msgstr ""
+msgstr "Afișează proprietățile moleculare."
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
@@ -5902,41 +5925,49 @@ msgid ""
 "Advance one coordinate set, looping to the first frame after the last. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Avansează cu un set de coordonate, revenind la primul cadru după ultimul. "
+"Returnează {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:673
 msgid ""
 "Step back one coordinate set, looping to the last frame before the first. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Revine cu un set de coordonate înapoi, parcurgând în buclă până la ultimul "
+"cadru dinaintea primului. Returnează {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:677
 msgid ""
 "Jump to a coordinate set, given as a zero-based index: {\"index\": n}. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Trece la un set de coordonate, specificat ca un index cu punct de pornire de "
+"la zero: {\"index\": n}. Returnează {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:681
 msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Afișează cadrul curent și numărul de seturi de coordonate, fără a modifica "
+"nimic. Returnează {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:697
 msgid "There is no molecule."
-msgstr ""
+msgstr "Nu există nicio moleculă."
 
 #: qtplugins/playertool/playertool.cpp:701
 msgid "The molecule has no coordinate sets."
-msgstr ""
+msgstr "Molecula nu are seturi de coordonate."
 
 #: qtplugins/playertool/playertool.cpp:711
 msgid "index is required."
-msgstr ""
+msgstr "este necesar un index."
 
 #: qtplugins/playertool/playertool.cpp:720
 #, qt-format
 msgid "index must be a whole number from 0 to %1."
-msgstr ""
+msgstr "indexul trebuie să fie un număr întreg cuprins între 0 și %1."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -6039,7 +6070,7 @@ msgstr "Mesaj de eroare: "
 
 #: qtplugins/plotpdf/plotpdf.cpp:211
 msgid "Show PDF plot."
-msgstr ""
+msgstr "Afișează graficul PDF."
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -6077,7 +6108,7 @@ msgstr "Eroare: "
 
 #: qtplugins/plotxrd/plotxrd.cpp:313
 msgid "Show XRD plot."
-msgstr ""
+msgstr "Afișează graficul XRD."
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
@@ -6656,16 +6687,18 @@ msgid ""
 "selectElement requires an \"element\" option (an element symbol or atomic "
 "number)."
 msgstr ""
+"selectElement necesită o opțiune “element” (un simbol al elementului sau un "
+"număr atomic)."
 
 #: qtplugins/select/select.cpp:696
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "Element necunoscut „%1”."
 
 #: qtplugins/select/select.cpp:700
 #, qt-format
 msgid "Atomic number %1 is out of range (1 to %2)."
-msgstr ""
+msgstr "Numărul atomic %1 este în afara intervalului (1 până la %2)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6966,7 +6999,7 @@ msgstr "Trasează spectre…"
 
 #: qtplugins/spectra/spectra.cpp:163
 msgid "Open spectra dialog."
-msgstr ""
+msgstr "Deschide fereastra de dialog „Spectre”."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)

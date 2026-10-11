@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 2.0.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-10-09 18:54+0000\n"
+"PO-Revision-Date: 2026-10-10 19:51+0000\n"
 "Last-Translator: Gansas <gamingfox5566@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/lt/>\n"
@@ -5331,7 +5331,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:679
 msgid "Keep Files"
-msgstr ""
+msgstr "Pasilikti Failus"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:681
 msgid "Delete Files"
