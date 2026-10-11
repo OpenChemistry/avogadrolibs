@@ -393,7 +393,7 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
 
   QProgressDialog dialog;
   dialog.setWindowTitle("QTAIM");
-  dialog.setLabelText(QString("Nuclear Critical Points Search"));
+  dialog.setLabelText(QObject::tr("Nuclear Critical Points Search"));
 
   QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
@@ -494,7 +494,7 @@ void QTAIMCriticalPointLocator::locateBondCriticalPoints()
 
   QProgressDialog dialog;
   dialog.setWindowTitle("QTAIM");
-  dialog.setLabelText(QString("Bond Critical Points Search"));
+  dialog.setLabelText(QObject::tr("Bond Critical Points Search"));
 
   QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
@@ -641,7 +641,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySources()
 
   QProgressDialog dialog;
   dialog.setWindowTitle("QTAIM");
-  dialog.setLabelText(QString("Electron Density Sources Search"));
+  dialog.setLabelText(QObject::tr("Electron Density Sources Search"));
 
   QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
@@ -786,7 +786,7 @@ void QTAIMCriticalPointLocator::locateElectronDensitySinks()
 
   QProgressDialog dialog;
   dialog.setWindowTitle("QTAIM");
-  dialog.setLabelText(QString("Electron Density Sinks Search"));
+  dialog.setLabelText(QObject::tr("Electron Density Sinks Search"));
 
   QFutureWatcher<QList<QVariant>> futureWatcher;
   QObject::connect(&futureWatcher, SIGNAL(finished()), &dialog, SLOT(reset()));
