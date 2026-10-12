@@ -142,8 +142,15 @@ void Focus::registerCommands()
 bool Focus::handleCommand(const QString& command,
                           [[maybe_unused]] const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // no molecule to handle the command
+  static const QStringList knownCommands = { "focusSelection", "unfocus" };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "focusSelection") {
     focusSelection();
