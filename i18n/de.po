@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-11 21:33+0000\n"
-"PO-Revision-Date: 2026-10-04 22:19+0000\n"
+"PO-Revision-Date: 2026-10-13 12:26+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1517,7 +1517,7 @@ msgstr ""
 
 #: qtgui/packagemanager.cpp:853
 msgid "neither pixi nor Python was found"
-msgstr ""
+msgstr "weder Pixi noch Python gefunden"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -2706,6 +2706,8 @@ msgid ""
 "Add a dummy atom at the geometric center of the molecule or the selected "
 "atoms."
 msgstr ""
+"Fügen Sie am geometrischen Zentrum des Moleküls oder den ausgewählten Atomen "
+"ein Dummy-Atom hinzu."
 
 #: qtplugins/centroid/centroid.cpp:141
 msgid ""
