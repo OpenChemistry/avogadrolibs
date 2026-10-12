@@ -15,13 +15,14 @@
 # Jakob Blahusch <jakob.blahusch@blahusch.com>, 2026.
 # Alexander Krappe <alexander.krappe@fu-berlin.de>, 2026.
 # Felix <felix@fmfl-devteam.de>, 2026.
+# Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-11 21:33+0000\n"
 "PO-Revision-Date: 2026-10-13 12:26+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -593,7 +594,7 @@ msgstr "RMS-Gradient"
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Durchschnittsgeschwindigkeit"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -1192,7 +1193,7 @@ msgstr "Alle Dateien"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "Komprimierte Dateien"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1216,6 +1217,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Script Standardfehler:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:360
 #, qt-format
@@ -1227,7 +1230,7 @@ msgstr ""
 #: qtgui/interfacescript.cpp:372
 #, qt-format
 msgid "Error reading molecule representation: %1"
-msgstr ""
+msgstr "Fehler beim Lesen der Moleküldarstellung: %1"
 
 #: qtgui/interfacescript.cpp:438
 #, qt-format
@@ -1474,7 +1477,7 @@ msgstr ""
 
 #: qtgui/packagemanager.cpp:694
 msgid "pixi install timed out"
-msgstr ""
+msgstr "Zeitlimit bei der Installation von pixi abgelaufen"
 
 #: qtgui/packagemanager.cpp:702
 #, qt-format
@@ -1482,6 +1485,8 @@ msgid ""
 "pixi install failed:\n"
 "%1"
 msgstr ""
+"Installation von pixi fehlgeschlagen:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:714
 #, qt-format
@@ -1490,7 +1495,7 @@ msgstr ""
 
 #: qtgui/packagemanager.cpp:743
 msgid "pip: creating the virtual environment timed out"
-msgstr ""
+msgstr "pip: Zeitlimit bei der Erstellung der virtuellen Umgebung abgelaufen"
 
 #: qtgui/packagemanager.cpp:752
 #, qt-format
@@ -1498,6 +1503,8 @@ msgid ""
 "pip: creating the virtual environment failed:\n"
 "%1"
 msgstr ""
+"pip: die Erstellung der virtuellen Umgebung ist gescheitert:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:770
 msgid "pip install timed out"
@@ -1584,7 +1591,7 @@ msgstr ""
 #: qtgui/pythonscript.cpp:456
 #, qt-format
 msgid "The script exited with error code %1."
-msgstr ""
+msgstr "Das Skript endete mit Fehlercode %1."
 
 #: qtgui/pythonscript.cpp:457
 msgid "The script crashed."
@@ -1598,6 +1605,10 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"\n"
+"\n"
+"Script Standardfehler:\n"
+"%1"
 
 #: qtgui/pythonscript.cpp:575
 #, qt-format
@@ -1676,7 +1687,7 @@ msgstr "Atome löschen"
 
 #: qtgui/rwmolecule.cpp:155 qtplugins/zmatrixeditor/zmatrixeditor.cpp:56
 msgid "Reorder Atoms"
-msgstr ""
+msgstr "Atome neu ordnen"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:43
 #. i18n: ectx: property (text), widget (QCheckBox, adjustHydrogens)
@@ -2292,10 +2303,9 @@ msgstr "Balance"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
 #: qtplugins/surfaces/surfaces.cpp:1007:177 rc.cpp:2075
-#, fuzzy
 msgctxt "colormap"
 msgid "Blue-DarkRed"
-msgstr "Blau-Dunkelrot"
+msgstr "Blue-DarkRed"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:55
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -2379,7 +2389,7 @@ msgstr "Aminosäurefarben anwenden"
 
 #: qtplugins/applycolors/applycolors.cpp:591
 msgid "Apply Shapely Colors"
-msgstr ""
+msgstr "Shapely-Farben anwenden"
 
 #: qtplugins/applycolors/applycolors.cpp:613
 msgid "Apply a custom color to atoms."
@@ -2706,8 +2716,8 @@ msgid ""
 "Add a dummy atom at the geometric center of the molecule or the selected "
 "atoms."
 msgstr ""
-"Fügen Sie am geometrischen Zentrum des Moleküls oder den ausgewählten Atomen "
-"ein Dummy-Atom hinzu."
+"Fügen Sie dem geometrischen Zentrum des Moleküls oder den ausgewählten "
+"Atomen ein Dummy-Atom hinzu."
 
 #: qtplugins/centroid/centroid.cpp:141
 msgid ""
@@ -2937,15 +2947,15 @@ msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:287
 msgid "value must be a number: a distance in Å."
-msgstr "wert muss eine Zahl sein: eine Distanz in Å."
+msgstr "Wert muss eine Zahl sein: eine Distanz in Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:291
 msgid "value must be a number: an angle in degrees."
-msgstr "wert muss eine zahl sein: ein winkel in grad."
+msgstr "Wert muss eine Zahl sein: ein Winkel in Grad."
 
 #: qtplugins/constraints/constraintsextension.cpp:295
 msgid "value must be a number: a dihedral angle in degrees."
-msgstr "wert muss eine zahl sein: ein dihedraler winkel in grad."
+msgstr "Wert muss eine Zahl sein: ein Diederwinkel in Grad."
 
 #: qtplugins/constraints/constraintsextension.cpp:309
 msgid "Could not measure the current geometry for these atoms."
@@ -2958,7 +2968,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsextension.cpp:324
 #: qtplugins/measuretool/measuretool.cpp:800
 msgid "value must be an angle from 0 to 180 degrees."
-msgstr "der wert muss ein winkel von 0 bis 180 grad sein."
+msgstr "Der Wert muss ein Winkel zwischen 0 bis 180 Grad sein."
 
 #: qtplugins/constraints/constraintsextension.cpp:370
 msgid ""
@@ -3623,7 +3633,7 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:106
 msgid "atoms must be two different atoms."
-msgstr "atome müssen zwei verschiedene atome sein."
+msgstr "Atome müssen zwei verschiedene Atome sein."
 
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
@@ -5651,16 +5661,16 @@ msgid "No Download Available"
 msgstr "Kein Download verfügbar"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:447
-#, fuzzy, qt-format
+#, qt-format
 msgid ""
 "The selected plugin(s) do not provide a downloadable source URL:\n"
 "\n"
 "%1"
 msgstr ""
-"Das ausgewählte Plugin(s) stellt keine herunterladbare Quell-URL zur "
-"Verfügung:\n"
+"Mindestens ein ausgewähltes Plugin stellt keine herunterladbare Quell-URL "
+"zur Verfügung:\n"
 "\n"
-"(X66X)"
+"(%1)"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:494
 #, qt-format
