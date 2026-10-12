@@ -2814,7 +2814,7 @@ msgstr "Abbrechen"
 
 #: qtplugins/commandscripts/command.cpp:481
 msgid "The script could not be started."
-msgstr ""
+msgstr "Das Skript konnte nicht gestartet werden."
 
 #: qtplugins/commandscripts/command.cpp:491
 #: qtplugins/commandscripts/command.cpp:544
@@ -2937,7 +2937,7 @@ msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:287
 msgid "value must be a number: a distance in Å."
-msgstr ""
+msgstr "wert muss eine Zahl sein: eine Distanz in Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:291
 msgid "value must be a number: an angle in degrees."
