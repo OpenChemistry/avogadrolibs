@@ -197,52 +197,52 @@ void GaussianSet::outputAll(ElectronType type)
 
   // Can be called to print out a summary of the basis set as read in
   auto numAtoms = static_cast<unsigned int>(m_molecule->atomCount());
-  cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << endl;
+  cout << "\nGaussian Basis Set\nNumber of atoms:" << numAtoms << '\n';
   switch (m_scfType) {
     case Rhf:
-      cout << "RHF orbitals" << endl;
+      cout << "RHF orbitals" << '\n';
       break;
     case Uhf:
-      cout << "UHF orbitals" << endl;
+      cout << "UHF orbitals" << '\n';
       break;
     case Rohf:
-      cout << "ROHF orbitals" << endl;
+      cout << "ROHF orbitals" << '\n';
       break;
     default:
-      cout << "Unknown orbitals" << endl;
+      cout << "Unknown orbitals" << '\n';
   }
 
   initCalculation();
 
-  cout << "Number of electrons = " << m_electrons[index] << endl;
+  cout << "Number of electrons = " << m_electrons[index] << '\n';
 
   if (!isValid()) {
-    cout << "Basis set is marked as invalid." << endl;
+    cout << "Basis set is marked as invalid." << '\n';
     return;
   }
 
   for (size_t i = 0; i < m_symmetry.size(); ++i) {
     cout << i << "\tAtom Index: " << m_atomIndices[i]
          << "\tSymmetry: " << m_symmetry[i] << "\tMO Index: " << m_moIndices[i]
-         << "\tGTO Index: " << m_gtoIndices[i] << endl;
+         << "\tGTO Index: " << m_gtoIndices[i] << '\n';
   }
   cout << "Symmetry: " << m_symmetry.size()
        << "\tgtoIndices: " << m_gtoIndices.size()
        << "\tLast gtoIndex: " << m_gtoIndices[m_symmetry.size()]
        << "\ngto size: " << m_gtoA.size() << " " << m_gtoC.size() << " "
-       << m_gtoCN.size() << endl;
+       << m_gtoCN.size() << '\n';
   for (size_t i = 0; i < m_symmetry.size(); ++i) {
     switch (m_symmetry[i]) {
       case S:
         cout << "Shell " << i << "\tS\n  MO 1\t"
              << m_moMatrix[index](0, m_moIndices[i]) << "\t"
-             << m_moMatrix[index](m_moIndices[i], 0) << endl;
+             << m_moMatrix[index](m_moIndices[i], 0) << '\n';
         break;
       case P:
         cout << "Shell " << i << "\tP\n  MO 1\t"
              << m_moMatrix[index](0, m_moIndices[i]) << "\t"
              << m_moMatrix[index](0, m_moIndices[i] + 1) << "\t"
-             << m_moMatrix[index](0, m_moIndices[i] + 2) << endl;
+             << m_moMatrix[index](0, m_moIndices[i] + 2) << '\n';
         break;
       case D:
         cout << "Shell " << i << "\tD\n  MO 1\t"
@@ -251,7 +251,7 @@ void GaussianSet::outputAll(ElectronType type)
              << m_moMatrix[index](0, m_moIndices[i] + 2) << "\t"
              << m_moMatrix[index](0, m_moIndices[i] + 3) << "\t"
              << m_moMatrix[index](0, m_moIndices[i] + 4) << "\t"
-             << m_moMatrix[index](0, m_moIndices[i] + 5) << endl;
+             << m_moMatrix[index](0, m_moIndices[i] + 5) << '\n';
         break;
       case D5:
         cout << "Shell " << i << "\tD5\n  MO 1\t"
@@ -259,19 +259,19 @@ void GaussianSet::outputAll(ElectronType type)
              << m_moMatrix[index](0, m_moIndices[i] + 1) << "\t"
              << m_moMatrix[index](0, m_moIndices[i] + 2) << "\t"
              << m_moMatrix[index](0, m_moIndices[i] + 3) << "\t"
-             << m_moMatrix[index](0, m_moIndices[i] + 4) << endl;
+             << m_moMatrix[index](0, m_moIndices[i] + 4) << '\n';
         break;
       case F:
         cout << "Shell " << i << "\tF\n  MO 1";
         for (short j = 0; j < 10; ++j)
           cout << "\t" << m_moMatrix[index](0, m_moIndices[i] + j);
-        cout << endl;
+        cout << '\n';
         break;
       case F7:
         cout << "Shell " << i << "\tF7\n  MO 1";
         for (short j = 0; j < 7; ++j)
           cout << "\t" << m_moMatrix[index](0, m_moIndices[i] + j);
-        cout << endl;
+        cout << '\n';
         break;
       default:
         cout << "Error: unhandled type...\n";
@@ -279,11 +279,11 @@ void GaussianSet::outputAll(ElectronType type)
     unsigned int cIndex = m_gtoIndices[i];
     for (size_t j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
       if (j >= m_gtoA.size()) {
-        cout << "Error, j is too large!" << j << m_gtoA.size() << endl;
+        cout << "Error, j is too large!" << j << m_gtoA.size() << '\n';
         continue;
       }
       cout << cIndex << "\tc: " << m_gtoC[cIndex] << "\ta: " << m_gtoA[cIndex]
-           << endl;
+           << '\n';
       ++cIndex;
     }
   }
@@ -601,7 +601,7 @@ bool GaussianSet::generateDensityMatrix()
           //               << endl;
           break;
         default:
-          cout << "Unhandled scf type:" << m_scfType << endl;
+          cout << "Unhandled scf type:" << m_scfType << '\n';
       }
     }
   }
@@ -630,7 +630,7 @@ bool GaussianSet::generateSpinDensityMatrix()
         m_spinDensity(iBasis, jBasis) = m_spinDensity(jBasis, iBasis);
       }
       cout << iBasis << ", " << jBasis << ": " << m_spinDensity(iBasis, jBasis)
-           << endl;
+           << '\n';
     }
   }
   return true;
