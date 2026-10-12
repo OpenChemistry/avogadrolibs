@@ -153,6 +153,20 @@ jobs:
         rm appdir/AppRun
         cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
+        # Bundled programs must run without LD_LIBRARY_PATH, since Avogadro
+        # strips it from child processes
+        missing=$(for f in appdir/usr/bin/* appdir/usr/lib/openbabel/*.so; do
+          if file -b "$f" | grep -q ELF; then
+            env -u LD_LIBRARY_PATH ldd "$f" 2>&1 | grep "not found" | sed "s|^|$f: |"
+          fi
+        done || true)
+        if [ -n "$missing" ]; then
+          echo "$missing"
+          exit 1
+        fi
+        out=$(env -u LD_LIBRARY_PATH BABEL_LIBDIR=appdir/usr/lib/openbabel BABEL_DATADIR=$(echo appdir/usr/share/openbabel/*) appdir/usr/bin/obabel -:CCO -oinchi)
+        echo "$out"
+        echo "$out" | grep -q "InChI=1S/C2H6O" || exit 1
         ./appimagetool-aarch64.AppImage appdir
         mv Avogadro*.AppImage avogadroapp/Avogadro2-aarch64.AppImage # for upload
       working-directory: ${{ runner.workspace }}/build
