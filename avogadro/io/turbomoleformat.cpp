@@ -347,7 +347,7 @@ bool TurbomoleFormat::read(std::istream& inStream, Core::Molecule& mol)
 
   // if we have fractional coordinates, we need to convert them to cartesian
   if (fractionalCoords) {
-    auto* cell = mol.unitCell();
+    cell = mol.unitCell();
     // "$coord frac" promises a cell, but the file need not deliver one: the
     // $periodic / $cell block can be missing, malformed, or rejected above as
     // linearly dependent. There is nothing to convert against then.

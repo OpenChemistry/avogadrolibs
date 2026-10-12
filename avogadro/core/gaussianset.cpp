@@ -140,16 +140,19 @@ void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
 
 bool GaussianSet::setActiveSetStep(int index)
 {
-  if (index >= static_cast<int>(m_moMatrixSet[0].size()) ||
-      index >= static_cast<int>(m_moMatrixSet[1].size())) {
+  if (index < 0)
+    return false;
+
+  const auto step = static_cast<size_t>(index);
+  if (step >= m_moMatrixSet[0].size() || step >= m_moMatrixSet[1].size()) {
     return false;
   }
 
-  if (index >= m_molecule->coordinate3dCount())
+  if (step >= m_molecule->coordinate3dCount())
     return false;
 
-  m_moMatrix[0] = m_moMatrixSet[0][index];
-  m_moMatrix[1] = m_moMatrixSet[1][index];
+  m_moMatrix[0] = m_moMatrixSet[0][step];
+  m_moMatrix[1] = m_moMatrixSet[1][step];
   m_molecule->setCoordinate3d(index);
   return true;
 }

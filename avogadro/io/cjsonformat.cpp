@@ -2043,6 +2043,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     // (i.e., we need to save the matrix)
     bool axisFrozen = false;
     Eigen::VectorXd frozenAtomMask = molecule.frozenAtomMask();
+    const auto n = static_cast<Index>(frozenAtomMask.size());
     for (Index i = 0; i < molecule.atomCount(); ++i) {
       if (molecule.frozenAtom(i)) {
         anyFrozen = true;
@@ -2052,7 +2053,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       }
 
       // check for custom axis
-      if (i * 3 + 2 < frozenAtomMask.size()) {
+      if (i * 3 + 2 < n) {
         Real sum = frozenAtomMask[3 * i] + frozenAtomMask[3 * i + 1] +
                    frozenAtomMask[3 * i + 2];
         // check if it's not all frozen or all unfrozen
@@ -2068,7 +2069,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     if (axisFrozen) {
       // iterate through the mask as an array
       json frozenAtomMaskArray;
-      for (Index i = 0; i < frozenAtomMask.size(); ++i) {
+      for (Index i = 0; i < n; ++i) {
         frozenAtomMaskArray.push_back(frozenAtomMask[i]);
       }
       atoms["frozen"] = frozenAtomMaskArray;

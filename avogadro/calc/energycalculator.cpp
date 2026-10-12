@@ -193,11 +193,13 @@ std::vector<Core::Constraint> EnergyCalculator::constraints() const
 Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
 {
   Real totalEnergy = 0.0;
+  const auto n = static_cast<Index>(x.size());
 
   for (const auto& constraint : m_distanceConstraints) {
     const Index a = constraint.aIndex();
     const Index b = constraint.bIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()))
+    // size of the problem
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n))
       // shouldn't happen - invalid constraint
       continue;
 
@@ -215,8 +217,7 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
     const Index a = constraint.aIndex();
     const Index b = constraint.bIndex();
     const Index c = constraint.cIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
-        (3 * c + 2 >= x.size()))
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n) || (3 * c + 2 >= n))
       // shouldn't happen, invalid constraint
       continue;
 
@@ -236,8 +237,8 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
     const Index b = constraint.bIndex();
     const Index c = constraint.cIndex();
     const Index d = constraint.dIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
-        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n) || (3 * c + 2 >= n) ||
+        (3 * d + 2 >= n))
       // shouldn't happen, invalid constraint
       continue;
 
@@ -257,8 +258,8 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
     const Index b = constraint.bIndex();
     const Index c = constraint.cIndex();
     const Index d = constraint.dIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
-        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n) || (3 * c + 2 >= n) ||
+        (3 * d + 2 >= n))
       // shouldn't happen, invalid constraint
       continue;
 
@@ -280,10 +281,12 @@ Real EnergyCalculator::constraintEnergies(const Eigen::VectorXd& x)
 void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
                                            Eigen::VectorXd& grad)
 {
+  const auto n = static_cast<Index>(x.size());
   for (const auto& constraint : m_distanceConstraints) {
     const Index a = constraint.aIndex();
     const Index b = constraint.bIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()))
+    // size of the problem
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n))
       // shouldn't happen - invalid constraint
       continue;
 
@@ -302,8 +305,7 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     const Index a = constraint.aIndex();
     const Index b = constraint.bIndex();
     const Index c = constraint.cIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
-        (3 * c + 2 >= x.size()))
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n) || (3 * c + 2 >= n))
       // shouldn't happen, invalid constraint
       continue;
 
@@ -327,8 +329,8 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     const Index b = constraint.bIndex();
     const Index c = constraint.cIndex();
     const Index d = constraint.dIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
-        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n) || (3 * c + 2 >= n) ||
+        (3 * d + 2 >= n))
       // shouldn't happen, invalid constraint
       continue;
 
@@ -355,8 +357,8 @@ void EnergyCalculator::constraintGradients(const Eigen::VectorXd& x,
     const Index b = constraint.bIndex();
     const Index c = constraint.cIndex();
     const Index d = constraint.dIndex();
-    if ((3 * a + 2 >= x.size()) || (3 * b + 2 >= x.size()) ||
-        (3 * c + 2 >= x.size()) || (3 * d + 2 >= x.size()))
+    if ((3 * a + 2 >= n) || (3 * b + 2 >= n) || (3 * c + 2 >= n) ||
+        (3 * d + 2 >= n))
       // shouldn't happen, invalid constraint
       continue;
 

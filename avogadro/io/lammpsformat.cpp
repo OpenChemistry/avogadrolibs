@@ -515,9 +515,10 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     mol.setCoordinate3d(positions, coordSet++);
-    auto* uc = new UnitCell(Vector3(x_max - x_min, 0, 0),
-                            Vector3(tilt_xy, y_max - y_min, 0),
-                            Vector3(tilt_xz, tilt_yz, z_max - z_min));
+    // The molecule owns the previous cell; setUnitCell() below deletes it.
+    uc = new UnitCell(Vector3(x_max - x_min, 0, 0),
+                      Vector3(tilt_xy, y_max - y_min, 0),
+                      Vector3(tilt_xz, tilt_yz, z_max - z_min));
     if (!uc->isRegular()) {
       appendError(
         "'ITEM: BOX BOUNDS' does not give linear-independent lattive vectors");

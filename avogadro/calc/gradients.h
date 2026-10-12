@@ -111,9 +111,6 @@ inline Real dihedralGradient(const Vector3& i, const Vector3& j,
   if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3)
     return phi; // skip this torsion
 
-  Real sinPhi = sin(phi);
-  Real cosPhi = cos(phi);
-
   // Using the BallView / Open Babel formula
   // https://doi.org/10.22028/D291-25896 (Appendix A)
   // Thanks to Andreas Moll
