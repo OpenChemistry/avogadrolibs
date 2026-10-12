@@ -2945,7 +2945,7 @@ msgstr "wert muss eine zahl sein: ein winkel in grad."
 
 #: qtplugins/constraints/constraintsextension.cpp:295
 msgid "value must be a number: a dihedral angle in degrees."
-msgstr ""
+msgstr "wert muss eine zahl sein: ein dihedraler winkel in grad."
 
 #: qtplugins/constraints/constraintsextension.cpp:309
 msgid "Could not measure the current geometry for these atoms."
