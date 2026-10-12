@@ -15,13 +15,14 @@
 # FX Coudert <fxcoudert@ik.me>, 2026.
 # Li Chaoyu <2395074867@qq.com>, 2026.
 # Li Chaoyu <ilqq@users.noreply.hosted.weblate.org>, 2026.
+# Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-11 21:33+0000\n"
 "PO-Revision-Date: 2026-10-13 12:26+0000\n"
-"Last-Translator: Li Chaoyu <ilqq@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -1197,7 +1198,7 @@ msgstr "Tous les fichiers"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "fichiers compressés"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
@@ -1205,15 +1206,15 @@ msgstr "Tous les formats supportés"
 
 #: qtgui/fragmenttools.cpp:382
 msgid "Adjust Distance"
-msgstr ""
+msgstr "ajuster la distance"
 
 #: qtgui/fragmenttools.cpp:425
 msgid "Adjust Angle"
-msgstr ""
+msgstr "ajuster l'angle"
 
 #: qtgui/fragmenttools.cpp:488
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "ajuster la torsion"
 
 #: qtgui/interfacescript.cpp:308
 #, qt-format
@@ -1838,12 +1839,12 @@ msgid "Less than a second remaining"
 msgstr "Moins d ' une seconde restante"
 
 #: qtgui/timedprogressdialog.cpp:98
-#, fuzzy, qt-plural-format
+#, qt-plural-format
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] "%n second restante"
-msgstr[1] "%n seconds restantes"
+msgstr[0] "%n seconde restante"
+msgstr[1] "%n secondes restantes"
 
 #: qtgui/timedprogressdialog.cpp:101
 #, qt-plural-format
