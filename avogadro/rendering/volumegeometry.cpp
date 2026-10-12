@@ -168,11 +168,12 @@ class VolumeGeometry::Private
 public:
   Private()
     : vertexShader(nullptr), fragmentShader(nullptr), program(nullptr), vao(0),
-      vbo(0), defaultFBO(0), renderFBO(0), renderTexture(0), depthTexture(0),
-      frontFBO(0), frontColorTexture(0), frontDepthTexture(0), backFBO(0),
-      backColorTexture(0), backDepthTexture(0), boxVertexShader(nullptr),
-      boxFragmentShader(nullptr), boxShaders(nullptr), transferTexture(0),
-      volumeBoxVao(0), volumeBoxVbo(0), volumeBoxEbo(0), volumeTexture(0)
+      vbo(0), frontFBO(0), frontColorTexture(0), frontDepthTexture(0),
+      backFBO(0), backColorTexture(0), backDepthTexture(0),
+      boxVertexShader(nullptr), boxFragmentShader(nullptr), boxShaders(nullptr),
+      transferTexture(0), volumeBoxVao(0), volumeBoxVbo(0), volumeBoxEbo(0),
+      volumeTexture(0), defaultFBO(0), renderFBO(0), renderTexture(0),
+      depthTexture(0)
   {
   }
 
@@ -209,8 +210,8 @@ public:
 };
 
 VolumeGeometry::VolumeGeometry()
-  : m_cube(nullptr), m_dirty(true), m_positiveColor(255, 0, 0),
-    m_negativeColor(0, 0, 255), d(new Private)
+  : m_positiveColor(255, 0, 0), m_negativeColor(0, 0, 255), m_cube(nullptr),
+    m_dirty(true), d(new Private)
 {
 }
 

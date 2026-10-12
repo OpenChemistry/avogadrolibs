@@ -31,8 +31,8 @@ namespace Avogadro::QtPlugins {
 
 MolecularProperties::MolecularProperties(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_action(new QAction(this)),
-    m_molecule(nullptr), m_dialog(nullptr), m_model(nullptr),
-    m_network(new QNetworkAccessManager(this))
+    m_molecule(nullptr), m_dialog(nullptr),
+    m_network(new QNetworkAccessManager(this)), m_model(nullptr)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&Molecular…"));

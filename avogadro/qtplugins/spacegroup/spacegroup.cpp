@@ -131,8 +131,8 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
-    m_fillTranslationalCellAction(new QAction(this)),
     m_fillUnitCellAction(new QAction(this)),
+    m_fillTranslationalCellAction(new QAction(this)),
     m_reduceToAsymmetricUnitAction(new QAction(this)),
     m_setToleranceAction(new QAction(this))
 {
