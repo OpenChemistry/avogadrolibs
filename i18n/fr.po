@@ -14,13 +14,14 @@
 # "David D." <dadu042@users.noreply.hosted.weblate.org>, 2025, 2026.
 # FX Coudert <fxcoudert@ik.me>, 2026.
 # Li Chaoyu <2395074867@qq.com>, 2026.
+# Li Chaoyu <ilqq@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-11 21:33+0000\n"
-"PO-Revision-Date: 2026-07-25 09:01+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@yahoo.com>\n"
+"PO-Revision-Date: 2026-10-13 12:26+0000\n"
+"Last-Translator: Li Chaoyu <ilqq@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1857,8 +1858,8 @@ msgstr[1] ""
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] "1 heure %n minute(s) restantes"
-msgstr[1] "1 heure %n minute(s) restantes"
+msgstr[0] "1 heure %n minute restante"
+msgstr[1] "1 heure %n minutes restantes"
 
 #: qtgui/timedprogressdialog.cpp:112
 #, qt-plural-format
