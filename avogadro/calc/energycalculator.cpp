@@ -127,7 +127,7 @@ void EnergyCalculator::cleanGradients(Eigen::VectorXd& grad)
     grad = grad.cwiseProduct(m_mask);
   else if (m_mask.rows() > 0)
     std::cerr << "Error: mask size " << m_mask.rows() << " " << grad.rows()
-              << std::endl;
+              << '\n';
 }
 
 void EnergyCalculator::appendError(const std::string& errorString,
@@ -161,8 +161,7 @@ void EnergyCalculator::setConstraints(
         m_outOfPlaneConstraints.push_back(constraint);
         break;
       default:
-        std::cerr << "Unknown constraint type: " << constraint.type()
-                  << std::endl;
+        std::cerr << "Unknown constraint type: " << constraint.type() << '\n';
     }
   }
 }

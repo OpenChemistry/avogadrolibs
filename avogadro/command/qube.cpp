@@ -54,11 +54,11 @@ int main(int argc, char* argv[])
       printHelp();
       return 0;
     } else if (current == "--version" || current == "-v") {
-      cout << "Version: " << Avogadro::version() << endl;
+      cout << "Version: " << Avogadro::version() << '\n';
       return 0;
     } else if (current == "-i" && i + 1 < argc) {
       inFormat = argv[++i];
-      cout << "input format " << inFormat << endl;
+      cout << "input format " << inFormat << '\n';
     } else if (current == "-orb" && i + 1 < argc) {
       orbitalNumber = atoi(argv[++i]);
       // cout << "plot orbital " << orbitalNumber << endl;
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
   Molecule mol;
   if (!inFile.empty()) {
     if (!mgr.readFile(mol, inFile, inFormat)) {
-      cout << "Failed to read " << inFile << " (" << inFormat << ")" << endl;
+      cout << "Failed to read " << inFile << " (" << inFormat << ")" << '\n';
       return 1;
     }
   } else if (!inFormat.empty()) {
@@ -83,25 +83,25 @@ int main(int argc, char* argv[])
       inFileString << line;
     if (!inFileString.str().empty()) {
       if (!mgr.readString(mol, inFileString.str(), inFormat)) {
-        cout << "Failed to read input stream: " << inFileString.str() << endl;
+        cout << "Failed to read input stream: " << inFileString.str() << '\n';
         return 1;
       }
     }
   } else {
-    cout << "Error, no input file or stream supplied with format." << endl;
+    cout << "Error, no input file or stream supplied with format." << '\n';
   }
   if ((orbitalNumber > 0) && density) {
     cout << "Error, choose either density or a single orbital, not both."
-         << endl;
+         << '\n';
     return 1;
   }
 
   // cube header
-  cout << "Avogadro generated cube" << endl;
+  cout << "Avogadro generated cube" << '\n';
   if (orbitalNumber > 0)
-    cout << "Orbital " << orbitalNumber << endl;
+    cout << "Orbital " << orbitalNumber << '\n';
   else
-    cout << "Electron Density" << endl;
+    cout << "Electron Density" << '\n';
 
   // set box dimensions in Bohr
   Vector3d min = Vector3d(-10.0, -10.0, -10.0);
@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
            mol.atomPosition3d(iatom).z() * ANGSTROM_TO_BOHR_D);
   }
   if (orbitalNumber > 0)
-    cout << "1  " << orbitalNumber << endl;
+    cout << "1  " << orbitalNumber << '\n';
 
   auto* m_tools = new GaussianSetTools(&mol);
 
@@ -157,5 +157,5 @@ void printHelp()
 {
   cout << "Usage: qube [-i <input-type>] <infilename> [-dens] [-orb <orbital "
           "number>] [-v / --version] \n"
-       << endl;
+       << '\n';
 }
