@@ -2941,7 +2941,7 @@ msgstr "wert muss eine Zahl sein: eine Distanz in Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:291
 msgid "value must be a number: an angle in degrees."
-msgstr ""
+msgstr "wert muss eine zahl sein: ein winkel in grad."
 
 #: qtplugins/constraints/constraintsextension.cpp:295
 msgid "value must be a number: a dihedral angle in degrees."
