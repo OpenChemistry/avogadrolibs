@@ -2958,7 +2958,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsextension.cpp:324
 #: qtplugins/measuretool/measuretool.cpp:800
 msgid "value must be an angle from 0 to 180 degrees."
-msgstr ""
+msgstr "der wert muss ein winkel von 0 bis 180 grad sein."
 
 #: qtplugins/constraints/constraintsextension.cpp:370
 msgid ""
