@@ -129,7 +129,7 @@ public:
    * Set the active element in the set, this expects a corresponding
    * coordinate set element, and will change the active MO matrix.
    */
-  bool setActiveSetStep(int index);
+  bool setActiveSetStep(unsigned int index);
 
   /**
    * @brief This enables support of sparse orbital sets, and provides a mapping

@@ -138,10 +138,9 @@ void GaussianSet::setMolecularOrbitals(const vector<double>& MOs,
   m_moMatrixSet[index][idx] = moMatrix;
 }
 
-bool GaussianSet::setActiveSetStep(int index)
+bool GaussianSet::setActiveSetStep(unsigned int index)
 {
-  if (index >= static_cast<int>(m_moMatrixSet[0].size()) ||
-      index >= static_cast<int>(m_moMatrixSet[1].size())) {
+  if (index >= m_moMatrixSet[0].size() || index >= m_moMatrixSet[1].size()) {
     return false;
   }
 
