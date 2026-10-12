@@ -10,13 +10,14 @@
 # Tomáš Poláček <ostriz2@seznam.cz>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # Michal Várady <miko.vaji@gmail.com>, 2026.
+# Michal Várady <majkl82@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-11 21:33+0000\n"
-"PO-Revision-Date: 2026-10-05 16:45+0000\n"
-"Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
+"PO-Revision-Date: 2026-10-12 13:07+0000\n"
+"Last-Translator: Michal Várady <majkl82@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
 "Language: cs\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -1473,11 +1474,11 @@ msgstr "Vytvořit nový pohled"
 
 #: qtgui/packagemanager.cpp:674
 msgid "pixi: the package declares no pixi workspace"
-msgstr ""
+msgstr "pixi: balíček nedeklaruje pracovní prostor pixi"
 
 #: qtgui/packagemanager.cpp:694
 msgid "pixi install timed out"
-msgstr ""
+msgstr "Vypršel časový limit příkazu pixi install"
 
 #: qtgui/packagemanager.cpp:702
 #, qt-format
@@ -1485,15 +1486,17 @@ msgid ""
 "pixi install failed:\n"
 "%1"
 msgstr ""
+"Příkaz pixi install se nezdařil:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:714
 #, qt-format
 msgid "pixi install did not provide %1"
-msgstr ""
+msgstr "Příkaz pixi install neposkytl %1"
 
 #: qtgui/packagemanager.cpp:743
 msgid "pip: creating the virtual environment timed out"
-msgstr ""
+msgstr "pip: vypršel časový limit pro vytvoření virtuálního prostředí"
 
 #: qtgui/packagemanager.cpp:752
 #, qt-format
@@ -1501,10 +1504,12 @@ msgid ""
 "pip: creating the virtual environment failed:\n"
 "%1"
 msgstr ""
+"pip: vytvoření virtuálního prostředí se nezdařilo:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:770
 msgid "pip install timed out"
-msgstr ""
+msgstr "Vypršel časový limit příkazu pip install"
 
 #: qtgui/packagemanager.cpp:778
 #, qt-format
@@ -1512,15 +1517,17 @@ msgid ""
 "pip install failed:\n"
 "%1"
 msgstr ""
+"Příkaz pip install se nezdařil:\n"
+"%1`"
 
 #: qtgui/packagemanager.cpp:790
 #, qt-format
 msgid "pip install did not provide %1"
-msgstr ""
+msgstr "Příkaz pip install neposkytl %1"
 
 #: qtgui/packagemanager.cpp:853
 msgid "neither pixi nor Python was found"
-msgstr ""
+msgstr "Nebyl nalezen pixi ani Python"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1879,7 +1886,7 @@ msgstr[2] "Zbývá %n hodin"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
-msgstr ""
+msgstr "Fragment HTML &3DMol…"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -2044,11 +2051,11 @@ msgstr "Chyba při čtení souboru OpenDX: nebyla nalezena žádná datová kost
 
 #: qtplugins/apbs/apbs.cpp:151
 msgid "Generating Positive Potential Mesh"
-msgstr ""
+msgstr "Vytváření sítě kladného potenciálu"
 
 #: qtplugins/apbs/apbs.cpp:165
 msgid "Generating Negative Potential Mesh"
-msgstr ""
+msgstr "Vytváření sítě záporného potenciálu"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -2460,7 +2467,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:261
 msgid "AutoOptimization"
-msgstr ""
+msgstr "Automatická optimalizace"
 
 #: qtplugins/autoopt/autoopt.cpp:268
 msgid "Optimize"
@@ -3638,20 +3645,20 @@ msgstr "Vykreslovat dipólový moment molekuly."
 
 #: qtplugins/editor/editor.cpp:94
 msgid "atoms must list exactly 2 atom indices."
-msgstr ""
+msgstr "atoms musí obsahovat přesně 2 indexy atomů."
 
 #: qtplugins/editor/editor.cpp:101
 msgid "atoms must be whole-number atom indices within the molecule."
-msgstr ""
+msgstr "atoms musí obsahovat celočíselné indexy atomů v molekule."
 
 #: qtplugins/editor/editor.cpp:106
 msgid "atoms must be two different atoms."
-msgstr ""
+msgstr "atoms musí označovat dva různé atomy."
 
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
 msgid "%1 must be 1, 2 or 3."
-msgstr ""
+msgstr "%1 musí být 1, 2 nebo 3."
 
 #: qtplugins/editor/editor.cpp:152
 msgctxt "control-key 2"
@@ -3699,21 +3706,26 @@ msgid ""
 "([x, y, z] in Angstroms), optional \"bondTo\" (atom index) and \"bondOrder\" "
 "(1-3). Returns the new atom \"index\"."
 msgstr ""
+"Přidat atom. Možnosti: \"element\" (značka nebo protonové číslo), "
+"\"position\" ([x, y, z] v ångströmech), volitelné \"bondTo\" (index atomu) a "
+"\"bondOrder\" (1-3). Vrací \"index\" nového atomu."
 
 #: qtplugins/editor/editor.cpp:1032
 msgid ""
 "Add a bond between two unbonded atoms. Options: \"atoms\" ([i, j]) and "
 "optional \"order\" (1-3). Returns the bond \"index\"."
 msgstr ""
+"Přidat vazbu mezi dvěma atomy, které nejsou spojeny vazbou. Možnosti: "
+"\"atoms\" ([i, j]) a volitelná \"order\" (1-3). Vrací \"index\" vazby."
 
 #: qtplugins/editor/editor.cpp:1035
 msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
-msgstr ""
+msgstr "Odstranit vazbu mezi dvěma atomy. Možnosti: \"atoms\" ([i, j])."
 
 #: qtplugins/editor/editor.cpp:1039
 msgid ""
 "Remove the selected atoms and their bonds. Returns the number \"removed\"."
-msgstr ""
+msgstr "Odstranit vybrané atomy a jejich vazby. Vrací počet \"removed\"."
 
 #: qtplugins/editor/editor.cpp:1053 qtplugins/measuretool/measuretool.cpp:764
 #: qtplugins/select/select.cpp:647
@@ -3722,17 +3734,17 @@ msgstr "Žádná molekula"
 
 #: qtplugins/editor/editor.cpp:1061
 msgid "The active layer is locked; unlock it to edit."
-msgstr ""
+msgstr "Aktivní vrstva je zamčená; pro úpravy ji odemkněte."
 
 #: qtplugins/editor/editor.cpp:1069
 #, qt-format
 msgid "Atom %1 is in a locked layer; unlock it to edit."
-msgstr ""
+msgstr "Atom %1 je v zamčené vrstvě; pro úpravy ji odemkněte."
 
 #: qtplugins/editor/editor.cpp:1080
 msgid ""
 "addAtom requires an \"element\" option (an element symbol or atomic number)."
-msgstr ""
+msgstr "addAtom vyžaduje volbu \"element\" (značku prvku nebo protonové číslo)."
 
 #: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
 #, qt-format
@@ -3746,28 +3758,30 @@ msgstr "Protonové číslo %1 je mimo rozsah (1 až %2)."
 
 #: qtplugins/editor/editor.cpp:1110
 msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
-msgstr ""
+msgstr "position musí být seznam 3 čísel [x, y, z] v ångströmech."
 
 #: qtplugins/editor/editor.cpp:1118
 msgid "position must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "position musí být seznam 3 konečných čísel [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1131
 msgid "bondTo must be the index of an atom in the molecule."
-msgstr ""
+msgstr "bondTo musí být index atomu v molekule."
 
 #: qtplugins/editor/editor.cpp:1178
 msgid "There is no bond between those atoms."
-msgstr ""
+msgstr "Mezi těmito atomy není vazba."
 
 #: qtplugins/editor/editor.cpp:1197
 msgid "Those atoms are already bonded."
-msgstr ""
+msgstr "Tyto atomy již jsou spojeny vazbou."
 
 #: qtplugins/editor/editor.cpp:1226
 #, qt-format
 msgid "Atom %1 or a bonded atom is in a locked layer; unlock it to edit."
 msgstr ""
+"Atom %1 nebo atom s ním spojený vazbou je v zamčené vrstvě; pro úpravy ji "
+"odemkněte."
 
 #: qtplugins/editor/editor.h:35 qtplugins/editor/editor.h:36
 msgid "Editor tool"
@@ -3795,7 +3809,7 @@ msgstr "Trojná"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:40
 msgid "Fetch from &PDB…"
-msgstr ""
+msgstr "Stáhnout z &PDB…"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -4387,11 +4401,11 @@ msgstr "Název"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Formula"
-msgstr ""
+msgstr "Vzorec"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Mass (g/mol)"
-msgstr ""
+msgstr "Hmotnost (g/mol)"
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -4932,7 +4946,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:794
 #, qt-format
 msgid "value must be a distance from %1 to %2 Å."
-msgstr ""
+msgstr "value musí být vzdálenost od %1 do %2 Å."
 
 #: qtplugins/measuretool/measuretool.cpp:861
 msgid "atoms must list exactly 2 atom indices for a distance."
@@ -5294,7 +5308,7 @@ msgstr "Nástroj pro navigaci"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:28
 msgid "Download by &Name…"
-msgstr ""
+msgstr "Stáhnout podle &názvu…"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
@@ -5789,12 +5803,12 @@ msgstr "Při rozbalování nebyly získány žádné soubory.\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:637
 #, qt-format
 msgid "Installation complete for %1.\n"
-msgstr ""
+msgstr "Instalace %1 byla dokončena.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:645
 #, qt-format
 msgid "Installation failed for %1: %2\n"
-msgstr ""
+msgstr "Instalace %1 se nezdařila: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:686
 msgid "Nothing to Remove"
@@ -6255,21 +6269,21 @@ msgstr "Uložit soubor"
 
 #: qtplugins/ply/ply.cpp:113
 msgid "PLY (*.ply)"
-msgstr ""
+msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
-msgstr ""
+msgstr "Export PLY"
 
 #: qtplugins/ply/ply.cpp:123
 #, qt-format
 msgid "Cannot open %1 for writing: %2"
-msgstr ""
+msgstr "Soubor %1 nelze otevřít pro zápis: %2"
 
 #: qtplugins/ply/ply.cpp:156
 #, qt-format
 msgid "Writing %1 failed: %2"
-msgstr ""
+msgstr "Zápis do %1 se nezdařil: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6599,7 +6613,7 @@ msgstr "Soubor %1 nelze přečíst."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:396
 msgid "Nuclear Critical Points Search"
-msgstr ""
+msgstr "Vyhledávání jaderných kritických bodů"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
@@ -6607,21 +6621,21 @@ msgstr "Nepodařilo se vytvořit dočasný soubor."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:497
 msgid "Bond Critical Points Search"
-msgstr ""
+msgstr "Vyhledávání vazebných kritických bodů"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:644
 msgid "Electron Density Sources Search"
-msgstr ""
+msgstr "Vyhledávání zdrojů elektronové hustoty"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:789
 msgid "Electron Density Sinks Search"
-msgstr ""
+msgstr "Vyhledávání stoků elektronové hustoty"
 
 #: qtplugins/qtaim/qtaimcubature.cpp:1412
 #: qtplugins/qtaim/qtaimcubature.cpp:1692
 #: qtplugins/qtaim/qtaimcubature.cpp:2172
 msgid "Atomic Basin Integration"
-msgstr ""
+msgstr "Integrace přes atomové oblasti"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -6847,6 +6861,8 @@ msgid ""
 "Select atoms by index. Options: \"indices\" (list of atom indices) and "
 "optional \"mode\": \"replace\" (default), \"add\" or \"remove\"."
 msgstr ""
+"Vybrat atomy podle indexu. Možnosti: \"indices\" (seznam indexů atomů) a "
+"volitelná \"mode\": \"replace\" (výchozí), \"add\" nebo \"remove\"."
 
 #: qtplugins/select/select.cpp:687
 msgid ""
@@ -6857,26 +6873,26 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:725
 msgid "selectAtoms requires an \"indices\" option (a list of atom indices)."
-msgstr ""
+msgstr "selectAtoms vyžaduje volbu \"indices\" (seznam indexů atomů)."
 
 #: qtplugins/select/select.cpp:738
 msgid "mode must be \"replace\", \"add\" or \"remove\"."
-msgstr ""
+msgstr "mode musí být \"replace\", \"add\" nebo \"remove\"."
 
 #: qtplugins/select/select.cpp:762
 #, qt-format
 msgid "atom index #%1 in indices must be a whole number."
-msgstr ""
+msgstr "Index atomu #%1 v indices musí být celé číslo."
 
 #: qtplugins/select/select.cpp:767
 #, qt-format
 msgid "atom index #%1 in indices is negative."
-msgstr ""
+msgstr "Index atomu #%1 v indices je záporný."
 
 #: qtplugins/select/select.cpp:773
 #, qt-format
 msgid "atom index %1 is out of range (the molecule has %2 atoms)."
-msgstr ""
+msgstr "Index atomu %1 je mimo rozsah (molekula má %2 atomů)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6928,16 +6944,16 @@ msgstr "Nová vrstva"
 
 #: qtplugins/spacegroup/spacegroup.cpp:82
 msgid "Give either hallNumber or spaceGroup, not both."
-msgstr ""
+msgstr "Zadejte buď hallNumber, nebo spaceGroup, ne obojí."
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
 #, qt-format
 msgid "hallNumber must be an integer from 1 to %1."
-msgstr ""
+msgstr "hallNumber musí být celé číslo od 1 do %1."
 
 #: qtplugins/spacegroup/spacegroup.cpp:106
 msgid "spaceGroup must be a space group symbol (a string)."
-msgstr ""
+msgstr "spaceGroup musí být symbol prostorové grupy (řetězec)."
 
 #: qtplugins/spacegroup/spacegroup.cpp:113
 #, qt-format
@@ -6945,6 +6961,8 @@ msgid ""
 "spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
 "(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
 msgstr ""
+"spaceGroup \"%1\" neurčuje jediné postavení prostorové grupy; použijte "
+"hallNumber (1 až %2) nebo symbol obsahující postavení, např. \"F d -3 m :2\"."
 
 #: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
@@ -7068,7 +7086,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "The molecule has no unit cell."
-msgstr ""
+msgstr "Molekula nemá základní buňku."
 
 #: qtplugins/spacegroup/spacegroup.cpp:636
 #, qt-format
@@ -7076,6 +7094,8 @@ msgid ""
 "The space group of the molecule is not known: give the hallNumber (1 to %1) "
 "or spaceGroup parameter."
 msgstr ""
+"Prostorová grupa molekuly není známa: zadejte parametr hallNumber (1 až %1) "
+"nebo spaceGroup."
 
 #: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
