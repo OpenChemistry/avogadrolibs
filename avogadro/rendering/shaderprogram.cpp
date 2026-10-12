@@ -12,6 +12,7 @@
 #include <avogadro/core/types.h>
 
 #include <algorithm>
+#include <cstdint>
 
 namespace Avogadro::Rendering {
 
@@ -250,8 +251,6 @@ bool ShaderProgram::disableAttributeArray(const std::string& name)
   return true;
 }
 
-#define BUFFER_OFFSET(i) ((char*)nullptr + (i))
-
 bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
                                       size_t stride, Type elementType,
                                       int elementTupleSize,
@@ -262,9 +261,11 @@ bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  glVertexAttribPointer(location, elementTupleSize, convertType(elementType),
-                        normalize == Normalize ? GL_TRUE : GL_FALSE,
-                        static_cast<GLsizei>(stride), BUFFER_OFFSET(offset));
+  // With a buffer bound, the "pointer" is a byte offset into that buffer.
+  glVertexAttribPointer(
+    location, elementTupleSize, convertType(elementType),
+    normalize == Normalize ? GL_TRUE : GL_FALSE, static_cast<GLsizei>(stride),
+    reinterpret_cast<const void*>(static_cast<std::uintptr_t>(offset)));
   return true;
 }
 
