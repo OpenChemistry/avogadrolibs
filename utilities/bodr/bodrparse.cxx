@@ -23,29 +23,34 @@
 #include <iostream>
 #include <vector>
 
+using std::cout;
+using std::endl;
 using std::ifstream;
 using std::ofstream;
 using std::string;
-using std::cout;
-using std::endl;
 using std::vector;
 
+using pugi::xml_attribute;
 using pugi::xml_document;
 using pugi::xml_node;
-using pugi::xml_attribute;
 
-struct Color {
+struct Color
+{
   Color() { c[0] = c[1] = c[2] = 0; }
   Color(unsigned char r, unsigned char g, unsigned char b)
   {
-    c[0] = r; c[1] = g; c[2] = b;
+    c[0] = r;
+    c[1] = g;
+    c[2] = b;
   }
   unsigned char c[3];
 };
 
-struct Element {
-  Element(const string &_id) : symbol(_id), atomicNumber(0), mass(-1.0),
-    radiusCovalent(-1.0), radiusVDW(-1.0)
+struct Element
+{
+  Element(const string& _id)
+    : symbol(_id), atomicNumber(0), mass(-1.0), radiusCovalent(-1.0),
+      radiusVDW(-1.0)
   {
   }
   string id; // This is the symbol normally.
@@ -59,10 +64,10 @@ struct Element {
 };
 
 // Separate the three components, then cast for unsigned char and store.
-bool colorFromString(const std::string &str, Color &color)
+bool colorFromString(const std::string& str, Color& color)
 {
   std::vector<std::string> tokens = Avogadro::Core::split(str, ' ');
-  if (tokens.size() != 3) {// Corrupted file/input we don't understand
+  if (tokens.size() != 3) { // Corrupted file/input we don't understand
     cout << "Error processing color, wrong number of components "
          << tokens.size() << endl;
     return false;
@@ -99,7 +104,6 @@ int main(int argc, char* argv[])
 
   // Construct a vector to contain all of the elements
   std::vector<Element> elements;
-  int elementCount = 0;
 
   xml_node rootNode = document.child("list");
   if (rootNode) {
@@ -108,8 +112,7 @@ int main(int argc, char* argv[])
       xml_attribute attribute = atomNode.attribute("id");
       if (attribute) {
         elements.emplace_back(string(attribute.value()));
-      }
-      else {
+      } else {
         cout << "Error, no atom id found. Skipping this entry." << endl;
         atomNode = atomNode.next_sibling("atom");
         continue;
@@ -135,16 +138,13 @@ int main(int argc, char* argv[])
           string value(attribute.value());
           if (value == "bo:atomicNumber") {
             elements.back().atomicNumber =
-                static_cast<unsigned char>(atoi(scalarNode.child_value()));
-          }
-          else if (value == "bo:mass") {
+              static_cast<unsigned char>(atoi(scalarNode.child_value()));
+          } else if (value == "bo:mass") {
             elements.back().mass = strtod(scalarNode.child_value(), nullptr);
-          }
-          else if (value == "bo:radiusCovalent") {
+          } else if (value == "bo:radiusCovalent") {
             elements.back().radiusCovalent =
-                strtod(scalarNode.child_value(), nullptr);
-          }
-          else if (value == "bo:radiusVDW") {
+              strtod(scalarNode.child_value(), nullptr);
+          } else if (value == "bo:radiusVDW") {
             elements.back().radiusVDW =
               strtod(scalarNode.child_value(), nullptr);
           }
@@ -162,7 +162,6 @@ int main(int argc, char* argv[])
         arrayNode = arrayNode.next_sibling("array");
       }
 
-      ++elementCount;
       atomNode = atomNode.next_sibling("atom");
     }
   }
@@ -190,7 +189,7 @@ int main(int argc, char* argv[])
     if (i > 0)
       output << ",";
     if (i % 10 == 0)
-      output <<"\n ";
+      output << "\n ";
     output << " \"" << elements[i].symbol << "\"";
   }
   output << " };\n\n";
@@ -200,7 +199,7 @@ int main(int argc, char* argv[])
     if (i > 0)
       output << ",";
     if (i % 5 == 0)
-      output <<"\n ";
+      output << "\n ";
     output << " \"" << elements[i].name << "\"";
   }
   output << " };\n\n";
@@ -210,7 +209,7 @@ int main(int argc, char* argv[])
     if (i > 0)
       output << ",";
     if (i % 7 == 0)
-      output <<"\n ";
+      output << "\n ";
     output << " " << elements[i].mass;
   }
   output << " };\n\n";
@@ -220,7 +219,7 @@ int main(int argc, char* argv[])
     if (i > 0)
       output << ",";
     if (i % 10 == 0)
-      output <<"\n ";
+      output << "\n ";
     output << " " << elements[i].radiusVDW;
   }
   output << " };\n\n";
@@ -230,7 +229,7 @@ int main(int argc, char* argv[])
     if (i > 0)
       output << ",";
     if (i % 10 == 0)
-      output <<"\n ";
+      output << "\n ";
     output << " " << elements[i].radiusCovalent;
   }
   output << " };\n\n";
@@ -240,10 +239,10 @@ int main(int argc, char* argv[])
     if (i > 0)
       output << ",";
     if (i % 3 == 0)
-      output <<"\n ";
-    output << " {" << int(elements[i].color.c[0])
-           << ", " << int(elements[i].color.c[1])
-           << ", " << int(elements[i].color.c[2]) << "}";
+      output << "\n ";
+    output << " {" << int(elements[i].color.c[0]) << ", "
+           << int(elements[i].color.c[1]) << ", " << int(elements[i].color.c[2])
+           << "}";
   }
   output << " };\n\n";
 

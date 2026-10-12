@@ -199,7 +199,7 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
       void visit(CurveGeometry&) override { return; }
       void visit(CylinderGeometry&) override { return; }
       void visit(MeshGeometry&) override { return; }
-      void visit(Texture2D&) { return; }
+      // void visit(Texture2D&) { return; }
       void visit(TextLabel2D& l) override { l.resetTexture(); }
       void visit(TextLabel3D& l) override { l.resetTexture(); }
       void visit(LineStripGeometry&) override { return; }
