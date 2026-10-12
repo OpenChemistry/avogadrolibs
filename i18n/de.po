@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-11 21:33+0000\n"
 "PO-Revision-Date: 2026-10-13 12:26+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3638,7 +3638,7 @@ msgstr "Atome müssen zwei verschiedene Atome sein."
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
 msgid "%1 must be 1, 2 or 3."
-msgstr ""
+msgstr "%1 muss 1, 2 oder 3 sein."
 
 #: qtplugins/editor/editor.cpp:152
 msgctxt "control-key 2"
