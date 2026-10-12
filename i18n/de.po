@@ -3623,7 +3623,7 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:106
 msgid "atoms must be two different atoms."
-msgstr ""
+msgstr "atome müssen zwei verschiedene atome sein."
 
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
