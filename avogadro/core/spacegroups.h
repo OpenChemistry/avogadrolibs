@@ -17,6 +17,7 @@
 namespace Avogadro::Core {
 
 class Molecule;
+class UnitCell;
 
 /**
  * Enumeration of the crystal system.
@@ -151,6 +152,23 @@ public:
    * If an invalid hall number is given, None will be returned.
    */
   static CrystalSystem crystalSystem(unsigned short hallNumber);
+
+  /**
+   * @return true if @p cell looks like a primitive cell although the space
+   * group (@p hallNumber) has a centred lattice (F, I, A, B or C), i.e. the
+   * cell is probably not the conventional cell the group's operations expect.
+   *
+   * The test is on the cell angles, with a tolerance of 5 degrees from 90.
+   * It depends on the crystal system, because conventional cells of some
+   * systems legitimately have angles other than 90:
+   *  - monoclinic: suspicious only if more than one angle deviates (one
+   *    non-90 angle is the normal conventional setting, e.g. C2/c);
+   *  - orthorhombic, tetragonal, cubic: suspicious if any angle deviates;
+   *  - all other systems (and primitive lattices, R lattices, or an invalid
+   *    hall number) are never judged: false is returned.
+   */
+  static bool cellLooksPrimitive(unsigned short hallNumber,
+                                 const UnitCell& cell);
 
   /**
    * @return the international number for a given hall number.

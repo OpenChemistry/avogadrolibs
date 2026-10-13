@@ -565,6 +565,40 @@ const char* SpaceGroups::internationalNumberKey()
   return "spaceGroup.internationalNumber";
 }
 
+bool SpaceGroups::cellLooksPrimitive(unsigned short hallNumber,
+                                     const UnitCell& cell)
+{
+  const char* hall = hallSymbol(hallNumber);
+  if (hall == nullptr || hall[0] == '\0')
+    return false;
+
+  // Centrosymmetric Hall symbols start with '-', e.g. "-C 2yc"; the lattice
+  // letter follows it.
+  const char lattice = hall[0] == '-' ? hall[1] : hall[0];
+  if (lattice != 'F' && lattice != 'I' && lattice != 'A' && lattice != 'B' &&
+      lattice != 'C')
+    return false;
+
+  constexpr double toleranceDegrees = 5.0;
+  constexpr double radiansToDegrees = 57.29577951308232;
+  int deviating = 0;
+  for (double angle : { cell.alpha(), cell.beta(), cell.gamma() }) {
+    if (std::abs(angle * radiansToDegrees - 90.0) > toleranceDegrees)
+      ++deviating;
+  }
+
+  switch (crystalSystem(hallNumber)) {
+    case Monoclinic:
+      return deviating > 1;
+    case Orthorhombic:
+    case Tetragonal:
+    case Cubic:
+      return deviating > 0;
+    default:
+      return false;
+  }
+}
+
 CrystalSystem SpaceGroups::crystalSystem(unsigned short hallNumber)
 {
   if (hallNumber == 1 || hallNumber == 2)

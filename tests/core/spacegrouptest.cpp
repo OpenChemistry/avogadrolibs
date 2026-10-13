@@ -1385,3 +1385,88 @@ TEST(SpaceGroupTest, setSpaceGroup)
   EXPECT_FALSE(SpaceGroups::setSpaceGroup(known, "C 1"));
   EXPECT_EQ(known.hallNumber(), 5);
 }
+
+namespace {
+UnitCell makeCell(double a, double b, double c, double alphaDeg, double betaDeg,
+                  double gammaDeg)
+{
+  const double d2r = 3.14159265358979323846 / 180.0;
+  return UnitCell(a, b, c, alphaDeg * d2r, betaDeg * d2r, gammaDeg * d2r);
+}
+} // namespace
+
+TEST(SpaceGroupTest, cellLooksPrimitive)
+{
+  // Centrosymmetric Hall symbols begin with '-': C 1 2/c 1 is "-C 2yc" and
+  // must still be recognised as a C lattice. A normal conventional cell with
+  // a single non-90 angle is not primitive.
+  const unsigned short c2c = SpaceGroups::hallNumberFromHallSymbol("-C 2yc");
+  ASSERT_NE(c2c, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(c2c), Avogadro::Core::Monoclinic);
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 90, 102.9, 90)));
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 95, 105, 90)));
+
+  // Same via the Hall number of C 1 2/c 1 (b unique, cell choice 1)
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(90, makeCell(8, 9, 10, 90, 102.9, 90)));
+
+  // Non-centrosymmetric monoclinic: C 1 2 1 (hall 9)
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 90, 105, 90)));
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 95, 105, 90)));
+
+  // I 2/a
+  const unsigned short i2a = SpaceGroups::hallNumberFromHallSymbol("-I 2ya");
+  ASSERT_NE(i2a, 0);
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(i2a, makeCell(8, 9, 10, 90, 100, 90)));
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(i2a, makeCell(8, 9, 10, 90, 100, 110)));
+
+  // Cubic F: the rhombohedral primitive cell is suspicious, the conventional
+  // cell is not, whether or not the Hall symbol starts with '-'.
+  const unsigned short fm3m = SpaceGroups::hallNumberFromHallSymbol("-F 4 2 3");
+  ASSERT_NE(fm3m, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(fm3m), Avogadro::Core::Cubic);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(fm3m, makeCell(4, 4, 4, 60, 60, 60)));
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(fm3m, makeCell(4, 4, 4, 90, 90, 90)));
+  const unsigned short f432 = SpaceGroups::hallNumberFromHallSymbol("F 4 2 3");
+  ASSERT_NE(f432, 0);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(f432, makeCell(4, 4, 4, 60, 60, 60)));
+
+  // Orthorhombic C and tetragonal I: any deviating angle counts
+  const unsigned short cmcm = SpaceGroups::hallNumberFromHallSymbol("-C 2c 2");
+  ASSERT_NE(cmcm, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(cmcm), Avogadro::Core::Orthorhombic);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(cmcm, makeCell(4, 5, 6, 90, 100, 90)));
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(cmcm, makeCell(4, 5, 6, 90, 90, 90)));
+  const unsigned short i4mmm = SpaceGroups::hallNumberFromHallSymbol("-I 4 2");
+  ASSERT_NE(i4mmm, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(i4mmm), Avogadro::Core::Tetragonal);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(i4mmm, makeCell(4, 4, 6, 90, 90, 100)));
+
+  // Within the 5 degree tolerance
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(cmcm, makeCell(4, 5, 6, 90, 94, 90)));
+
+  // Primitive lattice (P 1 21/c 1) with odd angles: never flagged
+  const unsigned short p21c = SpaceGroups::hallNumberFromHallSymbol("-P 2ybc");
+  ASSERT_NE(p21c, 0);
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(p21c, makeCell(8, 9, 10, 70, 105, 80)));
+
+  // Triclinic, and an invalid Hall number: never flagged
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(1, makeCell(8, 9, 10, 70, 105, 80)));
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(0, makeCell(8, 9, 10, 70, 105, 80)));
+}
