@@ -18,6 +18,7 @@ set(plugins
   Crystal
   Editor
   Focus
+  Forcefield
   MeasureTool
   ScriptFileFormats
   Select
