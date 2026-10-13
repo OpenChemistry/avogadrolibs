@@ -376,8 +376,9 @@ void Forcefield::handleListForceFieldsCommand()
   result["recommended"] = recommended;
   result["current"] = current;
 
-  emit commandFinished(tr("%1 force field(s) available.").arg(names.size()),
-                       result);
+  emit commandFinished(
+    tr("%n force field(s) available.", "", static_cast<int>(names.size())),
+    result);
 }
 
 void Forcefield::handleEnergyCommand(const QVariantMap& options)

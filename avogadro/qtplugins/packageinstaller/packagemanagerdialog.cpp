@@ -445,7 +445,8 @@ void PackageManagerDialog::installSelected()
     QMessageBox::information(
       this, tr("No Download Available"),
       tr("The selected plugin(s) do not provide a downloadable source URL:\n\n"
-         "%1")
+         "%1",
+         "", static_cast<int>(unavailable.size()))
         .arg(unavailable.join(QLatin1Char('\n'))));
     return;
   }
