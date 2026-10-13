@@ -98,6 +98,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     aux
     cube
     fchk
+    gamess
     molden
     nwchem
     orca
