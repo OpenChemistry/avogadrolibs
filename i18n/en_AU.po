@@ -242,14 +242,14 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
-"The following file(s) have been modified:\n"
+"The following file has been modified:\n"
 "\n"
 "%1\n"
 "\n"
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[1] ""
-"The following file(s) have been modified:\n"
+"The following files have been modified:\n"
 "\n"
 "%1\n"
 "\n"
@@ -1827,32 +1827,32 @@ msgstr "Less than a second remaining"
 msgctxt ""
 msgid "%n second(s) remaining"
 msgid_plural "%n second(s) remaining"
-msgstr[0] "%n second(s) remaining"
-msgstr[1] "%n second(s) remaining"
+msgstr[0] "%n second remaining"
+msgstr[1] "%n seconds remaining"
 
 #: qtgui/timedprogressdialog.cpp:101
 #, qt-plural-format
 msgctxt ""
 msgid "%n minute(s) remaining"
 msgid_plural "%n minute(s) remaining"
-msgstr[0] "%n minute(s) remaining"
-msgstr[1] "%n minute(s) remaining"
+msgstr[0] "%n minute remaining"
+msgstr[1] "%n minutes remaining"
 
 #: qtgui/timedprogressdialog.cpp:109
 #, qt-plural-format
 msgctxt ""
 msgid "1 hour %n minute(s) remaining"
 msgid_plural "1 hour %n minute(s) remaining"
-msgstr[0] "1 hour %n minute(s) remaining"
-msgstr[1] "1 hour %n minute(s) remaining"
+msgstr[0] "1 hour %n minute remaining"
+msgstr[1] "1 hour %n minutes remaining"
 
 #: qtgui/timedprogressdialog.cpp:112
 #, qt-plural-format
 msgctxt ""
 msgid "%n hour(s) remaining"
 msgid_plural "%n hour(s) remaining"
-msgstr[0] "%n hour(s) remaining"
-msgstr[1] "%n hour(s) remaining"
+msgstr[0] "%n hour remaining"
+msgstr[1] "%n hours remaining"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
@@ -4034,16 +4034,16 @@ msgstr "No atoms are selected."
 msgctxt ""
 msgid "Froze %n atom(s)."
 msgid_plural "Froze %n atom(s)."
-msgstr[0] "Froze %n atom(s)."
-msgstr[1] "Froze %n atom(s)."
+msgstr[0] "Froze %n atom."
+msgstr[1] "Froze %n atoms."
 
 #: qtplugins/forcefield/forcefield.cpp:543
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
 msgid_plural "Unfroze %n atom(s)."
-msgstr[0] "Unfroze %n atom(s)."
-msgstr[1] "Unfroze %n atom(s)."
+msgstr[0] "Unfroze %n atom."
+msgstr[1] "Unfroze %n atoms."
 
 #: qtplugins/forcefield/forcefield.cpp:557
 msgid "No axis was given."
@@ -5666,8 +5666,8 @@ msgstr ", "
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] "%n download(s) in the last %1 days"
-msgstr[1] "%n download(s) in the last %1 days"
+msgstr[0] "%n download in the last %1 days"
+msgstr[1] "%n downloads in the last %1 days"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:364
 #, qt-format
@@ -5792,8 +5792,8 @@ msgstr "Remove Plugins"
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
 msgid_plural "Remove %n selected plugin(s)?"
-msgstr[0] "Remove %n selected plugin(s)?"
-msgstr[1] "Remove %n selected plugin(s)?"
+msgstr[0] "Remove %n selected plugin?"
+msgstr[1] "Remove %n selected plugins?"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:698
 msgid "Keep Files"

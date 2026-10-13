@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fill and respell the English variant PO files (en_GB, en_AU, en_CA).
+Fill and respell the English variant PO files (en_GB, en_AU, en_CA, en_US).
 
 Usage: python copy-default.py [--locale LOCALE] [--dry-run] po-file [po-file ...]
 
@@ -9,12 +9,19 @@ For each entry (the header and obsolete entries are skipped):
     the locale (e.g. "Color" -> "Colour" for en_GB)
   - a msgstr identical to the msgid (the untouched copy from an earlier run)
     is respelled the same way
-  - plural entries are handled the same way, form by form
+  - plural entries are handled the same way, form by form: a form that is
+    empty or still identical to its source (msgid for form 0, msgid_plural
+    for form 1) is regenerated, a form that differs was edited and is kept.
+    Regenerated forms also resolve "(s)": "%n atom(s)" becomes "%n atom"
+    and "%n atoms". Verb agreement cannot be automated ("file(s) have
+    been"), so a warning is printed for each generated singular containing
+    have/are/were/do/these/them; fix those by hand.
   - anything else was edited by a human and is NEVER modified
 
 The locale comes from --locale, otherwise from the file name (en_GB.po or
 en-GB.po), otherwise from the 'Language' header of the file. Locales other
-than en_GB, en_AU and en_CA get a plain copy with no respelling.
+than en_GB, en_AU and en_CA (including en_US) get a plain copy with no
+respelling; en_US exists to supply correct singular and plural forms.
 
 Spelling rules are plain tables below (COMMON_SPELLING, ISE_STEMS, YSE_STEMS)
 and are easy to extend. Rich text markup (tags, <style> blocks, HTML
@@ -45,7 +52,10 @@ except ImportError:
     sys.exit(1)
 
 
-SUPPORTED_LOCALES = ('en_GB', 'en_AU', 'en_CA')
+SUPPORTED_LOCALES = ('en_GB', 'en_AU', 'en_CA', 'en_US')
+
+# Locales that get respelling (en_US is the source spelling)
+RESPELL_LOCALES = ('en_GB', 'en_AU', 'en_CA')
 
 # Locales that use -ise / -yse (Canadian English keeps -ize / -yze)
 ISE_LOCALES = ('en_GB', 'en_AU')
@@ -214,11 +224,28 @@ def respell_text(text, locale):
 
 def respell(text, locale):
     """Respell text for the locale, leaving markup and URLs untouched."""
-    if locale not in SUPPORTED_LOCALES or not text:
+    if locale not in RESPELL_LOCALES or not text:
         return text
     pieces = MARKUP_RE.split(text)
     for i in range(0, len(pieces), 2):
         pieces[i] = respell_text(pieces[i], locale)
+    return ''.join(pieces)
+
+
+PLURAL_S_RE = re.compile(r'([A-Za-z])\(s\)')
+
+# Words that signal verb or pronoun agreement a script cannot fix
+AGREEMENT_RE = re.compile(r'\b(have|are|were|do|these|them)\b', re.IGNORECASE)
+
+
+def resolve_plural(text, singular):
+    """Resolve "(s)" in the plain text of a plural entry's form."""
+    if not text:
+        return text
+    replacement = r'\1' if singular else r'\1s'
+    pieces = MARKUP_RE.split(text)
+    for i in range(0, len(pieces), 2):
+        pieces[i] = PLURAL_S_RE.sub(replacement, pieces[i])
     return ''.join(pieces)
 
 
@@ -245,30 +272,38 @@ def detect_locale(path, po, override):
     return from_name or ''
 
 
-def process_entry(entry, locale):
+def process_entry(entry, locale, warnings=None):
     """Fill or respell one entry. Returns (kind, old, new) or None.
 
-    kind is 'filled' or 'respelled'. Entries edited by a human are left
-    alone and return None.
+    kind is 'filled' or 'respelled'. Plural forms are decided one by one;
+    forms edited by a human are kept. Singular forms generated here that
+    need manual verb agreement are appended to the warnings list.
     """
     if entry.msgid_plural:
         forms = entry.msgstr_plural
-        new_forms = {0: respell(entry.msgid, locale),
-                     1: respell(entry.msgid_plural, locale)}
-        if all(forms.get(k, '') == '' for k in forms):
-            old = ''
-            kind = 'filled'
-        elif (len(forms) == 2 and forms.get(0) == entry.msgid
-              and forms.get(1) == entry.msgid_plural):
-            old = entry.msgid + ' | ' + entry.msgid_plural
-            kind = 'respelled'
-            if (new_forms[0] == entry.msgid
-                    and new_forms[1] == entry.msgid_plural):
-                return None
-        else:
+        sources = {0: entry.msgid, 1: entry.msgid_plural}
+        generated = {0: resolve_plural(respell(entry.msgid, locale), True),
+                     1: resolve_plural(respell(entry.msgid_plural, locale),
+                                       False)}
+        old_forms = {k: forms.get(k, '') for k in (0, 1)}
+        all_empty = all(v == '' for v in forms.values())
+        new_forms = {}
+        for k in (0, 1):
+            if old_forms[k] == '' or old_forms[k] == sources[k]:
+                new_forms[k] = generated[k]
+            else:
+                new_forms[k] = old_forms[k]
+        changed = [k for k in (0, 1) if new_forms[k] != old_forms[k]]
+        if not changed:
             return None
+        if 0 in changed and warnings is not None:
+            if AGREEMENT_RE.search(new_forms[0]):
+                warnings.append(new_forms[0])
         entry.msgstr_plural = new_forms
-        return (kind, old or (entry.msgid + ' | ' + entry.msgid_plural),
+        if all_empty:
+            return ('filled', sources[0] + ' | ' + sources[1],
+                    new_forms[0] + ' | ' + new_forms[1])
+        return ('respelled', old_forms[0] + ' | ' + old_forms[1],
                 new_forms[0] + ' | ' + new_forms[1])
 
     if entry.msgstr == '':
@@ -323,7 +358,11 @@ def process_file(filepath, locale_override=None, dry_run=False):
         if entry.msgid == '' or entry.obsolete:
             continue
 
-        result = process_entry(entry, locale)
+        warnings = []
+        result = process_entry(entry, locale, warnings)
+        for text in warnings:
+            print(f"Warning: {path.name}: check verb agreement in "
+                  f"singular form: {text!r}", file=sys.stderr)
         if result is None:
             continue
 
@@ -346,12 +385,12 @@ def process_file(filepath, locale_override=None, dry_run=False):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Fill empty msgstr entries in en_GB/en_AU/en_CA PO '
+        description='Fill empty msgstr entries in en_GB/en_AU/en_CA/en_US PO '
                     'files with the msgid, using local spelling.')
     parser.add_argument('po_files', nargs='+', metavar='po-file',
                         help='PO file(s) to process')
     parser.add_argument('--locale',
-                        help='locale (en_GB, en_AU, en_CA); default is '
+                        help='locale (en_GB, en_AU, en_CA, en_US); default is '
                              'taken from the file name or PO header')
     parser.add_argument('--dry-run', action='store_true',
                         help="don't save; print each changed entry as "
