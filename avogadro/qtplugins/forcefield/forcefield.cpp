@@ -232,9 +232,14 @@ Forcefield::Forcefield(QObject* parent_)
   }
 #else
   // These call obmm and can be slower
-  qDebug() << " registering obmm plugins";
-  Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
-  Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
+  // Without obmm, the energies would silently be zero
+  if (OBMMEnergy::isAvailable()) {
+    qDebug() << " registering obmm plugins";
+    Calc::EnergyManager::registerModel(new OBMMEnergy("MMFF94"));
+    Calc::EnergyManager::registerModel(new OBMMEnergy("GAFF"));
+  } else {
+    qDebug() << " obmm not found, not registering obmm force fields";
+  }
 #endif
 }
 

@@ -44,6 +44,13 @@ public:
   OBMMEnergy(const std::string& method = "");
   ~OBMMEnergy() override;
 
+  /**
+   * @return true if the obmm executable can be found, using the same lookup
+   * as setupProcess(): the AVO_OBMM_EXECUTABLE environment variable, then an
+   * obmm next to the application, then the PATH.
+   */
+  static bool isAvailable();
+
   std::string method() const { return m_identifier; }
   void setupProcess();
 
