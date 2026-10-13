@@ -18,8 +18,7 @@ class ObmmEnvGuard
 {
 public:
   explicit ObmmEnvGuard(const char* value)
-    : m_hadValue(qEnvironmentVariableIsSet(name)),
-      m_oldValue(qgetenv(name))
+    : m_hadValue(qEnvironmentVariableIsSet(name)), m_oldValue(qgetenv(name))
   {
     qputenv(name, value);
   }
