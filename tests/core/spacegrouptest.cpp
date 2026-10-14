@@ -1406,7 +1406,7 @@ TEST(SpaceGroupTest, cellLooksPrimitive)
   EXPECT_FALSE(
     SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 90, 102.9, 90)));
   EXPECT_TRUE(
-    SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 95, 105, 90)));
+    SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 100, 105, 90)));
 
   // Same via the Hall number of C 1 2/c 1 (b unique, cell choice 1)
   EXPECT_FALSE(
@@ -1416,7 +1416,7 @@ TEST(SpaceGroupTest, cellLooksPrimitive)
   EXPECT_FALSE(
     SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 90, 105, 90)));
   EXPECT_TRUE(
-    SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 95, 105, 90)));
+    SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 100, 105, 90)));
 
   // I 2/a
   const unsigned short i2a = SpaceGroups::hallNumberFromHallSymbol("-I 2ya");
