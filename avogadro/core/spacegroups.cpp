@@ -947,6 +947,117 @@ const std::vector<std::vector<SymmetryOperation>>& tableOperations()
   return table;
 }
 
+// Add the images of every atom under a set of transforms. @p transformsOf
+// returns the transformed fractional coordinates of a fractional position, one
+// per transform, and the first @p firstTransform of them are skipped (they are
+// the identity, i.e. the atom itself). New atoms closer than @p cartTol to an
+// existing atom are not added.
+void fillWithTransforms(
+  Molecule& mol,
+  const std::function<Array<Vector3>(const Vector3&)>& transformsOf,
+  Index firstTransform, double cartTol, bool wrapToCell, bool allCopies)
+{
+  UnitCell* uc = mol.unitCell();
+  if (!uc)
+    return;
+
+  Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  Array<Vector3> positions = mol.atomPositions3d();
+  Index numAtoms = mol.atomCount();
+
+  // We are going to loop through the original atoms. That is why
+  // we have numAtoms cached instead of using atomCount().
+  for (Index i = 0; i < numAtoms; ++i) {
+    unsigned char atomicNum = atomicNumbers[i];
+    Vector3 pos = uc->toFractional(positions[i]);
+
+    Array<Vector3> newAtoms = transformsOf(pos);
+
+    // The first transform(s) may be the identity, which is the original atom.
+    for (Index j = firstTransform; j < newAtoms.size(); ++j) {
+      // The new atoms are in fractional coordinates. Convert to cartesian.
+      Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
+      // if we are wrapping to the cell, we need to wrap the new atom
+      if (wrapToCell)
+        newCandidate = uc->wrapCartesian(newCandidate);
+
+      // If there is already any atom in this location within a
+      // certain tolerance, do not add the atom.
+      bool atomAlreadyPresent = false;
+      for (Index k = 0; k < mol.atomCount(); k++) {
+        Real distance = uc->distance(mol.atomPosition3d(k), newCandidate);
+        if (distance <= cartTol) {
+          atomAlreadyPresent = true;
+          break; // no need to keep looking
+        }
+      }
+
+      // If there is already an atom present here, just continue
+      if (atomAlreadyPresent)
+        continue;
+
+      // If we got this far, add the atom!
+      Atom newAtom = mol.addAtom(atomicNum);
+      newAtom.setPosition3d(newCandidate);
+    }
+  }
+
+  // Now we generate any copies on the unit boundary
+  if (allCopies)
+    SpaceGroups::fillTranslationalCopies(mol, cartTol);
+  else {
+    // Remove atoms with fractional coordinates near 1.0 only if a
+    // translational duplicate exists near 0.0 (same element, wrapped
+    // fractional coords within tolerance). If no duplicate exists, wrap
+    // the coordinate to 0.0 instead of deleting.
+    const double fracTol = 0.001;
+    std::vector<Index> toRemove;
+    for (Index i = 0; i < mol.atomCount(); ++i) {
+      Vector3 frac = uc->toFractional(mol.atomPositions3d()[i]);
+      bool nearBoundary = false;
+      for (Index j = 0; j < 3; ++j) {
+        if (std::abs(frac[j] - 1.0) < fracTol) {
+          nearBoundary = true;
+          break;
+        }
+      }
+      if (!nearBoundary)
+        continue;
+
+      // Build the wrapped version (1.0 -> 0.0)
+      Vector3 wrapped = frac;
+      for (Index j = 0; j < 3; ++j) {
+        if (std::abs(wrapped[j] - 1.0) < fracTol)
+          wrapped[j] = 0.0;
+      }
+      Vector3 wrappedCart = uc->toCartesian(wrapped);
+
+      // Check if a different atom of the same element exists at the
+      // wrapped position
+      bool hasDuplicate = false;
+      unsigned char atomicNum = mol.atomicNumber(i);
+      for (Index k = 0; k < mol.atomCount(); ++k) {
+        if (k == i)
+          continue;
+        if (mol.atomicNumber(k) != atomicNum)
+          continue;
+        if (uc->distance(mol.atomPosition3d(k), wrappedCart) < cartTol) {
+          hasDuplicate = true;
+          break;
+        }
+      }
+
+      if (hasDuplicate)
+        toRemove.push_back(i);
+      else
+        mol.setAtomPosition3d(i, wrappedCart); // wrap to 0.0
+    }
+    // Remove in reverse order so indices remain valid
+    for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it)
+      mol.removeAtom(*it);
+  }
+}
+
 } // namespace
 
 unsigned short SpaceGroups::hallNumberFromTransforms(
@@ -999,103 +1110,56 @@ void SpaceGroups::fillUnitCell(Molecule& mol, unsigned short hallNumber,
 {
   if (!mol.unitCell())
     return;
-  UnitCell* uc = mol.unitCell();
 
-  Array<unsigned char> atomicNumbers = mol.atomicNumbers();
-  Array<Vector3> positions = mol.atomPositions3d();
-  Index numAtoms = mol.atomCount();
+  // The first transform of a table entry is the identity: the original atom.
+  fillWithTransforms(
+    mol,
+    [hallNumber](const Vector3& pos) { return getTransforms(hallNumber, pos); },
+    1, cartTol, wrapToCell, allCopies);
+}
 
-  // We are going to loop through the original atoms. That is why
-  // we have numAtoms cached instead of using atomCount().
-  for (Index i = 0; i < numAtoms; ++i) {
-    unsigned char atomicNum = atomicNumbers[i];
-    Vector3 pos = uc->toFractional(positions[i]);
+bool SpaceGroups::fillUnitCellFromOperations(
+  Molecule& mol, const std::vector<std::string>& operations, double cartTol,
+  bool wrapToCell, bool allCopies)
+{
+  if (!mol.unitCell())
+    return false;
 
-    Array<Vector3> newAtoms = getTransforms(hallNumber, pos);
-
-    // We skip 0 because it is the original atom.
-    for (Index j = 1; j < newAtoms.size(); ++j) {
-      // The new atoms are in fractional coordinates. Convert to cartesian.
-      Vector3 newCandidate = uc->toCartesian(newAtoms[j]);
-      // if we are wrapping to the cell, we need to wrap the new atom
-      if (wrapToCell)
-        newCandidate = uc->wrapCartesian(newCandidate);
-
-      // If there is already any atom in this location within a
-      // certain tolerance, do not add the atom.
-      bool atomAlreadyPresent = false;
-      for (Index k = 0; k < mol.atomCount(); k++) {
-        Real distance = uc->distance(mol.atomPosition3d(k), newCandidate);
-        if (distance <= cartTol) {
-          atomAlreadyPresent = true;
-          break; // no need to keep looking
-        }
-      }
-
-      // If there is already an atom present here, just continue
-      if (atomAlreadyPresent)
-        continue;
-
-      // If we got this far, add the atom!
-      Atom newAtom = mol.addAtom(atomicNum);
-      newAtom.setPosition3d(newCandidate);
-    }
+  // Parse everything first so that nothing is changed if any operation is bad.
+  std::vector<SymmetryOperation> ops;
+  ops.reserve(operations.size());
+  for (const std::string& text : operations) {
+    SymmetryOperation op;
+    if (!parseSymmetryOperation(text, op))
+      return false;
+    ops.push_back(op);
   }
+  normalizeOperations(ops);
 
-  // Now we generate any copies on the unit boundary
-  if (allCopies)
-    fillTranslationalCopies(mol, cartTol);
-  else {
-    // Remove atoms with fractional coordinates near 1.0 only if a
-    // translational duplicate exists near 0.0 (same element, wrapped
-    // fractional coords within tolerance). If no duplicate exists, wrap
-    // the coordinate to 0.0 instead of deleting.
-    const double fracTol = 0.001;
-    std::vector<Index> toRemove;
-    for (Index i = 0; i < mol.atomCount(); ++i) {
-      Vector3 frac = uc->toFractional(mol.atomPositions3d()[i]);
-      bool nearBoundary = false;
-      for (Index j = 0; j < 3; ++j) {
-        if (std::abs(frac[j] - 1.0) < fracTol) {
-          nearBoundary = true;
-          break;
+  // The atoms are already present, so the identity has nothing to add.
+  SymmetryOperation identity;
+  identity.rotation = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+  ops.erase(std::remove(ops.begin(), ops.end(), identity), ops.end());
+
+  fillWithTransforms(
+    mol,
+    [&ops](const Vector3& pos) {
+      Array<Vector3> images;
+      images.reserve(ops.size());
+      for (const SymmetryOperation& op : ops) {
+        Vector3 image;
+        for (int row = 0; row < 3; ++row) {
+          image[row] = op.rotation[row * 3] * pos[0] +
+                       op.rotation[row * 3 + 1] * pos[1] +
+                       op.rotation[row * 3 + 2] * pos[2] +
+                       static_cast<Real>(op.translation[row]) / 12.0;
         }
+        images.push_back(image);
       }
-      if (!nearBoundary)
-        continue;
-
-      // Build the wrapped version (1.0 -> 0.0)
-      Vector3 wrapped = frac;
-      for (Index j = 0; j < 3; ++j) {
-        if (std::abs(wrapped[j] - 1.0) < fracTol)
-          wrapped[j] = 0.0;
-      }
-      Vector3 wrappedCart = uc->toCartesian(wrapped);
-
-      // Check if a different atom of the same element exists at the
-      // wrapped position
-      bool hasDuplicate = false;
-      unsigned char atomicNum = mol.atomicNumber(i);
-      for (Index k = 0; k < mol.atomCount(); ++k) {
-        if (k == i)
-          continue;
-        if (mol.atomicNumber(k) != atomicNum)
-          continue;
-        if (uc->distance(mol.atomPosition3d(k), wrappedCart) < cartTol) {
-          hasDuplicate = true;
-          break;
-        }
-      }
-
-      if (hasDuplicate)
-        toRemove.push_back(i);
-      else
-        mol.setAtomPosition3d(i, wrappedCart); // wrap to 0.0
-    }
-    // Remove in reverse order so indices remain valid
-    for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it)
-      mol.removeAtom(*it);
-  }
+      return images;
+    },
+    0, cartTol, wrapToCell, allCopies);
+  return true;
 }
 
 void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)

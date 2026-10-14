@@ -240,6 +240,23 @@ public:
                            bool allCopies = false);
 
   /**
+   * Fill a crystal with atoms by applying a list of symmetry operations
+   * written like "x,y,z" or "-x+1/2,y+1/2,-z" (the grammar of
+   * hallNumberFromTransforms()), as given by a file, instead of the ones of a
+   * table entry. The operations are applied as listed; the set is not closed
+   * to a group, and need not be one. Identity operations and any atom that
+   * would land within @p cartTol of an existing atom are skipped, so applying
+   * the operations to a structure that is already expanded adds nothing.
+   *
+   * @return false, and leave @p mol unchanged, if the molecule has no unit
+   * cell or any operation cannot be parsed. An empty list is accepted and
+   * adds nothing.
+   */
+  static bool fillUnitCellFromOperations(
+    Molecule& mol, const std::vector<std::string>& operations,
+    double cartTol = 1e-5, bool wrapToCell = true, bool allCopies = false);
+
+  /**
    * Add translational copies of atoms on the unit cell boundary.
    * For atoms at fractional coordinate ~0, a copy is placed at ~1 and
    * vice versa, plus edge and corner combinations.
