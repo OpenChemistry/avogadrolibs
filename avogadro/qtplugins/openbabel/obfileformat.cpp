@@ -40,6 +40,26 @@ void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
     return;
 
   const Io::CifSymmetry symmetry = Io::readCifSymmetry(cifText);
+
+  // The operations of the file are in no table entry (a non-standard setting
+  // such as I-1, or an origin that Open Babel's symbol does not carry), so no
+  // Hall number can describe the structure. The file's own operations beat
+  // Open Babel's guess of the group: expand the atoms with them, like reading
+  // a calculation where all the atoms are there, and call the result P1.
+  if (symmetry.hasUntabulatedOperations()) {
+    const unsigned short previous = molecule.hallNumber();
+    const std::size_t before = molecule.atomCount();
+    if (Io::expandCifAtoms(symmetry, molecule)) {
+      qDebug() << "CIF space group: the" << symmetry.operations.size()
+               << "symmetry operations match no table entry; expanded" << before
+               << "atoms to" << molecule.atomCount()
+               << "with them and set P1 (was Hall number" << previous << ")";
+      return;
+    }
+    qDebug() << "CIF space group: the symmetry operations match no table"
+             << "entry and could not be applied; keeping the reader's result";
+  }
+
   const unsigned short found = symmetry.hallNumber();
   if (found == 0)
     return;

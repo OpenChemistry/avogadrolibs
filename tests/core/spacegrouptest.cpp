@@ -1385,3 +1385,220 @@ TEST(SpaceGroupTest, setSpaceGroup)
   EXPECT_FALSE(SpaceGroups::setSpaceGroup(known, "C 1"));
   EXPECT_EQ(known.hallNumber(), 5);
 }
+
+namespace {
+UnitCell makeCell(double a, double b, double c, double alphaDeg, double betaDeg,
+                  double gammaDeg)
+{
+  const double d2r = 3.14159265358979323846 / 180.0;
+  return UnitCell(a, b, c, alphaDeg * d2r, betaDeg * d2r, gammaDeg * d2r);
+}
+} // namespace
+
+TEST(SpaceGroupTest, cellLooksPrimitive)
+{
+  // Centrosymmetric Hall symbols begin with '-': C 1 2/c 1 is "-C 2yc" and
+  // must still be recognised as a C lattice. A normal conventional cell with
+  // a single non-90 angle is not primitive.
+  const unsigned short c2c = SpaceGroups::hallNumberFromHallSymbol("-C 2yc");
+  ASSERT_NE(c2c, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(c2c), Avogadro::Core::Monoclinic);
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 90, 102.9, 90)));
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(c2c, makeCell(8, 9, 10, 100, 105, 90)));
+
+  // Same via the Hall number of C 1 2/c 1 (b unique, cell choice 1)
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(90, makeCell(8, 9, 10, 90, 102.9, 90)));
+
+  // Non-centrosymmetric monoclinic: C 1 2 1 (hall 9)
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 90, 105, 90)));
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(9, makeCell(8, 9, 10, 100, 105, 90)));
+
+  // I 2/a
+  const unsigned short i2a = SpaceGroups::hallNumberFromHallSymbol("-I 2ya");
+  ASSERT_NE(i2a, 0);
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(i2a, makeCell(8, 9, 10, 90, 100, 90)));
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(i2a, makeCell(8, 9, 10, 90, 100, 110)));
+
+  // Cubic F: the rhombohedral primitive cell is suspicious, the conventional
+  // cell is not, whether or not the Hall symbol starts with '-'.
+  const unsigned short fm3m = SpaceGroups::hallNumberFromHallSymbol("-F 4 2 3");
+  ASSERT_NE(fm3m, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(fm3m), Avogadro::Core::Cubic);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(fm3m, makeCell(4, 4, 4, 60, 60, 60)));
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(fm3m, makeCell(4, 4, 4, 90, 90, 90)));
+  const unsigned short f432 = SpaceGroups::hallNumberFromHallSymbol("F 4 2 3");
+  ASSERT_NE(f432, 0);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(f432, makeCell(4, 4, 4, 60, 60, 60)));
+
+  // Orthorhombic C and tetragonal I: any deviating angle counts
+  const unsigned short cmcm = SpaceGroups::hallNumberFromHallSymbol("-C 2c 2");
+  ASSERT_NE(cmcm, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(cmcm), Avogadro::Core::Orthorhombic);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(cmcm, makeCell(4, 5, 6, 90, 100, 90)));
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(cmcm, makeCell(4, 5, 6, 90, 90, 90)));
+  const unsigned short i4mmm = SpaceGroups::hallNumberFromHallSymbol("-I 4 2");
+  ASSERT_NE(i4mmm, 0);
+  EXPECT_EQ(SpaceGroups::crystalSystem(i4mmm), Avogadro::Core::Tetragonal);
+  EXPECT_TRUE(
+    SpaceGroups::cellLooksPrimitive(i4mmm, makeCell(4, 4, 6, 90, 90, 100)));
+
+  // Within the 5 degree tolerance
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(cmcm, makeCell(4, 5, 6, 90, 94, 90)));
+
+  // Primitive lattice (P 1 21/c 1) with odd angles: never flagged
+  const unsigned short p21c = SpaceGroups::hallNumberFromHallSymbol("-P 2ybc");
+  ASSERT_NE(p21c, 0);
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(p21c, makeCell(8, 9, 10, 70, 105, 80)));
+
+  // Triclinic, and an invalid Hall number: never flagged
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(1, makeCell(8, 9, 10, 70, 105, 80)));
+  EXPECT_FALSE(
+    SpaceGroups::cellLooksPrimitive(0, makeCell(8, 9, 10, 70, 105, 80)));
+}
+
+// A triclinic cell and an atom at fractional coordinates (x, y, z)
+Molecule triclinicWithAtom(double x, double y, double z,
+                           unsigned char number = 6)
+{
+  Molecule mol;
+  mol.setUnitCell(new UnitCell(makeCell(10, 11, 12, 80, 85, 95)));
+  mol.addAtom(number).setPosition3d(
+    mol.unitCell()->toCartesian(Vector3(x, y, z)));
+  return mol;
+}
+
+const std::vector<std::string> bodyCentredInversion = {
+  "x,y,z", "-x,-y,-z", "x+1/2,y+1/2,z+1/2", "-x+1/2,-y+1/2,-z+1/2"
+};
+
+TEST(SpaceGroupTest, fillUnitCellFromOperationsGeneralPosition)
+{
+  // I -1 is in no table entry, so this is the only way to expand it
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(bodyCentredInversion), 0);
+
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  EXPECT_EQ(mol.atomCount(), 4);
+  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_EQ(mol.atomicNumber(i), 6);
+
+  // each image is where the operation puts it (wrapped into the cell)
+  const std::vector<Vector3> expected = { Vector3(0.1, 0.2, 0.3),
+                                          Vector3(0.9, 0.8, 0.7),
+                                          Vector3(0.6, 0.7, 0.8),
+                                          Vector3(0.4, 0.3, 0.2) };
+  for (const Vector3& frac : expected) {
+    bool found = false;
+    for (Avogadro::Index i = 0; i < mol.atomCount(); ++i) {
+      if (mol.unitCell()->distance(mol.atomPosition3d(i),
+                                   mol.unitCell()->toCartesian(frac)) < 1e-6)
+        found = true;
+    }
+    EXPECT_TRUE(found) << frac.transpose();
+  }
+}
+
+TEST(SpaceGroupTest, fillUnitCellFromOperationsSpecialPosition)
+{
+  // At (1/4,1/4,1/4), -x+1/2,-y+1/2,-z+1/2 is the atom itself and
+  // -x,-y,-z is the same as x+1/2,y+1/2,z+1/2, at (3/4,3/4,3/4): two atoms.
+  Molecule mol = triclinicWithAtom(0.25, 0.25, 0.25);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  EXPECT_EQ(mol.atomCount(), 2);
+
+  // On the origin: 2 atoms (origin and cell centre)
+  Molecule origin = triclinicWithAtom(0.0, 0.0, 0.0);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    origin, bodyCentredInversion, 0.25, true, false));
+  EXPECT_EQ(origin.atomCount(), 2);
+}
+
+TEST(SpaceGroupTest, fillUnitCellFromOperationsIsIdempotent)
+{
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  ASSERT_EQ(mol.atomCount(), 4);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  EXPECT_EQ(mol.atomCount(), 4);
+
+  // the identity is not needed in the list, and its absence changes nothing
+  Molecule noIdentity = triclinicWithAtom(0.1, 0.2, 0.3);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    noIdentity, { "-x,-y,-z", "x+1/2,y+1/2,z+1/2", "-x+1/2,-y+1/2,-z+1/2" },
+    0.25, true, false));
+  EXPECT_EQ(noIdentity.atomCount(), 4);
+}
+
+TEST(SpaceGroupTest, fillUnitCellFromOperationsBadInput)
+{
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3);
+  const Vector3 before = mol.atomPosition3d(0);
+
+  // one bad operation among good ones: nothing is applied
+  EXPECT_FALSE(SpaceGroups::fillUnitCellFromOperations(
+    mol, { "x,y,z", "-x,-y,-z", "x+1/7,y,z" }));
+  EXPECT_FALSE(SpaceGroups::fillUnitCellFromOperations(
+    mol, { "-x,-y,-z", "not an operation" }));
+  EXPECT_FALSE(
+    SpaceGroups::fillUnitCellFromOperations(mol, { "x,y", "-x,-y,-z" }));
+  EXPECT_EQ(mol.atomCount(), 1);
+  EXPECT_EQ(mol.atomPosition3d(0), before);
+
+  // no unit cell
+  Molecule noCell;
+  noCell.addAtom(6);
+  EXPECT_FALSE(
+    SpaceGroups::fillUnitCellFromOperations(noCell, bodyCentredInversion));
+  EXPECT_EQ(noCell.atomCount(), 1);
+
+  // an empty list is valid and adds nothing
+  EXPECT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, {}));
+  EXPECT_EQ(mol.atomCount(), 1);
+}
+
+TEST(SpaceGroupTest, fillUnitCellFromOperationsMatchesTable)
+{
+  // With the operations of a table entry the result must be the same as with
+  // the Hall number: P 1 21/c 1 (-P 2ybc)
+  const unsigned short hall = SpaceGroups::hallNumberFromHallSymbol("-P 2ybc");
+  ASSERT_NE(hall, 0);
+  const std::vector<std::string> ops = { "x,y,z", "-x,y+1/2,-z+1/2", "-x,-y,-z",
+                                         "x,-y+1/2,z+1/2" };
+  ASSERT_EQ(SpaceGroups::hallNumberFromTransforms(ops), hall);
+
+  Molecule byHall = triclinicWithAtom(0.13, 0.27, 0.41);
+  Molecule byOps = byHall;
+  SpaceGroups::fillUnitCell(byHall, hall, 0.25, true, false);
+  ASSERT_TRUE(
+    SpaceGroups::fillUnitCellFromOperations(byOps, ops, 0.25, true, false));
+  ASSERT_EQ(byHall.atomCount(), 4);
+  ASSERT_EQ(byOps.atomCount(), byHall.atomCount());
+  for (Avogadro::Index i = 0; i < byHall.atomCount(); ++i) {
+    bool found = false;
+    for (Avogadro::Index j = 0; j < byOps.atomCount(); ++j) {
+      if (byHall.unitCell()->distance(byHall.atomPosition3d(i),
+                                      byOps.atomPosition3d(j)) < 1e-6)
+        found = true;
+    }
+    EXPECT_TRUE(found);
+  }
+}

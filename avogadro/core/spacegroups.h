@@ -17,6 +17,7 @@
 namespace Avogadro::Core {
 
 class Molecule;
+class UnitCell;
 
 /**
  * Enumeration of the crystal system.
@@ -153,6 +154,23 @@ public:
   static CrystalSystem crystalSystem(unsigned short hallNumber);
 
   /**
+   * @return true if @p cell looks like a primitive cell although the space
+   * group (@p hallNumber) has a centred lattice (F, I, A, B or C), i.e. the
+   * cell is probably not the conventional cell the group's operations expect.
+   *
+   * The test is on the cell angles, with a tolerance of 5 degrees from 90.
+   * It depends on the crystal system, because conventional cells of some
+   * systems legitimately have angles other than 90:
+   *  - monoclinic: suspicious only if more than one angle deviates (one
+   *    non-90 angle is the normal conventional setting, e.g. C2/c);
+   *  - orthorhombic, tetragonal, cubic: suspicious if any angle deviates;
+   *  - all other systems (and primitive lattices, R lattices, or an invalid
+   *    hall number) are never judged: false is returned.
+   */
+  static bool cellLooksPrimitive(unsigned short hallNumber,
+                                 const UnitCell& cell);
+
+  /**
    * @return the international number for a given hall number.
    * If an invalid hall number is given, 0 will be returned.
    */
@@ -220,6 +238,23 @@ public:
   static void fillUnitCell(Molecule& mol, unsigned short hallNumber,
                            double cartTol = 1e-5, bool wrapToCell = true,
                            bool allCopies = false);
+
+  /**
+   * Fill a crystal with atoms by applying a list of symmetry operations
+   * written like "x,y,z" or "-x+1/2,y+1/2,-z" (the grammar of
+   * hallNumberFromTransforms()), as given by a file, instead of the ones of a
+   * table entry. The operations are applied as listed; the set is not closed
+   * to a group, and need not be one. Identity operations and any atom that
+   * would land within @p cartTol of an existing atom are skipped, so applying
+   * the operations to a structure that is already expanded adds nothing.
+   *
+   * @return false, and leave @p mol unchanged, if the molecule has no unit
+   * cell or any operation cannot be parsed. An empty list is accepted and
+   * adds nothing.
+   */
+  static bool fillUnitCellFromOperations(
+    Molecule& mol, const std::vector<std::string>& operations,
+    double cartTol = 1e-5, bool wrapToCell = true, bool allCopies = false);
 
   /**
    * Add translational copies of atoms on the unit cell boundary.
