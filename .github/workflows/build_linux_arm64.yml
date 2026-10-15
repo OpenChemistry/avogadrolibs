@@ -155,13 +155,24 @@ jobs:
         chmod a+x appdir/AppRun
         # Bundled programs must run without LD_LIBRARY_PATH, since Avogadro
         # strips it from child processes
-        missing=$(for f in appdir/usr/bin/* appdir/usr/lib/openbabel/*.so; do
+        checked=0
+        missing=""
+        for f in appdir/usr/bin/* appdir/usr/lib/openbabel/*.so; do
           if file -b "$f" | grep -q ELF; then
-            env -u LD_LIBRARY_PATH ldd "$f" 2>&1 | grep "not found" | sed "s|^|$f: |"
+            checked=$((checked + 1))
+            deps=$(env -u LD_LIBRARY_PATH ldd "$f" 2>&1 | grep "not found" || true)
+            if [ -n "$deps" ]; then
+              missing="$missing$(echo "$deps" | sed "s|^|$f: |")"$'\n'
+            fi
           fi
-        done || true)
+        done
+        echo "Checked $checked ELF files with ldd"
+        if [ "$checked" -eq 0 ]; then
+          echo "No ELF files found to check"
+          exit 1
+        fi
         if [ -n "$missing" ]; then
-          echo "$missing"
+          printf '%s' "$missing"
           exit 1
         fi
         out=$(env -u LD_LIBRARY_PATH BABEL_LIBDIR=appdir/usr/lib/openbabel BABEL_DATADIR=$(echo appdir/usr/share/openbabel/*) appdir/usr/bin/obabel -:CCO -oinchi)
