@@ -75,9 +75,17 @@ jobs:
           target: desktop
           arch: linux_gcc_64
           dir: ${{ runner.temp }}/qt-host
-          archives: qtbase
+          # Host tools link QtCore, which needs Qt's matching ICU runtime.
+          archives: qtbase icu
           cache: true
           set-env: false
+
+      - name: Verify host Qt tools
+        run: |
+          qt_host="$RUNNER_TEMP/qt-host/Qt/$QT_VERSION/gcc_64"
+          "$qt_host/libexec/uic" --version
+          "$qt_host/libexec/moc" --version
+          "$qt_host/libexec/rcc" --version
 
       - name: Install WASM Qt
         uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
