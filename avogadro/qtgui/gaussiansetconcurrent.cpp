@@ -157,7 +157,8 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
                                              unsigned int state,
                                              void (*func)(GaussianShell&))
 {
-  if (!m_set || !m_tools)
+  // A basis set rejected by GaussianSetTools must not start a calculation
+  if (!m_set || !m_tools || !m_tools->isValid())
     return false;
 
   cancelAndWait();

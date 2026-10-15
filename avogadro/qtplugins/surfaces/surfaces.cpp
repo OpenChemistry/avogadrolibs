@@ -791,12 +791,13 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   m_cube->setLimits(*m_molecule, cubeResolution, padding);
 
   QString progressText;
+  bool started = true;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
     m_cube->setName("Electron Density");
     m_cube->setCubeType(Core::Cube::Type::ElectronDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateElectronDensity(m_cube);
+      started = m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateElectronDensity(m_cube);
     }
@@ -805,7 +806,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_cube->setName("Spin Density");
     m_cube->setCubeType(Core::Cube::Type::SpinDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateSpinDensity(m_cube);
+      started = m_gaussianConcurrent->calculateSpinDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateSpinDensity(m_cube);
     }
@@ -814,10 +815,18 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_cube->setName("Molecular Orbital " + std::to_string(index + 1));
     m_cube->setCubeType(Core::Cube::Type::MO);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
+      started =
+        m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
     } else {
       m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
     }
+  }
+
+  // The calculator refuses a basis set it cannot evaluate safely; there is
+  // nothing to wait for, so drop the empty cube rather than show progress.
+  if (!started) {
+    clearSurfaceData();
+    return;
   }
 
   // Set up the progress dialog.
