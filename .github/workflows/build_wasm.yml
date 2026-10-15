@@ -20,7 +20,7 @@ concurrency:
 env:
   QT_VERSION: '6.11.1'
   EMSCRIPTEN_VERSION: '4.0.7'
-  SUPERBUILD_REVISION: c698bffcd1888affd6a39ef040416f0a0d8d3177
+  SUPERBUILD_REVISION: dbb1100a931c528b0b887ed6a02c0d4f4395f4c1
   # ExternalProject's nested builds must use the same limit as the superbuild.
   CMAKE_BUILD_PARALLEL_LEVEL: '2'
 
@@ -34,14 +34,24 @@ jobs:
         shell: bash
 
     steps:
-      - name: Checkout pinned superbuild and companion sources
+      - name: Checkout pinned superbuild
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: OpenChemistry/openchemistry
+          repository: timvdm/openchemistry
           ref: ${{ env.SUPERBUILD_REVISION }}
-          submodules: recursive
           path: openchemistry
           persist-credentials: false
+
+      # These companion revisions are published in forks pending upstream merge.
+      # Keep the superbuild's exact gitlink pins; only override their fetch URLs.
+      - name: Checkout pinned companion sources
+        working-directory: openchemistry
+        run: |
+          git submodule init
+          git config submodule.avogadrolibs.url https://github.com/timvdm/avogadrolibs.git
+          git config submodule.avogadroapp.url https://github.com/timvdm/avogadroapp.git
+          git config submodule.avogadro-web.url https://github.com/timvdm/avogadro-web.git
+          git submodule update --init --recursive
 
       # With no ref override, pull_request builds GitHub's merge revision,
       # just like the native workflows. Do not build the superbuild's libs pin.
