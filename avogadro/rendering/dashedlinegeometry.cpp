@@ -149,14 +149,18 @@ void DashedLineGeometry::render(const Camera& camera)
     cout << d->program.error() << endl;
   }
 
+#ifndef __EMSCRIPTEN__
   glEnable(GL_LINE_SMOOTH);
+#endif
   glLineWidth(m_lineWidth);
 
   // Render the lines using the shader and VAO.
   glDrawArrays(GL_LINES, static_cast<GLint>(0),
                static_cast<GLsizei>(m_vertices.size()));
 
+#ifndef __EMSCRIPTEN__
   glDisable(GL_LINE_SMOOTH);
+#endif
 
   d->vao.release();
   d->program.release();

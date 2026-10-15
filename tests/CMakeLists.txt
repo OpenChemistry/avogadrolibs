@@ -79,7 +79,7 @@ if(USE_QT)
   add_subdirectory(qtgui)
   # The command-boundary tests link plugin targets directly, which only works
   # when they are static libraries built in this tree.
-  if(BUILD_STATIC_PLUGINS AND NOT PROJECT_IS_TOP_LEVEL)
+  if(BUILD_STATIC_PLUGINS AND USE_OPENGL AND NOT EMSCRIPTEN)
     add_subdirectory(qtplugins)
   else()
     message(STATUS "Skipping qtplugins tests: they need in-tree static plugins"

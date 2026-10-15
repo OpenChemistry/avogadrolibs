@@ -13,6 +13,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QSettings>
+#include <QSignalBlocker>
 
 #include <algorithm>
 
@@ -37,6 +38,10 @@ EditorToolWidget::EditorToolWidget(QWidget* parent_)
 
   // Show carbon at startup.
   selectElement(6);
+  connect(m_ui->bondOrder, &QComboBox::currentIndexChanged, this,
+          &EditorToolWidget::optionsChanged);
+  connect(m_ui->adjustHydrogens, &QCheckBox::toggled, this,
+          &EditorToolWidget::optionsChanged);
 }
 
 EditorToolWidget::~EditorToolWidget()
@@ -46,30 +51,23 @@ EditorToolWidget::~EditorToolWidget()
 
 void EditorToolWidget::setAtomicNumber(unsigned char atomicNum)
 {
+  const QSignalBlocker blocker(this);
   selectElement(atomicNum);
 
-  if (m_elementSelector)
-    m_elementSelector->setElement(static_cast<int>(atomicNum));
+  if (m_elementSelector) {
+    const QSignalBlocker selectorBlocker(m_elementSelector);
+    m_elementSelector->setElement(static_cast<int>(m_currentElement));
+  }
 }
 
 unsigned char EditorToolWidget::atomicNumber() const
 {
-  int curIndex = m_ui->element->currentIndex();
-  QVariant itemData = m_ui->element->itemData(curIndex);
-  if (!itemData.isValid())
-    return 0;
-
-  auto atomicNum = static_cast<unsigned char>(itemData.toUInt());
-
-  // "Other…" selected....
-  if (atomicNum == 0 && m_elementSelector)
-    atomicNum = static_cast<unsigned char>(m_elementSelector->element());
-
-  return atomicNum;
+  return m_currentElement;
 }
 
 void EditorToolWidget::setBondOrder(unsigned char order)
 {
+  const QSignalBlocker blocker(this);
   if (order < m_ui->bondOrder->count())
     m_ui->bondOrder->setCurrentIndex(static_cast<int>(order));
 }
@@ -82,6 +80,12 @@ unsigned char EditorToolWidget::bondOrder() const
 bool EditorToolWidget::adjustHydrogens() const
 {
   return m_ui->adjustHydrogens->isChecked();
+}
+
+void EditorToolWidget::setAdjustHydrogens(bool adjust)
+{
+  const QSignalBlocker blocker(this);
+  m_ui->adjustHydrogens->setChecked(adjust);
 }
 
 bool EditorToolWidget::adjustBondLengths() const
@@ -99,29 +103,31 @@ void EditorToolWidget::elementChanged(int index)
         connect(m_elementSelector, SIGNAL(elementChanged(int)), this,
                 SLOT(elementSelectedFromTable(int)));
       }
-      m_elementSelector->setElement(m_currentElement);
+      {
+        const QSignalBlocker selectorBlocker(m_elementSelector);
+        m_elementSelector->setElement(m_currentElement);
+      }
       m_elementSelector->show();
     } else {
-      if (m_elementSelector)
+      if (m_elementSelector) {
+        const QSignalBlocker blocker(m_elementSelector);
         m_elementSelector->setElement(itemData.toInt());
+      }
       m_currentElement = static_cast<unsigned char>(itemData.toInt());
+      emit optionsChanged();
     }
   }
 }
 
 void EditorToolWidget::updateElementCombo()
 {
+  // Rebuilding the list must not publish intermediate element selections.
+  const QSignalBlocker blocker(m_ui->element);
   // Build set of all elements:
   QList<unsigned char> allElements;
   allElements << m_defaultElements;
   allElements << m_userElements;
   std::sort(allElements.begin(), allElements.end());
-
-  // Cache selected atomic number for later
-  QVariant selectedData;
-  int curIndex = m_ui->element->currentIndex();
-  if (curIndex >= 0)
-    selectedData = m_ui->element->itemData(curIndex);
 
   // Clear and repopulate combo
   m_ui->element->clear();
@@ -134,9 +140,7 @@ void EditorToolWidget::updateElementCombo()
   m_ui->element->insertSeparator(m_ui->element->count());
   m_ui->element->addItem(tr("Other…"), ELEMENT_SELECTOR_TAG);
 
-  // Reset the element if it still exists
-  selectElement(static_cast<unsigned char>(
-    selectedData.isValid() ? selectedData.toInt() : -1));
+  m_ui->element->setCurrentIndex(m_ui->element->findData(m_currentElement));
 }
 
 void EditorToolWidget::addUserElement(unsigned char element)
@@ -171,6 +175,8 @@ void EditorToolWidget::elementSelectedFromTable(int element)
 
 void EditorToolWidget::selectElement(unsigned char element)
 {
+  if (element < 1 || element > 118)
+    return;
   int curIndex = element > 0 ? m_ui->element->findData(element) : -1;
   if (curIndex >= 0)
     m_ui->element->setCurrentIndex(curIndex);
