@@ -310,8 +310,15 @@ void AlignTool::registerCommands()
 bool AlignTool::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command.
+  static const QStringList knownCommands = { "centerAtom", "alignAtom" };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "centerAtom") {
     if (options.contains("id")) {

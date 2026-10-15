@@ -181,8 +181,16 @@ void Crystal::registerCommands()
 bool Crystal::handleCommand(const QString& command,
                             [[maybe_unused]] const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command.
+  static const QStringList knownCommands = { "wrapUnitCell",
+                                             "standardCrystalOrientation" };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "wrapUnitCell") {
     wrapAtomsToCell();
