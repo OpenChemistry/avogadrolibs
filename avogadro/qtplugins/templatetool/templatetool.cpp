@@ -224,16 +224,16 @@ QUndoCommand* TemplateTool::mouseMoveEvent(QMouseEvent* /*e*/)
 
 QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
 {
-  if (e->text().isEmpty())
-    return nullptr;
-
-  e->accept();
-
   // check which tab is currently active
   int currentTab = m_toolWidget->currentTab();
 
-  // if it's arrow keys, change tabs
-  if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right ||
+  // if it's arrow keys, change tabs (arrow keys have no text, so this must
+  // come before the empty-text check). Ctrl/Alt/Meta + arrows are reserved
+  // for camera navigation, so leave those alone.
+  const bool navModifier =
+    e->modifiers() & (Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier);
+  if ((!navModifier &&
+       (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right)) ||
       e->key() == Qt::Key_BracketLeft || e->key() == Qt::Key_BracketRight) {
     // cycle through tabs
     // the widget will handle any wrap-around
@@ -243,8 +243,14 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
       currentTab++;
     }
     m_toolWidget->setCurrentTab(currentTab);
+    e->accept();
     return nullptr;
   }
+
+  if (e->text().isEmpty())
+    return nullptr;
+
+  e->accept();
 
   // The typing limit applies between keys: restart the timer on every key
   m_keyPressTimer->start();
