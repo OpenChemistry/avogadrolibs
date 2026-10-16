@@ -229,8 +229,8 @@ struct LayerLabel : Core::LayerData
       auto* form = new QFormLayout;
       // color button
       auto* colorButton = new QtGui::ColorButton;
-      QObject::connect(colorButton, SIGNAL(colorChanged(const QColor&)), slot,
-                       SLOT(setColor(const QColor&)));
+      QObject::connect(colorButton, &QtGui::ColorButton::colorChanged, slot,
+                       &Label::setColor);
       form->addRow(QObject::tr("Color:"), colorButton);
 
       // radius scalar
@@ -239,8 +239,8 @@ struct LayerLabel : Core::LayerData
       spin->setSingleStep(0.1);
       spin->setDecimals(1);
       spin->setValue(radiusScalar);
-      QObject::connect(spin, SIGNAL(valueChanged(double)), slot,
-                       SLOT(setRadiusScalar(double)));
+      QObject::connect(spin, &QDoubleSpinBox::valueChanged, slot,
+                       &Label::setRadiusScalar);
       form->addRow(QObject::tr("Distance from center:"), spin);
 
       // label scale
@@ -249,16 +249,12 @@ struct LayerLabel : Core::LayerData
       scaleSpin->setSingleStep(0.1);
       scaleSpin->setDecimals(2);
       scaleSpin->setValue(labelScale);
-      QObject::connect(scaleSpin, SIGNAL(valueChanged(double)), slot,
-                       SLOT(setLabelScale(double)));
+      QObject::connect(scaleSpin, &QDoubleSpinBox::valueChanged, slot,
+                       &Label::setLabelScale);
       form->addRow(QObject::tr("Label scale:"), scaleSpin);
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
-
-      // set up the various atom options
-      [[maybe_unused]] char val = LabelOptions::None;
-      QStringList text;
 
       // first add the individual options
       atom->addItem(QObject::tr("None"), int(LabelOptions::None));
@@ -281,8 +277,8 @@ struct LayerLabel : Core::LayerData
         }
       }
 
-      QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
-                       SLOT(atomLabelType(int)));
+      QObject::connect(atom, &QComboBox::currentIndexChanged, slot,
+                       &Label::atomLabelType);
 
       form->addRow(QObject::tr("Atom Label:"), atom);
 
@@ -296,8 +292,8 @@ struct LayerLabel : Core::LayerData
       bond->addItem(QObject::tr("Index"), int(LabelOptions::Index));
       bond->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
 
-      QObject::connect(bond, SIGNAL(currentIndexChanged(int)), slot,
-                       SLOT(bondLabelType(int)));
+      QObject::connect(bond, &QComboBox::currentIndexChanged, slot,
+                       &Label::bondLabelType);
       form->addRow(QObject::tr("Bond Label:"), bond);
 
       auto* residue = new QComboBox;
@@ -310,8 +306,8 @@ struct LayerLabel : Core::LayerData
       residue->addItem(QObject::tr("Name & ID"),
                        int(LabelOptions::Index + LabelOptions::Name));
       residue->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
-      QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
-                       SLOT(residueLabelType(int)));
+      QObject::connect(residue, &QComboBox::currentIndexChanged, slot,
+                       &Label::residueLabelType);
 
       // residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
