@@ -824,8 +824,19 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
 
   // The calculator refuses a basis set it cannot evaluate safely; there is
   // nothing to wait for, so drop the empty cube rather than show progress.
+  // displayMesh() will never run, so do its bookkeeping here: the dialog's
+  // button was disabled on click, and a command caller is waiting on a reply.
   if (!started) {
     clearSurfaceData();
+    if (m_dialog != nullptr)
+      m_dialog->reenableCalculateButton();
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_commandResolution = 0.0f;
+      // TODO: translate after 2.1 (string freeze)
+      emit commandFailed(
+        QStringLiteral("The basis set is inconsistent and cannot be used."));
+    }
     return;
   }
 
