@@ -525,9 +525,11 @@ void Editor::emptyLeftClick(QMouseEvent* e)
     m_fixValenceLater = true;
   }
 
-  // Update the clicked object
+  // Update the clicked object. The molecule must be the QtGui::Molecule
+  // address that scene plugins put in their identifiers, or comparisons
+  // against renderer hits never match.
   m_clickedObject.type = Rendering::AtomType;
-  m_clickedObject.molecule = m_molecule;
+  m_clickedObject.molecule = &m_molecule->molecule();
   m_clickedObject.index = newAtom.index();
 
   // Emit changed signal
@@ -714,9 +716,10 @@ void Editor::atomRightClick(QMouseEvent* e)
   // okay, now adjust any valence on the bonded atoms
   // (e.g., add back some hydrogens)
   for (Index atomIndex : bondedAtoms) {
-    RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
-    if (atom.isValid())
-      QtGui::HydrogenTools::adjustHydrogens(atom, QtGui::HydrogenTools::Add);
+    RWAtom atomToAdjust = m_molecule->atomByUniqueId(atomIndex);
+    if (atomToAdjust.isValid())
+      QtGui::HydrogenTools::adjustHydrogens(atomToAdjust,
+                                            QtGui::HydrogenTools::Add);
   }
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
@@ -816,7 +819,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
     // ...and if we've created a new atom, remove the new atom and reset the
     // clicked atom's atomic number
     if (m_newObject.type == Rendering::AtomType &&
-        m_molecule == m_newObject.molecule) {
+        m_newObject.molecule == &m_molecule->molecule()) {
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
@@ -970,8 +973,10 @@ void Editor::atomLeftDrag(QMouseEvent* e)
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;
     m_newObject.index = newAtom.index();
-    const Core::Molecule* mol = &m_molecule->molecule();
-    m_newObject.molecule = mol;
+    // Not via a Core::Molecule pointer: the base-class conversion shifts the
+    // address past QObject, so the new atom would never match its own hit
+    // and would hide any atom behind it from atomToBond below.
+    m_newObject.molecule = &m_molecule->molecule();
   } else if (m_newObject.type == Rendering::AtomType) {
     // Grab the previously created atom
     newAtom = m_molecule->atom(m_newObject.index);
