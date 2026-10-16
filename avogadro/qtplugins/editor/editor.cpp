@@ -156,6 +156,12 @@ Editor::Editor(QObject* parent_)
        "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
        "Right Mouse:\tDelete Atom")
       .arg(shortcut));
+  m_keyPressTimer = new QTimer(this);
+  m_keyPressTimer->setSingleShot(true);
+  m_keyPressTimer->setInterval(2000);
+  connect(m_keyPressTimer, &QTimer::timeout, this,
+          &Editor::clearKeyPressBuffer);
+
   setIcon();
   reset();
 }
@@ -355,9 +361,8 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   if (m_layerManager.activeLayerLocked()) {
     return nullptr;
   }
-  // Set a timer to clear the buffer on first keypress:
-  if (m_keyPressBuffer.isEmpty())
-    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
+  // The typing limit applies between keys: restart the timer on every key
+  m_keyPressTimer->start();
 
   m_keyPressBuffer.append(m_keyPressBuffer.isEmpty() ? e->text().toUpper()
                                                      : e->text().toLower());

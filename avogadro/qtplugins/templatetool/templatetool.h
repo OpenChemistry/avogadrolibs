@@ -14,6 +14,7 @@
 #include <avogadro/rendering/primitive.h>
 
 #include <QtCore/QPoint>
+#include <QtCore/QTimer>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -63,7 +64,11 @@ public:
   void draw(Rendering::GroupNode& node) override;
 
 private slots:
-  void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
+  void clearKeyPressBuffer()
+  {
+    m_keyPressBuffer.clear();
+    m_keyPressTimer->stop();
+  }
 
 private:
   /**
@@ -106,6 +111,7 @@ private:
   bool m_bondAdded;
   bool m_fixValenceLater;
   QString m_keyPressBuffer;
+  QTimer* m_keyPressTimer;
 
   QtGui::PluginLayerManager m_layerManager;
 

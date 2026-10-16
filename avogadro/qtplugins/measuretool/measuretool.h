@@ -51,6 +51,7 @@ public:
   QUndoCommand* mouseMoveEvent(QMouseEvent* e) override;
   QUndoCommand* mouseReleaseEvent(QMouseEvent* e) override;
   QUndoCommand* mouseDoubleClickEvent(QMouseEvent* e) override;
+  QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
 

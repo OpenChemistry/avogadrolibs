@@ -24,6 +24,7 @@ set(plugins
   Select
   SpaceGroup
   Surfaces
+  TemplateTool
 )
 
 set(testSrcs "")

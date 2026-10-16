@@ -15,6 +15,7 @@
 
 #include <QtCore/QPoint>
 #include <QtCore/QPointer>
+#include <QtCore/QTimer>
 
 namespace Avogadro {
 namespace QtPlugins {
@@ -65,7 +66,11 @@ public:
                      const QVariantMap& options) override;
 
 private slots:
-  void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
+  void clearKeyPressBuffer()
+  {
+    m_keyPressBuffer.clear();
+    m_keyPressTimer->stop();
+  }
 
 private:
   /**
@@ -124,6 +129,7 @@ private:
   // drops its undo entry.
   bool m_dragCancelled;
   QString m_keyPressBuffer;
+  QTimer* m_keyPressTimer;
   QtGui::PluginLayerManager m_layerManager;
 
   Real m_bondDistance;
