@@ -10,6 +10,7 @@ set(tests
   BasisSet
   Bond
   Constraint
+  ContrastColor
   ConformerQuantity
   CoordinateBlockGenerator
   CoordinateSet
