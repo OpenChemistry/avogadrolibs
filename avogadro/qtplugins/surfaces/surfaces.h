@@ -13,6 +13,7 @@
 #include <avogadro/core/color3f.h>
 
 #include <QtCore/QFutureWatcher>
+#include <QtCore/QPointer>
 
 class QAction;
 class QDialog;
@@ -122,7 +123,8 @@ private:
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
-  QtGui::TimedProgressDialog* m_progressDialog = nullptr;
+  // Parented to parent() when that is a widget, which may delete it first.
+  QPointer<QtGui::TimedProgressDialog> m_progressDialog;
 
   QtGui::Molecule* m_molecule = nullptr;
   Core::BasisSet* m_basis = nullptr;

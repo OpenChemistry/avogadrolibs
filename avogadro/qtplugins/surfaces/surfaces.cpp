@@ -126,6 +126,8 @@ Surfaces::~Surfaces()
   // Parentless QThreads; ~MeshGenerator() waits for a running thread.
   delete m_meshGenerator1;
   delete m_meshGenerator2;
+  // Parentless when the plugin has no widget parent (e.g., in tests).
+  delete m_progressDialog;
   delete d;
   // delete m_cube; // should be freed by the molecule
 }
@@ -791,12 +793,13 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   m_cube->setLimits(*m_molecule, cubeResolution, padding);
 
   QString progressText;
+  bool started = true;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
     m_cube->setName("Electron Density");
     m_cube->setCubeType(Core::Cube::Type::ElectronDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateElectronDensity(m_cube);
+      started = m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateElectronDensity(m_cube);
     }
@@ -805,7 +808,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_cube->setName("Spin Density");
     m_cube->setCubeType(Core::Cube::Type::SpinDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateSpinDensity(m_cube);
+      started = m_gaussianConcurrent->calculateSpinDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateSpinDensity(m_cube);
     }
@@ -814,10 +817,29 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_cube->setName("Molecular Orbital " + std::to_string(index + 1));
     m_cube->setCubeType(Core::Cube::Type::MO);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
+      started =
+        m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
     } else {
       m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
     }
+  }
+
+  // The calculator refuses a basis set it cannot evaluate safely; there is
+  // nothing to wait for, so drop the empty cube rather than show progress.
+  // displayMesh() will never run, so do its bookkeeping here: the dialog's
+  // button was disabled on click, and a command caller is waiting on a reply.
+  if (!started) {
+    clearSurfaceData();
+    if (m_dialog != nullptr)
+      m_dialog->reenableCalculateButton();
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_commandResolution = 0.0f;
+      // TODO: translate after 2.1 (string freeze)
+      emit commandFailed(
+        QStringLiteral("The basis set is inconsistent and cannot be used."));
+    }
+    return;
   }
 
   // Set up the progress dialog.

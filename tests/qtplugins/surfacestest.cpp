@@ -9,6 +9,7 @@
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/gaussianset.h>
 
 #include <QtCore/QVariantMap>
 
@@ -259,6 +260,37 @@ TEST_F(SurfacesCommandTest, registersSurfaceCommands)
   EXPECT_TRUE(registered.contains("renderVDW"));
   EXPECT_TRUE(registered.contains("renderSolventAccessible"));
   EXPECT_TRUE(registered.contains("renderSolventExcluded"));
+}
+
+// A basis set GaussianSetTools refuses never starts a calculation, so the
+// command must fail at once instead of leaving the caller waiting forever.
+TEST_F(SurfacesCommandTest, rejectedBasisSetFailsTheCommand)
+{
+  auto* mol = m_harness.molecule();
+  auto* basis = new Avogadro::Core::GaussianSet;
+  basis->setMolecule(mol);
+  unsigned int s = basis->addBasis(0, Avogadro::Core::GaussianSet::S);
+  basis->addGto(s, 1.0, 1.3);
+  // Ethanol has nine atoms; this shell sits on one that does not exist.
+  s = basis->addBasis(99, Avogadro::Core::GaussianSet::S);
+  basis->addGto(s, 1.0, 1.3);
+  basis->setMolecularOrbitals({ 0.7, 0.7, 0.7, -0.7 },
+                              Avogadro::Core::BasisSet::Paired);
+  basis->setElectronCount(2);
+  mol->setBasisSet(basis);
+  m_surfaces.setMolecule(mol); // pick up the basis set
+
+  for (const char* command : { "renderMO", "renderElectronDensity" }) {
+    QVariantMap options;
+    options.insert(QStringLiteral("resolution"), Resolution);
+    options.insert(QStringLiteral("orbital"), 1);
+    const CommandOutcome out =
+      m_harness.run(QString::fromLatin1(command), options);
+    EXPECT_TRUE(out.claimed) << command;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+    EXPECT_TRUE(out.clean()) << describe(out);
+    EXPECT_EQ(mol->cubeCount(), 0u) << command << " left an empty cube";
+  }
 }
 
 TEST_F(SurfacesCommandTest, vanDerWaalsMatchesSerialReference)
