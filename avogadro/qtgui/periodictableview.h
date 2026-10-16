@@ -87,6 +87,7 @@ private:
   int m_element;
 
   QString m_keyPressBuffer;
+  QTimer* m_keyPressTimer;
 };
 
 } // namespace QtGui

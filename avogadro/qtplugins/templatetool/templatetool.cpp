@@ -84,6 +84,12 @@ TemplateTool::TemplateTool(QObject* parent_)
     m_clickedAtomicNumber(INVALID_ATOMIC_NUMBER), m_bondAdded(false),
     m_fixValenceLater(false), m_layerManager("Template")
 {
+  m_keyPressTimer = new QTimer(this);
+  m_keyPressTimer->setSingleShot(true);
+  m_keyPressTimer->setInterval(2000);
+  connect(m_keyPressTimer, &QTimer::timeout, this,
+          &TemplateTool::clearKeyPressBuffer);
+
   QString shortcut = tr("Ctrl+3", "control-key 3");
   m_activateAction->setText(tr("Template"));
   m_activateAction->setToolTip(
@@ -240,9 +246,8 @@ QUndoCommand* TemplateTool::keyPressEvent(QKeyEvent* e)
     return nullptr;
   }
 
-  // Set a timer to clear the buffer on first keypress:
-  if (m_keyPressBuffer.isEmpty())
-    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
+  // The typing limit applies between keys: restart the timer on every key
+  m_keyPressTimer->start();
 
   m_keyPressBuffer.append(e->text());
 
