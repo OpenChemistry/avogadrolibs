@@ -5,13 +5,15 @@
 # Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024, 2025, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
+# Remus-Gabriel Chelu <remus-gabriel@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-10 19:51+0000\n"
-"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
+"PO-Revision-Date: 2026-10-16 17:36+0000\n"
+"Last-Translator: Remus-Gabriel Chelu <remus-"
+"gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
 "Language: ro\n"
@@ -20,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -1483,11 +1485,11 @@ msgstr "Creează o nouă vizualizare"
 
 #: qtgui/packagemanager.cpp:674
 msgid "pixi: the package declares no pixi workspace"
-msgstr ""
+msgstr "pixi: pachetul nu declară niciun spațiu de lucru pixi"
 
 #: qtgui/packagemanager.cpp:694
 msgid "pixi install timed out"
-msgstr ""
+msgstr "Instalarea pixi a depășit limita de timp"
 
 #: qtgui/packagemanager.cpp:702
 #, qt-format
@@ -1495,15 +1497,17 @@ msgid ""
 "pixi install failed:\n"
 "%1"
 msgstr ""
+"Instalarea pixi a eșuat:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:714
 #, qt-format
 msgid "pixi install did not provide %1"
-msgstr ""
+msgstr "Instalarea pixi nu a furnizat %1"
 
 #: qtgui/packagemanager.cpp:743
 msgid "pip: creating the virtual environment timed out"
-msgstr ""
+msgstr "pip: timpul de așteptare pentru crearea mediului virtual a expirat"
 
 #: qtgui/packagemanager.cpp:752
 #, qt-format
@@ -1511,10 +1515,12 @@ msgid ""
 "pip: creating the virtual environment failed:\n"
 "%1"
 msgstr ""
+"pip: timpul de așteptare pentru crearea mediului virtual a eșuat:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:770
 msgid "pip install timed out"
-msgstr ""
+msgstr "Instalarea pip a depășit limita de timp"
 
 #: qtgui/packagemanager.cpp:778
 #, qt-format
@@ -1522,15 +1528,17 @@ msgid ""
 "pip install failed:\n"
 "%1"
 msgstr ""
+"Instalarea pip a eșuat:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:790
 #, qt-format
 msgid "pip install did not provide %1"
-msgstr ""
+msgstr "Instalarea pip nu a furnizat %1"
 
 #: qtgui/packagemanager.cpp:853
 msgid "neither pixi nor Python was found"
-msgstr ""
+msgstr "nu s-a găsit nici „pixi”, nici „Python”"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1889,7 +1897,7 @@ msgstr[2] "%n de ore rămase"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
-msgstr ""
+msgstr "Fragment HTML &3DMol…"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -2054,11 +2062,11 @@ msgstr "Eroare la citirea fișierului OpenDX: Nu s-a găsit niciun cub"
 
 #: qtplugins/apbs/apbs.cpp:151
 msgid "Generating Positive Potential Mesh"
-msgstr ""
+msgstr "Se generează o rețea cu potențial pozitiv"
 
 #: qtplugins/apbs/apbs.cpp:165
 msgid "Generating Negative Potential Mesh"
-msgstr ""
+msgstr "Se generează o rețea cu potențial negativ"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -2472,7 +2480,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:261
 msgid "AutoOptimization"
-msgstr ""
+msgstr "Optimizare automată"
 
 #: qtplugins/autoopt/autoopt.cpp:268
 msgid "Optimize"
@@ -3671,20 +3679,22 @@ msgstr "Redă momentul dipolar al moleculei."
 
 #: qtplugins/editor/editor.cpp:94
 msgid "atoms must list exactly 2 atom indices."
-msgstr ""
+msgstr "atomii trebuie să listeze exact 2 indici de atom."
 
 #: qtplugins/editor/editor.cpp:101
 msgid "atoms must be whole-number atom indices within the molecule."
 msgstr ""
+"atomii trebuie să fie indici de atomi exprimați prin numere întregi în "
+"cadrul moleculei."
 
 #: qtplugins/editor/editor.cpp:106
 msgid "atoms must be two different atoms."
-msgstr ""
+msgstr "atomii trebuie să fie doi atomi diferiți."
 
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
 msgid "%1 must be 1, 2 or 3."
-msgstr ""
+msgstr "%1 trebuie să fie 1, 2 sau 3."
 
 #: qtplugins/editor/editor.cpp:152
 msgctxt "control-key 2"
@@ -3733,21 +3743,28 @@ msgid ""
 "([x, y, z] in Angstroms), optional \"bondTo\" (atom index) and \"bondOrder\" "
 "(1-3). Returns the new atom \"index\"."
 msgstr ""
+"Adaugă un atom. Opțiuni: „element” (simbol sau număr atomic), „poziție” ([x, "
+"y, z] în angstromi), opțional „bondTo” (indicele atomului) și „bondOrder” (1-"
+"3). Returnează „indicele” noului atom."
 
 #: qtplugins/editor/editor.cpp:1032
 msgid ""
 "Add a bond between two unbonded atoms. Options: \"atoms\" ([i, j]) and "
 "optional \"order\" (1-3). Returns the bond \"index\"."
 msgstr ""
+"Adaugă o legătură între doi atomi care nu sunt legați. Opțiuni: „atomi” ([i, "
+"j]) și „ordine” opțională (1-3). Returnează „indicele” legăturii."
 
 #: qtplugins/editor/editor.cpp:1035
 msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
-msgstr ""
+msgstr "Elimină legătura dintre doi atomi. Opțiuni: „atomi” ([i, j])."
 
 #: qtplugins/editor/editor.cpp:1039
 msgid ""
 "Remove the selected atoms and their bonds. Returns the number \"removed\"."
 msgstr ""
+"Elimină atomii selectați și legăturile acestora. Returnează numărul de "
+"elemente „eliminate”."
 
 #: qtplugins/editor/editor.cpp:1053 qtplugins/measuretool/measuretool.cpp:764
 #: qtplugins/select/select.cpp:647
@@ -3756,17 +3773,19 @@ msgstr "Nicio moleculă"
 
 #: qtplugins/editor/editor.cpp:1061
 msgid "The active layer is locked; unlock it to edit."
-msgstr ""
+msgstr "Stratul activ este blocat; deblocați-l pentru a-l edita."
 
 #: qtplugins/editor/editor.cpp:1069
 #, qt-format
 msgid "Atom %1 is in a locked layer; unlock it to edit."
-msgstr ""
+msgstr "Atomul %1 se află într-un strat blocat; deblochează-l pentru a-l edita."
 
 #: qtplugins/editor/editor.cpp:1080
 msgid ""
 "addAtom requires an \"element\" option (an element symbol or atomic number)."
 msgstr ""
+"Funcția addAtom necesită o opțiune „element” (un simbol al elementului sau "
+"un număr atomic)."
 
 #: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
 #, qt-format
