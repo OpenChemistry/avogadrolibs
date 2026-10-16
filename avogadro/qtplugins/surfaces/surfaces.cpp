@@ -126,6 +126,8 @@ Surfaces::~Surfaces()
   // Parentless QThreads; ~MeshGenerator() waits for a running thread.
   delete m_meshGenerator1;
   delete m_meshGenerator2;
+  // Parentless when the plugin has no widget parent (e.g., in tests).
+  delete m_progressDialog;
   delete d;
   // delete m_cube; // should be freed by the molecule
 }
