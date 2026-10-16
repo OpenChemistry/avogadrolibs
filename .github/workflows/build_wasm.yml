@@ -1,0 +1,212 @@
+name: WASM Build
+
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+      - 'update-i18n-templates'
+    tags:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+env:
+  QT_VERSION: '6.11.1'
+  EMSCRIPTEN_VERSION: '4.0.7'
+  SUPERBUILD_REVISION: dbb1100a931c528b0b887ed6a02c0d4f4395f4c1
+  # ExternalProject's nested builds must use the same limit as the superbuild.
+  CMAKE_BUILD_PARALLEL_LEVEL: '2'
+
+jobs:
+  build:
+    name: WebAssembly Release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout pinned superbuild
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: timvdm/openchemistry
+          ref: ${{ env.SUPERBUILD_REVISION }}
+          path: openchemistry
+          persist-credentials: false
+
+      # These companion revisions are published in forks pending upstream merge.
+      # Keep the superbuild's exact gitlink pins; only override their fetch URLs.
+      - name: Checkout pinned companion sources
+        working-directory: openchemistry
+        run: |
+          git submodule init
+          git config submodule.avogadrolibs.url https://github.com/timvdm/avogadrolibs.git
+          git config submodule.avogadroapp.url https://github.com/timvdm/avogadroapp.git
+          git config submodule.avogadro-web.url https://github.com/timvdm/avogadro-web.git
+          git submodule update --init --recursive
+
+      # With no ref override, pull_request builds GitHub's merge revision,
+      # just like the native workflows. Do not build the superbuild's libs pin.
+      - name: Checkout library revision under test
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: openchemistry/avogadrolibs
+          persist-credentials: false
+
+      - name: Install build tools
+        run: |
+          sudo apt-get -qq update
+          sudo apt-get -qq install cmake ninja-build gzip
+
+      # Separate installation roots keep the host and WASM Qt caches distinct.
+      - name: Install host Qt
+        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: linux
+          target: desktop
+          arch: linux_gcc_64
+          dir: ${{ runner.temp }}/qt-host
+          # Host tools link QtCore, which needs Qt's matching ICU runtime.
+          archives: qtbase icu
+          cache: true
+          set-env: false
+
+      - name: Verify host Qt tools
+        run: |
+          qt_host="$RUNNER_TEMP/qt-host/Qt/$QT_VERSION/gcc_64"
+          "$qt_host/libexec/uic" --version
+          "$qt_host/libexec/moc" --version
+          "$qt_host/libexec/rcc" --version
+
+      - name: Install WASM Qt
+        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          target: wasm
+          arch: wasm_multithread
+          dir: ${{ runner.temp }}/qt-wasm
+          archives: qtbase
+          cache: true
+          set-env: false
+
+      - name: Checkout Emscripten SDK installer
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: emscripten-core/emsdk
+          ref: ${{ env.EMSCRIPTEN_VERSION }}
+          path: emsdk
+          persist-credentials: false
+
+      - name: Cache Emscripten SDK
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            emsdk/upstream
+            emsdk/node
+          key: wasm-sdk-${{ runner.os }}-${{ runner.arch }}-${{ env.EMSCRIPTEN_VERSION }}
+
+      - name: Activate toolchain
+        run: |
+          ./emsdk/emsdk install "$EMSCRIPTEN_VERSION"
+          ./emsdk/emsdk activate "$EMSCRIPTEN_VERSION"
+          {
+            echo "EM_CACHE=$RUNNER_TEMP/em-cache"
+            echo "QT_HOST_PATH=$RUNNER_TEMP/qt-host/Qt/$QT_VERSION/gcc_64"
+            echo "QT_WASM_PATH=$RUNNER_TEMP/qt-wasm/Qt/$QT_VERSION/wasm_multithread"
+          } >> "$GITHUB_ENV"
+
+      - name: Configure
+        run: |
+          source "$GITHUB_WORKSPACE/emsdk/emsdk_env.sh"
+          "$QT_WASM_PATH/bin/qt-cmake" -S openchemistry -B build-wasm -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DQT_HOST_PATH="$QT_HOST_PATH" \
+            -DQT_CHAINLOAD_TOOLCHAIN_FILE="$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
+            -DAVOGADRO_WEB_EDITOR=ON \
+            -DBUILD_AVOGADRO=ON -DUSE_OPENGL=ON \
+            -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_PLUGINS=ON \
+            -DENABLE_SUBPROCESS=OFF -DUSE_PYTHON=OFF \
+            -DUSE_LIBARCHIVE=OFF -DUSE_PLOTTER=OFF \
+            -DBUILD_MOLEQUEUE=OFF -DAvogadro_ENABLE_RPC=OFF \
+            -DENABLE_TESTING=OFF
+
+      - name: Build
+        run: |
+          source "$GITHUB_WORKSPACE/emsdk/emsdk_env.sh"
+          cmake --build build-wasm --parallel 2
+
+      - name: Check build profile
+        run: python3 openchemistry/avogadro-web/tests/check-build-profile.py build-wasm
+
+      - name: Stage and verify web package
+        run: |
+          source "$GITHUB_WORKSPACE/emsdk/emsdk_env.sh"
+          cmake --install build-wasm/avogadro-web --prefix "$RUNNER_TEMP/stage-wasm"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+
+          package = Path(os.environ['RUNNER_TEMP']) / 'stage-wasm/share/avogadro-web'
+          required = [
+              'index.html', 'editor.css', 'editor.js', 'qtloader.js',
+              'avogadro-web.js', 'avogadro-web.wasm', 'avogadro-web.wasm.gz',
+              'README.md', 'VALIDATION.md', 'serve-wasm.py',
+          ]
+          for name in required:
+              path = package / name
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise SystemExit(f'Missing or empty package file: {name}')
+          with (package / 'avogadro-web.wasm').open('rb') as wasm:
+              if wasm.read(8) != b'\x00asm\x01\x00\x00\x00':
+                  raise SystemExit('Invalid WASM magic or version')
+          # Preserve any worker JS/data emitted by the selected Qt runtime.
+          for pattern in ('*.js', '*.wasm', '*.data'):
+              for source in Path('build-wasm/avogadro-web/bin').glob(pattern):
+                  target = package / source.name
+                  if not target.is_file() or target.stat().st_size != source.stat().st_size:
+                      raise SystemExit(f'Missing or incomplete runtime asset: {source.name}')
+
+          def output(*args):
+              return subprocess.check_output(args, text=True).strip()
+
+          manifest = {
+              'sources': {
+                  name: output('git', '-C', f'openchemistry{suffix}', 'rev-parse', 'HEAD')
+                  for name, suffix in (
+                      ('openchemistry', ''), ('avogadrolibs', '/avogadrolibs'),
+                      ('avogadro-web', '/avogadro-web'),
+                  )
+              },
+              'toolchain': {
+                  'qt': os.environ['QT_VERSION'],
+                  'emscripten': os.environ['EMSCRIPTEN_VERSION'],
+                  'emcc': output('emcc', '--version'),
+                  'cmake': output('cmake', '--version'),
+                  'ninja': output('ninja', '--version'),
+              },
+              'profile': 'Release, wasm_multithread',
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+          }
+          (package / 'build-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          print(f'Verified web package: {package}')
+          PY
+
+      - name: Upload web package
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: avogadro-web-wasm
+          path: ${{ runner.temp }}/stage-wasm/share/avogadro-web/
+          if-no-files-found: error
+          retention-days: 14
