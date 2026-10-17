@@ -11,6 +11,7 @@
 #include "bufferobject.h"
 #include "camera.h"
 #include "primitive.h"
+#include "rendertimings.h"
 #include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
@@ -20,6 +21,7 @@
 #include <avogadro/core/array.h>
 
 #include <map>
+#include <memory>
 #include <string> // For member variables.
 #include <vector>
 
@@ -51,6 +53,28 @@ public:
 
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
+
+  /**
+   * Enable or disable per-pass timing of render(). Disabled by default, in
+   * which case render() issues no extra GL calls. When enabled each section
+   * of render() ("solid", "post", "opaque", "translucent", "overlay3d",
+   * "overlay2d") is timed on the CPU, and on the GPU with GL_TIME_ELAPSED
+   * queries when the driver supports them. Needs a current context.
+   */
+  void setTimingEnabled(bool enable);
+  bool timingEnabled() const { return m_timingEnabled; }
+
+  /**
+   * In synchronous mode render() blocks until the GPU results for the frame
+   * are in, and timings() describes that frame. Otherwise (the default) the
+   * results are collected a few frames later without stalling, and timings()
+   * lags the latest render() call.
+   */
+  void setTimingSynchronous(bool synchronous) { m_timingSync = synchronous; }
+  bool timingSynchronous() const { return m_timingSync; }
+
+  /** The most recently published frame timings; always one whole frame. */
+  const RenderTimings& timings() const { return m_timings; }
 
   /** Reset the view to fit the entire scene. */
   void resetCamera();
@@ -159,6 +183,12 @@ private:
 
   Vector3f m_center;
   float m_radius;
+
+  struct TimingState;
+  std::unique_ptr<TimingState> m_timingState;
+  RenderTimings m_timings;
+  bool m_timingEnabled = false;
+  bool m_timingSync = false;
 };
 
 inline const Camera& GLRenderer::camera() const

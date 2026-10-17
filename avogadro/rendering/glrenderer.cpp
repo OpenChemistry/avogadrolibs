@@ -18,11 +18,154 @@
 
 #include <avogadro/core/matrix.h>
 
+#include <array>
+#include <chrono>
 #include <iostream>
 
 namespace Avogadro::Rendering {
 
 using Core::Array;
+
+namespace {
+constexpr int TimedSections = 6;
+constexpr int TimedSlots = 4;
+const char* const SectionNames[TimedSections] = { "solid",     "post",
+                                                  "opaque",    "translucent",
+                                                  "overlay3d", "overlay2d" };
+} // namespace
+
+// Bookkeeping for GLRenderer::setTimingEnabled(). One slot holds the CPU
+// timings and the six GL_TIME_ELAPSED queries of a single frame; a ring of
+// them lets the GPU finish a frame while the next ones are being issued.
+struct GLRenderer::TimingState
+{
+  using Clock = std::chrono::steady_clock;
+
+  struct Slot
+  {
+    std::array<GLuint, TimedSections> queries = {};
+    std::array<double, TimedSections> cpuMs = {};
+    std::uint64_t frame = 0;
+    std::uint64_t bytes = 0;
+  };
+
+  std::array<Slot, TimedSlots> slots;
+  bool queriesCreated = false;
+  bool gpuAvailable = false;
+  int next = 0;    // slot the next frame is recorded in
+  int pending = 0; // frames issued but not yet published
+  std::uint64_t frameCounter = 0;
+
+  Slot* current = nullptr;
+  int section = -1;
+  Clock::time_point sectionStart;
+  std::uint64_t bytesAtStart = 0;
+
+  ~TimingState()
+  {
+    if (!queriesCreated)
+      return;
+    for (Slot& slot : slots)
+      glDeleteQueries(TimedSections, slot.queries.data());
+  }
+
+  void createQueries()
+  {
+    gpuAvailable = GLEW_VERSION_3_3 || GLEW_ARB_timer_query;
+    if (gpuAvailable) {
+      for (Slot& slot : slots)
+        glGenQueries(TimedSections, slot.queries.data());
+    }
+    queriesCreated = gpuAvailable;
+  }
+
+  Slot& oldest() { return slots[(next + TimedSlots - pending) % TimedSlots]; }
+
+  void publish(const Slot& slot, bool withGpu, RenderTimings& out) const
+  {
+    out.frame = slot.frame;
+    out.bufferBytesUploaded = slot.bytes;
+    out.gpuTimingAvailable = withGpu;
+    out.passes.resize(TimedSections);
+    for (int i = 0; i < TimedSections; ++i) {
+      PassTiming& pass = out.passes[i];
+      pass.name = SectionNames[i];
+      pass.cpuMs = slot.cpuMs[i];
+      pass.gpuMs = -1.0;
+      if (withGpu) {
+        GLuint64 ns = 0;
+        glGetQueryObjectui64v(slot.queries[i], GL_QUERY_RESULT, &ns);
+        pass.gpuMs = static_cast<double>(ns) * 1.0e-6;
+      }
+    }
+  }
+
+  // Publish every finished frame (oldest first) without waiting on the GPU.
+  void collectFinished(RenderTimings& out)
+  {
+    while (pending > 0) {
+      Slot& slot = oldest();
+      GLuint ready = 0;
+      glGetQueryObjectuiv(slot.queries[TimedSections - 1],
+                          GL_QUERY_RESULT_AVAILABLE, &ready);
+      if (!ready)
+        break;
+      publish(slot, true, out);
+      --pending;
+    }
+  }
+
+  void beginFrame(RenderTimings& out, bool synchronous)
+  {
+    if (!queriesCreated && frameCounter == 0)
+      createQueries();
+    if (gpuAvailable && !synchronous)
+      collectFinished(out);
+    // The ring is full of unread frames: drop the oldest to reuse its slot.
+    if (pending == TimedSlots)
+      --pending;
+    current = &slots[next];
+    current->frame = ++frameCounter;
+    bytesAtStart = BufferObject::totalBytesUploaded();
+    section = -1;
+  }
+
+  void beginSection(int index)
+  {
+    section = index;
+    if (gpuAvailable)
+      glBeginQuery(GL_TIME_ELAPSED, current->queries[index]);
+    sectionStart = Clock::now();
+  }
+
+  void endSection()
+  {
+    if (section < 0)
+      return;
+    const Clock::time_point stop = Clock::now();
+    current->cpuMs[section] =
+      std::chrono::duration<double, std::milli>(stop - sectionStart).count();
+    if (gpuAvailable)
+      glEndQuery(GL_TIME_ELAPSED);
+    section = -1;
+  }
+
+  void endFrame(RenderTimings& out, bool synchronous)
+  {
+    current->bytes = BufferObject::totalBytesUploaded() - bytesAtStart;
+    if (!gpuAvailable) {
+      publish(*current, false, out);
+    } else if (synchronous) {
+      // Anything still in flight is older than this frame; discard it.
+      pending = 0;
+      publish(*current, true, out);
+    } else {
+      ++pending;
+    }
+    next = (next + 1) % TimedSlots;
+    current = nullptr;
+  }
+};
 
 GLRenderer::GLRenderer()
   : m_valid(false), m_pixelRatio(1.0f), m_textRenderStrategy(nullptr),
@@ -50,6 +193,13 @@ GLRenderer::GLRenderer()
 GLRenderer::~GLRenderer()
 {
   delete m_textRenderStrategy;
+}
+
+void GLRenderer::setTimingEnabled(bool enable)
+{
+  m_timingEnabled = enable;
+  if (enable && !m_timingState)
+    m_timingState = std::make_unique<TimingState>();
 }
 
 void GLRenderer::initialize()
@@ -96,6 +246,12 @@ void GLRenderer::render()
   if (!m_valid)
     return;
 
+  TimingState* timing = m_timingEnabled ? m_timingState.get() : nullptr;
+  if (timing) {
+    timing->beginFrame(m_timings, m_timingSync);
+    timing->beginSection(0);
+  }
+
   Vector4ub c = m_scene.backgroundColor();
   glClearColor(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, c[3] / 255.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,14 +266,26 @@ void GLRenderer::render()
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
+  if (timing) {
+    timing->endSection();
+    timing->beginSection(1);
+  }
   // Before end(), so the offset the fog and depth-of-field are sized by
   // belongs to the camera this frame is drawn with rather than the last one.
   m_solidPipeline.adjustOffset(m_camera);
   m_solidPipeline.end(m_camera);
+  if (timing) {
+    timing->endSection();
+    timing->beginSection(2);
+  }
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
   m_scene.rootNode().accept(visitor);
+  if (timing) {
+    timing->endSection();
+    timing->beginSection(3);
+  }
 
   // Setup for transparent geometry
   visitor.setRenderPass(TranslucentPass);
@@ -126,17 +294,29 @@ void GLRenderer::render()
   // https://bugreports.qt.io/browse/QTBUG-36739
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
   m_scene.rootNode().accept(visitor);
+  if (timing) {
+    timing->endSection();
+    timing->beginSection(4);
+  }
 
   // Setup for 3d overlay rendering
   visitor.setRenderPass(Overlay3DPass);
   glClear(GL_DEPTH_BUFFER_BIT);
   m_scene.rootNode().accept(visitor);
+  if (timing) {
+    timing->endSection();
+    timing->beginSection(5);
+  }
 
   // Setup for 2d overlay rendering
   visitor.setRenderPass(Overlay2DPass);
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
   m_scene.rootNode().accept(visitor);
+  if (timing) {
+    timing->endSection();
+    timing->endFrame(m_timings, m_timingSync);
+  }
 
 #ifdef _3DCONNEXION
   if (m_drawIcon && (m_iconData != nullptr)) {

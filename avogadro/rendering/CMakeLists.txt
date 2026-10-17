@@ -49,6 +49,7 @@ avogadro_headers(Rendering
   primitive.h
   quad.h
   quadoutline.h
+  rendertimings.h
   scene.h
   shader.h
   shaderprogram.h
