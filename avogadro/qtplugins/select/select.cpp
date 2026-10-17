@@ -530,7 +530,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // check if name matches specified (e.g. HIS57 is really a HIS)
-      }   // index makes sense
+      } // index makes sense
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
@@ -542,7 +542,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // residue matches label
-      }   // for(residues)
+      } // for(residues)
       continue;
     } // 3-character labels
   }
