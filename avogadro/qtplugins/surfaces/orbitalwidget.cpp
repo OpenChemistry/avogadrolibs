@@ -11,13 +11,16 @@
 #include <QDebug>
 #include <QSettings>
 
+#include <algorithm>
+#include <cmath>
+
 using Avogadro::QtGui::RichTextDelegate;
 
 namespace Avogadro::QtPlugins {
 
 OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(parent, f), m_settings(nullptr), m_quality(OQ_Low),
-    m_isovalue(0.03), m_precalc_limit(true), m_precalc_range(10),
+  : QWidget(parent, f), m_settings(nullptr), m_isovalue(0.03),
+    m_precalc_limit(true), m_precalc_range(10),
     m_tableModel(new OrbitalTableModel(this)),
     m_sortedTableModel(new OrbitalSortingProxyModel(this))
 {
@@ -50,12 +53,16 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
   // TODO: Implement configure dialog
   ui.push_configure->setVisible(false);
   connect(ui.push_configure, SIGNAL(clicked()), this, SLOT(configureClicked()));
-  connect(ui.combo_quality, QOverload<int>::of(&QComboBox::currentIndexChanged),
-          this, [this](int idx) {
-            m_quality = OrbitalQuality(idx);
-            writeSettings();
-          });
   readSettings();
+  // Connect after readSettings() so restoring the index doesn't write back.
+  // Persist only this key: the destructor may never run at plugin teardown.
+  connect(ui.combo_quality, QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this, [](int idx) {
+            QSettings settings;
+            settings.beginGroup("orbitals");
+            settings.setValue("selectedQuality", idx);
+            settings.endGroup();
+          });
 }
 
 OrbitalWidget::~OrbitalWidget()
@@ -65,19 +72,25 @@ OrbitalWidget::~OrbitalWidget()
 
 OrbitalWidget::OrbitalQuality OrbitalWidget::quality() const
 {
-  return OrbitalQuality(ui.combo_quality->currentIndex());
+  int idx =
+    std::clamp(ui.combo_quality->currentIndex(), static_cast<int>(OQ_VeryLow),
+               static_cast<int>(OQ_VeryHigh));
+  return static_cast<OrbitalQuality>(idx);
 }
 
 void OrbitalWidget::readSettings()
 {
   QSettings settings;
   settings.beginGroup("orbitals");
-  m_quality = OrbitalQuality(settings.value("defaultQuality", 1).toInt());
   m_isovalue = settings.value("isoValue", 0.03).toDouble();
+  if (!std::isfinite(m_isovalue) || m_isovalue <= 0.0)
+    m_isovalue = 0.03;
+  // "defaultQuality" is the legacy key; only read it as a fallback
+  int legacyQuality = settings.value("defaultQuality", 1).toInt();
   int selectedQuality =
-    settings.value("selectedQuality", static_cast<int>(m_quality)).toInt();
-  ui.combo_quality->setCurrentIndex(selectedQuality);
-  m_quality = OrbitalQuality(selectedQuality);
+    settings.value("selectedQuality", legacyQuality).toInt();
+  ui.combo_quality->setCurrentIndex(
+    std::clamp(selectedQuality, 0, std::max(0, ui.combo_quality->count() - 1)));
   m_sortedTableModel->HOMOFirst(settings.value("HOMOFirst", false).toBool());
   m_precalc_limit = settings.value("precalc/limit", true).toBool();
   m_precalc_range = settings.value("precalc/range", 10).toInt();
@@ -88,7 +101,6 @@ void OrbitalWidget::writeSettings()
 {
   QSettings settings;
   settings.beginGroup("orbitals");
-  settings.setValue("defaultQuality", static_cast<int>(m_quality));
   settings.setValue("isoValue", m_isovalue);
   settings.setValue("selectedQuality", ui.combo_quality->currentIndex());
   settings.setValue("HOMOFirst", m_sortedTableModel->isHOMOFirst());
@@ -108,7 +120,7 @@ void OrbitalWidget::configureClicked()
   if (!m_settings) {
     m_settings = new OrbitalSettingsDialog(this);
   }
-  m_settings->setDefaultQuality(m_quality);
+  m_settings->setDefaultQuality(quality());
   m_settings->setIsoValue(m_isovalue);
   m_settings->setHOMOFirst(m_sortedTableModel->isHOMOFirst());
   m_settings->setLimitPrecalc(m_precalc_limit);
@@ -226,7 +238,7 @@ double OrbitalWidget::OrbitalQualityToDouble(OrbitalQuality q)
 
 void OrbitalWidget::setDefaults(OrbitalQuality q, double i, bool HOMOFirst)
 {
-  m_quality = q;
+  setQuality(q);
   m_isovalue = i;
   m_sortedTableModel->HOMOFirst(HOMOFirst);
   m_sortedTableModel->sort(0, Qt::AscendingOrder);
