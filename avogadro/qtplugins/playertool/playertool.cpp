@@ -344,10 +344,15 @@ void PlayerTool::play()
 void PlayerTool::animateDue()
 {
   // Advance by the frames due on the wall clock so playback skips frames,
-  // rather than falling behind, when rendering can't keep up.
-  qint64 due = static_cast<qint64>(m_playClock.elapsed() * m_playFps / 1000.0);
-  int advance = static_cast<int>(std::max<qint64>(1, due - m_playTicks));
-  m_playTicks += advance;
+  // rather than falling behind, when rendering can't keep up. Rounding puts
+  // each tick mid-frame, so timer jitter can't flip between skip and repeat;
+  // a tick that arrives before the next frame is due does nothing.
+  const auto due =
+    static_cast<qint64>(m_playClock.elapsed() * m_playFps / 1000.0 + 0.5);
+  if (due <= m_playTicks)
+    return;
+  const auto advance = static_cast<int>(due - m_playTicks);
+  m_playTicks = due;
   animate(advance);
 }
 
