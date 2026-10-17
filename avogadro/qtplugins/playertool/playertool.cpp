@@ -66,7 +66,8 @@ PlayerTool::PlayerTool(QObject* parent_)
     m_dynamicBonding(nullptr), m_glWidget(nullptr), m_slider(nullptr),
     playButton(nullptr)
 {
-  connect(&m_timer, &QTimer::timeout, this, [this]() { animate(); });
+  m_timer.setTimerType(Qt::PreciseTimer);
+  connect(&m_timer, &QTimer::timeout, this, &PlayerTool::animateDue);
 
   QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));
@@ -334,7 +335,20 @@ void PlayerTool::play()
   int timeOut = static_cast<int>(1000 / fps);
   if (m_timer.isActive())
     m_timer.stop();
+  m_playFps = fps;
+  m_playTicks = 0;
+  m_playClock.start();
   m_timer.start(timeOut);
+}
+
+void PlayerTool::animateDue()
+{
+  // Advance by the frames due on the wall clock so playback skips frames,
+  // rather than falling behind, when rendering can't keep up.
+  qint64 due = static_cast<qint64>(m_playClock.elapsed() * m_playFps / 1000.0);
+  int advance = static_cast<int>(std::max<qint64>(1, due - m_playTicks));
+  m_playTicks += advance;
+  animate(advance);
 }
 
 void PlayerTool::stop()

@@ -26,8 +26,7 @@
 namespace Avogadro::QtOpenGL {
 
 GLWidget::GLWidget(QWidget* p)
-  : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
-    m_renderTimer(nullptr)
+  : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginStateChanged, this,
@@ -222,20 +221,8 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
 
 void GLWidget::requestUpdate()
 {
-  if (!m_renderTimer) {
-    m_renderTimer = new QTimer(this);
-    connect(m_renderTimer, &QTimer::timeout, this, &GLWidget::updateTimeout);
-    m_renderTimer->setSingleShot(1000 / 30); // 30 fps
-    m_renderTimer->start();
-  }
-}
-
-void GLWidget::updateTimeout()
-{
-  if (m_renderTimer) {
-    m_renderTimer->deleteLater();
-    m_renderTimer = nullptr;
-  }
+  // update() only schedules a repaint, so bursts of requests (e.g. mouse
+  // moves while navigating) coalesce into one frame paced by the display.
   update();
 }
 
