@@ -1,0 +1,702 @@
+name: Rendering Benchmark (CI only)
+# CI-only workflow for the unmerged `render-benchmark-instrumentation` branch.
+# It builds AvogadroRenderBenchmark on Linux and Windows and runs it in several
+# OpenGL configurations, to answer the "phase 2 spike" in the offscreen render
+# plan: which platform/driver combinations give a usable offscreen GL context
+# with no window and (on Linux) no X server. Every other workflow ignores this
+# branch, so a push runs only the two jobs below.
+#
+# Each GL configuration is its own step with continue-on-error, so one failing
+# configuration (several are expected to fail, and that is a result) neither
+# hides the others nor stops the summary and artifact steps. A failure to
+# build the benchmark does fail the job.
+#
+# Both jobs use the Release build type, like the "Ubuntu x86" and "Windows Qt6"
+# configurations of build_linux.yml and build_windows.yml, whose setup they
+# copy. They restore master's sccache entries by those configuration names and
+# never save one.
+
+on:
+  push:
+    branches:
+      - 'render-benchmark-instrumentation'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  QT_VERSION: 6.8.3
+  BUILD_TYPE: Release
+  # Workload names; the runner script and the summary both use them.
+  WORKLOADS: water3000-rebuild water3000-render water30000-rebuild crambin-render
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Linux (Ubuntu x86, Release)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+      # Software rendering everywhere on Linux: the runners have no GPU.
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      GALLIUM_DRIVER: llvmpipe
+      # Log why Qt picks or rejects a GL context; this is the spike's evidence.
+      QT_LOGGING_RULES: "qt.qpa.gl=true;qt.qpa.egl*=true;qt.qpa.xcb.glintegration=true"
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    # build_linux.yml's list, minus libfuse2 (AppImage only).
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
+
+    # Runtime pieces for the benchmark: Xvfb and Mesa's software GL/EGL, plus
+    # the libraries Qt's xcb platform plugin needs. The eglfs/minimalegl
+    # plugins additionally want gbm, drm and libinput at load time.
+    - name: Install GL and Qt runtime dependencies
+      run: |
+        sudo apt-get -qq install xvfb mesa-utils libgl1 libgl1-mesa-dri libglx-mesa0 libegl1 libegl-mesa0 libopengl0 libgbm1 libdrm2 libinput10 \
+          libxcb-cursor0 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 libxcb-xkb1 libxcb-randr0 libxcb-glx0 libxcb-xfixes0 libxcb-sync1 libfontconfig1 libdbus-1-3
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    # Restore only: this branch must not save a cache. Must run before
+    # Configure, which needs the compiler-launcher variables it exports.
+    - name: Restore compiler cache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: Ubuntu x86
+        size: 600M
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=gcc CXX=g++ cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja -DUSE_SYSTEM_EIGEN=TRUE
+      shell: bash
+
+    - name: Build
+      run: |
+        CC=gcc CXX=g++ cmake --build . --config ${{ env.BUILD_TYPE }}
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    # Turn the benchmark on in the avogadrolibs sub-build, the same way
+    # build_windows.yml's "Run tests" step turns tests on.
+    - name: Build the rendering benchmark
+      id: build_bench
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        cmake -DENABLE_RENDERING_BENCHMARKS=ON .
+        cmake --build . --target AvogadroRenderBenchmark
+        exe=$(find "${{ runner.workspace }}/build/avogadrolibs" -type f -name AvogadroRenderBenchmark | head -n 1)
+        if [ -z "$exe" ]; then
+          echo "::error::AvogadroRenderBenchmark was not found after the build"
+          find "${{ runner.workspace }}/build/avogadrolibs" -maxdepth 3 -type f -perm -u+x | head -50
+          exit 1
+        fi
+        echo "Benchmark: $exe"
+        {
+          echo "BENCH_EXE=$exe"
+          echo "DATA_FILE=$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
+          # The executable finds our shared libraries and the superbuild's
+          # through the build tree; Qt's come from install-qt-action.
+          echo "LD_LIBRARY_PATH=${{ runner.workspace }}/build/avogadrolibs/lib:${{ runner.workspace }}/build/prefix/lib:${{ runner.workspace }}/build/prefix/lib64:$LD_LIBRARY_PATH"
+        } >> "$GITHUB_ENV"
+        ls -l "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
+
+    - name: Create workload runner
+      shell: bash
+      run: |
+        cat > "$RUNNER_TEMP/run_workloads.sh" <<'EOF'
+        #!/usr/bin/env bash
+        # Usage: run_workloads.sh CONFIG
+        # Runs the four workloads and writes results/CONFIG/<workload>.json,
+        # .png and .log (stdout and stderr), plus env.txt. Exits non-zero if
+        # any workload failed, so the calling step is marked, but always runs
+        # every workload.
+        config="$1"
+        out="$GITHUB_WORKSPACE/results/$config"
+        mkdir -p "$out"
+        native() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s' "$1"; fi; }
+        # Windows' own timeout.exe can shadow GNU timeout on PATH.
+        TIMEOUT=/usr/bin/timeout
+        [ -x "$TIMEOUT" ] || TIMEOUT=$(command -v timeout)
+
+        {
+          echo "config: $config"
+          echo "runner_os: $RUNNER_OS"
+          echo "exe: $BENCH_EXE"
+          date -u +"started: %Y-%m-%dT%H:%M:%SZ"
+          env | grep -E '^(QT_|EGL_|LIBGL_|GALLIUM_|MESA_|LP_|DISPLAY=|WAYLAND_DISPLAY=|AVOGADRO_|LD_LIBRARY_PATH=)' | sort
+        } > "$out/env.txt"
+
+        failed=0
+        run() {
+          local name="$1"; shift
+          local log="$out/$name.log"
+          echo "::group::$config / $name"
+          # 10 minutes per run; the software rasteriser can be very slow.
+          "$TIMEOUT" --kill-after=30 600 "$BENCH_EXE" "$@" --size 1280x720 \
+            --json "$(native "$out/$name.json")" \
+            --save-image "$(native "$out/$name.png")" > "$log" 2>&1
+          local rc=$?
+          echo "exit status: $rc" >> "$log"
+          cat "$log"
+          echo "::endgroup::"
+          if [ "$rc" -ne 0 ]; then
+            echo "::warning::$config / $name failed with exit status $rc"
+            failed=1
+          fi
+        }
+
+        run water3000-rebuild  --water 3000  --mode rebuild --frames 20 --warmup 3
+        run water3000-render   --water 3000  --mode render  --frames 20 --warmup 3
+        run water30000-rebuild --water 30000 --mode rebuild --frames 5  --warmup 1
+        run crambin-render     --file "$(native "$DATA_FILE")" --mode render --frames 20 --warmup 3
+        exit $failed
+        EOF
+        chmod +x "$RUNNER_TEMP/run_workloads.sh"
+
+    # Context for reading the results: the Qt platform plugins this Qt build
+    # ships (eglfs and minimalegl may be absent), what the executable links
+    # against, and what GLX reports under Xvfb.
+    - name: Record environment
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      shell: bash
+      run: |
+        mkdir -p results/linux-info
+        {
+          echo "== Qt platform plugins ($QT_ROOT_DIR/plugins/platforms)"
+          ls "$QT_ROOT_DIR/plugins/platforms" 2>&1
+          echo "== Qt EGL device integrations"
+          ls "$QT_ROOT_DIR/plugins/egldeviceintegrations" 2>&1
+          echo "== Missing shared libraries of the benchmark"
+          ldd "$BENCH_EXE" | grep "not found" || echo "none"
+          echo "== Mesa packages"
+          dpkg -l | grep -E 'libgl1-mesa-dri|libegl-mesa0|libglx-mesa0' | awk '{print $2, $3}'
+          echo "== benchmark --help"
+          "$BENCH_EXE" --help 2>&1 | head -5
+        } > results/linux-info/environment.txt 2>&1
+        xvfb-run -a -s "-screen 0 1920x1080x24" glxinfo -B > results/linux-info/glxinfo-xvfb.txt 2>&1 || true
+        cat results/linux-info/environment.txt results/linux-info/glxinfo-xvfb.txt
+
+    # (a) The main question: Qt's offscreen platform, no X server at all.
+    # Qt's offscreen plugin gets its GL from GLX on an X display, so this is
+    # expected to fail without DISPLAY; the log will say how.
+    - name: Benchmark - linux-offscreen (QT_QPA_PLATFORM=offscreen, no X)
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: |
+        unset DISPLAY WAYLAND_DISPLAY
+        bash "$RUNNER_TEMP/run_workloads.sh" linux-offscreen
+
+    # (b) The baseline: Xvfb with the default xcb platform, which is how the
+    # application runs under CI today.
+    - name: Benchmark - linux-xvfb (xvfb-run, xcb)
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      run: |
+        unset QT_QPA_PLATFORM
+        xvfb-run -a -s "-screen 0 1920x1080x24" bash "$RUNNER_TEMP/run_workloads.sh" linux-xvfb
+
+    # (c) Experimental: eglfs on Mesa's surfaceless EGL platform. With
+    # QT_QPA_EGLFS_INTEGRATION=none Qt uses its generic integration (no KMS or
+    # X11 device), so no display server and no GPU node are needed; the
+    # offscreen surface is then an EGL pbuffer. Input handling is disabled
+    # because there are no input devices. Qt's eglfs defaults to an OpenGL ES
+    # context, so a desktop 4.0 core request may be rejected; the log will say.
+    - name: Benchmark - linux-eglfs (eglfs, surfaceless EGL)
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      env:
+        QT_QPA_PLATFORM: eglfs
+        QT_QPA_EGLFS_INTEGRATION: none
+        QT_QPA_EGLFS_DISABLE_INPUT: "1"
+        EGL_PLATFORM: surfaceless
+      run: |
+        unset DISPLAY WAYLAND_DISPLAY
+        bash "$RUNNER_TEMP/run_workloads.sh" linux-eglfs
+
+    # (d) Experimental: the minimalegl platform plugin on the same surfaceless
+    # EGL platform, the other candidate in the plan's spike table.
+    - name: Benchmark - linux-minimalegl (minimalegl, surfaceless EGL)
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      env:
+        QT_QPA_PLATFORM: minimalegl
+        EGL_PLATFORM: surfaceless
+      run: |
+        unset DISPLAY WAYLAND_DISPLAY
+        bash "$RUNNER_TEMP/run_workloads.sh" linux-minimalegl
+
+    - name: Summarize results
+      if: always()
+      shell: bash
+      env:
+        CONFIGS: linux-offscreen linux-xvfb linux-eglfs linux-minimalegl
+      run: |
+        PY=$(command -v python3 || command -v python)
+        "$PY" - <<'PY'
+        import json, os, pathlib, re
+
+        root = pathlib.Path(os.environ["GITHUB_WORKSPACE"]) / "results"
+        configs = os.environ["CONFIGS"].split()
+        workloads = os.environ["WORKLOADS"].split()
+
+
+        def cell(value):
+            return str(value).replace("|", "\\|").replace("\n", " ")
+
+
+        def number(value, digits=2):
+            return "-" if value is None else f"{value:.{digits}f}"
+
+
+        def log_field(text, key):
+            m = re.search(rf"^{key}:\s*(.*)$", text, re.M)
+            return m.group(1).strip() if m else None
+
+
+        rows = []
+        details = []
+        for cfg in configs:
+            for wl in workloads:
+                base = root / cfg / wl
+                log = base.with_suffix(".log")
+                js = base.with_suffix(".json")
+                text = log.read_text(errors="replace") if log.exists() else ""
+                data = None
+                if js.exists():
+                    try:
+                        data = json.loads(js.read_text())
+                    except ValueError:
+                        data = None
+                if data is not None:
+                    status = "ok"
+                elif log.exists():
+                    status = "failed"
+                else:
+                    status = "missing"
+                vendor = renderer = version = "-"
+                atoms = frame = gpu = None
+                if data is not None:
+                    vendor = data.get("gl_vendor", "-")
+                    renderer = data.get("gl_renderer", "-")
+                    version = data.get("gl_version", "-")
+                    atoms = data.get("atoms")
+                    sections = data.get("sections", {})
+                    frame = sections.get("frame total", {}).get("median")
+                    gpu = sections.get("render total gpu", {}).get("median")
+                elif text:
+                    vendor = log_field(text, "GL_VENDOR") or "-"
+                    renderer = log_field(text, "GL_RENDERER") or "-"
+                    version = log_field(text, "GL_VERSION") or "-"
+                rows.append((cfg, wl, status, vendor, renderer, version,
+                             "-" if atoms is None else atoms,
+                             number(frame), number(gpu)))
+                if status == "failed":
+                    lines = [l for l in text.splitlines() if l.strip()]
+                    details.append((f"{cfg} / {wl}", "\n".join(lines[-12:])))
+
+        out = []
+        out.append(f"### Rendering benchmark: {os.environ.get('RUNNER_OS', '?')} "
+                   f"({os.environ.get('RUNNER_ARCH', '?')}), "
+                   f"build type {os.environ.get('BUILD_TYPE', '?')}")
+        out.append("")
+        out.append(f"Runner image: {os.environ.get('ImageOS', '?')} "
+                   f"{os.environ.get('ImageVersion', '?')}, "
+                   f"{os.cpu_count()} CPUs, Qt {os.environ.get('QT_VERSION', '?')}")
+        out.append("")
+        out.append("| config | workload | status | GL vendor | GL renderer | GL version | atoms | median frame total (ms) | median render total GPU (ms) |")
+        out.append("|---|---|---|---|---|---|---:|---:|---:|")
+        for row in rows:
+            out.append("| " + " | ".join(cell(c) for c in row) + " |")
+        out.append("")
+        for title, tail in details:
+            out.append(f"<details><summary>Failure: {cell(title)}</summary>\n\n```\n{tail}\n```\n</details>\n")
+        for cfg in configs:
+            env = root / cfg / "env.txt"
+            if env.exists():
+                out.append(f"<details><summary>Environment: {cfg}</summary>\n\n```\n{env.read_text(errors='replace')}\n```\n</details>\n")
+        for info in sorted(root.glob("*-info/*.txt")):
+            out.append(f"<details><summary>{info.parent.name}/{info.name}</summary>\n\n```\n{info.read_text(errors='replace')[:6000]}\n```\n</details>\n")
+
+        text = "\n".join(out) + "\n"
+        print(text)
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a", encoding="utf-8") as f:
+                f.write(text)
+        PY
+
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: render-benchmark-linux
+        path: ${{ github.workspace }}/results
+        if-no-files-found: warn
+
+  windows:
+    name: Windows (Windows Qt6, Release)
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
+      QT_LOGGING_RULES: "qt.qpa.gl=true"
+      # Pinned Mesa for Windows (pal1000/mesa-dist-win, MSVC x64 release
+      # build); the SHA-256 is the digest GitHub reports for the asset.
+      MESA_VERSION: 26.2.4
+      MESA_SHA256: 351fc8c8b695878ffb3eaa044b3ead08672a48b1a045e3c3e3975811df0f6695
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure MSVC Command Prompt
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+      with:
+        arch: x64
+
+    # The same package list as build_windows.yml (gtest included, though
+    # unused) so the exact-match vcpkg cache key hits master's cache.
+    - name: Install vcpkg packages
+      uses: ./.github/actions/vcpkg-install
+      with:
+        packages: libarchive eigen3 libxml2 zlib gtest
+
+    # build_windows.yml also installs nsis; only the installer needs it.
+    - name: Install Dependencies (Windows)
+      run: |
+        choco install ninja
+      shell: bash
+
+    # Restore only: this branch must not save a cache. Must run before
+    # Configure, which needs the compiler-launcher variables it exports.
+    - name: Restore compiler cache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: Windows Qt6
+        size: 600M
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=cl CXX=cl cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON
+      shell: bash
+
+    # Read-only restore of the third-party downloads; the key is
+    # build_windows.yml's for the "Windows Qt6" entry (sentry off).
+    - name: Cache thirdparty
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: thirdparty-${{ runner.os }}-${{ runner.arch }}-${{ env.BUILD_TYPE }}-sentryfalse-${{ hashFiles('openchemistry/cmake/External*.cmake', 'openchemistry/cmake/projects/*.cmake') }}
+
+    - name: Build
+      run: |
+        CC=cl CXX=cl cmake --build . --config ${{ env.BUILD_TYPE }} --parallel
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    # Turn the benchmark on in the avogadrolibs sub-build, the same way
+    # build_windows.yml's "Run tests" step turns tests on.
+    - name: Build the rendering benchmark
+      id: build_bench
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        cmake -DENABLE_RENDERING_BENCHMARKS=ON .
+        cmake --build . --target AvogadroRenderBenchmark --parallel
+        exe=$(find "${{ runner.workspace }}/build/avogadrolibs" -type f -name AvogadroRenderBenchmark.exe | head -n 1)
+        if [ -z "$exe" ]; then
+          echo "::error::AvogadroRenderBenchmark.exe was not found after the build"
+          find "${{ runner.workspace }}/build/avogadrolibs" -maxdepth 3 -name '*.exe' | head -50
+          exit 1
+        fi
+        echo "Benchmark: $exe"
+        {
+          echo "BENCH_EXE=$(cygpath -m "$exe")"
+          echo "DATA_FILE=$(cygpath -m "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb")"
+        } >> "$GITHUB_ENV"
+        # The PATH build_windows.yml's test step uses (Qt, vcpkg and the
+        # superbuild prefix), plus the build tree where our own DLLs sit.
+        for p in "$QT_ROOT_DIR/bin" "C:/vcpkg/installed/x64-windows/bin" \
+                 "${{ runner.workspace }}/build/prefix/bin" \
+                 "${{ runner.workspace }}/build/avogadrolibs/bin"; do
+          cygpath -w "$p" >> "$GITHUB_PATH"
+        done
+        ls -l "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
+
+    - name: Create workload runner
+      shell: bash
+      run: |
+        cat > "$RUNNER_TEMP/run_workloads.sh" <<'EOF'
+        #!/usr/bin/env bash
+        # Usage: run_workloads.sh CONFIG
+        # Runs the four workloads and writes results/CONFIG/<workload>.json,
+        # .png and .log (stdout and stderr), plus env.txt. Exits non-zero if
+        # any workload failed, so the calling step is marked, but always runs
+        # every workload.
+        config="$1"
+        out="$GITHUB_WORKSPACE/results/$config"
+        mkdir -p "$out"
+        native() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s' "$1"; fi; }
+        # Windows' own timeout.exe can shadow GNU timeout on PATH.
+        TIMEOUT=/usr/bin/timeout
+        [ -x "$TIMEOUT" ] || TIMEOUT=$(command -v timeout)
+
+        {
+          echo "config: $config"
+          echo "runner_os: $RUNNER_OS"
+          echo "exe: $BENCH_EXE"
+          date -u +"started: %Y-%m-%dT%H:%M:%SZ"
+          env | grep -E '^(QT_|EGL_|LIBGL_|GALLIUM_|MESA_|LP_|DISPLAY=|WAYLAND_DISPLAY=|AVOGADRO_|LD_LIBRARY_PATH=)' | sort
+        } > "$out/env.txt"
+
+        failed=0
+        run() {
+          local name="$1"; shift
+          local log="$out/$name.log"
+          echo "::group::$config / $name"
+          # 10 minutes per run; the software rasteriser can be very slow.
+          "$TIMEOUT" --kill-after=30 600 "$BENCH_EXE" "$@" --size 1280x720 \
+            --json "$(native "$out/$name.json")" \
+            --save-image "$(native "$out/$name.png")" > "$log" 2>&1
+          local rc=$?
+          echo "exit status: $rc" >> "$log"
+          cat "$log"
+          echo "::endgroup::"
+          if [ "$rc" -ne 0 ]; then
+            echo "::warning::$config / $name failed with exit status $rc"
+            failed=1
+          fi
+        }
+
+        run water3000-rebuild  --water 3000  --mode rebuild --frames 20 --warmup 3
+        run water3000-render   --water 3000  --mode render  --frames 20 --warmup 3
+        run water30000-rebuild --water 30000 --mode rebuild --frames 5  --warmup 1
+        run crambin-render     --file "$(native "$DATA_FILE")" --mode render --frames 20 --warmup 3
+        exit $failed
+        EOF
+        chmod +x "$RUNNER_TEMP/run_workloads.sh"
+
+    # The three configurations run in this order on purpose: the first two
+    # need the exe's directory free of any opengl32.dll, and the Mesa step
+    # copies one in, so it goes last.
+    #
+    # (b) The default: no Mesa. The runner has no GPU driver, so Windows
+    # serves its GDI software OpenGL 1.1, and a 4.0 core context is expected
+    # to fail.
+    - name: Benchmark - windows-default (system OpenGL, no Mesa)
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      run: |
+        bash "$RUNNER_TEMP/run_workloads.sh" windows-default
+
+    # (c) Experimental: Qt's own software OpenGL (opengl32sw.dll, a Mesa
+    # build), if install-qt-action ships it. Qt creates its context from that
+    # DLL, but GLEW (inside GLRenderer::initialize) may still resolve
+    # functions through the system opengl32.dll, so this may fail or crash.
+    - name: Benchmark - windows-qt-software (QT_OPENGL=software)
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      env:
+        QT_OPENGL: software
+      run: |
+        mkdir -p "$GITHUB_WORKSPACE/results/windows-qt-software"
+        { ls -l "$QT_ROOT_DIR/bin/opengl32sw.dll" 2>&1 || echo "opengl32sw.dll is missing"; } \
+          | tee "$GITHUB_WORKSPACE/results/windows-qt-software/opengl32sw.txt"
+        bash "$RUNNER_TEMP/run_workloads.sh" windows-qt-software
+
+    # (a) Mesa llvmpipe. opengl32.dll is not a KnownDLL, so a copy in the
+    # application directory is found before System32's GDI one, for Qt and for
+    # the executable's own (GLEW) imports alike. libgallium_wgl.dll holds the
+    # drivers and is selected with GALLIUM_DRIVER; this Mesa release has no
+    # libglapi.dll. dxil.dll only matters for the d3d12 driver, but is cheap.
+    # No well-known action does exactly this, so it is a pinned download with
+    # a checksum check.
+    - name: Fetch Mesa (llvmpipe) and put it beside the benchmark
+      id: mesa
+      if: always() && steps.build_bench.outcome == 'success'
+      continue-on-error: true
+      shell: bash
+      run: |
+        url="https://github.com/pal1000/mesa-dist-win/releases/download/${MESA_VERSION}/mesa3d-${MESA_VERSION}-release-msvc.7z"
+        curl -fsSL --retry 3 -o mesa.7z "$url"
+        echo "${MESA_SHA256}  mesa.7z" | sha256sum -c -
+        SEVENZ=$(command -v 7z || echo "/c/Program Files/7-Zip/7z.exe")
+        "$SEVENZ" x mesa.7z -omesa -y x64/opengl32.dll x64/libgallium_wgl.dll x64/dxil.dll > /dev/null
+        exedir=$(dirname "$BENCH_EXE")
+        for f in opengl32.dll libgallium_wgl.dll libglapi.dll dxil.dll; do
+          if [ -f "mesa/x64/$f" ]; then cp -f "mesa/x64/$f" "$exedir/"; fi
+        done
+        mkdir -p "$GITHUB_WORKSPACE/results/windows-mesa-llvmpipe"
+        {
+          echo "Mesa ${MESA_VERSION} (mesa-dist-win release-msvc, sha256 ${MESA_SHA256})"
+          ls -l "$exedir"/opengl32.dll "$exedir"/libgallium_wgl.dll "$exedir"/dxil.dll
+        } | tee "$GITHUB_WORKSPACE/results/windows-mesa-llvmpipe/mesa-files.txt"
+
+    # Skipped (so reported as missing) if the download or checksum failed,
+    # rather than mislabelling a run without Mesa.
+    - name: Benchmark - windows-mesa-llvmpipe (Mesa llvmpipe beside the exe)
+      if: always() && steps.mesa.outcome == 'success'
+      continue-on-error: true
+      timeout-minutes: 45
+      shell: bash
+      env:
+        GALLIUM_DRIVER: llvmpipe
+      run: |
+        bash "$RUNNER_TEMP/run_workloads.sh" windows-mesa-llvmpipe
+
+    - name: Summarize results
+      if: always()
+      shell: bash
+      env:
+        CONFIGS: windows-mesa-llvmpipe windows-default windows-qt-software
+      run: |
+        PY=$(command -v python3 || command -v python)
+        "$PY" - <<'PY'
+        import json, os, pathlib, re
+
+        root = pathlib.Path(os.environ["GITHUB_WORKSPACE"]) / "results"
+        configs = os.environ["CONFIGS"].split()
+        workloads = os.environ["WORKLOADS"].split()
+
+
+        def cell(value):
+            return str(value).replace("|", "\\|").replace("\n", " ")
+
+
+        def number(value, digits=2):
+            return "-" if value is None else f"{value:.{digits}f}"
+
+
+        def log_field(text, key):
+            m = re.search(rf"^{key}:\s*(.*)$", text, re.M)
+            return m.group(1).strip() if m else None
+
+
+        rows = []
+        details = []
+        for cfg in configs:
+            for wl in workloads:
+                base = root / cfg / wl
+                log = base.with_suffix(".log")
+                js = base.with_suffix(".json")
+                text = log.read_text(errors="replace") if log.exists() else ""
+                data = None
+                if js.exists():
+                    try:
+                        data = json.loads(js.read_text())
+                    except ValueError:
+                        data = None
+                if data is not None:
+                    status = "ok"
+                elif log.exists():
+                    status = "failed"
+                else:
+                    status = "missing"
+                vendor = renderer = version = "-"
+                atoms = frame = gpu = None
+                if data is not None:
+                    vendor = data.get("gl_vendor", "-")
+                    renderer = data.get("gl_renderer", "-")
+                    version = data.get("gl_version", "-")
+                    atoms = data.get("atoms")
+                    sections = data.get("sections", {})
+                    frame = sections.get("frame total", {}).get("median")
+                    gpu = sections.get("render total gpu", {}).get("median")
+                elif text:
+                    vendor = log_field(text, "GL_VENDOR") or "-"
+                    renderer = log_field(text, "GL_RENDERER") or "-"
+                    version = log_field(text, "GL_VERSION") or "-"
+                rows.append((cfg, wl, status, vendor, renderer, version,
+                             "-" if atoms is None else atoms,
+                             number(frame), number(gpu)))
+                if status == "failed":
+                    lines = [l for l in text.splitlines() if l.strip()]
+                    details.append((f"{cfg} / {wl}", "\n".join(lines[-12:])))
+
+        out = []
+        out.append(f"### Rendering benchmark: {os.environ.get('RUNNER_OS', '?')} "
+                   f"({os.environ.get('RUNNER_ARCH', '?')}), "
+                   f"build type {os.environ.get('BUILD_TYPE', '?')}")
+        out.append("")
+        out.append(f"Runner image: {os.environ.get('ImageOS', '?')} "
+                   f"{os.environ.get('ImageVersion', '?')}, "
+                   f"{os.cpu_count()} CPUs, Qt {os.environ.get('QT_VERSION', '?')}")
+        out.append("")
+        out.append("| config | workload | status | GL vendor | GL renderer | GL version | atoms | median frame total (ms) | median render total GPU (ms) |")
+        out.append("|---|---|---|---|---|---|---:|---:|---:|")
+        for row in rows:
+            out.append("| " + " | ".join(cell(c) for c in row) + " |")
+        out.append("")
+        for title, tail in details:
+            out.append(f"<details><summary>Failure: {cell(title)}</summary>\n\n```\n{tail}\n```\n</details>\n")
+        for cfg in configs:
+            env = root / cfg / "env.txt"
+            if env.exists():
+                out.append(f"<details><summary>Environment: {cfg}</summary>\n\n```\n{env.read_text(errors='replace')}\n```\n</details>\n")
+        for info in sorted(root.glob("*/*.txt")):
+            if info.name != "env.txt":
+                out.append(f"<details><summary>{info.parent.name}/{info.name}</summary>\n\n```\n{info.read_text(errors='replace')[:6000]}\n```\n</details>\n")
+
+        text = "\n".join(out) + "\n"
+        print(text)
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a", encoding="utf-8") as f:
+                f.write(text)
+        PY
+
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: render-benchmark-windows
+        path: ${{ github.workspace }}/results
+        if-no-files-found: warn
