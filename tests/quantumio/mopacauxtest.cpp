@@ -336,3 +336,34 @@ TEST(MopacAuxTest, negativeCountIsRejected)
     " ATOM_EL[1]=\n H\n ATOM_X:ANGSTROMS[-3]=\n 0.0 0.0 0.0\n", molecule));
   EXPECT_EQ(molecule.atomCount(), 0);
 }
+
+// Regression test (fuzzer OOM): a data line that merely contains "ATOM_X" has
+// no bracket, and its count used to be parsed from the start of the line. A
+// leading negative number became ~4 billion, and readArrayVec() allocated
+// for all of it up front.
+TEST(MopacAuxTest, bracketlessKeyReadsNoArray)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(" ATOM_EL[1]=\n H\n"
+                    "  -26.590  -20.071 1.63ATOM_X5 0.25\n"
+                    " 0.1 0.2 0.3\n",
+                    molecule);
+
+  EXPECT_EQ(molecule.atomCount(), 0);
+}
+
+// A huge positive count in the header must not decide how much is allocated;
+// only the values actually present are read.
+TEST(MopacAuxTest, hugeCoordinateCountReadsOnlyWhatIsPresent)
+{
+  MopacAux reader;
+  Molecule molecule;
+  reader.readString(
+    " ATOM_EL[2]=\n H H\n"
+    " ATOM_X:ANGSTROMS[999999999]=\n 0.0 0.0 0.0 0.0 0.0 0.74\n",
+    molecule);
+
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_DOUBLE_EQ(molecule.atomPosition3d(1).z(), 0.74);
+}

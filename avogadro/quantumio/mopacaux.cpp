@@ -14,6 +14,7 @@
 #include <cmath>
 #include <iostream>
 #include <limits>
+#include <optional>
 
 using std::cout;
 using std::endl;
@@ -24,6 +25,27 @@ namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::SlaterSet;
+
+namespace {
+
+// The n in a "KEY[n]=" header, or nullopt when the key has no complete
+// bracket pair or its contents are not an integer. Counts used to be parsed
+// from just after find('[') even when there was none, i.e. from the start of
+// the line, so a data line that merely contained e.g. "ATOM_X" and began with
+// a number was taken as a header carrying that number.
+std::optional<int> arrayCount(const string& key)
+{
+  const auto lBracket = key.find('[');
+  if (lBracket == string::npos)
+    return std::nullopt;
+  const auto rBracket = key.find(']', lBracket);
+  if (rBracket == string::npos)
+    return std::nullopt;
+  return Core::lexicalCast<int>(
+    key.substr(lBracket + 1, rBracket - lBracket - 1));
+}
+
+} // namespace
 
 MopacAux::MopacAux() : m_electrons(0) {}
 
@@ -185,21 +207,15 @@ bool MopacAux::processLine(std::istream& in)
 
   // Every array count below comes from a KEY[n]= header and reaches the
   // readers as an unsigned int, where a negative count asks for billions of
-  // values (and readArrayVec() allocates them all up front).
-  const auto countStart = key.find('[');
-  if (countStart != string::npos) {
-    const auto countEnd = key.find(']', countStart);
-    const string count = key.substr(countStart + 1, countEnd - countStart - 1);
-    if (Core::lexicalCast<int>(count).value_or(0) < 0) {
-      appendError("Negative array count: " + key);
-      return false;
-    }
+  // values.
+  if (arrayCount(key).value_or(0) < 0) {
+    appendError("Negative array count: " + key);
+    return false;
   }
 
   // Big switch statement checking for various things we are interested in
   if (Core::contains(key, "ATOM_EL")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atoms = " << tmp << '\n';
     m_atomNums = readArrayElements(in, tmp);
   } else if (Core::contains(key, "HEAT_OF_FORMATION:KCAL/MOL")) {
@@ -275,30 +291,25 @@ bool MopacAux::processLine(std::istream& in)
     }
     cout << "Dipole moment " << m_dipoleMoment.norm() << " Debye" << '\n';
   } else if (Core::contains(key, "AO_ATOMINDEX")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic orbitals = " << tmp << '\n';
     m_atomIndex = readArrayI(in, tmp);
     for (int& i : m_atomIndex)
       --i;
   } else if (Core::contains(key, "ATOM_SYMTYPE")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic orbital types = " << tmp << '\n';
     m_atomSym = readArraySym(in, tmp);
   } else if (Core::contains(key, "AO_ZETA")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of zeta values = " << tmp << '\n';
     m_zeta = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_CHARGES")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic charges = " << tmp << '\n';
     m_partialCharges = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_PQN")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of PQN values =" << tmp << '\n';
     m_pqn = readArrayI(in, tmp);
   } else if (Core::contains(key, "NUM_ELECTRONS")) {
@@ -308,11 +319,7 @@ bool MopacAux::processLine(std::istream& in)
       cout << "Number of electrons = " << m_electrons << '\n';
     }
   } else if (Core::contains(key, "ATOM_X")) {
-    auto lBracket = key.find('[');
-    auto rBracket = key.find(']');
-    int tmp =
-      Core::lexicalCast<int>(key.substr(lBracket + 1, rBracket - lBracket - 1))
-        .value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic coordinates = " << tmp << '\n';
     // A new geometry means any Hessian read so far belongs to the previous
     // one, so bank it before the geometry changes underneath it.
@@ -336,8 +343,7 @@ bool MopacAux::processLine(std::istream& in)
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
   } else if (Core::contains(key, "OVERLAP_MATRIX")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Size of lower half triangle of overlap matrix = " << tmp << '\n';
     if (!readOverlapMatrix(in, tmp))
       return false;
@@ -351,22 +357,18 @@ bool MopacAux::processLine(std::istream& in)
           in, static_cast<int>(m_atomIndex.size() * m_atomIndex.size())))
       return false;
   } else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Size of lower half triangle of density matrix = " << tmp << '\n';
     if (!readDensityMatrix(in, tmp))
       return false;
   } else if (Core::contains(key, "VIB._FREQ")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     readVibrationFrequencies(in, tmp);
   } else if (Core::contains(key, "VIB._T_DIP")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     readVibrationIntensities(in, tmp);
   } else if (Core::contains(key, "NORMAL_MODES")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     readNormalModes(in, tmp);
   }
   return true;
@@ -478,14 +480,15 @@ vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
 
 vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
 {
-  vector<Vector3> tmp(n / 3);
-  if (tmp.empty())
-    return tmp;
-  // Only whole vectors are stored, and a line may hold more values than the
-  // header promised, so never write past 3 * tmp.size() values.
-  const size_t size = 3 * tmp.size();
-  double* ptr = tmp[0].data();
+  // The vectors are built as the values arrive rather than sized from n: the
+  // count is only a header claim, and a bogus one must not decide how much
+  // memory is requested. The result is bounded by the file size instead.
+  vector<Vector3> tmp;
+  const size_t size = 3 * static_cast<size_t>(n / 3);
+  Vector3 current;
   size_t cnt = 0;
+  // Only whole vectors are stored, and a line may hold more values than the
+  // header promised, so never read past 3 * (n / 3) values.
   while (cnt < size) {
     string line;
     // Stop at end of file; see readArrayElements().
@@ -495,12 +498,12 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
     for (auto& i : list) {
       if (cnt >= size)
         break;
-      ptr[cnt++] = Core::lexicalCast<double>(i).value_or(0.0);
+      current[cnt % 3] = Core::lexicalCast<double>(i).value_or(0.0);
+      if (++cnt % 3 == 0)
+        tmp.push_back(current);
     }
   }
-  // A file that ends mid-block leaves the tail zero-filled; keep only the
-  // vectors that were read in full.
-  tmp.resize(cnt / 3);
+  // A file that ends mid-vector leaves current partly filled; it is dropped.
   return tmp;
 }
 
