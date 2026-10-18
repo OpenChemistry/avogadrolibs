@@ -12,7 +12,13 @@
 #include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
+#include <array>
+#include <chrono>
+#include <utility>
+#include <vector>
+
 #include <QPointer>
+#include <QtCore/QString>
 
 #if QT_VERSION >= 0x060000
 #include <QtOpenGLWidgets/QOpenGLWidget>
@@ -114,6 +120,22 @@ public:
   Qt::KeyboardModifiers navigationModifier() const;
   void setNavigationModifier(Qt::KeyboardModifiers modifier);
 
+  /**
+   * @brief Show or hide the frame statistics overlay.
+   *
+   * The overlay reports the display rate, the cost of the last scene rebuild,
+   * the render CPU and GPU times and the buffer upload volume. Showing it
+   * switches on the renderer's (asynchronous) pass timing; hiding it switches
+   * the timing off again. It is also enabled at construction when the
+   * AVOGADRO_FRAME_STATS environment variable is set to anything but "0" or
+   * the empty string; the value "log" also prints a summary line to stderr
+   * once a second.
+   * @{
+   */
+  void setFrameStatsVisible(bool visible);
+  bool frameStatsVisible() const { return m_statsVisible; }
+  /** @} */
+
 signals:
   void rendererInvalid();
 
@@ -207,6 +229,26 @@ private:
   Rendering::GLRenderer m_renderer;
   float m_pixelRatio = 0.0f;
   QtGui::ScenePluginModel m_scenePlugins;
+
+  // Frame statistics, see setFrameStatsVisible(). Only touched when
+  // m_statsVisible is set.
+  void drawFrameStats();
+  bool m_statsVisible = false;
+  bool m_statsLog = false;
+  std::chrono::steady_clock::time_point m_lastPaint;
+  std::chrono::steady_clock::time_point m_lastStatsLog;
+  bool m_haveLastPaint = false;
+  std::array<double, 30> m_frameIntervals{};
+  int m_frameIntervalCount = 0;
+  int m_frameIntervalNext = 0;
+  // The most recent scene rebuild.
+  double m_rebuildTotalMs = 0.0;
+  double m_rebuildClearMs = 0.0;
+  double m_rebuildToolsMs = 0.0;
+  double m_rebuildResetMs = 0.0;
+  std::vector<std::pair<QString, double>> m_rebuildPlugins;
+  int m_rebuildsSincePaint = 0;
+  int m_rebuildsAtLastPaint = 0;
 
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;

@@ -21,9 +21,53 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
+#include <QtGui/QFont>
+#include <QtGui/QFontDatabase>
+#include <QtGui/QFontMetrics>
+#include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLExtraFunctions>
+#include <QtGui/QPainter>
 #include <QtWidgets/QApplication>
 
+#include <algorithm>
+#include <chrono>
+
 namespace Avogadro::QtOpenGL {
+
+namespace {
+
+using Clock = std::chrono::steady_clock;
+
+double elapsedMs(Clock::time_point from, Clock::time_point to)
+{
+  return std::chrono::duration<double, std::milli>(to - from).count();
+}
+
+// The GPU time of a pass or total, or "n/a" when the driver gave none.
+QString gpuText(double ms)
+{
+  return ms < 0.0 ? QStringLiteral("n/a") : QString::number(ms, 'f', 1);
+}
+
+// Sum the CPU and GPU times of the passes named in `names`.
+void sectionTimes(const Rendering::RenderTimings& timings,
+                  std::initializer_list<const char*> names, double& cpuMs,
+                  double& gpuMs)
+{
+  cpuMs = 0.0;
+  gpuMs = timings.gpuTimingAvailable ? 0.0 : -1.0;
+  for (const Rendering::PassTiming& pass : timings.passes) {
+    for (const char* name : names) {
+      if (pass.name == name) {
+        cpuMs += pass.cpuMs;
+        if (gpuMs >= 0.0)
+          gpuMs += pass.gpuMs;
+      }
+    }
+  }
+}
+
+} // namespace
 
 GLWidget::GLWidget(QWidget* p)
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr)
@@ -40,6 +84,12 @@ GLWidget::GLWidget(QWidget* p)
     settings
       .value("glwidget/navigationModifier", static_cast<int>(Qt::AltModifier))
       .toInt());
+
+  const QByteArray stats = qgetenv("AVOGADRO_FRAME_STATS");
+  if (!stats.isEmpty() && stats != "0") {
+    m_statsLog = (stats == "log");
+    setFrameStatsVisible(true);
+  }
 }
 
 GLWidget::~GLWidget() {}
@@ -90,6 +140,14 @@ void GLWidget::updateMolecule()
 void GLWidget::updateScene()
 {
   // Build up the scene with the scene plugins, creating the appropriate nodes.
+  const bool stats = m_statsVisible;
+  Clock::time_point tStart, t0, t1;
+  if (stats) {
+    ++m_rebuildsSincePaint;
+    m_rebuildPlugins.clear();
+    tStart = t0 = Clock::now();
+  }
+
   QtGui::Molecule* mol = m_molecule;
   if (!mol)
     mol = new QtGui::Molecule(this);
@@ -97,20 +155,42 @@ void GLWidget::updateScene()
     Rendering::GroupNode& node = m_renderer.scene().rootNode();
     node.clear();
     auto* moleculeNode = new Rendering::GroupNode(&node);
+    if (stats) {
+      t1 = Clock::now();
+      m_rebuildClearMs = elapsedMs(t0, t1);
+    }
 
     foreach (QtGui::ScenePlugin* scenePlugin,
              m_scenePlugins.activeScenePlugins()) {
       auto* engineNode = new Rendering::GroupNode(moleculeNode);
+      if (stats)
+        t0 = Clock::now();
       scenePlugin->process(*mol, *engineNode);
+      if (stats) {
+        t1 = Clock::now();
+        m_rebuildPlugins.emplace_back(scenePlugin->name(), elapsedMs(t0, t1));
+      }
     }
 
     // Let the tools perform any drawing they need to do.
+    if (stats)
+      t0 = Clock::now();
     foreach (QtGui::ToolPlugin* tool, m_tools) {
       auto* toolNode = new Rendering::GroupNode(moleculeNode);
       tool->draw(*toolNode);
     }
+    if (stats) {
+      t1 = Clock::now();
+      m_rebuildToolsMs = elapsedMs(t0, t1);
+      t0 = t1;
+    }
 
     m_renderer.resetGeometry();
+    if (stats) {
+      t1 = Clock::now();
+      m_rebuildResetMs = elapsedMs(t0, t1);
+      m_rebuildTotalMs = elapsedMs(tStart, t1);
+    }
     update();
   }
   if (mol != m_molecule)
@@ -251,7 +331,166 @@ void GLWidget::paintGL()
   if (pixelRatio != m_pixelRatio)
     resizeGL(width(), height());
 
+  if (!m_statsVisible) {
+    m_renderer.render();
+    return;
+  }
+
+  // Time between successive paints; a gap of a second or more is idleness
+  // rather than frame time, so it restarts the average.
+  const Clock::time_point now = Clock::now();
+  if (m_haveLastPaint) {
+    const double interval = elapsedMs(m_lastPaint, now);
+    if (interval >= 1000.0) {
+      m_frameIntervalCount = 0;
+      m_frameIntervalNext = 0;
+    } else {
+      m_frameIntervals[m_frameIntervalNext] = interval;
+      m_frameIntervalNext =
+        (m_frameIntervalNext + 1) % static_cast<int>(m_frameIntervals.size());
+      m_frameIntervalCount = std::min(
+        m_frameIntervalCount + 1, static_cast<int>(m_frameIntervals.size()));
+    }
+  } else {
+    m_lastStatsLog = now;
+  }
+  m_lastPaint = now;
+  m_haveLastPaint = true;
+  m_rebuildsAtLastPaint = m_rebuildsSincePaint;
+  m_rebuildsSincePaint = 0;
+
   m_renderer.render();
+  drawFrameStats();
+}
+
+void GLWidget::drawFrameStats()
+{
+  // Median frame interval of the recent paints.
+  double interval = 0.0;
+  if (m_frameIntervalCount > 0) {
+    std::array<double, 30> sorted = m_frameIntervals;
+    auto middle = sorted.begin() + m_frameIntervalCount / 2;
+    std::nth_element(sorted.begin(), middle,
+                     sorted.begin() + m_frameIntervalCount);
+    interval = *middle;
+  }
+
+  const Rendering::RenderTimings& timings = m_renderer.timings();
+  double solidCpu, solidGpu, postCpu, postGpu;
+  sectionTimes(timings, { "solid" }, solidCpu, solidGpu);
+  sectionTimes(timings, { "post" }, postCpu, postGpu);
+
+  // The three slowest scene plugins of the last rebuild.
+  std::vector<std::pair<QString, double>> top = m_rebuildPlugins;
+  std::sort(top.begin(), top.end(),
+            [](const auto& a, const auto& b) { return a.second > b.second; });
+  QString plugins;
+  for (size_t i = 0; i < top.size() && i < 3; ++i) {
+    if (i > 0)
+      plugins += QStringLiteral(", ");
+    plugins += top[i].first + QString::asprintf(" %.1f", top[i].second);
+  }
+
+  const qsizetype atoms = m_molecule ? m_molecule->atomCount() : 0;
+  const qsizetype bonds = m_molecule ? m_molecule->bondCount() : 0;
+
+  QStringList lines;
+  // Paints a second or more apart are idle time, not frame time.
+  if (interval > 0.0)
+    lines << QString::asprintf("%.0f fps  %.1f ms/frame", 1000.0 / interval,
+                               interval);
+  else
+    lines << QStringLiteral("idle");
+  lines << QString::asprintf("rebuild %.1f ms (%d this frame)",
+                             m_rebuildTotalMs, m_rebuildsAtLastPaint);
+  lines << QString::asprintf("  clear %.1f  tools %.1f  reset %.1f",
+                             m_rebuildClearMs, m_rebuildToolsMs,
+                             m_rebuildResetMs);
+  if (!plugins.isEmpty())
+    lines << QStringLiteral("  ") + plugins;
+  lines << QStringLiteral("render CPU %1 ms  GPU %2 ms")
+             .arg(timings.totalCpuMs(), 0, 'f', 1)
+             .arg(gpuText(timings.totalGpuMs()));
+  lines << QStringLiteral("  solid %1/%2  post %3/%4 (cpu/gpu)")
+             .arg(solidCpu, 0, 'f', 1)
+             .arg(gpuText(solidGpu))
+             .arg(postCpu, 0, 'f', 1)
+             .arg(gpuText(postGpu));
+  lines << QString::asprintf("uploaded %.2f MB",
+                             static_cast<double>(timings.bufferBytesUploaded) /
+                               1.0e6);
+  lines << QString::asprintf("%lld atoms  %lld bonds",
+                             static_cast<long long>(atoms),
+                             static_cast<long long>(bonds));
+
+  if (m_statsLog && elapsedMs(m_lastStatsLog, m_lastPaint) >= 1000.0) {
+    m_lastStatsLog = m_lastPaint;
+    qInfo().noquote() << "frame-stats:" << lines.join(QStringLiteral(" | "));
+  }
+
+  // Hand the context to QPainter in the state its paint engine expects: none
+  // of our objects bound, and the widget's own framebuffer as the target.
+  QOpenGLExtraFunctions gl(context());
+  gl.glBindVertexArray(0);
+  gl.glUseProgram(0);
+  gl.glBindBuffer(GL_ARRAY_BUFFER, 0);
+  gl.glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebufferObject());
+
+  {
+    QPainter painter(this);
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    font.setPointSize(9);
+    painter.setFont(font);
+    const QFontMetrics metrics(font);
+    const int pad = 6;
+    int textWidth = 0;
+    for (const QString& line : lines)
+      textWidth = std::max(textWidth, metrics.horizontalAdvance(line));
+    const int lineHeight = metrics.lineSpacing();
+    const QRect box(8, 8, textWidth + 2 * pad,
+                    lineHeight * static_cast<int>(lines.size()) + 2 * pad);
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor(0, 0, 0, 170));
+    painter.drawRect(box);
+    painter.setPen(QColor(255, 255, 255));
+    int y = box.top() + pad + metrics.ascent();
+    for (const QString& line : lines) {
+      painter.drawText(box.left() + pad, y, line);
+      y += lineHeight;
+    }
+    painter.end();
+  }
+
+  // QPainter leaves its own scissor, stencil, mask and texture-unit state
+  // behind. render() sets depth test and blend itself but clears first, so a
+  // stale scissor, mask or stencil would clip or drop the next frame's clear,
+  // and the pipeline binds textures on whichever unit is active. The
+  // framebuffer and viewport are re-read from the context on every frame by
+  // SolidPipeline::begin(), so they need no restoring.
+  gl.glBindVertexArray(0);
+  gl.glUseProgram(0);
+  gl.glBindBuffer(GL_ARRAY_BUFFER, 0);
+  gl.glActiveTexture(GL_TEXTURE0);
+  gl.glDisable(GL_SCISSOR_TEST);
+  gl.glDisable(GL_STENCIL_TEST);
+  gl.glDisable(GL_CULL_FACE);
+  gl.glDepthMask(GL_TRUE);
+  gl.glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+}
+
+void GLWidget::setFrameStatsVisible(bool visible)
+{
+  if (visible == m_statsVisible)
+    return;
+  m_statsVisible = visible;
+  m_haveLastPaint = false;
+  m_frameIntervalCount = 0;
+  m_frameIntervalNext = 0;
+  m_rebuildsSincePaint = 0;
+  m_rebuildsAtLastPaint = 0;
+  m_renderer.setTimingEnabled(visible);
+  update();
 }
 
 Qt::KeyboardModifiers GLWidget::navigationModifier() const
