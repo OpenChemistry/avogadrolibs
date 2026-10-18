@@ -9,9 +9,11 @@
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/core/layermanager.h>
+#include <algorithm>
 #include <cassert>
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 namespace Avogadro {
 namespace QtGui {
@@ -25,6 +27,109 @@ namespace QtGui {
 class AVOGADROQTGUI_EXPORT PluginLayerManager : protected Core::LayerManager
 {
 public:
+  /**
+   * @class Snapshot
+   * @brief Per-call cache of everything a render loop asks the manager.
+   *
+   * atomEnabled(), getLayerID() and getSetting() each resolve the active
+   * molecule and look the plugin name up in a std::map. A Snapshot does that
+   * once, then answers the same questions with array lookups. It gives the
+   * same answers as the PluginLayerManager methods of the same name, and is
+   * meant to live for a single process() call: it holds the layer state and
+   * raw pointers into the settings, so build a new one after anything that
+   * edits layers.
+   */
+  template <typename T>
+  class Snapshot
+  {
+  public:
+    /** @return same as PluginLayerManager::atomEnabled(@p atom) */
+    bool atomEnabled(Index atom) const
+    {
+      if (!m_info)
+        return false;
+      size_t layer = m_info->layer.getLayerID(atom);
+      return layer != MaxIndex && layer < m_enabled.size() && m_enabled[layer];
+    }
+
+    /** @return same as PluginLayerManager::bondEnabled(@p atom1, @p atom2) */
+    bool bondEnabled(Index atom1, Index atom2) const
+    {
+      return atomEnabled(atom1) || atomEnabled(atom2);
+    }
+
+    /** @return same as PluginLayerManager::getLayerID(@p atom) */
+    size_t getLayerID(Index atom) const
+    {
+      if (!m_info || atom >= m_info->layer.atomCount())
+        return MaxIndex;
+      return m_info->layer.getLayerID(atom);
+    }
+
+    /** @return same as PluginLayerManager::getSetting<T>(@p layer); MaxIndex
+     * is the active layer. */
+    T* setting(size_t layer) const
+    {
+      if (!m_info)
+        return nullptr;
+      // Settings are created lazily, on first use, by the real getSetting():
+      // that keeps the molecule's settings arrays (which the CJSON writer
+      // saves) exactly what the per-call API would have left behind.
+      if (layer == MaxIndex) {
+        if (m_active == nullptr)
+          m_active = m_manager->getSetting<T>();
+        return m_active;
+      }
+      if (layer < m_settings.size()) {
+        if (m_settings[layer] == nullptr)
+          m_settings[layer] = m_manager->getSetting<T>(layer);
+        return m_settings[layer];
+      }
+      return m_manager->getSetting<T>(layer);
+    }
+
+    /** @return setting() of the layer holding @p atom */
+    T* atomSetting(Index atom) const { return setting(getLayerID(atom)); }
+
+  private:
+    friend class PluginLayerManager;
+    Snapshot() = default;
+
+    PluginLayerManager* m_manager = nullptr;
+    std::shared_ptr<Core::MoleculeInfo> m_info;
+    // m_enabled[layer]: enabled by the plugin and visible
+    std::vector<char> m_enabled;
+    // Lazily filled cache of getSetting<T>(layer) for 0..layerCount-1, and of
+    // the active layer; nullptr means "not fetched yet".
+    mutable std::vector<T*> m_settings;
+    mutable T* m_active = nullptr;
+  };
+
+  /** Capture the layer state of the active molecule for one render pass.
+   * Settings entries are created lazily, only for layers actually queried. */
+  template <typename T>
+  Snapshot<T> snapshot()
+  {
+    Snapshot<T> snap;
+    snap.m_manager = this;
+    snap.m_info = activeMoleculeInfo();
+    if (!snap.m_info)
+      return snap;
+
+    auto it = snap.m_info->enable.find(m_name);
+    if (it != snap.m_info->enable.end()) {
+      const auto& enable = it->second;
+      const auto& visible = snap.m_info->visible;
+      size_t n = std::min(enable.size(), visible.size());
+      snap.m_enabled.resize(n);
+      for (size_t i = 0; i < n; ++i)
+        snap.m_enabled[i] = (enable[i] && visible[i]) ? 1 : 0;
+    }
+
+    snap.m_settings.assign(snap.m_info->layer.layerCount(), nullptr);
+    return snap;
+  }
+
   PluginLayerManager(const std::string& name = "undef");
 
   ~PluginLayerManager();

@@ -10,8 +10,11 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/pluginlayermanager.h>
 
+#include <functional>
 #include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 using Avogadro::Index;
 using Avogadro::MaxIndex;
@@ -266,4 +269,257 @@ TEST_F(PluginLayerManagerTest, SettingsClonedNotSharedThroughMoleculeInfoCopy)
   plugin.getSetting<TestLayerData>(0)->setValue(99);
   EXPECT_EQ(static_cast<TestLayerData*>(copyPtr.get())->value(), 42);
   EXPECT_EQ(static_cast<TestLayerData*>(originalPtr.get())->value(), 99);
+}
+
+// The Snapshot must answer exactly what the per-call API answers, including
+// for layer state that is ragged: `enable`/`visible` shorter than the layer
+// count, disabled and invisible layers, atoms the Layer has never heard of,
+// null settings slots, a missing settings entry, and an active layer that is
+// not layer 0.
+namespace {
+
+struct SnapshotConfig
+{
+  const char* name;
+  std::vector<size_t> atomLayers; // layer id of atoms 0..n-1
+  size_t layerCount;              // layers 0..layerCount-1 exist
+  size_t active;
+  bool hasEnable;                // plugin has an `enable` entry at all
+  std::vector<bool> enable;      // possibly shorter than layerCount
+  std::vector<bool> visible;     // possibly shorter than layerCount
+  bool hasSettings;              // plugin has a `settings` entry at all
+  std::vector<size_t> nullSlots; // slots left null in that entry
+  size_t settingsSize;           // initial settings array length
+};
+
+void setupSnapshotConfig(const SnapshotConfig& c, Molecule& molecule)
+{
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  for (size_t i = 0; i < c.atomLayers.size(); ++i)
+    info->layer.addAtom(c.atomLayers[i], i);
+  while (info->layer.layerCount() < c.layerCount)
+    info->layer.addLayer();
+  info->layer.setActiveLayer(c.active);
+  info->visible = c.visible;
+  info->locked.assign(c.layerCount, false);
+  if (c.hasEnable)
+    info->enable["Plugin"] = c.enable;
+  if (c.hasSettings) {
+    Avogadro::Core::Array<LayerDataPtr> settings;
+    for (size_t i = 0; i < c.settingsSize; ++i) {
+      auto d = std::make_shared<TestLayerData>();
+      d->setValue(static_cast<int>(i) + 100);
+      settings.push_back(d);
+    }
+    for (size_t i : c.nullSlots)
+      if (i < settings.size())
+        settings[i] = nullptr;
+    info->settings["Plugin"] = settings;
+  }
+}
+
+// null / non-null of each slot, and whether the entry exists at all
+std::pair<bool, std::vector<bool>> settingsShape(Molecule& molecule)
+{
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  auto it = info->settings.find("Plugin");
+  if (it == info->settings.end())
+    return { false, {} };
+  std::vector<bool> shape;
+  for (size_t i = 0; i < it->second.size(); ++i)
+    shape.push_back(it->second[i] != nullptr);
+  return { true, shape };
+}
+
+void checkSnapshot(const SnapshotConfig& c,
+                   const std::function<void(const Molecule*)>& activate)
+{
+  SCOPED_TRACE(c.name);
+  const size_t n = c.atomLayers.size() + 5;
+  PluginLayerManager plugin("Plugin");
+
+  // Two identical setups: one queried through a snapshot, one through the
+  // per-call API. The settings arrays they are left with (which the CJSON
+  // writer saves) must have the same shape.
+  Molecule viaSnapshot;
+  setupSnapshotConfig(c, viaSnapshot);
+  activate(&viaSnapshot);
+  {
+    auto snap = plugin.snapshot<TestLayerData>();
+    for (Index a = 0; a < n; ++a)
+      if (snap.atomEnabled(a))
+        snap.atomSetting(a);
+  }
+  Molecule viaApi;
+  setupSnapshotConfig(c, viaApi);
+  activate(&viaApi);
+  for (Index a = 0; a < n; ++a)
+    if (plugin.atomEnabled(a))
+      plugin.getSetting<TestLayerData>(plugin.getLayerID(a));
+  EXPECT_EQ(settingsShape(viaSnapshot), settingsShape(viaApi));
+
+  // Now the active-layer and per-layer queries, again on both.
+  activate(&viaSnapshot);
+  {
+    auto snap = plugin.snapshot<TestLayerData>();
+    EXPECT_NE(snap.setting(MaxIndex), nullptr);
+    snap.setting(c.layerCount + 2);
+  }
+  activate(&viaApi);
+  plugin.getSetting<TestLayerData>();
+  plugin.getSetting<TestLayerData>(c.layerCount + 2);
+  EXPECT_EQ(settingsShape(viaSnapshot), settingsShape(viaApi));
+
+  // Answers match the per-call API on a fresh setup.
+  Molecule molecule;
+  setupSnapshotConfig(c, molecule);
+  activate(&molecule);
+  auto snap = plugin.snapshot<TestLayerData>();
+  for (Index a = 0; a < n; ++a) {
+    EXPECT_EQ(snap.atomEnabled(a), plugin.atomEnabled(a)) << "atom " << a;
+    EXPECT_EQ(snap.getLayerID(a), plugin.getLayerID(a)) << "atom " << a;
+    EXPECT_EQ(snap.atomSetting(a),
+              plugin.getSetting<TestLayerData>(plugin.getLayerID(a)))
+      << "atom " << a;
+    for (Index b = 0; b < n; ++b)
+      EXPECT_EQ(snap.bondEnabled(a, b), plugin.bondEnabled(a, b));
+  }
+  for (size_t layer = 0; layer < c.layerCount; ++layer)
+    EXPECT_EQ(snap.setting(layer), plugin.getSetting<TestLayerData>(layer));
+  EXPECT_EQ(snap.setting(MaxIndex), plugin.getSetting<TestLayerData>());
+  EXPECT_EQ(snap.setting(MaxIndex), plugin.getSetting<TestLayerData>(c.active));
+  EXPECT_EQ(snap.setting(c.layerCount + 2),
+            plugin.getSetting<TestLayerData>(c.layerCount + 2));
+}
+
+} // namespace
+
+TEST_F(PluginLayerManagerTest, SnapshotMatchesPerCallApi)
+{
+  const std::vector<SnapshotConfig> configs = {
+    { "regular",
+      { 0, 0, 1, 1, 2 },
+      3,
+      0,
+      true,
+      { true, true, true },
+      { true, true, true },
+      true,
+      {},
+      3 },
+    { "disabled and invisible layers",
+      { 0, 1, 2, 3, 1, 0 },
+      4,
+      0,
+      true,
+      { true, false, true, true },
+      { true, true, false, true },
+      true,
+      {},
+      4 },
+    { "enable shorter than layers",
+      { 0, 1, 2, 3 },
+      4,
+      1,
+      true,
+      { true, true },
+      { true, true, true, true },
+      true,
+      {},
+      4 },
+    { "visible shorter than layers",
+      { 0, 1, 2, 3 },
+      4,
+      1,
+      true,
+      { true, true, true, true },
+      { true, true },
+      true,
+      {},
+      4 },
+    { "active layer not 0, settings short",
+      { 0, 1, 2, 3, 3 },
+      4,
+      3,
+      true,
+      { false, true, true, true },
+      { true, true, true, true },
+      true,
+      {},
+      1 },
+    { "null settings slots",
+      { 0, 1, 2, 0 },
+      3,
+      2,
+      true,
+      { true, true, true },
+      { true, true, true },
+      true,
+      { 0, 2 },
+      3 },
+    { "missing settings entry",
+      { 0, 1, 1 },
+      2,
+      1,
+      true,
+      { true, true },
+      { true, true },
+      false,
+      {},
+      0 },
+    { "missing enable entry",
+      { 0, 1, 1 },
+      2,
+      0,
+      false,
+      {},
+      { true, true },
+      true,
+      {},
+      2 },
+    { "active layer one past max",
+      { 0, 1 },
+      2,
+      2,
+      true,
+      { true, true, true },
+      { true, true, true },
+      true,
+      {},
+      2 },
+    { "disabled layer stays null",
+      { 0, 1, 2 },
+      3,
+      0,
+      true,
+      { true, false, true },
+      { true, true, true },
+      true,
+      { 1 },
+      3 },
+    { "single atom, no atoms in some layers",
+      { 3 },
+      4,
+      0,
+      true,
+      { true, true, true, true },
+      { true, true, true, true },
+      false,
+      {},
+      0 },
+  };
+  for (const auto& c : configs)
+    checkSnapshot(c, [this](const Molecule* m) { setActiveMolecule(m); });
+}
+
+TEST_F(PluginLayerManagerTest, SnapshotWithNoActiveMolecule)
+{
+  PluginLayerManager plugin("Plugin");
+  auto snap = plugin.snapshot<TestLayerData>();
+  EXPECT_FALSE(snap.atomEnabled(0));
+  EXPECT_FALSE(snap.bondEnabled(0, 1));
+  EXPECT_EQ(snap.getLayerID(0), MaxIndex);
+  EXPECT_EQ(snap.setting(MaxIndex), nullptr);
+  EXPECT_EQ(snap.setting(0), nullptr);
+  EXPECT_EQ(snap.atomSetting(3), nullptr);
 }
