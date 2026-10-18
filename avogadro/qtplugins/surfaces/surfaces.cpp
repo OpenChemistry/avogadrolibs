@@ -188,6 +188,15 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     if (ok)
       cubeResolution = res;
   }
+  // Smoothing passes for the mesh; the dialog, when there is one, decides
+  // for itself. Callers that do not ask get none, as before.
+  m_commandSmoothing = 0;
+  if (options.contains("smoothing") && options["smoothing"].canConvert<int>()) {
+    bool ok;
+    int passes = options["smoothing"].toInt(&ok);
+    if (ok)
+      m_commandSmoothing = std::clamp(passes, 0, 19);
+  }
   if (options.contains("isovalue") && options["isovalue"].canConvert<float>()) {
     bool ok;
     float iso = options["isovalue"].toFloat(&ok);
@@ -1184,7 +1193,7 @@ void Surfaces::displayMesh()
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
   else
-    m_smoothingPasses = 0;
+    m_smoothingPasses = m_commandSmoothing;
 
   // A previous mesh job may still be writing into the pending meshes and
   // reading its cube; it is superseded, but has to finish before they go.
