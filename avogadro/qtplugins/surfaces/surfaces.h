@@ -151,6 +151,9 @@ private:
   /// Resolution used by the command currently running, reported back to the
   /// caller because resolution() picks one when the caller does not.
   float m_commandResolution = 0.0f;
+  /// Mesh smoothing passes asked for by the "smoothing" command option. Used
+  /// only when there is no dialog; 0 (none) unless the caller passes one.
+  int m_commandSmoothing = 0;
   /// Grid resolution calculateEDT() built its cube with, for the solvent-
   /// excluded erosion step in performEDTStep().
   float m_edtResolution = 0.0f;
