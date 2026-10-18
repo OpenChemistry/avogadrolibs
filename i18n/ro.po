@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-16 17:36+0000\n"
+"PO-Revision-Date: 2026-10-18 09:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remus-"
 "gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -190,8 +190,23 @@ msgid_plural ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr[0] ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândul %1 al "
+"matricei z. Geometria este scrisă corect, dar aceste coordonate nu pot fi "
+"modificate, iar un program care reconstruiește coordonatele carteziene pe "
+"baza acestora s-ar putea să nu reproducă exact această structură. Adăugarea "
+"unui atom fictiv în afara axei permite evitarea acestei situații."
 msgstr[1] ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândurile %1 "
+"ale matricei z. Geometria este scrisă corect, dar aceste coordonate nu pot "
+"fi modificate, iar un program care reconstruiește coordonatele carteziene pe "
+"baza acestora s-ar putea să nu reproducă exact această structură. Adăugarea "
+"unui atom fictiv în afara axei permite evitarea acestei situații."
 msgstr[2] ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândurile %1 "
+"ale matricei z. Geometria este scrisă corect, dar aceste coordonate nu pot "
+"fi modificate, iar un program care reconstruiește coordonatele carteziene pe "
+"baza acestora s-ar putea să nu reproducă exact această structură. Adăugarea "
+"unui atom fictiv în afara axei permite evitarea acestei situații."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -3800,27 +3815,31 @@ msgstr "Numărul atomic %1 este în afara intervalului (1 până la %2)."
 #: qtplugins/editor/editor.cpp:1110
 msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
 msgstr ""
+"poziția trebuie să fie o listă formată din 3 numere [x, y, z] exprimate în "
+"angstromi."
 
 #: qtplugins/editor/editor.cpp:1118
 msgid "position must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "poziția trebuie să fie o listă formată din 3 numere finite [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1131
 msgid "bondTo must be the index of an atom in the molecule."
-msgstr ""
+msgstr "bondTo trebuie să fie indicele unui atom din moleculă."
 
 #: qtplugins/editor/editor.cpp:1178
 msgid "There is no bond between those atoms."
-msgstr ""
+msgstr "Nu există nicio legătură între acești atomi."
 
 #: qtplugins/editor/editor.cpp:1197
 msgid "Those atoms are already bonded."
-msgstr ""
+msgstr "Acești atomi sunt deja legați între ei."
 
 #: qtplugins/editor/editor.cpp:1226
 #, qt-format
 msgid "Atom %1 or a bonded atom is in a locked layer; unlock it to edit."
 msgstr ""
+"Atomul %1 sau un atom legat se află într-un strat blocat; deblochează-l "
+"pentru a-l edita."
 
 #: qtplugins/editor/editor.h:35 qtplugins/editor/editor.h:36
 msgid "Editor tool"
@@ -3848,7 +3867,7 @@ msgstr "Triplu"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:40
 msgid "Fetch from &PDB…"
-msgstr ""
+msgstr "Preluare din &PDB…"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -4054,9 +4073,9 @@ msgstr "Îngheață o anumită axă (X, Y sau Z) a atomilor selectați."
 msgctxt ""
 msgid "%n force field(s) available."
 msgid_plural "%n force field(s) available."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%n câmp de forță disponibil."
+msgstr[1] "%n câmpuri de forță disponibile."
+msgstr[2] "%n de câmpuri de forță disponibile."
 
 #: qtplugins/forcefield/forcefield.cpp:387
 #: qtplugins/forcefield/forcefield.cpp:413
@@ -4450,11 +4469,11 @@ msgstr "Nume"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Formula"
-msgstr ""
+msgstr "Formula"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Mass (g/mol)"
-msgstr ""
+msgstr "Masa (g/mol)"
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -5003,7 +5022,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:794
 #, qt-format
 msgid "value must be a distance from %1 to %2 Å."
-msgstr ""
+msgstr "Valoarea trebuie să fie o distanță cuprinsă între %1 și %2 Å."
 
 #: qtplugins/measuretool/measuretool.cpp:861
 msgid "atoms must list exactly 2 atom indices for a distance."
@@ -5371,7 +5390,7 @@ msgstr "Instrument de navigare"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:28
 msgid "Download by &Name…"
-msgstr ""
+msgstr "Descărcare după &nume…"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
@@ -5822,8 +5841,17 @@ msgid_plural ""
 "\n"
 "%1"
 msgstr[0] ""
+"Modulul selectat nu oferă o adresă URL sursă de unde poate fi descărcat:\n"
+"\n"
+"%1"
 msgstr[1] ""
+"Modulele selectate nu oferă o adresă URL sursă de unde pot fi descărcate:\n"
+"\n"
+"%1"
 msgstr[2] ""
+"Modulele selectate nu oferă o adresă URL sursă de unde pot fi descărcate:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:495
 #, qt-format
@@ -5872,12 +5900,12 @@ msgstr "Extragerea nu a generat niciun fișier.\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:638
 #, qt-format
 msgid "Installation complete for %1.\n"
-msgstr ""
+msgstr "Instalarea pentru %1 s-a finalizat.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:646
 #, qt-format
 msgid "Installation failed for %1: %2\n"
-msgstr ""
+msgstr "Instalarea pentru %1 eșuat: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:687
 msgid "Nothing to Remove"
@@ -6341,21 +6369,21 @@ msgstr "Salvează fișierul"
 
 #: qtplugins/ply/ply.cpp:113
 msgid "PLY (*.ply)"
-msgstr ""
+msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
-msgstr ""
+msgstr "Export PLY"
 
 #: qtplugins/ply/ply.cpp:123
 #, qt-format
 msgid "Cannot open %1 for writing: %2"
-msgstr ""
+msgstr "Nu se poate deschide %1 pentru scriere: %2"
 
 #: qtplugins/ply/ply.cpp:156
 #, qt-format
 msgid "Writing %1 failed: %2"
-msgstr ""
+msgstr "Scrierea %1 a eșuat: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6685,7 +6713,7 @@ msgstr "Nu se poate citi fișierul %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:396
 msgid "Nuclear Critical Points Search"
-msgstr ""
+msgstr "Căutare a punctelor critice nucleare"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
@@ -6693,21 +6721,21 @@ msgstr "Nu s-a putut crea fișierul temporar."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:497
 msgid "Bond Critical Points Search"
-msgstr ""
+msgstr "Căutare a punctelor critice ale legăturilor"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:644
 msgid "Electron Density Sources Search"
-msgstr ""
+msgstr "Căutare a surselor de densitate electronică"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:789
 msgid "Electron Density Sinks Search"
-msgstr ""
+msgstr "Căutare a zonelor de scădere a densității electronice"
 
 #: qtplugins/qtaim/qtaimcubature.cpp:1412
 #: qtplugins/qtaim/qtaimcubature.cpp:1692
 #: qtplugins/qtaim/qtaimcubature.cpp:2172
 msgid "Atomic Basin Integration"
-msgstr ""
+msgstr "Integrarea bazinului atomic"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -6935,6 +6963,8 @@ msgid ""
 "Select atoms by index. Options: \"indices\" (list of atom indices) and "
 "optional \"mode\": \"replace\" (default), \"add\" or \"remove\"."
 msgstr ""
+"Selectează atomii după indice. Opțiuni: „indices” (lista indicilor atomilor) "
+"și opțional, modul „mode”: „replace” (implicit), „add” sau „remove”."
 
 #: qtplugins/select/select.cpp:687
 msgid ""
@@ -6947,25 +6977,27 @@ msgstr ""
 #: qtplugins/select/select.cpp:725
 msgid "selectAtoms requires an \"indices\" option (a list of atom indices)."
 msgstr ""
+"Funcția selectAtom necesită o opțiune „indices” (o listă de indici ai "
+"atomilor)."
 
 #: qtplugins/select/select.cpp:738
 msgid "mode must be \"replace\", \"add\" or \"remove\"."
-msgstr ""
+msgstr "modul trebuie să fie „replace”, „add” sau „remove”."
 
 #: qtplugins/select/select.cpp:762
 #, qt-format
 msgid "atom index #%1 in indices must be a whole number."
-msgstr ""
+msgstr "indicele atomului nr.%1 din indici trebuie să fie un număr întreg."
 
 #: qtplugins/select/select.cpp:767
 #, qt-format
 msgid "atom index #%1 in indices is negative."
-msgstr ""
+msgstr "indicele atomului nr.%1 din indici este negativ."
 
 #: qtplugins/select/select.cpp:773
 #, qt-format
 msgid "atom index %1 is out of range (the molecule has %2 atoms)."
-msgstr ""
+msgstr "indicele atomic %1 este în afara intervalului (molecula are %2 atomi)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -7019,16 +7051,18 @@ msgstr "Strat nou"
 
 #: qtplugins/spacegroup/spacegroup.cpp:82
 msgid "Give either hallNumber or spaceGroup, not both."
-msgstr ""
+msgstr "Specificați fie hallNumber, fie spaceGroup, nu ambele."
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
 #, qt-format
 msgid "hallNumber must be an integer from 1 to %1."
-msgstr ""
+msgstr "hallNumber trebuie să fie un număr întreg cuprins între 1 și %1."
 
 #: qtplugins/spacegroup/spacegroup.cpp:106
 msgid "spaceGroup must be a space group symbol (a string)."
 msgstr ""
+"spaceGroup trebuie să fie un simbol al unui grup spațial (un șir de "
+"caractere)."
 
 #: qtplugins/spacegroup/spacegroup.cpp:113
 #, qt-format
@@ -7036,6 +7070,9 @@ msgid ""
 "spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
 "(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
 msgstr ""
+"spaceGroup „%1” nu corespunde niciunei configurații de grup spațial; "
+"utilizați hallNumber (de la 1 la %2) sau un simbol care include configurația "
+"respectivă, de exemplu „F d -3 m :2”."
 
 #: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
@@ -7162,7 +7199,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "The molecule has no unit cell."
-msgstr ""
+msgstr "Molecula nu are celulă unitară."
 
 #: qtplugins/spacegroup/spacegroup.cpp:636
 #, qt-format
@@ -7170,6 +7207,8 @@ msgid ""
 "The space group of the molecule is not known: give the hallNumber (1 to %1) "
 "or spaceGroup parameter."
 msgstr ""
+"Grupul spațial al moleculei nu este cunoscut: specificați parametrul "
+"hallNumber (1 până la %1) sau spaceGroup."
 
 #: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
