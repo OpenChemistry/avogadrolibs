@@ -32,7 +32,7 @@ jobs:
   fuzz:
     name: Ubuntu Fuzz Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 240
 
     steps:
     - name: Checkout workflow repository
@@ -66,9 +66,9 @@ jobs:
 
     # Must run before Configure: it exports the compiler-launcher variables
     # that the superbuild's subprojects read when they configure. The size is
-    # larger than the default because the superbuild's avogadrolibs is built
-    # once in "Build", and then again in "Build fuzz targets" with the
-    # sanitizer flags, so the cache holds two sets of objects for it.
+    # larger than the default because avogadrolibs is compiled only once, in
+    # "Build fuzz targets", but with the sanitizer flags: ASan and -g objects
+    # are large, and the cache also holds the dependencies built in "Build".
     - name: Restore compiler cache
       uses: ./.github/actions/compiler-cache
       with:
@@ -134,9 +134,15 @@ jobs:
 
     - name: Build
       run: |
-        # Only avogadrolibs (and its dependencies) are needed for fuzzing, so
-        # skip building avogadroapp.
-        CC=clang CXX=clang++ cmake --build . --target avogadrolibs
+        # Only avogadrolibs' dependencies plus its configure step are needed
+        # here. "Build fuzz targets" reconfigures avogadrolibs with the
+        # sanitizer flags, which recompiled every object anyway, so building
+        # avogadrolibs here was discarded work (10-20 minutes cold, runs
+        # 39013774256 and 39108753376). The superbuild has no STEP_TARGETS for
+        # avogadrolibs, so the configure stamp file is named directly. If the
+        # ExternalProject layout ever changes, Ninja fails with "unknown
+        # target" rather than silently doing the wrong thing.
+        CC=clang CXX=clang++ cmake --build . --target avogadrolibs-prefix/src/avogadrolibs-stamp/avogadrolibs-configure
       shell: bash
       working-directory: ${{ runner.workspace }}/build
 
@@ -147,8 +153,8 @@ jobs:
         # hardening flags from "Configure" (see the note there), so they are
         # passed here explicitly; this is what actually puts ASan and UBSan
         # on avogadrolibs. The third-party subprojects stay uninstrumented.
-        # Changing the flags forces a full rebuild, as the per-config override
-        # below already did.
+        # This is the only compile of avogadrolibs in the job: "Build" just
+        # configures it.
         #
         # Asserts are kept alive here, which is the point of overriding the
         # per-config flags. CMake appends CMAKE_CXX_FLAGS_<CONFIG> after
@@ -176,7 +182,18 @@ jobs:
           -DCMAKE_EXE_LINKER_FLAGS="${FUZZ_LDFLAGS}" \
           -DCMAKE_SHARED_LINKER_FLAGS="${FUZZ_LDFLAGS}" \
           -DCMAKE_MODULE_LINKER_FLAGS="${FUZZ_LDFLAGS}" .
-        cmake --build .
+
+        # The unit-test executables are not run by this job, so build only the
+        # fuzz targets (and the libraries and plugins they link). "Run fuzz
+        # tests" already reports any missing binary as "not built". Ninja
+        # lists each executable as a "<name>: phony" alias.
+        fuzz_targets=$(ninja -t targets all | sed -n 's/^\(fuzz_[A-Za-z0-9_-]*\): phony$/\1/p' | sort -u)
+        if [ -z "${fuzz_targets}" ]; then
+          echo "::error::No fuzz_* targets found; is ENABLE_FUZZ on?"
+          exit 1
+        fi
+        # shellcheck disable=SC2086
+        cmake --build . --target ${fuzz_targets}
 
         # Guard against this silently regressing again: the fuzz job once ran
         # with no ASan at all. Symbols go through a variable, not a
@@ -202,8 +219,9 @@ jobs:
 
     - name: Run fuzz tests
       shell: bash
-      # Backstop so the artifact upload below still runs inside the job's 90 minutes.
-      timeout-minutes: 60
+      # Backstop so the artifact upload below still runs inside the job limit;
+      # a cold build takes up to ~55 minutes of the 240.
+      timeout-minutes: 180
       working-directory: ${{ runner.workspace }}/build/avogadrolibs
       run: |
         set -uo pipefail
