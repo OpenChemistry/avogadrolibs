@@ -121,16 +121,38 @@ public:
   const Core::Array<PackedVertex>& vertices() const { return m_vertices; }
   const Core::Array<unsigned int>& triangles() const { return m_indices; }
 
+  /**
+   * Get the axis-aligned bounding box of the vertices. The box is maintained
+   * incrementally as vertices are added, so this is O(1) even for meshes with
+   * tens of millions of vertices. Non-finite vertices are ignored.
+   * @param minimum Set to the minimum corner of the box.
+   * @param maximum Set to the maximum corner of the box.
+   * @return False (leaving the arguments untouched) if there are no finite
+   * vertices.
+   */
+  bool bounds(Vector3f& minimum, Vector3f& maximum) const;
+
 private:
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
    */
   void update();
 
+  /** Grow the cached bounding box to include @p point. */
+  void expandBounds(const Vector3f& point);
+
+  /** Reset the cached bounding box to empty. */
+  void resetBounds();
+
   Core::Array<PackedVertex> m_vertices;
   Core::Array<unsigned int> m_indices;
   Vector3ub m_color;
   unsigned char m_opacity;
+
+  // Cached axis-aligned bounding box of m_vertices; valid if m_hasBounds.
+  Vector3f m_boundsMin;
+  Vector3f m_boundsMax;
+  bool m_hasBounds;
 
   bool m_dirty;
 
@@ -153,6 +175,9 @@ inline void swap(MeshGeometry& lhs, MeshGeometry& rhs)
   swap(lhs.m_indices, rhs.m_indices);
   swap(lhs.m_color, rhs.m_color);
   swap(lhs.m_opacity, rhs.m_opacity);
+  swap(lhs.m_boundsMin, rhs.m_boundsMin);
+  swap(lhs.m_boundsMax, rhs.m_boundsMax);
+  swap(lhs.m_hasBounds, rhs.m_hasBounds);
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
