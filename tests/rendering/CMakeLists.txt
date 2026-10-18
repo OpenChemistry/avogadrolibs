@@ -2,6 +2,7 @@
 set(tests
   Camera
   CurveGeometry
+  GeometryVisitor
   Node
   PLYVisitor
   SphereGeometry

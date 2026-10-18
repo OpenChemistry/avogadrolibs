@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_RENDERING_GEOMETRYVISITOR_H
 #define AVOGADRO_RENDERING_GEOMETRYVISITOR_H
 
+#include "avogadrorenderingexport.h"
 #include "visitor.h"
 
 #include <avogadro/core/vector.h>
@@ -25,7 +26,7 @@ namespace Rendering {
  * notably the center and radius of the bounding sphere.
  */
 
-class GeometryVisitor : public Visitor
+class AVOGADRORENDERING_EXPORT GeometryVisitor : public Visitor
 {
 public:
   GeometryVisitor();
@@ -41,7 +42,7 @@ public:
   void visit(SphereGeometry&) override;
   void visit(CurveGeometry&) override;
   void visit(CylinderGeometry&) override { return; }
-  void visit(MeshGeometry&) override { return; }
+  void visit(MeshGeometry&) override;
   void visit(TextLabel2D&) override { return; }
   void visit(TextLabel3D&) override { return; }
   void visit(LineStripGeometry&) override;

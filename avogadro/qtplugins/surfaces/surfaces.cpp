@@ -5,6 +5,7 @@
 
 #include "surfaces.h"
 #include "surfacedialog.h"
+#include "surfaceresolution.h"
 
 // Header only, but duplicate symbols if included globally...
 namespace {
@@ -160,7 +161,9 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   int index = -1;
   int homo = -1;
   float isoValue = 0.03;
-  float cubeResolution = resolution(); // use default resolution
+  // Zero means "automatic": calculateEDT() and calculateQM() choose it once
+  // they know the grid padding.
+  float cubeResolution = 0.0f;
 
   if (options.contains("resolution") &&
       options["resolution"].canConvert<float>()) {
@@ -221,7 +224,8 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   }
 
   // Everything below hands work to a background thread, so the caller's reply
-  // is held until meshFinished() reports back.
+  // is held until meshFinished() reports back. The calculation records the
+  // resolution it actually used in m_commandResolution.
   m_commandResolution = cubeResolution;
 
   if ((command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) ||
@@ -470,7 +474,7 @@ void Surfaces::surfacesActivated()
   m_dialog->activateWindow();
 }
 
-float Surfaces::resolution(float specified)
+float Surfaces::resolution(float specified, double padding)
 {
   if (specified != 0.0)
     return specified;
@@ -478,9 +482,7 @@ float Surfaces::resolution(float specified)
   if (m_dialog != nullptr && !m_dialog->automaticResolution())
     return m_dialog->resolution();
 
-  float r = 0.02 * powf(m_molecule->atomCount(), 1.0f / 3.0f);
   float minimum = 0.05;
-  float maximum = 0.5;
 
   if (m_dialog != nullptr) {
     switch (m_dialog->surfaceType()) {
@@ -491,8 +493,21 @@ float Surfaces::resolution(float specified)
     }
   }
 
-  r = std::clamp(r, minimum, maximum);
-  return r;
+  // The grid spans the atoms' bounding box (as in Cube::setLimits) plus the
+  // padding on every side; the voxel budget is applied to that volume.
+  Vector3 extent = Vector3::Zero();
+  const Array<Vector3>& positions = m_molecule->atomPositions3d();
+  if (!positions.empty()) {
+    Vector3 low = positions[0];
+    Vector3 high = positions[0];
+    for (const Vector3& position : positions) {
+      low = low.cwiseMin(position);
+      high = high.cwiseMax(position);
+    }
+    extent = (high - low) + Vector3::Constant(2.0 * padding);
+  }
+
+  return automaticSurfaceResolution(m_molecule->atomCount(), extent, minimum);
 }
 
 void Surfaces::calculateSurface()
@@ -556,8 +571,25 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
   // Decide the resolution here, on the main thread, and remember it:
   // performEDTStep() must erode with the grid spacing the cube was built with.
-  const float res = resolution(defaultResolution);
+  //
+  // The padding here has to match the one computed in the worker below, which
+  // skips atoms in hidden layers. Using every atom gives the same value or a
+  // slightly larger one, so the voxel budget is never underestimated.
+  const double probe = (type == SolventAccessible || type == SolventExcluded)
+                         ? SolventProbeRadius
+                         : 0.0;
+  double maxRadius = probe;
+  for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
+    const double radius =
+      Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probe;
+    maxRadius = std::max(maxRadius, radius);
+  }
+  const double edtPadding = maxRadius + probe + 0.2;
+
+  const float res = resolution(defaultResolution, edtPadding);
   m_edtResolution = res;
+  if (m_commandPending)
+    m_commandResolution = res;
 
   QFuture future = QtConcurrent::run([=]() {
     double probeRadius = 0.0;
@@ -787,9 +819,11 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_isoValue = m_dialog->isosurfaceValue();
   else
     m_isoValue = isoValue;
-  float cubeResolution = resolution(defaultResolution);
-  float padding = 5.0;
   // TODO: allow extra padding for some molecules / properties
+  const float padding = 5.0;
+  const float cubeResolution = resolution(defaultResolution, padding);
+  if (m_commandPending)
+    m_commandResolution = cubeResolution;
   m_cube->setLimits(*m_molecule, cubeResolution, padding);
 
   QString progressText;

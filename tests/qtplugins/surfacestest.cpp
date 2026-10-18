@@ -5,6 +5,7 @@
 
 #include "commandtestharness.h"
 
+#include "surfaceresolution.h"
 #include "surfaces.h"
 
 #include <avogadro/core/cube.h>
@@ -24,7 +25,9 @@ using Avogadro::Index;
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
 using Avogadro::Core::Cube;
+using Avogadro::QtPlugins::automaticSurfaceResolution;
 using Avogadro::QtPlugins::Surfaces;
+using Avogadro::QtPlugins::SurfaceVoxelBudget;
 using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
@@ -432,4 +435,88 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
               0.0f)
       << "heavy atom " << i;
   }
+}
+
+namespace {
+
+// Number of grid points along an axis for the given length and spacing.
+double voxels(const Vector3& extent, float resolution)
+{
+  return (extent.x() / resolution) * (extent.y() / resolution) *
+         (extent.z() / resolution);
+}
+
+} // namespace
+
+TEST(SurfacesResolutionTest, smallMoleculeUnchanged)
+{
+  // 4HHB-like: 4.7k atoms in a ~70 A padded box. The formula gives
+  // 0.02 * cbrt(4700) = 0.34 A, well inside the budget.
+  const Vector3 extent(70.0, 80.0, 70.0);
+  const float formula = 0.02f * std::cbrt(4700.0f);
+  EXPECT_FLOAT_EQ(formula, automaticSurfaceResolution(4700, extent));
+  EXPECT_LE(voxels(extent, formula), SurfaceVoxelBudget);
+
+  // Tiny molecule: the clamp to the minimum still applies.
+  EXPECT_FLOAT_EQ(0.05f, automaticSurfaceResolution(1, Vector3(8.0, 8.0, 8.0)));
+  EXPECT_FLOAT_EQ(0.1f,
+                  automaticSurfaceResolution(1, Vector3(8.0, 8.0, 8.0), 0.1f));
+  // Over 16k atoms the formula is capped at 0.5 A when the box is small.
+  EXPECT_FLOAT_EQ(0.5f,
+                  automaticSurfaceResolution(100000, Vector3(60, 60, 60)));
+}
+
+TEST(SurfacesResolutionTest, largeExtentIsBudgetLimited)
+{
+  // A 2MS2-like capsid: 184k atoms in a ~330 A box, which at 0.5 A would be
+  // 290M voxels.
+  const Vector3 capsid(330.0, 330.0, 330.0);
+  ASSERT_GT(voxels(capsid, 0.5f), SurfaceVoxelBudget);
+  const float res = automaticSurfaceResolution(184000, capsid);
+  EXPECT_GT(res, 0.5f);
+  EXPECT_NEAR(SurfaceVoxelBudget, voxels(capsid, res),
+              SurfaceVoxelBudget * 1e-3);
+
+  // And a 1M-atom one.
+  const Vector3 huge(800.0, 700.0, 750.0);
+  const float resHuge = automaticSurfaceResolution(1000000, huge);
+  EXPECT_LE(voxels(huge, resHuge), SurfaceVoxelBudget * 1.001);
+  EXPECT_GT(resHuge, res);
+}
+
+TEST(SurfacesResolutionTest, neverBelowFormula)
+{
+  for (size_t atoms :
+       { size_t(1), size_t(100), size_t(5000), size_t(200000) }) {
+    for (float minimum : { 0.05f, 0.1f }) {
+      const float formula =
+        std::clamp(0.02f * std::cbrt(static_cast<float>(atoms)), minimum, 0.5f);
+      for (double length : { 1.0, 20.0, 100.0, 400.0, 2000.0 }) {
+        EXPECT_GE(
+          automaticSurfaceResolution(
+            atoms, Vector3(length, 0.7 * length, 1.3 * length), minimum),
+          formula);
+      }
+    }
+  }
+}
+
+TEST(SurfacesResolutionTest, monotonicInExtent)
+{
+  float previous = 0.0f;
+  for (double length = 10.0; length <= 3000.0; length *= 1.25) {
+    const float res =
+      automaticSurfaceResolution(50000, Vector3(length, length, length));
+    EXPECT_GE(res, previous) << "length " << length;
+    previous = res;
+  }
+  EXPECT_GT(previous, 0.5f);
+}
+
+TEST(SurfacesResolutionTest, degenerateExtent)
+{
+  const float formula = 0.02f * std::cbrt(1000.0f);
+  EXPECT_FLOAT_EQ(formula, automaticSurfaceResolution(1000, Vector3::Zero()));
+  EXPECT_FLOAT_EQ(formula, automaticSurfaceResolution(
+                             1000, Vector3(1e308, 1e308, 1e308) * 10.0));
 }

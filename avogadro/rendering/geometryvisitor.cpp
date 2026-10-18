@@ -7,6 +7,7 @@
 
 #include "curvegeometry.h"
 #include "linestripgeometry.h"
+#include "meshgeometry.h"
 #include "spheregeometry.h"
 #include "widelinegeometry.h"
 
@@ -48,6 +49,24 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
   tmpRadius = std::sqrt(tmpRadius);
   m_centers.push_back(tmpCenter);
   m_radii.push_back(tmpRadius);
+}
+
+void GeometryVisitor::visit(MeshGeometry& mesh)
+{
+  // 2D overlay meshes (e.g. the selection rubber band) are in screen
+  // coordinates, not scene coordinates.
+  if (mesh.renderPass() == Overlay2DPass)
+    return;
+
+  // Use the bounding box cached by the mesh rather than scanning vertices;
+  // surface meshes can have tens of millions of them.
+  Vector3f minimum, maximum;
+  if (!mesh.bounds(minimum, maximum))
+    return;
+
+  m_dirty = true;
+  m_centers.push_back(0.5f * (minimum + maximum));
+  m_radii.push_back(0.5f * (maximum - minimum).norm());
 }
 
 void GeometryVisitor::visit(CurveGeometry& cg)
