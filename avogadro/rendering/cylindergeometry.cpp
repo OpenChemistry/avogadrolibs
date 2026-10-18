@@ -24,6 +24,8 @@ namespace {
 
 #include <avogadro/core/matrix.h>
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 
 using std::cout;
@@ -70,6 +72,69 @@ void CylinderGeometry::accept(Visitor& visitor)
   visitor.visit(*this);
 }
 
+void CylinderGeometry::tessellate(std::vector<ColorNormalVertex>& vertices,
+                                  std::vector<unsigned int>& indices) const
+{
+  // Set some defaults for our cylinders.
+  constexpr unsigned int resolution = 8; // points per circle
+  constexpr double resolutionRadians =
+    2.0 * M_PI / static_cast<double>(resolution);
+
+  // cos(j * theta) and sin(j * theta), shared by every cylinder.
+  float cosines[resolution];
+  float sines[resolution];
+  for (unsigned int j = 0; j < resolution; ++j) {
+    cosines[j] = static_cast<float>(std::cos(j * resolutionRadians));
+    sines[j] = static_cast<float>(std::sin(j * resolutionRadians));
+  }
+
+  const size_t count = std::min(m_indices.size(), m_cylinders.size());
+  vertices.clear();
+  indices.clear();
+  // 2 vertices per point on the circle; 2 triangles per segment.
+  vertices.reserve(count * 2 * resolution);
+  indices.reserve(count * 6 * resolution);
+
+  for (size_t i = 0; i < count; ++i) {
+    const CylinderColor& cylinder = m_cylinders[i];
+    const Vector3f& position1 = cylinder.end1;
+    const Vector3f& position2 = cylinder.end2;
+    const Vector3f direction = (position2 - position1).normalized();
+    const float radius = cylinder.radius;
+
+    // Rotating u about the unit vector d by j * theta (Rodrigues, with
+    // d . u == 0) gives cos(j theta) u + sin(j theta) (d x u).
+    const Vector3f u = direction.unitOrthogonal() * radius;
+    const Vector3f w = direction.cross(u);
+
+    // Cylinder
+    ColorNormalVertex vert(cylinder.color, -direction, position1);
+    ColorNormalVertex vert2(cylinder.color2, -direction, position1);
+    const auto tubeStart = static_cast<unsigned int>(vertices.size());
+    for (unsigned int j = 0; j < resolution; ++j) {
+      const Vector3f radial = cosines[j] * u + sines[j] * w;
+      vert.normal = radial;
+      vert.vertex = position1 + radial;
+      vertices.push_back(vert);
+      vert2.normal = vert.normal;
+      vert2.vertex = position2 + radial;
+      vertices.push_back(vert2);
+    }
+    // Now to stitch it together.
+    for (unsigned int j = 0; j < resolution; ++j) {
+      unsigned int r1 = j + j;
+      unsigned int r2 = (j != 0 ? r1 : resolution + resolution) - 2;
+      indices.push_back(tubeStart + r1);
+      indices.push_back(tubeStart + r1 + 1);
+      indices.push_back(tubeStart + r2);
+
+      indices.push_back(tubeStart + r2);
+      indices.push_back(tubeStart + r1 + 1);
+      indices.push_back(tubeStart + r2 + 1);
+    }
+  }
+}
+
 void CylinderGeometry::update()
 {
   if (m_indices.empty() || m_cylinders.empty())
@@ -101,62 +166,9 @@ void CylinderGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    // Set some defaults for our cylinders.
-    const unsigned int resolution = 8; // points per circle
-    const float resolutionRadians =
-      2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
-    std::vector<Vector3f> radials;
-    radials.reserve(resolution);
-
-    std::vector<unsigned int> cylinderIndices;
     std::vector<ColorNormalVertex> cylinderVertices;
-
-    auto itIndex = m_indices.begin();
-    auto itCylinder = m_cylinders.begin();
-
-    for (unsigned int i = 0;
-         itIndex != m_indices.end() && itCylinder != m_cylinders.end();
-         ++i, ++itIndex, ++itCylinder) {
-
-      const Vector3f& position1 = itCylinder->end1;
-      const Vector3f& position2 = itCylinder->end2;
-      const Vector3f direction = (position2 - position1).normalized();
-      float radius = itCylinder->radius;
-
-      // Generate the radial vectors
-      Vector3f radialVec = direction.unitOrthogonal() * radius;
-      Eigen::AngleAxisf transform(resolutionRadians, direction);
-      radials.clear();
-      for (unsigned int j = 0; j < resolution; ++j) {
-        radials.push_back(radialVec);
-        radialVec = transform * radialVec;
-      }
-
-      // Cylinder
-      ColorNormalVertex vert(itCylinder->color, -direction, position1);
-      ColorNormalVertex vert2(itCylinder->color2, -direction, position1);
-      const auto tubeStart = static_cast<unsigned int>(cylinderVertices.size());
-      for (auto& radial : radials) {
-        vert.normal = radial;
-        vert.vertex = position1 + radial;
-        cylinderVertices.push_back(vert);
-        vert2.normal = vert.normal;
-        vert2.vertex = position2 + radial;
-        cylinderVertices.push_back(vert2);
-      }
-      // Now to stitch it together.
-      for (unsigned int j = 0; j < resolution; ++j) {
-        unsigned int r1 = j + j;
-        unsigned int r2 = (j != 0 ? r1 : resolution + resolution) - 2;
-        cylinderIndices.push_back(tubeStart + r1);
-        cylinderIndices.push_back(tubeStart + r1 + 1);
-        cylinderIndices.push_back(tubeStart + r2);
-
-        cylinderIndices.push_back(tubeStart + r2);
-        cylinderIndices.push_back(tubeStart + r1 + 1);
-        cylinderIndices.push_back(tubeStart + r2 + 1);
-      }
-    }
+    std::vector<unsigned int> cylinderIndices;
+    tessellate(cylinderVertices, cylinderIndices);
 
     d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
     d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);
@@ -282,8 +294,10 @@ std::multimap<float, Identifier> CylinderGeometry::hits(
     id.molecule = m_identifier.molecule;
     id.type = m_identifier.type;
     id.index = i;
-    if (m_indexMap.size())
-      id.index = m_indexMap.find(i)->second;
+    // Cylinders added without an explicit index have no entry (or the
+    // sentinel): they are identified by their position.
+    if (i < m_indexMap.size() && m_indexMap[i] != NoIndex)
+      id.index = m_indexMap[i];
     if (id.type != InvalidType) {
       float depth = distance.norm();
       result.insert(std::pair<float, Identifier>(depth, id));
@@ -312,7 +326,7 @@ void CylinderGeometry::addCylinder(const Vector3f& pos1, const Vector3f& pos2,
                                    float radius, const Vector3ub& color,
                                    size_t index)
 {
-  m_indexMap[m_cylinders.size()] = index;
+  setIndex(m_cylinders.size(), index);
   addCylinder(pos1, pos2, radius, color, color);
 }
 
@@ -320,8 +334,15 @@ void CylinderGeometry::addCylinder(const Vector3f& pos1, const Vector3f& pos2,
                                    float radius, const Vector3ub& colorStart,
                                    const Vector3ub& colorEnd, size_t index)
 {
-  m_indexMap[m_cylinders.size()] = index;
+  setIndex(m_cylinders.size(), index);
   addCylinder(pos1, pos2, radius, colorStart, colorEnd);
+}
+
+void CylinderGeometry::setIndex(size_t cylinder, size_t index)
+{
+  if (m_indexMap.size() <= cylinder)
+    m_indexMap.resize(cylinder + 1, NoIndex);
+  m_indexMap[cylinder] = index;
 }
 
 void CylinderGeometry::clear()
