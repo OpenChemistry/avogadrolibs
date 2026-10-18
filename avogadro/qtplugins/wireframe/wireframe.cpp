@@ -169,17 +169,15 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(lines);
   geometry->addDrawable(atoms);
   geometry->addDrawable(selectedAtoms);
+  auto layers = m_layerManager.snapshot<LayerWireframe>();
   lines->reserve(molecule.bondCount());
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!m_layerManager.bondEnabled(bond.atom1().index(),
-                                    bond.atom2().index())) {
+    if (!layers.bondEnabled(bond.atom1().index(), bond.atom2().index())) {
       continue;
     }
-    auto* interface1 = m_layerManager.getSetting<LayerWireframe>(
-      m_layerManager.getLayerID(bond.atom1().index()));
-    auto* interface2 = m_layerManager.getSetting<LayerWireframe>(
-      m_layerManager.getLayerID(bond.atom2().index()));
+    auto* interface1 = layers.atomSetting(bond.atom1().index());
+    auto* interface2 = layers.atomSetting(bond.atom2().index());
     if (!interface1->showHydrogens && !interface2->showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
          bond.atom2().atomicNumber() == 1)) {

@@ -136,17 +136,17 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(selectedSpheres);
   geometry->addDrawable(translucentSpheres);
 
+  auto layers = m_layerManager.snapshot<LayerVdW>();
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    if (!m_layerManager.atomEnabled(i)) {
+    if (!layers.atomEnabled(i)) {
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
 
     Vector3ub color = atom.color();
     auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    auto* interface =
-      m_layerManager.getSetting<LayerVdW>(m_layerManager.getLayerID(i));
+    auto* interface = layers.atomSetting(i);
     float opacity = interface->opacity;
     if (opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
