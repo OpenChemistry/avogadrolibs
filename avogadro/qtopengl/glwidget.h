@@ -13,6 +13,8 @@
 #include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
+#include <memory>
+
 #include <QImage>
 #include <QPointer>
 #include <QSize>
@@ -147,6 +149,22 @@ public:
    */
   QSize pixelSize() const;
 
+  /**
+   * @brief Show or hide the frame statistics overlay.
+   *
+   * The overlay reports the display rate, the cost of the last scene rebuild,
+   * the render CPU and GPU times and the buffer upload volume. Showing it
+   * switches on the renderer's (asynchronous) pass timing; hiding it switches
+   * the timing off again. It is also enabled at construction when the
+   * AVOGADRO_FRAME_STATS environment variable is set to anything but "0" or
+   * the empty string; the value "log" also prints a summary line to stderr
+   * once a second.
+   * @{
+   */
+  void setFrameStatsVisible(bool visible);
+  bool frameStatsVisible() const;
+  /** @} */
+
 signals:
   void rendererInvalid();
 
@@ -241,12 +259,19 @@ private:
   float m_pixelRatio = 0.0f;
   QtGui::ScenePluginModel m_scenePlugins;
 
+  // Frame statistics overlay, see setFrameStatsVisible().
+  void drawFrameStats();
+
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;
   /** True while updateScene() is building; guards against re-entry. */
   bool m_updatingScene = false;
   /** A change arrived mid-build; the scene must be rebuilt afterwards. */
   bool m_sceneUpdatePending = false;
+
+  // Frame statistics state; kept out of the header.
+  class Private;
+  std::unique_ptr<Private> d;
 };
 
 } // namespace QtOpenGL
