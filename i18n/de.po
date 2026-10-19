@@ -3002,6 +3002,8 @@ msgstr ""
 msgid ""
 "atom index #%1 in atoms is negative; atom indices must be zero or greater."
 msgstr ""
+"atomindex #%1 in Atomen ist negativ; Atomindizes müssen Null oder größer "
+"sein."
 
 #: qtplugins/constraints/constraintsextension.cpp:416
 #: qtplugins/measuretool/measuretool.cpp:918
