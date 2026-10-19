@@ -3,11 +3,13 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "shadowmolecule.h"
 #include "utils.h"
 
 #include <gtest/gtest.h>
 
 #include <map>
+#include <memory>
 #include <string>
 #include <type_traits>
 
@@ -3160,6 +3162,659 @@ TEST_F(MoleculeTest, RandomMixedMutationsStayConsistent)
 
     expectConsistent(molecule, "random step " + std::to_string(step) + " (op " +
                                  std::to_string(op) + ")");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Shadow-model test. RandomMixedMutationsStayConsistent above only proves the
+// arrays keep their sizes; this one proves every value is still on the atom
+// or bond it was given to. See shadowmolecule.h for the model. The molecule
+// has no unique ids of its own (QtGui::Molecule does, and
+// RWMoleculeTest.shadowModelSurvivesUndoRedo checks those), so identity is
+// tracked entirely in the shadow, which applies the documented swap-and-pop
+// rules to its own records.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+using ShadowModel::Model;
+
+class ShadowRunner
+{
+public:
+  explicit ShadowRunner(unsigned seed) : m_seed(seed), m_rng(seed)
+  {
+    m_mol = std::make_unique<Molecule>();
+  }
+
+  // Run one random operation, then check everything. Returns false (after
+  // reporting) on the first disagreement.
+  bool step(int stepNumber);
+
+private:
+  enum Op
+  {
+    AddAtom,
+    AddAtomAt,
+    RemoveAtom,
+    SwapAtom,
+    AddBond,
+    RemoveBond,
+    SwapBond,
+    SetBondOrder,
+    SetBondLabel,
+    SetBondProperties,
+    SetAtomicNumber,
+    SetPosition3d,
+    SetPosition2d,
+    SetLabel,
+    SetFormalCharge,
+    SetHybridization,
+    SetIsotope,
+    SetColor,
+    SetSelected,
+    SetFrozenAtom,
+    SetFrozenAxis,
+    SetLayer,
+    SetForce,
+    SetPartialCharges,
+    SetAtomProperties,
+    SetAllPositions3d,
+    SetAllLabels,
+    AddCoordinateSet,
+    ReplaceCoordinateSet,
+    ActivateCoordinateSet,
+    SetVelocities,
+    SetVibrations,
+    CopyConstruct,
+    CopyAssign,
+    MoveConstruct,
+    MoveAssign,
+    OpCount
+  };
+
+  static const char* name(int op)
+  {
+    static const char* names[] = {
+      "addAtom",
+      "addAtom(position)",
+      "removeAtom",
+      "swapAtom",
+      "addBond",
+      "removeBond",
+      "swapBond",
+      "setBondOrder",
+      "setBondLabel",
+      "bondProperties",
+      "setAtomicNumber",
+      "setAtomPosition3d",
+      "setAtomPosition2d",
+      "setAtomLabel",
+      "setFormalCharge",
+      "setHybridization",
+      "setIsotope",
+      "setColor",
+      "setAtomSelected",
+      "setFrozenAtom",
+      "setFrozenAtomAxis",
+      "setLayer",
+      "setForceVector",
+      "setPartialCharges",
+      "atomProperties",
+      "setAtomPositions3d",
+      "setAtomLabels",
+      "setCoordinate3d(new set)",
+      "setCoordinate3d(replace set)",
+      "setCoordinate3d(activate)",
+      "setVelocities",
+      "setVibrationData",
+      "copy construct",
+      "copy assign",
+      "move construct",
+      "move assign",
+    };
+    return names[op];
+  }
+
+  // Relative likelihood of each operation. Setters outweigh structural edits
+  // so that data is usually present when a swap or removal comes along, and
+  // addAtom is the only operation that needs no atoms.
+  static int weight(int op)
+  {
+    switch (op) {
+      case AddAtom:
+      case AddAtomAt:
+        return 6;
+      case RemoveAtom:
+      case SwapAtom:
+      case AddBond:
+        return 5;
+      case RemoveBond:
+      case SwapBond:
+        return 3;
+      case SetVelocities:
+      case SetVibrations:
+      case SetForce:
+      case SetPartialCharges:
+        return 2;
+      case AddCoordinateSet:
+      case ReplaceCoordinateSet:
+      case ActivateCoordinateSet:
+      case SetAllPositions3d:
+      case SetAllLabels:
+        return 1;
+      case CopyConstruct:
+      case CopyAssign:
+      case MoveConstruct:
+      case MoveAssign:
+        return 1;
+      default:
+        return 3;
+    }
+  }
+
+  Index pickIndex(Index count)
+  {
+    return std::uniform_int_distribution<Index>(0, count - 1)(m_rng);
+  }
+
+  int pickInt(int lo, int hi)
+  {
+    return std::uniform_int_distribution<int>(lo, hi)(m_rng);
+  }
+
+  bool chance(int percent) { return pickInt(0, 99) < percent; }
+
+  // Small integers keep the values exactly comparable and easy to read.
+  Vector3 pickVector()
+  {
+    return Vector3(pickInt(-50, 50), pickInt(-50, 50), pickInt(-50, 50));
+  }
+
+  unsigned char pickElement()
+  {
+    if (chance(4))
+      return Avogadro::CustomElementMin;
+    return static_cast<unsigned char>(pickInt(1, 10));
+  }
+
+  Array<Vector3> pickCoordinates(Index n)
+  {
+    // Usually one per atom; sometimes fewer, the way a short frame is read.
+    const Index length = chance(70) ? n : pickIndex(n + 1);
+    Array<Vector3> coords;
+    for (Index i = 0; i < length; ++i)
+      coords.push_back(pickVector());
+    return coords;
+  }
+
+  // A molecule with unrelated contents, to assign over.
+  std::unique_ptr<Molecule> junkMolecule()
+  {
+    auto junk = std::make_unique<Molecule>();
+    for (int i = 0; i < 4; ++i)
+      junk->addAtom(static_cast<unsigned char>(pickInt(1, 10)));
+    junk->addBond(0, 1, 2);
+    junk->addBond(2, 3, 1);
+    junk->setAtomLabel(2, "junk");
+    junk->setAtomPosition3d(3, pickVector());
+    junk->setFormalCharge(1, 1);
+    junk->setColor(0, Avogadro::Vector3ub(1, 2, 3));
+    junk->setFrozenAtomAxis(3, 1, true);
+    junk->setAtomSelected(1, true);
+    junk->setBondLabel(1, "junkbond");
+    junk->setCoordinate3d(pickCoordinates(4), 0);
+    junk->atomProperties().setDouble(ShadowModel::kAtomDoubleProperty, 1, 9.0);
+    return junk;
+  }
+
+  bool check(const Molecule& mol, const Model& model, const char* what)
+  {
+    const std::string error = ShadowModel::verify(mol, model);
+    if (error.empty())
+      return true;
+    ADD_FAILURE() << "seed " << m_seed << ", step " << m_step << ", op "
+                  << name(m_op) << " [" << what << "]: " << error;
+    return false;
+  }
+
+  bool checkAll(const char* what)
+  {
+    if (!check(*m_mol, m_model, what))
+      return false;
+    for (size_t i = 0; i < m_witnesses.size(); ++i) {
+      if (!check(*m_witnesses[i].first, m_witnesses[i].second,
+                 "earlier copy, which must not have changed"))
+        return false;
+    }
+    return true;
+  }
+
+  // The documented contract: a moved-from Molecule is a default-constructed
+  // one. It must also still be usable.
+  bool checkMovedFrom(Molecule& moved)
+  {
+    Model empty;
+    if (!check(moved, empty, "moved-from molecule"))
+      return false;
+    if (moved.vibrationData(0) != nullptr || moved.coordinate3d() != 0 ||
+        moved.hasData("shadow")) {
+      ADD_FAILURE() << "seed " << m_seed << ", step " << m_step << ", op "
+                    << name(m_op) << ": moved-from molecule is not empty";
+      return false;
+    }
+    Model usable;
+    usable.addAtom(8);
+    moved.addAtom(8);
+    return check(moved, usable, "moved-from molecule after addAtom");
+  }
+
+  void keepWitness(std::unique_ptr<Molecule> mol, const Model& model)
+  {
+    if (!chance(60))
+      return;
+    if (m_witnesses.size() >= 3)
+      m_witnesses.erase(m_witnesses.begin());
+    m_witnesses.emplace_back(std::move(mol), model);
+  }
+
+  unsigned m_seed;
+  std::mt19937 m_rng;
+  int m_step = 0;
+  int m_op = 0;
+  std::unique_ptr<Molecule> m_mol;
+  Model m_model;
+  // Earlier states of the molecule, kept after a copy so that the two copies
+  // keep being edited independently: a shared array that was not detached on
+  // write shows up as the witness changing.
+  std::vector<std::pair<std::unique_ptr<Molecule>, Model>> m_witnesses;
+};
+
+bool ShadowRunner::step(int stepNumber)
+{
+  m_step = stepNumber;
+  Molecule& mol = *m_mol;
+  Model& model = m_model;
+  Index n = mol.atomCount();
+  const Index bonds = mol.bondCount();
+
+  int total = 0;
+  for (int op = 0; op < OpCount; ++op)
+    total += weight(op);
+  int roll = pickInt(0, total - 1);
+  int op = 0;
+  for (; op < OpCount; ++op) {
+    if (roll < weight(op))
+      break;
+    roll -= weight(op);
+  }
+
+  // Keep the molecules small so that removals and swaps keep landing on
+  // index 0, the last atom, and an emptied molecule.
+  if ((op == AddAtom || op == AddAtomAt) && n >= 9)
+    op = RemoveAtom;
+  // Everything else needs an atom (or a bond, or a coordinate set) to act on.
+  const bool needsAtom = op != AddAtom && op != AddAtomAt && op < CopyConstruct;
+  if (needsAtom && n == 0)
+    op = AddAtom;
+  if ((op == AddBond || op == SwapAtom) && n < 2)
+    op = AddAtom;
+  if ((op == RemoveBond || op == SetBondOrder || op == SetBondLabel ||
+       op == SetBondProperties) &&
+      bonds == 0)
+    op = AddBond;
+  if (op == SwapBond && bonds < 2)
+    op = AddBond;
+  if (op == AddBond && n < 2)
+    op = AddAtom;
+  if (op == ActivateCoordinateSet && model.frameCount == 0)
+    op = AddCoordinateSet;
+  if (op == AddCoordinateSet && model.frameCount >= 4)
+    op = ReplaceCoordinateSet;
+  if (op == ReplaceCoordinateSet && model.frameCount == 0)
+    op = AddCoordinateSet;
+  m_op = op;
+  n = mol.atomCount();
+
+  switch (op) {
+    case AddAtom: {
+      const unsigned char z = pickElement();
+      mol.addAtom(z);
+      model.addAtom(z);
+      break;
+    }
+    case AddAtomAt: {
+      const unsigned char z = pickElement();
+      const Vector3 p = pickVector();
+      const bool covered = mol.atomPositions3d().size() == n;
+      mol.addAtom(z, p);
+      model.addAtom(z, &p, covered);
+      break;
+    }
+    case RemoveAtom: {
+      const Index i = chance(25) ? n - 1 : (chance(25) ? 0 : pickIndex(n));
+      if (!mol.removeAtom(i)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": removeAtom(" << i << ") refused, count " << n;
+        return false;
+      }
+      model.removeAtom(i);
+      const std::string error = model.syncBondOrder(mol);
+      if (!error.empty()) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ", op removeAtom(" << i << "): " << error;
+        return false;
+      }
+      break;
+    }
+    case SwapAtom: {
+      const Index a = pickIndex(n);
+      const Index b = chance(10) ? a : pickIndex(n);
+      mol.swapAtom(a, b);
+      model.swapAtom(a, b);
+      break;
+    }
+    case AddBond: {
+      const Index a = pickIndex(n);
+      Index b = pickIndex(n);
+      if (a == b)
+        b = (a + 1) % n;
+      const unsigned char order = static_cast<unsigned char>(pickInt(1, 3));
+      mol.addBond(a, b, order);
+      model.addBond(a, b, order);
+      break;
+    }
+    case RemoveBond: {
+      const Index i = chance(25) ? bonds - 1 : pickIndex(bonds);
+      mol.removeBond(i);
+      model.removeBond(i);
+      break;
+    }
+    case SwapBond: {
+      const Index a = pickIndex(bonds);
+      const Index b = pickIndex(bonds);
+      mol.swapBond(a, b);
+      model.swapBond(a, b);
+      break;
+    }
+    case SetBondOrder: {
+      const Index i = pickIndex(bonds);
+      const auto order = static_cast<unsigned char>(pickInt(1, 3));
+      mol.setBondOrder(i, order);
+      model.bonds[i].order = order;
+      break;
+    }
+    case SetBondLabel: {
+      const Index i = pickIndex(bonds);
+      const std::string label = "b" + std::to_string(m_step);
+      mol.setBondLabel(i, label);
+      model.bonds[i].label = label;
+      break;
+    }
+    case SetBondProperties: {
+      const Index i = pickIndex(bonds);
+      const double d = pickInt(-1000, 1000) / 8.0;
+      const int v = pickInt(-1000, 1000);
+      mol.bondProperties().setDouble(ShadowModel::kBondDoubleProperty, i, d);
+      model.bonds[i].doubleProperty = d;
+      if (chance(50)) {
+        mol.bondProperties().setInt(ShadowModel::kBondIntProperty, i, v);
+        model.bonds[i].intProperty = v;
+      }
+      break;
+    }
+    case SetAtomicNumber: {
+      const Index i = pickIndex(n);
+      const unsigned char z = pickElement();
+      mol.setAtomicNumber(i, z);
+      model.atoms[i].atomicNumber = z;
+      // Resets an explicit colour to the new element's.
+      model.atoms[i].color.reset();
+      break;
+    }
+    case SetPosition3d: {
+      const Index i = pickIndex(n);
+      const Vector3 p = pickVector();
+      mol.setAtomPosition3d(i, p);
+      model.atoms[i].position3d = p;
+      break;
+    }
+    case SetPosition2d: {
+      const Index i = pickIndex(n);
+      const Vector2 p(pickInt(-50, 50), pickInt(-50, 50));
+      mol.setAtomPosition2d(i, p);
+      model.atoms[i].position2d = p;
+      break;
+    }
+    case SetLabel: {
+      const Index i = pickIndex(n);
+      const std::string label = "a" + std::to_string(m_step);
+      mol.setAtomLabel(i, label);
+      model.atoms[i].label = label;
+      break;
+    }
+    case SetFormalCharge: {
+      const Index i = pickIndex(n);
+      const auto charge = static_cast<signed char>(pickInt(-3, 3));
+      mol.setFormalCharge(i, charge);
+      model.atoms[i].formalCharge = charge;
+      break;
+    }
+    case SetHybridization: {
+      const Index i = pickIndex(n);
+      const auto hyb =
+        static_cast<Avogadro::Core::AtomHybridization>(pickInt(-6, 6));
+      mol.setHybridization(i, hyb);
+      model.atoms[i].hybridization = hyb;
+      break;
+    }
+    case SetIsotope: {
+      const Index i = pickIndex(n);
+      const auto isotope = static_cast<unsigned short>(pickInt(1, 300));
+      mol.setIsotope(i, isotope);
+      model.atoms[i].isotope = isotope;
+      break;
+    }
+    case SetColor: {
+      const Index i = pickIndex(n);
+      const Avogadro::Vector3ub c(pickInt(0, 255), pickInt(0, 255),
+                                  pickInt(0, 255));
+      mol.setColor(i, c);
+      model.atoms[i].color = c;
+      break;
+    }
+    case SetSelected: {
+      const Index i = pickIndex(n);
+      const bool selected = chance(50);
+      mol.setAtomSelected(i, selected);
+      model.atoms[i].selected = selected;
+      break;
+    }
+    case SetFrozenAtom: {
+      const Index i = pickIndex(n);
+      const bool frozen = chance(50);
+      mol.setFrozenAtom(i, frozen);
+      for (bool& flag : model.atoms[i].frozen)
+        flag = frozen;
+      break;
+    }
+    case SetFrozenAxis: {
+      const Index i = pickIndex(n);
+      const int axis = pickInt(0, 2);
+      const bool frozen = chance(60);
+      mol.setFrozenAtomAxis(i, axis, frozen);
+      model.atoms[i].frozen[axis] = frozen;
+      break;
+    }
+    case SetLayer: {
+      const Index i = pickIndex(n);
+      const size_t layer = static_cast<size_t>(pickInt(0, 2));
+      mol.setLayer(i, layer);
+      model.atoms[i].layer = layer;
+      break;
+    }
+    case SetForce: {
+      const Index i = pickIndex(n);
+      const Vector3 f = pickVector();
+      mol.setForceVector(i, f);
+      model.atoms[i].force = f;
+      break;
+    }
+    case SetPartialCharges: {
+      const std::string type = chance(50) ? "mmff94" : "gasteiger";
+      std::vector<double> values;
+      MatrixX charges(n, 1);
+      for (Index i = 0; i < n; ++i) {
+        values.push_back(pickInt(-100, 100) / 16.0);
+        charges(static_cast<Eigen::Index>(i), 0) = values.back();
+      }
+      mol.setPartialCharges(type, charges);
+      model.setPartialCharges(type, values);
+      break;
+    }
+    case SetAtomProperties: {
+      const Index i = pickIndex(n);
+      const double d = pickInt(-1000, 1000) / 8.0;
+      mol.atomProperties().setDouble(ShadowModel::kAtomDoubleProperty, i, d);
+      model.atoms[i].doubleProperty = d;
+      if (chance(50)) {
+        const std::string s = "p" + std::to_string(m_step);
+        mol.atomProperties().setString(ShadowModel::kAtomStringProperty, i, s);
+        model.atoms[i].stringProperty = s;
+      }
+      if (chance(50)) {
+        const double m = pickInt(-1000, 1000) / 8.0;
+        MatrixX matrix(1, 1);
+        matrix(0, 0) = m;
+        mol.atomProperties().setMatrix(ShadowModel::kAtomMatrixProperty, i,
+                                       matrix);
+        model.atoms[i].matrixProperty = m;
+      }
+      break;
+    }
+    case SetAllPositions3d: {
+      Array<Vector3> all;
+      for (Index i = 0; i < n; ++i)
+        all.push_back(pickVector());
+      mol.setAtomPositions3d(all);
+      for (Index i = 0; i < n; ++i)
+        model.atoms[i].position3d = all[i];
+      break;
+    }
+    case SetAllLabels: {
+      Array<std::string> all;
+      for (Index i = 0; i < n; ++i)
+        all.push_back("all" + std::to_string(i) + "." + std::to_string(m_step));
+      mol.setAtomLabels(all);
+      for (Index i = 0; i < n; ++i)
+        model.atoms[i].label = all[i];
+      break;
+    }
+    case AddCoordinateSet:
+    case ReplaceCoordinateSet: {
+      const size_t index = op == AddCoordinateSet
+                             ? model.frameCount
+                             : static_cast<size_t>(pickInt(
+                                 0, static_cast<int>(model.frameCount) - 1));
+      const Array<Vector3> coords = pickCoordinates(n);
+      mol.setCoordinate3d(coords, index);
+      model.setCoordinateSet(
+        index, std::vector<Vector3>(coords.begin(), coords.end()));
+      break;
+    }
+    case ActivateCoordinateSet: {
+      const int index = pickInt(0, static_cast<int>(model.frameCount) - 1);
+      mol.setCoordinate3d(index);
+      model.activateCoordinateSet(static_cast<size_t>(index));
+      break;
+    }
+    case SetVelocities: {
+      const size_t index = model.velocitySetCount < 3
+                             ? model.velocitySetCount
+                             : static_cast<size_t>(pickInt(0, 2));
+      const Array<Vector3> values = pickCoordinates(n);
+      mol.setVelocities(values, static_cast<int>(index));
+      model.setVelocitySet(index,
+                           std::vector<Vector3>(values.begin(), values.end()));
+      break;
+    }
+    case SetVibrations: {
+      Molecule::VibrationData data;
+      std::vector<std::vector<Vector3>> modes;
+      const int count = pickInt(1, 2);
+      for (int m = 0; m < count; ++m) {
+        data.frequencies.push_back(100.0 * (m + 1));
+        const Array<Vector3> mode = pickCoordinates(n);
+        data.lx.push_back(mode);
+        modes.emplace_back(mode.begin(), mode.end());
+      }
+      mol.setVibrationData(data, 0);
+      model.setVibrations(modes);
+      break;
+    }
+    case CopyConstruct: {
+      auto copy = std::make_unique<Molecule>(mol);
+      if (!check(*copy, model, "copy-constructed") ||
+          !check(mol, model, "source of a copy"))
+        return false;
+      // Either keep the source around to be compared later, or destroy it
+      // and carry on with the copy alone.
+      std::unique_ptr<Molecule> source = std::move(m_mol);
+      m_mol = std::move(copy);
+      keepWitness(std::move(source), model);
+      break;
+    }
+    case CopyAssign: {
+      auto target = junkMolecule();
+      *target = mol;
+      if (!check(*target, model, "copy-assigned") ||
+          !check(mol, model, "source of a copy assignment"))
+        return false;
+      std::unique_ptr<Molecule> source = std::move(m_mol);
+      m_mol = std::move(target);
+      keepWitness(std::move(source), model);
+      break;
+    }
+    case MoveConstruct: {
+      auto target = std::make_unique<Molecule>(std::move(mol));
+      if (!check(*target, model, "move-constructed"))
+        return false;
+      if (!checkMovedFrom(mol))
+        return false;
+      m_mol = std::move(target);
+      break;
+    }
+    case MoveAssign: {
+      auto target = junkMolecule();
+      *target = std::move(mol);
+      if (!check(*target, model, "move-assigned"))
+        return false;
+      if (!checkMovedFrom(mol))
+        return false;
+      m_mol = std::move(target);
+      break;
+    }
+    default:
+      break;
+  }
+
+  return checkAll("after the operation");
+}
+
+} // namespace
+
+// Six fixed seeds of 3000 steps each (AVOGADRO_SHADOW_SEEDS=N for more), on
+// molecules of at most nine atoms.
+TEST_F(MoleculeTest, ShadowModelAgreesAfterEveryStep)
+{
+  const unsigned seeds = ShadowModel::seedCount(6);
+  for (unsigned seed = 1; seed <= seeds; ++seed) {
+    SCOPED_TRACE("loop seed " + std::to_string(seed));
+    ShadowRunner runner(seed * 7919u);
+    for (int step = 0; step < 3000; ++step) {
+      if (!runner.step(step))
+        return; // the failure already names the seed and step
+    }
   }
 }
 
