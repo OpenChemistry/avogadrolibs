@@ -3613,6 +3613,29 @@ TEST_F(MoleculeTest, removeAtomFullPropertyColumnSwapsAndPops)
   EXPECT_EQ("zero", *props.getString("s", 1));
 }
 
+TEST_F(MoleculeTest, removeAtomOverlongPropertyColumnSwapsAndPops)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 2, 3.0);
+  // The setters don't check the index, so a column can outgrow the atoms.
+  props.setDouble("d", 5, 9.0);
+
+  ASSERT_TRUE(m.removeAtom(0));
+
+  // The entries past the old atom count are dropped, and the former last
+  // atom's value follows it to index 0.
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(3.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 1));
+}
+
 TEST_F(MoleculeTest, swapBondMovesValuesOfShortPropertyColumns)
 {
   Molecule m;

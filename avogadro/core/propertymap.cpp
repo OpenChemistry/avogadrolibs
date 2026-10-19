@@ -278,6 +278,10 @@ template <typename T>
 void removeColumnEntry(Array<T>& column, Index index, Index entityCount,
                        const T& sentinel)
 {
+  // Entries past entityCount belong to no entity (the setters don't check
+  // the index), so drop them and treat the column as full.
+  if (column.size() > entityCount)
+    column.resize(entityCount);
   if (column.size() == entityCount) {
     column.swapAndPop(index);
   } else if (index < column.size()) {
