@@ -4011,7 +4011,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:417
 #: qtplugins/forcefield/forcefield.cpp:443
 msgid "A force field calculation is already running."
-msgstr ""
+msgstr "Eine Kraftfeldberechnung läuft bereits."
 
 #: qtplugins/forcefield/forcefield.cpp:395
 msgid "No atoms provided for energy calculation."
@@ -4031,11 +4031,11 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:477
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"gradientTolerance\" muss eine endliche, nicht-negative Zahl sein."
 
 #: qtplugins/forcefield/forcefield.cpp:487
 msgid "\"energyTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"energyTolerance\" muss eine endliche, nicht-negative Zahl sein."
 
 #: qtplugins/forcefield/forcefield.cpp:504
 #: qtplugins/forcefield/forcefield.cpp:529
@@ -4066,20 +4066,20 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:585
 msgid "Axis must be x, y, z or 0, 1, 2."
-msgstr ""
+msgstr "Achse muss x, y, z oder 0, 1, 2 sein."
 
 #: qtplugins/forcefield/forcefield.cpp:823
 msgid "The force field calculation was interrupted."
-msgstr ""
+msgstr "Die Kraftfeldberechnung wurde unterbrochen."
 
 #: qtplugins/forcefield/forcefield.cpp:893
 msgid "No force field is available for this molecule."
-msgstr ""
+msgstr "Für dieses Molekül steht kein Kraftfeld zur Verfügung."
 
 #: qtplugins/forcefield/forcefield.cpp:914
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
-msgstr ""
+msgstr "Kraftfeld \"%1\" ist mit diesem Molekül nicht kompatibel."
 
 #: qtplugins/forcefield/forcefield.cpp:917
 #, qt-format
@@ -4155,7 +4155,7 @@ msgstr "%1 Kraftnorm = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:1475
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "Dieses Molekül hat nur einen Koordinatensatz."
 
 #: qtplugins/forcefield/forcefield.h:63
 msgid "Forcefield optimization"
@@ -4353,6 +4353,8 @@ msgid ""
 "Add any missing hydrogen atoms, and remove any extra hydrogen atoms on any "
 "atoms that violate the octet rule."
 msgstr ""
+"Fügen Sie fehlende Wasserstoffatome hinzu und entfernen Sie zusätzliche "
+"Wasserstoffatome an beliebigen Atomen, die gegen die Oktettregel verstoßen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
