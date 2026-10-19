@@ -2418,3 +2418,133 @@ TEST(RWMoleculeTest, modifyMoleculeUndoKeepsAtomUniqueIds)
   EXPECT_EQ(mol.atomPosition3d(0), Vector3(-5.0, 0.0, 0.0));
   expectIdsConsistent(mol);
 }
+
+// setHybridization() used to push a SetAtomicNumberCommand, writing the
+// hybridization into the atom's atomic number.
+TEST(RWMoleculeTest, setHybridizationLeavesAtomicNumberAlone)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.setHybridization(0, Avogadro::Core::SP2));
+  EXPECT_EQ(Avogadro::Core::SP2, mol.hybridization(0));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+
+  ASSERT_TRUE(mol.setHybridization(0, Avogadro::Core::SP3));
+  EXPECT_EQ(Avogadro::Core::SP3, mol.hybridization(0));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(Avogadro::Core::SP2, mol.hybridization(0));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(Avogadro::Core::HybridizationUnknown, mol.hybridization(0));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+
+  mol.undoStack().redo();
+  EXPECT_EQ(Avogadro::Core::SP2, mol.hybridization(0));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+  mol.undoStack().redo();
+  EXPECT_EQ(Avogadro::Core::SP3, mol.hybridization(0));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+}
+
+TEST(RWMoleculeTest, removeBondUndoRestoresTheBondLabel)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1);
+  mol.addBond(1, 2);
+  mol.addBond(2, 3);
+  ASSERT_TRUE(mol.setBondLabel(0, "alpha"));
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.removeBond(static_cast<Index>(0)));
+  ASSERT_EQ(static_cast<Index>(2), mol.bondCount());
+  mol.undoStack().undo();
+  ASSERT_EQ(static_cast<Index>(3), mol.bondCount());
+
+  // Index order after undo is not guaranteed, so match bonds by endpoints.
+  int found = 0;
+  for (Index i = 0; i < mol.bondCount(); ++i) {
+    auto pair = mol.bondPair(i);
+    if (pair == std::make_pair(Index(0), Index(1))) {
+      EXPECT_EQ("alpha", mol.bondLabel(i));
+      ++found;
+    } else {
+      EXPECT_EQ("", mol.bondLabel(i));
+    }
+  }
+  EXPECT_EQ(1, found);
+
+  // Redo then undo again re-captures the label from the restored bond.
+  mol.undoStack().redo();
+  ASSERT_EQ(static_cast<Index>(2), mol.bondCount());
+  mol.undoStack().undo();
+  for (Index i = 0; i < mol.bondCount(); ++i) {
+    if (mol.bondPair(i) == std::make_pair(Index(0), Index(1)))
+      EXPECT_EQ("alpha", mol.bondLabel(i));
+  }
+}
+
+TEST(RWMoleculeTest, removeBondUndoWithoutLabelDoesNotGrowLabels)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 3; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1);
+  mol.addBond(1, 2);
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.removeBond(static_cast<Index>(0)));
+  mol.undoStack().undo();
+
+  ASSERT_EQ(static_cast<Index>(2), mol.bondCount());
+  EXPECT_TRUE(m.bondLabels().empty());
+}
+
+// Changing the element resets the atom's colour, so undo has to put back a
+// colour the user chose.
+TEST(RWMoleculeTest, setAtomicNumberUndoRestoresUserColor)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(7);
+  const Avogadro::Vector3ub userColor(10, 20, 30);
+  ASSERT_TRUE(mol.setColor(0, userColor));
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.setAtomicNumber(0, 8));
+  EXPECT_EQ(8, mol.atomicNumber(0));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(6, mol.atomicNumber(0));
+  EXPECT_EQ(userColor, mol.color(0));
+
+  mol.undoStack().redo();
+  EXPECT_EQ(8, mol.atomicNumber(0));
+  mol.undoStack().undo();
+  EXPECT_EQ(6, mol.atomicNumber(0));
+  EXPECT_EQ(userColor, mol.color(0));
+}
+
+TEST(RWMoleculeTest, setAtomicNumberUndoWithoutColorDoesNotAddColors)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.setAtomicNumber(0, 8));
+  mol.undoStack().undo();
+
+  EXPECT_EQ(6, mol.atomicNumber(0));
+  EXPECT_TRUE(m.colors().empty());
+}

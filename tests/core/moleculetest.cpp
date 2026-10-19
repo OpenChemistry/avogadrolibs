@@ -1872,7 +1872,7 @@ TEST(PropertyMapTest, AddEntry)
   PropertyMap pm;
   pm.setDouble("charge", 0, 1.0);
   pm.setInt("type", 0, 5);
-  pm.addEntry();
+  pm.addEntry(2);
 
   // Column should now be size 2
   auto col = pm.doubles("charge");
@@ -3494,4 +3494,238 @@ TEST_F(MoleculeTest, hallNumberSupersedesInternationalNumber)
   // nothing to remove the second time
   molecule.setHallNumber(6);
   EXPECT_EQ(molecule.hallNumber(), 6);
+}
+
+// --- Custom property columns shorter than the entity count ---
+//
+// setDouble() and friends only grow a column as far as the entity they were
+// given, so a column can be shorter than atomCount()/bondCount(). Swapping or
+// removing entities must still move each value with its entity.
+
+TEST_F(MoleculeTest, swapAtomMovesValuesOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.5);
+  props.setInt("i", 0, 42);
+  props.setString("s", 0, "first");
+
+  m.swapAtom(0, 2);
+
+  // The values travel with the atom (now at index 2) ...
+  ASSERT_TRUE(props.getDouble("d", 2).has_value());
+  EXPECT_DOUBLE_EQ(1.5, *props.getDouble("d", 2));
+  ASSERT_TRUE(props.getInt("i", 2).has_value());
+  EXPECT_EQ(42, *props.getInt("i", 2));
+  ASSERT_TRUE(props.getString("s", 2).has_value());
+  EXPECT_EQ("first", *props.getString("s", 2));
+  // ... and the atom swapped into index 0 never had any.
+  EXPECT_FALSE(props.getDouble("d", 0).has_value());
+  EXPECT_FALSE(props.getInt("i", 0).has_value());
+  EXPECT_FALSE(props.getString("s", 0).has_value());
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+}
+
+TEST_F(MoleculeTest, swapAtomWithPartiallyCoveredPropertyColumn)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0); // column covers atoms 0 and 1, not 2
+
+  m.swapAtom(1, 2);
+
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  ASSERT_TRUE(props.getDouble("d", 2).has_value());
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 2));
+}
+
+TEST_F(MoleculeTest, removeAtomClearsStaleValueOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.5);
+  props.setInt("i", 0, 42);
+  props.setString("s", 0, "first");
+
+  // Atom 2 (no entries) is swapped into index 0, so atom 0's values must go.
+  ASSERT_TRUE(m.removeAtom(0));
+
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_FALSE(props.getDouble("d", 0).has_value());
+  EXPECT_FALSE(props.getInt("i", 0).has_value());
+  EXPECT_FALSE(props.getString("s", 0).has_value());
+}
+
+TEST_F(MoleculeTest, removeAtomBeyondShortPropertyColumnKeepsValues)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  m.atomProperties().setDouble("d", 0, 1.5);
+
+  ASSERT_TRUE(m.removeAtom(1));
+
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  ASSERT_TRUE(m.atomProperties().getDouble("d", 0).has_value());
+  EXPECT_DOUBLE_EQ(1.5, *m.atomProperties().getDouble("d", 0));
+  EXPECT_FALSE(m.atomProperties().getDouble("d", 1).has_value());
+}
+
+TEST_F(MoleculeTest, removeAtomFullPropertyColumnSwapsAndPops)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 2, 3.0);
+  props.setString("s", 2, "last");
+  props.setString("s", 0, "zero");
+  props.setString("s", 1, "one");
+
+  m.swapAtom(0, 1);
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 1));
+  EXPECT_EQ("one", *props.getString("s", 0));
+
+  ASSERT_TRUE(m.removeAtom(0));
+
+  // The former last atom took index 0 and the column shrank with it.
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(3.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 1));
+  EXPECT_EQ("last", *props.getString("s", 0));
+  EXPECT_EQ("zero", *props.getString("s", 1));
+}
+
+TEST_F(MoleculeTest, removeAtomOverlongPropertyColumnSwapsAndPops)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 2, 3.0);
+  // The setters don't check the index, so a column can outgrow the atoms.
+  props.setDouble("d", 5, 9.0);
+
+  ASSERT_TRUE(m.removeAtom(0));
+
+  // The entries past the old atom count are dropped, and the former last
+  // atom's value follows it to index 0.
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(3.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 1));
+}
+
+TEST_F(MoleculeTest, addAtomDropsPropertyEntriesPastTheAtomCount)
+{
+  Molecule m;
+  m.addAtom(6);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  // The setters don't check the index, so values can sit past the atoms.
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 3, 4.0);
+  props.setInt("i", 1, 5);
+  props.setString("s", 1, "stale");
+  MatrixX tensor(2, 2);
+  tensor << 1.0, 2.0, 3.0, 4.0;
+  props.setMatrix("m", 0, tensor);
+  props.setMatrix("m", 1, tensor);
+
+  m.addAtom(7);
+
+  // The new atom starts unset, and the existing atom keeps its values.
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  EXPECT_FALSE(props.getInt("i", 1).has_value());
+  EXPECT_FALSE(props.getString("s", 1).has_value());
+  EXPECT_TRUE(props.getMatrix("m", 0).has_value());
+  EXPECT_FALSE(props.getMatrix("m", 1).has_value());
+
+  // Nothing stale is left for the next atom either.
+  m.addAtom(8);
+  EXPECT_FALSE(props.getDouble("d", 2).has_value());
+  EXPECT_FALSE(props.getDouble("d", 3).has_value());
+}
+
+TEST_F(MoleculeTest, addBondDropsPropertyEntriesPastTheBondCount)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(8);
+  m.addBond(0, 1, 1);
+  PropertyMap& props = m.bondProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setString("s", 1, "stale");
+
+  m.addBond(1, 2, 1);
+
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  EXPECT_FALSE(props.getString("s", 1).has_value());
+}
+
+TEST_F(MoleculeTest, swapBondMovesValuesOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addBond(0, 1);
+  m.addBond(1, 2);
+  m.addBond(2, 3);
+  m.bondProperties().setDouble("d", 0, 1.5);
+  m.bondProperties().setString("s", 0, "first");
+
+  m.swapBond(0, 2);
+
+  ASSERT_TRUE(m.bondProperties().getDouble("d", 2).has_value());
+  EXPECT_DOUBLE_EQ(1.5, *m.bondProperties().getDouble("d", 2));
+  EXPECT_EQ("first", *m.bondProperties().getString("s", 2));
+  EXPECT_FALSE(m.bondProperties().getDouble("d", 0).has_value());
+  EXPECT_FALSE(m.bondProperties().getString("s", 0).has_value());
+}
+
+TEST_F(MoleculeTest, removeBondClearsStaleValueOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addBond(0, 1);
+  m.addBond(1, 2);
+  m.addBond(2, 3);
+  m.bondProperties().setDouble("d", 0, 1.5);
+  m.bondProperties().setInt("i", 0, 7);
+
+  ASSERT_TRUE(m.removeBond(static_cast<Index>(0)));
+
+  ASSERT_EQ(static_cast<Index>(2), m.bondCount());
+  EXPECT_FALSE(m.bondProperties().getDouble("d", 0).has_value());
+  EXPECT_FALSE(m.bondProperties().getInt("i", 0).has_value());
 }
