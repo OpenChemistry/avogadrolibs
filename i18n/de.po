@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-13 12:26+0000\n"
+"PO-Revision-Date: 2026-10-20 03:05+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -4320,9 +4320,8 @@ msgid "Add Hydrogens"
 msgstr "Wasserstoffatome hinzufügen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:34
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Wasserstoffatome entfernen"
+msgstr "E&xtra Hydrogene entfernen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:39
 msgid "&Remove All Hydrogens"
