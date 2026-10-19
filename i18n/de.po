@@ -4803,7 +4803,7 @@ msgstr "Winkel:"
 #: qtplugins/measuretool/measuretool.cpp:602
 #: qtplugins/measuretool/measuretool.cpp:997
 msgid "One of these atoms no longer exists."
-msgstr ""
+msgstr "Einer dieser Atome existiert nicht mehr."
 
 #: qtplugins/measuretool/measuretool.cpp:604
 msgid "That's not a value this can be set to."
