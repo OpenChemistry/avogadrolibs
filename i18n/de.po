@@ -3736,7 +3736,7 @@ msgstr ""
 #: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "Unbekanntes Element \"%1\"."
 
 #: qtplugins/editor/editor.cpp:1098 qtplugins/select/select.cpp:709
 #, qt-format
@@ -3745,7 +3745,7 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:1110
 msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
-msgstr ""
+msgstr "position muss eine Liste mit 3 Nummern [x, y, z] in Angstroms sein."
 
 #: qtplugins/editor/editor.cpp:1118
 msgid "position must be a list of 3 finite numbers [x, y, z]."
