@@ -3317,6 +3317,8 @@ msgid ""
 "Writer error:\n"
 "%1"
 msgstr ""
+"Schreibfehler:\n"
+"(X14X)"
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
