@@ -330,6 +330,11 @@ class SetAtomicNumberCommand : public RWMolecule::UndoCommand
   Index m_atomId;
   unsigned char m_oldAtomicNumber;
   unsigned char m_newAtomicNumber;
+  // Changing the element resets the atom's colour to the new element's, so
+  // a colour the user chose has to be put back by undo. As in
+  // RemoveAtomCommand, only an atom that had one is given one.
+  bool m_hasColor = false;
+  Vector3ub m_color = Vector3ub(0, 0, 0);
 
 public:
   SetAtomicNumberCommand(RWMolecule& m, Index atomId,
@@ -342,12 +347,17 @@ public:
 
   void redo() override
   {
+    m_hasColor = m_molecule.colors().size() > m_atomId;
+    if (m_hasColor)
+      m_color = m_molecule.color(m_atomId);
     m_molecule.setAtomicNumber(m_atomId, m_newAtomicNumber);
   }
 
   void undo() override
   {
     m_molecule.setAtomicNumber(m_atomId, m_oldAtomicNumber);
+    if (m_hasColor)
+      m_molecule.setColor(m_atomId, m_color);
   }
 };
 } // namespace
@@ -635,6 +645,11 @@ class RemoveBondCommand : public RWMolecule::UndoCommand
   Index m_bondUid;
   std::pair<Index, Index> m_bondPair;
   unsigned char m_bondOrder;
+  // The label lives in an array that may be shorter than bondCount(), and
+  // setBondLabel() grows it to bondCount() on first write, so it is only
+  // restored when the bond had one (see RemoveAtomCommand).
+  bool m_hasLabel = false;
+  std::string m_label;
 
 public:
   RemoveBondCommand(RWMolecule& m, Index bondId, Index bondUid,
@@ -645,7 +660,13 @@ public:
   {
   }
 
-  void redo() override { m_molecule.removeBond(m_bondId); }
+  void redo() override
+  {
+    m_hasLabel = m_molecule.bondLabels().size() > m_bondId;
+    if (m_hasLabel)
+      m_label = m_molecule.bondLabel(m_bondId);
+    m_molecule.removeBond(m_bondId);
+  }
 
   void undo() override
   {
@@ -660,6 +681,9 @@ public:
 
     Index movedId = m_molecule.bondCount() - 1;
     m_molecule.swapBond(m_bondId, movedId);
+
+    if (m_hasLabel)
+      m_molecule.setBondLabel(m_bondId, m_label);
   }
 };
 } // namespace
