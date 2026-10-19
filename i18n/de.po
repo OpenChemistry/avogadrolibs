@@ -4133,7 +4133,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:1278
 #, qt-format
 msgid "%1 returned a non-finite energy."
-msgstr ""
+msgstr "%1 gab eine nicht-finite Energie zurück."
 
 #: qtplugins/forcefield/forcefield.cpp:1305
 msgid "No atoms provided for force calculation"
