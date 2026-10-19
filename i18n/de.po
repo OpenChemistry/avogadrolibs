@@ -3749,7 +3749,7 @@ msgstr "position muss eine Liste mit 3 Nummern [x, y, z] in Angstroms sein."
 
 #: qtplugins/editor/editor.cpp:1118
 msgid "position must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "position muss eine liste von 3 endlichen zahlen sein [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1131
 msgid "bondTo must be the index of an atom in the molecule."
