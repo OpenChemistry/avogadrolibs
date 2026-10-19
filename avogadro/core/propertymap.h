@@ -149,8 +149,11 @@ public:
   /**
    * Append a default entry to all existing dense columns.
    * New columns are not created; only columns that already exist are extended.
+   * @p entityCount is the count after addition, so the new entity's index is
+   * entityCount - 1. Any entry already at or past that index is dropped first,
+   * so the new entity never inherits a stale value.
    */
-  void addEntry();
+  void addEntry(Index entityCount);
 
   /**
    * Remove the entry at @p index using swap-and-pop.

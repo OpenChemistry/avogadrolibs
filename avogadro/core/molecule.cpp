@@ -835,7 +835,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   // The calculated results are per-atom, so a new atom invalidates them just
   // as a removed atom does (see removeAtom()).
   clearCalculatedResults();
-  m_atomProperties.addEntry();
+  m_atomProperties.addEntry(atomCount());
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -1396,7 +1396,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
     m_bondOrders.push_back(order);
-    m_bondProperties.addEntry();
+    m_bondProperties.addEntry(bondCount());
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
     m_bondOrders[index] = order;

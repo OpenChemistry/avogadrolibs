@@ -242,15 +242,36 @@ std::set<std::string> PropertyMap::matrixNames() const
 
 // --- Structural operations ---
 
-void PropertyMap::addEntry()
+void PropertyMap::addEntry(Index entityCount)
 {
-  for (auto& kv : m_doubles)
+  // Entries at or past the new entity's index belong to no entity (the
+  // setters don't check the index), so drop them before appending.
+  const Index index = entityCount > 0 ? entityCount - 1 : 0;
+  for (auto& kv : m_doubles) {
+    if (kv.second.size() > index)
+      kv.second.resize(index);
     kv.second.push_back(doubleSentinel);
-  for (auto& kv : m_ints)
+  }
+  for (auto& kv : m_ints) {
+    if (kv.second.size() > index)
+      kv.second.resize(index);
     kv.second.push_back(intSentinel);
-  for (auto& kv : m_strings)
+  }
+  for (auto& kv : m_strings) {
+    if (kv.second.size() > index)
+      kv.second.resize(index);
     kv.second.push_back(std::string());
-  // Sparse matrices: nothing to do on add.
+  }
+  // Sparse matrices: the new entity has no entry.
+  for (auto& kv : m_matrices) {
+    auto& col = kv.second;
+    for (auto it = col.begin(); it != col.end();) {
+      if (it->first >= index)
+        it = col.erase(it);
+      else
+        ++it;
+    }
+  }
 }
 
 namespace {

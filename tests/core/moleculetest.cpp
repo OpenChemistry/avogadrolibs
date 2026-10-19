@@ -1872,7 +1872,7 @@ TEST(PropertyMapTest, AddEntry)
   PropertyMap pm;
   pm.setDouble("charge", 0, 1.0);
   pm.setInt("type", 0, 5);
-  pm.addEntry();
+  pm.addEntry(2);
 
   // Column should now be size 2
   auto col = pm.doubles("charge");
@@ -3634,6 +3634,58 @@ TEST_F(MoleculeTest, removeAtomOverlongPropertyColumnSwapsAndPops)
   EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
   EXPECT_DOUBLE_EQ(3.0, *props.getDouble("d", 0));
   EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 1));
+}
+
+TEST_F(MoleculeTest, addAtomDropsPropertyEntriesPastTheAtomCount)
+{
+  Molecule m;
+  m.addAtom(6);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  // The setters don't check the index, so values can sit past the atoms.
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 3, 4.0);
+  props.setInt("i", 1, 5);
+  props.setString("s", 1, "stale");
+  MatrixX tensor(2, 2);
+  tensor << 1.0, 2.0, 3.0, 4.0;
+  props.setMatrix("m", 0, tensor);
+  props.setMatrix("m", 1, tensor);
+
+  m.addAtom(7);
+
+  // The new atom starts unset, and the existing atom keeps its values.
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  EXPECT_FALSE(props.getInt("i", 1).has_value());
+  EXPECT_FALSE(props.getString("s", 1).has_value());
+  EXPECT_TRUE(props.getMatrix("m", 0).has_value());
+  EXPECT_FALSE(props.getMatrix("m", 1).has_value());
+
+  // Nothing stale is left for the next atom either.
+  m.addAtom(8);
+  EXPECT_FALSE(props.getDouble("d", 2).has_value());
+  EXPECT_FALSE(props.getDouble("d", 3).has_value());
+}
+
+TEST_F(MoleculeTest, addBondDropsPropertyEntriesPastTheBondCount)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(8);
+  m.addBond(0, 1, 1);
+  PropertyMap& props = m.bondProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setString("s", 1, "stale");
+
+  m.addBond(1, 2, 1);
+
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  EXPECT_FALSE(props.getString("s", 1).has_value());
 }
 
 TEST_F(MoleculeTest, swapBondMovesValuesOfShortPropertyColumns)
