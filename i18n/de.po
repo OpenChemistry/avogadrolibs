@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-20 03:05+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -6192,7 +6192,7 @@ msgstr "Datei speichern"
 
 #: qtplugins/ply/ply.cpp:113
 msgid "PLY (*.ply)"
-msgstr ""
+msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
