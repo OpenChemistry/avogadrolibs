@@ -22,7 +22,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-20 03:05+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -589,7 +590,7 @@ msgstr "Zeit"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
@@ -3794,7 +3795,7 @@ msgstr "Dreifach"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:40
 msgid "Fetch from &PDB…"
-msgstr ""
+msgstr "Aus der PDB abrufen"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -6341,10 +6342,9 @@ msgid "β Sheet"
 msgstr "β-Faltblatt"
 
 #: qtplugins/propertytables/propertymodel.cpp:1369
-#, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr "3-10 Helix"
+msgstr "3-10-Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:1371
 msgctxt "beta bridge"
