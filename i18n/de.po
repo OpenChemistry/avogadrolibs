@@ -22,8 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-20 03:05+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3758,11 +3757,11 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:1178
 msgid "There is no bond between those atoms."
-msgstr ""
+msgstr "Es gibt keine Bindung zwischen diesen Atomen."
 
 #: qtplugins/editor/editor.cpp:1197
 msgid "Those atoms are already bonded."
-msgstr ""
+msgstr "Diese Atome sind bereits gebunden."
 
 #: qtplugins/editor/editor.cpp:1226
 #, qt-format
@@ -3831,7 +3830,7 @@ msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:128
 msgid "The PDB code must contain only letters and digits."
-msgstr ""
+msgstr "Der PDB-Code muss nur Buchstaben und Ziffern enthalten."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:204
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
