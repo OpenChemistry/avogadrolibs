@@ -68,6 +68,50 @@ esac
 [ -z "$CPU_MODEL" ] && CPU_MODEL="unknown"
 RAM_GB=$(((RAM_MB + 512) / 1024))
 
+# Power source: sets POWER_TEXT and ON_BATTERY (1 if running on battery).
+ON_BATTERY=0
+POWER_TEXT="unknown"
+detect_power() {
+  if [ "$(uname -s)" = "Darwin" ]; then
+    local line
+    line="$(pmset -g batt 2>/dev/null | head -n 1)"
+    case "$line" in
+      *"Battery Power"*)
+        local pct
+        pct="$(pmset -g batt 2>/dev/null | grep -o '[0-9]*%' | head -n 1)"
+        POWER_TEXT="on battery (${pct:-?})"
+        ON_BATTERY=1 ;;
+      *"AC Power"*)
+        if pmset -g batt 2>/dev/null | grep -q InternalBattery; then
+          POWER_TEXT="on AC power"
+        else
+          POWER_TEXT="no battery (desktop)"
+        fi ;;
+    esac
+    return
+  fi
+  local d have=0 mains=0 bat="" cap
+  for d in /sys/class/power_supply/*; do
+    [ -r "$d/type" ] || continue
+    have=1
+    case "$(cat "$d/type" 2>/dev/null)" in
+      Mains) [ "$(cat "$d/online" 2>/dev/null)" = "1" ] && mains=1 ;;
+      Battery) bat="$d" ;;
+    esac
+  done
+  [ "$have" -eq 0 ] && return
+  if [ -z "$bat" ]; then
+    POWER_TEXT="no battery (desktop)"
+  elif [ "$mains" -eq 1 ]; then
+    POWER_TEXT="on AC power"
+  else
+    cap="$(cat "$bat/capacity" 2>/dev/null)"
+    POWER_TEXT="on battery (${cap:-?}%)"
+    ON_BATTERY=1
+  fi
+}
+detect_power
+
 # Installed GPUs (laptops may have two; the benchmark reports which one
 # OpenGL actually used).
 gpu_list() {
@@ -103,6 +147,23 @@ fetch_pdb() {
   fi
   return 0
 }
+
+if [ "$ON_BATTERY" -eq 1 ]; then
+  echo
+  echo "======================================================================"
+  echo " WARNING: this computer is running on BATTERY power."
+  echo " Results on battery are much slower (often about half the speed) and"
+  echo " are NOT comparable with results on mains power."
+  echo " Please plug in the charger and run this script again."
+  echo "======================================================================"
+  if [ -t 0 ]; then
+    echo "Press Enter to continue anyway (the results will say \"on battery\"),"
+    echo "or press Ctrl+C to quit."
+    read -r _
+  else
+    echo "Continuing anyway; the results will say \"on battery\"."
+  fi
+fi
 
 # Build the list of systems: "label|extra arguments"
 SYSTEMS=()
@@ -180,6 +241,7 @@ esac
   echo "OS:     $OS_NAME"
   echo "CPU:    $CPU_MODEL ($CPU_CORES)"
   echo "RAM:    about ${RAM_GB} GB"
+  echo "Power:  $POWER_TEXT"
   echo "Installed GPUs:"
   echo "$GPU_LIST"
   echo "GPU used by the benchmark (OpenGL):"

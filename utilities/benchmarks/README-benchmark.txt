@@ -7,7 +7,8 @@ least 8 GB of RAM, the large 9MB0 structure). Nothing is installed and no
 window of molecules opens; it only measures how fast your computer draws.
 
 How long: usually 2 to 10 minutes. Please leave the computer alone while
-it runs, so the timings are not disturbed.
+it runs, so the timings are not disturbed. Plug laptops in (battery power
+roughly halves the speed) and close other heavy programs before running.
 
 How to run
   Windows: double-click run-benchmark.bat (keep it in the same folder as

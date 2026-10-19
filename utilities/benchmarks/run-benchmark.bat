@@ -34,13 +34,17 @@ if not defined BENCH goto :fail_nobench
 rem --- System information (PowerShell; wmic is gone on Windows 11) --------
 rem The header lines go to sysinfo.txt as plain ASCII.
 set "AVOSYS=%SYSINFO%"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $os=Get-CimInstance Win32_OperatingSystem; $cpu=@(Get-CimInstance Win32_Processor); $cs=Get-CimInstance Win32_ComputerSystem; $gpu=@(Get-CimInstance Win32_VideoController); $c=($cpu | Measure-Object NumberOfCores -Sum).Sum; $t=($cpu | Measure-Object NumberOfLogicalProcessors -Sum).Sum; $l=@(); $l+='Date:   '+(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'); $l+='OS:     '+$os.Caption+' '+$os.Version+' ('+$os.OSArchitecture+')'; $l+='CPU:    '+$cpu[0].Name.Trim()+' ('+$c+' cores / '+$t+' threads)'; $l+='RAM:    about '+[math]::Round($cs.TotalPhysicalMemory/1GB)+' GB'; $l+='Installed GPUs:'; foreach ($g in $gpu) { $l+='  '+$g.Name+' (driver '+$g.DriverVersion+')' }; $l | Set-Content -Encoding ASCII -Path $env:AVOSYS } catch { }" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $os=Get-CimInstance Win32_OperatingSystem; $cpu=@(Get-CimInstance Win32_Processor); $cs=Get-CimInstance Win32_ComputerSystem; $gpu=@(Get-CimInstance Win32_VideoController); $c=($cpu | Measure-Object NumberOfCores -Sum).Sum; $t=($cpu | Measure-Object NumberOfLogicalProcessors -Sum).Sum; $l=@(); $l+='Date:   '+(Get-Date -Format 'yyyy-MM-dd HH:mm:ss'); $l+='OS:     '+$os.Caption+' '+$os.Version+' ('+$os.OSArchitecture+')'; $l+='CPU:    '+$cpu[0].Name.Trim()+' ('+$c+' cores / '+$t+' threads)'; $l+='RAM:    about '+[math]::Round($cs.TotalPhysicalMemory/1GB)+' GB'; $p='unknown'; try { $b=@(Get-CimInstance Win32_Battery); if ($b.Count -eq 0) { $p='no battery (desktop)' } else { $s=[int]$b[0].BatteryStatus; if ($s -eq 1 -or $s -eq 4 -or $s -eq 5) { $p='on battery ('+$b[0].EstimatedChargeRemaining+[char]37+')' } elseif ($s -eq 2 -or $s -eq 3 -or ($s -ge 6 -and $s -le 9)) { $p='on AC power' } } } catch { }; $l+='Power:  '+$p; $l+='Installed GPUs:'; foreach ($g in $gpu) { $l+='  '+$g.Name+' (driver '+$g.DriverVersion+')' }; $l | Set-Content -Encoding ASCII -Path $env:AVOSYS } catch { }" >nul 2>&1
 
 rem Total RAM in MB (0 if unknown).
 set "RAM_MB=0"
 for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "[math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1MB)"`) do set "RAM_MB=%%i"
 rem Guard against non-numeric output.
 set /a RAM_MB=%RAM_MB% + 0 >nul 2>&1
+
+rem Running on battery roughly halves the speed: warn before starting.
+if exist "%SYSINFO%" findstr /b /c:"Power:  on battery" "%SYSINFO%" >nul 2>&1
+if exist "%SYSINFO%" if not errorlevel 1 call :battery_warning
 
 rem --- Decide which systems to run ---------------------------------------
 set "SKIP_NOTES=%WORK%\skipnotes.txt"
@@ -126,6 +130,20 @@ exit /b 0
 rem ======================================================================
 rem Subroutines
 rem ======================================================================
+
+rem :battery_warning - prominent warning; any key continues.
+:battery_warning
+echo.
+echo ======================================================================
+echo  WARNING: this computer is running on BATTERY power.
+echo  Results on battery are much slower ^(often about half the speed^) and
+echo  are NOT comparable with results on mains power.
+echo  Please plug in the charger and run this script again.
+echo  Or press a key to continue anyway ^(the results will say "on battery"^).
+echo ======================================================================
+echo.
+pause
+exit /b 0
 
 rem :runpair - run the current LABEL/TAG/ARGS in rebuild then render mode.
 :runpair
