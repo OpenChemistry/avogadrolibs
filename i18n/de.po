@@ -4146,7 +4146,7 @@ msgstr "Das Molekül änderte sich während der Berechnung."
 #: qtplugins/forcefield/forcefield.cpp:1373
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
-msgstr ""
+msgstr "%1 gab ein nicht-finite oder unvollständiges Ergebnis zurück."
 
 #: qtplugins/forcefield/forcefield.cpp:1395
 #, qt-format
