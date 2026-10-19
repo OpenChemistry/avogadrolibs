@@ -4141,7 +4141,7 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:1360
 msgid "The molecule changed during the calculation."
-msgstr ""
+msgstr "Das Molekül änderte sich während der Berechnung."
 
 #: qtplugins/forcefield/forcefield.cpp:1373
 #, qt-format
