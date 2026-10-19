@@ -4358,7 +4358,7 @@ msgstr ""
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
-msgstr ""
+msgstr "Entfernen Sie alle Wasserstoffatome im Molekül."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
