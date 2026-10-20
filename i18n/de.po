@@ -4801,6 +4801,16 @@ msgid ""
 "\n"
 "Values can also be typed into the tool panel to move the atoms."
 msgstr ""
+"Messwerkzeug (%1)\n"
+"\n"
+"Linke Maus: Wählen Sie bis zu vier Atome.\n"
+"Entfernungen werden zwischen 1-2 und 2-3 gemessen\n"
+"Winkel wird zwischen 1-3 mit 2 als gemeinsamer Punkt gemessen\n"
+"Dihedral wird zwischen 1-2-3-4 gemessen\n"
+"Richtige Maus: Die Messungen zurücksetzen.\n"
+"\n"
+"Um die Atome zu bewegen, können auch Werte in die Werkzeugtafel eingegeben "
+"werden."
 
 #: qtplugins/measuretool/measuretool.cpp:426
 #: qtplugins/measuretool/measuretool.cpp:436
