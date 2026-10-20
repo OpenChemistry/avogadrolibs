@@ -4764,6 +4764,15 @@ msgid ""
 "Ctrl+Shift+Left/Right:\tRotate around Z axis\n"
 "Alt+<key>:\tLarger steps"
 msgstr ""
+"Manipulationswerkzeug (%1)\n"
+"\n"
+"Linke Maus: Klicken und ziehen, um Atome zu bewegen\n"
+"Rechts Maus: Klicken Sie und ziehen Sie zu drehen Atome\n"
+"\n"
+"Arrow Keys: Übersetzen von Atomen\n"
+"Shift+Arrows: Drehen um X/Y Achsen\n"
+"Strg+Shift+Left/Right: Drehen um Z-Achse\n"
+"Alt+<key>: Größere Schritte"
 
 #: qtplugins/manipulator/manipulator.h:36
 #: qtplugins/manipulator/manipulator.h:37
