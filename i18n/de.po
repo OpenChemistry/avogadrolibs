@@ -4971,15 +4971,15 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:1001
 msgid "That's not a value this distance can be set to."
-msgstr ""
+msgstr "Das ist kein Wert, auf den dieser Abstand eingestellt werden kann."
 
 #: qtplugins/measuretool/measuretool.cpp:1003
 msgid "That's not a value this angle can be set to."
-msgstr ""
+msgstr "Das ist kein Wert, auf den dieser Winkel eingestellt werden kann."
 
 #: qtplugins/measuretool/measuretool.cpp:1005
 msgid "That's not a value this dihedral can be set to."
-msgstr ""
+msgstr "Das ist kein Wert, auf den diese Dihedral eingestellt werden kann."
 
 #: qtplugins/measuretool/measuretool.cpp:1026
 #, qt-format
