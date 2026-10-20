@@ -3769,7 +3769,7 @@ msgstr "position muss eine Liste von 3 endlichen Zahlen sein [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1131
 msgid "bondTo must be the index of an atom in the molecule."
-msgstr ""
+msgstr "anleihen Muss der Index eines Atoms im Molekül sein."
 
 #: qtplugins/editor/editor.cpp:1178
 msgid "There is no bond between those atoms."
