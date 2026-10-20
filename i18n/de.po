@@ -3783,6 +3783,8 @@ msgstr "Diese Atome sind bereits gebunden."
 #, qt-format
 msgid "Atom %1 or a bonded atom is in a locked layer; unlock it to edit."
 msgstr ""
+"Atom %1 oder ein gebundenes Atom befindet sich in einer gesperrten Schicht; "
+"entsperren Sie es zu bearbeiten."
 
 #: qtplugins/editor/editor.h:35 qtplugins/editor/editor.h:36
 msgid "Editor tool"
