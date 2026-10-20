@@ -7456,6 +7456,8 @@ msgstr "Mit der Datei zur Verfügung gestellte Cube-Datei rendern."
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
 msgstr ""
+"Diese Datei enthält keinen Basissatz, so dass kein Orbital berechnet werden "
+"kann."
 
 #: qtplugins/surfaces/surfaces.cpp:252
 #, qt-format
