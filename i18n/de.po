@@ -2970,7 +2970,7 @@ msgstr "Wert muss eine Zahl sein: ein Diederwinkel in Grad."
 
 #: qtplugins/constraints/constraintsextension.cpp:309
 msgid "Could not measure the current geometry for these atoms."
-msgstr ""
+msgstr "Konnte die aktuelle Geometrie für diese Atome nicht messen."
 
 #: qtplugins/constraints/constraintsextension.cpp:319
 msgid "value must be a distance greater than 0 Å."
