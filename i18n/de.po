@@ -3994,7 +3994,7 @@ msgstr "Berechnen Sie die Kraftfeldkräfte auf das aktuelle Molekül."
 
 #: qtplugins/forcefield/forcefield.cpp:279
 msgid "Optimize the geometry of the current molecule."
-msgstr ""
+msgstr "Optimieren Sie die Geometrie des aktuellen Moleküls."
 
 #: qtplugins/forcefield/forcefield.cpp:282
 msgid "Freeze selected atoms during force field optimization."
