@@ -325,11 +325,11 @@ Label::Label(QObject* parent_) : QtGui::ScenePlugin(parent_)
 {
   m_layerManager = PluginLayerManager(m_name);
 
-  // Atoms move on every frame of an interactive edit or optimization, so wait
-  // for the motion to settle before recomputing charges.
-  m_moveTimer.setSingleShot(true);
-  m_moveTimer.setInterval(300);
-  connect(&m_moveTimer, &QTimer::timeout, this, &Label::recomputeMovedCharges);
+  // Drags and optimizations change the molecule on every frame, so every
+  // charge calculation waits for the changes to settle.
+  m_chargeTimer.setSingleShot(true);
+  m_chargeTimer.setInterval(300);
+  connect(&m_chargeTimer, &QTimer::timeout, this, &Label::chargeTimerFired);
 }
 
 Label::~Label() {}
@@ -340,7 +340,11 @@ void Label::watchMolecule(const QtGui::Molecule& molecule)
   if (m_watchedMolecule == mol)
     return;
   QObject::disconnect(m_changedConnection);
-  m_moveTimer.stop();
+  m_chargeTimer.stop();
+  m_movedPending = false;
+  m_chargePending = false;
+  m_chargeMolecule.clear();
+  m_displayedCharges.resize(0, 0);
   m_watchedMolecule = mol;
   m_changedConnection =
     connect(mol, &QtGui::Molecule::changed, this, &Label::moleculeChanged);
@@ -371,7 +375,19 @@ void Label::moleculeChanged(unsigned int change)
       molecule->partialChargeTypes().count(m_ownChargeType) == 0 ||
       !showsPartialCharges())
     return;
-  m_moveTimer.start();
+  m_movedPending = true;
+  m_chargeTimer.start();
+}
+
+void Label::chargeTimerFired()
+{
+  if (m_movedPending) {
+    m_movedPending = false;
+    recomputeMovedCharges();
+  }
+  // Does nothing if the recompute above already ran the calculation.
+  if (m_chargePending)
+    calculatePartialCharges();
 }
 
 void Label::recomputeMovedCharges()
@@ -475,16 +491,18 @@ std::string preferredChargeType(const std::set<std::string>& types)
 void Label::requestPartialCharges(const QtGui::Molecule& molecule)
 {
   auto* mol = const_cast<QtGui::Molecule*>(&molecule);
-  if (m_chargePending || molecule.atomCount() == 0)
+  if (molecule.atomCount() == 0)
     return;
   // Don't retry a calculation that already failed for this molecule
   if (m_lastChargeMolecule == mol &&
       m_lastChargeAtomCount == molecule.atomCount())
     return;
 
+  // Restart the timer on every request: during a drag this runs once per
+  // frame, and the calculation should happen once, after the last one.
   m_chargeMolecule = mol;
   m_chargePending = true;
-  QTimer::singleShot(0, this, &Label::calculatePartialCharges);
+  m_chargeTimer.start();
 }
 
 void Label::calculatePartialCharges()
@@ -547,10 +565,18 @@ void Label::processAtom(const QtGui::Molecule& molecule,
   if (m_layerManager.getSetting<LayerLabel>(layer)->atomOptions &
       LayerLabel::LabelOptions::PartialCharge) {
     const std::string type = preferredChargeType(molecule.partialChargeTypes());
-    if (type.empty())
+    if (type.empty()) {
       requestPartialCharges(molecule);
-    else
+      // Keep showing the last values while the new ones are calculated, so
+      // labels don't blink during an edit. Only if the atoms still line up.
+      if (m_chargePending && m_displayedCharges.cols() > 0 &&
+          static_cast<Index>(m_displayedCharges.rows()) == molecule.atomCount())
+        charges = m_displayedCharges;
+    } else {
       charges = molecule.partialCharges(type);
+      if (m_watchedMolecule == &molecule)
+        m_displayedCharges = charges;
+    }
   }
   std::map<unsigned char, size_t> atomCount;
   for (Index i = 0; i < molecule.atomCount(); ++i) {

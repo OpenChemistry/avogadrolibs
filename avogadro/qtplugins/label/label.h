@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_LABEL_H
 #define AVOGADRO_QTPLUGINS_LABEL_H
 
+#include <avogadro/core/matrix.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
@@ -64,6 +65,9 @@ private slots:
   /** React to a molecule change: schedule a recompute after atoms move. */
   void moleculeChanged(unsigned int change);
 
+  /** Run whatever charge calculation is waiting on the debounce timer. */
+  void chargeTimerFired();
+
   /** Recompute the charges this plugin calculated, after atoms moved. */
   void recomputeMovedCharges();
 
@@ -102,7 +106,11 @@ private:
   std::string m_recomputeType;
   QPointer<QtGui::Molecule> m_watchedMolecule;
   QMetaObject::Connection m_changedConnection;
-  QTimer m_moveTimer;
+  QTimer m_chargeTimer;
+  bool m_movedPending = false;
+  // The charges last displayed for the watched molecule, shown while a
+  // recalculation is pending.
+  MatrixX m_displayedCharges;
 };
 
 } // end namespace QtPlugins

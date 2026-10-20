@@ -21,6 +21,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/textlabel3d.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QSettings>
@@ -34,6 +35,7 @@
 #include <gtest/gtest.h>
 
 #include <string>
+#include <vector>
 
 using Avogadro::Index;
 using Avogadro::MatrixX;
@@ -45,6 +47,7 @@ namespace R = Avogadro::Rendering;
 namespace {
 
 constexpr int kPartialCharge = 32; // LayerLabel::LabelOptions::PartialCharge
+constexpr int kSettle = 600;       // longer than Label's 300 ms debounce
 const char* kModelId = "labeltestcharges";
 
 // Counts how often it is asked for charges.
@@ -190,9 +193,9 @@ TEST_F(LabelChargeTest, processDoesNotCalculateCharges)
   process(label);
   EXPECT_EQ(CountingModel::calls, 0);
 
-  // From the event loop the charges are calculated once and stored, and a
+  // After the debounce the charges are calculated once and stored, and a
   // scene rebuild is requested.
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   EXPECT_EQ(CountingModel::calls, 1);
   EXPECT_EQ(changed.count(), 1);
   const auto types = m_harness.molecule()->partialChargeTypes();
@@ -202,7 +205,7 @@ TEST_F(LabelChargeTest, processDoesNotCalculateCharges)
 
   // The rebuild finds them and does not ask again.
   EXPECT_GT(process(label), 0u);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   EXPECT_EQ(CountingModel::calls, 1);
   EXPECT_EQ(changed.count(), 1);
 }
@@ -214,7 +217,7 @@ TEST_F(LabelChargeTest, chargesAreRecalculatedAfterAnEditKeepingAtomCount)
   auto* mol = m_harness.molecule();
 
   process(label);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   ASSERT_EQ(CountingModel::calls, 1);
   ASSERT_FALSE(mol->partialChargeTypes().empty());
 
@@ -226,7 +229,7 @@ TEST_F(LabelChargeTest, chargesAreRecalculatedAfterAnEditKeepingAtomCount)
   ASSERT_EQ(mol->atomCount(), 3u);
 
   process(label);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   EXPECT_EQ(CountingModel::calls, 2);
   EXPECT_FALSE(mol->partialChargeTypes().empty());
 }
@@ -242,7 +245,7 @@ TEST_F(LabelChargeTest, failedCalculationIsNotRetried)
   QSignalSpy changed(&label, &Label::drawablesChanged);
   for (int i = 0; i < 3; ++i) {
     process(label);
-    QCoreApplication::processEvents();
+    QTest::qWait(kSettle);
   }
   EXPECT_EQ(CountingModel::calls, 0);
   EXPECT_EQ(changed.count(), 0);
@@ -262,7 +265,7 @@ TEST_F(LabelChargeTest, shortStoredChargesAreSafe)
   Label label;
   label.setEnabled(true);
   EXPECT_GT(process(label), 0u);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   EXPECT_EQ(CountingModel::calls, 0);
 }
 
@@ -273,7 +276,7 @@ TEST_F(LabelChargeTest, movedAtomsRecomputeOwnChargesDebounced)
   auto* mol = m_harness.molecule();
 
   process(label);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   ASSERT_EQ(CountingModel::calls, 1);
   const std::string type = *mol->partialChargeTypes().begin();
   ASSERT_DOUBLE_EQ(mol->partialCharges(type)(0, 0), 0.25);
@@ -311,7 +314,7 @@ TEST_F(LabelChargeTest, movedAtomsLeaveForeignChargesAlone)
   mol->setPartialCharges("From File", charges);
 
   EXPECT_GT(process(label), 0u);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
 
   mol->setAtomPosition3d(0, Vector3(3, 0, 0));
   mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
@@ -332,7 +335,7 @@ TEST_F(LabelChargeTest, structuralEditDropsAndRecalculatesCharges)
   auto* mol = m_harness.molecule();
 
   process(label);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   ASSERT_EQ(CountingModel::calls, 1);
   ASSERT_FALSE(mol->partialChargeTypes().empty());
 
@@ -345,7 +348,75 @@ TEST_F(LabelChargeTest, structuralEditDropsAndRecalculatesCharges)
 
   // No debounce is involved: the rebuild queues the calculation.
   process(label);
-  QCoreApplication::processEvents();
+  QTest::qWait(kSettle);
   EXPECT_EQ(CountingModel::calls, 2);
   EXPECT_FALSE(mol->partialChargeTypes().empty());
+}
+
+namespace {
+std::vector<std::string> labelTexts(R::Node* node)
+{
+  std::vector<std::string> texts;
+  if (auto* geometry = dynamic_cast<R::GeometryNode*>(node)) {
+    for (const auto* drawable : geometry->drawables()) {
+      if (const auto* label = dynamic_cast<const R::TextLabel3D*>(drawable))
+        texts.push_back(label->text());
+    }
+  }
+  if (auto* group = dynamic_cast<R::GroupNode*>(node)) {
+    for (const auto& child : group->children()) {
+      auto sub = labelTexts(child.node);
+      texts.insert(texts.end(), sub.begin(), sub.end());
+    }
+  }
+  return texts;
+}
+} // namespace
+
+TEST_F(LabelChargeTest, dragBurstCalculatesOnceAndKeepsLabelsVisible)
+{
+  Label label;
+  label.setEnabled(true);
+  auto* mol = m_harness.molecule();
+
+  process(label);
+  QTest::qWait(kSettle);
+  ASSERT_EQ(CountingModel::calls, 1);
+  const std::string type = *mol->partialChargeTypes().begin();
+  // The rebuild that drawablesChanged requests displays (and caches) them.
+  EXPECT_GT(process(label), 0u);
+
+  // The draw tool and others flag every drag frame as Atoms|Modified, which
+  // drops the charges each time.
+  for (int i = 1; i <= 10; ++i) {
+    mol->setAtomPosition3d(0, Vector3(i, 0, 0));
+    mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                     Avogadro::QtGui::Molecule::Modified);
+    ASSERT_TRUE(mol->partialChargeTypes().empty());
+
+    R::GroupNode root;
+    auto* node = new R::GroupNode(&root);
+    label.process(*mol, *node);
+    // The labels keep the last values instead of blanking.
+    const auto texts = labelTexts(node);
+    ASSERT_EQ(texts.size(), 3u);
+    EXPECT_NE(texts[0].find("0.25"), std::string::npos) << texts[0];
+    QCoreApplication::processEvents();
+  }
+  EXPECT_EQ(CountingModel::calls, 1);
+
+  QTest::qWait(kSettle);
+  EXPECT_EQ(CountingModel::calls, 2);
+  ASSERT_FALSE(mol->partialChargeTypes().empty());
+  EXPECT_DOUBLE_EQ(mol->partialCharges(type)(0, 0), 10.25);
+
+  // A changed atom count must not reuse the cached values.
+  mol->addAtom(1, Vector3(3, 3, 0));
+  mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                   Avogadro::QtGui::Molecule::Added);
+  R::GroupNode root;
+  auto* node = new R::GroupNode(&root);
+  label.process(*mol, *node);
+  for (const auto& text : labelTexts(node))
+    EXPECT_EQ(text.find("0.25"), std::string::npos) << text;
 }
