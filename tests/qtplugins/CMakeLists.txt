@@ -72,6 +72,13 @@ if(haveScenePlugins)
   endforeach()
 endif()
 
+# GLWidget re-entrancy regression test (needs the QtOpenGL library).
+set(haveGLWidgetTest OFF)
+if(TARGET Avogadro::QtOpenGL)
+  set(haveGLWidgetTest ON)
+  list(APPEND testSrcs glwidgetreentrytest.cpp)
+endif()
+
 if(NOT testSrcs)
   return()
 endif()
@@ -89,6 +96,10 @@ target_link_libraries(AvogadroQtPluginsTests
   Avogadro::QtGui
   ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB}
   Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+
+if(haveGLWidgetTest)
+  target_link_libraries(AvogadroQtPluginsTests Avogadro::QtOpenGL)
+endif()
 
 # Plugin headers include rendering headers, and the Focus test builds a
 # Camera and Scene of its own.
@@ -125,6 +136,14 @@ foreach(plugin ${testNames})
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
 endforeach()
+
+if(haveGLWidgetTest)
+  add_test(NAME "QtPlugins-GLWidgetReentry"
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*")
+  set_tests_properties("QtPlugins-GLWidgetReentry" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    TIMEOUT 120)
+endif()
 
 # fuzz_qtplugin_commands: libFuzzer drives random command sequences through
 # CommandTestHarness, in-process (2.1 release plan, section 4.2). Same plugins

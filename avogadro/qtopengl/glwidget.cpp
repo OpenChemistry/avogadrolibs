@@ -89,36 +89,58 @@ void GLWidget::updateMolecule()
 
 void GLWidget::updateScene()
 {
-  // Build up the scene with the scene plugins, creating the appropriate nodes.
-  QtGui::Molecule* mol = m_molecule;
-  if (!mol)
-    mol = new QtGui::Molecule(this);
-  if (mol) {
-    Rendering::GroupNode& node = m_renderer.scene().rootNode();
-    node.clear();
-    auto* moleculeNode = new Rendering::GroupNode(&node);
-
-    foreach (QtGui::ScenePlugin* scenePlugin,
-             m_scenePlugins.activeScenePlugins()) {
-      auto* engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(*mol, *engineNode);
-    }
-
-    // Let the tools perform any drawing they need to do.
-    foreach (QtGui::ToolPlugin* tool, m_tools) {
-      auto* toolNode = new Rendering::GroupNode(moleculeNode);
-      tool->draw(*toolNode);
-    }
-
-    m_renderer.resetGeometry();
-    update();
+  // A scene plugin or tool can spin a nested event loop while it builds the
+  // scene (e.g. waiting on an external process), which may deliver another
+  // change to this widget. Rebuilding then would free the nodes the outer
+  // pass is still filling, so defer: remember the request and rebuild once
+  // the current pass has finished.
+  if (m_updatingScene) {
+    m_sceneUpdatePending = true;
+    return;
   }
-  if (mol != m_molecule)
-    delete mol;
+
+  m_updatingScene = true;
+  do {
+    m_sceneUpdatePending = false;
+
+    // Build up the scene with the scene plugins, creating the appropriate
+    // nodes. m_molecule is a QPointer and may change between passes.
+    QtGui::Molecule* mol = m_molecule;
+    if (!mol)
+      mol = new QtGui::Molecule(this);
+    if (mol) {
+      Rendering::GroupNode& node = m_renderer.scene().rootNode();
+      node.clear();
+      auto* moleculeNode = new Rendering::GroupNode(&node);
+
+      foreach (QtGui::ScenePlugin* scenePlugin,
+               m_scenePlugins.activeScenePlugins()) {
+        auto* engineNode = new Rendering::GroupNode(moleculeNode);
+        scenePlugin->process(*mol, *engineNode);
+      }
+
+      // Let the tools perform any drawing they need to do.
+      foreach (QtGui::ToolPlugin* tool, m_tools) {
+        auto* toolNode = new Rendering::GroupNode(moleculeNode);
+        tool->draw(*toolNode);
+      }
+    }
+    if (mol != m_molecule)
+      delete mol;
+  } while (m_sceneUpdatePending);
+  m_updatingScene = false;
+
+  m_renderer.resetGeometry();
+  update();
 }
 
 void GLWidget::clearScene()
 {
+  // Clearing now would free nodes the running build is still using
+  if (m_updatingScene) {
+    m_sceneUpdatePending = true;
+    return;
+  }
   m_renderer.scene().clear();
 }
 

@@ -210,6 +210,10 @@ private:
 
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;
+  /** True while updateScene() is building; guards against re-entry. */
+  bool m_updatingScene = false;
+  /** A change arrived mid-build; the scene must be rebuilt afterwards. */
+  bool m_sceneUpdatePending = false;
 };
 
 } // namespace QtOpenGL
