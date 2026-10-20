@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-13 12:26+0000\n"
+"PO-Revision-Date: 2026-10-20 03:05+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -589,11 +589,11 @@ msgstr "Zeit"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Relative Energie"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
@@ -2971,7 +2971,7 @@ msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:319
 msgid "value must be a distance greater than 0 Å."
-msgstr ""
+msgstr "Wert muss ein Abstand größer als 0 Å sein."
 
 #: qtplugins/constraints/constraintsextension.cpp:324
 #: qtplugins/measuretool/measuretool.cpp:800
@@ -2994,7 +2994,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:896
 #, qt-format
 msgid "atom index #%1 in atoms must be a whole number."
-msgstr ""
+msgstr "Atomnummer #%1 der Atome muß eine ganze Zahl sein."
 
 #: qtplugins/constraints/constraintsextension.cpp:398
 #: qtplugins/measuretool/measuretool.cpp:900
@@ -3002,6 +3002,8 @@ msgstr ""
 msgid ""
 "atom index #%1 in atoms is negative; atom indices must be zero or greater."
 msgstr ""
+"Atomnummer #%1 in Atomen ist negativ; Atomnummers müssen Null oder größer "
+"sein."
 
 #: qtplugins/constraints/constraintsextension.cpp:416
 #: qtplugins/measuretool/measuretool.cpp:918
@@ -3315,6 +3317,8 @@ msgid ""
 "Writer error:\n"
 "%1"
 msgstr ""
+"Schreibfehler:\n"
+"(%1)"
 
 #: qtplugins/copypaste/copypaste.cpp:281 qtplugins/copypaste/copypaste.cpp:314
 msgid "Error Pasting Molecule"
@@ -3732,20 +3736,23 @@ msgstr ""
 #: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "Unbekanntes Element \"%1\"."
 
 #: qtplugins/editor/editor.cpp:1098 qtplugins/select/select.cpp:709
 #, qt-format
 msgid "Atomic number %1 is out of range (1 to %2)."
 msgstr ""
+"Ordnungszahl %1 befindet sich außerhalb des erlaubten Bereiches (1 bis und "
+"inklusive %2)."
 
 #: qtplugins/editor/editor.cpp:1110
 msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
 msgstr ""
+"position muss eine Liste mit 3 reellen Zahlen [x, y, z] in Angstrom sein."
 
 #: qtplugins/editor/editor.cpp:1118
 msgid "position must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "position muss eine Liste von 3 endlichen Zahlen sein [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1131
 msgid "bondTo must be the index of an atom in the molecule."
@@ -3753,11 +3760,11 @@ msgstr ""
 
 #: qtplugins/editor/editor.cpp:1178
 msgid "There is no bond between those atoms."
-msgstr ""
+msgstr "Es gibt keine Bindung zwischen diesen Atomen."
 
 #: qtplugins/editor/editor.cpp:1197
 msgid "Those atoms are already bonded."
-msgstr ""
+msgstr "Diese Atome sind bereits gebunden."
 
 #: qtplugins/editor/editor.cpp:1226
 #, qt-format
@@ -3790,7 +3797,7 @@ msgstr "Dreifach"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:40
 msgid "Fetch from &PDB…"
-msgstr ""
+msgstr "Aus der &PDB abrufen…"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -3826,7 +3833,7 @@ msgstr ""
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:128
 msgid "The PDB code must contain only letters and digits."
-msgstr ""
+msgstr "Der PDB-Code darf nur Buchstaben und Ziffern enthalten."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:204
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
@@ -3914,7 +3921,7 @@ msgstr "Kräfte"
 #: qtplugins/forcefield/forcefield.cpp:104
 #: qtplugins/forcefield/forcefield.cpp:1499
 msgid "Energies (All Conformers)"
-msgstr ""
+msgstr "Energie (Alle Konformere)"
 
 #: qtplugins/forcefield/forcefield.cpp:112
 #: qtplugins/forcefield/forcefield.cpp:1498
@@ -3960,7 +3967,7 @@ msgstr "Ausgewählte Atome trennen"
 
 #: qtplugins/forcefield/forcefield.cpp:273
 msgid "List the force fields available for the current molecule."
-msgstr ""
+msgstr "Zeige die für das gegenwärtige Molekül verfügbaren Kraftfelder."
 
 #: qtplugins/forcefield/forcefield.cpp:275
 msgid "Compute the force field energy of the current molecule."
@@ -3991,8 +3998,8 @@ msgstr ""
 msgctxt ""
 msgid "%n force field(s) available."
 msgid_plural "%n force field(s) available."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n Kraftfeld steht zur Verfügung."
+msgstr[1] "%n Kraftfelder stehen zur Verfügung."
 
 #: qtplugins/forcefield/forcefield.cpp:387
 #: qtplugins/forcefield/forcefield.cpp:413
@@ -4007,7 +4014,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:417
 #: qtplugins/forcefield/forcefield.cpp:443
 msgid "A force field calculation is already running."
-msgstr ""
+msgstr "Eine Kraftfeldberechnung läuft bereits."
 
 #: qtplugins/forcefield/forcefield.cpp:395
 msgid "No atoms provided for energy calculation."
@@ -4027,11 +4034,11 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:477
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"gradientTolerance\" muss eine endliche, nicht-negative Zahl sein."
 
 #: qtplugins/forcefield/forcefield.cpp:487
 msgid "\"energyTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"energyTolerance\" muss eine endliche, nicht-negative Zahl sein."
 
 #: qtplugins/forcefield/forcefield.cpp:504
 #: qtplugins/forcefield/forcefield.cpp:529
@@ -4045,16 +4052,16 @@ msgstr ""
 msgctxt ""
 msgid "Froze %n atom(s)."
 msgid_plural "Froze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n Atom eingefroren."
+msgstr[1] "%n Atome eingefroren."
 
 #: qtplugins/forcefield/forcefield.cpp:544
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
 msgid_plural "Unfroze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n Atom wieder freigeben."
+msgstr[1] "%n Atome wieder freigeben."
 
 #: qtplugins/forcefield/forcefield.cpp:558
 msgid "No axis was given."
@@ -4062,25 +4069,25 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:585
 msgid "Axis must be x, y, z or 0, 1, 2."
-msgstr ""
+msgstr "Achse muss x, y, z oder 0, 1, 2 sein."
 
 #: qtplugins/forcefield/forcefield.cpp:823
 msgid "The force field calculation was interrupted."
-msgstr ""
+msgstr "Die Kraftfeldberechnung wurde unterbrochen."
 
 #: qtplugins/forcefield/forcefield.cpp:893
 msgid "No force field is available for this molecule."
-msgstr ""
+msgstr "Für dieses Molekül steht kein Kraftfeld zur Verfügung."
 
 #: qtplugins/forcefield/forcefield.cpp:914
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
-msgstr ""
+msgstr "Kraftfeld \"%1\" ist mit diesem Molekül nicht kompatibel."
 
 #: qtplugins/forcefield/forcefield.cpp:917
 #, qt-format
 msgid "Unknown force field \"%1\"."
-msgstr ""
+msgstr "Kraftfeld \"%1\" ist unbekannt."
 
 #: qtplugins/forcefield/forcefield.cpp:933
 #: qtplugins/forcefield/forcefield.cpp:1216
@@ -4129,7 +4136,7 @@ msgstr ""
 #: qtplugins/forcefield/forcefield.cpp:1278
 #, qt-format
 msgid "%1 returned a non-finite energy."
-msgstr ""
+msgstr "%1 gab eine unendliche Energie zurück."
 
 #: qtplugins/forcefield/forcefield.cpp:1305
 msgid "No atoms provided for force calculation"
@@ -4137,12 +4144,12 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:1360
 msgid "The molecule changed during the calculation."
-msgstr ""
+msgstr "Während der Berechnung änderte sich das Molekül."
 
 #: qtplugins/forcefield/forcefield.cpp:1373
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
-msgstr ""
+msgstr "%1 gab ein unendliches oder unvollständiges Ergebnis zurück."
 
 #: qtplugins/forcefield/forcefield.cpp:1395
 #, qt-format
@@ -4151,7 +4158,7 @@ msgstr "%1 Kraftnorm = %L2"
 
 #: qtplugins/forcefield/forcefield.cpp:1475
 msgid "This molecule has only one coordinate set."
-msgstr ""
+msgstr "Dieses Molekül hat nur einen Koordinatensatz."
 
 #: qtplugins/forcefield/forcefield.h:63
 msgid "Forcefield optimization"
@@ -4320,9 +4327,8 @@ msgid "Add Hydrogens"
 msgstr "Wasserstoffatome hinzufügen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:34
-#, fuzzy
 msgid "Remove E&xtra Hydrogens"
-msgstr "Wasserstoffatome entfernen"
+msgstr "E&xtra Wasserstoffatome entfernen"
 
 #: qtplugins/hydrogens/hydrogens.cpp:39
 msgid "&Remove All Hydrogens"
@@ -4333,9 +4339,8 @@ msgid "Add/remove hydrogens from the current molecule."
 msgstr "Wasserstoffatome dem aktuellen Molekül hinzufügen/entfernen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:59
-#, fuzzy
 msgid "&Hydrogens"
-msgstr "Wasserstoffatome"
+msgstr "&Wasserstoffatome"
 
 #: qtplugins/hydrogens/hydrogens.cpp:114
 msgid "Add any missing hydrogen atoms on atoms that have incomplete octets."
@@ -4350,10 +4355,12 @@ msgid ""
 "Add any missing hydrogen atoms, and remove any extra hydrogen atoms on any "
 "atoms that violate the octet rule."
 msgstr ""
+"Fehlende Wasserstoffatome hinzufügen, sowie Wasserstoffatome an beliebigen "
+"Atomen entfernen, die gegen die Oktettregel verstoßen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
-msgstr ""
+msgstr "Alle Wasserstoffatome im Molekül entfernen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
@@ -4388,7 +4395,7 @@ msgstr "Formel"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Mass (g/mol)"
-msgstr ""
+msgstr "Masse (g/mol)"
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -4505,7 +4512,7 @@ msgstr "Polymer…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:82
 msgid "No SMILES format reader found. Is Open Babel available?"
-msgstr ""
+msgstr "Kein SMILES Formatleser gefunden. Ist Open Babel verfügbar?"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QWidget, InsertPolymerDialog)
@@ -4539,7 +4546,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
-msgstr ""
+msgstr "Monomer auswählen"
 
 #. i18n: file: qtgui/insertfragmentdialog.ui:22
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4588,7 +4595,6 @@ msgid "Element"
 msgstr "Element"
 
 #: qtplugins/label/label.cpp:268
-#, fuzzy
 msgid "Element & Number"
 msgstr "Element & Nummer"
 
@@ -4706,7 +4712,6 @@ msgstr "SMILES"
 
 #: qtplugins/lineformatinput/lineformatinput.cpp:89
 #: qtplugins/lineformatinput/lineformatinput.cpp:114
-#, fuzzy
 msgid "No descriptors found!"
 msgstr "Keine Deskriptoren gefunden!"
 
@@ -4798,7 +4803,7 @@ msgstr "Winkel:"
 #: qtplugins/measuretool/measuretool.cpp:602
 #: qtplugins/measuretool/measuretool.cpp:997
 msgid "One of these atoms no longer exists."
-msgstr ""
+msgstr "Eines dieser Atome existiert nicht mehr."
 
 #: qtplugins/measuretool/measuretool.cpp:604
 msgid "That's not a value this can be set to."
@@ -4808,17 +4813,22 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:1010
 msgid "These atoms are in the same place, so this distance isn't defined."
 msgstr ""
+"Beide Atome sind am gleichen Ort, deshalb kann kein Abstand definiert werden."
 
 #: qtplugins/measuretool/measuretool.cpp:613
 #: qtplugins/measuretool/measuretool.cpp:1015
 msgid ""
 "Three of these atoms are in a straight line, so this dihedral isn't defined."
 msgstr ""
+"Drei dieser Atome befinden sich auf einer Geraden, deshalb ist kein "
+"Diederwinkel definiert."
 
 #: qtplugins/measuretool/measuretool.cpp:616
 #: qtplugins/measuretool/measuretool.cpp:1013
 msgid "These atoms are in a straight line, so this angle isn't defined."
 msgstr ""
+"Diese Atome befinden sich auf einer Geraden, deshalb ist kein Winkel "
+"definiert."
 
 #: qtplugins/measuretool/measuretool.cpp:641
 #, qt-format
@@ -5210,19 +5220,17 @@ msgid "Translate the scene."
 msgstr "Darstellung verschieben."
 
 #: qtplugins/navigator/navigator.cpp:126
-#, fuzzy
 msgid "Reverse Direction of Zoom on Scroll"
 msgstr "Richtung von Zoomen beim Scrollen umkehren"
 
 #: qtplugins/navigator/navigator.cpp:128
-#, fuzzy
 msgid ""
 "Default:\tScroll down to shrink, scroll up to zoom\n"
 "Reversed:\tScroll up to shrink, scroll down to zoom"
 msgstr ""
-"Standard:\tNach unten scrollen zu verkleinern, nach oben scrollen zu "
+"Standard:\tNach unten scrollen um zu verkleinern, nach oben scrollen um zu "
 "vergrößern\n"
-"Umgekehrt:\tNach oben scrollen zu verkleinern, nach unten scrollen zu "
+"Umgekehrt:\tNach oben scrollen um zu verkleinern, nach unten scrollen um zu "
 "vergrößern"
 
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
@@ -5271,7 +5279,6 @@ msgid "Chalcogen"
 msgstr "Chalkogen"
 
 #: qtplugins/noncovalent/noncovalent.h:34
-#, fuzzy
 msgid "Render a few non-covalent interactions."
 msgstr "Einige nicht-kovalente Wechselwirkungen rendern."
 
@@ -5526,13 +5533,12 @@ msgid "Generate input for OpenMM."
 msgstr "Eingaben für OpenMM generieren."
 
 #: qtplugins/openmminput/openmminputdialog.cpp:201
-#, fuzzy
 msgid ""
 "Would you like to update the preview text, losing all changes made in the "
 "OpenMM input deck preview pane?"
 msgstr ""
-"Soll der Vorschautext aktualisiert werden? Alle Änderungen im "
-"Vorschauabschnitt des OpenMM-Eingabe werden dabei verworfen."
+"Soll der Vorschautext aktualisiert und dabei alle Änderungen der Vorschau "
+"der OpenMM-Eingabe verworfen werden?"
 
 #: qtplugins/openmminput/openmminputdialog.cpp:493
 #: qtplugins/openmminput/openmminputdialog.cpp:496
@@ -5913,7 +5919,7 @@ msgid "Player"
 msgstr "Abspieler"
 
 #: qtplugins/playertool/playertool.cpp:73
-#, fuzzy, qt-format
+#, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr "Animationswerkzeug\t(%1)"
 
@@ -6186,7 +6192,7 @@ msgstr "Datei speichern"
 
 #: qtplugins/ply/ply.cpp:113
 msgid "PLY (*.ply)"
-msgstr ""
+msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
@@ -6338,10 +6344,9 @@ msgid "β Sheet"
 msgstr "β-Faltblatt"
 
 #: qtplugins/propertytables/propertymodel.cpp:1369
-#, fuzzy
 msgctxt "3-10 helix"
 msgid "3-10 helix"
-msgstr "3-10 Helix"
+msgstr "3-10-Helix"
 
 #: qtplugins/propertytables/propertymodel.cpp:1371
 msgctxt "beta bridge"
@@ -7667,7 +7672,6 @@ msgstr ""
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
-#, fuzzy
 msgid "Template tool"
 msgstr "Templatwerkzeug"
 
@@ -9955,21 +9959,18 @@ msgstr "Anzahl der Konformeren:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:40
 #. i18n: ectx: property (text), widget (QRadioButton, systematicRadio)
-#, fuzzy
 msgid "Systematic rotor search"
-msgstr "Systematische Drehpunkt-Suche"
+msgstr "Systematische Rotor-Suche"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:47
 #. i18n: ectx: property (text), widget (QRadioButton, randomRadio)
-#, fuzzy
 msgid "Random rotor search"
-msgstr "Zufällige Drehpunkt-Suche"
+msgstr "Zufällige Rotor-Suche"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:54
 #. i18n: ectx: property (text), widget (QRadioButton, weightedRadio)
-#, fuzzy
 msgid "Weighted rotor search"
-msgstr "Gewichtete Drehpunkt-Suche"
+msgstr "Gewichtete Rotor-Suche"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:61
 #. i18n: ectx: property (text), widget (QRadioButton, geneticRadio)
@@ -10026,9 +10027,8 @@ msgstr "Konvergenz:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:180
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#, fuzzy
 msgid "Scoring method:"
-msgstr "Methode der Auswahl:"
+msgstr "Bewertungsmethode:"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:187
 #. i18n: ectx: property (toolTip), widget (QComboBox, scoringComboBox)
@@ -10056,7 +10056,6 @@ msgstr ""
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:67
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
-#, fuzzy
 msgid "Steepest Descent"
 msgstr "steilster Abstieg"
 
@@ -10618,7 +10617,6 @@ msgstr "Spektrenvisualisierung"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:58
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#, fuzzy
 msgid "Scale Factor:"
 msgstr "Skalierungsfaktor:"
 
