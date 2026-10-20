@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-20 03:05+0000\n"
+"PO-Revision-Date: 2026-10-20 13:40+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -3816,7 +3816,7 @@ msgstr "PDB-Molekül %1 kann nicht gelesen werden"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
-msgstr ""
+msgstr "Laden Sie eine Struktur der Protein Data Bank herunter."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
