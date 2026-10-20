@@ -3710,6 +3710,9 @@ msgid ""
 "Add a bond between two unbonded atoms. Options: \"atoms\" ([i, j]) and "
 "optional \"order\" (1-3). Returns the bond \"index\"."
 msgstr ""
+"Fügen Sie eine Bindung zwischen zwei ungebundenen Atomen hinzu. Optionen: "
+"\"Atome\" ([i, j]) und optional \"Bestellung\" (1-3). Gibt die Anleihe "
+"\"Index\" zurück."
 
 #: qtplugins/editor/editor.cpp:1035
 msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
