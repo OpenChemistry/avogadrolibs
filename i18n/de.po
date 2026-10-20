@@ -1482,7 +1482,7 @@ msgstr "Neue Ansicht erstellen"
 
 #: qtgui/packagemanager.cpp:674
 msgid "pixi: the package declares no pixi workspace"
-msgstr ""
+msgstr "pixi: das paket erklärt keinen pixi-workspace"
 
 #: qtgui/packagemanager.cpp:694
 msgid "pixi install timed out"
