@@ -7469,6 +7469,8 @@ msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
 msgstr ""
+"Diese Datei enthält keinen Basissatz, so dass keine Elektronendichte "
+"berechnet werden kann."
 
 #: qtplugins/surfaces/surfaces.cpp:272
 msgid ""
