@@ -15,13 +15,15 @@
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Daniel Colciaghi <danielcolciaghi@gmail.com>, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
+# Jonathan Di Pietro <jonathandip@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-04 02:51+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-10-21 08:07+0000\n"
+"Last-Translator: Jonathan Di Pietro "
+"<jonathandip@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/it/>\n"
 "Language: it\n"
@@ -29,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -3621,7 +3623,7 @@ msgstr ""
 #: qtplugins/editor/editor.cpp:1053 qtplugins/measuretool/measuretool.cpp:764
 #: qtplugins/select/select.cpp:647
 msgid "No molecule"
-msgstr ""
+msgstr "Nessuna molecola"
 
 #: qtplugins/editor/editor.cpp:1061
 msgid "The active layer is locked; unlock it to edit."
@@ -3765,7 +3767,7 @@ msgstr ""
 #: qtplugins/networkdatabases/networkdatabases.cpp:148
 #: qtplugins/networkdatabases/networkdatabases.cpp:197
 msgid "Network Download Failed"
-msgstr "Download dalla Rete Fallito"
+msgstr "Download dalla rete non riuscito"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:265
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
@@ -3912,7 +3914,7 @@ msgstr[1] ""
 #: qtplugins/forcefield/forcefield.cpp:525
 #: qtplugins/forcefield/forcefield.cpp:550
 msgid "No molecule is open."
-msgstr ""
+msgstr "Nessuna molecola è aperta."
 
 #: qtplugins/forcefield/forcefield.cpp:391
 #: qtplugins/forcefield/forcefield.cpp:417
@@ -5664,7 +5666,7 @@ msgstr[1] ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:699
 msgid "Keep Files"
-msgstr ""
+msgstr "Mantieni i file"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:701
 msgid "Delete Files"
