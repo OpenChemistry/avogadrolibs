@@ -64,7 +64,7 @@ foreach(plugin ${scenePlugins})
 endforeach()
 if(haveScenePlugins)
   message(STATUS "Adding scene plugin serialize test.")
-  list(APPEND testSrcs scenepluginserializetest.cpp)
+  list(APPEND testSrcs scenepluginserializetest.cpp labelchargetest.cpp)
   foreach(plugin ${scenePlugins})
     list(APPEND pluginTargets ${plugin})
     get_target_property(pluginDir ${plugin} SOURCE_DIR)
@@ -142,6 +142,22 @@ if(haveGLWidgetTest)
     COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*")
   set_tests_properties("QtPlugins-GLWidgetReentry" PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    TIMEOUT 120)
+endif()
+
+# Label's text labels make OpenGL calls, which the offscreen platform cannot
+# provide; macOS has a real (headless-capable) platform plugin for it. Elsewhere
+# the tests skip themselves when no context can be created.
+if(haveScenePlugins)
+  if(APPLE)
+    set(labelChargePlatform "cocoa")
+  else()
+    set(labelChargePlatform "offscreen")
+  endif()
+  add_test(NAME "QtPlugins-LabelCharge"
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=LabelChargeTest.*")
+  set_tests_properties("QtPlugins-LabelCharge" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=${labelChargePlatform}"
     TIMEOUT 120)
 endif()
 
