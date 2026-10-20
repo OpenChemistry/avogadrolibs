@@ -3990,7 +3990,7 @@ msgstr "Berechnung der Kraftfeldenergie des aktuellen Moleküls."
 
 #: qtplugins/forcefield/forcefield.cpp:277
 msgid "Compute the force field forces on the current molecule."
-msgstr ""
+msgstr "Berechnen Sie die Kraftfeldkräfte auf das aktuelle Molekül."
 
 #: qtplugins/forcefield/forcefield.cpp:279
 msgid "Optimize the geometry of the current molecule."
