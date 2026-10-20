@@ -7934,6 +7934,9 @@ msgid ""
 "Dummy atoms added beside the linear fragments. They are ordinary atoms of "
 "element Xx: delete them, or undo, when you are done with the matrix."
 msgstr ""
+"Neben den linearen Fragmenten gibt es Dummy-Atome. Sie sind gewöhnliche "
+"Atome von Element Xx: löschen Sie sie, oder undo, wenn Sie mit der Matrix "
+"fertig sind."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
