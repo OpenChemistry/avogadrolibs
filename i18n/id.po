@@ -14,13 +14,14 @@
 # Arif Budiman <arifpedia@gmail.com>, 2025, 2026.
 # Narada Fox <narada.fox7pc@gmail.com>, 2026.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2026.
+# Arif Budiman <arifpedia@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-11 23:17+0000\n"
-"Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
+"PO-Revision-Date: 2026-10-20 09:44+0000\n"
+"Last-Translator: Arif Budiman <arifpedia@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/id/>\n"
 "Language: id\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -195,6 +196,11 @@ msgid_plural ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr[0] ""
+"Fragmen linear menyebabkan sudut atau torsi pada baris z-matrix %1 tidak "
+"dapat ditentukan. Geometri ditulis dengan benar, tetapi koordinat ini tidak "
+"dapat diubah, dan program yang membangun ulang koordinat Kartesius dari "
+"koordinat tersebut mungkin tidak dapat mereproduksi struktur ini secara "
+"persis. Menambahkan atom dummy di luar sumbu dapat menghindari masalah ini."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -1471,11 +1477,11 @@ msgstr "Buat tampilan baru"
 
 #: qtgui/packagemanager.cpp:674
 msgid "pixi: the package declares no pixi workspace"
-msgstr ""
+msgstr "pixi: paket tidak mendeklarasikan workspace pixi"
 
 #: qtgui/packagemanager.cpp:694
 msgid "pixi install timed out"
-msgstr ""
+msgstr "Waktu tunggu pixi install habis"
 
 #: qtgui/packagemanager.cpp:702
 #, qt-format
@@ -1483,15 +1489,17 @@ msgid ""
 "pixi install failed:\n"
 "%1"
 msgstr ""
+"pixi install gagal:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:714
 #, qt-format
 msgid "pixi install did not provide %1"
-msgstr ""
+msgstr "pixi install tidak menyediakan %1"
 
 #: qtgui/packagemanager.cpp:743
 msgid "pip: creating the virtual environment timed out"
-msgstr ""
+msgstr "pip: waktu tunggu pembuatan lingkungan virtual habis"
 
 #: qtgui/packagemanager.cpp:752
 #, qt-format
@@ -1499,10 +1507,12 @@ msgid ""
 "pip: creating the virtual environment failed:\n"
 "%1"
 msgstr ""
+"pip: pembuatan lingkungan virtual gagal:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:770
 msgid "pip install timed out"
-msgstr ""
+msgstr "Waktu tunggu pip install habis"
 
 #: qtgui/packagemanager.cpp:778
 #, qt-format
@@ -1510,15 +1520,17 @@ msgid ""
 "pip install failed:\n"
 "%1"
 msgstr ""
+"pip install gagal:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:790
 #, qt-format
 msgid "pip install did not provide %1"
-msgstr ""
+msgstr "pip install tidak menyediakan %1"
 
 #: qtgui/packagemanager.cpp:853
 msgid "neither pixi nor Python was found"
-msgstr ""
+msgstr "pixi maupun Python tidak ditemukan"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1870,7 +1882,7 @@ msgstr[0] "%n jam tersisa"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
-msgstr ""
+msgstr "Cuplikan HTML &3DMol…"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -2035,11 +2047,11 @@ msgstr "Kesalahan saat membaca file OpenDX: Tidak ditemukan kubus."
 
 #: qtplugins/apbs/apbs.cpp:151
 msgid "Generating Positive Potential Mesh"
-msgstr ""
+msgstr "Membuat Mesh Potensial Positif"
 
 #: qtplugins/apbs/apbs.cpp:165
 msgid "Generating Negative Potential Mesh"
-msgstr ""
+msgstr "Membuat Mesh Potensial Negatif"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -2451,7 +2463,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:261
 msgid "AutoOptimization"
-msgstr ""
+msgstr "OptimasiOtomatis"
 
 #: qtplugins/autoopt/autoopt.cpp:268
 msgid "Optimize"
@@ -3637,20 +3649,21 @@ msgstr "Hitung momen dipol molekul."
 
 #: qtplugins/editor/editor.cpp:94
 msgid "atoms must list exactly 2 atom indices."
-msgstr ""
+msgstr "atoms harus mencantumkan tepat 2 indeks atom."
 
 #: qtplugins/editor/editor.cpp:101
 msgid "atoms must be whole-number atom indices within the molecule."
 msgstr ""
+"atoms harus berupa indeks atom bilangan bulat yang berada dalam molekul."
 
 #: qtplugins/editor/editor.cpp:106
 msgid "atoms must be two different atoms."
-msgstr ""
+msgstr "atoms harus merujuk pada dua atom yang berbeda."
 
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
 msgid "%1 must be 1, 2 or 3."
-msgstr ""
+msgstr "%1 harus bernilai 1, 2, atau 3."
 
 #: qtplugins/editor/editor.cpp:152
 msgctxt "control-key 2"
@@ -3698,21 +3711,27 @@ msgid ""
 "([x, y, z] in Angstroms), optional \"bondTo\" (atom index) and \"bondOrder\" "
 "(1-3). Returns the new atom \"index\"."
 msgstr ""
+"Tambahkan atom. Opsi: \"element\" (simbol atau nomor atom), \"position\" "
+"([x, y, z] dalam Angstrom), serta opsi opsional \"bondTo\" (indeks atom) dan "
+"\"bondOrder\" (1-3). Mengembalikan \"index\" atom baru."
 
 #: qtplugins/editor/editor.cpp:1032
 msgid ""
 "Add a bond between two unbonded atoms. Options: \"atoms\" ([i, j]) and "
 "optional \"order\" (1-3). Returns the bond \"index\"."
 msgstr ""
+"Tambahkan ikatan antara dua atom yang belum berikatan. Opsi: \"atoms\" ([i, "
+"j]) dan opsi opsional \"order\" (1-3). Mengembalikan \"index\" ikatan."
 
 #: qtplugins/editor/editor.cpp:1035
 msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
-msgstr ""
+msgstr "Hapus ikatan antara dua atom. Opsi: \"atoms\" ([i, j])."
 
 #: qtplugins/editor/editor.cpp:1039
 msgid ""
 "Remove the selected atoms and their bonds. Returns the number \"removed\"."
 msgstr ""
+"Hapus atom yang dipilih beserta ikatannya. Mengembalikan jumlah \"removed\"."
 
 #: qtplugins/editor/editor.cpp:1053 qtplugins/measuretool/measuretool.cpp:764
 #: qtplugins/select/select.cpp:647
@@ -3721,17 +3740,17 @@ msgstr "Tidak ada molekul"
 
 #: qtplugins/editor/editor.cpp:1061
 msgid "The active layer is locked; unlock it to edit."
-msgstr ""
+msgstr "Lapisan aktif terkunci; buka kuncinya untuk mengedit."
 
 #: qtplugins/editor/editor.cpp:1069
 #, qt-format
 msgid "Atom %1 is in a locked layer; unlock it to edit."
-msgstr ""
+msgstr "Atom %1 berada dalam lapisan terkunci; buka kuncinya untuk mengedit."
 
 #: qtplugins/editor/editor.cpp:1080
 msgid ""
 "addAtom requires an \"element\" option (an element symbol or atomic number)."
-msgstr ""
+msgstr "addAtom memerlukan opsi \"element\" (simbol unsur atau nomor atom)."
 
 #: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
 #, qt-format
@@ -3745,28 +3764,30 @@ msgstr "Nomor atom %1 berada di luar rentang (1 hingga %2)."
 
 #: qtplugins/editor/editor.cpp:1110
 msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
-msgstr ""
+msgstr "position harus berupa daftar berisi 3 angka [x, y, z] dalam Angstrom."
 
 #: qtplugins/editor/editor.cpp:1118
 msgid "position must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "position harus berupa daftar berisi 3 angka berhingga [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1131
 msgid "bondTo must be the index of an atom in the molecule."
-msgstr ""
+msgstr "bondTo harus berupa indeks atom dalam molekul."
 
 #: qtplugins/editor/editor.cpp:1178
 msgid "There is no bond between those atoms."
-msgstr ""
+msgstr "Tidak ada ikatan antara atom-atom tersebut."
 
 #: qtplugins/editor/editor.cpp:1197
 msgid "Those atoms are already bonded."
-msgstr ""
+msgstr "Atom-atom tersebut sudah berikatan."
 
 #: qtplugins/editor/editor.cpp:1226
 #, qt-format
 msgid "Atom %1 or a bonded atom is in a locked layer; unlock it to edit."
 msgstr ""
+"Atom %1 atau atom yang berikatan dengannya berada dalam lapisan terkunci; "
+"buka kuncinya untuk mengedit."
 
 #: qtplugins/editor/editor.h:35 qtplugins/editor/editor.h:36
 msgid "Editor tool"
@@ -3794,7 +3815,7 @@ msgstr "Tiga"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:40
 msgid "Fetch from &PDB…"
-msgstr ""
+msgstr "Ambil dari &PDB…"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -3994,7 +4015,7 @@ msgstr "Bekukan sumbu tertentu (X, Y, atau Z) pada atom yang dipilih."
 msgctxt ""
 msgid "%n force field(s) available."
 msgid_plural "%n force field(s) available."
-msgstr[0] ""
+msgstr[0] "Tersedia %n medan gaya."
 
 #: qtplugins/forcefield/forcefield.cpp:387
 #: qtplugins/forcefield/forcefield.cpp:413
@@ -4388,11 +4409,11 @@ msgstr "Nama"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Formula"
-msgstr ""
+msgstr "Rumus"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Mass (g/mol)"
-msgstr ""
+msgstr "Massa (g/mol)"
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -4933,7 +4954,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:794
 #, qt-format
 msgid "value must be a distance from %1 to %2 Å."
-msgstr ""
+msgstr "value harus berupa jarak dari %1 hingga %2 Å."
 
 #: qtplugins/measuretool/measuretool.cpp:861
 msgid "atoms must list exactly 2 atom indices for a distance."
@@ -5297,7 +5318,7 @@ msgstr "Alat navigasi"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:28
 msgid "Download by &Name…"
-msgstr ""
+msgstr "Unduh berdasarkan &Nama…"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
@@ -5744,6 +5765,9 @@ msgid_plural ""
 "\n"
 "%1"
 msgstr[0] ""
+"Plugin yang dipilih tidak menyediakan URL sumber yang dapat diunduh:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:495
 #, qt-format
@@ -5792,12 +5816,12 @@ msgstr "Ekstraksi tidak menghasilkan file.\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:638
 #, qt-format
 msgid "Installation complete for %1.\n"
-msgstr ""
+msgstr "Instalasi %1 selesai.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:646
 #, qt-format
 msgid "Installation failed for %1: %2\n"
-msgstr ""
+msgstr "Instalasi %1 gagal: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:687
 msgid "Nothing to Remove"
@@ -6256,21 +6280,21 @@ msgstr "Simpan File"
 
 #: qtplugins/ply/ply.cpp:113
 msgid "PLY (*.ply)"
-msgstr ""
+msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
-msgstr ""
+msgstr "Ekspor PLY"
 
 #: qtplugins/ply/ply.cpp:123
 #, qt-format
 msgid "Cannot open %1 for writing: %2"
-msgstr ""
+msgstr "Tidak dapat membuka %1 untuk ditulis: %2"
 
 #: qtplugins/ply/ply.cpp:156
 #, qt-format
 msgid "Writing %1 failed: %2"
-msgstr ""
+msgstr "Penulisan %1 gagal: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6599,7 +6623,7 @@ msgstr "Tidak dapat membaca file %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:396
 msgid "Nuclear Critical Points Search"
-msgstr ""
+msgstr "Pencarian Titik Kritis Inti"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
@@ -6607,21 +6631,21 @@ msgstr "Gagal membuat file sementara."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:497
 msgid "Bond Critical Points Search"
-msgstr ""
+msgstr "Pencarian Titik Kritis Ikatan"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:644
 msgid "Electron Density Sources Search"
-msgstr ""
+msgstr "Pencarian Sumber Kerapatan Elektron"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:789
 msgid "Electron Density Sinks Search"
-msgstr ""
+msgstr "Pencarian Serapan Kerapatan Elektron"
 
 #: qtplugins/qtaim/qtaimcubature.cpp:1412
 #: qtplugins/qtaim/qtaimcubature.cpp:1692
 #: qtplugins/qtaim/qtaimcubature.cpp:2172
 msgid "Atomic Basin Integration"
-msgstr ""
+msgstr "Integrasi Basin Atom"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -6849,6 +6873,8 @@ msgid ""
 "Select atoms by index. Options: \"indices\" (list of atom indices) and "
 "optional \"mode\": \"replace\" (default), \"add\" or \"remove\"."
 msgstr ""
+"Pilih atom berdasarkan indeks. Opsi: \"indices\" (daftar indeks atom) dan "
+"opsi opsional \"mode\": \"replace\" (default), \"add\", atau \"remove\"."
 
 #: qtplugins/select/select.cpp:687
 msgid ""
@@ -6859,26 +6885,26 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:725
 msgid "selectAtoms requires an \"indices\" option (a list of atom indices)."
-msgstr ""
+msgstr "selectAtoms memerlukan opsi \"indices\" (daftar indeks atom)."
 
 #: qtplugins/select/select.cpp:738
 msgid "mode must be \"replace\", \"add\" or \"remove\"."
-msgstr ""
+msgstr "mode harus berupa \"replace\", \"add\", atau \"remove\"."
 
 #: qtplugins/select/select.cpp:762
 #, qt-format
 msgid "atom index #%1 in indices must be a whole number."
-msgstr ""
+msgstr "Indeks atom #%1 dalam indices harus berupa bilangan bulat."
 
 #: qtplugins/select/select.cpp:767
 #, qt-format
 msgid "atom index #%1 in indices is negative."
-msgstr ""
+msgstr "Indeks atom #%1 dalam indices bernilai negatif."
 
 #: qtplugins/select/select.cpp:773
 #, qt-format
 msgid "atom index %1 is out of range (the molecule has %2 atoms)."
-msgstr ""
+msgstr "Indeks atom %1 berada di luar rentang (molekul memiliki %2 atom)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6931,16 +6957,16 @@ msgstr "Lapisan Baru"
 
 #: qtplugins/spacegroup/spacegroup.cpp:82
 msgid "Give either hallNumber or spaceGroup, not both."
-msgstr ""
+msgstr "Berikan hallNumber atau spaceGroup, bukan keduanya."
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
 #, qt-format
 msgid "hallNumber must be an integer from 1 to %1."
-msgstr ""
+msgstr "hallNumber harus berupa bilangan bulat dari 1 hingga %1."
 
 #: qtplugins/spacegroup/spacegroup.cpp:106
 msgid "spaceGroup must be a space group symbol (a string)."
-msgstr ""
+msgstr "spaceGroup harus berupa simbol grup ruang (string)."
 
 #: qtplugins/spacegroup/spacegroup.cpp:113
 #, qt-format
@@ -6948,6 +6974,9 @@ msgid ""
 "spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
 "(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
 msgstr ""
+"spaceGroup \"%1\" tidak merujuk pada satu pengaturan grup ruang yang unik; "
+"gunakan hallNumber (1 hingga %2) atau simbol yang menyertakan pengaturannya, "
+"misalnya \"F d -3 m :2\"."
 
 #: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
@@ -7071,7 +7100,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "The molecule has no unit cell."
-msgstr ""
+msgstr "Molekul tidak memiliki sel satuan."
 
 #: qtplugins/spacegroup/spacegroup.cpp:636
 #, qt-format
@@ -7079,6 +7108,8 @@ msgid ""
 "The space group of the molecule is not known: give the hallNumber (1 to %1) "
 "or spaceGroup parameter."
 msgstr ""
+"Grup ruang molekul tidak diketahui: berikan parameter hallNumber (1 hingga "
+"%1) atau spaceGroup."
 
 #: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
