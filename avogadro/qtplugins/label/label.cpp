@@ -11,6 +11,7 @@
 #include <iostream>
 #include <limits>
 #include <locale>
+#include <set>
 #include <sstream>
 
 // for partial charges
@@ -27,6 +28,7 @@
 #include <avogadro/rendering/textlabel3d.h>
 
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -392,47 +394,94 @@ void Label::processResidue(const Core::Molecule& molecule,
   }
 }
 
-QString partialCharge(Molecule* molecule, int atom)
+namespace {
+// Choose a charge type: GFN2 or AM1BCC, then MMFF94, then Gasteiger, else
+// whatever comes first. Returns an empty string for an empty set.
+std::string preferredChargeType(const std::set<std::string>& types)
 {
-  // TODO: we need to track type and/or calling the charge calculator
-  float charge = 0.0;
-  std::set<std::string> types = molecule->partialChargeTypes();
-  if (types.size() > 0) {
-    auto first = types.cbegin();
-    MatrixX charges = molecule->partialCharges((*first));
-    charge = charges(atom, 0);
-  } else {
-    // find something
-    const auto options =
-      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
-    if (options.size() > 0) {
-      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
-      std::string type;
-      if (options.find("GFN2") != options.end())
-        type = "GFN2";
-      else if (options.find("am1bcc") != options.end())
-        type = "am1bcc";
-      else if (options.find("mmff94") != options.end())
-        type = "mmff94";
-      else if (options.find("gasteiger") != options.end())
-        type = "gasteiger";
-      else
-        type = *options.begin();
-
-      MatrixX charges =
-        Calc::ChargeManager::instance().partialCharges(type, *molecule);
-      charge = charges(atom, 0);
-    }
+  if (types.empty())
+    return std::string();
+  for (const char* preferred : { "GFN2", "am1bcc", "mmff94", "gasteiger" }) {
+    if (types.find(preferred) != types.end())
+      return preferred;
   }
-  // e.g. '-0.12' => 5 characters
-  return QString("%L1").arg(charge, 5, 'f', 2);
+  return *types.begin();
+}
+} // namespace
+
+void Label::requestPartialCharges(const QtGui::Molecule& molecule)
+{
+  auto* mol = const_cast<QtGui::Molecule*>(&molecule);
+  if (m_chargePending || molecule.atomCount() == 0)
+    return;
+  // Don't retry a calculation that already failed for this molecule
+  if (m_lastChargeMolecule == mol &&
+      m_lastChargeAtomCount == molecule.atomCount())
+    return;
+
+  m_chargeMolecule = mol;
+  m_chargePending = true;
+  QTimer::singleShot(0, this, &Label::calculatePartialCharges);
 }
 
-void Label::processAtom(const Core::Molecule& molecule,
+void Label::calculatePartialCharges()
+{
+  m_chargePending = false;
+  QtGui::Molecule* molecule = m_chargeMolecule;
+  m_chargeMolecule.clear();
+  if (molecule == nullptr || !molecule->partialChargeTypes().empty())
+    return;
+
+  const QPointer<QtGui::Molecule> guard(molecule);
+  const Index atomCount = molecule->atomCount();
+
+  // Remember only failed attempts: charges are cleared by edits, and a
+  // successful calculation must run again after an edit that returns to the
+  // same atom count (remove a bond, undo/redo).
+  const auto recordFailure = [&]() {
+    m_lastChargeMolecule = guard;
+    m_lastChargeAtomCount = atomCount;
+  };
+
+  const std::string type = preferredChargeType(
+    Calc::ChargeManager::instance().identifiersForMolecule(*molecule));
+  if (type.empty()) {
+    recordFailure();
+    return;
+  }
+
+  // This can run a nested event loop (Open Babel), so check afterwards that
+  // the molecule is still there and still the same size.
+  MatrixX charges =
+    Calc::ChargeManager::instance().partialCharges(type, *molecule);
+  if (!guard.isNull() && static_cast<Index>(charges.rows()) == atomCount &&
+      molecule->atomCount() == atomCount) {
+    molecule->setPartialCharges(type, charges);
+    m_lastChargeMolecule.clear();
+    emit drawablesChanged();
+  } else {
+    recordFailure();
+  }
+}
+
+void Label::processAtom(const QtGui::Molecule& molecule,
                         Rendering::GroupNode& node, size_t layer)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
+
+  // Use only the charges the molecule already has. Calculating them here can
+  // run an external program and a nested event loop in the middle of a scene
+  // rebuild, so that is deferred instead (see requestPartialCharges()).
+  MatrixX charges;
+  if (m_layerManager.getSetting<LayerLabel>(layer)->atomOptions &
+      LayerLabel::LabelOptions::PartialCharge) {
+    const std::string type = preferredChargeType(molecule.partialChargeTypes());
+    if (type.empty())
+      requestPartialCharges(molecule);
+    else
+      charges = molecule.partialCharges(type);
+  }
   std::map<unsigned char, size_t> atomCount;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
@@ -452,8 +501,11 @@ void Label::processAtom(const Core::Molecule& molecule,
     std::string text = atom.label();
 
     if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge) {
-      QString charge = partialCharge(const_cast<Molecule*>(&molecule), i);
-      text += charge.toStdString();
+      // Stored charges can be shorter than the atom list after an edit
+      if (static_cast<Index>(charges.rows()) > i && charges.cols() > 0) {
+        // e.g. '-0.12' => 5 characters
+        text += QString("%L1").arg(charges(i, 0), 5, 'f', 2).toStdString();
+      }
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Custom) {
       // already set

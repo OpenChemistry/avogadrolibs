@@ -64,12 +64,19 @@ foreach(plugin ${scenePlugins})
 endforeach()
 if(haveScenePlugins)
   message(STATUS "Adding scene plugin serialize test.")
-  list(APPEND testSrcs scenepluginserializetest.cpp)
+  list(APPEND testSrcs scenepluginserializetest.cpp labelchargetest.cpp)
   foreach(plugin ${scenePlugins})
     list(APPEND pluginTargets ${plugin})
     get_target_property(pluginDir ${plugin} SOURCE_DIR)
     list(APPEND pluginIncludes "${pluginDir}")
   endforeach()
+endif()
+
+# GLWidget re-entrancy regression test (needs the QtOpenGL library).
+set(haveGLWidgetTest OFF)
+if(TARGET Avogadro::QtOpenGL)
+  set(haveGLWidgetTest ON)
+  list(APPEND testSrcs glwidgetreentrytest.cpp)
 endif()
 
 if(NOT testSrcs)
@@ -89,6 +96,10 @@ target_link_libraries(AvogadroQtPluginsTests
   Avogadro::QtGui
   ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB}
   Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+
+if(haveGLWidgetTest)
+  target_link_libraries(AvogadroQtPluginsTests Avogadro::QtOpenGL)
+endif()
 
 # Plugin headers include rendering headers, and the Focus test builds a
 # Camera and Scene of its own.
@@ -125,6 +136,30 @@ foreach(plugin ${testNames})
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
 endforeach()
+
+if(haveGLWidgetTest)
+  add_test(NAME "QtPlugins-GLWidgetReentry"
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*")
+  set_tests_properties("QtPlugins-GLWidgetReentry" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    TIMEOUT 120)
+endif()
+
+# Label's text labels make OpenGL calls, which the offscreen platform cannot
+# provide; macOS has a real (headless-capable) platform plugin for it. Elsewhere
+# the tests skip themselves when no context can be created.
+if(haveScenePlugins)
+  if(APPLE)
+    set(labelChargePlatform "cocoa")
+  else()
+    set(labelChargePlatform "offscreen")
+  endif()
+  add_test(NAME "QtPlugins-LabelCharge"
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=LabelChargeTest.*")
+  set_tests_properties("QtPlugins-LabelCharge" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=${labelChargePlatform}"
+    TIMEOUT 120)
+endif()
 
 # fuzz_qtplugin_commands: libFuzzer drives random command sequences through
 # CommandTestHarness, in-process (2.1 release plan, section 4.2). Same plugins

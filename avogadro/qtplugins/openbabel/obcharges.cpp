@@ -52,7 +52,7 @@ private:
     timer.start(msTimeout);
 
     while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::AllEvents, 500);
+      qApp->processEvents(QEventLoop::ExcludeUserInputEvents, 500);
 
     return m_finished;
   }

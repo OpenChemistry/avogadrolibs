@@ -8,6 +8,10 @@
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
+
+#include <QtCore/QPointer>
+
+#include <string>
 namespace Avogadro {
 namespace QtPlugins {
 
@@ -47,9 +51,18 @@ public slots:
   void setLabelScale(double scale);
   void setColor(const QColor& color);
 
+private slots:
+  /**
+   * Compute partial charges for the pending molecule, from the top-level
+   * event loop rather than while the scene is being built, then request a
+   * scene rebuild so the labels show them.
+   */
+  void calculatePartialCharges();
+
 private:
-  void processAtom(const Core::Molecule& molecule, Rendering::GroupNode& node,
+  void processAtom(const QtGui::Molecule& molecule, Rendering::GroupNode& node,
                    size_t layer);
+  void requestPartialCharges(const QtGui::Molecule& molecule);
   void processBond(const Core::Molecule& molecule, Rendering::GroupNode& node,
                    size_t layer);
   void processResidue(const Core::Molecule& molecule,
@@ -58,6 +71,16 @@ private:
   Rendering::GroupNode* m_group;
   std::string m_name = "Labels";
   Vector3ub m_color;
+
+  // At most one deferred charge calculation is queued at a time.
+  QPointer<QtGui::Molecule> m_chargeMolecule;
+  bool m_chargePending = false;
+  // The molecule and size of the last FAILED calculation attempt, so a model
+  // that fails or returns nothing is not retried on every scene rebuild.
+  // Cleared on success: edits clear the stored charges, and they must be
+  // recalculated even when the atom count returns to an earlier value.
+  QPointer<QtGui::Molecule> m_lastChargeMolecule;
+  Index m_lastChargeAtomCount = 0;
 };
 
 } // end namespace QtPlugins
