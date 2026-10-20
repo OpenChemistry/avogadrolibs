@@ -3737,6 +3737,7 @@ msgstr "Die aktive Schicht ist gesperrt; entsperren Sie es zu bearbeiten."
 #, qt-format
 msgid "Atom %1 is in a locked layer; unlock it to edit."
 msgstr ""
+"Atom %1 ist in einer gesperrten Schicht; entsperren Sie es zu bearbeiten."
 
 #: qtplugins/editor/editor.cpp:1080
 msgid ""
