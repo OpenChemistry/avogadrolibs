@@ -6025,6 +6025,8 @@ msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Melden Sie den aktuellen Rahmen und die Anzahl der Koordinatensätze, ohne "
+"etwas zu ändern. Returns {\"frame\": ..., \"count\": ..."
 
 #: qtplugins/playertool/playertool.cpp:698
 msgid "There is no molecule."
