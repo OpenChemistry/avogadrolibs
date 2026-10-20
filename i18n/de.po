@@ -7682,6 +7682,17 @@ msgid ""
 "Select a ligand or functional group and click on a hydrogen atom to attach "
 "it."
 msgstr ""
+"Vorlage (%1)\n"
+"\n"
+"Fügen Sie Fragmente ein, einschließlich Metallzentren.\n"
+"Wählen Sie ein Element und Koordinationsgeometrie, klicken Sie dann auf ein "
+"Fragment einfügen.\n"
+"Klicken Sie auf einen Wasserstoff, um ihn durch das gewählte Metallzentrum "
+"zu ersetzen, oder klicken Sie auf jedes andere Atom, um sein Element und "
+"seine formale Ladung zu ändern.\n"
+"\n"
+"Wählen Sie einen Liganden oder eine funktionelle Gruppe und klicken Sie auf "
+"ein Wasserstoffatom, um es zu befestigen."
 
 #: qtplugins/templatetool/templatetool.cpp:501
 #: qtplugins/templatetool/templatetool.cpp:678
