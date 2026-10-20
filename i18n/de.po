@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-20 16:14+0000\n"
+"PO-Revision-Date: 2026-10-21 08:07+0000\n"
 "Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -4947,7 +4947,7 @@ msgstr ""
 #: qtplugins/measuretool/measuretool.cpp:794
 #, qt-format
 msgid "value must be a distance from %1 to %2 Å."
-msgstr ""
+msgstr "wert muss eine Entfernung von %1 zu %2 Å sein."
 
 #: qtplugins/measuretool/measuretool.cpp:861
 msgid "atoms must list exactly 2 atom indices for a distance."
