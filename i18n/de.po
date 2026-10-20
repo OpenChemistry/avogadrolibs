@@ -8039,7 +8039,7 @@ msgstr "Entfernung (Å)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:131
 msgid "Dihedral (°)"
-msgstr ""
+msgstr "Diedral (°)"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
 #, qt-format
