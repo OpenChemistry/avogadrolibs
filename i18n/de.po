@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-20 13:40+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -578,7 +578,7 @@ msgstr ""
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Einzelbild"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -1516,7 +1516,7 @@ msgstr ""
 
 #: qtgui/packagemanager.cpp:770
 msgid "pip install timed out"
-msgstr ""
+msgstr "pip install, Zeitüberschreitung"
 
 #: qtgui/packagemanager.cpp:778
 #, qt-format
@@ -1524,11 +1524,13 @@ msgid ""
 "pip install failed:\n"
 "%1"
 msgstr ""
+"pip install ist fehlgeschlagen:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:790
 #, qt-format
 msgid "pip install did not provide %1"
-msgstr ""
+msgstr "pip install hat %1 nicht zur Verfügung gestellt"
 
 #: qtgui/packagemanager.cpp:853
 msgid "neither pixi nor Python was found"
@@ -3816,7 +3818,7 @@ msgstr "PDB-Molekül %1 kann nicht gelesen werden"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
-msgstr "Laden Sie eine Struktur der Protein Data Bank herunter."
+msgstr "Laden Sie eine Struktur von der Protein Data Bank herunter."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
@@ -3839,7 +3841,7 @@ msgstr "Der PDB-Code darf nur Buchstaben und Ziffern enthalten."
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
 #, qt-format
 msgid "Downloaded %1"
-msgstr ""
+msgstr "heruntergeladen: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:212
 msgid "PDB Code"
@@ -3864,7 +3866,7 @@ msgstr "Abfrage für %1"
 #: qtplugins/networkdatabases/networkdatabases.cpp:148
 #: qtplugins/networkdatabases/networkdatabases.cpp:197
 msgid "Network Download Failed"
-msgstr "Herunterladen über das Netzwerk fehlgeschlagen"
+msgstr "Das Herunterladen über das Netzwerk ist fehlgeschlagen"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:265
 #: qtplugins/networkdatabases/networkdatabases.cpp:141
@@ -3895,7 +3897,7 @@ msgstr "Fokus aufheben"
 
 #: qtplugins/focus/focus.cpp:138
 msgid "Focus a selection"
-msgstr ""
+msgstr "Auswahl fokussieren"
 
 #: qtplugins/focus/focus.cpp:139
 msgid "Unfocus a focused selection"
@@ -4381,7 +4383,7 @@ msgstr "Von PQR importieren"
 
 #: qtplugins/importpqr/importpqr.h:39
 msgid "Download a molecule from PQR."
-msgstr "Laden Sie ein Molekül von PQR herunter."
+msgstr "Ein Molekül von der PQR herunterladen."
 
 #: qtplugins/importpqr/pqrwidget.cpp:16 qtplugins/label/label.cpp:309
 #: qtplugins/packageinstaller/packagemodel.cpp:175
@@ -5239,11 +5241,11 @@ msgstr "Navigationswerkzeug"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:28
 msgid "Download by &Name…"
-msgstr ""
+msgstr "Nach &Namen herunterladen …"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
-msgstr "Laden Sie eine Struktur mit Namen aus einer Online-Datenbank herunter."
+msgstr "Lade eine Struktur mit ihrem Namen aus einer Online-Datenbank herunter."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:78
 msgid "fetchByName requires a non-empty 'name' parameter."
@@ -5633,8 +5635,8 @@ msgstr ", "
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n Download in den vergangenen %1 Tagen"
+msgstr[1] "%n Downloads in den vergangenen %1 Tagen"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:364
 #, qt-format
@@ -5689,12 +5691,18 @@ msgid_plural ""
 "\n"
 "%1"
 msgstr[0] ""
+"Für das ausgewählte Plugin ist keine URL zum Quellcode verfügbar:\n"
+"\n"
+"%1"
 msgstr[1] ""
+"Für die ausgewählten Plugins sind keine URLs zum Quellcode verfügbar:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:495
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
-msgstr ""
+msgstr "Die Weiterleitung während des Downloads von %1 war erfolglos.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:512
 #, qt-format
@@ -5707,9 +5715,9 @@ msgid "Failed to download from %1: %2\n"
 msgstr "Der Download von %1 ist fehlgeschlagen: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:556
-#, fuzzy, qt-format
+#, qt-format
 msgid "Downloading %1 to %2\n"
-msgstr "%1 wird zu %2 herunterladen\n"
+msgstr "%1 wird nach %2 heruntergeladen\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:570
 #, qt-format
@@ -5719,7 +5727,7 @@ msgstr "Extrahiere %1…\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:578
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
-msgstr "Extrahieren vollständig (%1 files)\n"
+msgstr "Extrahieren vollständig (%1 Dateien)\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:613
 #, qt-format
@@ -5738,12 +5746,12 @@ msgstr "Extraktion ergab keine Dateien.\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:638
 #, qt-format
 msgid "Installation complete for %1.\n"
-msgstr ""
+msgstr "Installation für %1 abgeschlossen.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:646
 #, qt-format
 msgid "Installation failed for %1: %2\n"
-msgstr ""
+msgstr "Installation von %1 fehlgeschlagen: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:687
 msgid "Nothing to Remove"
@@ -5926,9 +5934,8 @@ msgstr "Animationswerkzeug\t(%1)"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
 #: qtplugins/playertool/playertool.cpp:105:2139
-#, fuzzy
 msgid "Frame:"
-msgstr "Frame:"
+msgstr "Einzelbild:"
 
 #: qtplugins/playertool/playertool.cpp:135
 msgctxt "start or first frame index"
@@ -6005,12 +6012,16 @@ msgid ""
 "Advance one coordinate set, looping to the first frame after the last. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Wechsele zum nächsten Koordinatensatz und durchlaufe dabei den ersten bis "
+"zum letzten Einzelbild. Rückgabe {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:674
 msgid ""
 "Step back one coordinate set, looping to the last frame before the first. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Wechsele zum nächsten Koordinatensatz und durchlaufe dabei das letzte bis "
+"zum ersten Einzelbild. Rückgabe {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:678
 msgid ""
@@ -6018,15 +6029,15 @@ msgid ""
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
 "Springe zu einem Koordinatensatz, der als Null-basierter Index angegeben "
-"ist: {\"index\": n}. Returns {\"frame\": ..., \"count\": ..."
+"ist: {\"index\": n}. Rückgabe {\"frame\": ..., \"count\": ...}."
 
 #: qtplugins/playertool/playertool.cpp:682
 msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
 msgstr ""
-"Melden Sie den aktuellen Rahmen und die Anzahl der Koordinatensätze, ohne "
-"etwas zu ändern. Returns {\"frame\": ..., \"count\": ..."
+"Melde das aktuelle Einzelbild und die Anzahl der Koordinatensätze, ohne "
+"etwas zu ändern. Rückgabe {\"frame\": ..., \"count\": ...}."
 
 #: qtplugins/playertool/playertool.cpp:698
 msgid "There is no molecule."
@@ -6065,11 +6076,11 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:519
 msgid "Conformer Analysis"
-msgstr "Konformer-Analyse"
+msgstr "Konformeren-Analyse"
 
 #: qtplugins/plotconformer/plotconformer.cpp:541
 msgid "Plot:"
-msgstr ""
+msgstr "Darstellung:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:543
 msgid "vs"
@@ -6077,11 +6088,11 @@ msgstr ""
 
 #: qtplugins/plotconformer/plotconformer.cpp:554
 msgid "Add from Selection"
-msgstr ""
+msgstr "Von der Auswahl hinzufügen"
 
 #: qtplugins/plotconformer/plotconformer.cpp:558
 msgid "Unwrap dihedral scans"
-msgstr ""
+msgstr "Scans der Diederwinkel entpacken"
 
 #: qtplugins/plotconformer/plotconformer.cpp:566
 msgid "Energy Units:"
@@ -6089,7 +6100,7 @@ msgstr "Energieeinheiten:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:586
 msgid "Time between frames:"
-msgstr "Zeit zwischen den Rahmen:"
+msgstr "Zeit zwischen den Einzelbildern:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:592
 msgid " ps"
@@ -6105,7 +6116,7 @@ msgstr ""
 #: qtplugins/plotconformer/plotconformer.cpp:844
 #, qt-format
 msgid "Conformer %1 of %2 — use ← and → to step through them"
-msgstr ""
+msgstr "Konformer %1 von %2 — benutze ← und → um zwischen ihnen zu wechseln"
 
 #: qtplugins/plotconformer/plotconformer.cpp:897
 msgid ""
@@ -6121,7 +6132,7 @@ msgstr ""
 msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
 msgstr ""
 "Konformerdaten (RMSD, Energie- oder Scankoordinaten) generieren und "
-"aufzeichnen."
+"darstellen."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -6149,7 +6160,7 @@ msgstr "Einen Graphen einer Paarverteilungsfunktion berechnen und zeichnen."
 
 #: qtplugins/plotxrd/plotxrd.cpp:36
 msgid "Plot Theoretical XRD Pattern…"
-msgstr "Zeichne theoretisches XRD Diffraktogramm…"
+msgstr "Zeichne theoretisches XRD-Diffraktogramm…"
 
 #: qtplugins/plotxrd/plotxrd.cpp:149
 msgid "Failed to generate XRD pattern"
@@ -6176,7 +6187,7 @@ msgstr "Fehler: "
 
 #: qtplugins/plotxrd/plotxrd.cpp:312
 msgid "Show XRD plot."
-msgstr ""
+msgstr "XRD-Plot anzeigen."
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
@@ -6184,12 +6195,11 @@ msgstr "PlotXrd"
 
 #: qtplugins/plotxrd/plotxrd.h:92
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
-msgstr ""
-"Berechnung und Zeichnen eines theoretischen XRD-Musters mit ObjCryst++."
+msgstr "Berechne und zeichne ein theoretischen XRD mit ObjCryst++."
 
 #: qtplugins/ply/ply.cpp:73
 msgid "PLY Render…"
-msgstr "PLY-Render…"
+msgstr "PLY-Renderer…"
 
 #: qtplugins/ply/ply.cpp:112 qtplugins/povray/povray.cpp:68
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
@@ -6675,7 +6685,7 @@ msgstr "Auswahl nach Rest …"
 
 #: qtplugins/select/select.cpp:73
 msgid "Select Backbone Atoms…"
-msgstr "Wähle Gerüstatome……"
+msgstr "Wähle Gerüstatome…"
 
 #: qtplugins/select/select.cpp:78
 msgid "Select Sidechain Atoms…"
@@ -7160,7 +7170,6 @@ msgid "Spectra"
 msgstr "Spektren"
 
 #: qtplugins/spectra/spectra.h:34
-#, fuzzy
 msgid "Display spectra plots."
 msgstr "Spektren anzeigen."
 
@@ -7462,8 +7471,8 @@ msgstr "Mit der Datei zur Verfügung gestellte Cube-Datei rendern."
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
 msgstr ""
-"Diese Datei enthält keinen Basissatz, so dass kein Orbital berechnet werden "
-"kann."
+"Diese Datei enthält keinen Basissatz, deshalb kann kein Orbital berechnet "
+"werden."
 
 #: qtplugins/surfaces/surfaces.cpp:252
 #, qt-format
@@ -7475,19 +7484,19 @@ msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
 msgstr ""
-"Diese Datei enthält keinen Basissatz, so dass keine Elektronendichte "
-"berechnet werden kann."
+"Diese Datei enthält keinen Basissatz, deshalb kann keine Elektronendichte "
+"berechnet werden."
 
 #: qtplugins/surfaces/surfaces.cpp:272
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
 msgstr ""
-"Diese Datei enthält keinen Basissatz, so dass keine Spindichte berechnet "
-"werden kann."
+"Diese Datei enthält keinen Basissatz, deshalb kann keine Spindichte "
+"berechnet werden."
 
 #: qtplugins/surfaces/surfaces.cpp:282
 msgid "This file does not contain any cube data."
-msgstr "Diese Datei enthält keine Würfeldaten."
+msgstr "Diese Datei enthält keine cube-Daten."
 
 #: qtplugins/surfaces/surfaces.cpp:292
 #, qt-format
@@ -7779,7 +7788,7 @@ msgstr "Schwingungsmoden anzeigen."
 
 #: qtplugins/vrml/vrml.cpp:29
 msgid "VRML Render…"
-msgstr "VRML-Render…"
+msgstr "VRML-Renderer …"
 
 #: qtplugins/vrml/vrml.cpp:69
 msgid "VRML (*.wrl);;Text file (*.txt)"
@@ -8936,7 +8945,7 @@ msgstr "Formel:"
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:132
 #. i18n: ectx: property (text), widget (QPushButton, downloadButton)
 msgid "Download"
-msgstr "Herunterladen"
+msgstr "Download"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, InsertDNADialog)
@@ -10519,7 +10528,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
 msgid "PDF Plot Options"
-msgstr ""
+msgstr "Darstellungsoptionen für die PDF"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:20
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -11342,8 +11351,8 @@ msgid ""
 "<html><head/><body><p>Limit the y-range in the plot?</p><p>Default: off</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Das y-Umfang im Diagramm beschränken?</p><p>Default: "
-"off</p></body></html>"
+"<html><head/><body><p>Das y-Intervall im Diagramm einschränken?</p><p>"
+"Default: off</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:181
 #. i18n: ectx: property (text), widget (QCheckBox, cb_limitY)
