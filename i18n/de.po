@@ -4878,6 +4878,9 @@ msgid ""
 "Measure the distance in Å between two atoms, given as zero-based indices: "
 "{\"atoms\": [i, j]}. Returns {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Messen Sie den Abstand in Å zwischen zwei Atomen, angegeben als Null-"
+"basierte Indizes: {\"Atome\": [i, j]}. Gibt {\"Abstand\" zurück: ..., "
+"\"Atome\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:699
 msgid ""
