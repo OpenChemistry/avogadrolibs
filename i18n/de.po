@@ -3717,6 +3717,7 @@ msgstr ""
 #: qtplugins/editor/editor.cpp:1035
 msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
 msgstr ""
+"Entfernen Sie die Bindung zwischen zwei Atomen. Optionen: \"Atome\" ([i, j])."
 
 #: qtplugins/editor/editor.cpp:1039
 msgid ""
