@@ -5031,7 +5031,7 @@ msgstr ""
 
 #: qtplugins/measuretool/measurewidget.cpp:39
 msgid "Distance 1–2"
-msgstr ""
+msgstr "Abstand 1–2"
 
 #: qtplugins/measuretool/measurewidget.cpp:39
 #: qtplugins/measuretool/measurewidget.cpp:42
@@ -5041,15 +5041,15 @@ msgstr " Å"
 
 #: qtplugins/measuretool/measurewidget.cpp:42
 msgid "Distance 2–3"
-msgstr ""
+msgstr "Abstand 2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:45
 msgid "Distance 3–4"
-msgstr ""
+msgstr "Entfernung 3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:48
 msgid "Angle 1–2–3"
-msgstr ""
+msgstr "Winkel 1–2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:48
 #: qtplugins/measuretool/measurewidget.cpp:50
@@ -5059,11 +5059,11 @@ msgstr "°"
 
 #: qtplugins/measuretool/measurewidget.cpp:50
 msgid "Angle 2–3–4"
-msgstr ""
+msgstr "Winkel 2–3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:52
 msgid "Dihedral 1–2–3–4"
-msgstr ""
+msgstr "Dihedral 1–2–3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:155
 #, qt-format
