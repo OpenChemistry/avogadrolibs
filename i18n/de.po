@@ -5193,7 +5193,7 @@ msgstr "&Eigenschaften"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:226
 msgid "Show molecular properties."
-msgstr ""
+msgstr "Zeigen Sie molekulare Eigenschaften."
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
