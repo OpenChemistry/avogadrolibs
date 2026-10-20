@@ -3701,6 +3701,9 @@ msgid ""
 "([x, y, z] in Angstroms), optional \"bondTo\" (atom index) and \"bondOrder\" "
 "(1-3). Returns the new atom \"index\"."
 msgstr ""
+"Füge ein Atom hinzu. Optionen: \"Element\" (Symbol oder Atomzahl), "
+"\"Position\" ([x, y, z] in Angstroms), optional \"bondTo\" (Atomindex) und "
+"\"bondOrder\" (1-3). Gibt das neue Atom \"Index\" zurück."
 
 #: qtplugins/editor/editor.cpp:1032
 msgid ""
