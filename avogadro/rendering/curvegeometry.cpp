@@ -293,20 +293,20 @@ void checkShaderInfo(ShaderInfo& shaderInfo, const std::string& fs,
     shaderInfo.fragmentShader.setType(Shader::Fragment);
     shaderInfo.fragmentShader.setSource(fs);
     if (!shaderInfo.vertexShader.compile())
-      cout << shaderInfo.vertexShader.error() << endl;
+      cout << shaderInfo.vertexShader.error() << '\n';
     if (!shaderInfo.fragmentShader.compile())
-      cout << shaderInfo.fragmentShader.error() << endl;
+      cout << shaderInfo.fragmentShader.error() << '\n';
     shaderInfo.program.attachShader(shaderInfo.vertexShader);
     shaderInfo.program.attachShader(shaderInfo.fragmentShader);
     if (!shaderInfo.program.link())
-      cout << shaderInfo.program.error() << endl;
+      cout << shaderInfo.program.error() << '\n';
   }
 }
 
 void CurveGeometry::processShaderError(bool error)
 {
   if (error) {
-    cout << m_shaderInfo.program.error() << endl;
+    cout << m_shaderInfo.program.error() << '\n';
   }
 }
 

@@ -162,27 +162,27 @@ void SolidPipeline::initialize()
   d->screenVertexShader.setType(Shader::Vertex);
   d->screenVertexShader.setSource(solid_vs);
   if (!d->screenVertexShader.compile())
-    std::cout << d->screenVertexShader.error() << std::endl;
+    std::cout << d->screenVertexShader.error() << '\n';
 
   d->firstFragmentShader.setType(Shader::Fragment);
   d->firstFragmentShader.setSource(solid_first_fs);
   if (!d->firstFragmentShader.compile())
-    std::cout << d->firstFragmentShader.error() << std::endl;
+    std::cout << d->firstFragmentShader.error() << '\n';
 
   d->firstStageShaders.attachShader(d->screenVertexShader);
   d->firstStageShaders.attachShader(d->firstFragmentShader);
   if (!d->firstStageShaders.link())
-    std::cout << d->firstStageShaders.error() << std::endl;
+    std::cout << d->firstStageShaders.error() << '\n';
 
   d->aoFragmentShader.setType(Shader::Fragment);
   d->aoFragmentShader.setSource(solid_ao_fs);
   if (!d->aoFragmentShader.compile())
-    std::cout << d->aoFragmentShader.error() << std::endl;
+    std::cout << d->aoFragmentShader.error() << '\n';
 
   d->aoStageShaders.attachShader(d->screenVertexShader);
   d->aoStageShaders.attachShader(d->aoFragmentShader);
   if (!d->aoStageShaders.link())
-    std::cout << d->aoStageShaders.error() << std::endl;
+    std::cout << d->aoStageShaders.error() << '\n';
 }
 
 void SolidPipeline::begin()

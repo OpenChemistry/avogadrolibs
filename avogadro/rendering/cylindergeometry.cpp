@@ -86,9 +86,9 @@ void CylinderGeometry::update()
     d->fragmentShader->setType(Shader::Fragment);
     d->fragmentShader->setSource(cylinders_fs);
     if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
+      cout << d->vertexShader->error() << '\n';
     if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
+      cout << d->fragmentShader->error() << '\n';
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
@@ -96,7 +96,7 @@ void CylinderGeometry::update()
     d->program->attachShader(*d->vertexShader);
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
-      cout << d->program->error() << endl;
+      cout << d->program->error() << '\n';
   }
 
   // Check if the VBOs are ready, if not get them ready.
@@ -168,25 +168,25 @@ void CylinderGeometry::update()
 
     ShaderProgram* program = d->program;
     if (!program->enableAttributeArray("vertex"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("vertex", ColorNormalVertex::vertexOffset(),
                                     sizeof(ColorNormalVertex), FloatType, 3,
                                     ShaderProgram::NoNormalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
     if (!program->enableAttributeArray("color"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("color", ColorNormalVertex::colorOffset(),
                                     sizeof(ColorNormalVertex), UCharType, 3,
                                     ShaderProgram::Normalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
     if (!program->enableAttributeArray("normal"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("normal", ColorNormalVertex::normalOffset(),
                                     sizeof(ColorNormalVertex), FloatType, 3,
                                     ShaderProgram::NoNormalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
 
     d->vao.release();
@@ -207,25 +207,25 @@ void CylinderGeometry::render(const Camera& camera)
   update();
 
   if (!d->program->bind())
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
   }
   if (!d->program->setUniformValue("projection",
                                    camera.projection().matrix())) {
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
   }
   if (!d->program->setUniformValue("opacity", m_opacity)) {
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
   if (!d->program->setUniformValue("normalMatrix", normalMatrix))
-    std::cout << d->program->error() << std::endl;
+    std::cout << d->program->error() << '\n';
 
   // Render the loaded cylinders using the shader and VAO.
   glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
