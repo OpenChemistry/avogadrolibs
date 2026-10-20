@@ -75,8 +75,10 @@ private:
   // At most one deferred charge calculation is queued at a time.
   QPointer<QtGui::Molecule> m_chargeMolecule;
   bool m_chargePending = false;
-  // The molecule and size of the last calculation attempt, so a model that
-  // fails or returns nothing is not retried on every scene rebuild.
+  // The molecule and size of the last FAILED calculation attempt, so a model
+  // that fails or returns nothing is not retried on every scene rebuild.
+  // Cleared on success: edits clear the stored charges, and they must be
+  // recalculated even when the atom count returns to an earlier value.
   QPointer<QtGui::Molecule> m_lastChargeMolecule;
   Index m_lastChargeAtomCount = 0;
 };

@@ -123,13 +123,14 @@ protected:
   void SetUp() override
   {
     // Use scratch settings so the user's label options are untouched.
+    m_previousFormat = QSettings::defaultFormat();
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,
                        m_settingsDir.path());
     QSettings settings;
-    settings.setValue("label/atomoptions", kPartialCharge);
-    settings.setValue("label/bondoptions", 0);
-    settings.setValue("label/residueoptions", 0);
+    settings.setValue("label/atomOptions", kPartialCharge);
+    settings.setValue("label/bondOptions", 0);
+    settings.setValue("label/residueOptions", 0);
     settings.sync();
 
     if (!m_gl.ok)
@@ -147,6 +148,7 @@ protected:
 
   void TearDown() override
   {
+    QSettings::setDefaultFormat(m_previousFormat);
     if (m_registered)
       Avogadro::Calc::ChargeManager::unregisterModel(kModelId);
   }
@@ -163,6 +165,7 @@ protected:
   GLContext m_gl;
   CommandTestHarness m_harness;
   bool m_registered = false;
+  QSettings::Format m_previousFormat = QSettings::NativeFormat;
 };
 
 } // namespace
@@ -198,6 +201,30 @@ TEST_F(LabelChargeTest, processDoesNotCalculateCharges)
   QCoreApplication::processEvents();
   EXPECT_EQ(CountingModel::calls, 1);
   EXPECT_EQ(changed.count(), 1);
+}
+
+TEST_F(LabelChargeTest, chargesAreRecalculatedAfterAnEditKeepingAtomCount)
+{
+  Label label;
+  label.setEnabled(true);
+  auto* mol = m_harness.molecule();
+
+  process(label);
+  QCoreApplication::processEvents();
+  ASSERT_EQ(CountingModel::calls, 1);
+  ASSERT_FALSE(mol->partialChargeTypes().empty());
+
+  // Adding and removing a bond clears the charges but keeps the atom count.
+  mol->addBond(0, 1, 1);
+  ASSERT_EQ(mol->atomCount(), 3u);
+  mol->removeBond(0, 1);
+  ASSERT_TRUE(mol->partialChargeTypes().empty());
+  ASSERT_EQ(mol->atomCount(), 3u);
+
+  process(label);
+  QCoreApplication::processEvents();
+  EXPECT_EQ(CountingModel::calls, 2);
+  EXPECT_FALSE(mol->partialChargeTypes().empty());
 }
 
 TEST_F(LabelChargeTest, failedCalculationIsNotRetried)

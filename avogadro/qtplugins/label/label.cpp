@@ -432,24 +432,35 @@ void Label::calculatePartialCharges()
   if (molecule == nullptr || !molecule->partialChargeTypes().empty())
     return;
 
-  m_lastChargeMolecule = molecule;
-  m_lastChargeAtomCount = molecule->atomCount();
+  const QPointer<QtGui::Molecule> guard(molecule);
+  const Index atomCount = molecule->atomCount();
+
+  // Remember only failed attempts: charges are cleared by edits, and a
+  // successful calculation must run again after an edit that returns to the
+  // same atom count (remove a bond, undo/redo).
+  const auto recordFailure = [&]() {
+    m_lastChargeMolecule = guard;
+    m_lastChargeAtomCount = atomCount;
+  };
 
   const std::string type = preferredChargeType(
     Calc::ChargeManager::instance().identifiersForMolecule(*molecule));
-  if (type.empty())
+  if (type.empty()) {
+    recordFailure();
     return;
+  }
 
   // This can run a nested event loop (Open Babel), so check afterwards that
   // the molecule is still there and still the same size.
-  const QPointer<QtGui::Molecule> guard(molecule);
-  const Index atomCount = molecule->atomCount();
   MatrixX charges =
     Calc::ChargeManager::instance().partialCharges(type, *molecule);
   if (!guard.isNull() && static_cast<Index>(charges.rows()) == atomCount &&
       molecule->atomCount() == atomCount) {
     molecule->setPartialCharges(type, charges);
+    m_lastChargeMolecule.clear();
     emit drawablesChanged();
+  } else {
+    recordFailure();
   }
 }
 
