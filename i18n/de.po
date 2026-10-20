@@ -5243,7 +5243,7 @@ msgstr ""
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
-msgstr ""
+msgstr "Laden Sie eine Struktur mit Namen aus einer Online-Datenbank herunter."
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:78
 msgid "fetchByName requires a non-empty 'name' parameter."
