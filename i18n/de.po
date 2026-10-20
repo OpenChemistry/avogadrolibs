@@ -6089,7 +6089,7 @@ msgstr "Energieeinheiten:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:586
 msgid "Time between frames:"
-msgstr ""
+msgstr "Zeit zwischen den Rahmen:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:592
 msgid " ps"
