@@ -4888,6 +4888,9 @@ msgid ""
 "based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": …, \"atoms\": [i, "
 "j, k]}."
 msgstr ""
+"Messen Sie den Winkel in Grad in der Mitte von drei Atomen, angegeben als "
+"Null-basierte Indizes: {\"Atome\": [i, j, k]}. Returns {\"angle\": ..., "
+"\"Atome\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid ""
