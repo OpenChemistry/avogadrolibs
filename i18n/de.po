@@ -4898,6 +4898,9 @@ msgid ""
 "zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Messen Sie den dihedralen Winkel in Grad (-180 bis 180) von vier Atomen, "
+"gegeben als Null-basierte Indizes: {\"Atome\": [i, j, k, l]}. Returns "
+"{\"dihedral\": ..., \"Atome\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:709
 msgid ""
