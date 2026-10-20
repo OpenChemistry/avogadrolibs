@@ -3743,6 +3743,8 @@ msgstr ""
 msgid ""
 "addAtom requires an \"element\" option (an element symbol or atomic number)."
 msgstr ""
+"hinzufügen Atom benötigt eine \"Element\" Option (ein Elementsymbol oder "
+"Atomnummer)."
 
 #: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
 #, qt-format
