@@ -1124,7 +1124,7 @@ msgstr ""
 
 #: qtgui/energyunitsdialog.cpp:49
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Energie umrechnen aus:"
 
 #: qtgui/energyunitsdialog.cpp:51 qtplugins/plotconformer/plotconformer.cpp:568
 msgid "to"
@@ -8037,7 +8037,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:367
 msgid "An atom cannot be measured against itself."
-msgstr ""
+msgstr "Ein Atom kann nicht gegen sich selbst gemessen werden."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:373
 #, qt-format
