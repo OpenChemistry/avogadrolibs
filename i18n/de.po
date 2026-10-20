@@ -6017,6 +6017,8 @@ msgid ""
 "Jump to a coordinate set, given as a zero-based index: {\"index\": n}. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Springe zu einem Koordinatensatz, der als Null-basierter Index angegeben "
+"ist: {\"index\": n}. Returns {\"frame\": ..., \"count\": ..."
 
 #: qtplugins/playertool/playertool.cpp:682
 msgid ""
@@ -6133,7 +6135,7 @@ msgstr "Fehlermeldung: "
 
 #: qtplugins/plotpdf/plotpdf.cpp:211
 msgid "Show PDF plot."
-msgstr ""
+msgstr "PDF-Plot anzeigen."
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
