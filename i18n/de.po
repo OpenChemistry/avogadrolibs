@@ -6116,6 +6116,8 @@ msgstr ""
 #: qtplugins/plotconformer/plotconformer.h:176
 msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
 msgstr ""
+"Konformerdaten (RMSD, Energie- oder Scankoordinaten) generieren und "
+"aufzeichnen."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
