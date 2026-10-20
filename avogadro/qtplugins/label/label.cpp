@@ -324,12 +324,75 @@ struct LayerLabel : Core::LayerData
 Label::Label(QObject* parent_) : QtGui::ScenePlugin(parent_)
 {
   m_layerManager = PluginLayerManager(m_name);
+
+  // Atoms move on every frame of an interactive edit or optimization, so wait
+  // for the motion to settle before recomputing charges.
+  m_moveTimer.setSingleShot(true);
+  m_moveTimer.setInterval(300);
+  connect(&m_moveTimer, &QTimer::timeout, this, &Label::recomputeMovedCharges);
 }
 
 Label::~Label() {}
 
+void Label::watchMolecule(const QtGui::Molecule& molecule)
+{
+  auto* mol = const_cast<QtGui::Molecule*>(&molecule);
+  if (m_watchedMolecule == mol)
+    return;
+  QObject::disconnect(m_changedConnection);
+  m_moveTimer.stop();
+  m_watchedMolecule = mol;
+  m_changedConnection =
+    connect(mol, &QtGui::Molecule::changed, this, &Label::moleculeChanged);
+}
+
+bool Label::showsPartialCharges()
+{
+  for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge)
+      return true;
+  }
+  return false;
+}
+
+void Label::moleculeChanged(unsigned int change)
+{
+  // Structural edits already discard the charges (see
+  // QtGui::Molecule::emitChanged()) and process() requests a new calculation.
+  // Only a move keeps them, so only a move leaves ours out of date.
+  if (!(change & QtGui::Molecule::Moved) ||
+      !(change & QtGui::Molecule::Atoms) ||
+      QtGui::Molecule::invalidatesDerivedData(change))
+    return;
+  QtGui::Molecule* molecule = m_watchedMolecule;
+  if (molecule == nullptr || m_ownChargeMolecule != molecule ||
+      m_ownChargeType.empty() ||
+      molecule->partialChargeTypes().count(m_ownChargeType) == 0 ||
+      !showsPartialCharges())
+    return;
+  m_moveTimer.start();
+}
+
+void Label::recomputeMovedCharges()
+{
+  QtGui::Molecule* molecule = m_ownChargeMolecule;
+  if (molecule == nullptr || m_ownChargeType.empty() ||
+      molecule->partialChargeTypes().count(m_ownChargeType) == 0)
+    return;
+
+  // Keep the old charges on screen until the new ones are stored.
+  m_lastChargeMolecule.clear();
+  molecule->removePartialCharges(m_ownChargeType);
+  m_chargeMolecule = molecule;
+  m_recomputeType = m_ownChargeType;
+  calculatePartialCharges();
+  m_recomputeType.clear();
+}
+
 void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
+  watchMolecule(molecule);
   m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
@@ -429,7 +492,9 @@ void Label::calculatePartialCharges()
   m_chargePending = false;
   QtGui::Molecule* molecule = m_chargeMolecule;
   m_chargeMolecule.clear();
-  if (molecule == nullptr || !molecule->partialChargeTypes().empty())
+  // A recompute replaces our own type even if other types are stored too.
+  if (molecule == nullptr ||
+      (m_recomputeType.empty() && !molecule->partialChargeTypes().empty()))
     return;
 
   const QPointer<QtGui::Molecule> guard(molecule);
@@ -443,8 +508,11 @@ void Label::calculatePartialCharges()
     m_lastChargeAtomCount = atomCount;
   };
 
-  const std::string type = preferredChargeType(
-    Calc::ChargeManager::instance().identifiersForMolecule(*molecule));
+  const std::string type =
+    !m_recomputeType.empty()
+      ? m_recomputeType
+      : preferredChargeType(
+          Calc::ChargeManager::instance().identifiersForMolecule(*molecule));
   if (type.empty()) {
     recordFailure();
     return;
@@ -457,6 +525,8 @@ void Label::calculatePartialCharges()
   if (!guard.isNull() && static_cast<Index>(charges.rows()) == atomCount &&
       molecule->atomCount() == atomCount) {
     molecule->setPartialCharges(type, charges);
+    m_ownChargeMolecule = molecule;
+    m_ownChargeType = type;
     m_lastChargeMolecule.clear();
     emit drawablesChanged();
   } else {

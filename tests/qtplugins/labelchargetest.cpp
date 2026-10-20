@@ -18,6 +18,7 @@
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/calc/chargemodel.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/groupnode.h>
 
@@ -28,6 +29,7 @@
 #include <QtGui/QOpenGLContext>
 #include <QtGui/QSurfaceFormat>
 #include <QtTest/QSignalSpy>
+#include <QtTest/QTest>
 
 #include <gtest/gtest.h>
 
@@ -74,7 +76,9 @@ private:
   {
     ++calls;
     MatrixX charges(mol.atomCount(), 1);
-    charges.setConstant(0.25);
+    // Depends on the geometry so a recalculation after a move shows.
+    for (Index i = 0; i < mol.atomCount(); ++i)
+      charges(i, 0) = 0.25 + mol.atomPosition3d(i).x();
     return charges;
   }
 };
@@ -260,4 +264,88 @@ TEST_F(LabelChargeTest, shortStoredChargesAreSafe)
   EXPECT_GT(process(label), 0u);
   QCoreApplication::processEvents();
   EXPECT_EQ(CountingModel::calls, 0);
+}
+
+TEST_F(LabelChargeTest, movedAtomsRecomputeOwnChargesDebounced)
+{
+  Label label;
+  label.setEnabled(true);
+  auto* mol = m_harness.molecule();
+
+  process(label);
+  QCoreApplication::processEvents();
+  ASSERT_EQ(CountingModel::calls, 1);
+  const std::string type = *mol->partialChargeTypes().begin();
+  ASSERT_DOUBLE_EQ(mol->partialCharges(type)(0, 0), 0.25);
+  QSignalSpy changed(&label, &Label::drawablesChanged);
+
+  // A burst of moves, as during a drag or an optimization.
+  for (int i = 1; i <= 5; ++i) {
+    mol->setAtomPosition3d(0, Vector3(i, 0, 0));
+    mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                     Avogadro::QtGui::Molecule::Moved);
+  }
+  QCoreApplication::processEvents();
+  EXPECT_EQ(CountingModel::calls, 1);
+  // The old values stay until the recomputed ones are ready.
+  EXPECT_DOUBLE_EQ(mol->partialCharges(type)(0, 0), 0.25);
+
+  QTest::qWait(600);
+  EXPECT_EQ(CountingModel::calls, 2);
+  EXPECT_DOUBLE_EQ(mol->partialCharges(type)(0, 0), 5.25);
+  EXPECT_EQ(changed.count(), 1);
+
+  // Nothing further is pending.
+  QTest::qWait(600);
+  EXPECT_EQ(CountingModel::calls, 2);
+}
+
+TEST_F(LabelChargeTest, movedAtomsLeaveForeignChargesAlone)
+{
+  Label label;
+  label.setEnabled(true);
+  auto* mol = m_harness.molecule();
+
+  MatrixX charges(3, 1);
+  charges << 0.1, 0.2, 0.3;
+  mol->setPartialCharges("From File", charges);
+
+  EXPECT_GT(process(label), 0u);
+  QCoreApplication::processEvents();
+
+  mol->setAtomPosition3d(0, Vector3(3, 0, 0));
+  mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                   Avogadro::QtGui::Molecule::Moved);
+  QTest::qWait(600);
+
+  EXPECT_EQ(CountingModel::calls, 0);
+  const auto types = mol->partialChargeTypes();
+  ASSERT_EQ(types.size(), 1u);
+  EXPECT_EQ(*types.begin(), "From File");
+  EXPECT_DOUBLE_EQ(mol->partialCharges("From File")(0, 0), 0.1);
+}
+
+TEST_F(LabelChargeTest, structuralEditDropsAndRecalculatesCharges)
+{
+  Label label;
+  label.setEnabled(true);
+  auto* mol = m_harness.molecule();
+
+  process(label);
+  QCoreApplication::processEvents();
+  ASSERT_EQ(CountingModel::calls, 1);
+  ASSERT_FALSE(mol->partialChargeTypes().empty());
+
+  // An element change goes through RWMolecule; the editing tool then emits
+  // Atoms|Modified, which is what discards the charges.
+  mol->undoMolecule()->setAtomicNumber(2, 7);
+  mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                   Avogadro::QtGui::Molecule::Modified);
+  EXPECT_TRUE(mol->partialChargeTypes().empty());
+
+  // No debounce is involved: the rebuild queues the calculation.
+  process(label);
+  QCoreApplication::processEvents();
+  EXPECT_EQ(CountingModel::calls, 2);
+  EXPECT_FALSE(mol->partialChargeTypes().empty());
 }

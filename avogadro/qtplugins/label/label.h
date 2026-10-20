@@ -9,7 +9,9 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
+#include <QtCore/QMetaObject>
 #include <QtCore/QPointer>
+#include <QtCore/QTimer>
 
 #include <string>
 namespace Avogadro {
@@ -59,7 +61,16 @@ private slots:
    */
   void calculatePartialCharges();
 
+  /** React to a molecule change: schedule a recompute after atoms move. */
+  void moleculeChanged(unsigned int change);
+
+  /** Recompute the charges this plugin calculated, after atoms moved. */
+  void recomputeMovedCharges();
+
 private:
+  void watchMolecule(const QtGui::Molecule& molecule);
+  bool showsPartialCharges();
+
   void processAtom(const QtGui::Molecule& molecule, Rendering::GroupNode& node,
                    size_t layer);
   void requestPartialCharges(const QtGui::Molecule& molecule);
@@ -81,6 +92,17 @@ private:
   // recalculated even when the atom count returns to an earlier value.
   QPointer<QtGui::Molecule> m_lastChargeMolecule;
   Index m_lastChargeAtomCount = 0;
+
+  // The charges this plugin calculated itself, so that they (and only they)
+  // can be recomputed after atoms move. Charges from a file or from another
+  // plugin are never touched.
+  QPointer<QtGui::Molecule> m_ownChargeMolecule;
+  std::string m_ownChargeType;
+  // Set only while recomputing m_ownChargeType after a move.
+  std::string m_recomputeType;
+  QPointer<QtGui::Molecule> m_watchedMolecule;
+  QMetaObject::Connection m_changedConnection;
+  QTimer m_moveTimer;
 };
 
 } // end namespace QtPlugins
