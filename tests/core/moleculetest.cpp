@@ -3729,3 +3729,24 @@ TEST_F(MoleculeTest, removeBondClearsStaleValueOfShortPropertyColumns)
   EXPECT_FALSE(m.bondProperties().getDouble("d", 0).has_value());
   EXPECT_FALSE(m.bondProperties().getInt("i", 0).has_value());
 }
+
+TEST_F(MoleculeTest, removePartialCharges)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(8);
+  MatrixX charges(2, 1);
+  charges << 0.25, -0.25;
+  molecule.setPartialCharges("a", charges);
+  molecule.setPartialCharges("b", charges);
+
+  molecule.removePartialCharges("a");
+  EXPECT_EQ(molecule.partialChargeTypes().count("a"), 0u);
+  EXPECT_EQ(molecule.partialChargeTypes().count("b"), 1u);
+  EXPECT_DOUBLE_EQ(molecule.partialCharges("b")(0, 0), 0.25);
+  EXPECT_TRUE(molecule.partialCharges("a").isZero());
+
+  // Removing a type that is not stored is harmless.
+  molecule.removePartialCharges("missing");
+  EXPECT_EQ(molecule.partialChargeTypes().size(), 1u);
+}

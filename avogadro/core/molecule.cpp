@@ -401,6 +401,11 @@ void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
   m_partialCharges[type] = value;
 }
 
+void Molecule::removePartialCharges(const std::string& type)
+{
+  m_partialCharges.erase(type);
+}
+
 MatrixX Molecule::partialCharges(const std::string& type) const
 {
   auto search = m_partialCharges.find(type);
