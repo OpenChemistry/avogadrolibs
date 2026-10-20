@@ -7481,7 +7481,7 @@ msgstr ""
 
 #: qtplugins/surfaces/surfaces.cpp:282
 msgid "This file does not contain any cube data."
-msgstr ""
+msgstr "Diese Datei enthält keine Würfeldaten."
 
 #: qtplugins/surfaces/surfaces.cpp:292
 #, qt-format
