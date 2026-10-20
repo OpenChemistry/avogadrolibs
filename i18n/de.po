@@ -3727,11 +3727,11 @@ msgstr ""
 #: qtplugins/editor/editor.cpp:1053 qtplugins/measuretool/measuretool.cpp:764
 #: qtplugins/select/select.cpp:647
 msgid "No molecule"
-msgstr ""
+msgstr "Kein Molekül"
 
 #: qtplugins/editor/editor.cpp:1061
 msgid "The active layer is locked; unlock it to edit."
-msgstr ""
+msgstr "Die aktive Schicht ist gesperrt; entsperren Sie es zu bearbeiten."
 
 #: qtplugins/editor/editor.cpp:1069
 #, qt-format
