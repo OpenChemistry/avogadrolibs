@@ -8015,7 +8015,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
 msgid "There is nothing to rebuild."
-msgstr ""
+msgstr "Es gibt nichts zu bauen."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:187
 msgid "There is nothing to renumber."
