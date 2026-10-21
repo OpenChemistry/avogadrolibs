@@ -5014,6 +5014,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atome %1 und %2 sind über das Molekül verbunden, so dass sich dieser Abstand "
+"ohne Verfälschung nicht ändern kann. Versuchen Sie das Manipulat-Tool."
 
 #: qtplugins/measuretool/measuretool.cpp:1050
 #, qt-format
