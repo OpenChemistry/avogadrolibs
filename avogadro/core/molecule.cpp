@@ -2336,6 +2336,15 @@ void Molecule::estimateVelocities(const std::vector<double>& intervals)
 
 void Molecule::updateVelocityProperties()
 {
+  // No velocities means no properties, rather than empty lists that a file
+  // writer would have to know to skip.
+  if (m_velocities.empty()) {
+    m_data.remove("velocities");
+    m_data.remove("velocityDeviations");
+    m_data.remove("temperatures");
+    return;
+  }
+
   std::vector<double> speeds(m_velocities.size(), 0.0);
   std::vector<double> deviations(m_velocities.size(), 0.0);
   std::vector<double> temperatures(m_velocities.size(), 0.0);

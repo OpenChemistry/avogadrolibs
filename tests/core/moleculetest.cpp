@@ -2599,6 +2599,10 @@ TEST_F(MoleculeTest, estimateVelocitiesSingleGeometry)
   EXPECT_TRUE(molecule.velocities(0).empty());
   EXPECT_TRUE(molecule.data("velocities").toList().empty());
   EXPECT_TRUE(molecule.data("temperatures").toList().empty());
+  // Removed outright, not left as empty lists for a file writer to trip on.
+  EXPECT_FALSE(molecule.hasData("velocities"));
+  EXPECT_FALSE(molecule.hasData("velocityDeviations"));
+  EXPECT_FALSE(molecule.hasData("temperatures"));
 }
 
 // A labelled atom weighs what its isotope weighs, which is the difference
