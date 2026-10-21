@@ -128,6 +128,12 @@ public:
   /** Sets atomic partial charges with @p type to @p value. */
   void setPartialCharges(const std::string& type, const MatrixX& value);
 
+  /**
+   * Discards the stored partial charges of type @p type, if any. Other
+   * charge types are left alone.
+   */
+  void removePartialCharges(const std::string& type);
+
   /** @return the atomic partial charges of type @p type */
   MatrixX partialCharges(const std::string& type) const;
 
