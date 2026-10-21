@@ -6146,6 +6146,8 @@ msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
+"Wählen Sie 2, 3 oder 4 Atome, um einen Abstand, Winkel oder dihedral über "
+"den Exterieuren zu folgen."
 
 #: qtplugins/plotconformer/plotconformer.cpp:519
 msgid "Conformer Analysis"
