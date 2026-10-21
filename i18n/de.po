@@ -7981,6 +7981,8 @@ msgid ""
 "Rebuild every atom position from the table. The molecule is not moved or "
 "reoriented."
 msgstr ""
+"Erstelle jede Atomposition vom Tisch. Das Molekül wird nicht bewegt oder "
+"reorientiert."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
