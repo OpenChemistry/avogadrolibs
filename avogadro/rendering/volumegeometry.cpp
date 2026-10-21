@@ -154,7 +154,7 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texColor, GLuint* texDepth,
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if (status != GL_FRAMEBUFFER_COMPLETE) {
     std::cerr << "Error: " << label << " framebuffer incomplete: 0x" << std::hex
-              << status << std::endl;
+              << status << '\n';
   }
 
   // Unbind the FBO:
@@ -442,7 +442,7 @@ void VolumeGeometry::initialize()
     d->fragmentShader = new Shader(Shader::Fragment);
     d->fragmentShader->setSource(volume_fs);
     if (!d->fragmentShader->compile())
-      std::cout << d->fragmentShader->error() << std::endl;
+      std::cout << d->fragmentShader->error() << '\n';
   }
 
   if (!d->program) {
