@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-21 08:07+0000\n"
+"PO-Revision-Date: 2026-10-21 15:18+0000\n"
 "Last-Translator: Jonathan Di Pietro "
 "<jonathandip@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/avogadro/"
@@ -249,17 +249,30 @@ msgid_plural ""
 "Would you like to overwrite your changes to reflect the new geometry or job "
 "options?"
 msgstr[0] ""
+"Il seguente file è stato modificato:\n"
+"\n"
+"%1\n"
+"\n"
+"Vuoi sovrascrivere le modifiche apportate per riflettere la nuova geometria "
+"o le nuove opzioni di lavoro?"
 msgstr[1] ""
+"I seguenti file sono stati modificati:\n"
+"\n"
+"%1\n"
+"\n"
+"Vuoi sovrascrivere le modifiche apportate per riflettere la nuova geometria "
+"o le nuove opzioni di lavoro?"
 
 #: molequeue/inputgeneratorwidget.cpp:227
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:147
 #: qtplugins/openmminput/openmminputdialog.cpp:204
 msgid "Overwrite modified input files?"
-msgstr ""
+msgstr "Sovrascrivere i file di input modificati?"
 
 #: molequeue/inputgeneratorwidget.cpp:253
 msgid "Problems occurred during input generation:"
 msgstr ""
+"Si sono verificati dei problemi durante la generazione del file di input:"
 
 #: molequeue/inputgeneratorwidget.cpp:342
 msgid "No input files to save!"
@@ -270,7 +283,7 @@ msgstr "Non ci sono file di input da salvare!"
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:980
 #: qtplugins/gamessinput/gamessinputdialog.cpp:917
 msgid "Cannot connect to MoleQueue"
-msgstr ""
+msgstr "Impossibile connettersi a MoleQueue"
 
 #: molequeue/inputgeneratorwidget.cpp:351
 #: molequeue/inputgeneratorwidget.cpp:659 molequeue/molequeuewidget.cpp:70
@@ -280,11 +293,13 @@ msgid ""
 "Cannot connect to MoleQueue server. Please ensure that it is running and try "
 "again."
 msgstr ""
+"Impossibile connettersi al server di MoleQueue. Assicurati che sia in "
+"esecuzione e riprova."
 
 #: molequeue/inputgeneratorwidget.cpp:382
 #, qt-format
 msgid "Submit %1 Calculation"
-msgstr "Invia %1 calcolo"
+msgstr "Invia il calcolo %1"
 
 #: molequeue/inputgeneratorwidget.cpp:398
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:1017
@@ -300,28 +315,30 @@ msgstr ""
 
 #: molequeue/inputgeneratorwidget.cpp:416 qtgui/interfacewidget.cpp:50
 msgid "Script returns warnings:\n"
-msgstr ""
+msgstr "Lo script restituisce avvisi:\n"
 
 #: molequeue/inputgeneratorwidget.cpp:433
 msgid "Hide &Warnings"
-msgstr ""
+msgstr "Nascondi &avvisi"
 
 #: molequeue/inputgeneratorwidget.cpp:439
 msgid "Show &Warnings"
-msgstr ""
+msgstr "Mostra &avvisi"
 
 #: molequeue/inputgeneratorwidget.cpp:456 qtgui/interfacewidget.cpp:66
 msgid "An error has occurred:"
-msgstr ""
+msgstr "Si è verificato un errore:"
 
 #: molequeue/inputgeneratorwidget.cpp:507
 msgid "Select output filename"
-msgstr ""
+msgstr "Seleziona il nome del file di output"
 
 #: molequeue/inputgeneratorwidget.cpp:519
 #, qt-format
 msgid "Internal error: could not find text widget for filename '%1'"
 msgstr ""
+"Errore interno: impossibile trovare il widget di testo per il nome del file "
+"'%1'"
 
 #: molequeue/inputgeneratorwidget.cpp:535
 #: molequeue/inputgeneratorwidget.cpp:646
@@ -352,21 +369,21 @@ msgstr "Impossibile scrivere sul file %1."
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:243
 #: qtplugins/openmminput/openmminputdialog.cpp:341
 msgid "Select output directory"
-msgstr ""
+msgstr "Seleziona la cartella di output"
 
 #: molequeue/inputgeneratorwidget.cpp:564
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:258
 #: qtplugins/openmminput/openmminputdialog.cpp:356
 #, qt-format
 msgid "%1: Directory does not exist!"
-msgstr ""
+msgstr "%1: la cartella non esiste!"
 
 #: molequeue/inputgeneratorwidget.cpp:570
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:264
 #: qtplugins/openmminput/openmminputdialog.cpp:362
 #, qt-format
 msgid "%1: Directory cannot be read!"
-msgstr ""
+msgstr "%1: impossibile leggere la cartella!"
 
 #: molequeue/inputgeneratorwidget.cpp:580
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:272
@@ -391,6 +408,7 @@ msgstr "%1: il file non può essere scritto."
 #: qtplugins/openmminput/openmminputdialog.cpp:404
 msgid "The input files cannot be written due to an unknown error."
 msgstr ""
+"I file di input non possono essere scritti a causa di un errore sconosciuto."
 
 #: molequeue/inputgeneratorwidget.cpp:602
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:310
@@ -401,6 +419,9 @@ msgid ""
 "\n"
 "%1"
 msgstr ""
+"I file di input non possono essere scritti:\n"
+"\n"
+"%1"
 
 #: molequeue/inputgeneratorwidget.cpp:611
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:319
@@ -415,6 +436,13 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"I file di input non possono essere scritti:\n"
+"\n"
+"%1\n"
+"\n"
+"Avvisi:\n"
+"\n"
+"%2"
 
 #: molequeue/inputgeneratorwidget.cpp:622
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:330
@@ -427,12 +455,17 @@ msgid ""
 "\n"
 "Would you like to continue?"
 msgstr ""
+"Avviso:\n"
+"\n"
+"%1\n"
+"\n"
+"Desideri continuare?"
 
 #: molequeue/inputgeneratorwidget.cpp:626
 #: qtplugins/lammpsinput/lammpsinputdialog.cpp:334
 #: qtplugins/openmminput/openmminputdialog.cpp:432
 msgid "Write input files"
-msgstr ""
+msgstr "Scrivi file di input"
 
 #: molequeue/inputgeneratorwidget.cpp:673
 msgid "Configure Job"
@@ -449,38 +482,42 @@ msgstr ""
 #: molequeue/molequeuedialog.cpp:67
 msgid "Avogadro timed out waiting for a reply from MoleQueue."
 msgstr ""
+"Avogadro ha atteso una risposta da MoleQueue oltre il tempo massimo "
+"consentito."
 
 #: molequeue/molequeuedialog.cpp:83
 #, qt-format
 msgctxt "%1 = job ID, %2 = description"
 msgid "Waiting for job %1 “%2” to finish…"
-msgstr ""
+msgstr "In attesa del completamento del calcolo %1 “%2”…"
 
 #: molequeue/molequeuedialog.cpp:87
 msgid "Stop waiting"
-msgstr ""
+msgstr "Interrompi l'attesa"
 
 #: molequeue/molequeuedialog.cpp:106
 msgid "Fetching completed job information…"
-msgstr ""
+msgstr "Recupero delle informazioni sul calcolo completato…"
 
 #: molequeue/molequeuedialog.cpp:118
 msgid "Job Retrieval Timeout"
-msgstr ""
+msgstr "Tempo massimo per il recupero del calcolo superato"
 
 #: molequeue/molequeuedialog.cpp:119
 msgid "Avogadro timed out waiting for the finished job details from MoleQueue."
 msgstr ""
+"Avogadro ha atteso oltre il tempo massimo consentito per ricevere da "
+"MoleQueue i dettagli del calcolo completato."
 
 #: molequeue/molequeuedialog.cpp:129
 msgid "Error Submitting Job"
-msgstr ""
+msgstr "Errore durante l'invio del calcolo"
 
 #: molequeue/molequeuedialog.cpp:130
 #, qt-format
 msgctxt "%1 = error"
 msgid "The job has been rejected by MoleQueue: %1"
-msgstr ""
+msgstr "Il calcolo è stato rifiutato da MoleQueue: %1"
 
 #: molequeue/molequeuedialog.cpp:197 molequeue/molequeuewidget.cpp:141
 msgid "No program selected."
@@ -492,15 +529,15 @@ msgstr ""
 
 #: molequeue/molequeuewidget.cpp:97
 msgid "Client failed to submit job to MoleQueue."
-msgstr ""
+msgstr "Il client non è riuscito a inviare il calcolo a MoleQueue."
 
 #: molequeue/molequeuewidget.cpp:150
 msgid "Internal error."
-msgstr ""
+msgstr "Errore interno."
 
 #: molequeue/molequeuewidget.cpp:151
 msgid "Unable to resolve program selection. This is a bug."
-msgstr ""
+msgstr "Impossibile risolvere la selezione del programma. Si tratta di un bug."
 
 #: qtgui/backgroundfileformat.cpp:29 qtgui/backgroundfileformat.cpp:54
 msgid "No molecule set in BackgroundFileFormat!"
@@ -512,26 +549,26 @@ msgstr "Nessun Io::FileFormat impostato in BackgroundFileFormat!"
 
 #: qtgui/backgroundfileformat.cpp:35 qtgui/backgroundfileformat.cpp:60
 msgid "No file name set in BackgroundFileFormat!"
-msgstr "Nessun nome file impostato in BackgroundFileFormat!"
+msgstr "Nessun nome del file impostato in BackgroundFileFormat!"
 
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Distanza %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Angolo %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Diedro %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Vincolo"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
@@ -542,25 +579,26 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
 #: qtgui/conformerquantitytranslator.cpp:47:1761
 msgid "Time"
-msgstr ""
+msgstr "Tempo"
 
 #: qtgui/conformerquantitytranslator.cpp:49
+#, fuzzy
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Energia relativa"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
-msgstr ""
+msgstr "Gradiente RMS"
 
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Velocità media"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -573,18 +611,18 @@ msgid "Temperature"
 msgstr "Temperatura"
 
 #: qtgui/conformerquantitytranslator.cpp:78
-#, qt-format
+#, fuzzy, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
-msgstr ""
+msgstr "Dividi orizzontalmente"
 
 #: qtgui/containerwidget.cpp:31
 msgid "Split Vertical"
-msgstr ""
+msgstr "Dividi verticalmente"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:61
 #. i18n: ectx: property (text), item, widget (QComboBox, elementComboBox)
@@ -1068,24 +1106,27 @@ msgstr "Oganesson"
 
 #: qtgui/energyunitsdialog.cpp:25
 msgid "Convert Energy Units"
-msgstr ""
+msgstr "Converti le unità di energia"
 
 #: qtgui/energyunitsdialog.cpp:40 qtplugins/plotconformer/plotconformer.cpp:896
 msgid "This file records the units its energies are in."
 msgstr ""
+"Questo file registra le unità di misura in cui sono espresse le energie."
 
 #: qtgui/energyunitsdialog.cpp:41
 msgid ""
 "Energies are read in the units the file used, which may not be recorded."
 msgstr ""
+"Le energie vengono lette utilizzando le unità di misura impiegate nel file, "
+"che potrebbero non essere specificate."
 
 #: qtgui/energyunitsdialog.cpp:49
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Converti le energie da:"
 
 #: qtgui/energyunitsdialog.cpp:51 qtplugins/plotconformer/plotconformer.cpp:568
 msgid "to"
-msgstr ""
+msgstr "a"
 
 #: qtgui/filebrowsewidget.cpp:24
 msgid "Browse"
@@ -1101,52 +1142,56 @@ msgstr "Seleziona gli eseguibili:"
 
 #: qtgui/fileformatdialog.cpp:53
 msgid "Unable to find a suitable file reader for the selected file."
-msgstr ""
+msgstr "Impossibile trovare un lettore di file adatto al file selezionato."
 
 #: qtgui/fileformatdialog.cpp:105
 msgid ""
 "The file extension is missing, so the format cannot be determined. Do you "
 "want to add it?"
 msgstr ""
+"L'estensione del file è mancante, quindi non è possibile determinarne il "
+"formato. Vuoi aggiungerla?"
 
 #: qtgui/fileformatdialog.cpp:119
 msgid "Unable to find a suitable file writer for the selected format."
-msgstr ""
+msgstr "Impossibile trovare un lettore di file adatto al formato selezionato."
 
 #: qtgui/fileformatdialog.cpp:172
 msgctxt "File handlers"
 msgid "handlers"
-msgstr ""
+msgstr "gestori"
 
 #: qtgui/fileformatdialog.cpp:173
 msgctxt "e.g. file handlers that can 'handle' this file."
 msgid "handle"
-msgstr ""
+msgstr "gestire"
 
 #: qtgui/fileformatdialog.cpp:177
 msgctxt "File readers"
 msgid "readers"
-msgstr ""
+msgstr "lettori"
 
 #: qtgui/fileformatdialog.cpp:178
 msgctxt "e.g. file readers that can 'read' this file."
 msgid "read"
-msgstr ""
+msgstr "leggere"
 
 #: qtgui/fileformatdialog.cpp:182
 msgctxt "File writers"
 msgid "writers"
-msgstr ""
+msgstr "scrittori"
 
 #: qtgui/fileformatdialog.cpp:183
 msgctxt "e.g. file writers that can 'write' this file."
 msgid "write"
-msgstr ""
+msgstr "scrivere"
 
 #: qtgui/fileformatdialog.cpp:188
 #, qt-format
 msgid "Multiple %1 found that can %2 this format. Which should be used?"
 msgstr ""
+"Sono stati trovati più %1 in grado di %2 questo formato. Quale si dovrebbe "
+"utilizzare?"
 
 #: qtgui/fileformatdialog.cpp:289
 msgid "All files"
@@ -1154,23 +1199,23 @@ msgstr "Tutti i file"
 
 #: qtgui/fileformatdialog.cpp:299
 msgid "Compressed files"
-msgstr ""
+msgstr "File compressi"
 
 #: qtgui/fileformatdialog.cpp:306
 msgid "All supported formats"
-msgstr ""
+msgstr "Tutti i formati supportati"
 
 #: qtgui/fragmenttools.cpp:382
 msgid "Adjust Distance"
-msgstr ""
+msgstr "Regola la distanza"
 
 #: qtgui/fragmenttools.cpp:425
 msgid "Adjust Angle"
-msgstr ""
+msgstr "Regola l'angolo"
 
 #: qtgui/fragmenttools.cpp:488
 msgid "Adjust Torsion"
-msgstr ""
+msgstr "Regola la torsione"
 
 #: qtgui/interfacescript.cpp:308
 #, qt-format
@@ -1178,6 +1223,8 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"Errore standard dello script:\n"
+"%1"
 
 #: qtgui/interfacescript.cpp:360
 #, qt-format
