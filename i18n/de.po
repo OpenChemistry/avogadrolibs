@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-21 23:50+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2925,10 +2925,11 @@ msgid ""
 "[i, j, (k, (l))], \"value\": v}, …]}, with zero-based atom indices and value "
 "in Å for a distance or degrees for an angle or torsion."
 msgstr ""
-"Liste der Geometriezwänge auf dem aktuellen Molekül. Keine Optionen. Returns "
-"{\"constraints\": [{\"type\": \"Abstand\"|\"angle\"|\"torsion\", \"Atome\": "
-"[i, j, (k, (l))], \"Wert\": v}, ...]}, mit Null-basierten Atom-Indizes und -"
-"Wert in Å für einen Abstand oder Grad für einen Winkel oder Torsion."
+"Führe die geometrischen Nebenbedingungen des aktuellen Moleküls auf. Keine "
+"Optionen. Rückgabe {\"constraints\": [{\"type\": "
+"\"Abstand\"|\"angle\"|\"torsion\", \"Atome\": [i, j, (k, (l))], \"Wert\": v}"
+", ...]}, mit Null-basierten Atom-Indizes und einem Wert in Å für einen "
+"Abstand sowie Grad für einen Winkel oder eine Torsion."
 
 #: qtplugins/constraints/constraintsextension.cpp:162
 msgid ""
@@ -2941,15 +2942,16 @@ msgid ""
 "updated instead of adding a duplicate. Returns {\"type\": …, \"atoms\": […], "
 "\"value\": …, \"updated\": bool}."
 msgstr ""
-"Fügen oder aktualisieren Sie eine Geometrie Strenge, gegeben als Null-"
-"basierte Atomindizes: {\"Atome\": [i, j]} für einen Abstand, {\"Atome\": [i, "
-"j, k]} für einen Winkel, oder {\"Atome\": [i, j, k, l]} für eine Torsion, "
-"plus einen optionalen {\"Wert\": ...} in Å für einen Abstand oder Grad für "
-"einen Winkel oder Torsion. Wird auf \"Wert\" verzichtet, wird die aktuelle "
-"Geometrie dieser Atome gemessen und verwendet. Wenn auf den gleichen Atomen "
-"bereits eine Strenge vorhanden ist (in beiden Reihenfolge), wird ihr Wert "
-"aktualisiert, anstatt ein Duplikat hinzuzufügen. Returns {\"type\": ..., "
-"\"Atome\": [...], \"Wert\": ..., \"updated\": bool}."
+"Einfügen oder Aktualisieren einer geometrischen Nebenbedingung, angegeben "
+"mit Null-basierten Atomindizes: {\"atoms\": [i, j]} für einen Abstand, "
+"{\"atoms\": [i, j, k]} für einen Winkel, oder {\"atoms\": [i, j, k, l]} für "
+"eine Torsion, sowie einem optionalen {\"value\": ...} entweder in Å für "
+"einen Abstand oder Grad für einen Winkel oder Torsion. Wird auf \"value\" "
+"verzichtet, wird die aktuelle Geometrie dieser Atome gemessen und verwendet. "
+"Falls die gleichen Atome bereits einer Nebenbedingung gilt (Reihenfolge der "
+"Nennung ist irrelevant), wird ihr Wert aktualisiert, anstatt ein Duplikat "
+"hinzuzufügen. Rückgabe {\"type\": ..., \"atoms\": [...], \"value\": ..., "
+"\"updated\": bool}."
 
 #: qtplugins/constraints/constraintsextension.cpp:173
 msgid ""
@@ -3009,6 +3011,7 @@ msgstr ""
 #: qtplugins/constraints/constraintsextension.cpp:377
 msgid "atoms must list 2 (distance), 3 (angle) or 4 (torsion) atom indices."
 msgstr ""
+"atoms setzt 2 (Abstand), 3 (Winkel) oder 4 (Torsion) atom indices voraus."
 
 #: qtplugins/constraints/constraintsextension.cpp:388
 #: qtplugins/constraints/constraintsextension.cpp:394
@@ -4047,7 +4050,7 @@ msgstr[1] "%n Kraftfelder stehen zur Verfügung."
 #: qtplugins/forcefield/forcefield.cpp:525
 #: qtplugins/forcefield/forcefield.cpp:550
 msgid "No molecule is open."
-msgstr ""
+msgstr "Es ist kein Molekül geöffnet."
 
 #: qtplugins/forcefield/forcefield.cpp:391
 #: qtplugins/forcefield/forcefield.cpp:417
@@ -4964,7 +4967,7 @@ msgstr "Wert muss ein Abstand zwischen %1 und %2 Å sein."
 
 #: qtplugins/measuretool/measuretool.cpp:861
 msgid "atoms must list exactly 2 atom indices for a distance."
-msgstr ""
+msgstr "atoms setzt für einen Abstand exakt 2 atom indices voraus."
 
 #: qtplugins/measuretool/measuretool.cpp:864
 msgid "atoms must list exactly 3 atom indices for an angle."
@@ -5014,8 +5017,9 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
-"Atome %1 und %2 sind über das Molekül verbunden, so dass sich dieser Abstand "
-"ohne Verfälschung nicht ändern kann. Versuchen Sie das Manipulat-Tool."
+"Atome %1 und %2 sind über das Molekül verbunden. Daher kann sich dieser "
+"Abstand ändern, ohne das Molekül zu verzerren. Versuchen Sie das "
+"Manipulationswerkzeug."
 
 #: qtplugins/measuretool/measuretool.cpp:1050
 #, qt-format
@@ -5060,7 +5064,7 @@ msgstr "Abstand 2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:45
 msgid "Distance 3–4"
-msgstr "Entfernung 3–4"
+msgstr "Abstand 3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:48
 msgid "Angle 1–2–3"
@@ -6146,8 +6150,8 @@ msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
-"Wählen Sie 2, 3 oder 4 Atome, um einen Abstand, Winkel oder dihedral über "
-"den Exterieuren zu folgen."
+"Wählen Sie 2, 3 oder 4 Atome, um einen Abstand, Winkel oder Diederwinkel "
+"über mehrere Konformere zu verfolgen."
 
 #: qtplugins/plotconformer/plotconformer.cpp:519
 msgid "Conformer Analysis"
@@ -6309,7 +6313,7 @@ msgstr "Szene mit PLY rendern."
 
 #: qtplugins/povray/povray.cpp:29
 msgid "POV-Ray Render…"
-msgstr "POV-Ray Renderer …"
+msgstr "POV-Ray-Renderer …"
 
 #: qtplugins/povray/povray.cpp:69
 msgid "POV-Ray (*.pov);;Text file (*.txt)"
@@ -7974,15 +7978,15 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
-msgstr ""
+msgstr "Geometrie wiederaufbauen"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:69
 msgid ""
 "Rebuild every atom position from the table. The molecule is not moved or "
 "reoriented."
 msgstr ""
-"Erstelle jede Atomposition vom Tisch. Das Molekül wird nicht bewegt oder "
-"reorientiert."
+"Regeneriere jede Atomposition entsprechend der Tabelle. Das Molekül wird "
+"dabei weder bewegt, noch neu ausgerichtet."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
@@ -8011,11 +8015,11 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
-msgstr ""
+msgstr "Die Geometrie wurde entsprechend der Tabelle wiederaufgebaut."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:165
 msgid "There is nothing to rebuild."
-msgstr "Es gibt nichts zu bauen."
+msgstr "Es gibt nichts wieder aufzubauen."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:187
 msgid "There is nothing to renumber."
@@ -8092,11 +8096,11 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:735
 msgid "Rebuild from Z-matrix"
-msgstr ""
+msgstr "Entsprechend der Z-Matrix neu aufbauen"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:117
 msgid "Constrain Distance"
-msgstr ""
+msgstr "Abstand beschränken"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:123
 msgid "Constrain Dihedral"
@@ -8534,6 +8538,28 @@ msgid ""
 "for optimization flags<br/><span style=\" font-weight:600;\">1</span> - A "
 "literal 1 (\"1\"), useful for optimization flags<br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Formatvorgaben. Jedes Zeichen steht für einen Wert, "
+"der einem Atom zugeschrieben wird:</p><p><span style=\" font-weight:600\">#</"
+"span> - Atomindex (1, 2, ..., numAtoms)<br/><span style=\" font-"
+"weight:600;\">Z</span> - Ordnungszahl (z.B. \"6\" für Kohlenstoff)<br/><span "
+"style=\" font-weight:600;\">G</span> - Ordnungszahl, GAMESS-Stil (z.B. "
+"\"6.0\" für Kohlenstoff)<br/><span style=\" font-weight:600;\">N</span> - "
+"Elementname (z.B. \"Kohlenstoff\")<br/><span style=\" font-weight:600;\">S</"
+"span> - Elementsymbol (z.B. \"C\" für Kohlenstoff)<br/><span style=\" font-"
+"weight:700;\">L</span> - Atombezeichnung (z.B., \"C2\" für das zweite "
+"Kohlenstoffatom, \"H1\" für das erste Wasserstoffatom) <br/><span style=\" "
+"font-weight:600;\">x</span> - x-Komponente (Abszisse)<br/><span style=\" "
+"font-weight:600;\">y</span> - y-Komponente (Ordinate)<br/><span style=\" "
+"font-weight:600;\">z</span> - z-Komponente (Applikate)<br/><span style=\" "
+"font-weight:600;\">a</span> - 'a' Gitterkoordinate (nur bei Kristallen)<br/>"
+"<span style=\" font-weight:600;\">b</span> - 'b' Gitterkoordinate (nur bei "
+"Kristallen)<br/><span style=\" font-weight:600;\">c</span> - 'c' "
+"Gitterkoordinate (nur bei Kristallen)<br/><span style=\" font-weight:600;\">"
+"_</span> - Ein literales Leerzeichen (\" \"), nützlich für Ausrichtungen<br/>"
+"<span style=\" font-weight:600;\">0</span> - Eine litterale 0 (\"0\"), "
+"nützlich für Optimierungsflags<br/><span style=\" font-weight:600;\">1</"
+"span> - Eine literale 1 (\"1\"), nützlich für Optimierungsflaggen<br/></p></"
+"body></html>"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:78
 #. i18n: ectx: property (text), widget (QToolButton, help)
@@ -8875,7 +8901,7 @@ msgstr ""
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
 msgid "Adjust Bond Lengths"
-msgstr ""
+msgstr "Bindungslängen anpassen"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -10203,7 +10229,7 @@ msgstr ""
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:140
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 msgid "electrostatic cutoff distance:"
-msgstr "elektrostatischer abschaltabstand:"
+msgstr "elektrostatischer Grenzabstand:"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:213
 #. i18n: ectx: property (text), widget (QLabel, label_2)
