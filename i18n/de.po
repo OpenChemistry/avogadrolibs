@@ -7801,7 +7801,7 @@ msgstr ""
 
 #: qtplugins/vibrations/displacementdialog.cpp:68
 msgid "A scale factor of zero would only duplicate the current geometry."
-msgstr ""
+msgstr "Ein Skalenfaktor von Null würde nur die aktuelle Geometrie duplizieren."
 
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
