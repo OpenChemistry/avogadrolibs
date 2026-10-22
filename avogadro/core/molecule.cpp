@@ -1386,7 +1386,10 @@ void Molecule::clearAtoms()
 
 Molecule::AtomType Molecule::atom(Index index) const
 {
-  assert(index < atomCount());
+  // Not assert(): NDEBUG removes it, and callers such as the Python bindings
+  // can pass any index. Return an invalid proxy instead.
+  if (index >= atomCount())
+    return AtomType();
   return AtomType(const_cast<Molecule*>(this), index);
 }
 
@@ -1495,7 +1498,10 @@ void Molecule::clearBonds()
 
 Molecule::BondType Molecule::bond(Index index) const
 {
-  assert(index < bondCount());
+  // See atom(): refuse an out-of-range index rather than build a proxy that
+  // reads past the end of the bond arrays.
+  if (index >= bondCount())
+    return BondType();
 
   return BondType(const_cast<Molecule*>(this), index);
 }
