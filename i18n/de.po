@@ -9502,7 +9502,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Repeat Style:"
-msgstr ""
+msgstr "Wiederholen Stil:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
