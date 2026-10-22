@@ -9,6 +9,7 @@ set(tests
   AtomUtilities
   BasisSet
   Bond
+  BondOrderPerception
   Constraint
   ContrastColor
   ConformerQuantity
