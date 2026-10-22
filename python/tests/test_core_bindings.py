@@ -258,3 +258,98 @@ def test_cube_data_assignment_still_works():
     cube.data = np.arange(60, dtype=np.float32).reshape(3, 4, 5)
     assert cube.value(1, 2, 3) == np.float32(1 * 20 + 2 * 5 + 3)
     assert cube.data[1, 2, 3] == np.float32(33)
+
+
+# --- Setters validate their input ---
+
+
+def test_set_positions_roundtrip():
+    mol = make_water()
+    pos = np.arange(9, dtype=float).reshape(3, 3)
+    mol.positions = pos
+    assert np.array_equal(mol.positions, pos)
+
+
+@pytest.mark.parametrize("rows", [0, 2, 4, 100])
+def test_set_positions_wrong_length(rows):
+    mol = make_water()
+    mol.positions = np.ones((3, 3))
+    if rows == 0:
+        # An empty array is accepted by the core (it clears the positions)
+        mol.positions = np.zeros((0, 3))
+        assert mol.positions.shape == (0, 3)
+        return
+    with pytest.raises(ValueError, match="3.*%d|%d.*3" % (rows, rows)):
+        mol.positions = np.zeros((rows, 3))
+    assert np.all(mol.positions == 1.0)
+
+
+@pytest.mark.parametrize("shape", [(3,), (3, 2), (3, 4), (1, 3, 3), ()])
+def test_set_positions_wrong_shape(shape):
+    mol = make_water()
+    with pytest.raises(ValueError):
+        mol.positions = np.zeros(shape)
+
+
+def test_set_atomic_numbers_roundtrip():
+    mol = make_water()
+    mol.atomic_numbers = np.array([6, 7, 8], dtype=np.uint8)
+    assert mol.atomic_numbers.tolist() == [6, 7, 8]
+    assert mol.atom(1).atomic_number == 7
+
+
+@pytest.mark.parametrize("count", [0, 2, 4])
+def test_set_atomic_numbers_wrong_length(count):
+    mol = make_water()
+    with pytest.raises(ValueError, match="3.*%d|%d.*3" % (count, count)):
+        mol.atomic_numbers = np.ones(count, dtype=np.uint8)
+    assert mol.atomic_numbers.tolist() == [8, 1, 1]
+
+
+def test_set_atomic_numbers_wrong_ndim():
+    mol = make_water()
+    with pytest.raises(ValueError):
+        mol.atomic_numbers = np.array(6, dtype=np.uint8)  # 0-d
+    with pytest.raises(ValueError):
+        mol.atomic_numbers = np.ones((3, 1), dtype=np.uint8)
+    assert mol.atomic_numbers.tolist() == [8, 1, 1]
+
+
+def test_set_formal_charges():
+    mol = make_water()
+    mol.formal_charges = np.array([-2, 1, 1], dtype=np.int8)
+    assert mol.formal_charges.tolist() == [-2, 1, 1]
+    with pytest.raises(ValueError, match="3.*2|2.*3"):
+        mol.formal_charges = np.zeros(2, dtype=np.int8)
+    with pytest.raises(ValueError):
+        mol.formal_charges = np.array(1, dtype=np.int8)
+    assert mol.formal_charges.tolist() == [-2, 1, 1]
+
+
+def test_set_atomic_numbers_updates_element_state():
+    mol = make_water()
+    mol.atomic_numbers = np.array([6, 6, 6], dtype=np.uint8)
+    assert mol.formula() == "C3"
+
+
+def test_cube_data_wrong_size():
+    mol, cube = make_cube((3, 4, 5))
+    with pytest.raises(ValueError, match="60"):
+        cube.data = np.zeros(59, dtype=np.float32)
+    with pytest.raises(ValueError):
+        cube.data = np.zeros((3, 4, 6), dtype=np.float32)
+    with pytest.raises(ValueError):
+        cube.data = np.zeros(0, dtype=np.float32)
+
+
+def test_cube_data_flat_array_of_right_size():
+    mol, cube = make_cube((3, 4, 5))
+    cube.data = np.arange(60, dtype=np.float32)
+    assert cube.data.shape == (3, 4, 5)
+    assert cube.data[0, 0, 4] == 4.0
+
+
+def test_cube_data_before_limits_rejected():
+    cube = core.Molecule().add_cube()
+    with pytest.raises(ValueError):
+        cube.data = np.ones(8, dtype=np.float32)

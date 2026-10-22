@@ -7,6 +7,8 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/molecule.h>
 
+#include <string>
+
 namespace py = pybind11;
 
 using namespace Avogadro;
@@ -74,13 +76,25 @@ void exportCube(py::module_& m)
       },
       [](Cube& self, py::array_t<float, py::array::c_style> arr) {
         auto buf = arr.request();
+        // Cube::setData() accepts only exactly nx*ny*nz values, so this is
+        // also false for an empty array and when no limits have been set
+        // yet (nx*ny*nz == 0): there is nothing sensible to size the data
+        // against then.
+        const auto expected =
+          static_cast<Py_ssize_t>(self.nx()) * self.ny() * self.nz();
         auto* ptr = static_cast<float*>(buf.ptr);
-        self.setData(std::vector<float>(ptr, ptr + buf.size));
+        if (buf.size != expected ||
+            !self.setData(std::vector<float>(ptr, ptr + buf.size)))
+          throw py::value_error(
+            "Cube data must have nx*ny*nz = " + std::to_string(expected) +
+            " values (set the limits first), got " + std::to_string(buf.size));
       },
       "Cube data as a read-only numpy array of shape (nx, ny, nz). This is a "
       "view of the cube's storage, not a copy, and is invalidated by "
       "set_limits() or by assigning to data; do not keep it across those. "
-      "To modify the data, assign a new array: cube.data = new_array.")
+      "To modify the data, assign a new array: cube.data = new_array (it must "
+      "have nx*ny*nz values, so set the limits first, or ValueError is "
+      "raised).")
     // Spatial properties
     .def_property_readonly("min", &Cube::min, "The minimum corner of the cube")
     .def_property_readonly("max", &Cube::max, "The maximum corner of the cube")

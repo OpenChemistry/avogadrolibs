@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -27,6 +28,13 @@ void requireOwnedAtom(const Molecule& self, const Atom& atom)
 {
   if (!atom.isValid() || atom.molecule() != &self)
     throw py::value_error("Atom does not belong to this molecule");
+}
+
+// The setters need one entry per atom; say what was expected.
+std::string lengthMessage(const char* name, size_t expected, size_t got)
+{
+  return std::string(name) + " must have one entry per atom (expected " +
+         std::to_string(expected) + ", got " + std::to_string(got) + ")";
 }
 
 // Copy count rows of width elements of type T into a new (count, width)
@@ -170,9 +178,12 @@ void exportMolecule(py::module_& m)
         if (buf.ndim != 2 || buf.shape[1] != 3)
           throw py::value_error("Expected shape (N, 3)");
         Core::Array<Vector3> positions(buf.shape[0]);
-        std::memcpy(positions.data(), buf.ptr,
-                    buf.shape[0] * 3 * sizeof(double));
-        self.setAtomPositions3d(positions);
+        if (buf.shape[0] > 0)
+          std::memcpy(positions.data(), buf.ptr,
+                      buf.shape[0] * 3 * sizeof(double));
+        if (!self.setAtomPositions3d(positions))
+          throw py::value_error(
+            lengthMessage("positions", self.atomCount(), positions.size()));
       },
       "Atomic positions as an (N, 3) numpy array (a copy; assign to the "
       "property to change them)")
@@ -184,9 +195,14 @@ void exportMolecule(py::module_& m)
       },
       [](Molecule& self, py::array_t<uint8_t, py::array::c_style> arr) {
         auto buf = arr.request();
+        if (buf.ndim != 1)
+          throw py::value_error("Expected a 1-D array of atomic numbers");
         Core::Array<unsigned char> nums(buf.shape[0]);
-        std::memcpy(nums.data(), buf.ptr, buf.shape[0]);
-        self.setAtomicNumbers(nums);
+        if (buf.shape[0] > 0)
+          std::memcpy(nums.data(), buf.ptr, buf.shape[0]);
+        if (!self.setAtomicNumbers(nums))
+          throw py::value_error(
+            lengthMessage("atomic_numbers", self.atomCount(), nums.size()));
       },
       "Atomic numbers as a uint8 numpy array (a copy; assign to the property "
       "to change them)")
@@ -198,9 +214,14 @@ void exportMolecule(py::module_& m)
       },
       [](Molecule& self, py::array_t<int8_t, py::array::c_style> arr) {
         auto buf = arr.request();
+        if (buf.ndim != 1)
+          throw py::value_error("Expected a 1-D array of formal charges");
         Core::Array<signed char> charges(buf.shape[0]);
-        std::memcpy(charges.data(), buf.ptr, buf.shape[0]);
-        self.setFormalCharges(charges);
+        if (buf.shape[0] > 0)
+          std::memcpy(charges.data(), buf.ptr, buf.shape[0]);
+        if (!self.setFormalCharges(charges))
+          throw py::value_error(
+            lengthMessage("formal_charges", self.atomCount(), charges.size()));
       },
       "Formal charges as an int8 numpy array (a copy; assign to the property "
       "to change them)")
