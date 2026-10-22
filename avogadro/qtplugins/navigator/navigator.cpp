@@ -83,8 +83,16 @@ void Navigator::registerCommands()
 bool Navigator::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  if (m_renderer == nullptr)
-    return false; // No camera
+  static const QStringList knownCommands = { "rotateScene", "zoomScene",
+                                             "translateScene" };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_renderer == nullptr) {
+    emit commandFailed(tr("No camera"));
+    return true;
+  }
 
   if (command == "rotateScene") {
     float x = options.value("x").toFloat();
@@ -107,9 +115,6 @@ bool Navigator::handleCommand(const QString& command,
     float y = options.value("y").toFloat();
     translate(m_renderer->camera().focus(), x, y);
     m_glWidget->requestUpdate();
-  } else {
-    qDebug() << "Unknown command: " << command;
-    return false;
   }
 
   return true;
