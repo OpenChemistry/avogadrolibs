@@ -7806,7 +7806,7 @@ msgstr "Ein Skalenfaktor von Null würde nur die aktuelle Geometrie duplizieren.
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
 msgid "One new coordinate set, displaced by %1 × the normal mode."
-msgstr ""
+msgstr "Ein neuer Koordinatensatz, verschoben durch %1 × den normalen Modus."
 
 #: qtplugins/vibrations/displacementdialog.cpp:83
 #, qt-format
