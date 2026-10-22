@@ -50,14 +50,16 @@ void exportCube(py::module_& m)
   bool (Cube::*setValue_idx)(unsigned int, float) = &Cube::setValue;
 
   cubeClass
-    // Data as 3D numpy array (zero-copy view)
+    // Data as a 3D numpy array: a zero-copy, read-only view (cubes can be
+    // many MB). Writes go through the setter, which also refreshes the
+    // min/max values.
     .def_property(
       "data",
       [](Cube& self) -> py::array_t<float> {
         auto* vec = self.data();
         if (vec->empty())
           return py::array_t<float>();
-        return py::array_t<float>(
+        auto view = py::array_t<float>(
           { static_cast<Py_ssize_t>(self.nx()),
             static_cast<Py_ssize_t>(self.ny()),
             static_cast<Py_ssize_t>(self.nz()) },
@@ -65,13 +67,20 @@ void exportCube(py::module_& m)
             static_cast<Py_ssize_t>(self.nz() * sizeof(float)),
             static_cast<Py_ssize_t>(sizeof(float)) },
           vec->data(), py::cast(self));
+        // Not writeable: an in-place write would skip the min/max update
+        // that the setter does.
+        view.attr("setflags")(py::arg("write") = false);
+        return view;
       },
       [](Cube& self, py::array_t<float, py::array::c_style> arr) {
         auto buf = arr.request();
         auto* ptr = static_cast<float*>(buf.ptr);
         self.setData(std::vector<float>(ptr, ptr + buf.size));
       },
-      "Cube data as a numpy array of shape (nx, ny, nz)")
+      "Cube data as a read-only numpy array of shape (nx, ny, nz). This is a "
+      "view of the cube's storage, not a copy, and is invalidated by "
+      "set_limits() or by assigning to data; do not keep it across those. "
+      "To modify the data, assign a new array: cube.data = new_array.")
     // Spatial properties
     .def_property_readonly("min", &Cube::min, "The minimum corner of the cube")
     .def_property_readonly("max", &Cube::max, "The maximum corner of the cube")
