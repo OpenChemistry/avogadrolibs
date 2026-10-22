@@ -23,7 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-22 11:04+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -9497,7 +9498,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, repeatLabel)
 msgid "Repeats:"
-msgstr ""
+msgstr "Wiederholungen:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -9507,7 +9508,7 @@ msgstr "Wiederholen Stil:"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
 msgid "Percent"
-msgstr ""
+msgstr "Prozent"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:237
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
@@ -9519,7 +9520,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Length:"
-msgstr ""
+msgstr "Gesamtlänge"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
