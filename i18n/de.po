@@ -8212,6 +8212,9 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
+"<html><head/><body><p>Fernbediente Arbeitsdateien nach Fertigstellung der "
+"Arbeit löschen. Die Ergebnisse werden noch in den lokalen MoleQueue Job "
+"Cache kopiert.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
