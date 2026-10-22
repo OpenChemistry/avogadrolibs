@@ -35,6 +35,34 @@
 
 namespace Avogadro::QtPlugins {
 
+namespace {
+// Standard menu names, mirroring the built-in plugins' menus. These must be
+// string literals marked for translation so that lupdate extracts them in this
+// class's context; tr() on a runtime string can only find literals that appear
+// in this file.
+const char* const standardMenuNames[] = {
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&File"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Edit"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&View"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Build"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Select"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Analyze"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Calculate"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Input"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Crystal"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Extensions"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "Se&ttings"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Window"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Help"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Properties"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Insert"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Import"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "&Export"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "Surfaces"),
+  QT_TRANSLATE_NOOP("Avogadro::QtPlugins::Command", "Scripts")
+};
+} // namespace
+
 using Avogadro::QtGui::InterfaceScript;
 using Avogadro::QtGui::InterfaceWidget;
 using Avogadro::QtGui::TimedProgressDialog;
@@ -89,7 +117,7 @@ QStringList Command::menuPath(QAction* action) const
   if (hash == QString::number(info.size()) + info.lastModified().toString()) {
     path = settings.value("scripts/" + scriptFileName + "/menu").toStringList();
     if (!path.isEmpty())
-      return path;
+      return translateMenuPath(path);
   }
 
   // otherwise, we have a script name, so ask it
@@ -127,12 +155,34 @@ QStringList Command::menuPath(QAction* action) const
     action->setProperty("menu priority", priority);
   }
 
-  // try to translate each part of the path
+  // the cache above keeps the untranslated path
+  return translateMenuPath(path);
+}
+
+QString Command::translateMenuLabel(const QString& label) const
+{
+  if (label.isEmpty())
+    return label;
+
+  // Built-in menus are translated with mnemonics (e.g., "&Analyze"), and
+  // MenuBuilder merges menus by comparing paths with '&' stripped, so plugin
+  // labels must map onto the same translated text. Match the label against
+  // the standard names ignoring '&' and case, and translate the standard form.
+  const QString bare = QString(label).remove('&');
+  for (const char* entry : standardMenuNames) {
+    const QString name = QString::fromUtf8(entry);
+    if (bare.compare(QString(name).remove('&'), Qt::CaseInsensitive) == 0)
+      return tr(entry);
+  }
+  return tr(label.toUtf8().constData());
+}
+
+QStringList Command::translateMenuPath(const QStringList& path) const
+{
   // not ideal, but most menus should already be in the translation file
   QStringList translatedPath;
-  foreach (QString part, path)
-    translatedPath << tr(part.toUtf8());
-
+  for (const QString& part : path)
+    translatedPath << translateMenuLabel(part);
   return translatedPath;
 }
 
@@ -649,9 +699,11 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
     return var.toString();
   };
 
-  QString topMenu = resolveLabel(metadata.value("menu"));
-  QString subMenu = resolveLabel(metadata.value("submenu"));
-  QString subSubMenu = resolveLabel(metadata.value("subsubmenu"));
+  // translate menu levels so they merge with the built-in (translated) menus
+  QString topMenu = translateMenuLabel(resolveLabel(metadata.value("menu")));
+  QString subMenu = translateMenuLabel(resolveLabel(metadata.value("submenu")));
+  QString subSubMenu =
+    translateMenuLabel(resolveLabel(metadata.value("subsubmenu")));
   QString item = resolveLabel(metadata.value("item"));
 
   // If nothing is specified at all, just add under Extensions > Scripts with
