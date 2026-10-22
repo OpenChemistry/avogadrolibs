@@ -10643,7 +10643,7 @@ msgstr "Öffnen Sie den Bugtracker dieses Plugins in Ihrem Browser"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
 msgid "Install from Directory…"
-msgstr ""
+msgstr "Installieren von Verzeichnis.."
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:164
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
