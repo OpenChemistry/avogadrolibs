@@ -207,11 +207,19 @@ public:
   Eigen::VectorXd mask() const { return m_mask; }
 
   /**
-   * Called when the current molecule changes.
+   * Called when the current molecule changes. Implementations should call
+   * setMaskFromMolecule() so the mask starts from the molecule's frozen
+   * atoms; callers can still override it afterwards with setMask().
    */
   virtual void setMolecule(Core::Molecule* mol) = 0;
 
 protected:
+  /**
+   * Reset the mask to the molecule's frozen atoms, or free every atom if the
+   * molecule has no frozen-atom mask of the right size.
+   */
+  void setMaskFromMolecule(const Core::Molecule& molecule);
+
   /**
    * @brief Append an error to the error string for the model.
    * @param errorString The error to be added.

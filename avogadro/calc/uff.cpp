@@ -1126,6 +1126,8 @@ void UFF::setMolecule(Core::Molecule* mol)
     return; // nothing to do
   }
 
+  setMaskFromMolecule(*mol);
+
   int numAtoms = mol->atomCount();
   if (numAtoms < 2)
     return; // nothing to do for single atoms

@@ -178,3 +178,87 @@ TEST(UffConstraintTest, RestraintEnergyAndGradientAreInKilojoules)
     EXPECT_NEAR(grad2[i] - grad0[i], -expectedH1[i], 1e-9);
   }
 }
+
+namespace {
+Molecule bentWater()
+{
+  Molecule molecule;
+  Atom o = molecule.addAtom(8);
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  o.setPosition3d(Vector3(0.0, 0.0, 0.0));
+  h1.setPosition3d(Vector3(1.2, 0.1, 0.0));
+  h2.setPosition3d(Vector3(-0.2, 1.1, 0.05));
+  molecule.addBond(o, h1, 1);
+  molecule.addBond(o, h2, 1);
+  return molecule;
+}
+
+Eigen::VectorXd positionsOf(const Molecule& molecule)
+{
+  Eigen::VectorXd x(3 * molecule.atomCount());
+  for (Index i = 0; i < molecule.atomCount(); ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  return x;
+}
+} // namespace
+
+// Same contract as LennardJonesTest.SetMoleculeUsesFrozenAtomMask
+TEST(UffMaskTest, SetMoleculeUsesFrozenAtomMask)
+{
+  Molecule molecule = bentWater();
+  molecule.setFrozenAtom(0, true);
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const Eigen::VectorXd mask = uff.mask();
+  ASSERT_EQ(mask.rows(), 9);
+  EXPECT_TRUE(mask.head<3>().isZero());
+  EXPECT_TRUE(mask.tail<6>().isOnes());
+
+  // the frozen atom feels no force
+  Eigen::VectorXd grad;
+  uff.gradient(positionsOf(molecule), grad);
+  EXPECT_TRUE(grad.head<3>().isZero());
+  EXPECT_FALSE(grad.tail<6>().isZero());
+}
+
+TEST(UffMaskTest, SetMoleculeWithoutFrozenAtomsFreesEveryAtom)
+{
+  Molecule molecule = bentWater();
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const Eigen::VectorXd mask = uff.mask();
+  ASSERT_EQ(mask.rows(), 9);
+  EXPECT_TRUE(mask.isOnes());
+}
+
+TEST(UffMaskTest, SetMaskAfterSetMoleculeOverridesAndSetMoleculeResets)
+{
+  Molecule molecule = bentWater();
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  Eigen::VectorXd mask = Eigen::VectorXd::Ones(9);
+  mask.segment<3>(3).setZero(); // freeze H1
+  uff.setMask(mask);
+  Eigen::VectorXd grad;
+  uff.gradient(positionsOf(molecule), grad);
+  EXPECT_TRUE(grad.segment<3>(3).isZero());
+
+  // a new setMolecule() starts again from the molecule's frozen atoms
+  uff.setMolecule(&molecule);
+  EXPECT_TRUE(uff.mask().isOnes());
+}
+
+TEST(UffMaskTest, SingleAtomMoleculeGetsMaskOfTheRightSize)
+{
+  Molecule molecule;
+  molecule.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  UFF uff;
+  uff.setMolecule(&molecule);
+  EXPECT_EQ(uff.mask().rows(), 3);
+}
