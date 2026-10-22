@@ -7589,7 +7589,7 @@ msgstr "Cube %1 ist aus dem Bereich, diese Datei hat %2."
 #: qtplugins/surfaces/surfaces.cpp:298
 #, qt-format
 msgid "Cube %1 could not be read."
-msgstr ""
+msgstr "Cube %1 konnte nicht gelesen werden."
 
 #: qtplugins/surfaces/surfaces.cpp:447
 #, qt-format
@@ -7613,7 +7613,7 @@ msgstr "Molekularorbital %L1 wird berechnet"
 
 #: qtplugins/surfaces/surfaces.cpp:914
 msgid "The calculation was interrupted."
-msgstr ""
+msgstr "Die Berechnung wurde unterbrochen."
 
 #: qtplugins/surfaces/surfaces.cpp:1088
 msgctxt "finished rendering surface or molecular orbital"
@@ -7671,11 +7671,11 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
 msgid "The molecule has no 3D coordinates."
-msgstr ""
+msgstr "Das Molekül hat keine 3D-Koordinaten."
 
 #: qtplugins/symmetry/symmetry.cpp:228
 msgid "The molecule has no atoms."
-msgstr ""
+msgstr "Das Molekül hat keine Atome."
 
 #: qtplugins/symmetry/symmetry.cpp:386
 msgid "There is no molecule to symmetrize."
@@ -7683,7 +7683,7 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetry.cpp:394
 msgid "A single atom is already symmetric."
-msgstr ""
+msgstr "Ein einziges Atom ist bereits symmetrisch."
 
 #: qtplugins/symmetry/symmetry.cpp:415
 #, qt-format
