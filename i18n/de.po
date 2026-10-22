@@ -4942,6 +4942,10 @@ msgid ""
 "{\"atoms\": [i, j], \"value\": …}; the second atom and everything bonded to "
 "it on that side move. Returns the new {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Setzen Sie den Abstand in Å zwischen zwei Atomen, gegeben als Null-basierte "
+"Indizes: {\"Atome\": [i, j], \"Wert\": ...}; das zweite Atom und alles, was "
+"an dieser Seite gebunden ist, bewegen sich. Gibt den neuen {\"Abstand\" "
+"zurück: ..., \"Atome\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
