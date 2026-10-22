@@ -9946,7 +9946,7 @@ msgstr "einheitlich"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:755
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
 msgid "Set the initial atom velocities to match this temperature."
-msgstr ""
+msgstr "Setzen Sie die anfänglichen Atomgeschwindigkeiten auf diese Temperatur."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:774
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
