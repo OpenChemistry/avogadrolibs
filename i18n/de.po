@@ -7712,7 +7712,7 @@ msgstr "Entdeckt %1"
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
 msgid "Symmetrized to %1"
-msgstr ""
+msgstr "Symmetrisiert auf %1"
 
 #: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
