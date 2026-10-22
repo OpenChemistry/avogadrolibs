@@ -6578,7 +6578,7 @@ msgstr "Partialladungstyp auswählen:"
 
 #: qtplugins/propertytables/propertyview.cpp:965
 msgid "Add Property…"
-msgstr ""
+msgstr "Objekt hinzufügen.."
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
