@@ -4,11 +4,16 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <cmath>
+#include <optional>
 #include <stdexcept>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace py = pybind11;
 
@@ -116,6 +121,99 @@ PYBIND11_MODULE(core, m)
                   &UnitCell::setCellMatrix, "The unit cell vector matrix")
     .def("distance", &UnitCell::distance,
          "Calculate the distance between two points in the unit cell");
+
+  // --- Constraint ---
+
+  py::class_<Constraint> constraintClass(
+    m, "Constraint",
+    "A harmonic restraint on a distance, angle or torsion.\n\n"
+    "Distances are in Angstrom and angles / torsions in DEGREES. The "
+    "restraint energy is k * (x - x0)^2 (no factor of one half), with k in "
+    "kJ/mol/Angstrom^2 for a distance and kJ/mol/radian^2 for an angle or "
+    "torsion (the angle is converted to radians internally). Torsions are "
+    "periodic. Immutable once created. Atom indices are checked against a "
+    "molecule when the constraint is assigned to an "
+    "avogadro.calc.EnergyCalculator.");
+
+  py::enum_<Constraint::Type>(constraintClass, "Type")
+    .value("Distance", Constraint::DistanceConstraint)
+    .value("Angle", Constraint::AngleConstraint)
+    .value("Torsion", Constraint::TorsionConstraint)
+    .value("OutOfPlane", Constraint::OutOfPlaneConstraint)
+    .value("Unknown", Constraint::UnknownConstraint);
+
+  constraintClass
+    .def(
+      py::init([](const std::vector<Index>& atoms, double value,
+                  std::optional<double> forceConstant) {
+        if (atoms.size() < 2 || atoms.size() > 4)
+          throw py::value_error(
+            "atoms must have 2 (distance), 3 (angle) or 4 (torsion) indices");
+        for (size_t i = 0; i < atoms.size(); ++i) {
+          if (atoms[i] == MaxIndex)
+            throw py::value_error("invalid atom index");
+          for (size_t j = 0; j < i; ++j)
+            if (atoms[i] == atoms[j])
+              throw py::value_error("atoms must be distinct");
+        }
+        if (!std::isfinite(value))
+          throw py::value_error("value must be finite");
+        Constraint constraint(atoms[0], atoms[1],
+                              atoms.size() > 2 ? atoms[2] : MaxIndex,
+                              atoms.size() > 3 ? atoms[3] : MaxIndex, value);
+        if (forceConstant) {
+          const double k = *forceConstant;
+          if (!std::isfinite(k) || k < 0.0)
+            throw py::value_error("force_constant must be finite and >= 0");
+          constraint.setK(k);
+        }
+        return constraint;
+      }),
+      py::arg("atoms"), py::arg("value"),
+      py::arg("force_constant") = py::none(),
+      "Create a constraint on 2 (distance), 3 (angle) or 4 (torsion) atoms. "
+      "value is in Angstrom or degrees. force_constant defaults to "
+      "Constraint.DEFAULT_DISTANCE_K or Constraint.DEFAULT_ANGULAR_K.")
+    .def_property_readonly(
+      "atoms",
+      [](const Constraint& self) {
+        std::vector<Index> atoms{ self.aIndex(), self.bIndex() };
+        if (self.cIndex() != MaxIndex)
+          atoms.push_back(self.cIndex());
+        if (self.dIndex() != MaxIndex)
+          atoms.push_back(self.dIndex());
+        return py::tuple(py::cast(atoms));
+      },
+      "Tuple of the 2, 3 or 4 atom indices")
+    .def_property_readonly("type", &Constraint::type,
+                           "The Constraint.Type, inferred from the atoms")
+    .def_property_readonly("value", &Constraint::value,
+                           "Target value: Angstrom (distance) or degrees "
+                           "(angle, torsion)")
+    .def_property_readonly("force_constant", &Constraint::k,
+                           "Harmonic force constant (see the class docs for "
+                           "units)")
+    .def("is_valid", &Constraint::isValid, py::arg("atom_count"),
+         "True if every atom index is below atom_count")
+    .def("__repr__",
+         [](const Constraint& self) {
+           std::string atoms;
+           for (auto index :
+                { self.aIndex(), self.bIndex(), self.cIndex(), self.dIndex() })
+             if (index != MaxIndex)
+               atoms += (atoms.empty() ? "" : ", ") + std::to_string(index);
+           return "Constraint(atoms=(" + atoms +
+                  "), value=" + std::to_string(self.value()) +
+                  ", force_constant=" + std::to_string(self.k()) + ")";
+         })
+    .def_property_readonly_static(
+      "DEFAULT_DISTANCE_K",
+      [](py::object) { return Constraint::DefaultDistanceK; },
+      "Default distance force constant, kJ/mol/Angstrom^2")
+    .def_property_readonly_static(
+      "DEFAULT_ANGULAR_K",
+      [](py::object) { return Constraint::DefaultAngularK; },
+      "Default angle / torsion force constant, kJ/mol/radian^2");
 
   // Register types from other files. Order matters: BasisSet and Cube must
   // be registered before Molecule (which references them via properties).

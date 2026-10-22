@@ -53,6 +53,19 @@ target_link_libraries(avogadroiopython
 )
 install(TARGETS avogadroiopython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
 
+# Calc (force fields and optimizers)
+pybind11_add_module(avogadrocalcpython calc.cpp)
+set_target_properties(avogadrocalcpython
+  PROPERTIES
+    OUTPUT_NAME calc)
+target_link_libraries(avogadrocalcpython
+  PRIVATE
+    Avogadro::Calc
+    Avogadro::Core
+    pybind11::module
+)
+install(TARGETS avogadrocalcpython LIBRARY COMPONENT python DESTINATION "${_python_module_install_dir}")
+
 # Set the RPATH so the dependent libraries can be found in the wheel.
 if(APPLE)
   set(_rpath_value "@loader_path")
@@ -61,7 +74,8 @@ elseif(UNIX)
 endif()
 
 if (NOT WIN32)
-  set_target_properties(avogadrocorepython avogadroiopython PROPERTIES
+  set_target_properties(avogadrocorepython avogadroiopython avogadrocalcpython
+                        PROPERTIES
                         INSTALL_RPATH ${_rpath_value})
 endif()
 
@@ -71,7 +85,7 @@ install(FILES ${PY_SRCS} COMPONENT python DESTINATION "${_python_module_install_
 
 # Set the output directory so the python modules can be used from the build
 # tree.
-set_target_properties(avogadrocorepython avogadroiopython
+set_target_properties(avogadrocorepython avogadroiopython avogadrocalcpython
   PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/avogadro"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/avogadro"
