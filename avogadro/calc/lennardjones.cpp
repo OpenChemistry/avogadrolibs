@@ -83,10 +83,7 @@ void LennardJones::setMolecule(Core::Molecule* mol)
   m_cell = mol->unitCell(); // could be nullptr
   Index numAtoms = mol->atomCount();
 
-  // use the molecule's frozen atoms, if it has a mask of the right size
-  m_mask = mol->frozenAtomMask();
-  if (m_mask.rows() != static_cast<Eigen::Index>(3 * numAtoms))
-    m_mask = Eigen::VectorXd::Ones(static_cast<Eigen::Index>(3 * numAtoms));
+  setMaskFromMolecule(*mol);
 
   // track atomic radii for this molecule
   m_radii.setZero();

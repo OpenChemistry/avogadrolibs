@@ -10,6 +10,7 @@
 #include <avogadro/calc/uff.h>
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
@@ -117,3 +118,147 @@ INSTANTIATE_TEST_SUITE_P(
                     "hooh.xyz", "PF5.xyz", "SF4.xyz", "SF6.xyz", "XeF4.xyz"
                     // Add more molecule files here as needed
                     ));
+
+// Restraints are documented in kJ/mol (core/constraint.h), the same units as
+// the UFF energy, so adding one must raise the energy by exactly k * delta^2
+// and the gradient by the restraint's own gradient.
+TEST(UffConstraintTest, RestraintEnergyAndGradientAreInKilojoules)
+{
+  Molecule molecule;
+  Atom o = molecule.addAtom(8);
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  o.setPosition3d(Vector3(0.0, 0.0, 0.0));
+  h1.setPosition3d(Vector3(1.0, 0.1, 0.0));
+  h2.setPosition3d(Vector3(-0.2, 0.95, 0.05));
+  molecule.addBond(o, h1, 1);
+  molecule.addBond(o, h2, 1);
+
+  Eigen::VectorXd x(9);
+  for (Index i = 0; i < 3; ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+  Eigen::VectorXd grad0;
+  const Real e0 = uff.evaluate(x, &grad0);
+
+  // O-H1 distance restraint 0.1 A shorter than the current bond
+  const Vector3 oh = x.segment<3>(3) - x.segment<3>(0);
+  const Real distance = oh.norm();
+  const Real distanceDelta = 0.1;
+  const Real distanceK = 50.0; // kJ/mol/A^2
+  Constraint bond(0, 1, MaxIndex, MaxIndex, distance - distanceDelta);
+  bond.setK(distanceK);
+
+  // H1-O-H2 angle restraint 5 degrees smaller than the current angle
+  const Vector3 oh2 = x.segment<3>(6) - x.segment<3>(0);
+  const Real angle = std::acos(oh.dot(oh2) / (oh.norm() * oh2.norm()));
+  const Real angleDelta = 5.0 * DEG_TO_RAD_D;
+  const Real angleK = 20.0; // kJ/mol/rad^2
+  Constraint bend(1, 0, 2, MaxIndex, (angle - angleDelta) / DEG_TO_RAD_D);
+  bend.setK(angleK);
+
+  uff.setConstraints({ bond, bend });
+  Eigen::VectorXd grad1;
+  const Real e1 = uff.evaluate(x, &grad1);
+
+  const Real expected = distanceK * distanceDelta * distanceDelta +
+                        angleK * angleDelta * angleDelta;
+  EXPECT_NEAR(e1 - e0, expected, 1e-9);
+  EXPECT_NEAR(uff.value(x) - e0, expected, 1e-9);
+
+  // the distance restraint alone pulls H1 toward O by 2 k delta
+  uff.setConstraints({ bond });
+  Eigen::VectorXd grad2;
+  uff.evaluate(x, &grad2);
+  const Vector3 expectedH1 = 2.0 * distanceK * distanceDelta * oh / distance;
+  for (int i = 0; i < 3; ++i) {
+    EXPECT_NEAR(grad2[3 + i] - grad0[3 + i], expectedH1[i], 1e-9);
+    EXPECT_NEAR(grad2[i] - grad0[i], -expectedH1[i], 1e-9);
+  }
+}
+
+namespace {
+Molecule bentWater()
+{
+  Molecule molecule;
+  Atom o = molecule.addAtom(8);
+  Atom h1 = molecule.addAtom(1);
+  Atom h2 = molecule.addAtom(1);
+  o.setPosition3d(Vector3(0.0, 0.0, 0.0));
+  h1.setPosition3d(Vector3(1.2, 0.1, 0.0));
+  h2.setPosition3d(Vector3(-0.2, 1.1, 0.05));
+  molecule.addBond(o, h1, 1);
+  molecule.addBond(o, h2, 1);
+  return molecule;
+}
+
+Eigen::VectorXd positionsOf(const Molecule& molecule)
+{
+  Eigen::VectorXd x(3 * molecule.atomCount());
+  for (Index i = 0; i < molecule.atomCount(); ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  return x;
+}
+} // namespace
+
+// Same contract as LennardJonesTest.SetMoleculeUsesFrozenAtomMask
+TEST(UffMaskTest, SetMoleculeUsesFrozenAtomMask)
+{
+  Molecule molecule = bentWater();
+  molecule.setFrozenAtom(0, true);
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const Eigen::VectorXd mask = uff.mask();
+  ASSERT_EQ(mask.rows(), 9);
+  EXPECT_TRUE(mask.head<3>().isZero());
+  EXPECT_TRUE(mask.tail<6>().isOnes());
+
+  // the frozen atom feels no force
+  Eigen::VectorXd grad;
+  uff.gradient(positionsOf(molecule), grad);
+  EXPECT_TRUE(grad.head<3>().isZero());
+  EXPECT_FALSE(grad.tail<6>().isZero());
+}
+
+TEST(UffMaskTest, SetMoleculeWithoutFrozenAtomsFreesEveryAtom)
+{
+  Molecule molecule = bentWater();
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  const Eigen::VectorXd mask = uff.mask();
+  ASSERT_EQ(mask.rows(), 9);
+  EXPECT_TRUE(mask.isOnes());
+}
+
+TEST(UffMaskTest, SetMaskAfterSetMoleculeOverridesAndSetMoleculeResets)
+{
+  Molecule molecule = bentWater();
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  Eigen::VectorXd mask = Eigen::VectorXd::Ones(9);
+  mask.segment<3>(3).setZero(); // freeze H1
+  uff.setMask(mask);
+  Eigen::VectorXd grad;
+  uff.gradient(positionsOf(molecule), grad);
+  EXPECT_TRUE(grad.segment<3>(3).isZero());
+
+  // a new setMolecule() starts again from the molecule's frozen atoms
+  uff.setMolecule(&molecule);
+  EXPECT_TRUE(uff.mask().isOnes());
+}
+
+TEST(UffMaskTest, SingleAtomMoleculeGetsMaskOfTheRightSize)
+{
+  Molecule molecule;
+  molecule.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  UFF uff;
+  uff.setMolecule(&molecule);
+  EXPECT_EQ(uff.mask().rows(), 3);
+}
