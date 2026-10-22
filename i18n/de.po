@@ -7813,6 +7813,7 @@ msgstr "Ein neuer Koordinatensatz, verschoben durch %1 × den normalen Modus."
 msgid ""
 "%1 new coordinate sets, evenly spaced from -%2 to +%2 × the normal mode."
 msgstr ""
+"%1 neue Koordinatensätze, gleichmäßig von -%2 bis +%2 × den Normalmodus."
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
 msgid "The middle one is the undisplaced geometry."
