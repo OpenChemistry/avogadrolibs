@@ -4603,7 +4603,7 @@ msgstr ""
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:625
 msgid "No monomer specified. Please choose at least monomer A."
-msgstr ""
+msgstr "Kein Monomer angegeben. Bitte wählen Sie mindestens Monomer A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:631
 msgid "Working"
