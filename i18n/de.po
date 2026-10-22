@@ -10690,6 +10690,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Der max 2theta Wert in Grad.</p><p>Standard: 162.00°</"
+"p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
