@@ -7113,6 +7113,8 @@ msgid ""
 "The space group of the molecule is not known: give the hallNumber (1 to %1) "
 "or spaceGroup parameter."
 msgstr ""
+"Die Raumgruppe des Moleküls ist nicht bekannt: Geben Sie den hallNumber (1 "
+"bis %1) oder spaceGroup-Parameter."
 
 #: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
