@@ -7837,7 +7837,7 @@ msgstr ""
 #: qtplugins/vibrations/vibrationdialog.cpp:168
 #, qt-format
 msgid "Mode %1 (%2 cm⁻¹)"
-msgstr ""
+msgstr "Modus %1 (%2 cm-1)"
 
 #: qtplugins/vibrations/vibrationdialog.cpp:170
 #, qt-format
@@ -7973,7 +7973,7 @@ msgstr "Erweiterte Hückel-Rechnungen mit yaehmop ausführen."
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:36
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:34
 msgid "Z-Matrix Editor"
-msgstr ""
+msgstr "Z-Matrix-Editor"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
@@ -7994,11 +7994,11 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
-msgstr ""
+msgstr "&Z-Matrix Editor.."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:135
 msgid "Atoms renumbered into z-matrix order."
-msgstr ""
+msgstr "Atome in z-Matrix-Bestellung umnummeriert."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:137
 msgid "The atoms are already in z-matrix order."
