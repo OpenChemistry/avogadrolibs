@@ -23,8 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-22 14:23+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2056,11 +2055,11 @@ msgstr "Fehler beim Lesen der OpenDX-Datei: kein Cube gefunden"
 
 #: qtplugins/apbs/apbs.cpp:151
 msgid "Generating Positive Potential Mesh"
-msgstr ""
+msgstr "Netz mit positivem Potential erstellen"
 
 #: qtplugins/apbs/apbs.cpp:165
 msgid "Generating Negative Potential Mesh"
-msgstr ""
+msgstr "Netz mit negativem Potential erstellen"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -3863,7 +3862,7 @@ msgstr "Laden Sie eine Struktur von der Protein Data Bank herunter."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
-msgstr ""
+msgstr "fetchPDB setzt einen nicht-leeren 'code'-Parameter voraus."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:116
 msgid "The PDB code must be exactly 4 characters long."
@@ -4073,7 +4072,7 @@ msgstr ""
 
 #: qtplugins/forcefield/forcefield.cpp:467
 msgid "\"steps\" must be a positive integer."
-msgstr ""
+msgstr "\"steps\" setzt eine positive ganze Zahl voraus."
 
 #: qtplugins/forcefield/forcefield.cpp:477
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
@@ -4087,7 +4086,7 @@ msgstr "\"energyTolerance\" muss eine endliche, nicht-negative Zahl sein."
 #: qtplugins/forcefield/forcefield.cpp:529
 #: qtplugins/forcefield/forcefield.cpp:554
 msgid "No atoms are selected."
-msgstr "Es werden keine Atome ausgewählt."
+msgstr "Es sind keine Atome ausgewählt."
 
 #: qtplugins/forcefield/forcefield.cpp:519
 #: qtplugins/forcefield/forcefield.cpp:601
@@ -4568,7 +4567,7 @@ msgstr "Polymer einfügen"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
-msgstr ""
+msgstr "3D-Struktur wird erstellt…"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:104
 #, qt-format
@@ -4601,10 +4600,11 @@ msgstr "Filter:"
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
 msgstr ""
+"Die Monomeranteile müssen sich auf 100 % summieren (gegenwärtige Summe: %1)."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:625
 msgid "No monomer specified. Please choose at least monomer A."
-msgstr "Kein Monomer angegeben. Bitte wählen Sie mindestens Monomer A."
+msgstr "Es wurde kein Monomer angegeben. Bitte wählen Sie mindestens Monomer A."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:631
 msgid "Working"
@@ -5341,7 +5341,7 @@ msgstr "chemischer Name"
 #: qtplugins/networkdatabases/networkdatabases.cpp:180
 #, qt-format
 msgid "Querying PubChem for %1"
-msgstr "Abfragen von PubChem für %1"
+msgstr "Abfrage von PubChem für %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
@@ -5731,7 +5731,7 @@ msgstr "Nichts ausgewählt"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:404
 msgid "Select a plugin to install or update."
-msgstr "Wählen Sie ein Plugin, um zu installieren oder zu aktualisieren."
+msgstr "Wählen Sie ein Plugin, das Sie installieren oder aktualisieren wollen."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:414
 #, qt-format
@@ -5841,7 +5841,7 @@ msgstr "Nichts zu entfernen"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:688
 msgid "Select an installed plugin to remove it."
-msgstr ""
+msgstr "Wählen Sie ein Plugin, das zu entfernen ist."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:694
 msgid "Remove Plugins"
@@ -6166,7 +6166,7 @@ msgstr "Darstellung:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:543
 msgid "vs"
-msgstr ""
+msgstr "vs."
 
 #: qtplugins/plotconformer/plotconformer.cpp:554
 msgid "Add from Selection"
@@ -6294,17 +6294,17 @@ msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
-msgstr "PLY Ausfuhr"
+msgstr "PLY-Export"
 
 #: qtplugins/ply/ply.cpp:123
 #, qt-format
 msgid "Cannot open %1 for writing: %2"
-msgstr ""
+msgstr "%1 kann nicht zum Schreiben von %2 geöffnet werden"
 
 #: qtplugins/ply/ply.cpp:156
 #, qt-format
 msgid "Writing %1 failed: %2"
-msgstr "Schreiben %1 fehlgeschlagen: %2"
+msgstr "Schreiben von %1 fehlgeschlagen: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6524,11 +6524,11 @@ msgstr "Eigenschaften der Reste"
 #: qtplugins/propertytables/propertyview.cpp:891
 #: qtplugins/propertytables/propertyview.cpp:901
 msgid "Add Property"
-msgstr ""
+msgstr "Eigenschaft hinzufügen"
 
 #: qtplugins/propertytables/propertyview.cpp:867
 msgid "Property name"
-msgstr ""
+msgstr "Name der Eigenschaft"
 
 #. i18n: file: qtplugins/importpqr/pqrwidget.ui:139
 #. i18n: ectx: property (text), widget (QLabel, label_4)
@@ -6544,7 +6544,7 @@ msgstr "Zahl"
 
 #: qtplugins/propertytables/propertyview.cpp:874
 msgid "Integer"
-msgstr ""
+msgstr "ganze Zahl"
 
 #: qtplugins/propertytables/propertyview.cpp:877
 msgid "Text"
@@ -6560,7 +6560,7 @@ msgstr "Typ:"
 
 #: qtplugins/propertytables/propertyview.cpp:892
 msgid "The property name cannot be empty."
-msgstr ""
+msgstr "Der Name der Eigenschaft kann nicht leer sein."
 
 #: qtplugins/propertytables/propertyview.cpp:902
 #, qt-format
@@ -6568,6 +6568,8 @@ msgid ""
 "Could not add a property named \"%1\". A column with that name may already "
 "exist."
 msgstr ""
+"Eine Eigenschaft namens \"%1\" kann nicht hinzugefügt werden. Eine Spalte "
+"mit diesem Namen kann bereits bestehen."
 
 #: qtplugins/propertytables/propertyview.cpp:935
 msgid "Partial Charge Type"
@@ -6579,11 +6581,11 @@ msgstr "Partialladungstyp auswählen:"
 
 #: qtplugins/propertytables/propertyview.cpp:965
 msgid "Add Property…"
-msgstr "Objekt hinzufügen.."
+msgstr "Eigenschaft hinzufügen…"
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr "Energieeinheiten umrechnen.."
+msgstr "Energieeinheiten umrechnen…"
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
@@ -6959,7 +6961,7 @@ msgstr "Neue Ebene"
 
 #: qtplugins/spacegroup/spacegroup.cpp:82
 msgid "Give either hallNumber or spaceGroup, not both."
-msgstr "Geben Sie entweder hallNumber oder spaceGroup, nicht beide."
+msgstr "Geben Sie entweder hallNumber oder spaceGroup an, jedoch nicht beide."
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
 #, qt-format
@@ -6976,9 +6978,9 @@ msgid ""
 "spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
 "(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
 msgstr ""
-"spaceGroup \"%1\" bezeichnet keine einzelne Raumgruppeneinstellung; "
-"verwenden Sie hallNumber (1 bis %2) oder ein Symbol, das die Einstellung "
-"umfasst, z.B. \"F d -3 m :2\"."
+"spaceGroup \"%1\" bezeichnet kein spezifisches Setting einer Raumgruppe; "
+"verwenden Sie stattdessen hallNumber (1 bis %2) oder ein Symbol, um das "
+"Setting zu berücksichtigen, z.B. \"F d -3 m :2\"."
 
 #: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
@@ -7106,7 +7108,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "The molecule has no unit cell."
-msgstr ""
+msgstr "Ein Molekül hat keine Einheitszelle."
 
 #: qtplugins/spacegroup/spacegroup.cpp:636
 #, qt-format
@@ -7114,8 +7116,8 @@ msgid ""
 "The space group of the molecule is not known: give the hallNumber (1 to %1) "
 "or spaceGroup parameter."
 msgstr ""
-"Die Raumgruppe des Moleküls ist nicht bekannt: Geben Sie den hallNumber (1 "
-"bis %1) oder spaceGroup-Parameter."
+"Die Raumgruppe des Moleküls ist unbekannt: Geben Sie den hallNumber (1 bis "
+"%1) oder spaceGroup-Parameter an."
 
 #: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
@@ -7561,7 +7563,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:252
 #, qt-format
 msgid "Orbital %1 is out of range."
-msgstr "Orbital %1 ist außer Reichweite."
+msgstr "Orbital %1 ist außerhalb des verfügbaren Intervalls."
 
 #: qtplugins/surfaces/surfaces.cpp:262
 msgid ""
@@ -7585,7 +7587,9 @@ msgstr "Diese Datei enthält keine cube-Daten."
 #: qtplugins/surfaces/surfaces.cpp:292
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
-msgstr "Cube %1 ist aus dem Bereich, diese Datei hat %2."
+msgstr ""
+"Cube %1 befindet sich außerhalb des verfügbaren Intervalls, diese Datei hat "
+"%2."
 
 #: qtplugins/surfaces/surfaces.cpp:298
 #, qt-format
@@ -7626,9 +7630,8 @@ msgid "Movie AVI (*.avi)"
 msgstr "Film AVI (*.avi)"
 
 #: qtplugins/surfaces/surfaces.cpp:1103
-#, fuzzy
 msgid "Export Movie"
-msgstr "Exportiere Video"
+msgstr "Video exportieren"
 
 #: qtplugins/surfaces/surfaces.cpp:1104
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
@@ -7668,7 +7671,7 @@ msgstr "Symmetrie …"
 
 #: qtplugins/symmetry/symmetry.cpp:216
 msgid "There is no molecule to analyze."
-msgstr ""
+msgstr "Es ist kein Molekül für eine Analyse verfügbar."
 
 #: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
 msgid "The molecule has no 3D coordinates."
@@ -7680,11 +7683,11 @@ msgstr "Das Molekül hat keine Atome."
 
 #: qtplugins/symmetry/symmetry.cpp:386
 msgid "There is no molecule to symmetrize."
-msgstr ""
+msgstr "Es ist kein Molekül verfügbar, das symmetrisiert werden könnte."
 
 #: qtplugins/symmetry/symmetry.cpp:394
 msgid "A single atom is already symmetric."
-msgstr "Ein einziges Atom ist bereits symmetrisch."
+msgstr "Ein einzelnes Atom ist bereits symmetrisch."
 
 #: qtplugins/symmetry/symmetry.cpp:415
 #, qt-format
@@ -7693,27 +7696,27 @@ msgstr ""
 
 #: qtplugins/symmetry/symmetry.cpp:438
 msgid "Detect the point group of the molecule."
-msgstr "Erkennen Sie die Punktgruppe des Moleküls."
+msgstr "Bestimme die Punktgruppe des Moleküls."
 
 #: qtplugins/symmetry/symmetry.cpp:440
 msgid "Snap the molecule onto its detected point group."
-msgstr ""
+msgstr "Passe das Molekül an seine erkannten Punktgruppe an."
 
 #: qtplugins/symmetry/symmetry.cpp:457
 #, qt-format
 msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
 msgstr ""
-"Unbekannte Toleranz \"%1\": erwartet dicht, normal, locker oder sehrloose."
+"Unbekannte Toleranz \"%1\": erwartet eng, normal, locker oder sehr locker."
 
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr "Entdeckt %1"
+msgstr "Erkannt %1"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
 msgid "Symmetrized to %1"
-msgstr "Symmetrisiert auf %1"
+msgstr "Symmetrisiert zu %1"
 
 #: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
@@ -7798,27 +7801,29 @@ msgstr "Einfache Darstellung von vdW-Sphären."
 #: qtplugins/vibrations/displacementdialog.cpp:37
 #, qt-format
 msgid "Displace along: %1"
-msgstr ""
+msgstr "Verschiebung entlang: %1"
 
 #: qtplugins/vibrations/displacementdialog.cpp:68
 msgid "A scale factor of zero would only duplicate the current geometry."
-msgstr "Ein Skalenfaktor von Null würde nur die aktuelle Geometrie duplizieren."
+msgstr ""
+"Ein Skalierungsfaktor von Null würde nur die aktuelle Geometrie duplizieren."
 
 #: qtplugins/vibrations/displacementdialog.cpp:74
 #, qt-format
 msgid "One new coordinate set, displaced by %1 × the normal mode."
-msgstr "Ein neuer Koordinatensatz, verschoben durch %1 × den normalen Modus."
+msgstr "Ein neuer Koordinatensatz, verschoben mit %1 × den normalen Modus."
 
 #: qtplugins/vibrations/displacementdialog.cpp:83
 #, qt-format
 msgid ""
 "%1 new coordinate sets, evenly spaced from -%2 to +%2 × the normal mode."
 msgstr ""
-"%1 neue Koordinatensätze, gleichmäßig von -%2 bis +%2 × den Normalmodus."
+"%1 neue Koordinatensätze, gleichmäßig im Intervall von -%2 bis +%2 × des "
+"Normalmodus verteilt."
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
 msgid "The middle one is the undisplaced geometry."
-msgstr "Die mittlere ist die unversetzte Geometrie."
+msgstr "Die mittlere ist die originale Geometrie ohne Verschiebung."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
@@ -7995,15 +8000,15 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:80
 msgid "&Z-Matrix Editor…"
-msgstr "&Z-Matrix Editor.."
+msgstr "&Z-Matrix Editor…"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:135
 msgid "Atoms renumbered into z-matrix order."
-msgstr "Atome in z-Matrix-Bestellung umnummeriert."
+msgstr "Atome umnummeriert in Sequenz der z-Matrix."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:137
 msgid "The atoms are already in z-matrix order."
-msgstr "Die Atome sind bereits in z-Matrix-Ordnung."
+msgstr "Die Atome folgen bereits der Sequenz in der z-Matrix."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:148
 msgid ""
@@ -8016,7 +8021,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
-msgstr "Nichts braucht ein Dummy-Atom."
+msgstr "Ein Dummy-Atom wird hier nicht benötigt."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
@@ -8028,23 +8033,25 @@ msgstr "Es gibt nichts wieder aufzubauen."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:187
 msgid "There is nothing to renumber."
-msgstr ""
+msgstr "Eine neue Numerierung ist nicht nötig."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:190
 msgid ""
 "The atoms are already in z-matrix order: every atom already follows the "
 "atoms it is measured against, so renumbering them would change nothing."
 msgstr ""
-"Die Atome sind bereits in z-Matrix-Ordnung: Jedes Atom folgt bereits den "
-"Atomen, gegen die es gemessen wird, so dass die Umnummerierung nichts ändert."
+"Die Atome folgen bereits der Sequenz der z-Matrix: Jedes Atom folgt bereits "
+"den Atomen, gegen die es gemessen wird, daran würde eine neue Numerierung "
+"nichts ändern."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:195
 msgid ""
 "Renumber the atoms so that each one follows the atoms it is measured "
 "against. This changes the atom numbers the rest of the application uses."
 msgstr ""
-"Renummerieren Sie die Atome, so dass jeder den Atomen folgt, gegen die es "
-"gemessen wird. Dies ändert die Atomzahlen den Rest der Anwendung."
+"Nummerieren Sie die Atome so, dass jedes Atom denen folgt, gegen die es "
+"gemessen wird. Das ändert die Atomzahlen für den weiteren Verlauf der "
+"Anwendung."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:207
 msgid ""
@@ -8062,7 +8069,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
-msgstr "Bearbeiten Sie Bondlängen, Winkel und Torsion in einem Tisch."
+msgstr "Bearbeite Bindungslängen, Winkel und Torsionen in einer Tabelle."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:127
 msgid "Distance (Å)"
@@ -8075,12 +8082,12 @@ msgstr "Diederwinkel (°)"
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
 #, qt-format
 msgid "Constrained to %1 Å"
-msgstr ""
+msgstr "Festgelegt auf %1 Å"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:176
 #, qt-format
 msgid "Constrained to %1°"
-msgstr ""
+msgstr "Festgelegt auf %1°"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:364
 #, qt-format
@@ -8113,7 +8120,7 @@ msgstr "Abstand beschränken"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:123
 msgid "Constrain Dihedral"
-msgstr ""
+msgstr "Diederwinkel festlegen"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -8213,9 +8220,9 @@ msgid ""
 "Results will still be copied to the local MoleQueue job cache first.</p></"
 "body></html>"
 msgstr ""
-"<html><head/><body><p>Fernbediente Arbeitsdateien nach Fertigstellung der "
-"Arbeit löschen. Die Ergebnisse werden noch in den lokalen MoleQueue Job "
-"Cache kopiert.</p></body></html>"
+"<html><head/><body><p>Remote Arbeitsdateien werden nach Abschluss der Arbeit "
+"gelöscht. Die Ergebnisse werden noch in den lokalen MoleQueue Job Cache "
+"kopiert.</p></body></html>"
 
 #. i18n: file: molequeue/molequeuewidget.ui:128
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -8228,8 +8235,8 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Überprüfe, ob dieser Job nicht in der MoleQueue GUI "
-"standardmäßig angezeigt wird.</p></body></html>[X]"
+"<html><head/><body><p>Wählen Sie diese Option, damit dieser Job nicht in der "
+"MoleQueue GUI standardmäßig erscheint.</p></body></html>[X]"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -8911,8 +8918,8 @@ msgstr "Bindungsordnung:"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
 msgid "When possible, adjust bond lengths when changing atoms or bond orders"
 msgstr ""
-"Wenn möglich, Anpassung der Bindungslängen beim Wechsel von Atomen oder "
-"Bindungsaufträgen"
+"Wenn möglich, Bindungslängen beim Wechsel von Atomen oder Bindungsordnungen "
+"anpassen"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
@@ -9506,17 +9513,17 @@ msgstr "Monomer C:"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
 msgid "Depiction of the A repeat unit"
-msgstr ""
+msgstr "Wiedergabe der Wiederholeinheit A"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:103
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerBGraphics)
 msgid "Depiction of the B repeat unit"
-msgstr ""
+msgstr "Wiedergabe der Wiederholeinheit B"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:119
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerCGraphics)
 msgid "Depiction of the C repeat unit"
-msgstr ""
+msgstr "Wiedergabe der Wiederholeinheit C"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:160
 #. i18n: ectx: property (text), widget (QLabel, repeatLabel)
@@ -9548,7 +9555,7 @@ msgstr "Gesamtlänge:"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Molecular Weight"
-msgstr ""
+msgstr "molare Masse"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -9740,9 +9747,8 @@ msgstr "Zeile"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:256
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
-#, fuzzy
 msgid "meso"
-msgstr "Mesomerie"
+msgstr "meso"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:261
 #. i18n: ectx: property (text), item, widget (QComboBox, atomStyleCombo)
@@ -9819,7 +9825,7 @@ msgstr "NH-Ketten"
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
 msgstr ""
-"Zeitschritt für die Simulation in Einheiten nach \"Units\" Spezifikation."
+"Zeitinkrement für die Simulation in Einheiten nach \"Units\" Spezifikation."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -9947,7 +9953,9 @@ msgstr "einheitlich"
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:755
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, velocityTempSpin)
 msgid "Set the initial atom velocities to match this temperature."
-msgstr "Setzen Sie die anfänglichen Atomgeschwindigkeiten auf diese Temperatur."
+msgstr ""
+"Bestimme die anfänglichen Atomgeschwindigkeiten, die dieser Temperatur "
+"entsprechen."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:774
 #. i18n: ectx: property (toolTip), widget (QCheckBox, zeroMOMCheck)
@@ -10148,7 +10156,6 @@ msgstr "Anzahl der Kinder für jede Elterngeometrie"
 
 #. i18n: file: qtplugins/openbabel/conformersearchdialog.ui:105
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#, fuzzy
 msgid "Children:"
 msgstr "Kinder:"
 
@@ -10624,7 +10631,7 @@ msgstr "Gesamtenergie"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
 msgid "Search plugins…"
-msgstr ""
+msgstr "Suche Plugins…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
@@ -10639,22 +10646,22 @@ msgstr "Problem melden"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
 msgid "Open this plugin's bug tracker in your browser"
-msgstr "Öffnen Sie den Bugtracker dieses Plugins in Ihrem Browser"
+msgstr "Öffnen Sie den Bugtracker für dieses Plugin in Ihrem Browser"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
 msgid "Install from Directory…"
-msgstr "Installieren von Verzeichnis.."
+msgstr "Installieren von Verzeichnis…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:164
 #. i18n: ectx: property (text), widget (QPushButton, removeButton)
 msgid "Remove Selected"
-msgstr "Ausgewählte entfernen"
+msgstr "Auswahl entfernen"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:171
 #. i18n: ectx: property (text), widget (QPushButton, installButton)
 msgid "Install / Update Selected"
-msgstr "Installieren / Update ausgewählt"
+msgstr "Auswahl Installieren / Aktualisieren"
 
 #. i18n: file: qtplugins/plotpdf/pdfoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::PdfOptionsDialog)
@@ -10674,7 +10681,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
 msgid "Theoretical XRD Pattern Options"
-msgstr ""
+msgstr "Optionen des theoretischen XRDs"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:17
 #. i18n: ectx: property (toolTip), widget (QDialog, Avogadro::QtPlugins::XrdOptionsDialog)
@@ -10682,8 +10689,8 @@ msgid ""
 "<html><head/><body><p>The broadening of the peak at the base (in degrees).</"
 "p></body></html>"
 msgstr ""
-"<html><head/><body><p>Die Erweiterung des Peaks an der Basis (in Grad).</p></"
-"body></html>"
+"<html><head/><body><p>Die Signalverbreiterung an der Basis der Peaks (in "
+"Grad).</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:23
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_max2Theta)
@@ -10691,8 +10698,8 @@ msgid ""
 "<html><head/><body><p>The max 2theta value in degrees.</p><p>Default: "
 "162.00°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Der max 2theta Wert in Grad.</p><p>Standard: 162.00°</"
-"p></body></html>"
+"<html><head/><body><p>Der maximale 2theta-Wert in Grad.</p><p>Standard: "
+"162.00°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:45
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, spin_peakWidth)
@@ -10700,7 +10707,7 @@ msgid ""
 "<html><head/><body><p>The broadening of the peaks at the base in degrees.</"
 "p><p>Default: 0.52958°</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Die Erweiterung der Spitzen an der Basis in Grad.</p>"
+"<html><head/><body><p>Die Signalverbreiterung an der Peakbasis in Grad.</p>"
 "<p>Standard: 0.52958°</p></body></html>"
 
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:67
@@ -10785,7 +10792,7 @@ msgstr "X-Achse Minimum:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:82
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 msgid "X-Axis Maximum:"
-msgstr ""
+msgstr "x-Achse, Maximum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:99
 #. i18n: ectx: property (text), widget (QLabel, label_12)
@@ -10795,7 +10802,7 @@ msgstr "Offset:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 msgid "Y-Axis Maximum:"
-msgstr ""
+msgstr "y-Achse, Maximum:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:123
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -10810,7 +10817,7 @@ msgstr "Peakbreite:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:183
 #. i18n: ectx: property (text), widget (QLabel, label_27)
 msgid "Peak Threshold:"
-msgstr ""
+msgstr "Peak-Schwellenwert:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:190
 #. i18n: ectx: property (text), widget (QLabel, unitsLabel)
@@ -10893,7 +10900,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:315
 #. i18n: ectx: property (text), widget (QPushButton, push_import)
 msgid "&Import…"
-msgstr "&Importieren"
+msgstr "&Importieren…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:328
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -10908,12 +10915,12 @@ msgstr "Berechnete Spektren:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr "Raw Spectra:"
+msgstr "Rohspektren:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
 msgid "&Export…"
-msgstr "E&xportieren"
+msgstr "E&xportieren…"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:478
 #. i18n: ectx: property (text), widget (QPushButton, push_exportData)
@@ -10958,7 +10965,7 @@ msgstr ""
 #. i18n: file: qtplugins/spectra/spectradialog.ui:608
 #. i18n: ectx: property (text), widget (QPushButton, push_loadSpectra)
 msgid "&Load data…"
-msgstr "&Load Daten.."
+msgstr "&Daten laden…"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:65
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -11034,9 +11041,8 @@ msgstr "beta"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:95
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#, fuzzy
 msgid "Color by:"
-msgstr "Farbe nach:"
+msgstr "einfärben nach:"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:113
 #. i18n: ectx: property (text), item, widget (QComboBox, propertyCombo)
@@ -11451,17 +11457,18 @@ msgid ""
 "different high symmetry points depending on the lattice (such as if a &gt; b "
 "or a &lt; b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Enter spezielle k-Punkte als solche:</p><p>L 0.5 0.5</"
-"p><p>G 0,0</p>[X]<p>X 0.50</p>[X]<p>Das ist &lt;symbol [X139] Linien werden "
-"gezogen, die diese k-Punkte auf dem Diagramm in der Reihenfolge, in der Sie "
-"sie einfügen. Bitte beachten Sie, dass die Orientierung Ihrer Zelle einen "
-"Einfluss auf die Orte dieser gegenseitigen Raumpunkte haben kann.</p><p> "
-"Wenn die Raumgruppe des Kristalls wahrgenommen oder eingestellt wurde, "
-"werden die speziellen k Punkte automatisch mit den primitiven "
-"Zellhochsymmetriepunkten für diese Raumgruppe gefüllt. Es gibt einige "
-"Raumgruppen unterschiedlich hohe Symmetriepunkte je nach Gitter (z.B. ein "
-"&gt; b oder ein &lt; b) - das wird automatisch berücksichtigt.</p></body></"
-"html>"
+"<html><head/><body><p>Eingabe der speziellen k-Punkte:</p><p>L 0,5 0,5 0,5</"
+"p><p>G 0,0 0,0 0,0</p><p>X 0,5 0,0 0,5</p><p>Das heißt, &lt;Symbol&gt; "
+"&lt;x&gt; &lt;y&gt; &lt;z&gt;, wobei x, y und z fraktionelle Koordinaten im "
+"reziproken Raum sind. Die gezeichneten Linien verbinden diese k-Punkte im "
+"Diagramm in der Reihenfolge der Eingabe dieser Punkte. Bitte beachten Sie, "
+"dass die Orientierung Ihrer Zelle die Lage dieser Punkte im reziproken Raum "
+"beeinflussen kann. </p><p>Wenn die Raumgruppe des Kristalls erkannt oder à "
+"priori festgelegt wurde, werden die speziellen k-Punkte automatisch mit den "
+"höchstmöglichen Symmetriepunkten der Elementarzelle für diese Raumgruppe "
+"gefüllt. Je nach Gitter (z. B. a &gt; b oder a &lt; b) gibt es verschiedene "
+"Raumgruppen mit unterschiedlichen höchsten Symmetriepunkten – dies wird "
+"automatisch berücksichtigt.</p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
