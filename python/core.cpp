@@ -78,12 +78,22 @@ PYBIND11_MODULE(core, m)
                   guardedSet(&Bond::setOrder, "invalid bond"),
                   "The order of the bond (single = 1, double = 2, etc)")
     .def("is_valid", &Bond::isValid, "Check if the object is valid")
-    // keep_alive is safe here (no arguments to fail converting), unlike on
-    // Molecule's methods; see keepAlive in molecule.cpp.
-    .def("atom1", guardedGet(&Bond::atom1, "invalid bond"), "The first atom",
-         py::keep_alive<0, 1>())
-    .def("atom2", guardedGet(&Bond::atom2, "invalid bond"), "The second atom",
-         py::keep_alive<0, 1>());
+    .def(
+      "atom1",
+      [](const Bond& self) {
+        if (!self.isValid())
+          throw std::runtime_error("invalid bond");
+        return keepAlive(*self.molecule(), self.atom1());
+      },
+      "The first atom")
+    .def(
+      "atom2",
+      [](const Bond& self) {
+        if (!self.isValid())
+          throw std::runtime_error("invalid bond");
+        return keepAlive(*self.molecule(), self.atom2());
+      },
+      "The second atom");
 
   // --- UnitCell ---
 

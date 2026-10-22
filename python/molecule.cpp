@@ -55,20 +55,6 @@ py::array_t<T> copyToArray(const void* source, size_t count, size_t width = 0)
   return result;
 }
 
-// Return value (an Atom or Bond proxy) as a Python object that keeps its
-// molecule alive. py::keep_alive<0, 1> would be the usual tool, but pybind11
-// 3.1 runs its post-call hook even when argument conversion failed, which
-// then dereferences a bogus return handle: m.atom(-1) segfaults instead of
-// raising TypeError. Doing it by hand only runs on a successful call.
-template <typename T>
-py::object keepAlive(Molecule& owner, T&& value)
-{
-  py::object result = py::cast(std::forward<T>(value));
-  py::object ownerObject = py::cast(&owner, py::return_value_policy::reference);
-  py::detail::keep_alive_impl(result, ownerObject);
-  return result;
-}
-
 } // namespace
 
 // The bulk getters memcpy these types into plain numpy arrays.

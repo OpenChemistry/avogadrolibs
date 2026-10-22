@@ -89,6 +89,15 @@ def test_negative_index_rejected():
         mol.bond(-1)
 
 
+def test_bond_atom_rejects_wrong_self_type():
+    # pybind11 3.1's keep_alive post-call hook crashed when argument
+    # conversion failed, including for the implicit self argument.
+    with pytest.raises(TypeError):
+        core.Bond.atom1(5)
+    with pytest.raises(TypeError):
+        core.Bond.atom2("not a bond")
+
+
 def test_missing_bond_is_invalid_and_guarded():
     mol = core.Molecule()
     mol.add_atom(6)
