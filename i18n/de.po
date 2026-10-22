@@ -8274,7 +8274,7 @@ msgstr "Strg+C"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Structure Input File"
-msgstr ""
+msgstr "Struktur Eingabedatei"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
