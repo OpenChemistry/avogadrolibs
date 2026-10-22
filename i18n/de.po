@@ -6120,20 +6120,20 @@ msgstr ""
 
 #: qtplugins/playertool/playertool.cpp:698
 msgid "There is no molecule."
-msgstr ""
+msgstr "Es gibt kein Molekül."
 
 #: qtplugins/playertool/playertool.cpp:702
 msgid "The molecule has no coordinate sets."
-msgstr ""
+msgstr "Das Molekül hat keine Koordinatensätze."
 
 #: qtplugins/playertool/playertool.cpp:712
 msgid "index is required."
-msgstr ""
+msgstr "index ist erforderlich."
 
 #: qtplugins/playertool/playertool.cpp:721
 #, qt-format
 msgid "index must be a whole number from 0 to %1."
-msgstr ""
+msgstr "index muss eine ganze Zahl von 0 bis %1 sein."
 
 #: qtplugins/playertool/playertool.h:35
 msgid "Player tool"
@@ -6185,7 +6185,7 @@ msgstr "Zeit zwischen den Einzelbildern:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:592
 msgid " ps"
-msgstr ""
+msgstr " ps"
 
 #: qtplugins/plotconformer/plotconformer.cpp:594
 msgid ""
@@ -6293,7 +6293,7 @@ msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
-msgstr ""
+msgstr "PLY Ausfuhr"
 
 #: qtplugins/ply/ply.cpp:123
 #, qt-format
