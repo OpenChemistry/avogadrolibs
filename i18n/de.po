@@ -8910,6 +8910,8 @@ msgstr "Bindungsordnung:"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
 msgid "When possible, adjust bond lengths when changing atoms or bond orders"
 msgstr ""
+"Wenn möglich, Anpassung der Bindungslängen beim Wechsel von Atomen oder "
+"Bindungsaufträgen"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
