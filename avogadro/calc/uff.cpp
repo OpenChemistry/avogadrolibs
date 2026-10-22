@@ -1144,8 +1144,8 @@ Real UFF::value(const Eigen::VectorXd& x)
 
   Real energy = 0.0;
   d->evaluate(x, &energy, nullptr);
-  energy += constraintEnergies(x);
-  return energy * KCAL_TO_KJ;
+  // UFF terms are in kcal/mol; restraints are already in kJ/mol
+  return energy * KCAL_TO_KJ + constraintEnergies(x);
 }
 
 Real UFF::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
@@ -1165,17 +1165,17 @@ Real UFF::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
   Real energy = 0.0;
   d->evaluate(x, &energy, grad);
 
-  // Add constraint energies
-  energy += constraintEnergies(x);
+  // Convert the UFF terms from kcal/mol to kJ/mol before adding restraints,
+  // which are already in kJ/mol (see core/constraint.h)
+  energy = energy * KCAL_TO_KJ + constraintEnergies(x);
 
   if (grad != nullptr) {
+    *grad *= KCAL_TO_KJ;
     cleanGradients(*grad);
     constraintGradients(x, *grad);
-    // convert from kcal/mol to kJ/mol
-    *grad *= KCAL_TO_KJ;
   }
 
-  return energy * KCAL_TO_KJ;
+  return energy;
 }
 
 Real UFF::bondEnergy(const Eigen::VectorXd& x)
