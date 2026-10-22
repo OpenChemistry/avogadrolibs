@@ -7817,7 +7817,7 @@ msgstr ""
 
 #: qtplugins/vibrations/displacementdialog.cpp:88
 msgid "The middle one is the undisplaced geometry."
-msgstr ""
+msgstr "Die mittlere ist die unversetzte Geometrie."
 
 #. i18n: file: qtplugins/vibrations/vibrationdialog.ui:96
 #. i18n: ectx: property (text), widget (QPushButton, startButton)
