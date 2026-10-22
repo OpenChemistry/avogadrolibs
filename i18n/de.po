@@ -7560,7 +7560,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:252
 #, qt-format
 msgid "Orbital %1 is out of range."
-msgstr ""
+msgstr "Orbital %1 ist außer Reichweite."
 
 #: qtplugins/surfaces/surfaces.cpp:262
 msgid ""
