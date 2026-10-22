@@ -10298,12 +10298,12 @@ msgstr "AMBER99sb"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:109
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-ildn"
-msgstr ""
+msgstr "AMBER99sb-ildn"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:114
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
 msgid "AMBER99sb-nmr"
-msgstr ""
+msgstr "AMBER99sb-nmr"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:119
 #. i18n: ectx: property (text), item, widget (QComboBox, forceFieldCombo)
@@ -10323,17 +10323,17 @@ msgstr "Wassermodell:"
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:145
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP3P"
-msgstr ""
+msgstr "TIPP3P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:150
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP4P-Ew"
-msgstr ""
+msgstr "TIP4P-Ew"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:155
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
 msgid "TIP5P"
-msgstr ""
+msgstr "TIP5P"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:160
 #. i18n: ectx: property (text), item, widget (QComboBox, waterModelCombo)
@@ -10638,7 +10638,7 @@ msgstr ""
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
 msgid "Open this plugin's bug tracker in your browser"
-msgstr ""
+msgstr "Öffnen Sie den Bugtracker dieses Plugins in Ihrem Browser"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
