@@ -6582,7 +6582,7 @@ msgstr "Objekt hinzufügen.."
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr ""
+msgstr "Energieeinheiten umrechnen.."
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
