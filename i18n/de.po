@@ -5730,7 +5730,7 @@ msgstr "Nichts ausgewählt"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:404
 msgid "Select a plugin to install or update."
-msgstr ""
+msgstr "Wählen Sie ein Plugin, um zu installieren oder zu aktualisieren."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:414
 #, qt-format
