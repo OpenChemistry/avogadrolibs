@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
-"PO-Revision-Date: 2026-10-21 23:50+0000\n"
+"PO-Revision-Date: 2026-10-22 10:16+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2295,7 +2295,7 @@ msgstr "Spectral"
 #: qtplugins/surfaces/surfaces.cpp:1003:180 rc.cpp:2078
 msgctxt "colormap"
 msgid "Coolwarm"
-msgstr "Kühl-Warm"
+msgstr "Coolwarm"
 
 #. i18n: file: qtplugins/applycolors/chargedialog.ui:35
 #. i18n: ectx: property (text), item, widget (QComboBox, colorMapCombo)
@@ -3248,7 +3248,7 @@ msgstr "Atomkoordinaten bearbeiten"
 #: qtplugins/label/label.cpp:274 qtplugins/label/label.cpp:297
 #: qtplugins/label/label.cpp:312:2111 rc.cpp:2136
 msgid "Custom"
-msgstr "Benutzerdefiniert"
+msgstr "benutzerdefiniert"
 
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:640
 msgid "XYZ format (symbols)"
@@ -4730,7 +4730,6 @@ msgid "Opacity:"
 msgstr "Intransparenz:"
 
 #: qtplugins/licorice/licorice.h:36
-#, fuzzy
 msgid "Render atoms as licorice / sticks."
 msgstr "Atome als Lakritz/Stäbchen rendern."
 
@@ -6475,9 +6474,8 @@ msgid "Torsion Properties…"
 msgstr "Torsionseigenschaften…"
 
 #: qtplugins/propertytables/propertytables.cpp:55
-#, fuzzy
 msgid "Residue Properties…"
-msgstr "Resteneigenschaften…"
+msgstr "Eigenschaften der Reste…"
 
 #: qtplugins/propertytables/propertytables.cpp:63
 msgid "Conformer Properties…"
@@ -6515,9 +6513,8 @@ msgid "Conformer Properties"
 msgstr "Konformereneigenschaften"
 
 #: qtplugins/propertytables/propertyview.cpp:74
-#, fuzzy
 msgid "Residue Properties"
-msgstr "Resteneigenschaften"
+msgstr "Eigenschaften der Reste"
 
 #: qtplugins/propertytables/propertyview.cpp:862
 #: qtplugins/propertytables/propertyview.cpp:891
@@ -6729,9 +6726,8 @@ msgid "Load electrostatic models from external scripts."
 msgstr "Elektrostatische Modelle aus externen Skripten laden."
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:30
-#, fuzzy
 msgid "Script File Formats"
-msgstr "Skriptendateiformate"
+msgstr "Formate der Skriptdateien"
 
 #: qtplugins/scriptfileformats/scriptfileformats.h:34
 msgid "Load file reader/writers from external scripts."
@@ -7769,7 +7765,6 @@ msgid "Clipboard"
 msgstr "Zwischenablage"
 
 #: qtplugins/templatetool/templatetool.cpp:589
-#, fuzzy
 msgid "Insert Template"
 msgstr "Templat einfügen"
 
@@ -7872,7 +7867,6 @@ msgid "Vibrations"
 msgstr "Schwingungen"
 
 #: qtplugins/vibrations/vibrations.h:41
-#, fuzzy
 msgid "Display vibrational modes."
 msgstr "Schwingungsmoden anzeigen."
 
@@ -9071,9 +9065,8 @@ msgstr "Nukleinsäuren einfügen"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#, fuzzy
 msgid "DNA/RNA Builder"
-msgstr "DNA/RNA-Erzeuger"
+msgstr "DNA/RNA-Editor"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:27
 #. i18n: ectx: property (text), item, widget (QComboBox, typeComboBox)
@@ -9177,10 +9170,9 @@ msgstr "Stränge:"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:190
 #. i18n: ectx: property (text), widget (QRadioButton, singleStrandRadio)
-#, fuzzy
 msgctxt "single-strand DNA"
 msgid "Single"
-msgstr "Einfach"
+msgstr "einfache Helix"
 
 #. i18n: file: qtplugins/insertdna/insertdnadialog.ui:197
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
@@ -10965,7 +10957,7 @@ msgstr "Niedrig"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:380
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 msgid "Medium"
-msgstr "Mittel"
+msgstr "mittel"
 
 #. i18n: file: qtplugins/surfaces/orbitalwidget.ui:91
 #. i18n: ectx: property (text), item, widget (QComboBox, combo_quality)
@@ -11043,7 +11035,7 @@ msgstr "Glätten:"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:375
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 msgid "Light"
-msgstr "Licht"
+msgstr "leicht"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:385
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
