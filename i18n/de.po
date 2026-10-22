@@ -9818,6 +9818,7 @@ msgstr "NH-Ketten"
 msgid ""
 "Time step for the simulation in units according to \"Units\" specification."
 msgstr ""
+"Zeitschritt für die Simulation in Einheiten nach \"Units\" Spezifikation."
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:399
 #. i18n: ectx: property (text), widget (QLabel, label_2)
