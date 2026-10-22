@@ -9529,7 +9529,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Tacticity:"
-msgstr ""
+msgstr "Tacticity:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
