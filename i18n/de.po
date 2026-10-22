@@ -8227,6 +8227,8 @@ msgid ""
 "<html><head/><body><p>Check to prevent this job from showing up in the "
 "MoleQueue GUI by default.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Überprüfe, ob dieser Job nicht in der MoleQueue GUI "
+"standardmäßig angezeigt wird.</p></body></html>[X]"
 
 #. i18n: file: molequeue/molequeuewidget.ui:148
 #. i18n: ectx: property (text), widget (QLabel, label_2)
