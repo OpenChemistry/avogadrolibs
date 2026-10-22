@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-22 11:04+0000\n"
-"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -2391,7 +2391,7 @@ msgstr "Rest-Farben zurücksetzen"
 
 #: qtplugins/applycolors/applycolors.cpp:476
 msgid "Apply Secondary Structure Colors"
-msgstr "Sekundärstruktur Farben anwenden"
+msgstr "Sekundärstruktur-Farben anwenden"
 
 #: qtplugins/applycolors/applycolors.cpp:564
 msgid "Apply Amino Acid Colors"
@@ -4519,7 +4519,6 @@ msgid "Insert Fragment"
 msgstr "Fragment einfügen"
 
 #: qtplugins/insertfragment/insertfragment.h:35
-#, fuzzy
 msgid "InsertFragment"
 msgstr "Fragment einfügen"
 
@@ -4564,7 +4563,7 @@ msgstr "Kein SMILES Formatleser gefunden. Ist Open Babel verfügbar?"
 #: qtplugins/insertpolymer/insertpolymer.h:23
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:636:904 rc.cpp:979
 msgid "Insert Polymer"
-msgstr ""
+msgstr "Polymer einfügen"
 
 #: qtplugins/insertpolymer/insertpolymer.cpp:90
 msgid "Generating 3D structure…"
@@ -4576,14 +4575,16 @@ msgid ""
 "Failed to generate polymer from SMILES:\n"
 "%1"
 msgstr ""
+"Es konnte kein Polymer aus den SMILES gebildet werden:\n"
+"%1"
 
 #: qtplugins/insertpolymer/insertpolymer.h:26
 msgid "Build polymers from monomer repeat units."
-msgstr ""
+msgstr "Polymer von monomeren Wiederholungseinheiten bauen."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:166
 msgid "Polymer monomer data directory not found."
-msgstr "Polymer Monomer Datenverzeichnis nicht gefunden."
+msgstr "Das Datenverzeichnis der Monomere konnte nicht gefunden werden."
 
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:172
 msgid "Choose Monomer"
@@ -4942,10 +4943,10 @@ msgid ""
 "{\"atoms\": [i, j], \"value\": …}; the second atom and everything bonded to "
 "it on that side move. Returns the new {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
-"Setzen Sie den Abstand in Å zwischen zwei Atomen, gegeben als Null-basierte "
-"Indizes: {\"Atome\": [i, j], \"Wert\": ...}; das zweite Atom und alles, was "
-"an dieser Seite gebunden ist, bewegen sich. Gibt den neuen {\"Abstand\" "
-"zurück: ..., \"Atome\": [i, j]}."
+"Bestimme den Abstand in Å zwischen zwei Atomen, gegeben als Null-basierte "
+"Indizes: {\"atoms\": [i, j], \"value\": ...}; das zweite Atom und alles, was "
+"an diese Seite gebunden ist, bewegen sich. Rückgabe des neuen {\"distance\": "
+"…, \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
@@ -7776,7 +7777,7 @@ msgstr "Liganden einfügen"
 
 #: qtplugins/templatetool/templatetool.cpp:1011
 msgid "Insert Metal Center"
-msgstr ""
+msgstr "Metallzentrum einfügen"
 
 #: qtplugins/templatetool/templatetool.h:36
 #: qtplugins/templatetool/templatetool.h:37
@@ -7970,7 +7971,7 @@ msgstr ""
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
 msgid "Add Dummy Atoms"
-msgstr "Dummy Atoms hinzufügen"
+msgstr "Dummy-Atome hinzufügen"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
@@ -8278,7 +8279,7 @@ msgstr "Strg+C"
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Structure Input File"
-msgstr "Struktur Eingabedatei"
+msgstr "Struktur-Eingabedatei"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:28
 #. i18n: ectx: property (text), widget (QRadioButton, generateFromPdbButton)
@@ -9180,12 +9181,12 @@ msgstr "einfache Helix"
 #. i18n: ectx: property (text), widget (QRadioButton, doubleStrandRadio)
 msgctxt "double-strand DNA"
 msgid "Double"
-msgstr "Doppelt"
+msgstr "Doppelhelix"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 msgid "Peptide Builder"
-msgstr ""
+msgstr "Peptid-Editor"
 
 #. i18n: file: qtplugins/insertpeptide/insertpeptidedialog.ui:46
 #. i18n: ectx: property (toolTip), widget (QToolButton, toolButton)
@@ -9462,7 +9463,7 @@ msgstr "Polymerstruktur"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:26
 #. i18n: ectx: property (text), widget (QLabel, label)
 msgid "A unit:"
-msgstr ""
+msgstr "Monomer A:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:33
 #. i18n: ectx: property (text), widget (QPushButton, monomerAButton)
@@ -9476,12 +9477,12 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:40
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "B unit:"
-msgstr ""
+msgstr "Monomer B:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:57
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 msgid "C unit:"
-msgstr ""
+msgstr "Monomer C:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:87
 #. i18n: ectx: property (toolTip), widget (QToolButton, monomerAGraphics)
@@ -9506,7 +9507,7 @@ msgstr "Wiederholungen:"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:221
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 msgid "Repeat Style:"
-msgstr "Wiederholen Stil:"
+msgstr "Wiederholungsstil:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:232
 #. i18n: ectx: property (text), item, widget (QComboBox, monomerRepeatStyle)
@@ -9518,12 +9519,12 @@ msgstr "Prozent"
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:269
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
 msgid "Repeat Units"
-msgstr ""
+msgstr "Wiederholungseinheiten"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:245
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 msgid "Total Length:"
-msgstr "Gesamtlänge"
+msgstr "Gesamtlänge:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:274
 #. i18n: ectx: property (text), item, widget (QComboBox, totalLengthUnits)
@@ -9533,27 +9534,27 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:285
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 msgid "Tacticity:"
-msgstr "Tacticity:"
+msgstr "Taktizität:"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:292
 #. i18n: ectx: property (toolTip), widget (QComboBox, tacticityComboBox)
 msgid "Control of the polymer stereochemistry / tacticity"
-msgstr "Steuerung der Polymer-Stereochemie / Taktik"
+msgstr "Steuerung der Polymer-Stereochemie / Taktizität"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:299
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Atactic / Random"
-msgstr ""
+msgstr "ataktisch / zufällig"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Isotactic"
-msgstr "Isopraktisch"
+msgstr "isotaktisch"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Syndiotactic"
-msgstr ""
+msgstr "syndiotaktisch / alternierend"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, LammpsInputDialog)
