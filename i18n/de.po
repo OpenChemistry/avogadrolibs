@@ -6303,7 +6303,7 @@ msgstr ""
 #: qtplugins/ply/ply.cpp:156
 #, qt-format
 msgid "Writing %1 failed: %2"
-msgstr ""
+msgstr "Schreiben %1 fehlgeschlagen: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
