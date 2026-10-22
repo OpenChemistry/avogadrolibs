@@ -8061,7 +8061,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
-msgstr ""
+msgstr "Bearbeiten Sie Bondlängen, Winkel und Torsion in einem Tisch."
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:127
 msgid "Distance (Å)"
