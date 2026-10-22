@@ -10738,7 +10738,7 @@ msgstr ""
 #. i18n: file: qtplugins/plotxrd/xrdoptionsdialog.ui:141
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 msgid "Max 2θ:"
-msgstr ""
+msgstr "Max 2θ:"
 
 #. i18n: file: qtplugins/qtaim/qtaimsettingswidget.ui:19
 #. i18n: ectx: property (text), widget (QLabel, atomRadiusLabel)
@@ -10907,7 +10907,7 @@ msgstr "Berechnete Spektren:"
 #. i18n: file: qtplugins/spectra/spectradialog.ui:409
 #. i18n: ectx: property (text), widget (QLabel, label_14)
 msgid "Raw Spectra:"
-msgstr ""
+msgstr "Raw Spectra:"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:457
 #. i18n: ectx: property (text), widget (QPushButton, push_export)
