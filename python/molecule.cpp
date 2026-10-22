@@ -9,50 +9,128 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <algorithm>
 #include <cstring>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace py = pybind11;
 
 using namespace Avogadro;
 using namespace Avogadro::Core;
 
-// Ensure std::pair<Index,Index> has no padding for zero-copy numpy views.
+namespace {
+
+// The Atom/Bond proxies hold a raw pointer to their molecule; refuse proxies
+// from another molecule rather than index this one with a foreign index.
+void requireOwnedAtom(const Molecule& self, const Atom& atom)
+{
+  if (!atom.isValid() || atom.molecule() != &self)
+    throw py::value_error("Atom does not belong to this molecule");
+}
+
+// The setters need one entry per atom; say what was expected.
+std::string lengthMessage(const char* name, size_t expected, size_t got)
+{
+  return std::string(name) + " must have one entry per atom (expected " +
+         std::to_string(expected) + ", got " + std::to_string(got) + ")";
+}
+
+// Copy count rows of width elements of type T into a new (count, width)
+// numpy array, or a flat (count,) one when width is 0. The result owns its
+// data: a view into Core::Array would dangle as soon as the molecule
+// reallocates, and Core::Array is copy-on-write, so writes through a view of
+// its const buffer could change other molecules sharing it.
+template <typename T>
+py::array_t<T> copyToArray(const void* source, size_t count, size_t width = 0)
+{
+  std::vector<Py_ssize_t> shape{ static_cast<Py_ssize_t>(count) };
+  if (width > 0)
+    shape.push_back(static_cast<Py_ssize_t>(width));
+  py::array_t<T> result(shape);
+  if (count > 0)
+    std::memcpy(result.mutable_data(), source,
+                count * std::max<size_t>(width, 1) * sizeof(T));
+  return result;
+}
+
+} // namespace
+
+// The bulk getters memcpy these types into plain numpy arrays.
 static_assert(sizeof(std::pair<Index, Index>) == 2 * sizeof(Index),
-              "std::pair<Index,Index> must be contiguous for numpy view");
+              "std::pair<Index,Index> must be contiguous to copy into numpy");
+static_assert(sizeof(Vector3) == 3 * sizeof(double),
+              "Vector3 must be contiguous to copy into numpy");
 
 void exportMolecule(py::module_& m)
 {
   // Function pointer overloads
   Index (Molecule::*atomCount0)() const = &Molecule::atomCount;
   Index (Molecule::*atomCount1)(unsigned char) const = &Molecule::atomCount;
-  Bond (Molecule::*addBond1)(Index, Index, unsigned char) = &Molecule::addBond;
-  Bond (Molecule::*addBond2)(const Atom&, const Atom&, unsigned char) =
-    &Molecule::addBond;
-  Bond (Molecule::*bond0)(Index) const = &Molecule::bond;
-  Bond (Molecule::*bond1)(const Atom&, const Atom&) const = &Molecule::bond;
-  Bond (Molecule::*bond2)(Index, Index) const = &Molecule::bond;
   Cube* (Molecule::*cube0)(Index) = &Molecule::cube;
   UnitCell* (Molecule::*unitCell0)() = &Molecule::unitCell;
 
   py::class_<Molecule>(m, "Molecule")
     .def(py::init<>())
     // --- Per-atom/bond access ---
-    .def("add_atom",
-         static_cast<Atom (Molecule::*)(unsigned char)>(&Molecule::addAtom),
-         "Add an atom")
+    // Atom and Bond are proxies holding a raw Molecule pointer, so every one
+    // returned must keep the molecule alive (see keepAlive).
+    .def(
+      "add_atom",
+      [](Molecule& self, unsigned char atomicNumber) {
+        return keepAlive(self, self.addAtom(atomicNumber));
+      },
+      "Add an atom")
     .def("atom_count", atomCount0, "The number of atoms")
     .def("atom_count", atomCount1,
          "The number of atoms with the supplied atomic number")
-    .def("atom", &Molecule::atom, "The atom at the specified index")
-    .def("add_bond", addBond1, "Add a new bond", py::arg("a1"), py::arg("a2"),
-         py::arg("order") = 1)
-    .def("add_bond", addBond2, "Add a new bond", py::arg("a1"), py::arg("a2"),
-         py::arg("order") = 1)
+    .def(
+      "atom",
+      [](Molecule& self, Index index) {
+        if (index >= self.atomCount())
+          throw py::index_error("atom index out of range");
+        return keepAlive(self, self.atom(index));
+      },
+      "The atom at the specified index")
+    .def(
+      "add_bond",
+      [](Molecule& self, Index a1, Index a2, unsigned char order) {
+        return keepAlive(self, self.addBond(a1, a2, order));
+      },
+      "Add a new bond", py::arg("a1"), py::arg("a2"), py::arg("order") = 1)
+    .def(
+      "add_bond",
+      [](Molecule& self, const Atom& a1, const Atom& a2, unsigned char order) {
+        requireOwnedAtom(self, a1);
+        requireOwnedAtom(self, a2);
+        return keepAlive(self, self.addBond(a1, a2, order));
+      },
+      "Add a new bond", py::arg("a1"), py::arg("a2"), py::arg("order") = 1)
     .def("bond_count", &Molecule::bondCount, "The number of bonds")
-    .def("bond", bond0, "The bond at the specified index")
-    .def("bond", bond1, "The bond between the specified atoms")
-    .def("bond", bond2, "The bond between the specified atoms")
+    .def(
+      "bond",
+      [](Molecule& self, Index index) {
+        if (index >= self.bondCount())
+          throw py::index_error("bond index out of range");
+        return keepAlive(self, self.bond(index));
+      },
+      "The bond at the specified index")
+    .def(
+      "bond",
+      [](Molecule& self, const Atom& a, const Atom& b) {
+        requireOwnedAtom(self, a);
+        requireOwnedAtom(self, b);
+        return keepAlive(self, self.bond(a, b));
+      },
+      "The bond between the specified atoms (invalid if there is none)")
+    .def(
+      "bond",
+      [](Molecule& self, Index a, Index b) {
+        return keepAlive(self, self.bond(a, b));
+      },
+      "The bond between the atoms at the specified indices (invalid if "
+      "there is none)")
     .def("add_cube", &Molecule::addCube,
          py::return_value_policy::reference_internal, "Add a new cube")
     .def("cube_count", &Molecule::cubeCount, "The number of cubes")
@@ -74,90 +152,79 @@ void exportMolecule(py::module_& m)
          py::arg("delimiter") = "", py::arg("show_counts_over") = 1)
     .def("mass", &Molecule::mass, "The mass of the molecule")
 
-    // --- Bulk array properties (numpy, zero-copy read) ---
+    // --- Bulk array properties (numpy; getters return copies) ---
     .def_property(
       "positions",
       [](const Molecule& self) -> py::array_t<double> {
         const auto& pos = self.atomPositions3d();
-        if (pos.empty())
-          return py::array_t<double>(std::vector<Py_ssize_t>{ 0, 3 });
-        return py::array_t<double>(
-          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(pos.size()), 3 },
-          { static_cast<Py_ssize_t>(3 * sizeof(double)),
-            static_cast<Py_ssize_t>(sizeof(double)) },
-          reinterpret_cast<const double*>(pos.constData()), py::cast(self));
+        return copyToArray<double>(pos.constData(), pos.size(), 3);
       },
       [](Molecule& self, py::array_t<double, py::array::c_style> arr) {
         auto buf = arr.request();
         if (buf.ndim != 2 || buf.shape[1] != 3)
           throw py::value_error("Expected shape (N, 3)");
         Core::Array<Vector3> positions(buf.shape[0]);
-        std::memcpy(positions.data(), buf.ptr,
-                    buf.shape[0] * 3 * sizeof(double));
-        self.setAtomPositions3d(positions);
+        if (buf.shape[0] > 0)
+          std::memcpy(positions.data(), buf.ptr,
+                      buf.shape[0] * 3 * sizeof(double));
+        if (!self.setAtomPositions3d(positions))
+          throw py::value_error(
+            lengthMessage("positions", self.atomCount(), positions.size()));
       },
-      "Atomic positions as an (N, 3) numpy array")
+      "Atomic positions as an (N, 3) numpy array (a copy; assign to the "
+      "property to change them)")
     .def_property(
       "atomic_numbers",
       [](const Molecule& self) -> py::array_t<uint8_t> {
         const auto& nums = self.atomicNumbers();
-        if (nums.empty())
-          return py::array_t<uint8_t>(0);
-        return py::array_t<uint8_t>(
-          { static_cast<Py_ssize_t>(nums.size()) },
-          { static_cast<Py_ssize_t>(sizeof(uint8_t)) },
-          reinterpret_cast<const uint8_t*>(nums.constData()), py::cast(self));
+        return copyToArray<uint8_t>(nums.constData(), nums.size());
       },
       [](Molecule& self, py::array_t<uint8_t, py::array::c_style> arr) {
         auto buf = arr.request();
+        if (buf.ndim != 1)
+          throw py::value_error("Expected a 1-D array of atomic numbers");
         Core::Array<unsigned char> nums(buf.shape[0]);
-        std::memcpy(nums.data(), buf.ptr, buf.shape[0]);
-        self.setAtomicNumbers(nums);
+        if (buf.shape[0] > 0)
+          std::memcpy(nums.data(), buf.ptr, buf.shape[0]);
+        if (!self.setAtomicNumbers(nums))
+          throw py::value_error(
+            lengthMessage("atomic_numbers", self.atomCount(), nums.size()));
       },
-      "Atomic numbers as a uint8 numpy array")
+      "Atomic numbers as a uint8 numpy array (a copy; assign to the property "
+      "to change them)")
     .def_property(
       "formal_charges",
       [](const Molecule& self) -> py::array_t<int8_t> {
         const auto& charges = self.formalCharges();
-        if (charges.empty())
-          return py::array_t<int8_t>(0);
-        return py::array_t<int8_t>(
-          { static_cast<Py_ssize_t>(charges.size()) },
-          { static_cast<Py_ssize_t>(sizeof(int8_t)) },
-          reinterpret_cast<const int8_t*>(charges.constData()), py::cast(self));
+        return copyToArray<int8_t>(charges.constData(), charges.size());
       },
       [](Molecule& self, py::array_t<int8_t, py::array::c_style> arr) {
         auto buf = arr.request();
+        if (buf.ndim != 1)
+          throw py::value_error("Expected a 1-D array of formal charges");
         Core::Array<signed char> charges(buf.shape[0]);
-        std::memcpy(charges.data(), buf.ptr, buf.shape[0]);
-        self.setFormalCharges(charges);
+        if (buf.shape[0] > 0)
+          std::memcpy(charges.data(), buf.ptr, buf.shape[0]);
+        if (!self.setFormalCharges(charges))
+          throw py::value_error(
+            lengthMessage("formal_charges", self.atomCount(), charges.size()));
       },
-      "Formal charges as an int8 numpy array")
+      "Formal charges as an int8 numpy array (a copy; assign to the property "
+      "to change them)")
     .def_property_readonly(
       "bond_pairs",
       [](const Molecule& self) -> py::array_t<size_t> {
         const auto& pairs = self.bondPairs();
-        if (pairs.empty())
-          return py::array_t<size_t>(std::vector<Py_ssize_t>{ 0, 2 });
-        return py::array_t<size_t>(
-          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(pairs.size()), 2 },
-          { static_cast<Py_ssize_t>(2 * sizeof(size_t)),
-            static_cast<Py_ssize_t>(sizeof(size_t)) },
-          reinterpret_cast<const size_t*>(pairs.constData()), py::cast(self));
+        return copyToArray<size_t>(pairs.constData(), pairs.size(), 2);
       },
-      "Bond pairs as an (M, 2) numpy array of atom indices")
+      "Bond pairs as an (M, 2) numpy array of atom indices (a copy)")
     .def_property_readonly(
       "bond_orders",
       [](const Molecule& self) -> py::array_t<uint8_t> {
         const auto& orders = self.bondOrders();
-        if (orders.empty())
-          return py::array_t<uint8_t>(0);
-        return py::array_t<uint8_t>(
-          { static_cast<Py_ssize_t>(orders.size()) },
-          { static_cast<Py_ssize_t>(sizeof(uint8_t)) },
-          reinterpret_cast<const uint8_t*>(orders.constData()), py::cast(self));
+        return copyToArray<uint8_t>(orders.constData(), orders.size());
       },
-      "Bond orders as a uint8 numpy array")
+      "Bond orders as a uint8 numpy array (a copy)")
 
     // --- Partial charges ---
     .def("partial_charges", &Molecule::partialCharges, py::arg("type"),
@@ -202,15 +269,9 @@ void exportMolecule(py::module_& m)
       "force_vectors",
       [](const Molecule& self) -> py::array_t<double> {
         const auto& forces = self.forceVectors();
-        if (forces.empty())
-          return py::array_t<double>(std::vector<Py_ssize_t>{ 0, 3 });
-        return py::array_t<double>(
-          std::vector<Py_ssize_t>{ static_cast<Py_ssize_t>(forces.size()), 3 },
-          { static_cast<Py_ssize_t>(3 * sizeof(double)),
-            static_cast<Py_ssize_t>(sizeof(double)) },
-          reinterpret_cast<const double*>(forces.constData()), py::cast(self));
+        return copyToArray<double>(forces.constData(), forces.size(), 3);
       },
-      "Force vectors as an (N, 3) numpy array")
+      "Force vectors as an (N, 3) numpy array (a copy)")
 
     // --- Vibration data (returns by value, must copy) ---
     .def_property_readonly(
