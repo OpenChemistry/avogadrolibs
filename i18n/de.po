@@ -7702,6 +7702,7 @@ msgstr ""
 #, qt-format
 msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
 msgstr ""
+"Unbekannte Toleranz \"%1\": erwartet dicht, normal, locker oder sehrloose."
 
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
