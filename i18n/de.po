@@ -5340,7 +5340,7 @@ msgstr "chemischer Name"
 #: qtplugins/networkdatabases/networkdatabases.cpp:180
 #, qt-format
 msgid "Querying PubChem for %1"
-msgstr ""
+msgstr "Abfragen von PubChem für %1"
 
 #: qtplugins/networkdatabases/networkdatabases.h:35
 msgid "Network Databases"
