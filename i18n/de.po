@@ -11345,7 +11345,7 @@ msgstr ""
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:61
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
 msgid "Number of structures:"
-msgstr ""
+msgstr "Anzahl der Strukturen:"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:68
 #. i18n: ectx: property (toolTip), widget (QSpinBox, countSpinBox)
@@ -11451,6 +11451,17 @@ msgid ""
 "different high symmetry points depending on the lattice (such as if a &gt; b "
 "or a &lt; b) - that is taken into account automatically.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Enter spezielle k-Punkte als solche:</p><p>L 0.5 0.5</"
+"p><p>G 0,0</p>[X]<p>X 0.50</p>[X]<p>Das ist &lt;symbol [X139] Linien werden "
+"gezogen, die diese k-Punkte auf dem Diagramm in der Reihenfolge, in der Sie "
+"sie einfügen. Bitte beachten Sie, dass die Orientierung Ihrer Zelle einen "
+"Einfluss auf die Orte dieser gegenseitigen Raumpunkte haben kann.</p><p> "
+"Wenn die Raumgruppe des Kristalls wahrgenommen oder eingestellt wurde, "
+"werden die speziellen k Punkte automatisch mit den primitiven "
+"Zellhochsymmetriepunkten für diese Raumgruppe gefüllt. Es gibt einige "
+"Raumgruppen unterschiedlich hohe Symmetriepunkte je nach Gitter (z.B. ein "
+"&gt; b oder ein &lt; b) - das wird automatisch berücksichtigt.</p></body></"
+"html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:149
 #. i18n: ectx: property (html), widget (QTextEdit, edit_specialKPoints)
