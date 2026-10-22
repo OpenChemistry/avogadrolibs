@@ -6963,11 +6963,11 @@ msgstr "Geben Sie entweder hallNumber oder spaceGroup, nicht beide."
 #: qtplugins/spacegroup/spacegroup.cpp:97
 #, qt-format
 msgid "hallNumber must be an integer from 1 to %1."
-msgstr ""
+msgstr "hallNumber muss eine ganze Zahl von 1 bis %1 sein."
 
 #: qtplugins/spacegroup/spacegroup.cpp:106
 msgid "spaceGroup must be a space group symbol (a string)."
-msgstr ""
+msgstr "spaceGroup muss ein Raumgruppensymbol (ein String) sein."
 
 #: qtplugins/spacegroup/spacegroup.cpp:113
 #, qt-format
@@ -6975,6 +6975,9 @@ msgid ""
 "spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
 "(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
 msgstr ""
+"spaceGroup \"%1\" bezeichnet keine einzelne Raumgruppeneinstellung; "
+"verwenden Sie hallNumber (1 bis %2) oder ein Symbol, das die Einstellung "
+"umfasst, z.B. \"F d -3 m :2\"."
 
 #: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
