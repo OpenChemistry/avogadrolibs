@@ -8015,7 +8015,7 @@ msgstr ""
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
-msgstr ""
+msgstr "Nichts braucht ein Dummy-Atom."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
