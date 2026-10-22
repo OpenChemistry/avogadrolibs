@@ -8002,7 +8002,7 @@ msgstr "Atome in z-Matrix-Bestellung umnummeriert."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:137
 msgid "The atoms are already in z-matrix order."
-msgstr ""
+msgstr "Die Atome sind bereits in z-Matrix-Ordnung."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:148
 msgid ""
