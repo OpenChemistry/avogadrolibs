@@ -362,3 +362,73 @@ def test_cube_data_before_limits_rejected():
     cube = core.Molecule().add_cube()
     with pytest.raises(ValueError):
         cube.data = np.ones(8, dtype=np.float32)
+
+
+# --- Constraint ---
+
+
+def test_constraint_types_from_atom_count():
+    assert core.Constraint([0, 1], 1.5).type == core.Constraint.Type.Distance
+    assert core.Constraint([0, 1, 2], 109.5).type == core.Constraint.Type.Angle
+    assert core.Constraint([0, 1, 2, 3], 60.0).type == core.Constraint.Type.Torsion
+
+
+def test_constraint_properties():
+    c = core.Constraint((3, 1, 2), 120.0, 5000.0)
+    assert c.atoms == (3, 1, 2)
+    assert c.value == 120.0
+    assert c.force_constant == 5000.0
+    assert "120" in repr(c)
+
+
+def test_constraint_default_force_constants():
+    # Distances are in kJ/mol/A^2, angles and torsions in kJ/mol/rad^2.
+    assert core.Constraint([0, 1], 1.0).force_constant == core.Constraint.DEFAULT_DISTANCE_K
+    assert core.Constraint([0, 1, 2], 90.0).force_constant == core.Constraint.DEFAULT_ANGULAR_K
+    assert core.Constraint([0, 1, 2, 3], 0.0).force_constant == core.Constraint.DEFAULT_ANGULAR_K
+
+
+def test_constraint_is_valid():
+    c = core.Constraint([0, 4, 2], 90.0)
+    assert c.is_valid(5)
+    assert not c.is_valid(4)
+    assert not c.is_valid(0)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ([0], 1.0),
+        ([0, 1, 2, 3, 4], 1.0),
+        ([], 1.0),
+        ([0, 0], 1.0),
+        ([0, 1, 0], 1.0),
+        ([0, 1], float("nan")),
+        ([0, 1], float("inf")),
+    ],
+)
+def test_constraint_bad_values(args):
+    with pytest.raises(ValueError):
+        core.Constraint(*args)
+
+
+@pytest.mark.parametrize("k", [-1.0, float("nan")])
+def test_constraint_bad_force_constant(k):
+    with pytest.raises(ValueError):
+        core.Constraint([0, 1], 1.0, k)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [(5, 1.0), (["a", "b"], 1.0), ([-1, 1], 1.0), ([0, 1], "x"), ([0, 1], 1.0, "k")],
+)
+def test_constraint_wrong_types(args):
+    with pytest.raises(TypeError):
+        core.Constraint(*args)
+
+
+def test_constraint_unbound_wrong_self():
+    with pytest.raises(TypeError):
+        core.Constraint.is_valid(5, 3)
+    with pytest.raises(TypeError):
+        core.Constraint.is_valid(core.Constraint([0, 1], 1.0), "x")
