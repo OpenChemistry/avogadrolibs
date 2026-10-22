@@ -7584,7 +7584,7 @@ msgstr "Diese Datei enthält keine cube-Daten."
 #: qtplugins/surfaces/surfaces.cpp:292
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
-msgstr ""
+msgstr "Cube %1 ist aus dem Bereich, diese Datei hat %2."
 
 #: qtplugins/surfaces/surfaces.cpp:298
 #, qt-format
