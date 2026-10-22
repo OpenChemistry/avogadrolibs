@@ -8042,6 +8042,8 @@ msgid ""
 "Renumber the atoms so that each one follows the atoms it is measured "
 "against. This changes the atom numbers the rest of the application uses."
 msgstr ""
+"Renummerieren Sie die Atome, so dass jeder den Atomen folgt, gegen die es "
+"gemessen wird. Dies ändert die Atomzahlen den Rest der Anwendung."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:207
 msgid ""
