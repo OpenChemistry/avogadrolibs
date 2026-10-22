@@ -9544,7 +9544,7 @@ msgstr ""
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:304
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
 msgid "Isotactic"
-msgstr ""
+msgstr "Isopraktisch"
 
 #. i18n: file: qtplugins/insertpolymer/insertpolymerdialog.ui:309
 #. i18n: ectx: property (text), item, widget (QComboBox, tacticityComboBox)
