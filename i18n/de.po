@@ -23,7 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-10-13 17:39+0000\n"
 "PO-Revision-Date: 2026-10-22 10:16+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5224,9 +5225,8 @@ msgstr "Molküleigenschaften"
 
 #: qtplugins/molecularproperties/molecularview.cpp:138
 #: qtplugins/propertytables/propertyview.cpp:807
-#, fuzzy
 msgid "Export CSV"
-msgstr "Exportieren CSV"
+msgstr "Exportieren als CSV"
 
 #: qtplugins/molecularproperties/molecularview.cpp:139
 #: qtplugins/propertytables/propertyview.cpp:808
@@ -5958,9 +5958,8 @@ msgid "File Formats"
 msgstr "Dateiformate"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:616
-#, fuzzy
 msgid "Input Generators"
-msgstr "Eingabe-Erzeuger"
+msgstr "Eingabegeneratoren"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:618
 msgid "Commands"
