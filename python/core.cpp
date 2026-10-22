@@ -7,10 +7,41 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <stdexcept>
+#include <utility>
+
 namespace py = pybind11;
 
 using namespace Avogadro;
 using namespace Avogadro::Core;
+
+namespace {
+
+// Atom and Bond are lightweight proxies (molecule pointer + index). One that
+// is not valid (e.g. Molecule.bond(a, b) when there is no such bond) must not
+// be dereferenced, so every accessor except index/is_valid goes through
+// these wrappers and raises RuntimeError instead of crashing.
+template <typename T, typename R>
+auto guardedGet(R (T::*getter)() const, const char* what)
+{
+  return [getter, what](const T& self) -> R {
+    if (!self.isValid())
+      throw std::runtime_error(what);
+    return (self.*getter)();
+  };
+}
+
+template <typename T, typename R, typename Arg>
+auto guardedSet(R (T::*setter)(Arg), const char* what)
+{
+  return [setter, what](T& self, Arg value) {
+    if (!self.isValid())
+      throw std::runtime_error(what);
+    (self.*setter)(std::forward<Arg>(value));
+  };
+}
+
+} // namespace
 
 PYBIND11_MODULE(core, m)
 {
@@ -22,13 +53,18 @@ PYBIND11_MODULE(core, m)
   py::class_<atomBase>(m, "atomBase");
   py::class_<Atom, atomBase>(m, "Atom")
     .def_property_readonly("index", &Atom::index, "Index in the molecule")
-    .def_property("atomic_number", &Atom::atomicNumber, &Atom::setAtomicNumber,
-                  "The atomic number")
-    .def_property("position", &Atom::position3d, &Atom::setPosition3d,
+    .def_property(
+      "atomic_number", guardedGet(&Atom::atomicNumber, "invalid atom"),
+      guardedSet(&Atom::setAtomicNumber, "invalid atom"), "The atomic number")
+    .def_property("position", guardedGet(&Atom::position3d, "invalid atom"),
+                  guardedSet(&Atom::setPosition3d, "invalid atom"),
                   "The 3D position of the atom")
-    .def_property("formal_charge", &Atom::formalCharge, &Atom::setFormalCharge,
+    .def_property("formal_charge",
+                  guardedGet(&Atom::formalCharge, "invalid atom"),
+                  guardedSet(&Atom::setFormalCharge, "invalid atom"),
                   "The formal charge of the atom")
-    .def_property("is_selected", &Atom::selected, &Atom::setSelected,
+    .def_property("is_selected", guardedGet(&Atom::selected, "invalid atom"),
+                  guardedSet(&Atom::setSelected, "invalid atom"),
                   "Whether the atom is selected")
     .def("is_valid", &Atom::isValid, "Check if the object is valid");
 
@@ -38,11 +74,16 @@ PYBIND11_MODULE(core, m)
   py::class_<bondBase>(m, "bondBase");
   py::class_<Bond, bondBase>(m, "Bond")
     .def_property_readonly("index", &Bond::index, "Index in the molecule")
-    .def_property("order", &Bond::order, &Bond::setOrder,
+    .def_property("order", guardedGet(&Bond::order, "invalid bond"),
+                  guardedSet(&Bond::setOrder, "invalid bond"),
                   "The order of the bond (single = 1, double = 2, etc)")
     .def("is_valid", &Bond::isValid, "Check if the object is valid")
-    .def("atom1", &Bond::atom1, "The first atom")
-    .def("atom2", &Bond::atom2, "The second atom");
+    // keep_alive is safe here (no arguments to fail converting), unlike on
+    // Molecule's methods; see keepAlive in molecule.cpp.
+    .def("atom1", guardedGet(&Bond::atom1, "invalid bond"), "The first atom",
+         py::keep_alive<0, 1>())
+    .def("atom2", guardedGet(&Bond::atom2, "invalid bond"), "The second atom",
+         py::keep_alive<0, 1>());
 
   // --- UnitCell ---
 

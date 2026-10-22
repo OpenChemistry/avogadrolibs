@@ -17,6 +17,32 @@ namespace py = pybind11;
 using namespace Avogadro;
 using namespace Avogadro::Core;
 
+namespace {
+
+// The Atom/Bond proxies hold a raw pointer to their molecule; refuse proxies
+// from another molecule rather than index this one with a foreign index.
+void requireOwnedAtom(const Molecule& self, const Atom& atom)
+{
+  if (!atom.isValid() || atom.molecule() != &self)
+    throw py::value_error("Atom does not belong to this molecule");
+}
+
+// Return value (an Atom or Bond proxy) as a Python object that keeps its
+// molecule alive. py::keep_alive<0, 1> would be the usual tool, but pybind11
+// 3.1 runs its post-call hook even when argument conversion failed, which
+// then dereferences a bogus return handle: m.atom(-1) segfaults instead of
+// raising TypeError. Doing it by hand only runs on a successful call.
+template <typename T>
+py::object keepAlive(Molecule& owner, T&& value)
+{
+  py::object result = py::cast(std::forward<T>(value));
+  py::object ownerObject = py::cast(&owner, py::return_value_policy::reference);
+  py::detail::keep_alive_impl(result, ownerObject);
+  return result;
+}
+
+} // namespace
+
 // Ensure std::pair<Index,Index> has no padding for zero-copy numpy views.
 static_assert(sizeof(std::pair<Index, Index>) == 2 * sizeof(Index),
               "std::pair<Index,Index> must be contiguous for numpy view");
@@ -26,33 +52,69 @@ void exportMolecule(py::module_& m)
   // Function pointer overloads
   Index (Molecule::*atomCount0)() const = &Molecule::atomCount;
   Index (Molecule::*atomCount1)(unsigned char) const = &Molecule::atomCount;
-  Bond (Molecule::*addBond1)(Index, Index, unsigned char) = &Molecule::addBond;
-  Bond (Molecule::*addBond2)(const Atom&, const Atom&, unsigned char) =
-    &Molecule::addBond;
-  Bond (Molecule::*bond0)(Index) const = &Molecule::bond;
-  Bond (Molecule::*bond1)(const Atom&, const Atom&) const = &Molecule::bond;
-  Bond (Molecule::*bond2)(Index, Index) const = &Molecule::bond;
   Cube* (Molecule::*cube0)(Index) = &Molecule::cube;
   UnitCell* (Molecule::*unitCell0)() = &Molecule::unitCell;
 
   py::class_<Molecule>(m, "Molecule")
     .def(py::init<>())
     // --- Per-atom/bond access ---
-    .def("add_atom",
-         static_cast<Atom (Molecule::*)(unsigned char)>(&Molecule::addAtom),
-         "Add an atom")
+    // Atom and Bond are proxies holding a raw Molecule pointer, so every one
+    // returned must keep the molecule alive (see keepAlive).
+    .def(
+      "add_atom",
+      [](Molecule& self, unsigned char atomicNumber) {
+        return keepAlive(self, self.addAtom(atomicNumber));
+      },
+      "Add an atom")
     .def("atom_count", atomCount0, "The number of atoms")
     .def("atom_count", atomCount1,
          "The number of atoms with the supplied atomic number")
-    .def("atom", &Molecule::atom, "The atom at the specified index")
-    .def("add_bond", addBond1, "Add a new bond", py::arg("a1"), py::arg("a2"),
-         py::arg("order") = 1)
-    .def("add_bond", addBond2, "Add a new bond", py::arg("a1"), py::arg("a2"),
-         py::arg("order") = 1)
+    .def(
+      "atom",
+      [](Molecule& self, Index index) {
+        if (index >= self.atomCount())
+          throw py::index_error("atom index out of range");
+        return keepAlive(self, self.atom(index));
+      },
+      "The atom at the specified index")
+    .def(
+      "add_bond",
+      [](Molecule& self, Index a1, Index a2, unsigned char order) {
+        return keepAlive(self, self.addBond(a1, a2, order));
+      },
+      "Add a new bond", py::arg("a1"), py::arg("a2"), py::arg("order") = 1)
+    .def(
+      "add_bond",
+      [](Molecule& self, const Atom& a1, const Atom& a2, unsigned char order) {
+        requireOwnedAtom(self, a1);
+        requireOwnedAtom(self, a2);
+        return keepAlive(self, self.addBond(a1, a2, order));
+      },
+      "Add a new bond", py::arg("a1"), py::arg("a2"), py::arg("order") = 1)
     .def("bond_count", &Molecule::bondCount, "The number of bonds")
-    .def("bond", bond0, "The bond at the specified index")
-    .def("bond", bond1, "The bond between the specified atoms")
-    .def("bond", bond2, "The bond between the specified atoms")
+    .def(
+      "bond",
+      [](Molecule& self, Index index) {
+        if (index >= self.bondCount())
+          throw py::index_error("bond index out of range");
+        return keepAlive(self, self.bond(index));
+      },
+      "The bond at the specified index")
+    .def(
+      "bond",
+      [](Molecule& self, const Atom& a, const Atom& b) {
+        requireOwnedAtom(self, a);
+        requireOwnedAtom(self, b);
+        return keepAlive(self, self.bond(a, b));
+      },
+      "The bond between the specified atoms (invalid if there is none)")
+    .def(
+      "bond",
+      [](Molecule& self, Index a, Index b) {
+        return keepAlive(self, self.bond(a, b));
+      },
+      "The bond between the atoms at the specified indices (invalid if "
+      "there is none)")
     .def("add_cube", &Molecule::addCube,
          py::return_value_policy::reference_internal, "Add a new cube")
     .def("cube_count", &Molecule::cubeCount, "The number of cubes")
