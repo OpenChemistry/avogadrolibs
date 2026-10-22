@@ -42,8 +42,12 @@ env:
   # Run tests
   CIBW_TEST_REQUIRES: pytest
 
-  # Run a very simple test to make sure the wheels are working
-  CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
+  # Run a very simple test, plus the binding safety tests, to make sure the
+  # wheels are working
+  CIBW_TEST_COMMAND: >
+    pytest {project}/scripts/github-actions/simple_test.py
+    {project}/python/tests/test_core_bindings.py
+    {project}/python/tests/test_io_bindings.py
 
   # We can't currently test Mac arm64 builds on x64
   CIBW_TEST_SKIP: "*_arm64"
