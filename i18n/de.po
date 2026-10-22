@@ -7707,7 +7707,7 @@ msgstr ""
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr ""
+msgstr "Entdeckt %1"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
