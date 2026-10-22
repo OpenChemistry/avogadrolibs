@@ -8034,6 +8034,8 @@ msgid ""
 "The atoms are already in z-matrix order: every atom already follows the "
 "atoms it is measured against, so renumbering them would change nothing."
 msgstr ""
+"Die Atome sind bereits in z-Matrix-Ordnung: Jedes Atom folgt bereits den "
+"Atomen, gegen die es gemessen wird, so dass die Umnummerierung nichts ändert."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:195
 msgid ""
