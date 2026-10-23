@@ -9,9 +9,9 @@ Going forward, we will indicate particular releases for long-term-support, altho
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.0.x | :white_check_mark: |
-| 1.103.x | :white_check_mark: |
-| < 1.103 | :x:                |
+| 2.1.x   | :white_check_mark: |
+| 2.0.x   | :white_check_mark: |
+| < 2.x   | :x:                |
 
 ## Reporting a Vulnerability
 
