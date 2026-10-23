@@ -12,6 +12,8 @@
 
 #include <avogadro/io/mdlformat.h>
 
+#include <cstdio>
+
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Molecule;
@@ -391,4 +393,114 @@ TEST(MdlTest, aromaticBondType4IsKekulizedV3000)
   Molecule molecule;
   ASSERT_TRUE(mdl.readString(molfile, molecule)) << mdl.error();
   expectKekulizedBenzene(molecule);
+}
+
+namespace {
+// A chloro-bromo-iron triatomic with the element symbols supplied by caller.
+std::string v2000Symbols(const char* fe, const char* cl, const char* br,
+                         const char* mixed, const char* c)
+{
+  auto line = [](double x, const char* sym) {
+    char buf[96];
+    snprintf(buf, sizeof(buf),
+             "%10.4f%10.4f%10.4f %-3s 0  0  0  0  0  0  0  0  0  0  0  0\n", x,
+             0.0, 0.0, sym);
+    return std::string(buf);
+  };
+  return "Symbols\n  Test3D\n\n  5  0  0  0  0  0  0  0  0  0999 V2000\n" +
+         line(0.0, fe) + line(1.0, cl) + line(2.0, br) + line(3.0, mixed) +
+         line(4.0, c) + "M  END\n";
+}
+} // namespace
+
+TEST(MdlTest, upperCaseSymbolsV2000)
+{
+  const std::string molfile = v2000Symbols("FE", "CL", "BR", "cL", "C");
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(molfile, molecule)) << mdl.error();
+  ASSERT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 26);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 17);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 35);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 17);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 6);
+}
+
+TEST(MdlTest, upperCaseSymbolsV3000)
+{
+  const std::string molfile = "Symbols\n"
+                              "  Test3D\n"
+                              "\n"
+                              "  0  0  0     0  0            999 V3000\n"
+                              "M  V30 BEGIN CTAB\n"
+                              "M  V30 COUNTS 5 0 0 0 0\n"
+                              "M  V30 BEGIN ATOM\n"
+                              "M  V30 1 FE 0.0 0.0 0.0 0\n"
+                              "M  V30 2 CL 1.0 0.0 0.0 0\n"
+                              "M  V30 3 BR 2.0 0.0 0.0 0\n"
+                              "M  V30 4 cL 3.0 0.0 0.0 0\n"
+                              "M  V30 5 C 4.0 0.0 0.0 0\n"
+                              "M  V30 END ATOM\n"
+                              "M  V30 BEGIN BOND\n"
+                              "M  V30 END BOND\n"
+                              "M  V30 END CTAB\n"
+                              "M  END\n";
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(molfile, molecule)) << mdl.error();
+  ASSERT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 26);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 17);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 35);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 17);
+  EXPECT_EQ(molecule.atom(4).atomicNumber(), 6);
+}
+
+TEST(MdlTest, deuteriumSymbols)
+{
+  MdlFormat mdl;
+  Molecule v2;
+  ASSERT_TRUE(mdl.readString(v2000Symbols("D", "d", "T", "t", "H"), v2))
+    << mdl.error();
+  ASSERT_EQ(v2.atomCount(), 5);
+  for (size_t i = 0; i < 5; ++i)
+    EXPECT_EQ(v2.atom(i).atomicNumber(), 1);
+  EXPECT_EQ(v2.isotope(0), 2);
+  EXPECT_EQ(v2.isotope(1), 2);
+  EXPECT_EQ(v2.isotope(2), 3);
+  EXPECT_EQ(v2.isotope(3), 3);
+
+  const std::string v3 = "D\n  Test3D\n\n"
+                         "  0  0  0     0  0            999 V3000\n"
+                         "M  V30 BEGIN CTAB\n"
+                         "M  V30 COUNTS 2 0 0 0 0\n"
+                         "M  V30 BEGIN ATOM\n"
+                         "M  V30 1 D 0.0 0.0 0.0 0\n"
+                         "M  V30 2 t 1.0 0.0 0.0 0\n"
+                         "M  V30 END ATOM\n"
+                         "M  V30 BEGIN BOND\n"
+                         "M  V30 END BOND\n"
+                         "M  V30 END CTAB\n"
+                         "M  END\n";
+  Molecule v3m;
+  ASSERT_TRUE(mdl.readString(v3, v3m)) << mdl.error();
+  EXPECT_EQ(v3m.atom(0).atomicNumber(), 1);
+  EXPECT_EQ(v3m.isotope(0), 2);
+  EXPECT_EQ(v3m.atom(1).atomicNumber(), 1);
+  EXPECT_EQ(v3m.isotope(1), 3);
+}
+
+TEST(MdlTest, upperCaseSymbolsConformerMatch)
+{
+  // A second SDF record with the same atoms is folded in as another
+  // coordinate set when its elements match the first record. The second
+  // record writes its symbols in upper case; it must still match.
+  const std::string sdf = v2000Symbols("Fe", "Cl", "Br", "Cl", "C") + "$$$$\n" +
+                          v2000Symbols("FE", "CL", "BR", "CL", "C") + "$$$$\n";
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(sdf, molecule)) << mdl.error();
+  EXPECT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
 }

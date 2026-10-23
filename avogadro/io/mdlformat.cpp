@@ -15,6 +15,7 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
+#include <cctype>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -39,6 +40,21 @@ using std::istringstream;
 using std::setprecision;
 using std::setw;
 using std::string;
+
+namespace {
+// Element symbols are case-sensitive in the element table, but many files
+// (e.g. RCSB Chemical Component Dictionary SDFs) write them in upper case
+// ("FE", "CL"). Normalise to first upper, rest lower, ASCII only. This also
+// makes "d" and "t" match the deuterium / tritium checks.
+std::string normalizeSymbol(std::string symbol)
+{
+  for (size_t i = 0; i < symbol.size(); ++i) {
+    auto c = static_cast<unsigned char>(symbol[i]);
+    symbol[i] = static_cast<char>(i == 0 ? std::toupper(c) : std::tolower(c));
+  }
+  return symbol;
+}
+} // namespace
 
 namespace Avogadro::Io {
 
@@ -239,7 +255,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       return false;
     }
 
-    string element(trimmed(buffer.substr(31, 3)));
+    string element(normalizeSymbol(trimmed(buffer.substr(31, 3))));
     auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))).value_or(0));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
@@ -654,7 +670,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       // Check element matches
-      string element(trimmed(buffer.substr(31, 3)));
+      string element(normalizeSymbol(trimmed(buffer.substr(31, 3))));
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       if (element == "D" || element == "T")
         atomicNum = 1;
@@ -774,7 +790,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       return false;
     }
 
-    string element(trimmed(atomData[3]));
+    string element(normalizeSymbol(trimmed(atomData[3])));
     unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
     Atom newAtom = mol.addAtom(atomicNum);
     if (element == "D") {
