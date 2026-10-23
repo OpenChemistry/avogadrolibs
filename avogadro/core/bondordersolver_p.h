@@ -88,8 +88,9 @@ struct BondOrderSolution
  * tightened until nothing changes: an atom whose demand equals the total
  * capacity of its open edges forces them all, an atom with no demand left
  * zeroes them all) with bounded backtracking over the most constrained
- * vertex. Ordinary conjugated systems, fused aromatics included, resolve by
- * propagation alone.
+ * vertex. Isolated multiple bonds resolve by propagation alone; rings and
+ * other conjugated systems need a few branching steps (benzene one, biphenyl
+ * two, coronene five), which then propagate to settle the rest.
  */
 BondOrderSolution solveBondOrders(const BondOrderProblem& problem,
                                   std::size_t stepBudget);

@@ -27,8 +27,11 @@ struct BondOrderOptions
 
   /**
    * How many branching steps the search may spend on each connected group of
-   * unsaturated atoms before giving that group up. Ordinary molecules,
-   * fused aromatics included, need none at all.
+   * unsaturated atoms before giving that group up. Isolated double and triple
+   * bonds are settled by propagation alone, but rings and other conjugated
+   * systems need branching: benzene and naphthalene take one step, biphenyl
+   * two, coronene five. A budget of zero therefore fails every group that
+   * propagation cannot settle.
    */
   std::size_t stepBudgetPerComponent = 100000;
 };

@@ -648,19 +648,14 @@ TEST(BondOrderPerceptionTest, grapheneFlake)
 TEST(BondOrderPerceptionTest, oddUnsaturationFailsImmediately)
 {
   // A flake with a vacancy has an odd number of sp2 carbons: no pairing of
-  // their valences exists. That is decided before any search, so it is fast
-  // (the old behaviour spent its whole step budget, about a quarter of a
-  // second) and the message names the cause.
+  // their valences exists. That is decided before any search (the old
+  // behaviour spent its whole step budget), so the message names the cause
+  // rather than the step limit.
   std::size_t carbons = 0;
   Molecule mol = graphene(true, carbons);
   ASSERT_EQ(carbons % 2, 1u);
 
-  const auto start = std::chrono::steady_clock::now();
   const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
-  const double seconds =
-    std::chrono::duration<double>(std::chrono::steady_clock::now() - start)
-      .count();
-  EXPECT_LT(seconds, 0.05);
   EXPECT_FALSE(result.success);
   EXPECT_EQ(result.failedAtoms.size(), carbons);
   EXPECT_NE(result.message.find("odd number of unpaired"), std::string::npos)

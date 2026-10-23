@@ -455,6 +455,12 @@ void runCorpus(const std::string& subdirectory, const std::string& extension,
           if (!matches) {
             unexpected.push_back(key + " (expected " + expected->second.kind +
                                  ", got " + name + ")");
+            // Perception claiming success with the wrong valences is never an
+            // acceptable substitute for the failure the manifest expects.
+            if (eval.outcome == Outcome::Wrong) {
+              ADD_FAILURE() << key << ": expected " << expected->second.kind
+                            << ", got wrong (" << eval.detail << ")";
+            }
           }
           if (eval.outcome == Outcome::Fail) {
             EXPECT_TRUE(eval.cleanFailure)
