@@ -607,7 +607,13 @@ TEST(BondOrderPerceptionTest, longPolyeneWithNitroGroup)
   EXPECT_EQ(mol.bond(0, nitrogen).order(), 1);
 }
 
-TEST(BondOrderPerceptionTest, grapheneFlake)
+/**
+ * A parallelogram of hexagonal graphene cells, edge carbons capped with
+ * hydrogen, as geometry-only input (coordinates plus bonds). With @a vacancy
+ * the carbon nearest the middle is removed, leaving an odd number of carbons
+ * (the three neighbours get hydrogen).
+ */
+Molecule graphene(bool vacancy, std::size_t& carbons)
 {
   // A parallelogram of hexagonal graphene cells, edge carbons capped with
   // hydrogen, as geometry-only input (coordinates plus bonds).
@@ -639,10 +645,24 @@ TEST(BondOrderPerceptionTest, grapheneFlake)
     }
   }
 
+  if (vacancy) {
+    // Take out the carbon nearest the middle of the flake.
+    Vector3 centre = Vector3::Zero();
+    for (const Vector3& position : positions)
+      centre += position;
+    centre /= static_cast<double>(positions.size());
+    std::size_t nearest = 0;
+    for (std::size_t p = 1; p < positions.size(); ++p) {
+      if ((positions[p] - centre).norm() < (positions[nearest] - centre).norm())
+        nearest = p;
+    }
+    positions.erase(positions.begin() + static_cast<std::ptrdiff_t>(nearest));
+  }
+
   Molecule mol;
   for (const Vector3& position : positions)
     mol.addAtom(6).setPosition3d(position);
-  const std::size_t carbons = positions.size();
+  carbons = positions.size();
   for (std::size_t p = 0; p < carbons; ++p) {
     std::vector<std::size_t> neighbours;
     for (std::size_t q = 0; q < carbons; ++q) {
@@ -662,6 +682,13 @@ TEST(BondOrderPerceptionTest, grapheneFlake)
       mol.addBond(p, h.index(), 1);
     }
   }
+  return mol;
+}
+
+TEST(BondOrderPerceptionTest, grapheneFlake)
+{
+  std::size_t carbons = 0;
+  Molecule mol = graphene(false, carbons);
   ASSERT_GT(carbons, 150u);
 
   const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
@@ -669,6 +696,107 @@ TEST(BondOrderPerceptionTest, grapheneFlake)
   for (Index c = 0; c < carbons; ++c)
     EXPECT_EQ(orderSum(mol, c, true), 4u) << "carbon " << c;
   EXPECT_EQ(histogram(mol)[2], carbons / 2);
+}
+
+TEST(BondOrderPerceptionTest, oddUnsaturationFailsImmediately)
+{
+  // A flake with a vacancy has an odd number of sp2 carbons: no pairing of
+  // their valences exists. That is decided before any search, so it is fast
+  // (the old behaviour spent its whole step budget, about a quarter of a
+  // second) and the message names the cause.
+  std::size_t carbons = 0;
+  Molecule mol = graphene(true, carbons);
+  ASSERT_EQ(carbons % 2, 1u);
+
+  const auto start = std::chrono::steady_clock::now();
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  const double seconds =
+    std::chrono::duration<double>(std::chrono::steady_clock::now() - start)
+      .count();
+  EXPECT_LT(seconds, 0.05);
+  EXPECT_FALSE(result.success);
+  EXPECT_EQ(result.failedAtoms.size(), carbons);
+  EXPECT_NE(result.message.find("odd number of unpaired"), std::string::npos)
+    << result.message;
+  EXPECT_EQ(result.message.find("step"), std::string::npos) << result.message;
+  EXPECT_EQ(histogram(mol).count(2), 0u);
+}
+
+TEST(BondOrderPerceptionTest, oddUnsaturationIsAnotherComponentsBusiness)
+{
+  // The allyl radical is odd; the benzene beside it is not.
+  Parsed ring = parse("c1ccccc1");
+  Molecule radical;
+  for (int i = 0; i < 3; ++i)
+    radical.addAtom(6);
+  radical.addBond(0, 1, 1);
+  radical.addBond(1, 2, 1);
+  const int hydrogens[] = { 2, 1, 2 };
+  for (Index c = 0; c < 3; ++c) {
+    for (int h = 0; h < hydrogens[c]; ++h)
+      radical.addBond(c, radical.addAtom(1).index(), 1);
+  }
+  Molecule combined = ring.mol;
+  const Index shift = combined.atomCount();
+  for (Index a = 0; a < radical.atomCount(); ++a)
+    combined.addAtom(radical.atomicNumber(a));
+  for (Index b = 0; b < radical.bondCount(); ++b) {
+    combined.addBond(radical.bondPairs()[b].first + shift,
+                     radical.bondPairs()[b].second + shift, 1);
+  }
+  const BondOrderResult explicitResult =
+    combined.perceiveBondOrders(BondOrderOptions());
+  EXPECT_FALSE(explicitResult.success);
+  EXPECT_NE(explicitResult.message.find("odd number"), std::string::npos);
+  EXPECT_EQ(explicitResult.failedAtoms,
+            (std::vector<Index>{ shift, shift + 1, shift + 2 }));
+}
+
+TEST(BondOrderPerceptionTest, atomsBondedOnlyToMetalsAreSatisfied)
+{
+  // Square-planar PtCl4: the chlorines have no non-metal bond, so there is
+  // nothing to perceive, and nothing fails.
+  Molecule mol;
+  mol.addAtom(78);
+  for (int i = 0; i < 4; ++i) {
+    mol.addAtom(17);
+    mol.addBond(0, i + 1, 1);
+  }
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_TRUE(result.success) << result.message;
+  EXPECT_TRUE(result.failedAtoms.empty());
+  for (Index b = 0; b < mol.bondCount(); ++b)
+    EXPECT_EQ(mol.bond(b).order(), 1);
+}
+
+TEST(BondOrderPerceptionTest, metalAndNonMetalBondsStillHeldToValence)
+{
+  // A carbonyl carbon bound to Fe and to O needs three more units of valence
+  // from its non-metal bonds but can only get two from the oxygen's one: it
+  // is still a failure. The lone chloride on the same metal is not.
+  Parsed carbonyl = parse("[Fe]C#O");
+  const Index chloride = carbonyl.mol.addAtom(17).index();
+  carbonyl.mol.addBond(0, chloride, 1);
+  const BondOrderResult result =
+    carbonyl.mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_FALSE(result.success);
+  for (Index atom : result.failedAtoms)
+    EXPECT_NE(atom, chloride);
+  EXPECT_FALSE(result.failedAtoms.empty());
+
+  // An atom with no bonds at all is not covered by the metal rule: a lone
+  // chlorine beside a bonded pair still fails.
+  Molecule lone;
+  lone.addAtom(6);
+  lone.addAtom(8);
+  lone.addBond(0, 1, 1);
+  const Index stray = lone.addAtom(17).index();
+  const BondOrderResult loneResult =
+    lone.perceiveBondOrders(BondOrderOptions());
+  EXPECT_FALSE(loneResult.success);
+  EXPECT_NE(std::find(loneResult.failedAtoms.begin(),
+                      loneResult.failedAtoms.end(), stray),
+            loneResult.failedAtoms.end());
 }
 
 TEST(BondOrderPerceptionTest, stepBudgetIsReported)

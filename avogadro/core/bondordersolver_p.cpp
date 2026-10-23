@@ -55,12 +55,14 @@ public:
     solution.componentSolved.assign(componentVertices.size(), false);
     for (std::size_t c = 0; c < componentVertices.size(); ++c) {
       Index culprit = MaxIndex;
-      if (solveComponent(componentVertices[c], stepBudget, culprit)) {
+      BondOrderFailure reason = BondOrderFailure::Contradiction;
+      if (solveComponent(componentVertices[c], stepBudget, culprit, reason)) {
         solution.componentSolved[c] = true;
         for (std::size_t e : componentEdges[c])
           solution.extra[e] = m_lo[e];
       } else {
         solution.culprits.push_back(culprit);
+        solution.reasons.push_back(reason);
       }
     }
     return solution;
@@ -289,8 +291,29 @@ private:
   };
 
   bool solveComponent(const std::vector<Index>& vertices,
-                      std::size_t stepBudget, Index& culprit)
+                      std::size_t stepBudget, Index& culprit,
+                      BondOrderFailure& reason)
   {
+    // A necessary condition, checked before any search: every unit of extra
+    // order on an edge is counted once at each of its two ends, so the
+    // demands of a component must add up to an even number. An odd total
+    // (an unpaired electron, or a site that needs a charge) can never be
+    // met, and without this the search would try every arrangement before
+    // giving up.
+    unsigned int totalDemand = 0;
+    for (Index v : vertices)
+      totalDemand += m_problem.demand[v];
+    if (totalDemand % 2 != 0) {
+      for (Index v : vertices) {
+        if (m_problem.demand[v] > 0) {
+          culprit = v;
+          break;
+        }
+      }
+      reason = BondOrderFailure::OddUnsaturation;
+      return false;
+    }
+
     m_trail.clear();
     clearQueue();
     for (Index v : vertices)
@@ -298,6 +321,8 @@ private:
 
     Index contradiction = MaxIndex;
     if (!propagate(contradiction)) {
+      // Includes the other necessary condition, that an atom's demand cannot
+      // exceed the total capacity of its edges: propagation sees that at once.
       culprit = contradiction;
       return false;
     }
@@ -317,6 +342,7 @@ private:
 
         if (steps >= stepBudget) {
           culprit = MaxIndex; // A resource limit, not one atom's fault.
+          reason = BondOrderFailure::StepLimit;
           return false;
         }
         ++steps;

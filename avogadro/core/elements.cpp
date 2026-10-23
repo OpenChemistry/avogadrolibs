@@ -269,9 +269,9 @@ unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
 
 bool Elements::isMetal(unsigned char atomicNumber)
 {
-  // TODO(review): chemistry. The boundary cases are a judgement call: Be, Mg
-  // and Po count as metals; B, Si, Ge, As, Sb, Te and At do not; Nh-Lv count
-  // but Ts and Og do not.
+  // The boundary cases are a judgement call: Be, Mg and Po count as metals;
+  //    B, Si, Ge, As, Sb, Te and At do not;
+  // Nh-Lv count as metals, but Ts and Og do not.
   return (atomicNumber >= 3 && atomicNumber <= 4) ||   // Li, Be
          (atomicNumber >= 11 && atomicNumber <= 13) || // Na, Mg, Al
          (atomicNumber >= 19 && atomicNumber <= 31) || // K to Ga

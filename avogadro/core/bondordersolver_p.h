@@ -46,6 +46,14 @@ struct BondOrderProblem
   std::vector<Edge> edges;
 };
 
+/** Why a component could not be solved. */
+enum class BondOrderFailure
+{
+  Contradiction,  //!< propagation or search showed no assignment exists
+  StepLimit,      //!< the step budget ran out before an answer was found
+  OddUnsaturation //!< total demand is odd, so no assignment can exist
+};
+
 struct BondOrderSolution
 {
   /** One entry per edge: the extra order assigned, valid where the edge's
@@ -60,8 +68,12 @@ struct BondOrderSolution
   std::vector<bool> componentSolved;
 
   /** One entry per FAILED component, in component order: the vertex at which
-   * the contradiction was found, or MaxIndex if the step budget ran out. */
+   * the contradiction was found (for an odd total, the first vertex with
+   * demand), or MaxIndex if the step budget ran out. */
   std::vector<Index> culprits;
+
+  /** Parallel to culprits: why each failed component failed. */
+  std::vector<BondOrderFailure> reasons;
 
   bool success() const { return culprits.empty(); }
 };

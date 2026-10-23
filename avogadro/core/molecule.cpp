@@ -1996,8 +1996,17 @@ unsigned char maxBondOrder(unsigned char atomicNumber1,
 }
 
 /** Worded like kekulizeFailureMessage(). */
-std::string bondOrderFailureMessage(Index culprit, std::size_t failedAtoms)
+std::string bondOrderFailureMessage(Index culprit, std::size_t failedAtoms,
+                                    bool oddUnsaturation)
 {
+  if (oddUnsaturation) {
+    return "Could not perceive bond orders: an odd number of unpaired "
+           "valences remains in a connected group of atoms, so no "
+           "arrangement of bonds can satisfy it (a radical or charged site "
+           "is likely), leaving " +
+           std::to_string(failedAtoms) +
+           (failedAtoms == 1 ? " atom" : " atoms") + " unsatisfied.";
+  }
   std::string message =
     "Could not perceive bond orders: no valid arrangement of multiple bonds "
     "exists";
@@ -2029,21 +2038,35 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   // kekulize(): it is what selects among the valences an element has (the
   // 3 or 5 of nitrogen, the 2, 4 or 6 of sulfur).
   //
-  // TODO(review): chemistry. Metals are skipped (unsaturation 0, never a
+  // For now: Metals are skipped (unsaturation 0, never a
   // candidate), and a bond to a metal is left out of the order sum of the
   // atom on the other end, so that a ligand is judged as if it were free: the
   // nitrogen of pyridine bound to Zn has a sum of 2 and a target of 3, and
   // comes out aromatic, while the N-Zn bond stays single. Dative bonds and
   // metal-ligand multiple bonds (carbonyls, carbenes) are therefore never
-  // perceived.
+  // perceived. (TODO)
+  //
+  // An atom whose bonds all go to metals (chloride on PtCl4,
+  // or the terminal ligand atoms of a simple complex) has no
+  // non-metal bond to take valence from. It gets unsaturation 0 and is never
+  // a failure. An atom with both kinds of bond is still held to its full
+  // valence from its non-metal bonds. An atom with no bonds at all is not
+  // covered by this rule, and fails if its element wants any valence.
   std::vector<unsigned int> orderSum(atoms, 0);
+  std::vector<unsigned int> metalBonds(atoms, 0);
+  std::vector<unsigned int> nonMetalBonds(atoms, 0);
   for (Index bond = 0; bond < bondTotal; ++bond) {
     const Index a = m_graph.endpoints(bond).first;
     const Index b = m_graph.endpoints(bond).second;
     const bool metalA = Elements::isMetal(m_atomicNumbers[a]);
     const bool metalB = Elements::isMetal(m_atomicNumbers[b]);
-    if (metalA || metalB)
+    if (metalA || metalB) {
+      ++metalBonds[a];
+      ++metalBonds[b];
       continue;
+    }
+    ++nonMetalBonds[a];
+    ++nonMetalBonds[b];
     orderSum[a] += m_bondOrders[bond];
     orderSum[b] += m_bondOrders[bond];
   }
@@ -2053,6 +2076,8 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   for (Index atom = 0; atom < atoms; ++atom) {
     if (Elements::isMetal(m_atomicNumbers[atom]))
       continue;
+    if (metalBonds[atom] > 0 && nonMetalBonds[atom] == 0)
+      continue; // Bonded only to metals: satisfied.
     const unsigned int target =
       atomValence(m_atomicNumbers[atom], formalCharge(atom), orderSum[atom]);
     // An overbonded atom has no room left: zero, not an underflow.
@@ -2091,11 +2116,11 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     // whose cost falls most on going from single to double are branched on
     // first (score = cost(1) - cost(2)).
     //
-    // TODO(review): chemistry. Ideal lengths come from
-    // AtomUtilities::idealBondLength(). Nothing here is about periodic
-    // images, so a bond across a cell boundary is measured the long way
-    // round. The first valid assignment found is kept; no attempt is made to
-    // find the one with the lowest total cost.
+    // Ideal lengths come from AtomUtilities::idealBondLength()
+    // Nothing here is about periodic images, so a bond across a cell
+    // boundary is measured the long way round. The first valid assignment
+    // found is kept; no attempt is made to find the one with the lowest
+    // total cost. (TODO)
     if (haveGeometry) {
       const Real d = (m_positions3d[a] - m_positions3d[b]).norm();
       unsigned char bestOrder = 1;
@@ -2145,8 +2170,9 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
         problem.demand[atom] > 0)
       result.failedAtoms.push_back(atom);
   }
-  result.message = bondOrderFailureMessage(solution.culprits.front(),
-                                           result.failedAtoms.size());
+  result.message = bondOrderFailureMessage(
+    solution.culprits.front(), result.failedAtoms.size(),
+    solution.reasons.front() == BondOrderFailure::OddUnsaturation);
   return result;
 }
 
