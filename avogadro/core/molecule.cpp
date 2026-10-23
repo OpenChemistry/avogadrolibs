@@ -1995,6 +1995,50 @@ unsigned char maxBondOrder(unsigned char atomicNumber1,
   return MaxPerceivedOrder;
 }
 
+struct GeometricPreference
+{
+  unsigned char preferred; //!< Extra order to try first (order - 1).
+  double score;            //!< cost(1) - cost(2): how double the bond looks.
+};
+
+/**
+ * cost(k) is how far the measured length @a distance is from the ideal
+ * length of an order-k bond between the two elements, for k = 1 to
+ * capacity + 1. The order with the lowest cost (the lowest k of equals) is
+ * the one tried first. The bonds whose cost falls most on going from single
+ * to double are branched on first (score = cost(1) - cost(2)).
+ *
+ * Ideal lengths come from AtomUtilities::idealBondLength()
+ * Nothing here is about periodic images, so a bond across a cell
+ * boundary is measured the long way round. The first valid assignment
+ * found is kept; no attempt is made to find the one with the lowest
+ * total cost. (TODO)
+ */
+GeometricPreference geometricPreference(Real distance,
+                                        unsigned char atomicNumber1,
+                                        unsigned char atomicNumber2,
+                                        unsigned char capacity)
+{
+  unsigned char bestOrder = 1;
+  Real bestCost = 0.0;
+  Real costSingle = 0.0;
+  Real costDouble = 0.0;
+  for (unsigned char order = 1; order <= capacity + 1; ++order) {
+    const Real cost =
+      std::abs(distance - AtomUtilities::idealBondLength(atomicNumber1,
+                                                         atomicNumber2, order));
+    if (order == 1)
+      costSingle = cost;
+    if (order == 2)
+      costDouble = cost;
+    if (order == 1 || cost < bestCost) {
+      bestOrder = order;
+      bestCost = cost;
+    }
+  }
+  return { static_cast<unsigned char>(bestOrder - 1), costSingle - costDouble };
+}
+
 /** Worded like kekulizeFailureMessage(). */
 std::string bondOrderFailureMessage(Index culprit, std::size_t failedAtoms,
                                     bool oddUnsaturation)
@@ -2052,39 +2096,49 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   // a failure. An atom with both kinds of bond is still held to its full
   // valence from its non-metal bonds. An atom with no bonds at all is not
   // covered by this rule, and fails if its element wants any valence.
+  std::vector<char> metal(atoms, 0);
+  for (Index atom = 0; atom < atoms; ++atom)
+    metal[atom] = Elements::isMetal(m_atomicNumbers[atom]) ? 1 : 0;
+
   std::vector<unsigned int> orderSum(atoms, 0);
-  std::vector<unsigned int> metalBonds(atoms, 0);
-  std::vector<unsigned int> nonMetalBonds(atoms, 0);
+  std::vector<char> hasMetalBond(atoms, 0);
+  std::vector<char> hasNonMetalBond(atoms, 0);
   for (Index bond = 0; bond < bondTotal; ++bond) {
     const Index a = m_graph.endpoints(bond).first;
     const Index b = m_graph.endpoints(bond).second;
-    const bool metalA = Elements::isMetal(m_atomicNumbers[a]);
-    const bool metalB = Elements::isMetal(m_atomicNumbers[b]);
-    if (metalA || metalB) {
-      ++metalBonds[a];
-      ++metalBonds[b];
+    if (metal[a] || metal[b]) {
+      hasMetalBond[a] = 1;
+      hasMetalBond[b] = 1;
       continue;
     }
-    ++nonMetalBonds[a];
-    ++nonMetalBonds[b];
+    hasNonMetalBond[a] = 1;
+    hasNonMetalBond[b] = 1;
     orderSum[a] += m_bondOrders[bond];
     orderSum[b] += m_bondOrders[bond];
   }
 
   BondOrderProblem problem;
   problem.demand.assign(atoms, 0);
+  // Check to see if we have a demand for increased bond orders
+  bool anyDemand = false;
   for (Index atom = 0; atom < atoms; ++atom) {
-    if (Elements::isMetal(m_atomicNumbers[atom]))
+    // skip metals
+    if (metal[atom])
       continue;
-    if (metalBonds[atom] > 0 && nonMetalBonds[atom] == 0)
+    if (hasMetalBond[atom] && !hasNonMetalBond[atom])
       continue; // Bonded only to metals: satisfied.
+
     const unsigned int target =
       atomValence(m_atomicNumbers[atom], formalCharge(atom), orderSum[atom]);
-    // An overbonded atom has no room left: zero, not an underflow.
+    // An overbonded atom has no room left: zero
     const unsigned int unsaturation =
       target > orderSum[atom] ? target - orderSum[atom] : 0;
+
+    // If we have unsaturation, there's a demand (i.e., this atom needs more
+    // bonds)
     problem.demand[atom] = static_cast<unsigned char>(
       std::min(unsaturation, static_cast<unsigned int>(MaxPerceivedOrder)));
+    anyDemand = anyDemand || problem.demand[atom] != 0;
   }
 
   // Step 2: the candidate bonds. Only single bonds between two unsaturated
@@ -2110,42 +2164,24 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     edge.b = b;
     edge.capacity = capacity;
 
-    // Geometry only orders the search. cost(k) is how far the measured length
-    // d is from the ideal length of an order-k bond between these elements.
-    // The order with the lowest cost is the one tried first, and the bonds
-    // whose cost falls most on going from single to double are branched on
-    // first (score = cost(1) - cost(2)).
-    //
-    // Ideal lengths come from AtomUtilities::idealBondLength()
-    // Nothing here is about periodic images, so a bond across a cell
-    // boundary is measured the long way round. The first valid assignment
-    // found is kept; no attempt is made to find the one with the lowest
-    // total cost. (TODO)
+    // Geometry only orders the search; see geometricPreference().
     if (haveGeometry) {
-      const Real d = (m_positions3d[a] - m_positions3d[b]).norm();
-      unsigned char bestOrder = 1;
-      Real bestCost = 0.0;
-      Real costSingle = 0.0;
-      Real costDouble = 0.0;
-      for (unsigned char order = 1; order <= capacity + 1; ++order) {
-        const Real cost =
-          std::abs(d - AtomUtilities::idealBondLength(
-                         m_atomicNumbers[a], m_atomicNumbers[b], order));
-        if (order == 1)
-          costSingle = cost;
-        if (order == 2)
-          costDouble = cost;
-        if (order == 1 || cost < bestCost) {
-          bestOrder = order;
-          bestCost = cost;
-        }
-      }
-      edge.preferred = static_cast<unsigned char>(bestOrder - 1);
-      edge.score = costSingle - costDouble;
+      const GeometricPreference preference =
+        geometricPreference((m_positions3d[a] - m_positions3d[b]).norm(),
+                            m_atomicNumbers[a], m_atomicNumbers[b], capacity);
+      edge.preferred = preference.preferred;
+      edge.score = preference.score;
+    } else {
+      edge.preferred = capacity; // Highest order first, in edge order.
     }
     problem.edges.push_back(edge);
     bondOfEdge.push_back(bond);
   }
+
+  // Nothing to raise and nothing wanted: a saturated molecule, say. Skip the
+  // solver and its allocations altogether.
+  if (problem.edges.empty() && !anyDemand)
+    return result;
 
   // Step 3: solve each connected component of candidates on its own.
   const BondOrderSolution solution =
@@ -2164,15 +2200,14 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     return result;
 
   result.success = false;
-  for (Index atom = 0; atom < atoms; ++atom) {
-    const Index component = solution.component[atom];
-    if (component != MaxIndex && !solution.componentSolved[component] &&
-        problem.demand[atom] > 0)
-      result.failedAtoms.push_back(atom);
+  for (const ComponentFailure& failure : solution.failures) {
+    result.failedAtoms.insert(result.failedAtoms.end(),
+                              failure.vertices.begin(), failure.vertices.end());
   }
+  std::sort(result.failedAtoms.begin(), result.failedAtoms.end());
   result.message = bondOrderFailureMessage(
-    solution.culprits.front(), result.failedAtoms.size(),
-    solution.reasons.front() == BondOrderFailure::OddUnsaturation);
+    solution.failures.front().culprit, result.failedAtoms.size(),
+    solution.failures.front().reason == BondOrderFailure::OddUnsaturation);
   return result;
 }
 

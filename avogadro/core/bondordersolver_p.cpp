@@ -6,6 +6,7 @@
 #include "bondordersolver_p.h"
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <numeric>
 #include <utility>
@@ -30,15 +31,28 @@ public:
     : m_problem(problem), m_vertexCount(problem.demand.size()),
       m_lo(problem.edges.size(), 0), m_hi(problem.edges.size(), 0),
       m_sumLo(m_vertexCount, 0), m_sumHi(m_vertexCount, 0),
-      m_inQueue(m_vertexCount, false), m_incident(m_vertexCount)
+      m_inQueue(m_vertexCount, false), m_incidentStart(m_vertexCount + 1, 0)
   {
     for (std::size_t e = 0; e < problem.edges.size(); ++e) {
       const BondOrderProblem::Edge& edge = problem.edges[e];
       m_hi[e] = edge.capacity;
-      m_incident[edge.a].push_back(e);
-      m_incident[edge.b].push_back(e);
+      ++m_incidentStart[edge.a + 1];
+      ++m_incidentStart[edge.b + 1];
       m_sumHi[edge.a] += edge.capacity;
       m_sumHi[edge.b] += edge.capacity;
+    }
+
+    // Edges at each vertex, in one flat array (offsets are a prefix sum of
+    // the degrees). Filling in ascending edge order keeps every vertex's
+    // slice in ascending edge order, which the search order depends on.
+    for (std::size_t v = 0; v < m_vertexCount; ++v)
+      m_incidentStart[v + 1] += m_incidentStart[v];
+    m_incidentEdges.resize(m_incidentStart[m_vertexCount]);
+    std::vector<std::size_t> fill(m_incidentStart.begin(),
+                                  m_incidentStart.end() - 1);
+    for (std::size_t e = 0; e < problem.edges.size(); ++e) {
+      m_incidentEdges[fill[problem.edges[e].a]++] = e;
+      m_incidentEdges[fill[problem.edges[e].b]++] = e;
     }
   }
 
@@ -46,23 +60,23 @@ public:
   {
     BondOrderSolution solution;
     solution.extra.assign(m_problem.edges.size(), 0);
-    solution.component.assign(m_vertexCount, MaxIndex);
 
     std::vector<std::vector<Index>> componentVertices;
     std::vector<std::vector<std::size_t>> componentEdges;
-    findComponents(solution.component, componentVertices, componentEdges);
+    findComponents(componentVertices, componentEdges);
 
-    solution.componentSolved.assign(componentVertices.size(), false);
     for (std::size_t c = 0; c < componentVertices.size(); ++c) {
-      Index culprit = MaxIndex;
-      BondOrderFailure reason = BondOrderFailure::Contradiction;
-      if (solveComponent(componentVertices[c], stepBudget, culprit, reason)) {
-        solution.componentSolved[c] = true;
+      ComponentFailure failure;
+      if (solveComponent(componentVertices[c], stepBudget, failure.culprit,
+                         failure.reason)) {
         for (std::size_t e : componentEdges[c])
           solution.extra[e] = m_lo[e];
       } else {
-        solution.culprits.push_back(culprit);
-        solution.reasons.push_back(reason);
+        for (Index v : componentVertices[c]) {
+          if (m_problem.demand[v] > 0)
+            failure.vertices.push_back(v);
+        }
+        solution.failures.push_back(std::move(failure));
       }
     }
     return solution;
@@ -82,10 +96,10 @@ private:
     return v;
   }
 
-  void findComponents(std::vector<Index>& componentOf,
-                      std::vector<std::vector<Index>>& vertices,
+  void findComponents(std::vector<std::vector<Index>>& vertices,
                       std::vector<std::vector<std::size_t>>& edges) const
   {
+    std::vector<Index> componentOf(m_vertexCount, MaxIndex);
     std::vector<Index> parent(m_vertexCount);
     std::iota(parent.begin(), parent.end(), Index(0));
     for (const BondOrderProblem::Edge& edge : m_problem.edges) {
@@ -99,7 +113,8 @@ private:
     // by their first vertex.
     std::vector<Index> idOfRoot(m_vertexCount, MaxIndex);
     for (Index v = 0; v < m_vertexCount; ++v) {
-      if (m_incident[v].empty() && m_problem.demand[v] == 0)
+      if (m_incidentStart[v] == m_incidentStart[v + 1] &&
+          m_problem.demand[v] == 0)
         continue;
       const Index root = findRoot(parent, v);
       if (idOfRoot[root] == MaxIndex) {
@@ -112,6 +127,21 @@ private:
     }
     for (std::size_t e = 0; e < m_problem.edges.size(); ++e)
       edges[componentOf[m_problem.edges[e].a]].push_back(e);
+  }
+
+  /** The edges at a vertex, in ascending edge order. */
+  struct EdgeRange
+  {
+    const std::size_t* first;
+    const std::size_t* last;
+    const std::size_t* begin() const { return first; }
+    const std::size_t* end() const { return last; }
+  };
+
+  EdgeRange incident(Index v) const
+  {
+    return { m_incidentEdges.data() + m_incidentStart[v],
+             m_incidentEdges.data() + m_incidentStart[v + 1] };
   }
 
   // ------------------------------------------------------------------
@@ -186,7 +216,7 @@ private:
       m_inQueue[v] = false;
 
       const int demand = m_problem.demand[v];
-      for (std::size_t e : m_incident[v]) {
+      for (std::size_t e : incident(v)) {
         if (m_sumLo[v] > demand || m_sumHi[v] < demand) {
           contradiction = v;
           clearQueue();
@@ -219,7 +249,7 @@ private:
   int openEdges(Index v) const
   {
     int count = 0;
-    for (std::size_t e : m_incident[v]) {
+    for (std::size_t e : incident(v)) {
       if (m_lo[e] < m_hi[e])
         ++count;
     }
@@ -252,7 +282,7 @@ private:
   {
     std::size_t best = 0;
     bool found = false;
-    for (std::size_t e : m_incident[v]) {
+    for (std::size_t e : incident(v)) {
       if (m_lo[e] == m_hi[e])
         continue;
       if (!found || m_problem.edges[e].score > m_problem.edges[best].score) {
@@ -263,17 +293,22 @@ private:
     return best;
   }
 
-  /** The values still open on edge @a e, the preferred one first. */
-  std::vector<unsigned char> orderedValues(std::size_t e) const
+  /** At most capacity + 1 = 3 values; a fixed array avoids an allocation. */
+  struct Values
   {
-    const BondOrderProblem::Edge& edge = m_problem.edges[e];
-    const int preferred =
-      (edge.preferred == 255) ? edge.capacity : int(edge.preferred);
-    std::vector<unsigned char> values;
+    std::array<unsigned char, 4> data{};
+    std::size_t count = 0;
+  };
+
+  /** The values still open on edge @a e, the preferred one first. */
+  Values orderedValues(std::size_t e) const
+  {
+    const int preferred = m_problem.edges[e].preferred;
+    Values values;
     for (int value = m_lo[e]; value <= m_hi[e]; ++value)
-      values.push_back(static_cast<unsigned char>(value));
+      values.data[values.count++] = static_cast<unsigned char>(value);
     // Closest to the preferred value first; of two equally close, the higher.
-    std::stable_sort(values.begin(), values.end(),
+    std::stable_sort(values.data.begin(), values.data.begin() + values.count,
                      [preferred](unsigned char x, unsigned char y) {
                        const int dx = std::abs(int(x) - preferred);
                        const int dy = std::abs(int(y) - preferred);
@@ -285,7 +320,7 @@ private:
   struct Frame
   {
     std::size_t edge = 0;
-    std::vector<unsigned char> values;
+    Values values;
     std::size_t cursor = 0;
     std::size_t trailMark = 0;
   };
@@ -356,7 +391,7 @@ private:
       }
 
       Frame& top = stack.back();
-      if (top.cursor >= top.values.size()) {
+      if (top.cursor >= top.values.count) {
         // Every value of this edge has failed: undo it entirely and let the
         // edge decided before it try its next value.
         undoTo(top.trailMark);
@@ -372,7 +407,7 @@ private:
       // Clear whatever the previous value left, which also restores the
       // intervals to the state the value list was collected in.
       undoTo(top.trailMark);
-      const unsigned char value = top.values[top.cursor];
+      const unsigned char value = top.values.data[top.cursor];
       setBounds(top.edge, value, value);
       enqueue(m_problem.edges[top.edge].a);
       enqueue(m_problem.edges[top.edge].b);
@@ -395,7 +430,8 @@ private:
   std::vector<int> m_sumHi; //!< Per vertex: sum of hi over its edges.
   std::vector<bool> m_inQueue;
   std::vector<Index> m_queue;
-  std::vector<std::vector<std::size_t>> m_incident;
+  std::vector<std::size_t> m_incidentStart; //!< CSR offsets, size n + 1.
+  std::vector<std::size_t> m_incidentEdges; //!< Edges grouped by vertex.
   std::vector<TrailEntry> m_trail;
 };
 

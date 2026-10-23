@@ -34,11 +34,12 @@ struct BondOrderProblem
      * The extra order the caller would like to try first (0 to capacity), and
      * how strongly it likes the edge to be raised at all: edges at a vertex
      * are branched on in order of decreasing @p score. Both only steer the
-     * search order; they never change which solutions are valid. With no
-     * geometric information leave the defaults (preferred = capacity,
-     * score = 0), which tries the highest order first in edge order.
+     * search order; they never change which solutions are valid. Callers
+     * always set @p preferred. With no geometric information use
+     * preferred = capacity and score = 0, which tries the highest order
+     * first in edge order.
      */
-    unsigned char preferred = 255; //!< 255 means "capacity".
+    unsigned char preferred = 0;
     double score = 0.0;
   };
 
@@ -54,28 +55,28 @@ enum class BondOrderFailure
   OddUnsaturation //!< total demand is odd, so no assignment can exist
 };
 
+/** A component that could not be solved. */
+struct ComponentFailure
+{
+  /** The vertex at which the contradiction was found (for an odd total, the
+   * first vertex with demand), or MaxIndex if the step budget ran out. */
+  Index culprit = MaxIndex;
+  BondOrderFailure reason = BondOrderFailure::Contradiction;
+
+  /** The component's vertices that still have demand, in increasing order. */
+  std::vector<Index> vertices;
+};
+
 struct BondOrderSolution
 {
   /** One entry per edge: the extra order assigned, valid where the edge's
    * component was solved and zero otherwise. */
   std::vector<unsigned char> extra;
 
-  /** One entry per vertex: the connected component it belongs to, or MaxIndex
-   * for a vertex with no demand and no edges. */
-  std::vector<Index> component;
+  /** One entry per failed component, in component order (by first vertex). */
+  std::vector<ComponentFailure> failures;
 
-  /** One entry per component: whether it was solved. */
-  std::vector<bool> componentSolved;
-
-  /** One entry per FAILED component, in component order: the vertex at which
-   * the contradiction was found (for an odd total, the first vertex with
-   * demand), or MaxIndex if the step budget ran out. */
-  std::vector<Index> culprits;
-
-  /** Parallel to culprits: why each failed component failed. */
-  std::vector<BondOrderFailure> reasons;
-
-  bool success() const { return culprits.empty(); }
+  bool success() const { return failures.empty(); }
 };
 
 /**
