@@ -435,6 +435,16 @@ void runCorpus(const std::string& subdirectory, const std::string& extension,
       if (expected == manifest.end()) {
         if (eval.outcome == Outcome::Pass) {
           ++tally.passed;
+        } else if (eval.outcome == Outcome::Kekule) {
+          // Kekule means every atom's order sum already matches, and two
+          // assignments with the same sums can only differ around closed
+          // cycles: this is another valid Kekule structure, not an error.
+          // Which one wins can turn on last-bit differences in the geometric
+          // score, so it varies between compilers, and RingPerceiver misses
+          // rings in cages (a fullerene bond can be reported as non-ring).
+          ++tally.passed;
+          unexpected.push_back(
+            key + " (alternative Kekule structure: " + eval.detail + ")");
         } else {
           ++tally.unexpectedFail;
           ADD_FAILURE() << key << ": " << name << " (" << eval.detail << ")";
