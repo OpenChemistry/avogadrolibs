@@ -3,6 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "bondorderchecks.h"
+
 #include <gtest/gtest.h>
 
 #include <avogadro/core/elements.h>
@@ -25,6 +27,10 @@ using Avogadro::Core::BondOrderOptions;
 using Avogadro::Core::BondOrderResult;
 using Avogadro::Core::Elements;
 using Avogadro::Core::Molecule;
+using BondOrderChecks::histogram;
+using BondOrderChecks::orderSums;
+using BondOrderChecks::saneOrders;
+using BondOrderChecks::shuffledCopy;
 
 namespace {
 
@@ -216,92 +222,28 @@ void applySpelled(Parsed& p, const std::vector<std::size_t>& which)
     p.mol.setBondOrder(bond, p.spelled[bond]);
 }
 
-unsigned int orderSum(const Molecule& mol, Index atom, bool skipMetals)
-{
-  unsigned int sum = 0;
-  for (Index b = 0; b < mol.bondCount(); ++b) {
-    const auto pair = mol.bondPairs()[b];
-    if (pair.first != atom && pair.second != atom)
-      continue;
-    const Index other = (pair.first == atom) ? pair.second : pair.first;
-    if (skipMetals && Elements::isMetal(mol.atomicNumber(other)))
-      continue;
-    sum += mol.bondOrders()[b];
-  }
-  return sum;
-}
-
 /** Every valence is filled, orders are 1 to 3, and H/halogen bonds single. */
 ::testing::AssertionResult valid(const Parsed& p, const Molecule& mol)
 {
+  const std::vector<unsigned int> sums = orderSums(mol, true);
   for (Index atom = 0; atom < mol.atomCount(); ++atom) {
     if (Elements::isMetal(mol.atomicNumber(atom)))
       continue;
-    if (orderSum(mol, atom, true) != p.valence[atom]) {
+    if (sums[atom] != p.valence[atom]) {
       return ::testing::AssertionFailure()
              << "atom " << atom << " ("
              << Elements::symbol(mol.atomicNumber(atom)) << ") has order sum "
-             << orderSum(mol, atom, true) << ", expected " << p.valence[atom];
+             << sums[atom] << ", expected " << p.valence[atom];
     }
   }
-  for (Index b = 0; b < mol.bondCount(); ++b) {
-    const unsigned int order = mol.bond(b).order();
-    const unsigned char z1 = mol.bond(b).atom1().atomicNumber();
-    const unsigned char z2 = mol.bond(b).atom2().atomicNumber();
-    if (order < 1 || order > 3)
-      return ::testing::AssertionFailure()
-             << "bond " << b << " has order " << order;
-    const unsigned char singles[] = { 1, 9, 17, 35, 53 };
-    for (unsigned char z : singles) {
-      if ((z1 == z || z2 == z) && order != 1)
-        return ::testing::AssertionFailure()
-               << "bond " << b << " to " << Elements::symbol(z) << " has order "
-               << order;
-    }
-  }
-  return ::testing::AssertionSuccess();
+  return saneOrders(mol);
 }
 
-std::map<unsigned int, std::size_t> histogram(const Molecule& mol)
-{
-  std::map<unsigned int, std::size_t> counts;
-  for (Index b = 0; b < mol.bondCount(); ++b)
-    ++counts[mol.bond(b).order()];
-  return counts;
-}
-
-/** A copy with atoms and bonds added in a random order (all bonds single). */
-Molecule shuffled(const Molecule& source, unsigned int seed)
-{
-  std::mt19937 rng(seed);
-  std::vector<Index> perm(source.atomCount());
-  std::iota(perm.begin(), perm.end(), Index(0));
-  std::shuffle(perm.begin(), perm.end(), rng);
-  std::vector<Index> newIndex(perm.size());
-
-  Molecule result;
-  for (std::size_t i = 0; i < perm.size(); ++i) {
-    newIndex[perm[i]] = i;
-    result.addAtom(source.atomicNumber(perm[i]));
-  }
-  std::vector<Index> bondOrder(source.bondCount());
-  std::iota(bondOrder.begin(), bondOrder.end(), Index(0));
-  std::shuffle(bondOrder.begin(), bondOrder.end(), rng);
-  for (Index b : bondOrder) {
-    const auto pair = source.bondPairs()[b];
-    result.addBond(newIndex[pair.first], newIndex[pair.second], 1);
-  }
-  return result;
-}
-
-/** The valences of @a p, carried over to the shuffled copy of its molecule. */
+/** A shuffled copy of @a p; the usual valences are recomputed for it. */
 Parsed shuffledParsed(const Parsed& p, unsigned int seed)
 {
-  // Rebuild the permutation shuffled() used to carry valences across: the
-  // valence is a function of the element and bonding only, so recompute it
-  // from the usual valences instead.
   Parsed result;
-  result.mol = shuffled(p.mol, seed);
+  result.mol = shuffledCopy(p.mol, seed, false);
   for (Index a = 0; a < result.mol.atomCount(); ++a) {
     result.valence.push_back(Elements::isMetal(result.mol.atomicNumber(a))
                                ? 0
@@ -315,8 +257,9 @@ void expectSolvedUnderShuffles(const std::string& text, int shuffles = 20)
   Parsed p = parse(text);
   for (int s = 0; s < shuffles; ++s) {
     Parsed copy = shuffledParsed(p, 1000 + s);
-    const BondOrderResult result = copy.mol.perceiveBondOrders(
-      BondOrderOptions{ false, BondOrderOptions().stepBudgetPerComponent });
+    BondOrderOptions options;
+    options.useGeometry = false;
+    const BondOrderResult result = copy.mol.perceiveBondOrders(options);
     EXPECT_TRUE(result.success)
       << text << " seed " << s << ": " << result.message;
     EXPECT_TRUE(valid(copy, copy.mol)) << text << " seed " << s;
@@ -425,32 +368,34 @@ TEST(BondOrderPerceptionTest, hydrogenAndHalogenBondsStaySingle)
   EXPECT_EQ(mol.bond(0).order(), 1);
 }
 
-TEST(BondOrderPerceptionTest, unsatisfiableComponentLeavesOthersAlone)
+/**
+ * Benzene next to an allyl radical, CH2-CH-CH2: three carbons that each want
+ * one more bond but have only two bonds to share. @a shift is set to the
+ * index of the radical's first carbon.
+ */
+Molecule benzeneBesideAllylRadical(Index& shift)
 {
-  // Benzene next to an allyl radical (three carbons, each wanting one more
-  // bond, but only two bonds to share): the radical cannot be satisfied, the
-  // ring can, and each is judged on its own.
-  Molecule radical;
-  for (int i = 0; i < 3; ++i)
-    radical.addAtom(6);
-  radical.addBond(0, 1, 1);
-  radical.addBond(1, 2, 1);
-  // CH2-CH-CH2: 2 + 1 + 2 hydrogens.
+  Molecule mol = parse("c1ccccc1").mol;
+  shift = mol.atomCount();
   const int hydrogens[] = { 2, 1, 2 };
+  for (int i = 0; i < 3; ++i)
+    mol.addAtom(6);
+  mol.addBond(shift, shift + 1, 1);
+  mol.addBond(shift + 1, shift + 2, 1);
   for (Index c = 0; c < 3; ++c) {
     for (int h = 0; h < hydrogens[c]; ++h)
-      radical.addBond(c, radical.addAtom(1).index(), 1);
+      mol.addBond(shift + c, mol.addAtom(1).index(), 1);
   }
+  return mol;
+}
 
-  Parsed benzene = parse("c1ccccc1");
-  Molecule combined = benzene.mol;
-  const Index shift = combined.atomCount();
-  for (Index a = 0; a < radical.atomCount(); ++a)
-    combined.addAtom(radical.atomicNumber(a));
-  for (Index b = 0; b < radical.bondCount(); ++b) {
-    combined.addBond(radical.bondPairs()[b].first + shift,
-                     radical.bondPairs()[b].second + shift, 1);
-  }
+TEST(BondOrderPerceptionTest, unsatisfiableComponentLeavesOthersAlone)
+{
+  // The radical cannot be satisfied, the ring can, and each is judged on its
+  // own.
+  Index shift = 0;
+  Molecule combined = benzeneBesideAllylRadical(shift);
+  const Index ringBonds = 12; // six ring bonds and six C-H
 
   const BondOrderResult combinedResult =
     combined.perceiveBondOrders(BondOrderOptions());
@@ -461,11 +406,11 @@ TEST(BondOrderPerceptionTest, unsatisfiableComponentLeavesOthersAlone)
 
   // The ring got its three double bonds ...
   std::size_t doubles = 0;
-  for (Index b = 0; b < benzene.mol.bondCount(); ++b)
+  for (Index b = 0; b < ringBonds; ++b)
     doubles += (combined.bond(b).order() == 2) ? 1 : 0;
   EXPECT_EQ(doubles, 3u);
   // ... and the radical's bonds are as they were.
-  for (Index b = benzene.mol.bondCount(); b < combined.bondCount(); ++b)
+  for (Index b = ringBonds; b < combined.bondCount(); ++b)
     EXPECT_EQ(combined.bond(b).order(), 1);
 }
 
@@ -601,8 +546,9 @@ TEST(BondOrderPerceptionTest, longPolyeneWithNitroGroup)
 
   // Every carbon has its fourth valence, with the double bonds alternating
   // along the chain.
+  const std::vector<unsigned int> sums = orderSums(mol, true);
   for (int i = 0; i < chain; ++i)
-    EXPECT_EQ(orderSum(mol, i, true), 4u) << "carbon " << i;
+    EXPECT_EQ(sums[i], 4u) << "carbon " << i;
   EXPECT_EQ(histogram(mol)[2], static_cast<std::size_t>(chain / 2));
   EXPECT_EQ(mol.bond(0, nitrogen).order(), 1);
 }
@@ -693,8 +639,9 @@ TEST(BondOrderPerceptionTest, grapheneFlake)
 
   const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
   EXPECT_TRUE(result.success) << result.message;
+  const std::vector<unsigned int> sums = orderSums(mol, true);
   for (Index c = 0; c < carbons; ++c)
-    EXPECT_EQ(orderSum(mol, c, true), 4u) << "carbon " << c;
+    EXPECT_EQ(sums[c], 4u) << "carbon " << c;
   EXPECT_EQ(histogram(mol)[2], carbons / 2);
 }
 
@@ -724,31 +671,14 @@ TEST(BondOrderPerceptionTest, oddUnsaturationFailsImmediately)
 
 TEST(BondOrderPerceptionTest, oddUnsaturationIsAnotherComponentsBusiness)
 {
-  // The allyl radical is odd; the benzene beside it is not.
-  Parsed ring = parse("c1ccccc1");
-  Molecule radical;
-  for (int i = 0; i < 3; ++i)
-    radical.addAtom(6);
-  radical.addBond(0, 1, 1);
-  radical.addBond(1, 2, 1);
-  const int hydrogens[] = { 2, 1, 2 };
-  for (Index c = 0; c < 3; ++c) {
-    for (int h = 0; h < hydrogens[c]; ++h)
-      radical.addBond(c, radical.addAtom(1).index(), 1);
-  }
-  Molecule combined = ring.mol;
-  const Index shift = combined.atomCount();
-  for (Index a = 0; a < radical.atomCount(); ++a)
-    combined.addAtom(radical.atomicNumber(a));
-  for (Index b = 0; b < radical.bondCount(); ++b) {
-    combined.addBond(radical.bondPairs()[b].first + shift,
-                     radical.bondPairs()[b].second + shift, 1);
-  }
-  const BondOrderResult explicitResult =
-    combined.perceiveBondOrders(BondOrderOptions());
-  EXPECT_FALSE(explicitResult.success);
-  EXPECT_NE(explicitResult.message.find("odd number"), std::string::npos);
-  EXPECT_EQ(explicitResult.failedAtoms,
+  // The allyl radical is odd, which is named as the cause; the benzene beside
+  // it is not, and is not reported.
+  Index shift = 0;
+  Molecule mol = benzeneBesideAllylRadical(shift);
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_FALSE(result.success);
+  EXPECT_NE(result.message.find("odd number"), std::string::npos);
+  EXPECT_EQ(result.failedAtoms,
             (std::vector<Index>{ shift, shift + 1, shift + 2 }));
 }
 
@@ -804,8 +734,10 @@ TEST(BondOrderPerceptionTest, stepBudgetIsReported)
   // With no budget at all, anything that needs a guess is given up. Benzene
   // without a starting double bond needs one.
   Parsed benzene = parse("c1ccccc1");
-  const BondOrderResult result =
-    benzene.mol.perceiveBondOrders(BondOrderOptions{ false, 0 });
+  BondOrderOptions options;
+  options.useGeometry = false;
+  options.stepBudgetPerComponent = 0;
+  const BondOrderResult result = benzene.mol.perceiveBondOrders(options);
   EXPECT_FALSE(result.success);
   EXPECT_EQ(result.failedAtoms.size(), 6u);
   for (Index b = 0; b < benzene.mol.bondCount(); ++b)

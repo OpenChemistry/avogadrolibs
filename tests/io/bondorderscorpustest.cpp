@@ -63,62 +63,22 @@ std::vector<std::string> corpusFiles()
 
 using BondOrderChecks::histogram;
 using BondOrderChecks::orderSums;
+using BondOrderChecks::saneOrders;
+using BondOrderChecks::shuffledCopy;
 
-/**
- * Per-atom order sums that leave out every bond to a metal (and give metals
- * zero): perception does not assign or count metal-ligand bond orders.
- */
-std::vector<unsigned int> ligandOrderSums(const Molecule& mol)
+/** Calls @a body(truth, name) for every molfile directly in the corpus. */
+template <typename Body>
+void forEachCorpusMolecule(Body body)
 {
-  std::vector<unsigned int> sums(mol.atomCount(), 0);
-  for (Index b = 0; b < mol.bondCount(); ++b) {
-    const auto pair = mol.bondPairs()[b];
-    if (Elements::isMetal(mol.atomicNumber(pair.first)) ||
-        Elements::isMetal(mol.atomicNumber(pair.second)))
+  for (const std::string& path : corpusFiles()) {
+    MdlFormat mdl;
+    Molecule truth;
+    if (!mdl.readFile(path, truth)) {
+      ADD_FAILURE() << path << ": " << mdl.error();
       continue;
-    sums[pair.first] += mol.bondOrders()[b];
-    sums[pair.second] += mol.bondOrders()[b];
-  }
-  return sums;
-}
-
-/** Every order is 1 to 3 and every bond to H or a halogen is single. */
-void expectSaneOrders(const Molecule& mol, const std::string& name)
-{
-  for (Index b = 0; b < mol.bondCount(); ++b) {
-    const unsigned int order = mol.bondOrders()[b];
-    EXPECT_GE(order, 1u) << name;
-    EXPECT_LE(order, 3u) << name;
-    for (Index end : { mol.bondPairs()[b].first, mol.bondPairs()[b].second }) {
-      const unsigned char z = mol.atomicNumber(end);
-      if (z == 1 || z == 9 || z == 17 || z == 35 || z == 53)
-        EXPECT_EQ(order, 1u) << name << " bond " << b;
     }
+    body(truth, std::filesystem::path(path).stem().string());
   }
-}
-
-/** A copy of @a source with atoms and bonds in a random order, all single. */
-Molecule shuffledSingle(const Molecule& source, unsigned int seed)
-{
-  std::mt19937 rng(seed);
-  std::vector<Index> perm(source.atomCount());
-  std::iota(perm.begin(), perm.end(), Index(0));
-  std::shuffle(perm.begin(), perm.end(), rng);
-  std::vector<Index> newIndex(perm.size());
-  Molecule result;
-  for (std::size_t i = 0; i < perm.size(); ++i) {
-    newIndex[perm[i]] = i;
-    result.addAtom(source.atomicNumber(perm[i]))
-      .setPosition3d(source.atomPosition3d(perm[i]));
-  }
-  std::vector<Index> bondOrder(source.bondCount());
-  std::iota(bondOrder.begin(), bondOrder.end(), Index(0));
-  std::shuffle(bondOrder.begin(), bondOrder.end(), rng);
-  for (Index b : bondOrder) {
-    result.addBond(newIndex[source.bondPairs()[b].first],
-                   newIndex[source.bondPairs()[b].second], 1);
-  }
-  return result;
 }
 
 // ---------------------------------------------------------------------
@@ -203,7 +163,7 @@ bool readAny(const std::string& path, Molecule& mol, std::string& error)
   return ok;
 }
 
-unsigned int usualValence(unsigned char z)
+unsigned int hydrocarbonValence(unsigned char z)
 {
   if (z == 1)
     return 1;
@@ -230,11 +190,11 @@ Evaluation evaluate(const std::string& fullPath, bool stripCharges)
 
   // The sums every atom must end with: those of the reference, or, for the
   // carbon systems that come without a reference, carbon 4 and hydrogen 1.
-  std::vector<unsigned int> wanted = ligandOrderSums(truth);
+  std::vector<unsigned int> wanted = orderSums(truth, true);
   if (!anyMultiple) {
     for (Index a = 0; a < truth.atomCount(); ++a) {
-      if (usualValence(truth.atomicNumber(a)) != 0)
-        wanted[a] = usualValence(truth.atomicNumber(a));
+      if (hydrocarbonValence(truth.atomicNumber(a)) != 0)
+        wanted[a] = hydrocarbonValence(truth.atomicNumber(a));
     }
   }
   std::vector<bool> metal(truth.atomCount(), false);
@@ -254,8 +214,8 @@ Evaluation evaluate(const std::string& fullPath, bool stripCharges)
   bool referenceUsable = true;
   if (hydrocarbon) {
     for (Index a = 0; a < truth.atomCount(); ++a)
-      wanted[a] = usualValence(truth.atomicNumber(a));
-    referenceUsable = (ligandOrderSums(truth) == wanted);
+      wanted[a] = hydrocarbonValence(truth.atomicNumber(a));
+    referenceUsable = (orderSums(truth, true) == wanted);
   }
 
   Molecule mol = truth;
@@ -314,7 +274,7 @@ Evaluation evaluate(const std::string& fullPath, bool stripCharges)
       if (region[pair.second])
         nearFailure[pair.first] = true;
     }
-    const std::vector<unsigned int> got = ligandOrderSums(mol);
+    const std::vector<unsigned int> got = orderSums(mol, true);
     for (Index a = 0; a < mol.atomCount() && eval.cleanFailure; ++a) {
       if (!nearFailure[a] && got[a] != wanted[a]) {
         eval.cleanFailure = false;
@@ -358,7 +318,7 @@ Evaluation evaluate(const std::string& fullPath, bool stripCharges)
     }
   }
 
-  const std::vector<unsigned int> got = ligandOrderSums(mol);
+  const std::vector<unsigned int> got = orderSums(mol, true);
   if (got != wanted) {
     eval.outcome = Outcome::Wrong;
     eval.detail = "reported success with wrong valences";
@@ -375,6 +335,38 @@ Evaluation evaluate(const std::string& fullPath, bool stripCharges)
     }
   }
   return eval;
+}
+
+const char* outcomeName(Outcome outcome)
+{
+  switch (outcome) {
+    case Outcome::Pass:
+      return "pass";
+    case Outcome::Fail:
+      return "fail";
+    case Outcome::Wrong:
+      return "wrong";
+    case Outcome::Kekule:
+      return "kekule";
+  }
+  return "";
+}
+
+bool hasFormalCharges(const Molecule& mol)
+{
+  for (Index a = 0; a < mol.atomCount(); ++a) {
+    if (mol.formalCharge(a) != 0)
+      return true;
+  }
+  return false;
+}
+
+void writeReportRow(std::ostream& out, const std::string& path,
+                    const std::string& mode, const Evaluation& eval)
+{
+  out << path << '\t' << mode << '\t' << outcomeName(eval.outcome) << '\t'
+      << eval.detail << '\t' << eval.atoms << '\t' << eval.seconds << '\t'
+      << (eval.cleanFailure ? "clean" : "DIRTY") << '\t' << eval.note << '\n';
 }
 
 struct Tally
@@ -424,30 +416,17 @@ void runCorpus(const std::string& subdirectory, const std::string& extension,
     std::string probeError;
     ASSERT_TRUE(readAny((dir / file).string(), probe, probeError))
       << relative << ": " << probeError;
-    bool charged = false;
-    for (Index a = 0; a < probe.atomCount(); ++a)
-      charged = charged || probe.formalCharge(a) != 0;
-
     std::vector<std::pair<std::string, bool>> modes = { { "charged", false } };
-    if (bothChargeModes && charged)
+    if (bothChargeModes && hasFormalCharges(probe))
       modes.push_back({ "neutral", true });
 
     for (const auto& mode : modes) {
       const Evaluation eval = evaluate((dir / file).string(), mode.second);
       const std::string key = relative + " " + mode.first;
       const auto expected = manifest.find(key);
-      const char* name =
-        eval.outcome == Outcome::Pass
-          ? "pass"
-          : (eval.outcome == Outcome::Fail
-               ? "fail"
-               : (eval.outcome == Outcome::Wrong ? "wrong" : "kekule"));
-      if (report.is_open()) {
-        report << relative << '\t' << mode.first << '\t' << name << '\t'
-               << eval.detail << '\t' << eval.atoms << '\t' << eval.seconds
-               << '\t' << (eval.cleanFailure ? "clean" : "DIRTY") << '\t'
-               << eval.note << '\n';
-      }
+      const char* name = outcomeName(eval.outcome);
+      if (report.is_open())
+        writeReportRow(report, relative, mode.first, eval);
       if (eval.seconds > tally.slowest) {
         tally.slowest = eval.seconds;
         tally.slowestName = key;
@@ -547,24 +526,14 @@ TEST(BondOrdersCorpusTest, sweepExternalDirectory)
     std::string error;
     if (!readAny(file, probe, error))
       continue;
-    bool charged = false;
-    for (Index a = 0; a < probe.atomCount(); ++a)
-      charged = charged || probe.formalCharge(a) != 0;
+    const bool charged = hasFormalCharges(probe);
     for (bool strip : { false, true }) {
       if (strip && !charged)
         continue;
       const Evaluation eval = evaluate(file, strip);
-      const char* name =
-        eval.outcome == Outcome::Pass
-          ? "pass"
-          : (eval.outcome == Outcome::Fail
-               ? "fail"
-               : (eval.outcome == Outcome::Wrong ? "wrong" : "kekule"));
-      report << std::filesystem::path(file).lexically_relative(sweep).string()
-             << '\t' << (strip ? "neutral" : "charged") << '\t' << name << '\t'
-             << eval.detail << '\t' << eval.atoms << '\t' << eval.seconds
-             << '\t' << (eval.cleanFailure ? "clean" : "DIRTY") << '\t'
-             << eval.note << '\n';
+      writeReportRow(
+        report, std::filesystem::path(file).lexically_relative(sweep).string(),
+        strip ? "neutral" : "charged", eval);
     }
   }
 }
@@ -576,12 +545,7 @@ TEST(BondOrdersCorpusTest, corpusIsPresent)
 
 TEST(BondOrdersCorpusTest, perceiveUpToResonance)
 {
-  for (const std::string& path : corpusFiles()) {
-    MdlFormat mdl;
-    Molecule truth;
-    ASSERT_TRUE(mdl.readFile(path, truth)) << path << ": " << mdl.error();
-    const std::string name = std::filesystem::path(path).stem().string();
-
+  forEachCorpusMolecule([](const Molecule& truth, const std::string& name) {
     for (bool useGeometry : { true, false }) {
       Molecule mol = truth;
       for (Index b = 0; b < mol.bondCount(); ++b)
@@ -592,21 +556,16 @@ TEST(BondOrdersCorpusTest, perceiveUpToResonance)
       EXPECT_TRUE(result.success) << name << ": " << result.message;
       EXPECT_EQ(orderSums(mol), orderSums(truth)) << name;
       EXPECT_EQ(histogram(mol), histogram(truth)) << name;
-      expectSaneOrders(mol, name);
+      EXPECT_TRUE(saneOrders(mol)) << name;
     }
-  }
+  });
 }
 
 TEST(BondOrdersCorpusTest, permutedAtomOrderGivesSameResultUpToResonance)
 {
-  for (const std::string& path : corpusFiles()) {
-    MdlFormat mdl;
-    Molecule truth;
-    ASSERT_TRUE(mdl.readFile(path, truth)) << path << ": " << mdl.error();
-    const std::string name = std::filesystem::path(path).stem().string();
-
+  forEachCorpusMolecule([](const Molecule& truth, const std::string& name) {
     for (unsigned int seed = 1; seed <= 20; ++seed) {
-      Molecule mol = shuffledSingle(truth, seed);
+      Molecule mol = shuffledCopy(truth, seed, true);
       const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
       EXPECT_TRUE(result.success)
         << name << " seed " << seed << ": " << result.message;
@@ -617,7 +576,7 @@ TEST(BondOrdersCorpusTest, permutedAtomOrderGivesSameResultUpToResonance)
       std::sort(got.begin(), got.end());
       std::sort(want.begin(), want.end());
       EXPECT_EQ(got, want) << name << " seed " << seed;
-      expectSaneOrders(mol, name);
+      EXPECT_TRUE(saneOrders(mol)) << name;
     }
-  }
+  });
 }

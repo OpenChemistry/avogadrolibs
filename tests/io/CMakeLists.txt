@@ -45,6 +45,8 @@ message(STATUS "Test source files: ${testSrcs}")
 add_executable(AvogadroIOTests ${testSrcs})
 target_link_libraries(AvogadroIOTests Avogadro::IO
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+# Helpers shared between the core and io bond order tests.
+target_include_directories(AvogadroIOTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
