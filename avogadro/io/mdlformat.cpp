@@ -15,7 +15,6 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 
-#include <cctype>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -44,15 +43,16 @@ using std::string;
 namespace {
 // Element symbols are case-sensitive in the element table, but many files
 // (e.g. RCSB Chemical Component Dictionary SDFs) write them in upper case
-// ("FE", "CL"). Normalise to first upper, rest lower, ASCII only. This also
-// makes "d" and "t" match the deuterium / tritium checks.
-std::string normalizeSymbol(std::string symbol)
+// ("FE", "CL"). Normalise to first upper, rest lower. This also makes "d" and
+// "t" match the deuterium / tritium checks. Only A-Z / a-z change, whatever
+// the C locale: std::tolower() under a Turkish LC_CTYPE turns the "I" of "SI"
+// into a dotless i, and the lookup then fails.
+std::string normalizeSymbol(const std::string& symbol)
 {
-  for (size_t i = 0; i < symbol.size(); ++i) {
-    auto c = static_cast<unsigned char>(symbol[i]);
-    symbol[i] = static_cast<char>(i == 0 ? std::toupper(c) : std::tolower(c));
-  }
-  return symbol;
+  std::string result = toLower(symbol);
+  if (!result.empty() && result[0] >= 'a' && result[0] <= 'z')
+    result[0] = static_cast<char>(result[0] - 'a' + 'A');
+  return result;
 }
 } // namespace
 

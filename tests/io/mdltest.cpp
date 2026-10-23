@@ -12,7 +12,10 @@
 
 #include <avogadro/io/mdlformat.h>
 
+#include <cctype>
+#include <clocale>
 #include <cstdio>
+#include <string>
 
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
@@ -455,6 +458,39 @@ TEST(MdlTest, upperCaseSymbolsV3000)
   EXPECT_EQ(molecule.atom(2).atomicNumber(), 35);
   EXPECT_EQ(molecule.atom(3).atomicNumber(), 17);
   EXPECT_EQ(molecule.atom(4).atomicNumber(), 6);
+}
+
+// Under a Turkish LC_CTYPE (e.g. glibc's tr_TR.ISO-8859-9) std::tolower('I')
+// is a dotless i, so a locale-dependent normalisation would read "SI" as
+// "S\xFD" and lose the silicon. Skipped where no such locale is installed.
+TEST(MdlTest, upperCaseSymbolsTurkishLocale)
+{
+  const char* previous = std::setlocale(LC_CTYPE, nullptr);
+  const std::string saved = previous ? previous : "C";
+  bool hazard = false;
+  for (const char* name :
+       { "tr_TR.ISO-8859-9", "tr_TR.ISO8859-9", "tr_TR.iso88599", "tr_TR" }) {
+    if (std::setlocale(LC_CTYPE, name) && std::tolower('I') != 'i') {
+      hazard = true;
+      break;
+    }
+  }
+  if (!hazard) {
+    std::setlocale(LC_CTYPE, saved.c_str());
+    GTEST_SKIP() << "No locale where tolower('I') != 'i'";
+  }
+
+  const std::string molfile = v2000Symbols("SI", "BI", "LI", "IN", "C");
+  MdlFormat mdl;
+  Molecule molecule;
+  const bool ok = mdl.readString(molfile, molecule);
+  std::setlocale(LC_CTYPE, saved.c_str());
+  ASSERT_TRUE(ok) << mdl.error();
+  ASSERT_EQ(molecule.atomCount(), 5);
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 14);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 83);
+  EXPECT_EQ(molecule.atom(2).atomicNumber(), 3);
+  EXPECT_EQ(molecule.atom(3).atomicNumber(), 49);
 }
 
 TEST(MdlTest, deuteriumSymbols)
