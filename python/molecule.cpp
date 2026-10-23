@@ -250,7 +250,8 @@ void exportMolecule(py::module_& m)
     .def("perceive_bonds_simple", &Molecule::perceiveBondsSimple,
          py::arg("tolerance") = 0.45, py::arg("min_distance") = 0.32,
          "Perceive bonds from distances")
-    .def("perceive_bond_orders", &Molecule::perceiveBondOrders,
+    .def("perceive_bond_orders",
+         static_cast<void (Molecule::*)()>(&Molecule::perceiveBondOrders),
          "Perceive bond orders from geometry")
 
     // --- Basis set ---

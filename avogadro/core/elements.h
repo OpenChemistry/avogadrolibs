@@ -88,6 +88,15 @@ public:
   static double radiusCovalent(unsigned char atomicNumber);
 
   /**
+   * @return true if the element with the supplied @p atomicNumber is a metal:
+   * the alkali and alkaline-earth metals (including Be and Mg), the
+   * transition metals (groups 3-12, with the lanthanides and actinides), the
+   * post-transition metals Al, Ga, In, Tl, Sn, Pb, Bi and Po, and Nh-Lv.
+   * The metalloids B, Si, Ge, As, Sb and Te are not metals here.
+   */
+  static bool isMetal(unsigned char atomicNumber);
+
+  /**
    * @return the default color of the element with the supplied @p atomicNumber.
    * This is a pointer to a static three component unsigned char color.
    */

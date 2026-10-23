@@ -12,6 +12,7 @@
 
 #include "array.h"
 #include "bond.h"
+#include "bondorderperception.h"
 #include "constraint.h"
 #include "elements.h"
 #include "graph.h"
@@ -787,6 +788,52 @@ public:
    */
   void perceiveBondsFromResidueData();
 
+  /**
+   * Perceives bond orders from the connectivity (and, optionally, the
+   * geometry) of the molecule. Bonds are assumed to be present already; only
+   * bonds currently of order 1 are ever raised.
+   *
+   * Every non-metal atom has one target valence, from atomValence() for its
+   * element, formal charge and current bond order sum. The atom's
+   * unsaturation is that target minus the bond order sum it already has. The
+   * task is then to give each candidate bond (a single bond between two
+   * unsaturated atoms) an extra order of 0, 1 or 2 so that the extras at every
+   * atom add up to exactly its unsaturation. This is a degree-constrained
+   * subgraph problem; it is solved exactly by constraint propagation with
+   * bounded backtracking, separately for each connected group of candidate
+   * bonds. A group that can be solved is written back; a group that cannot is
+   * left exactly as it was, and its unsaturated atoms are reported.
+   *
+   * Rules, all of them chemistry judgements for a reviewer to check:
+   *  - No bond ends up above order 3, and a bond to hydrogen or a halogen
+   *    stays single.
+   *  - Bonds that already have an order above 1 are kept as they are, and
+   *    count toward their atoms' valence.
+   *  - Metal atoms (see Elements::isMetal()) are never given bond orders, and
+   *    their bonds do not count toward their ligands' valence: a pyridine
+   *    nitrogen bound to zinc is still a pyridine nitrogen.
+   *  - If the molecule has 3D coordinates and @p options asks for it, bond
+   *    lengths decide which of several valid assignments is tried first. For
+   *    a bond of length d the order k nearest to d, among the
+   *    AtomUtilities::idealBondLength() values for k = 1, 2, 3, is the one
+   *    preferred, and bonds that look most strongly multiple are branched on
+   *    first. This only steers the search: the first valid assignment found
+   *    is taken, with no attempt to find the best one overall.
+   *
+   * Limits: there is one fixed valence per atom, chosen by the sum of its
+   * existing bond orders. Atoms whose valence depends on the answer
+   * (hypervalent S and P, nitro groups, N-oxides), charged or radical atoms,
+   * and heavy-atom-only structures with missing hydrogens will be reported as
+   * failures instead of being assigned charges or implicit hydrogens.
+   *
+   * @return which atoms, if any, could not be satisfied.
+   */
+  BondOrderResult perceiveBondOrders(const BondOrderOptions& options);
+
+  /**
+   * Perceives bond orders with default options, ignoring the result.
+   * @sa perceiveBondOrders(const BondOrderOptions&)
+   */
   void perceiveBondOrders();
 
   /**

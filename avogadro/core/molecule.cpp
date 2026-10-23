@@ -5,7 +5,9 @@
 
 #include "molecule.h"
 
+#include "atomutilities.h"
 #include "basisset.h"
+#include "bondordersolver_p.h"
 #include "cube.h"
 #include "elements.h"
 #include "layermanager.h"
@@ -1964,147 +1966,254 @@ void Molecule::clearVibrations()
   m_vibrations.clear();
 }
 
-void Molecule::perceiveBondOrders()
+namespace {
+
+/** The ceiling on any bond order that perception will assign. */
+constexpr unsigned char MaxPerceivedOrder = 3;
+
+bool isHalogen(unsigned char atomicNumber)
 {
-  // check for coordinates and that there are some bonds
-  if (m_positions3d.size() != atomCount() || m_positions3d.size() < 2 ||
-      m_graph.edgeCount() == 0)
-    return;
+  return atomicNumber == 9 || atomicNumber == 17 || atomicNumber == 35 ||
+         atomicNumber == 53 || atomicNumber == 85;
+}
 
-  // save the existing bonds and bond orders
-  // first calculate the unsaturated valence for every atom
-  Array<unsigned char> originalBonds = m_bondOrders;
-  Array<unsigned char> unsaturatedValence(atomCount(), 0);
-  bool anyUnsaturated = false;
-  for (Index i = 0; i < atomCount(); ++i) {
-    unsigned char boSum = 0;
-    for (auto bond : bonds(i)) {
-      boSum += bond.order();
+/**
+ * The highest bond order perception may give a bond between two elements.
+ *
+ * TODO(review): chemistry. Hydrogen and the halogens are held to single
+ * bonds. That forbids real but rare cases (the higher-valent halogen oxides,
+ * for instance, which are written with double bonds in some conventions) and
+ * is what stops a heavy-atom-only structure from being handed a bond order
+ * of 4 by pushing all of its missing valence onto one bond.
+ */
+unsigned char maxBondOrder(unsigned char atomicNumber1,
+                           unsigned char atomicNumber2)
+{
+  if (atomicNumber1 == 1 || atomicNumber2 == 1 || isHalogen(atomicNumber1) ||
+      isHalogen(atomicNumber2))
+    return 1;
+  return MaxPerceivedOrder;
+}
+
+struct GeometricPreference
+{
+  unsigned char preferred; //!< Extra order to try first (order - 1).
+  double score;            //!< cost(1) - cost(2): how double the bond looks.
+};
+
+/**
+ * cost(k) is how far the measured length @a distance is from the ideal
+ * length of an order-k bond between the two elements, for k = 1 to
+ * capacity + 1. The order with the lowest cost (the lowest k of equals) is
+ * the one tried first. The bonds whose cost falls most on going from single
+ * to double are branched on first (score = cost(1) - cost(2)).
+ *
+ * Ideal lengths come from AtomUtilities::idealBondLength()
+ * Nothing here is about periodic images, so a bond across a cell
+ * boundary is measured the long way round. The first valid assignment
+ * found is kept; no attempt is made to find the one with the lowest
+ * total cost. (TODO)
+ */
+GeometricPreference geometricPreference(Real distance,
+                                        unsigned char atomicNumber1,
+                                        unsigned char atomicNumber2,
+                                        unsigned char capacity)
+{
+  unsigned char bestOrder = 1;
+  Real bestCost = 0.0;
+  Real costSingle = 0.0;
+  Real costDouble = 0.0;
+  for (unsigned char order = 1; order <= capacity + 1; ++order) {
+    const Real cost =
+      std::abs(distance - AtomUtilities::idealBondLength(atomicNumber1,
+                                                         atomicNumber2, order));
+    if (order == 1)
+      costSingle = cost;
+    if (order == 2)
+      costDouble = cost;
+    if (order == 1 || cost < bestCost) {
+      bestOrder = order;
+      bestCost = cost;
     }
-    const unsigned int target =
-      atomValence(atomicNumber(i), formalCharge(i), bonds(i).size());
+  }
+  return { static_cast<unsigned char>(bestOrder - 1), costSingle - costDouble };
+}
 
-    // check to see if the atom needs valence
-    //  if boSum is too large, then the atom already has too many bonds
-    //  so return zero instead of an underflow
-    unsaturatedValence[i] =
-      target > boSum ? static_cast<unsigned char>(target - boSum) : 0;
+/** Worded like kekulizeFailureMessage(). */
+std::string bondOrderFailureMessage(Index culprit, std::size_t failedAtoms,
+                                    bool oddUnsaturation)
+{
+  if (oddUnsaturation) {
+    return "Could not perceive bond orders: an odd number of unpaired "
+           "valences remains in a connected group of atoms, so no "
+           "arrangement of bonds can satisfy it (a radical or charged site "
+           "is likely), leaving " +
+           std::to_string(failedAtoms) +
+           (failedAtoms == 1 ? " atom" : " atoms") + " unsatisfied.";
+  }
+  std::string message =
+    "Could not perceive bond orders: no valid arrangement of multiple bonds "
+    "exists";
+  // MaxIndex means the search ran out of steps rather than hitting one atom.
+  if (culprit != MaxIndex)
+    message += " that satisfies atom " + std::to_string(culprit);
+  else
+    message += " that the search could find within its step limit";
+  message += ", leaving " + std::to_string(failedAtoms) +
+             (failedAtoms == 1 ? " atom" : " atoms") + " unsatisfied.";
+  return message;
+}
 
-    if (unsaturatedValence[i] > 0)
-      anyUnsaturated = true;
+} // namespace
+
+BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
+{
+  BondOrderResult result;
+  const Index atoms = atomCount();
+  const Index bondTotal = bondCount();
+  if (atoms < 2 || bondTotal == 0)
+    return result;
+
+  const bool haveGeometry =
+    options.useGeometry && m_positions3d.size() == atoms;
+
+  // Step 1: the unsaturation of every atom. The order sum handed to
+  // atomValence() is a sum of bond orders and not a bond count, as in
+  // kekulize(): it is what selects among the valences an element has (the
+  // 3 or 5 of nitrogen, the 2, 4 or 6 of sulfur).
+  //
+  // For now: Metals are skipped (unsaturation 0, never a
+  // candidate), and a bond to a metal is left out of the order sum of the
+  // atom on the other end, so that a ligand is judged as if it were free: the
+  // nitrogen of pyridine bound to Zn has a sum of 2 and a target of 3, and
+  // comes out aromatic, while the N-Zn bond stays single. Dative bonds and
+  // metal-ligand multiple bonds (carbonyls, carbenes) are therefore never
+  // perceived. (TODO)
+  //
+  // An atom whose bonds all go to metals (chloride on PtCl4,
+  // or the terminal ligand atoms of a simple complex) has no
+  // non-metal bond to take valence from. It gets unsaturation 0 and is never
+  // a failure. An atom with both kinds of bond is still held to its full
+  // valence from its non-metal bonds. An atom with no bonds at all is not
+  // covered by this rule, and fails if its element wants any valence.
+  std::vector<char> metal(atoms, 0);
+  for (Index atom = 0; atom < atoms; ++atom)
+    metal[atom] = Elements::isMetal(m_atomicNumbers[atom]) ? 1 : 0;
+
+  std::vector<unsigned int> orderSum(atoms, 0);
+  std::vector<char> hasMetalBond(atoms, 0);
+  std::vector<char> hasNonMetalBond(atoms, 0);
+  for (Index bond = 0; bond < bondTotal; ++bond) {
+    const Index a = m_graph.endpoints(bond).first;
+    const Index b = m_graph.endpoints(bond).second;
+    if (metal[a] || metal[b]) {
+      hasMetalBond[a] = 1;
+      hasMetalBond[b] = 1;
+      continue;
+    }
+    hasNonMetalBond[a] = 1;
+    hasNonMetalBond[b] = 1;
+    orderSum[a] += m_bondOrders[bond];
+    orderSum[b] += m_bondOrders[bond];
   }
 
-  Index startIndex = 0;
-  Index initialAtom = 0;
-  while (anyUnsaturated) {
+  BondOrderProblem problem;
+  problem.demand.assign(atoms, 0);
+  // Check to see if we have a demand for increased bond orders
+  bool anyDemand = false;
+  for (Index atom = 0; atom < atoms; ++atom) {
+    // skip metals
+    if (metal[atom])
+      continue;
+    if (hasMetalBond[atom] && !hasNonMetalBond[atom])
+      continue; // Bonded only to metals: satisfied.
 
-    // okay, we're first going to try placing *one* bond from our start atom
-    // .. then we can try placing bonds anywhere
+    const unsigned int target =
+      atomValence(m_atomicNumbers[atom], formalCharge(atom), orderSum[atom]);
+    // An overbonded atom has no room left: zero
+    const unsigned int unsaturation =
+      target > orderSum[atom] ? target - orderSum[atom] : 0;
 
-    // find the first atom with unsaturated valence of ONE
-    bool foundStart = false;
-    for (Index i = startIndex; i < atomCount(); ++i) {
-      if (unsaturatedValence[i] == 1) {
-        startIndex = i;
-        foundStart = true;
-        break;
-      }
+    // If we have unsaturation, there's a demand (i.e., this atom needs more
+    // bonds)
+    problem.demand[atom] = static_cast<unsigned char>(
+      std::min(unsaturation, static_cast<unsigned int>(MaxPerceivedOrder)));
+    anyDemand = anyDemand || problem.demand[atom] != 0;
+  }
+
+  // Step 2: the candidate bonds. Only single bonds between two unsaturated
+  // non-metal atoms can be raised; existing multiple bonds are fixed.
+  std::vector<Index> bondOfEdge;
+  for (Index bond = 0; bond < bondTotal; ++bond) {
+    if (m_bondOrders[bond] != 1)
+      continue;
+    const Index a = m_graph.endpoints(bond).first;
+    const Index b = m_graph.endpoints(bond).second;
+    if (problem.demand[a] == 0 || problem.demand[b] == 0)
+      continue;
+    const unsigned char ceiling =
+      maxBondOrder(m_atomicNumbers[a], m_atomicNumbers[b]);
+    const unsigned char capacity = static_cast<unsigned char>(
+      std::min<unsigned int>({ static_cast<unsigned int>(ceiling - 1),
+                               problem.demand[a], problem.demand[b] }));
+    if (capacity == 0)
+      continue;
+
+    BondOrderProblem::Edge edge;
+    edge.a = a;
+    edge.b = b;
+    edge.capacity = capacity;
+
+    // Geometry only orders the search; see geometricPreference().
+    if (haveGeometry) {
+      const GeometricPreference preference =
+        geometricPreference((m_positions3d[a] - m_positions3d[b]).norm(),
+                            m_atomicNumbers[a], m_atomicNumbers[b], capacity);
+      edge.preferred = preference.preferred;
+      edge.score = preference.score;
+    } else {
+      edge.preferred = capacity; // Highest order first, in edge order.
     }
+    problem.edges.push_back(edge);
+    bondOfEdge.push_back(bond);
+  }
 
-    // if we didn't find an atom with unsaturated valence of ONE,
-    // .. then find *something*
-    if (!foundStart) {
-      for (Index i = startIndex; i < atomCount(); ++i) {
-        if (unsaturatedValence[i] > 0) {
-          startIndex = i;
-          foundStart = true;
-          break;
-        }
-      }
+  // Nothing to raise and nothing wanted: a saturated molecule, say. Skip the
+  // solver and its allocations altogether.
+  if (problem.edges.empty() && !anyDemand)
+    return result;
+
+  // Step 3: solve each connected component of candidates on its own.
+  const BondOrderSolution solution =
+    solveBondOrders(problem, options.stepBudgetPerComponent);
+
+  // Step 4: commit what was solved. A component that failed keeps its bonds
+  // as they were, and its atoms are reported.
+  for (std::size_t edge = 0; edge < bondOfEdge.size(); ++edge) {
+    if (solution.extra[edge] > 0) {
+      m_bondOrders[bondOfEdge[edge]] = static_cast<unsigned char>(
+        m_bondOrders[bondOfEdge[edge]] + solution.extra[edge]);
     }
+  }
 
-    if (foundStart) {
-      // std::cerr << "Found start index " << startIndex << std::endl;
+  if (solution.success())
+    return result;
 
-      // look at the neighbors of our start atom
-      Index bestIndex = MaxIndex;
-      unsigned bestValence = 256; // something impossible
-      Real bestDistance = 100.0;  // 10 Angstroms squared
-      Vector3 startPosition = m_positions3d[startIndex];
-      // iterate through the Indexes of the neighbors
-      for (auto neighbor : graph().neighbors(startIndex)) {
-        // if this neighbor doesn't have an unsaturated valence, skip it
-        if (unsaturatedValence[neighbor] == 0) {
-          continue;
-        }
+  result.success = false;
+  for (const ComponentFailure& failure : solution.failures) {
+    result.failedAtoms.insert(result.failedAtoms.end(),
+                              failure.vertices.begin(), failure.vertices.end());
+  }
+  std::sort(result.failedAtoms.begin(), result.failedAtoms.end());
+  result.message = bondOrderFailureMessage(
+    solution.failures.front().culprit, result.failedAtoms.size(),
+    solution.failures.front().reason == BondOrderFailure::OddUnsaturation);
+  return result;
+}
 
-        if (unsaturatedValence[neighbor] < bestValence) {
-          bestIndex = neighbor;
-          bestValence = unsaturatedValence[neighbor];
-          bestDistance =
-            (m_positions3d[neighbor] - startPosition).squaredNorm();
-        } else if (unsaturatedValence[neighbor] == bestValence) {
-          // check if this neighbor is closer
-          Real distance =
-            (m_positions3d[neighbor] - startPosition).squaredNorm();
-          if (distance < bestDistance) {
-            bestIndex = neighbor;
-            bestDistance = distance;
-          }
-        }
-      }
-      // if we found a neighbor, then we can assign a bond order and update
-      // charges
-      if (bestIndex != MaxIndex) {
-        /*std::cerr << "Assigning bond " << startIndex << " " << bestIndex
-                  << std::endl; */
-
-        // assign the bond order
-        m_bondOrders[bond(startIndex, bestIndex).index()] += 1;
-        // update the unsaturated valence of the start atom
-        unsaturatedValence[startIndex] -= 1;
-        // update the unsaturated valence of the neighbor atom
-        unsaturatedValence[bestIndex] -= 1;
-
-        startIndex = 0; // we can now try placing bonds anywhere
-      } else {
-        startIndex += 1;
-      }
-    }
-
-    // TODO: update the current formal charges
-
-    anyUnsaturated = false; // check if we're done
-    for (Index i = 0; i < atomCount(); ++i) {
-      if (unsaturatedValence[i] > 0) {
-        anyUnsaturated = true;
-        break;
-      }
-    }
-
-    if (!foundStart && anyUnsaturated) {
-      // we've gone through and it's not working
-      // try a new starting atom and reset the bond orders
-      // std::cerr << " didn't work " << initialAtom << std::endl;
-
-      initialAtom += 1;
-      startIndex = initialAtom;
-      for (Index i = 0; i < m_bondOrders.size(); ++i) {
-        unsigned change = m_bondOrders[i] - originalBonds[i];
-        if (change > 0) {
-          // update the valences
-          unsaturatedValence[bond(i).atom1().index()] += change;
-          unsaturatedValence[bond(i).atom2().index()] += change;
-        }
-        m_bondOrders[i] = originalBonds[i];
-      }
-    }
-
-    if (initialAtom >= atomCount()) {
-      break;
-    }
-
-  } // keep going until we've assigned all the bond orders
+void Molecule::perceiveBondOrders()
+{
+  perceiveBondOrders(BondOrderOptions());
 }
 
 void Molecule::perceiveBondsSimple(const double tolerance, const double min)
