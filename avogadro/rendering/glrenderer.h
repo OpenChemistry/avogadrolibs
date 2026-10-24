@@ -46,6 +46,16 @@ public:
   /** Resize the context in response to window management events. */
   void resize(int width, int height);
 
+  /**
+   * Resize with an explicit device (framebuffer) size. @p width and
+   * @p height are logical pixels, used by the cameras; the viewport and the
+   * pipeline buffers are exactly deviceWidth x deviceHeight. The two-argument
+   * overload derives the device size as the truncated product of the logical
+   * size and the pixel ratio. Offscreen rendering uses this to hit an exact
+   * output size whatever the pixel ratio.
+   */
+  void resize(int width, int height, int deviceWidth, int deviceHeight);
+
   /** Set the ratio of physical to logical pixels. */
   void setPixelRatio(float ratio);
 

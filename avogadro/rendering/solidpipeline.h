@@ -49,6 +49,12 @@ public:
   void resize(int width, int height);
 
   /**
+   * @brief Resize buffers to exactly deviceWidth x deviceHeight pixels. The
+   * logical width and height are only used by the two-argument overload.
+   */
+  void resize(int width, int height, int deviceWidth, int deviceHeight);
+
+  /**
    * @brief Set pixel ratio (1.0 on standard displays, 2.0 on Retina, etc.).
    */
   void setPixelRatio(float ratio);

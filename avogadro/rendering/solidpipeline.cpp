@@ -306,8 +306,14 @@ void SolidPipeline::adjustOffset(const Camera& cam)
 
 void SolidPipeline::resize(int width, int height)
 {
-  m_width = width * m_pixelRatio;
-  m_height = height * m_pixelRatio;
+  resize(width, height, static_cast<int>(width * m_pixelRatio),
+         static_cast<int>(height * m_pixelRatio));
+}
+
+void SolidPipeline::resize(int, int, int deviceWidth, int deviceHeight)
+{
+  m_width = deviceWidth;
+  m_height = deviceHeight;
 
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,

@@ -31,9 +31,7 @@
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <memory>
-#include <numeric>
 
 namespace Avogadro::QtOpenGL {
 
@@ -51,54 +49,26 @@ struct RenderLayout
   float pixelRatio;
 };
 
-// GLRenderer::resize() and SolidPipeline::resize() compute a device size as
-// the truncated float product of an integer logical size and the pixel ratio.
-// Return whether that gives exactly the wanted device size.
-bool isExact(int logicalW, int logicalH, float ratio, int deviceW, int deviceH)
-{
-  return static_cast<int>(logicalW * ratio) == deviceW &&
-         static_cast<int>(logicalH * ratio) == deviceH;
-}
-
-// Find an integer logical size and a float pixel ratio whose device size is
-// exactly deviceW x deviceH, with the logical height as close to the view's as
-// possible (so labels and line widths keep their on-screen proportions).
+// Logical size and pixel ratio for rendering an outW x outH image at
+// supersampling k from a view viewH logical pixels tall.
 //
-// The logical size is an int pair and there is a single ratio, so the output
-// aspect ratio is only exactly representable when the logical size is a
-// multiple of the reduced aspect ratio uw:uh. Take the multiple nearest to the
-// view height. If it is not within 1.5x of the view height (the output has an
-// awkward aspect such as 1001 x 999), render with logical size = output size
-// and ratio = supersample instead; labels then scale with the image, but the
-// size is exact.
+// The logical height stays the view's, so labels and line widths keep their
+// on-screen proportions, and the ratio maps it onto the output height:
+// ratio = outH * k / viewH. The logical width is that of the output aspect
+// ratio, rounded to a whole logical pixel. The camera's aspect therefore
+// differs from outW / outH by at most 0.5 / logicalWidth, which is negligible
+// (text labels, which derive a viewport from logical width times ratio, are
+// off by the same fraction). The framebuffer and viewport do not depend on
+// the rounding: renderImage passes the exact device size to
+// GLRenderer::resize().
 RenderLayout chooseLayout(int outW, int outH, int k, int viewH)
 {
-  const int deviceW = outW * k;
-  const int deviceH = outH * k;
-
-  const int d = std::gcd(outW, outH);
-  const int uh = outH / d;
-  const int uw = outW / d;
-  if (viewH > 0) {
-    const int m = std::max(
-      1, static_cast<int>(std::lround(static_cast<double>(viewH) / uh)));
-    const long long h = static_cast<long long>(m) * uh;
-    const long long w = static_cast<long long>(m) * uw;
-    if (h * 3 >= viewH * 2LL && h * 2 <= viewH * 3LL && w <= 1000000) {
-      const int lw = static_cast<int>(w);
-      const int lh = static_cast<int>(h);
-      float ratio = static_cast<float>(static_cast<double>(deviceH) / lh);
-      // Float rounding may land just under the exact value, which would
-      // truncate to one pixel short. Nudge upwards; staying within a few ulps
-      // keeps the truncation at the exact size.
-      for (int i = 0; i < 8; ++i) {
-        if (isExact(lw, lh, ratio, deviceW, deviceH))
-          return { lw, lh, ratio };
-        ratio = std::nextafter(ratio, std::numeric_limits<float>::infinity());
-      }
-    }
-  }
-  return { outW, outH, static_cast<float>(k) };
+  const int logicalH = std::max(1, viewH);
+  const auto logicalW = static_cast<int>(std::max<long long>(
+    1, std::llround(static_cast<double>(outW) * logicalH / outH)));
+  const auto ratio =
+    static_cast<float>(static_cast<double>(outH) * k / logicalH);
+  return { logicalW, logicalH, ratio };
 }
 
 } // namespace
@@ -497,7 +467,8 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   m_renderer.scene().setBackgroundColor(Vector4ub(0, 0, 0, 0));
   m_renderer.setProjectionScale(projectionScale);
   m_renderer.setPixelRatio(layout.pixelRatio);
-  m_renderer.resize(layout.logicalWidth, layout.logicalHeight);
+  m_renderer.resize(layout.logicalWidth, layout.logicalHeight,
+                    static_cast<int>(renderW), static_cast<int>(renderH));
 
   // Bind immediately before rendering: SolidPipeline::begin() records the
   // bound framebuffer as its output, and a pipeline that initialized lazily

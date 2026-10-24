@@ -72,17 +72,24 @@ void GLRenderer::initialize()
 
 void GLRenderer::resize(int width, int height)
 {
+  resize(width, height, static_cast<int>(width * m_pixelRatio),
+         static_cast<int>(height * m_pixelRatio));
+}
+
+void GLRenderer::resize(int width, int height, int deviceWidth,
+                        int deviceHeight)
+{
   if (!m_valid)
     return;
 
   // m_volume.resize(width, height);
   // The viewport is in device pixels, while the cameras work in logical pixels
   // as they are used to project and unproject Qt mouse coordinates.
-  glViewport(0, 0, static_cast<GLsizei>(width * m_pixelRatio),
-             static_cast<GLsizei>(height * m_pixelRatio));
+  glViewport(0, 0, static_cast<GLsizei>(deviceWidth),
+             static_cast<GLsizei>(deviceHeight));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
-  m_solidPipeline.resize(width, height);
+  m_solidPipeline.resize(width, height, deviceWidth, deviceHeight);
 }
 
 void GLRenderer::setPixelRatio(float ratio)

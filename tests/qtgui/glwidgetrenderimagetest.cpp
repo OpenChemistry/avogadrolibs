@@ -213,7 +213,8 @@ TEST_F(GLWidgetRenderImageTest, exactOutputSizes)
 {
   const QSize sizes[] = { { 300, 300 },   { 900, 300 },  { 300, 900 },
                           { 401, 333 },   { 1001, 999 }, { 7, 5 },
-                          { 1920, 1080 }, { 640, 480 } };
+                          { 1920, 1080 }, { 640, 480 },  { 3000, 1963 },
+                          { 1963, 3000 }, { 8192, 3 },   { 3, 4000 } };
   for (const QSize& size : sizes) {
     QImage image = render(size.width(), size.height());
     EXPECT_EQ(image.size(), size);
