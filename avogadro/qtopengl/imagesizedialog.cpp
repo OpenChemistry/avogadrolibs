@@ -31,7 +31,7 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
                                  bool showTransparent, bool evenDimensions,
                                  QWidget* parent)
   : QDialog(parent), m_glWidget(glWidget), m_settingsKey(settingsKey),
-    m_even(evenDimensions)
+    m_even(evenDimensions), m_showTransparent(showTransparent)
 {
   setWindowTitle(tr("Image Size"));
 
@@ -47,8 +47,12 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
   }
 
   m_lock = new QCheckBox(tr("&Lock aspect ratio"));
-  m_transparent = new QCheckBox(tr("&Transparent background"));
-  m_transparent->setVisible(showTransparent);
+  // Parented to the dialog even when not shown, so it is never a top-level
+  // window and is freed with the dialog. It only joins the layout (and so
+  // only appears) when asked for.
+  m_transparent = new QCheckBox(tr("&Transparent background"), this);
+  if (!m_showTransparent)
+    m_transparent->hide();
 
   auto* widthLabel = new QLabel(tr("&Width:"));
   widthLabel->setBuddy(m_width);
@@ -73,7 +77,7 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
   form->addRow(heightLabel, m_height);
   form->addRow(QString(), m_lock);
   form->addRow(tr("Size of view:"), presets);
-  if (showTransparent)
+  if (m_showTransparent)
     form->addRow(QString(), m_transparent);
 
   auto* buttons =
@@ -132,7 +136,7 @@ QSize ImageSizeDialog::imageSize() const
 
 bool ImageSizeDialog::transparentBackground() const
 {
-  return m_transparent->isVisible() && m_transparent->isChecked();
+  return m_showTransparent && m_transparent->isChecked();
 }
 
 RenderOptions ImageSizeDialog::renderOptions() const
@@ -202,7 +206,7 @@ void ImageSizeDialog::accept()
   settings.setValue("width", m_width->value());
   settings.setValue("height", m_height->value());
   settings.setValue("aspectLock", m_lock->isChecked());
-  if (m_transparent->isVisible())
+  if (m_showTransparent)
     settings.setValue("transparent", m_transparent->isChecked());
   settings.endGroup();
   QDialog::accept();

@@ -74,6 +74,7 @@ private:
   GLWidget* m_glWidget;
   QString m_settingsKey;
   bool m_even;
+  bool m_showTransparent;
   QSpinBox* m_width;
   QSpinBox* m_height;
   QCheckBox* m_lock;
