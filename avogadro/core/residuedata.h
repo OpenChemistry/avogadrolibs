@@ -2436,6 +2436,114 @@ ResidueData FLCData("FLC",
                       { "OHB", "HOB" } },
                     // Double Bonds
                     { { "CAC", "OA1" }, { "CBC", "OB1" }, { "CGC", "OG1" } });
+ResidueData SECData("SEC",
+                    // Atoms
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "CB", 6 },
+                      { "SE", 34 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "OXT", 8 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HA", 1 },
+                      { "HB2", 1 },
+                      { "HB3", 1 },
+                      { "HE", 1 },
+                      { "HXT", 1 } },
+                    // Single Bonds
+                    { { "N", "CA" },
+                      { "N", "H" },
+                      { "N", "H2" },
+                      { "CA", "CB" },
+                      { "CA", "C" },
+                      { "CA", "HA" },
+                      { "CB", "SE" },
+                      { "CB", "HB2" },
+                      { "CB", "HB3" },
+                      { "SE", "HE" },
+                      { "C", "OXT" },
+                      { "OXT", "HXT" } },
+                    // Double Bonds
+                    { { "C", "O" } });
+ResidueData PYLData(
+  "PYL",
+  // Atoms
+  { { "CB2", 6 },  { "CG2", 6 },  { "CD2", 6 },  { "CE2", 6 },  { "N2", 7 },
+    { "CA2", 6 },  { "C2", 6 },   { "O2", 8 },   { "NZ", 7 },   { "CE", 6 },
+    { "CD", 6 },   { "CG", 6 },   { "CB", 6 },   { "CA", 6 },   { "C", 6 },
+    { "OXT", 8 },  { "O", 8 },    { "N", 7 },    { "HXT", 1 },  { "HA", 1 },
+    { "H", 1 },    { "H2", 1 },   { "HB3", 1 },  { "HB2", 1 },  { "HG3", 1 },
+    { "HG2", 1 },  { "HD3", 1 },  { "HD2", 1 },  { "HE3", 1 },  { "HE2", 1 },
+    { "HZ", 1 },   { "HA2", 1 },  { "HE22", 1 }, { "HD32", 1 }, { "HD22", 1 },
+    { "HG22", 1 }, { "HB12", 1 }, { "HB22", 1 }, { "HB32", 1 } },
+  // Single Bonds
+  { { "CB2", "CG2" },  { "CB2", "HB12" }, { "CB2", "HB22" }, { "CB2", "HB32" },
+    { "CG2", "CD2" },  { "CG2", "CA2" },  { "CG2", "HG22" }, { "CD2", "CE2" },
+    { "CD2", "HD32" }, { "CD2", "HD22" }, { "CE2", "HE22" }, { "N2", "CA2" },
+    { "CA2", "C2" },   { "CA2", "HA2" },  { "C2", "NZ" },    { "NZ", "CE" },
+    { "NZ", "HZ" },    { "CE", "CD" },    { "CE", "HE3" },   { "CE", "HE2" },
+    { "CD", "CG" },    { "CD", "HD3" },   { "CD", "HD2" },   { "CG", "CB" },
+    { "CG", "HG3" },   { "CG", "HG2" },   { "CB", "CA" },    { "CB", "HB3" },
+    { "CB", "HB2" },   { "CA", "C" },     { "CA", "HA" },    { "CA", "N" },
+    { "C", "OXT" },    { "OXT", "HXT" },  { "N", "H" },      { "N", "H2" } },
+  // Double Bonds
+  { { "CE2", "N2" }, { "C2", "O2" }, { "C", "O" } });
+ResidueData AIBData("AIB",
+                    // Atoms
+                    { { "N", 7 },
+                      { "CA", 6 },
+                      { "C", 6 },
+                      { "O", 8 },
+                      { "OXT", 8 },
+                      { "CB1", 6 },
+                      { "CB2", 6 },
+                      { "H", 1 },
+                      { "H2", 1 },
+                      { "HXT", 1 },
+                      { "HB11", 1 },
+                      { "HB12", 1 },
+                      { "HB13", 1 },
+                      { "HB21", 1 },
+                      { "HB22", 1 },
+                      { "HB23", 1 } },
+                    // Single Bonds
+                    { { "N", "CA" },
+                      { "N", "H" },
+                      { "N", "H2" },
+                      { "CA", "C" },
+                      { "CA", "CB1" },
+                      { "CA", "CB2" },
+                      { "C", "OXT" },
+                      { "OXT", "HXT" },
+                      { "CB1", "HB11" },
+                      { "CB1", "HB12" },
+                      { "CB1", "HB13" },
+                      { "CB2", "HB21" },
+                      { "CB2", "HB22" },
+                      { "CB2", "HB23" } },
+                    // Double Bonds
+                    { { "C", "O" } });
+ResidueData NMEData("NME",
+                    // Atoms
+                    { { "N", 7 },
+                      { "C", 6 },
+                      { "HN1", 1 },
+                      { "HN2", 1 },
+                      { "H1", 1 },
+                      { "H2", 1 },
+                      { "H3", 1 } },
+                    // Single Bonds
+                    { { "N", "C" },
+                      { "N", "HN1" },
+                      { "N", "HN2" },
+                      { "C", "H1" },
+                      { "C", "H2" },
+                      { "C", "H3" } },
+                    // Double Bonds
+                    {});
+
 std::map<std::string, ResidueData> residueDict = {
   { "ALA", ALAData }, { "CYS", CYSData }, { "ASP", ASPData },
   { "GLU", GLUData }, { "PHE", PHEData }, { "GLY", GLYData },
@@ -2467,6 +2575,8 @@ std::map<std::string, ResidueData> residueDict = {
   { "NO3", NO3Data }, { "PTR", PTRData }, { "IPA", IPAData },
   { "COA", COAData }, { "KCX", KCXData }, { "H4B", H4BData },
   { "SAM", SAMData }, { "GNP", GNPData }, { "FLC", FLCData },
+  { "SEC", SECData }, { "PYL", PYLData }, { "AIB", AIBData },
+  { "NME", NMEData },
 
 };
 } // namespace Avogadro::Core
