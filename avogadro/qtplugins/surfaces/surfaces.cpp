@@ -33,6 +33,7 @@ namespace {
 
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/imagesizedialog.h>
 
 #include <avogadro/core/basisset.h>
 #include <avogadro/core/gaussiansettools.h>
@@ -51,7 +52,6 @@ namespace {
 #include <avogadro/quantumio/qcschema.h>
 
 #include <QAction>
-#include <QOpenGLFramebufferObject>
 #include <QtConcurrent/QtConcurrentMap>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QBuffer>
@@ -61,9 +61,6 @@ namespace {
 #include <QtCore/QVariantMap>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-
-#include <QGuiApplication>
-#include <QScreen>
 
 #include <algorithm>
 #include <numeric>
@@ -86,6 +83,8 @@ class Surfaces::PIMPL
 public:
   GifWriter* gifWriter = nullptr;
   gwavi_t* gwaviWriter = nullptr;
+  // Frame size chosen when recording started.
+  QSize movieSize = QSize(800, 600);
 };
 
 namespace {
@@ -95,6 +94,20 @@ void registerQuantumFormat(Io::FileFormat* format)
 {
   if (!Io::FileFormatManager::registerFormat(format))
     delete format;
+}
+
+// Finish and release whichever movie writer is open.
+void closeMovieWriters(GifWriter*& gif, gwavi_t*& avi)
+{
+  if (gif != nullptr) {
+    GifEnd(gif);
+    delete gif;
+    gif = nullptr;
+  }
+  if (avi != nullptr) {
+    gwavi_close(avi);
+    avi = nullptr;
+  }
 }
 } // namespace
 
@@ -1168,6 +1181,19 @@ void Surfaces::recordMovie()
   if (!fileInfo.suffix().isEmpty())
     baseName = fileInfo.absolutePath() + "/" + fileInfo.baseName();
 
+  // Ask for the frame size. Video encoders need even dimensions.
+  auto* activeWidget = QtOpenGL::ActiveObjects::instance().activeGLWidget();
+  QtOpenGL::ImageSizeDialog sizeDialog(activeWidget, "surfaces/movie", false,
+                                       true, qobject_cast<QWidget*>(parent()));
+  sizeDialog.setWindowTitle(tr("Movie Size"));
+  if (sizeDialog.exec() != QDialog::Accepted) {
+    m_dialog->enableRecord();
+    return;
+  }
+  d->movieSize = sizeDialog.imageSize();
+  const int movieWidth = d->movieSize.width();
+  const int movieHeight = d->movieSize.height();
+
   m_baseFileName = baseName;
   m_numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
@@ -1180,12 +1206,12 @@ void Surfaces::recordMovie()
   if (selectedFilter == tr("GIF (*.gif)")) {
     d->gwaviWriter = nullptr;
     d->gifWriter = new GifWriter;
-    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), 800, 600,
-             100 / 4);
+    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), movieWidth,
+             movieHeight, 100 / 4);
   } else if (selectedFilter == tr("Movie AVI (*.avi)")) {
     d->gifWriter = nullptr;
-    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(), 800, 600,
-                                "MJPG", 4, nullptr);
+    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(),
+                                movieWidth, movieHeight, "MJPG", 4, nullptr);
   } else {
     d->gwaviWriter = nullptr;
     d->gifWriter = nullptr;
@@ -1212,35 +1238,33 @@ void Surfaces::movieFrame()
     m_dialog->enableRecord();
     return;
   }
-  glWidget->resize(800 / glWidget->devicePixelRatio(),
-                   600 / glWidget->devicePixelRatio());
-  QImage exportImage;
-  glWidget->raise();
-  glWidget->repaint();
-  if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-    exportImage = glWidget->grabFramebuffer();
-  } else {
-    auto* screen = QGuiApplication::primaryScreen();
-    auto pixmap = screen->grabWindow(glWidget->winId());
-    exportImage = pixmap.toImage();
+  QtOpenGL::RenderOptions renderOptions;
+  renderOptions.size = d->movieSize;
+  QString renderError;
+  QImage exportImage = glWidget->renderImage(renderOptions, &renderError);
+  if (exportImage.isNull()) {
+    QMessageBox::warning(
+      qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+      tr("Cannot render the movie frame: %1").arg(renderError));
+    closeMovieWriters(d->gifWriter, d->gwaviWriter);
+    m_recordingMovie = false;
+    m_dialog->enableRecord();
+    return;
   }
 
   if (d->gifWriter) {
-    int pixelCount = exportImage.width() * exportImage.height();
-    auto* imageData = new uint8_t[pixelCount * 4];
-    int imageIndex = 0;
-    for (int j = 0; j < exportImage.height(); ++j) {
-      for (int k = 0; k < exportImage.width(); ++k) {
-        QColor color = exportImage.pixel(k, j);
-        imageData[imageIndex] = static_cast<uint8_t>(color.red());
-        imageData[imageIndex + 1] = static_cast<uint8_t>(color.green());
-        imageData[imageIndex + 2] = static_cast<uint8_t>(color.blue());
-        imageData[imageIndex + 3] = static_cast<uint8_t>(color.alpha());
-        imageIndex += 4;
-      }
+    // GIF-H wants tightly packed RGBA; scanlines may be padded.
+    exportImage = exportImage.convertToFormat(QImage::Format_RGBA8888);
+    const int frameWidth = exportImage.width();
+    const int frameHeight = exportImage.height();
+    const size_t rowBytes = static_cast<size_t>(frameWidth) * 4;
+    std::vector<uint8_t> imageData(rowBytes * frameHeight);
+    for (int y = 0; y < frameHeight; ++y) {
+      std::copy_n(exportImage.constScanLine(y), rowBytes,
+                  imageData.begin() + y * rowBytes);
     }
-    GifWriteFrame(d->gifWriter, imageData, 800, 600, 100 / 4);
-    delete[] imageData;
+    GifWriteFrame(d->gifWriter, imageData.data(), frameWidth, frameHeight,
+                  100 / 4);
   } else if (d->gwaviWriter) {
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -1277,13 +1301,8 @@ void Surfaces::movieFrame()
     calculateSurface();
   } else {
     qDebug() << "We are done! Make some movies.";
-    if (d->gifWriter) {
-      GifEnd(d->gifWriter);
-      delete d->gifWriter;
-      d->gifWriter = nullptr;
-    } else if (d->gwaviWriter) {
-      gwavi_close(d->gwaviWriter);
-      d->gwaviWriter = nullptr;
+    if (d->gifWriter || d->gwaviWriter) {
+      closeMovieWriters(d->gifWriter, d->gwaviWriter);
     } else {
       QProcess proc;
       QStringList args;
