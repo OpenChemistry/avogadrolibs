@@ -199,7 +199,8 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   // The texture holds premultiplied color (QPainter renders into
   // Format_ARGB32_Premultiplied), so blend with GL_ONE rather than
   // GL_SRC_ALPHA, which would multiply by alpha a second time. Save and
-  // restore the caller's blend state.
+  // restore the caller's blend state. The alpha channel is "over" blended too,
+  // so a label over a transparent background keeps its partial alpha.
   const GLboolean blendWasEnabled = glIsEnabled(GL_BLEND);
   GLint srcRgb = GL_SRC_ALPHA, dstRgb = GL_ONE_MINUS_SRC_ALPHA;
   GLint srcAlpha = GL_ONE, dstAlpha = GL_ONE;
@@ -208,7 +209,8 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   glGetIntegerv(GL_BLEND_SRC_ALPHA, &srcAlpha);
   glGetIntegerv(GL_BLEND_DST_ALPHA, &dstAlpha);
   glEnable(GL_BLEND);
-  glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+  glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
 
   // Draw texture
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
