@@ -817,6 +817,11 @@ public:
    *  - Metal atoms (see Elements::isMetal()) are never given bond orders, and
    *    their bonds do not count toward their ligands' valence: a pyridine
    *    nitrogen bound to zinc is still a pyridine nitrogen.
+   *  - With 3D coordinates in use, a period-2 atom with exactly two neighbors
+   *    whose bond angle is below 150 degrees is sp2 and can carry at most one
+   *    pi bond, so it is not offered a second one (a bare C6 ring becomes
+   *    benzene, not a cumulene). A near-linear atom, and any atom of period 3
+   *    or later, is not limited.
    *  - If the molecule has 3D coordinates and @p options asks for it, bond
    *    lengths decide which of several valid assignments is tried first. For
    *    a bond of length d the order k nearest to d, among the

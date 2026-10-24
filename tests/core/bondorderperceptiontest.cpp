@@ -747,6 +747,122 @@ TEST(BondOrderPerceptionTest, stepBudgetDoesNotStopBestEffort)
   EXPECT_EQ(histogram(benzene.mol)[2], 3u);
 }
 
+/** Bare carbon atoms at @a positions, bonded along @a bonds, all single. */
+Molecule bareCarbons(const std::vector<Vector3>& positions,
+                     const std::vector<std::pair<Index, Index>>& bonds)
+{
+  Molecule mol;
+  for (const Vector3& position : positions)
+    mol.addAtom(6).setPosition3d(position);
+  for (const auto& bond : bonds)
+    mol.addBond(bond.first, bond.second, 1);
+  return mol;
+}
+
+/** How many double bonds each atom is in. */
+std::vector<unsigned int> doubleBondCounts(const Molecule& mol)
+{
+  std::vector<unsigned int> counts(mol.atomCount(), 0);
+  for (Index b = 0; b < mol.bondCount(); ++b) {
+    if (mol.bondOrders()[b] == 2) {
+      ++counts[mol.bondPairs()[b].first];
+      ++counts[mol.bondPairs()[b].second];
+    }
+  }
+  return counts;
+}
+
+Molecule bareHexagon()
+{
+  std::vector<Vector3> positions;
+  for (int i = 0; i < 6; ++i) {
+    const double angle = i * 3.14159265358979 / 3.0;
+    positions.emplace_back(1.39 * std::cos(angle), 1.39 * std::sin(angle), 0.0);
+  }
+  std::vector<std::pair<Index, Index>> bonds;
+  for (Index i = 0; i < 6; ++i)
+    bonds.emplace_back(i, (i + 1) % 6);
+  return bareCarbons(positions, bonds);
+}
+
+TEST(BondOrderPerceptionTest, bareBenzeneRingIsNotACumulene)
+{
+  // Six carbons and no hydrogens: each has two neighbors and wants two more
+  // bonds, which connectivity alone satisfies with six double bonds. A bent
+  // period-2 atom is sp2 and carries one pi bond, so the geometry gives three.
+  Molecule mol = bareHexagon();
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_TRUE(result.success) << result.message;
+  EXPECT_EQ(histogram(mol)[2], 3u);
+  EXPECT_EQ(histogram(mol)[1], 3u);
+  for (unsigned int count : doubleBondCounts(mol))
+    EXPECT_EQ(count, 1u);
+}
+
+TEST(BondOrderPerceptionTest, bareBenzeneRingWithoutGeometry)
+{
+  // Without geometry nothing says the carbons are bent, so whatever comes
+  // out is only required to be an exact assignment.
+  Molecule mol = bareHexagon();
+  BondOrderOptions options;
+  options.useGeometry = false;
+  const BondOrderResult result = mol.perceiveBondOrders(options);
+  EXPECT_TRUE(result.success) << result.message;
+  for (unsigned int sum : orderSums(mol))
+    EXPECT_EQ(sum, 4u);
+}
+
+TEST(BondOrderPerceptionTest, linearAtomKeepsTwoDoubleBonds)
+{
+  // Allene, H2C=C=CH2 with explicit hydrogens: the central carbon has two
+  // neighbors at 180 degrees, so it is sp and the bent-atom cap must not
+  // apply to it.
+  Molecule mol;
+  mol.addAtom(6).setPosition3d(Vector3(-1.31, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(1.31, 0.0, 0.0));
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 1);
+  const double sign[2] = { -1.0, 1.0 };
+  for (int end = 0; end < 2; ++end) {
+    for (int h = 0; h < 2; ++h) {
+      auto hydrogen = mol.addAtom(1);
+      hydrogen.setPosition3d(Vector3(sign[end] * 1.88, 0.0, 0.0) +
+                             Vector3(0.0, 0.94 * sign[h], 0.0));
+      mol.addBond(end == 0 ? 0 : 2, hydrogen.index(), 1);
+    }
+  }
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_TRUE(result.success) << result.message;
+  EXPECT_EQ(mol.bond(0, 1).order(), 2);
+  EXPECT_EQ(mol.bond(1, 2).order(), 2);
+}
+
+TEST(BondOrderPerceptionTest, benzyneKeepsItsBentTriple)
+{
+  // o-Benzyne: the bare carbons are bent but the 1.26 A bond is a triple
+  // bond, so the length exception must keep their full demand.
+  static const double coordinates[10][3] = {
+    { 1.3575, 0.0563, 0.0 },   { 0.7275, 1.1475, 0.0 },
+    { -0.6950, 1.2038, 0.0 },  { -1.3900, 0.0000, 0.0 },
+    { -0.6950, -1.2038, 0.0 }, { 0.6950, -1.2038, 0.0 },
+    { -1.2350, 2.1391, 0.0 },  { -2.4700, 0.0000, 0.0 },
+    { -1.2350, -2.1391, 0.0 }, { 1.2350, -2.1391, 0.0 }
+  };
+  Molecule mol;
+  for (int i = 0; i < 10; ++i) {
+    mol.addAtom(i < 6 ? 6 : 1)
+      .setPosition3d(
+        Vector3(coordinates[i][0], coordinates[i][1], coordinates[i][2]));
+  }
+  mol.perceiveBondsSimple();
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_TRUE(result.success) << result.message;
+  EXPECT_EQ(mol.bond(0, 1).order(), 3);
+  EXPECT_EQ(histogram(mol)[3], 1u);
+  EXPECT_EQ(histogram(mol)[2], 2u);
+}
+
 TEST(BondOrderPerceptionTest, oddSystemGetsBestEffort)
 {
   // Allyl radical, CH2-CH-CH2 with explicit hydrogens: no exact answer, but
@@ -770,4 +886,79 @@ TEST(BondOrderPerceptionTest, oddSystemGetsBestEffort)
   EXPECT_EQ(histogram(mol)[2], 1u);
   for (unsigned int sum : orderSums(mol))
     EXPECT_LE(sum, 4u);
+}
+
+TEST(BondOrderPerceptionTest, bentChainKeepsAlternatingDoubleBonds)
+{
+  // A bare zigzag C4 with 120 degree angles. The interior carbons are sp2
+  // and take one double bond each; the terminal carbons are left with
+  // dangling valence. The best effort is C=C-C=C and the ends are reported.
+  const Vector3 step(1.4, 0.0, 0.0);
+  const Vector3 up(0.7, 1.2124, 0.0);
+  std::vector<Vector3> positions = { Vector3(0.0, 0.0, 0.0) };
+  positions.push_back(positions.back() + step);
+  positions.push_back(positions.back() + up);
+  positions.push_back(positions.back() + step);
+  Molecule mol = bareCarbons(positions, { { 0, 1 }, { 1, 2 }, { 2, 3 } });
+
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_FALSE(result.success);
+  EXPECT_EQ(mol.bond(0, 1).order(), 2);
+  EXPECT_EQ(mol.bond(1, 2).order(), 1);
+  EXPECT_EQ(mol.bond(2, 3).order(), 2);
+  EXPECT_EQ(result.failedAtoms, (std::vector<Index>{ 0, 3 }));
+}
+
+TEST(BondOrderPerceptionTest, hydrogenFreeNanoribbon)
+{
+  // A bare armchair graphene nanoribbon as ASE writes it (48 carbons, no
+  // hydrogens, cut where the periodic cell was). The dangling end atoms
+  // cannot be satisfied, but the rest should still be a Kekule pattern.
+  static const double coordinates[48][3] = {
+    { 7.37854, 0.00000, 0.00000 },  { 8.60829, 0.00000, 0.71000 },
+    { 8.60829, 0.00000, 2.13000 },  { 7.37854, 0.00000, 2.84000 },
+    { 7.37854, 0.00000, 4.26000 },  { 8.60829, 0.00000, 4.97000 },
+    { 8.60829, 0.00000, 6.39000 },  { 7.37854, 0.00000, 7.10000 },
+    { 7.37854, 0.00000, 8.52000 },  { 8.60829, 0.00000, 9.23000 },
+    { 8.60829, 0.00000, 10.65000 }, { 7.37854, 0.00000, 11.36000 },
+    { 4.91902, 0.00000, 0.00000 },  { 6.14878, 0.00000, 0.71000 },
+    { 6.14878, 0.00000, 2.13000 },  { 4.91902, 0.00000, 2.84000 },
+    { 4.91902, 0.00000, 4.26000 },  { 6.14878, 0.00000, 4.97000 },
+    { 6.14878, 0.00000, 6.39000 },  { 4.91902, 0.00000, 7.10000 },
+    { 4.91902, 0.00000, 8.52000 },  { 6.14878, 0.00000, 9.23000 },
+    { 6.14878, 0.00000, 10.65000 }, { 4.91902, 0.00000, 11.36000 },
+    { 2.45951, 0.00000, 0.00000 },  { 3.68927, 0.00000, 0.71000 },
+    { 3.68927, 0.00000, 2.13000 },  { 2.45951, 0.00000, 2.84000 },
+    { 2.45951, 0.00000, 4.26000 },  { 3.68927, 0.00000, 4.97000 },
+    { 3.68927, 0.00000, 6.39000 },  { 2.45951, 0.00000, 7.10000 },
+    { 2.45951, 0.00000, 8.52000 },  { 3.68927, 0.00000, 9.23000 },
+    { 3.68927, 0.00000, 10.65000 }, { 2.45951, 0.00000, 11.36000 },
+    { 0.00000, 0.00000, 0.00000 },  { 1.22976, 0.00000, 0.71000 },
+    { 1.22976, 0.00000, 2.13000 },  { 0.00000, 0.00000, 2.84000 },
+    { 0.00000, 0.00000, 4.26000 },  { 1.22976, 0.00000, 4.97000 },
+    { 1.22976, 0.00000, 6.39000 },  { 0.00000, 0.00000, 7.10000 },
+    { 0.00000, 0.00000, 8.52000 },  { 1.22976, 0.00000, 9.23000 },
+    { 1.22976, 0.00000, 10.65000 }, { 0.00000, 0.00000, 11.36000 }
+  };
+  Molecule mol;
+  for (const auto& c : coordinates)
+    mol.addAtom(6).setPosition3d(Vector3(c[0], c[1], c[2]));
+  mol.perceiveBondsSimple();
+
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
+  EXPECT_FALSE(result.success);
+
+  // Every carbon is in exactly one double bond (a perfect matching exists)
+  // and none is over its valence.
+  for (unsigned int count : doubleBondCounts(mol))
+    EXPECT_EQ(count, 1u);
+  for (unsigned int sum : orderSums(mol))
+    EXPECT_LE(sum, 4u);
+  EXPECT_EQ(histogram(mol)[2], 24u);
+
+  // Only the end atoms, which have fewer than three neighbors and so cannot
+  // be saturated, are reported; here that is two of them.
+  EXPECT_EQ(result.failedAtoms.size(), 2u);
+  for (Index atom : result.failedAtoms)
+    EXPECT_LT(mol.bonds(atom).size(), 3u);
 }

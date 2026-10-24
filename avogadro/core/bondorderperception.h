@@ -19,9 +19,11 @@ struct BondOrderOptions
 {
   /**
    * Use the 3D coordinates, when the molecule has them, to decide which of
-   * several equally valid assignments to try first (see
-   * Molecule::perceiveBondOrders()). Never changes whether a valid assignment
-   * is found.
+   * several equally valid assignments to try first, and to rule out a second
+   * pi bond on a bent two-coordinate period-2 atom (see
+   * Molecule::perceiveBondOrders()). The second use can change whether a
+   * valid assignment is found: a bare C6 ring has an all-double cumulene
+   * solution that geometry excludes.
    */
   bool useGeometry = true;
 
