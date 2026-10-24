@@ -49,6 +49,20 @@ public:
   /** Set the ratio of physical to logical pixels. */
   void setPixelRatio(float ratio);
 
+  /**
+   * Scale the projection frustum about the view axis. A scale above 1 shows
+   * more of the scene in both directions, so a wider-than-tall view can keep
+   * everything a taller one showed. The default is 1. The scale is applied
+   * whenever the projection is calculated; the stored frustum is untouched.
+   * @{
+   */
+  void setProjectionScale(float scale) { m_projectionScale = scale; }
+  float projectionScale() const { return m_projectionScale; }
+  /** @} */
+
+  /** The ratio of physical to logical pixels last set. */
+  float pixelRatio() const { return m_pixelRatio; }
+
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
 
@@ -122,12 +136,14 @@ public:
   Eigen::Vector3f m_iconPosition;
 #endif
 
-private:
   /**
-   * Apply the projection matrix.
+   * Compute the camera's projection matrix from the viewport size, the
+   * projection scale and the scene bounds. render() does this every frame; it
+   * needs no GL context, so it is also public for use by tests.
    */
   void applyProjection();
 
+private:
   /**
    * @brief Detect hits in a group node.
    */
@@ -149,6 +165,7 @@ private:
 
   bool m_valid;
   float m_pixelRatio;
+  float m_projectionScale = 1.0f;
   std::string m_error;
   Camera m_camera;
   Camera m_overlayCamera;

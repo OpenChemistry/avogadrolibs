@@ -217,26 +217,29 @@ void GLRenderer::applyProjection()
   float distance = m_camera.distance(m_center);
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
+  // Applied to local copies only: the stored frustum is the base value that
+  // zooming edits, so scaling it in place would accumulate on every frame.
+  const float scale = m_projectionScale;
   if (m_camera.projectionType() == Perspective) {
     m_perspectiveFrustum[0] = m_perspectiveFrustum[2] * aspectRatio;
     m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
     m_perspectiveFrustum[5] = distance + m_radius;
     m_camera.calculatePerspective(
-      m_perspectiveFrustum[0], m_perspectiveFrustum[1], m_perspectiveFrustum[2],
-      m_perspectiveFrustum[3], m_perspectiveFrustum[4],
-      m_perspectiveFrustum[5]);
+      m_perspectiveFrustum[0] * scale, m_perspectiveFrustum[1] * scale,
+      m_perspectiveFrustum[2] * scale, m_perspectiveFrustum[3] * scale,
+      m_perspectiveFrustum[4], m_perspectiveFrustum[5]);
   } else {
     // Renders the orthographic projection of the molecule
     m_orthographicFrustum[0] = m_orthographicFrustum[2] * aspectRatio;
     m_orthographicFrustum[1] = m_orthographicFrustum[3] * aspectRatio;
     m_orthographicFrustum[5] = distance + m_radius;
     m_orthographicFrustum[4] = -m_orthographicFrustum[5];
-    m_camera.calculateOrthographic(m_orthographicFrustum[0],  // L
-                                   m_orthographicFrustum[1],  // R
-                                   m_orthographicFrustum[2],  // B
-                                   m_orthographicFrustum[3],  // T
-                                   m_orthographicFrustum[4],  // N
-                                   m_orthographicFrustum[5]); // F
+    m_camera.calculateOrthographic(m_orthographicFrustum[0] * scale, // L
+                                   m_orthographicFrustum[1] * scale, // R
+                                   m_orthographicFrustum[2] * scale, // B
+                                   m_orthographicFrustum[3] * scale, // T
+                                   m_orthographicFrustum[4],         // N
+                                   m_orthographicFrustum[5]);        // F
   }
   m_overlayCamera.calculateOrthographic(
     0.f, static_cast<float>(m_overlayCamera.width()), 0.f,

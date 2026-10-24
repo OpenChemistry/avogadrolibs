@@ -3,6 +3,7 @@ set(tests
   Camera
   CurveGeometry
   CylinderGeometry
+  GLRenderer
   GeometryVisitor
   Node
   PLYVisitor
