@@ -10,6 +10,7 @@
 #include <avogadro/qtopengl/renderoptions.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/spheregeometry.h>
 
 #include <QtCore/QCoreApplication>
@@ -31,6 +32,7 @@ using Avogadro::Vector4ub;
 using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::QtOpenGL::RenderOptions;
 using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::MeshGeometry;
 using Avogadro::Rendering::SphereGeometry;
 
 namespace {
@@ -433,9 +435,95 @@ TEST_F(GLWidgetRenderImageTest, repeatedCallsAreStable)
   EXPECT_EQ(meanAbsDiff(first, last), 0.0);
 }
 
-// Informational: how the composite-over-background export compares with the
-// opaque frame the widget itself draws, with each screen-space effect on.
-TEST_F(GLWidgetRenderImageTest, compositeVersusDirectOpaque)
+// Adds a translucent, pure red quad facing the camera. It covers the middle of
+// the view, partly over the spheres (if any) and partly over the background.
+void addTranslucentQuad(GLWidget& widget, unsigned char opacity)
+{
+  auto* node = new GeometryNode;
+  auto* mesh = new MeshGeometry;
+  node->addDrawable(mesh);
+  mesh->setRenderPass(Avogadro::Rendering::TranslucentPass);
+  mesh->setColor(Vector3ub(255, 0, 0));
+  mesh->setOpacity(opacity);
+  Avogadro::Core::Array<Vector3f> vertices, normals;
+  const float h = 2.6f, z = 1.5f;
+  vertices.push_back(Vector3f(-h, -h, z));
+  vertices.push_back(Vector3f(h, -h, z));
+  vertices.push_back(Vector3f(h, h, z));
+  vertices.push_back(Vector3f(-h, h, z));
+  for (int i = 0; i < 4; ++i)
+    normals.push_back(Vector3f(0, 0, 1));
+  const unsigned int first = mesh->addVertices(vertices, normals);
+  mesh->addTriangle(first, first + 1, first + 2);
+  mesh->addTriangle(first, first + 2, first + 3);
+  widget.renderer().scene().rootNode().addChild(node);
+  widget.renderer().resetGeometry();
+  widget.renderer().resetCamera();
+  QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+}
+
+TEST_F(GLWidgetRenderImageTest, translucentAloneKeepsPartialAlpha)
+{
+  widget->makeCurrent();
+  widget->renderer().scene().clear();
+  widget->doneCurrent();
+  addTranslucentQuad(*widget, 128);
+
+  QImage image = render(400, 300, true, 1, RenderOptions::Framing::Fit,
+                        "translucent-transparent.png");
+  ASSERT_FALSE(image.isNull());
+  EXPECT_EQ(image.format(), QImage::Format_ARGB32);
+  // The centre of the quad covers only background.
+  const QRgb c = image.pixel(200, 150);
+  EXPECT_GT(qAlpha(c), 10);
+  EXPECT_LT(qAlpha(c), 245);
+  EXPECT_NEAR(qAlpha(c), 128, 20);
+  // Pure red stays red once un-premultiplied. A face-on normal receives only
+  // the mesh shader's ambient term, 255 / 2.2 = 116; a colour blended against
+  // black first would read about half of that.
+  EXPECT_NEAR(qRed(c), 116, 12);
+  EXPECT_LT(qGreen(c), 25);
+  EXPECT_LT(qBlue(c), 25);
+  EXPECT_EQ(qAlpha(image.pixel(0, 0)), 0);
+}
+
+TEST_F(GLWidgetRenderImageTest, opaqueMatchesWindowWithTranslucent)
+{
+  addTranslucentQuad(*widget, 128);
+  const Vector4ub white(255, 255, 255, 255);
+  widget->renderer().scene().setBackgroundColor(white);
+  widget->renderer().solidPipeline().setBackgroundColor(white);
+  QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+
+  QImage window = widget->grabFramebuffer();
+  ASSERT_FALSE(window.isNull());
+  window.setDevicePixelRatio(1.0);
+  QImage exported = widget->renderImage(RenderOptions());
+  ASSERT_FALSE(exported.isNull());
+  ASSERT_EQ(window.size(), exported.size());
+  EXPECT_EQ(exported.format(), QImage::Format_RGB32);
+
+  QImage a = window.convertToFormat(QImage::Format_RGB32);
+  QImage b = exported.convertToFormat(QImage::Format_RGB32);
+  int maxDiff = 0;
+  for (int y = 0; y < a.height(); ++y) {
+    for (int x = 0; x < a.width(); ++x) {
+      QRgb p = a.pixel(x, y), q = b.pixel(x, y);
+      maxDiff = std::max({ maxDiff, std::abs(qRed(p) - qRed(q)),
+                           std::abs(qGreen(p) - qGreen(q)),
+                           std::abs(qBlue(p) - qBlue(q)) });
+    }
+  }
+  EXPECT_LE(maxDiff, 2);
+  // Not a trivial comparison: the quad tints the white background.
+  EXPECT_LT(qGreen(b.pixel(b.width() / 2, b.height() / 2)), 200);
+
+  widget->renderer().solidPipeline().setBackgroundColor(Background);
+}
+
+// The export of the opaque scene agrees with the frame the widget itself draws
+// with each screen-space effect on.
+TEST_F(GLWidgetRenderImageTest, exportMatchesWindow)
 {
   auto& pipeline = widget->renderer().solidPipeline();
   const bool ao = pipeline.getAoEnabled();
@@ -463,28 +551,11 @@ TEST_F(GLWidgetRenderImageTest, compositeVersusDirectOpaque)
     QImage direct = widget->grabFramebuffer();
     ASSERT_FALSE(direct.isNull());
     direct.setDevicePixelRatio(1.0);
-    RenderOptions options; // view size x DPR
-    QImage composite = widget->renderImage(options);
-    ASSERT_FALSE(composite.isNull());
-    ASSERT_EQ(direct.size(), composite.size());
-    const double diff = meanAbsDiff(direct, composite);
-    int maxDiff = 0;
-    QImage a = direct.convertToFormat(QImage::Format_RGB32);
-    QImage b = composite.convertToFormat(QImage::Format_RGB32);
-    for (int y = 0; y < a.height(); ++y)
-      for (int x = 0; x < a.width(); ++x)
-        maxDiff = std::max(maxDiff,
-                           std::abs(qRed(a.pixel(x, y)) - qRed(b.pixel(x, y))));
-    std::cout << "direct opaque vs composite [" << c.name << "]: mean abs diff "
-              << diff << ", max red diff " << maxDiff << "\n";
-    const char* outDir = std::getenv("AVO_RENDERIMAGE_OUT");
-    if (outDir != nullptr) {
-      direct.save(QDir(outDir).filePath(QString("direct-%1.png").arg(c.name)));
-      composite.save(
-        QDir(outDir).filePath(QString("composite-%1.png").arg(c.name)));
-    }
+    QImage exported = widget->renderImage(RenderOptions()); // view x DPR
+    ASSERT_FALSE(exported.isNull());
+    ASSERT_EQ(direct.size(), exported.size());
     // Same layout as the widget, so these should agree closely.
-    EXPECT_LT(diff, 2.0) << c.name;
+    EXPECT_LT(meanAbsDiff(direct, exported), 2.0) << c.name;
   }
 
   pipeline.setFogEnabled(fog);

@@ -21,7 +21,6 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLFramebufferObjectFormat>
 #include <QOpenGLFunctions>
-#include <QPainter>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
@@ -449,9 +448,9 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
     projectionScale = std::max(1.0f, viewAspect / outAspect);
   }
 
-  // 7. Render. Always with a fully transparent background, as the on-screen
-  // export always has; an opaque image is composited over the background
-  // colour afterwards.
+  // 7. Render. An opaque image is drawn straight over the real background
+  // colour, exactly as the window is. A transparent one is drawn over (0, 0, 0,
+  // 0), which leaves a premultiplied image in the framebuffer.
   QOpenGLFramebufferObjectFormat format;
   format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
   format.setInternalTextureFormat(GL_RGBA8);
@@ -464,7 +463,11 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   }
 
   const Vector4ub background = restore.background;
-  m_renderer.scene().setBackgroundColor(Vector4ub(0, 0, 0, 0));
+  if (options.transparentBackground)
+    m_renderer.scene().setBackgroundColor(Vector4ub(0, 0, 0, 0));
+  else
+    m_renderer.scene().setBackgroundColor(
+      Vector4ub(background[0], background[1], background[2], 255));
   m_renderer.setProjectionScale(projectionScale);
   m_renderer.setPixelRatio(layout.pixelRatio);
   m_renderer.resize(layout.logicalWidth, layout.logicalHeight,
@@ -490,16 +493,12 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
     image.setDevicePixelRatio(1.0);
   }
 
-  if (options.transparentBackground)
-    return image.convertToFormat(QImage::Format_ARGB32);
+  if (!options.transparentBackground)
+    return image.convertToFormat(QImage::Format_RGB32);
 
-  QImage opaque(outSize, QImage::Format_ARGB32_Premultiplied);
-  opaque.fill(QColor(background[0], background[1], background[2], 255));
-  {
-    QPainter painter(&opaque);
-    painter.drawImage(0, 0, image);
-  }
-  return opaque.convertToFormat(QImage::Format_RGB32);
+  // The framebuffer holds premultiplied colour. Qt labels the image that way,
+  // so converting un-premultiplies it.
+  return image.convertToFormat(QImage::Format_ARGB32);
 }
 
 Qt::KeyboardModifiers GLWidget::navigationModifier() const
