@@ -173,11 +173,15 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   lines->reserve(molecule.bondCount());
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!layers.bondEnabled(bond.atom1().index(), bond.atom2().index())) {
+    Index a1 = bond.atom1().index();
+    Index a2 = bond.atom2().index();
+    size_t layer1 = layers.getLayerID(a1);
+    size_t layer2 = layers.getLayerID(a2);
+    if (!layers.layerEnabled(layer1) && !layers.layerEnabled(layer2)) {
       continue;
     }
-    auto* interface1 = layers.atomSetting(bond.atom1().index());
-    auto* interface2 = layers.atomSetting(bond.atom2().index());
+    auto* interface1 = layers.setting(layer1);
+    auto* interface2 = layers.setting(layer2);
     if (!interface1->showHydrogens && !interface2->showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
          bond.atom2().atomicNumber() == 1)) {
@@ -196,8 +200,8 @@ void Wireframe::process(const QtGui::Molecule& molecule,
                    lineWidth * WideLineGeometry::lineWidthScale);
     // add small spheres to allow the selection tool to work
     // smaller than this gets ignored
-    atoms->addSphere(pos1, color1, 0.001f, bond.atom1().index());
-    atoms->addSphere(pos2, color2, 0.001f, bond.atom2().index());
+    atoms->addSphere(pos1, color1, 0.001f, a1);
+    atoms->addSphere(pos2, color2, 0.001f, a2);
     if (bond.atom1().selected())
       selectedAtoms->addSphere(pos1, selectedColor, 0.3f, i);
     if (bond.atom2().selected())

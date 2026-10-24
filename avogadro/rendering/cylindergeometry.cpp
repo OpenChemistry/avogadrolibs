@@ -295,8 +295,8 @@ std::multimap<float, Identifier> CylinderGeometry::hits(
     id.type = m_identifier.type;
     id.index = i;
     // Cylinders added without an explicit index have no entry (or the
-    // sentinel): they are identified by their position.
-    if (i < m_indexMap.size() && m_indexMap[i] != NoIndex)
+    // MaxIndex sentinel): they are identified by their position.
+    if (i < m_indexMap.size() && m_indexMap[i] != MaxIndex)
       id.index = m_indexMap[i];
     if (id.type != InvalidType) {
       float depth = distance.norm();
@@ -341,7 +341,7 @@ void CylinderGeometry::addCylinder(const Vector3f& pos1, const Vector3f& pos2,
 void CylinderGeometry::setIndex(size_t cylinder, size_t index)
 {
   if (m_indexMap.size() <= cylinder)
-    m_indexMap.resize(cylinder + 1, NoIndex);
+    m_indexMap.resize(cylinder + 1, MaxIndex);
   m_indexMap[cylinder] = index;
 }
 

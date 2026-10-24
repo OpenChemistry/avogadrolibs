@@ -8,7 +8,6 @@
 
 #include "drawable.h"
 
-#include <limits>
 #include <vector>
 
 namespace Avogadro {
@@ -165,10 +164,9 @@ public:
 private:
   std::vector<CylinderColor> m_cylinders;
   std::vector<size_t> m_indices;
-  // Explicit index of the cylinder at each position, or NoIndex. May be
+  // Explicit index of the cylinder at each position, or MaxIndex. May be
   // shorter than m_cylinders; positions past the end have no explicit index.
   std::vector<size_t> m_indexMap;
-  static constexpr size_t NoIndex = std::numeric_limits<size_t>::max();
   void setIndex(size_t cylinder, size_t index);
   float m_opacity = 1.0f;
 

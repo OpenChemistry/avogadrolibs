@@ -10,8 +10,6 @@
 
 #include <avogadro/core/layermanager.h>
 #include <algorithm>
-#include <cassert>
-#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -46,24 +44,20 @@ public:
     /** @return same as PluginLayerManager::atomEnabled(@p atom) */
     bool atomEnabled(Index atom) const
     {
-      if (!m_info)
-        return false;
-      size_t layer = m_info->layer.getLayerID(atom);
-      return layer != MaxIndex && layer < m_enabled.size() && m_enabled[layer];
+      return layerEnabled(getLayerID(atom));
     }
 
-    /** @return same as PluginLayerManager::bondEnabled(@p atom1, @p atom2) */
-    bool bondEnabled(Index atom1, Index atom2) const
+    /** @return if @p layer is enabled by the plugin and visible; MaxIndex (an
+     * atom in no layer) is never enabled. */
+    bool layerEnabled(size_t layer) const
     {
-      return atomEnabled(atom1) || atomEnabled(atom2);
+      return layer < m_enabled.size() && m_enabled[layer];
     }
 
     /** @return same as PluginLayerManager::getLayerID(@p atom) */
     size_t getLayerID(Index atom) const
     {
-      if (!m_info || atom >= m_info->layer.atomCount())
-        return MaxIndex;
-      return m_info->layer.getLayerID(atom);
+      return m_info ? m_info->layer.getLayerID(atom) : MaxIndex;
     }
 
     /** @return same as PluginLayerManager::getSetting<T>(@p layer); MaxIndex
@@ -72,14 +66,11 @@ public:
     {
       if (!m_info)
         return nullptr;
+      if (layer == MaxIndex)
+        layer = m_activeLayer;
       // Settings are created lazily, on first use, by the real getSetting():
       // that keeps the molecule's settings arrays (which the CJSON writer
       // saves) exactly what the per-call API would have left behind.
-      if (layer == MaxIndex) {
-        if (m_active == nullptr)
-          m_active = m_manager->getSetting<T>();
-        return m_active;
-      }
       if (layer < m_settings.size()) {
         if (m_settings[layer] == nullptr)
           m_settings[layer] = m_manager->getSetting<T>(layer);
@@ -87,9 +78,6 @@ public:
       }
       return m_manager->getSetting<T>(layer);
     }
-
-    /** @return setting() of the layer holding @p atom */
-    T* atomSetting(Index atom) const { return setting(getLayerID(atom)); }
 
   private:
     friend class PluginLayerManager;
@@ -99,10 +87,10 @@ public:
     std::shared_ptr<Core::MoleculeInfo> m_info;
     // m_enabled[layer]: enabled by the plugin and visible
     std::vector<char> m_enabled;
-    // Lazily filled cache of getSetting<T>(layer) for 0..layerCount-1, and of
-    // the active layer; nullptr means "not fetched yet".
+    size_t m_activeLayer = 0;
+    // Lazily filled cache of getSetting<T>(layer) for every layer and the
+    // active layer; nullptr means "not fetched yet".
     mutable std::vector<T*> m_settings;
-    mutable T* m_active = nullptr;
   };
 
   /** Capture the layer state of the active molecule for one render pass.
@@ -119,14 +107,16 @@ public:
     auto it = snap.m_info->enable.find(m_name);
     if (it != snap.m_info->enable.end()) {
       const auto& enable = it->second;
-      const auto& visible = snap.m_info->visible;
-      size_t n = std::min(enable.size(), visible.size());
-      snap.m_enabled.resize(n);
-      for (size_t i = 0; i < n; ++i)
-        snap.m_enabled[i] = (enable[i] && visible[i]) ? 1 : 0;
+      snap.m_enabled.resize(enable.size());
+      for (size_t i = 0; i < enable.size(); ++i)
+        snap.m_enabled[i] = enabledAndVisible(*snap.m_info, enable, i) ? 1 : 0;
     }
 
-    snap.m_settings.assign(snap.m_info->layer.layerCount(), nullptr);
+    // The active layer can be one past the last layer, so cache it too.
+    snap.m_activeLayer = snap.m_info->layer.activeLayer();
+    snap.m_settings.assign(
+      std::max(snap.m_info->layer.layerCount(), snap.m_activeLayer + 1),
+      nullptr);
     return snap;
   }
 
@@ -217,6 +207,15 @@ public:
   }
 
 private:
+  // visible is sized per layer independently of Layer itself, so bounds check
+  // it separately rather than assuming the two agree.
+  static bool enabledAndVisible(const Core::MoleculeInfo& info,
+                                const std::vector<bool>& enable, size_t layer)
+  {
+    return layer < enable.size() && enable[layer] &&
+           layer < info.visible.size() && info.visible[layer];
+  }
+
   // layer key identifier
   std::string m_name;
 };

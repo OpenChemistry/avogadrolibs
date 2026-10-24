@@ -144,12 +144,13 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   auto layers = m_layerManager.snapshot<LayerLicorice>();
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    if (!layers.atomEnabled(i)) {
+    size_t layer = layers.getLayerID(i);
+    if (!layers.layerEnabled(layer)) {
       continue;
     }
     Vector3ub color = atom.color();
 
-    auto* interface = layers.atomSetting(i);
+    auto* interface = layers.setting(layer);
     opacity = interface->opacity;
     if (opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
@@ -179,12 +180,16 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
 
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!layers.bondEnabled(bond.atom1().index(), bond.atom2().index())) {
+    Index a1 = bond.atom1().index();
+    Index a2 = bond.atom2().index();
+    size_t layer1 = layers.getLayerID(a1);
+    size_t layer2 = layers.getLayerID(a2);
+    if (!layers.layerEnabled(layer1) && !layers.layerEnabled(layer2)) {
       continue;
     }
 
-    auto* interface1 = layers.atomSetting(bond.atom1().index());
-    auto* interface2 = layers.atomSetting(bond.atom2().index());
+    auto* interface1 = layers.setting(layer1);
+    auto* interface2 = layers.setting(layer2);
 
     bool doOpaque = true;
     if (interface1->opacity < 1.0f || interface2->opacity < 1.0f) {

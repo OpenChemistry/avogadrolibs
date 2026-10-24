@@ -348,7 +348,7 @@ void checkSnapshot(const SnapshotConfig& c,
     auto snap = plugin.snapshot<TestLayerData>();
     for (Index a = 0; a < n; ++a)
       if (snap.atomEnabled(a))
-        snap.atomSetting(a);
+        snap.setting(snap.getLayerID(a));
   }
   Molecule viaApi;
   setupSnapshotConfig(c, viaApi);
@@ -378,11 +378,14 @@ void checkSnapshot(const SnapshotConfig& c,
   for (Index a = 0; a < n; ++a) {
     EXPECT_EQ(snap.atomEnabled(a), plugin.atomEnabled(a)) << "atom " << a;
     EXPECT_EQ(snap.getLayerID(a), plugin.getLayerID(a)) << "atom " << a;
-    EXPECT_EQ(snap.atomSetting(a),
+    EXPECT_EQ(snap.layerEnabled(snap.getLayerID(a)), plugin.atomEnabled(a))
+      << "atom " << a;
+    EXPECT_EQ(snap.setting(snap.getLayerID(a)),
               plugin.getSetting<TestLayerData>(plugin.getLayerID(a)))
       << "atom " << a;
     for (Index b = 0; b < n; ++b)
-      EXPECT_EQ(snap.bondEnabled(a, b), plugin.bondEnabled(a, b));
+      EXPECT_EQ(snap.atomEnabled(a) || snap.atomEnabled(b),
+                plugin.bondEnabled(a, b));
   }
   for (size_t layer = 0; layer < c.layerCount; ++layer)
     EXPECT_EQ(snap.setting(layer), plugin.getSetting<TestLayerData>(layer));
@@ -517,9 +520,10 @@ TEST_F(PluginLayerManagerTest, SnapshotWithNoActiveMolecule)
   PluginLayerManager plugin("Plugin");
   auto snap = plugin.snapshot<TestLayerData>();
   EXPECT_FALSE(snap.atomEnabled(0));
-  EXPECT_FALSE(snap.bondEnabled(0, 1));
+  EXPECT_FALSE(snap.layerEnabled(0));
+  EXPECT_FALSE(snap.layerEnabled(MaxIndex));
   EXPECT_EQ(snap.getLayerID(0), MaxIndex);
   EXPECT_EQ(snap.setting(MaxIndex), nullptr);
   EXPECT_EQ(snap.setting(0), nullptr);
-  EXPECT_EQ(snap.atomSetting(3), nullptr);
+  EXPECT_EQ(snap.setting(snap.getLayerID(3)), nullptr);
 }
