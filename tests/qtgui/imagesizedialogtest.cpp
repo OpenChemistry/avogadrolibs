@@ -157,3 +157,16 @@ TEST_F(ImageSizeDialogTest, transparentHiddenWhenNotOffered)
   for (auto* c : dialog.findChildren<QCheckBox*>())
     EXPECT_EQ(c->window(), &dialog);
 }
+
+TEST_F(ImageSizeDialogTest, transparentDefaultOnlyWithoutRememberedChoice)
+{
+  {
+    ImageSizeDialog dialog(nullptr, Key, true, false, nullptr, true);
+    EXPECT_TRUE(dialog.transparentBackground());
+    // The user turns it off; that choice now wins over the default.
+    checkBox(dialog, "ransparent")->setChecked(false);
+    dialog.accept();
+  }
+  ImageSizeDialog again(nullptr, Key, true, false, nullptr, true);
+  EXPECT_FALSE(again.transparentBackground());
+}

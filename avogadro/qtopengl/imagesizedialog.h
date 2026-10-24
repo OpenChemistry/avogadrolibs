@@ -42,10 +42,12 @@ public:
    * different uses (images, movies) remember separately.
    * @param showTransparent Show the transparent-background check box.
    * @param evenDimensions Force even width and height (video encoders).
+   * @param defaultTransparent Whether the transparent check box starts
+   * checked when no earlier choice is remembered.
    */
   ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
                   bool showTransparent, bool evenDimensions,
-                  QWidget* parent = nullptr);
+                  QWidget* parent = nullptr, bool defaultTransparent = false);
 
   /** The chosen size in pixels. */
   QSize imageSize() const;

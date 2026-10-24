@@ -29,7 +29,7 @@ constexpr int MaxDimension = 8192;
 
 ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
                                  bool showTransparent, bool evenDimensions,
-                                 QWidget* parent)
+                                 QWidget* parent, bool defaultTransparent)
   : QDialog(parent), m_glWidget(glWidget), m_settingsKey(settingsKey),
     m_even(evenDimensions), m_showTransparent(showTransparent)
 {
@@ -97,7 +97,8 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
   if (size.width() < 1 || size.height() < 1)
     size = viewPixelSize();
   m_lock->setChecked(settings.value("aspectLock", true).toBool());
-  m_transparent->setChecked(settings.value("transparent", false).toBool());
+  m_transparent->setChecked(
+    settings.value("transparent", defaultTransparent).toBool());
   settings.endGroup();
   setImageSize(size);
   m_aspect = static_cast<double>(m_width->value()) / m_height->value();
