@@ -131,7 +131,13 @@ void GLRenderer::render()
   glEnable(GL_BLEND);
   // Thanks to Giuseppe D'Angelo for a related comment:
   // https://bugreports.qt.io/browse/QTBUG-36739
-  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+  // The alpha channel uses "over" blending (GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+  // rather than adding, which saturated the alpha of any pixel a translucent
+  // surface touched. Over an opaque destination alpha stays 1, so the window
+  // is unaffected; over a transparent background (image export) the buffer
+  // holds a valid premultiplied image.
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
   m_scene.rootNode().accept(visitor);
 
   // Setup for 3d overlay rendering

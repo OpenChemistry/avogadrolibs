@@ -653,8 +653,10 @@ void VolumeGeometry::render(const Camera& camera)
 
   d->program->release();
 
-  // Restore GL state for other translucent objects
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // Restore GL state for other translucent objects (the same factors as the
+  // renderer's translucent pass).
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }
