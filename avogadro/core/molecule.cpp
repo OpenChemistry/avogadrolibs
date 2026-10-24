@@ -2185,10 +2185,11 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
 
   // Step 3: solve each connected component of candidates on its own.
   const BondOrderSolution solution =
-    solveBondOrders(problem, options.stepBudgetPerComponent);
+    solveBondOrders(problem, options.stepBudgetPerComponent, true);
 
-  // Step 4: commit what was solved. A component that failed keeps its bonds
-  // as they were, and its atoms are reported.
+  // Step 4: commit what was found. A component that failed still gets the
+  // best-effort partial assignment (see solveBondOrders()), and the atoms it
+  // could not satisfy are reported.
   for (std::size_t edge = 0; edge < bondOfEdge.size(); ++edge) {
     if (solution.extra[edge] > 0) {
       m_bondOrders[bondOfEdge[edge]] = static_cast<unsigned char>(

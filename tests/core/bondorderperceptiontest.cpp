@@ -339,7 +339,8 @@ TEST(BondOrderPerceptionTest, noOrderAboveThree)
   // Heavy atoms only: each carbon is three valence units short, which the
   // single C-C bond could only supply as order 4. Phase 1 cannot add
   // hydrogens, so it reports the failure; what matters is that no bond ever
-  // leaves the 1 to 3 range, and that nothing is changed on failure.
+  // leaves the 1 to 3 range. The best effort raises the bond as far as it may
+  // go, a triple bond, which leaves each carbon one unit short.
   for (int order : { 2, 3 }) {
     Molecule mol;
     mol.addAtom(6);
@@ -348,11 +349,10 @@ TEST(BondOrderPerceptionTest, noOrderAboveThree)
     mol.setAtomPosition3d(1, Vector3(order == 2 ? 1.34 : 1.20, 0, 0));
     mol.addBond(0, 1, 1);
     const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
-    EXPECT_LE(mol.bond(0).order(), 3);
     EXPECT_FALSE(result.success);
     EXPECT_EQ(result.failedAtoms, (std::vector<Index>{ 0, 1 }));
     EXPECT_FALSE(result.message.empty());
-    EXPECT_EQ(mol.bond(0).order(), 1);
+    EXPECT_EQ(mol.bond(0).order(), 3);
   }
 }
 
@@ -400,8 +400,9 @@ TEST(BondOrderPerceptionTest, unsatisfiableComponentLeavesOthersAlone)
   const BondOrderResult combinedResult =
     combined.perceiveBondOrders(BondOrderOptions());
   EXPECT_FALSE(combinedResult.success);
-  EXPECT_EQ(combinedResult.failedAtoms,
-            (std::vector<Index>{ shift, shift + 1, shift + 2 }));
+  ASSERT_EQ(combinedResult.failedAtoms.size(), 1u);
+  EXPECT_GE(combinedResult.failedAtoms[0], shift);
+  EXPECT_LE(combinedResult.failedAtoms[0], shift + 2);
   EXPECT_NE(combinedResult.message.find("atom"), std::string::npos);
 
   // The ring got its three double bonds ...
@@ -409,9 +410,12 @@ TEST(BondOrderPerceptionTest, unsatisfiableComponentLeavesOthersAlone)
   for (Index b = 0; b < ringBonds; ++b)
     doubles += (combined.bond(b).order() == 2) ? 1 : 0;
   EXPECT_EQ(doubles, 3u);
-  // ... and the radical's bonds are as they were.
+  // ... and the radical gets a best-effort double bond, one of its two
+  // carbon-carbon bonds, with the odd carbon out reported.
+  std::size_t radicalDoubles = 0;
   for (Index b = ringBonds; b < combined.bondCount(); ++b)
-    EXPECT_EQ(combined.bond(b).order(), 1);
+    radicalDoubles += (combined.bond(b).order() == 2) ? 1 : 0;
+  EXPECT_EQ(radicalDoubles, 1u);
 }
 
 TEST(BondOrderPerceptionTest, presetMultipleBondIsKept)
@@ -457,15 +461,16 @@ TEST(BondOrderPerceptionTest, metalLigandStaysAromatic)
 
 TEST(BondOrderPerceptionTest, metalCarbonylFailsGracefully)
 {
-  // Fe(CO) alone: the carbon has three units of valence for one oxygen that
-  // can give it two at most, so perception reports the failure rather than
-  // looping, and leaves every bond as it was.
+  // Fe(CO) alone: the carbon wants three more units of valence from an
+  // oxygen that can give one, so perception reports the failure rather than
+  // looping. The best effort makes C=O, and the metal bond is never touched.
   Parsed carbonyl = parse("[Fe]C#O");
   const BondOrderResult result =
     carbonyl.mol.perceiveBondOrders(BondOrderOptions());
   EXPECT_FALSE(result.success);
-  for (Index b = 0; b < carbonyl.mol.bondCount(); ++b)
-    EXPECT_EQ(carbonyl.mol.bond(b).order(), 1);
+  EXPECT_EQ(result.failedAtoms, (std::vector<Index>{ 1 }));
+  EXPECT_EQ(carbonyl.mol.bond(0, 1).order(), 1);
+  EXPECT_EQ(carbonyl.mol.bond(1, 2).order(), 2);
 }
 
 TEST(BondOrderPerceptionTest, geometryChoosesBetweenKekuleStructures)
@@ -650,31 +655,33 @@ TEST(BondOrderPerceptionTest, oddUnsaturationFailsImmediately)
   // A flake with a vacancy has an odd number of sp2 carbons: no pairing of
   // their valences exists. That is decided before any search (the old
   // behaviour spent its whole step budget), so the message names the cause
-  // rather than the step limit.
+  // rather than the step limit. The rest of the flake still gets a best-
+  // effort Kekule structure, leaving exactly one carbon over.
   std::size_t carbons = 0;
   Molecule mol = graphene(true, carbons);
   ASSERT_EQ(carbons % 2, 1u);
 
   const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
   EXPECT_FALSE(result.success);
-  EXPECT_EQ(result.failedAtoms.size(), carbons);
+  EXPECT_EQ(result.failedAtoms.size(), 1u);
   EXPECT_NE(result.message.find("odd number of unpaired"), std::string::npos)
     << result.message;
   EXPECT_EQ(result.message.find("step"), std::string::npos) << result.message;
-  EXPECT_EQ(histogram(mol).count(2), 0u);
+  EXPECT_EQ(histogram(mol)[2], (carbons - 1) / 2);
 }
 
 TEST(BondOrderPerceptionTest, oddUnsaturationIsAnotherComponentsBusiness)
 {
   // The allyl radical is odd, which is named as the cause; the benzene beside
-  // it is not, and is not reported.
+  // it is not, and is not reported. One radical carbon is left over.
   Index shift = 0;
   Molecule mol = benzeneBesideAllylRadical(shift);
   const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
   EXPECT_FALSE(result.success);
   EXPECT_NE(result.message.find("odd number"), std::string::npos);
-  EXPECT_EQ(result.failedAtoms,
-            (std::vector<Index>{ shift, shift + 1, shift + 2 }));
+  ASSERT_EQ(result.failedAtoms.size(), 1u);
+  EXPECT_GE(result.failedAtoms[0], shift);
+  EXPECT_LE(result.failedAtoms[0], shift + 2);
 }
 
 TEST(BondOrderPerceptionTest, atomsBondedOnlyToMetalsAreSatisfied)
@@ -724,17 +731,43 @@ TEST(BondOrderPerceptionTest, metalAndNonMetalBondsStillHeldToValence)
             loneResult.failedAtoms.end());
 }
 
-TEST(BondOrderPerceptionTest, stepBudgetIsReported)
+TEST(BondOrderPerceptionTest, stepBudgetDoesNotStopBestEffort)
 {
-  // With no budget at all, anything that needs a guess is given up. Benzene
-  // without a starting double bond needs one.
+  // With no budget at all, anything that needs a guess is given up by the
+  // exact search. Benzene without a starting double bond needs one, but the
+  // best-effort completion that follows finds the Kekule structure anyway
+  // (a ring is bipartite), so the group counts as solved.
   Parsed benzene = parse("c1ccccc1");
   BondOrderOptions options;
   options.useGeometry = false;
   options.stepBudgetPerComponent = 0;
   const BondOrderResult result = benzene.mol.perceiveBondOrders(options);
+  EXPECT_TRUE(result.success) << result.message;
+  EXPECT_TRUE(result.failedAtoms.empty());
+  EXPECT_EQ(histogram(benzene.mol)[2], 3u);
+}
+
+TEST(BondOrderPerceptionTest, oddSystemGetsBestEffort)
+{
+  // Allyl radical, CH2-CH-CH2 with explicit hydrogens: no exact answer, but
+  // one carbon-carbon double bond is committed and one carbon reported.
+  Index shift = 0;
+  Molecule mol;
+  shift = mol.addAtom(6).index();
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 1);
+  const int hydrogens[] = { 2, 1, 2 };
+  for (Index c = 0; c < 3; ++c) {
+    for (int h = 0; h < hydrogens[c]; ++h)
+      mol.addBond(shift + c, mol.addAtom(1).index(), 1);
+  }
+  const BondOrderResult result = mol.perceiveBondOrders(BondOrderOptions());
   EXPECT_FALSE(result.success);
-  EXPECT_EQ(result.failedAtoms.size(), 6u);
-  for (Index b = 0; b < benzene.mol.bondCount(); ++b)
-    EXPECT_EQ(benzene.mol.bond(b).order(), 1);
+  EXPECT_EQ(result.failedAtoms.size(), 1u);
+  EXPECT_FALSE(result.message.empty());
+  EXPECT_EQ(histogram(mol)[2], 1u);
+  for (unsigned int sum : orderSums(mol))
+    EXPECT_LE(sum, 4u);
 }

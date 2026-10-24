@@ -801,8 +801,13 @@ public:
    * atom add up to exactly its unsaturation. This is a degree-constrained
    * subgraph problem; it is solved exactly by constraint propagation with
    * bounded backtracking, separately for each connected group of candidate
-   * bonds. A group that can be solved is written back; a group that cannot is
-   * left exactly as it was, and its unsaturated atoms are reported.
+   * bonds. A group that can be solved is written back. For a group that cannot
+   * (an unpaired electron, missing hydrogens, a dangling edge atom) the
+   * demands are treated as upper bounds and a best-effort Kekule-like pattern
+   * is written back instead: a greedy assignment improved by augmenting
+   * paths, optimal for bipartite systems such as benzenoids and graphene and
+   * a heuristic otherwise. Only the atoms it still could not satisfy are
+   * reported, and success is false.
    *
    * Rules, all of them chemistry judgements for a reviewer to check:
    *  - No bond ends up above order 3, and a bond to hydrogen or a halogen

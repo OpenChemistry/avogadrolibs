@@ -56,7 +56,7 @@ public:
     }
   }
 
-  BondOrderSolution solve(std::size_t stepBudget)
+  BondOrderSolution solve(std::size_t stepBudget, bool bestEffort)
   {
     BondOrderSolution solution;
     solution.extra.assign(m_problem.edges.size(), 0);
@@ -72,11 +72,22 @@ public:
         for (std::size_t e : componentEdges[c])
           solution.extra[e] = m_lo[e];
       } else {
+        std::vector<int> residual;
+        if (bestEffort) {
+          residual = completeBestEffort(componentVertices[c], componentEdges[c],
+                                        solution.extra);
+        } else {
+          residual.assign(m_vertexCount, 0);
+          for (Index v : componentVertices[c])
+            residual[v] = m_problem.demand[v];
+        }
         for (Index v : componentVertices[c]) {
-          if (m_problem.demand[v] > 0)
+          if (residual[v] > 0)
             failure.vertices.push_back(v);
         }
-        solution.failures.push_back(std::move(failure));
+        // The best effort may have satisfied everything after all.
+        if (!failure.vertices.empty())
+          solution.failures.push_back(std::move(failure));
       }
     }
     return solution;
@@ -421,6 +432,117 @@ private:
     }
   }
 
+  /**
+   * Fills @a extra for one component that has no exact solution, treating
+   * each demand as an upper bound, and returns the residual demand of every
+   * vertex (indexed by vertex, only the component's entries are meaningful).
+   *
+   * A greedy pass seeds the assignment, then augmenting paths improve it:
+   * an alternating path v0, e1, v1, ..., ek, vk (k odd) between two distinct
+   * vertices that still have residual demand, raising the odd edges and
+   * lowering the even ones, adds one to the total assigned order and leaves
+   * every interior vertex unchanged. On a bipartite graph (benzenoids,
+   * graphene, any all-even-ring system) this finds a maximum assignment. On a
+   * graph with odd rings it is only a heuristic, because blossoms are not
+   * contracted, and it may stop short of the optimum. The search is
+   * iterative, so a large fused system cannot overflow the stack.
+   */
+  std::vector<int> completeBestEffort(const std::vector<Index>& vertices,
+                                      const std::vector<std::size_t>& edges,
+                                      std::vector<unsigned char>& extra) const
+  {
+    std::vector<int> residual(m_vertexCount, 0);
+    for (Index v : vertices)
+      residual[v] = m_problem.demand[v];
+
+    // Pass 1 gives each edge the order the caller preferred, pass 2 fills
+    // whatever room is left; both visit the most double-looking bonds first.
+    std::vector<std::size_t> order(edges);
+    std::stable_sort(
+      order.begin(), order.end(), [this](std::size_t x, std::size_t y) {
+        return m_problem.edges[x].score > m_problem.edges[y].score;
+      });
+    for (int pass = 0; pass < 2; ++pass) {
+      for (std::size_t e : order) {
+        const BondOrderProblem::Edge& edge = m_problem.edges[e];
+        const int limit = pass == 0 ? edge.preferred : edge.capacity;
+        const int room = limit - extra[e];
+        const int give = std::min({ room, residual[edge.a], residual[edge.b] });
+        if (give > 0) {
+          extra[e] = static_cast<unsigned char>(extra[e] + give);
+          residual[edge.a] -= give;
+          residual[edge.b] -= give;
+        }
+      }
+    }
+
+    // Augmenting paths, found by a breadth-first search from each vertex
+    // that still wants order. A vertex with no path now never gets one later
+    // (the assignment only grows), so it is tried once and then retired.
+    std::vector<char> retired(m_vertexCount, 0);
+    std::vector<char> visited(m_vertexCount, 0);
+    std::vector<std::size_t> viaEdge(m_vertexCount, 0);
+    std::vector<Index> parent(m_vertexCount, 0);
+    std::vector<Index> touched, queue;
+    std::vector<char> odd;
+    for (Index root : vertices) {
+      while (residual[root] > 0 && !retired[root]) {
+        // The parity of a vertex is its depth in the search tree. From an
+        // even vertex leave along an edge that can be raised, from an odd
+        // one along an edge that can be lowered.
+        touched.assign(1, root);
+        queue.assign(1, root);
+        odd.assign(1, 0);
+        visited[root] = 1;
+        Index target = MaxIndex;
+        for (std::size_t head = 0; head < queue.size() && target == MaxIndex;
+             ++head) {
+          const Index v = queue[head];
+          const bool atOdd = odd[head] != 0;
+          for (std::size_t i = m_incidentStart[v]; i < m_incidentStart[v + 1];
+               ++i) {
+            const std::size_t e = m_incidentEdges[i];
+            const BondOrderProblem::Edge& edge = m_problem.edges[e];
+            const bool usable = atOdd ? extra[e] > 0 : extra[e] < edge.capacity;
+            if (!usable)
+              continue;
+            const Index w = edge.a == v ? edge.b : edge.a;
+            if (visited[w])
+              continue;
+            visited[w] = 1;
+            touched.push_back(w);
+            parent[w] = v;
+            viaEdge[w] = e;
+            if (!atOdd && residual[w] > 0) {
+              target = w;
+              break;
+            }
+            queue.push_back(w);
+            odd.push_back(atOdd ? 0 : 1);
+          }
+        }
+
+        if (target == MaxIndex) {
+          retired[root] = 1;
+        } else {
+          // Walk back to the root: the edge arriving at the target is
+          // raised, and the edges before it alternate.
+          bool raise = true;
+          for (Index v = target; v != root; v = parent[v]) {
+            const std::size_t e = viaEdge[v];
+            extra[e] = static_cast<unsigned char>(extra[e] + (raise ? 1 : -1));
+            raise = !raise;
+          }
+          --residual[root];
+          --residual[target];
+        }
+        for (Index v : touched)
+          visited[v] = 0;
+      }
+    }
+    return residual;
+  }
+
   const BondOrderProblem& m_problem;
   std::size_t m_vertexCount;
 
@@ -438,10 +560,10 @@ private:
 } // namespace
 
 BondOrderSolution solveBondOrders(const BondOrderProblem& problem,
-                                  std::size_t stepBudget)
+                                  std::size_t stepBudget, bool bestEffort)
 {
   Solver solver(problem);
-  return solver.solve(stepBudget);
+  return solver.solve(stepBudget, bestEffort);
 }
 
 } // namespace Avogadro::Core

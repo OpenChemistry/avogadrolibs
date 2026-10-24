@@ -39,10 +39,14 @@ struct BondOrderOptions
 /** What Molecule::perceiveBondOrders() did. */
 struct BondOrderResult
 {
-  /** True if every atom's valence was satisfied. */
+  /**
+   * True if every atom's valence was satisfied. When false, the bonds of each
+   * group of atoms that could not be solved exactly still hold a best-effort
+   * partial assignment; @a failedAtoms are the atoms left short.
+   */
   bool success = true;
 
-  /** The atoms left unsatisfied, in increasing order. */
+  /** The atoms still unsatisfied after the best effort, in increasing order. */
   std::vector<Index> failedAtoms;
 
   /** A human-readable explanation when @a success is false; empty otherwise. */
