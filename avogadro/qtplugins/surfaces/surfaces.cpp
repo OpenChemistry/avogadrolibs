@@ -1304,7 +1304,6 @@ void Surfaces::movieFrame()
     if (d->gifWriter || d->gwaviWriter) {
       closeMovieWriters(d->gifWriter, d->gwaviWriter);
     } else {
-      QProcess proc;
       QStringList args;
       args << "-y"
            << "-r" << QString::number(10) << "-i"
@@ -1315,7 +1314,17 @@ void Surfaces::movieFrame()
            << "30"
            << "-pix_fmt"
            << "yuv420p" << m_baseFileName + ".mp4";
-      proc.execute("avconv", args);
+      // ffmpeg is the current name; avconv is its old Libav fork.
+      // execute() returns -2 when the program cannot be started.
+      int result = QProcess::execute("ffmpeg", args);
+      if (result == -2)
+        result = QProcess::execute("avconv", args);
+      if (result == -2) {
+        QMessageBox::warning(
+          qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+          tr("Cannot run ffmpeg or avconv to encode the movie. The frames "
+             "were saved as PNG files."));
+      }
     }
     /*
     args.clear();

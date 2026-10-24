@@ -561,18 +561,29 @@ void PlayerTool::recordMovie()
                              tr("Cannot save file %1.").arg(fileName));
         return;
       }
-      QProcess proc;
-      QStringList args;
-      args << "-y"
-           << "-r" << QString::number(m_animationFPS->value()) << "-i"
-           << baseName + "%0" + QString::number(numberLength) + "d.png"
-           << "-c:v"
-           << "libx264"
-           << "-r"
-           << "30"
-           << "-pix_fmt"
-           << "yuv420p" << baseName + ".mp4";
-      proc.execute("avconv", args);
+    }
+
+    // Encode once, after all of the frames have been written.
+    QStringList args;
+    args << "-y"
+         << "-r" << QString::number(m_animationFPS->value()) << "-i"
+         << baseName + "%0" + QString::number(numberLength) + "d.png"
+         << "-c:v"
+         << "libx264"
+         << "-r"
+         << "30"
+         << "-pix_fmt"
+         << "yuv420p" << baseName + ".mp4";
+    // ffmpeg is the current name; avconv is its old Libav fork. execute()
+    // returns -2 when the program cannot be started.
+    int result = QProcess::execute("ffmpeg", args);
+    if (result == -2)
+      result = QProcess::execute("avconv", args);
+    if (result == -2) {
+      QMessageBox::warning(
+        qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+        tr("Cannot run ffmpeg or avconv to encode the movie. The frames were "
+           "saved as PNG files."));
     }
   }
 }
