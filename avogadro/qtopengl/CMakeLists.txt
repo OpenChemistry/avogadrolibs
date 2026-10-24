@@ -8,6 +8,7 @@ avogadro_headers(QtOpenGL
   activeobjects.h
   glwidget.h
   qttextrenderstrategy.h
+  renderoptions.h
 )
 
 target_sources(QtOpenGL PRIVATE
