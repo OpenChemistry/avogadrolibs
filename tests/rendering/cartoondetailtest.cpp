@@ -5,6 +5,8 @@
 
 #include <gtest/gtest.h>
 
+#include "curvetesthelpers.h"
+
 #include <cartoondetail.h>
 
 #include <avogadro/core/vector.h>
@@ -14,6 +16,7 @@
 #include <cmath>
 #include <vector>
 
+using namespace CurveTest;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Core::Residue;
@@ -22,6 +25,7 @@ using Avogadro::QtPlugins::CartoonResidueCounts;
 using Avogadro::Rendering::BSplineGeometry;
 using Avogadro::Rendering::Cartoon;
 using Avogadro::Rendering::ColorNormalVertex;
+using Avogadro::Rendering::CurveGeometry;
 using namespace Avogadro::QtPlugins;
 
 namespace {
@@ -33,14 +37,30 @@ CartoonResidueCounts cartoons(size_t residues)
   return c;
 }
 
-template <class G>
-void addHelix(G& g, int n)
+// A tube of the helix, one colour so that no ring is repeated.
+void addHelix(BSplineGeometry& g, int n)
 {
-  for (int i = 0; i < n; ++i) {
-    float t = static_cast<float>(i) * 100.0f * 3.14159265f / 180.0f;
-    g.addPoint(Vector3f(2.3f * std::cos(t), 2.3f * std::sin(t), 1.5f * i),
-               Vector3ub(5, 6, 7), 0.2f, 0, static_cast<size_t>(i));
-  }
+  const auto pts = helix(n);
+  for (int i = 0; i < n; ++i)
+    g.addPoint(pts[i], Vector3ub(5, 6, 7), 0.2f, 0, static_cast<size_t>(i));
+}
+
+// An extended chain, coloured alike.
+void addStrand(CurveGeometry& g, int n, float radius)
+{
+  for (int i = 0; i < n; ++i)
+    g.addPoint(Vector3f(3.3f * i, std::sin(0.5f * i), 0), Vector3ub(5, 6, 7),
+               radius, 0, i);
+}
+
+size_t vertexCount(const CurveGeometry& g, size_t* indexCount = nullptr)
+{
+  std::vector<ColorNormalVertex> v;
+  std::vector<unsigned int> idx;
+  g.tessellate(0, v, idx);
+  if (indexCount)
+    *indexCount = idx.size();
+  return v.size();
 }
 
 } // namespace
@@ -125,62 +145,40 @@ TEST(CartoonDetailTest, allStylesCountTowardsTheBudget)
 
 TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
 {
-  // the plugin's ring vertex arithmetic must agree with what is tessellated
-  const int n = 40;
+  // the plugin's ring vertex arithmetic must agree with what is tessellated:
   // one spline segment per residue, and one ring more than segment samples
+  const int n = 40;
   const size_t drawn = n;
   for (const auto& level : kCartoonDetailLevels) {
-    {
-      Cartoon cartoon(0.1f, 0.5f);
-      for (int i = 0; i < n; ++i)
-        cartoon.addPoint(Vector3f(3.3f * i, std::sin(0.5f * i), 0.0f),
-                         Vector3ub(5, 6, 7), 0, i,
-                         Residue::SecondaryStructure::coil);
-      cartoon.setSegmentsPerResidue(level.segments);
-      cartoon.setSides(level.sides);
-      std::vector<ColorNormalVertex> v;
-      std::vector<unsigned int> idx;
-      cartoon.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), (drawn * level.segments + 1) * level.sides);
-    }
-    {
-      BSplineGeometry tube(false);
-      addHelix(tube, n);
-      tube.setSegmentsPerResidue(level.segments);
-      tube.setSides(tubeSides(level));
-      std::vector<ColorNormalVertex> v;
-      std::vector<unsigned int> idx;
-      tube.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), (drawn * level.segments + 1) * tubeSides(level));
-    }
-    {
-      // flat ribbon (negative radius, as the plugin draws it): two vertices
-      // a ring whatever the sides
-      Cartoon flat(-0.1f, -0.5f);
-      for (int i = 0; i < n; ++i)
-        flat.CurveGeometry::addPoint(Vector3f(3.3f * i, std::sin(0.5f * i), 0),
-                                     Vector3ub(5, 6, 7), -0.75f, 0, i);
-      flat.setSegmentsPerResidue(level.segments);
-      flat.setSides(level.sides);
-      std::vector<ColorNormalVertex> v;
-      std::vector<unsigned int> idx;
-      flat.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), (drawn * flatSegments(level) + 1) * 2);
-      EXPECT_EQ(flat.segmentsFor(true), flatSegments(level));
-    }
-    {
-      // flat line (trace): one vertex a sample
-      BSplineGeometry trace;
-      for (int i = 0; i < n; ++i)
-        trace.addPoint(Vector3f(3.3f * i, std::sin(0.5f * i), 0),
-                       Vector3ub(5, 6, 7), -0.15f, 0, i);
-      trace.setSegmentsPerResidue(level.segments);
-      std::vector<ColorNormalVertex> v;
-      std::vector<unsigned int> idx;
-      trace.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), drawn * flatSegments(level) + 1);
-      EXPECT_TRUE(idx.empty());
-    }
+    Cartoon cartoon(0.1f, 0.5f);
+    addStrand(cartoon, n, 0.5f);
+    cartoon.setSegmentsPerResidue(level.segments);
+    cartoon.setSides(level.sides);
+    EXPECT_EQ(vertexCount(cartoon), (drawn * level.segments + 1) * level.sides);
+
+    BSplineGeometry tube(false);
+    addHelix(tube, n);
+    tube.setSegmentsPerResidue(level.segments);
+    tube.setSides(tubeSides(level));
+    EXPECT_EQ(vertexCount(tube),
+              (drawn * level.segments + 1) * tubeSides(level));
+
+    // flat ribbon (negative radius, as the plugin draws it): two vertices a
+    // ring whatever the sides
+    Cartoon flat(-0.1f, -0.5f);
+    addStrand(flat, n, -0.75f);
+    flat.setSegmentsPerResidue(level.segments);
+    flat.setSides(level.sides);
+    EXPECT_EQ(vertexCount(flat), (drawn * flatSegments(level) + 1) * 2);
+    EXPECT_EQ(flat.segmentsFor(true), flatSegments(level));
+
+    // flat line (trace): one vertex a sample, and no triangles
+    BSplineGeometry trace;
+    addStrand(trace, n, -0.15f);
+    trace.setSegmentsPerResidue(level.segments);
+    size_t indices = 1;
+    EXPECT_EQ(vertexCount(trace, &indices), drawn * flatSegments(level) + 1);
+    EXPECT_EQ(indices, 0u);
   }
 }
 

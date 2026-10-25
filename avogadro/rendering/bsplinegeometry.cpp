@@ -6,7 +6,6 @@
 #include "bsplinegeometry.h"
 
 #include <algorithm>
-#include <cmath>
 
 namespace Avogadro::Rendering {
 
@@ -36,19 +35,6 @@ Vector3f BSplineGeometry::computeSegmentPoint(
   for (size_t n = 0; n < 3; ++n)
     q += points[index[n]].pos * weights[n];
   return q;
-}
-
-Vector3f BSplineGeometry::computeCurvePoint(
-  float t, const std::vector<Point>& points) const
-{
-  const size_t size = points.size();
-  if (size < 2)
-    return size == 0 ? Vector3f::Zero() : points.front().pos;
-  if (!(t >= 0.0f))
-    t = 0.0f; // also catches NaN
-  const float s = std::min(t, 1.0f) * static_cast<float>(size);
-  const size_t segment = std::min(static_cast<size_t>(s), size - 1);
-  return computeSegmentPoint(segment, s - static_cast<float>(segment), points);
 }
 
 } // namespace Avogadro::Rendering

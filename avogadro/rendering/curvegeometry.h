@@ -126,8 +126,6 @@ public:
   /** Segments sampled per control point for a line of the given kind. */
   size_t segmentsFor(bool flat) const;
 
-  const static size_t SKIPPED;
-
 protected:
   std::vector<Line*> m_lines;
   std::map<size_t, size_t> m_indexMap;
@@ -138,24 +136,15 @@ protected:
   size_t m_sides = 0;
 
   virtual void update(int index);
-  virtual Vector3f computeCurvePoint(
-    float t, const std::vector<Point>& points) const = 0;
   /**
-   * @return true if the curve is a uniform spline with one segment per
-   * control point, evaluated with computeSegmentPoint(), that starts at the
-   * first and ends at the last control point. Segment k belongs to control
-   * point k (the nearest one over the whole segment), so its colour,
-   * computeScale() index and secondary structure come from control point k.
-   * Otherwise tessellate() walks computeCurvePoint(t) over [0, 1] as it
-   * always has.
+   * The curve has one segment per control point, running from the first
+   * control point to the last. Segment k (0 <= k < points.size()) belongs to
+   * control point k, the one nearest to the whole segment, so the colour,
+   * computeScale() index and secondary structure of its samples come from
+   * control point k. @p f in [0, 1] is the position within the segment.
    */
-  virtual bool hasUniformSegments() const { return false; }
-  /**
-   * Point on segment @p segment in [0, points.size()) at local parameter
-   * @p f in [0, 1]. Only used if hasUniformSegments().
-   */
-  virtual Vector3f computeSegmentPoint(size_t segment, float f,
-                                       const std::vector<Point>& points) const;
+  virtual Vector3f computeSegmentPoint(
+    size_t segment, float f, const std::vector<Point>& points) const = 0;
   virtual size_t circleResolution(bool flat) const;
   /**
    * Append the vertices of one cross-section ring (circleResolution(flat)

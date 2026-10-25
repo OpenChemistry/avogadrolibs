@@ -19,13 +19,9 @@ public:
 
 protected:
   /**
-   * Uniform quadratic B-spline with one segment per control point, running
-   * from the first to the last control point. @p t in [0, 1] maps onto the
-   * points.size() segments.
+   * Uniform quadratic B-spline (C1) with the end control points doubled, so
+   * that the curve runs from the first to the last control point.
    */
-  Vector3f computeCurvePoint(float t,
-                             const std::vector<Point>& points) const override;
-  bool hasUniformSegments() const override { return true; }
   Vector3f computeSegmentPoint(size_t segment, float f,
                                const std::vector<Point>& points) const override;
 };

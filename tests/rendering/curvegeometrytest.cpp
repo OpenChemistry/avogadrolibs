@@ -5,6 +5,8 @@
 
 #include <gtest/gtest.h>
 
+#include "curvetesthelpers.h"
+
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/bsplinegeometry.h>
 #include <avogadro/rendering/cartoongeometry.h>
@@ -12,6 +14,7 @@
 #include <cmath>
 #include <vector>
 
+using namespace CurveTest;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Core::Residue;
@@ -23,25 +26,13 @@ namespace {
 
 void addHelix(Cartoon& cartoon, int count, size_t group = 0)
 {
+  const auto pts = helix(count);
   for (int i = 0; i < count; ++i) {
-    float t = static_cast<float>(i) * 100.0f * 3.14159265f / 180.0f;
     auto structure = i < count / 2 ? Residue::SecondaryStructure::alphaHelix
                                    : Residue::SecondaryStructure::coil;
-    cartoon.addPoint(Vector3f(2.3f * std::cos(t), 2.3f * std::sin(t), 1.5f * i),
-                     Vector3ub(10 + i, 20 + i, 30 + i), group,
+    cartoon.addPoint(pts[i], Vector3ub(10 + i, 20 + i, 30 + i), group,
                      static_cast<size_t>(i), structure);
   }
-}
-
-bool allFinite(const std::vector<ColorNormalVertex>& vertices)
-{
-  for (const auto& v : vertices) {
-    for (int k = 0; k < 3; ++k) {
-      if (!std::isfinite(v.vertex[k]) || !std::isfinite(v.normal[k]))
-        return false;
-    }
-  }
-  return true;
 }
 
 } // namespace

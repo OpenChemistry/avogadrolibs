@@ -27,8 +27,6 @@ namespace Avogadro::Rendering {
 
 using Core::Array;
 
-const size_t CurveGeometry::SKIPPED = 1;
-
 CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true)
 {
   setRenderPass(SolidPass);
@@ -114,12 +112,6 @@ size_t CurveGeometry::segmentsFor(bool flat) const
   return flat ? (base * 4 + 1) / 3 : base;
 }
 
-Vector3f CurveGeometry::computeSegmentPoint(size_t, float,
-                                            const std::vector<Point>&) const
-{
-  return Vector3f::Zero();
-}
-
 void CurveGeometry::tessellate(size_t lineIndex,
                                std::vector<ColorNormalVertex>& vertices,
                                std::vector<unsigned int>& indices) const
@@ -132,64 +124,33 @@ void CurveGeometry::tessellate(size_t lineIndex,
   const Line* line = m_lines[lineIndex];
   const size_t lineResolution = segmentsFor(line->flat);
   const size_t qttyPoints = line->points.size();
-  const bool uniform = hasUniformSegments();
 
   // Sample q of the curve; the strip between frames i - 1 and i takes the
   // colour of frame i.
   //
-  // Uniform splines: there is one segment per control point (see
-  // computeSegmentPoint(); the curve runs from the first to the last control
-  // point). Segment k is owned by control point k, which is nearest to the
-  // whole of it, so a sample at (k, f) uses the type and width of k, and the
-  // strip arriving at it the colour of k (of k - 1 at the first sample of a
-  // segment, which ends the previous one). The last sample is the end of
-  // segment n - 1. Every sample gets a frame; the first one looks towards the
-  // second.
-  //
-  // Otherwise: the original mapping, residue i for t in [i, i + 1) / n and
-  // colours starting at control point 3. Sample 0 only seeds the tangent.
-  size_t totalSamples = 0;
-  size_t top = 0;
-  if (uniform) {
-    if (qttyPoints >= 2)
-      totalSamples = qttyPoints * lineResolution + 1;
-  } else {
-    // B-spline valid parameter range requires a margin of ~n/6 at the end;
-    // for long chains (n >= 24), 4 points suffice
-    const size_t margin = std::min<size_t>(4, (qttyPoints + 5) / 6);
-    top = qttyPoints <= margin + 2 ? 0 : qttyPoints - margin;
-    totalSamples = top > SKIPPED ? (top - SKIPPED) * lineResolution : 0;
-  }
+  // There is one segment per control point (see computeSegmentPoint()) and
+  // segment k is owned by control point k, so a sample at (k, f) uses the type
+  // and width of k, and the strip arriving at it the colour of k (of k - 1 at
+  // the first sample of a segment, which ends the previous one). The last
+  // sample is the end of segment n - 1. Every sample gets a frame; the first
+  // one looks towards the second.
+  const size_t totalSamples =
+    qttyPoints >= 2 ? qttyPoints * lineResolution + 1 : 0;
   const size_t lastControl = qttyPoints > 0 ? qttyPoints - 1 : 0;
-  const size_t firstColor = qttyPoints > 3 ? 3u : 0u;
-  const size_t qttySegments = lineResolution * qttyPoints;
   auto sampleAt = [&](size_t q) {
     CurveSample s;
-    if (uniform) {
-      const size_t k = q / lineResolution;
-      const size_t j = q % lineResolution;
-      const float f =
-        static_cast<float>(j) / static_cast<float>(lineResolution);
-      s.pos = computeSegmentPoint(k, f, line->points);
-      if (k >= qttyPoints) { // the end of the last segment
-        s.scaleIndex = lastControl;
-        s.scaleT = 1.0f;
-        s.colorIndex = lastControl;
-      } else {
-        s.scaleIndex = k;
-        s.scaleT = f;
-        s.colorIndex = j > 0 || k == 0 ? k : k - 1;
-      }
+    const size_t k = q / lineResolution;
+    const size_t j = q % lineResolution;
+    const float f = static_cast<float>(j) / static_cast<float>(lineResolution);
+    s.pos = computeSegmentPoint(k, f, line->points);
+    if (k >= qttyPoints) { // the end of the last segment
+      s.scaleIndex = lastControl;
+      s.scaleT = 1.0f;
+      s.colorIndex = lastControl;
     } else {
-      const size_t i = SKIPPED + q / lineResolution;
-      const size_t j = q % lineResolution;
-      const float t = (i * lineResolution + j) / float(qttySegments);
-      s.pos = computeCurvePoint(t, line->points);
-      s.scaleIndex = i;
-      s.scaleT = j / static_cast<float>(lineResolution);
-      s.colorIndex =
-        q > 0 ? std::min(firstColor + (q - 1) / lineResolution, lastControl)
-              : firstColor;
+      s.scaleIndex = k;
+      s.scaleT = f;
+      s.colorIndex = j > 0 || k == 0 ? k : k - 1;
     }
     return s;
   };
@@ -203,7 +164,7 @@ void CurveGeometry::tessellate(size_t lineIndex,
   for (size_t q = 0; q < totalSamples && !nanDetected; ++q) {
     const CurveSample sample = sampleAt(q);
     const Vector3f p = sample.pos;
-    if (q > 0 || (uniform && totalSamples > 1)) {
+    if (q > 0 || totalSamples > 1) {
       Vector3f tangent = q > 0 ? p - previous : sampleAt(1).pos - p;
       if (tangent.squaredNorm() < 1e-10f) {
         previous = p;

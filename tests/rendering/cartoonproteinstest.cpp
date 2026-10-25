@@ -7,39 +7,27 @@
 // avogadrodata (data/pdb); a test is skipped if its file is missing, so a
 // checkout of avogadrodata older than the 6VXX/1PGA/4HHB commit still passes.
 //
-// The Cartoons plugin is a Qt plugin and cannot be linked here, so the
-// C-alpha trace is built the way Cartoons::getBackboneByResidues() does it:
-// non-heterogen residues with both CA and O, and a new curve whenever the
-// chain, the residue numbering or a 6 A step breaks the trace. (The plugin
-// also splits by bonded component; chain id plays that role here.)
+// The C-alpha traces come from loadBackbone() in curvetesthelpers.h.
 
 #include <gtest/gtest.h>
 
+#include "curvetesthelpers.h"
 #include "legacyspline.h"
 
 #include <cartoondetail.h>
 
-#include <avogadro/core/molecule.h>
-#include <avogadro/core/residue.h>
 #include <avogadro/core/vector.h>
-#include <avogadro/io/pdbformat.h>
 #include <avogadro/rendering/beziergeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
 #include <avogadro/rendering/cartoongeometry.h>
 
 #include <algorithm>
-#include <cmath>
 #include <cstdio>
-#include <filesystem>
-#include <map>
 #include <string>
 #include <vector>
 
+using namespace CurveTest;
 using Avogadro::Vector3f;
-using Avogadro::Vector3ub;
-using Avogadro::Core::Molecule;
-using Avogadro::Core::Residue;
-using Avogadro::Io::PdbFormat;
 using Avogadro::QtPlugins::CartoonResidueCounts;
 using Avogadro::QtPlugins::chooseCartoonDetailLevel;
 using Avogadro::QtPlugins::kCartoonDetailLevels;
@@ -48,151 +36,40 @@ using Avogadro::Rendering::BSplineGeometry;
 using Avogadro::Rendering::Cartoon;
 using Avogadro::Rendering::ColorNormalVertex;
 
+// The proteins that are in avogadrodata, or a skip if there are none.
+#define LOAD_PROTEINS_OR_SKIP(proteins)                                        \
+  std::vector<std::string> missing;                                            \
+  const auto proteins = loadProteins(missing);                                 \
+  if (proteins.empty())                                                        \
+    GTEST_SKIP() << "no protein files in avogadrodata";                        \
+  for (const auto& name : missing)                                             \
+    std::printf("skipped (not in avogadrodata): %s\n", name.c_str());
+
 namespace {
 
-struct Chain
+std::vector<ColorNormalVertex> tessellateTube(const std::vector<Vector3f>& pos,
+                                              BSplineGeometry& g)
 {
-  std::vector<Vector3f> pos;
-  std::vector<Residue::SecondaryStructure> ss;
-};
-
-struct Backbone
-{
-  std::vector<Chain> chains;
-  size_t residues() const
-  {
-    size_t n = 0;
-    for (const auto& c : chains)
-      n += c.pos.size();
-    return n;
-  }
-};
-
-bool loadBackbone(const std::string& name, Backbone& result)
-{
-  const std::filesystem::path path =
-    std::filesystem::path(AVOGADRO_DATA) / "data" / "pdb" / (name + ".pdb");
-  if (!std::filesystem::exists(path))
-    return false;
-  Molecule molecule;
-  PdbFormat pdb;
-  if (!pdb.readFile(path.string(), molecule))
-    return false;
-
-  struct State
-  {
-    bool started = false;
-    char chain = '\0';
-    size_t residueId = 0;
-    Vector3f position = Vector3f::Zero();
-    size_t group = 0;
-  };
-  std::map<char, State> previous;
-  std::map<char, size_t> groupOfChain;
-  for (const auto& residue : molecule.residues()) {
-    if (residue.isHeterogen())
-      continue;
-    auto ca = residue.atomByName("CA");
-    auto o = residue.atomByName("O");
-    if (!ca.isValid() || !o.isValid())
-      continue;
-    const Vector3f p = ca.position3d().cast<float>();
-    State& s = previous[residue.chainId()];
-    if (!s.started || residue.residueId() <= s.residueId ||
-        (p - s.position).norm() > 6.0f) {
-      result.chains.emplace_back();
-      s.group = result.chains.size() - 1;
-    }
-    s.started = true;
-    s.residueId = residue.residueId();
-    s.position = p;
-    result.chains[s.group].pos.push_back(p);
-    result.chains[s.group].ss.push_back(residue.secondaryStructure());
-  }
-  return true;
+  for (size_t i = 0; i < pos.size(); ++i)
+    g.addPoint(pos[i], idColor(i), 0.1f, 0, i);
+  std::vector<ColorNormalVertex> v;
+  std::vector<unsigned int> idx;
+  g.tessellate(0, v, idx);
+  return v;
 }
-
-Vector3ub idColor(size_t id)
-{
-  return Vector3ub(static_cast<unsigned char>(id & 255),
-                   static_cast<unsigned char>((id >> 8) & 255),
-                   static_cast<unsigned char>((id >> 16) & 255));
-}
-
-size_t colorId(const Vector3ub& c)
-{
-  return static_cast<size_t>(c[0]) | static_cast<size_t>(c[1]) << 8 |
-         static_cast<size_t>(c[2]) << 16;
-}
-
-struct Rings
-{
-  std::vector<Vector3f> centre;
-  std::vector<size_t> owner;
-};
-
-Rings rings(const std::vector<ColorNormalVertex>& v, size_t sides)
-{
-  Rings r;
-  for (size_t base = 0; base + sides <= v.size(); base += sides) {
-    Vector3f c = Vector3f::Zero();
-    for (size_t j = 0; j < sides; ++j)
-      c += v[base + j].vertex;
-    r.centre.push_back(c / static_cast<float>(sides));
-    r.owner.push_back(colorId(v[base].color));
-  }
-  return r;
-}
-
-struct StepStats
-{
-  float max = 0.0f, median = 0.0f;
-  size_t reversals = 0;
-};
-
-StepStats steps(const std::vector<Vector3f>& p)
-{
-  std::vector<float> d;
-  std::vector<Vector3f> s;
-  for (size_t i = 1; i < p.size(); ++i) {
-    Vector3f step = p[i] - p[i - 1];
-    if (step.norm() < 1e-6f)
-      continue;
-    d.push_back(step.norm());
-    s.push_back(step);
-  }
-  StepStats r;
-  if (d.empty())
-    return r;
-  r.max = *std::max_element(d.begin(), d.end());
-  std::sort(d.begin(), d.end());
-  r.median = d[d.size() / 2];
-  for (size_t i = 1; i < s.size(); ++i)
-    if (s[i].dot(s[i - 1]) < 0.0f)
-      ++r.reversals;
-  return r;
-}
-
-const char* const kProteins[] = {
-  "1CRN", "1PGA", "4HHB", "6VXX", "1FDT", "1MYK"
-};
 
 } // namespace
 
 TEST(CartoonProteinsTest, tessellationIsFiniteAndCountedAtEveryLevel)
 {
-  std::vector<std::string> missing;
-  for (const char* name : kProteins) {
-    Backbone bb;
-    if (!loadBackbone(name, bb)) {
-      missing.push_back(name);
-      continue;
-    }
-    ASSERT_GT(bb.residues(), 40u) << name;
+  LOAD_PROTEINS_OR_SKIP(proteins)
+  for (const auto& [name, bb] : proteins) {
+    SCOPED_TRACE(name);
+    ASSERT_GT(bb.residues(), 40u);
     CartoonResidueCounts counts;
     counts.cartoon = bb.residues();
-    const size_t chosen = chooseCartoonDetailLevel(counts);
-    EXPECT_EQ(chosen, 0u) << name << " is small enough for full detail";
+    EXPECT_EQ(chooseCartoonDetailLevel(counts), 0u)
+      << "small enough for full detail";
 
     for (const auto& level : kCartoonDetailLevels) {
       size_t totalVertices = 0;
@@ -207,78 +84,48 @@ TEST(CartoonProteinsTest, tessellationIsFiniteAndCountedAtEveryLevel)
         std::vector<unsigned int> idx;
         cartoon.tessellate(0, v, idx);
         if (n < 2) {
-          EXPECT_TRUE(v.empty()) << name;
+          EXPECT_TRUE(v.empty());
           continue;
         }
         // a ring at every sample of the n segments (including both ends);
         // rings are only repeated where the colour changes
         const size_t frames = n * level.segments + 1;
-        EXPECT_GE(v.size(), frames * level.sides) << name << " n=" << n;
-        EXPECT_LE(v.size(), (frames + n - 1) * level.sides)
-          << name << " n=" << n;
-        EXPECT_EQ(idx.size(), (frames - 1) * level.sides * 6) << name;
-        for (const auto& x : v) {
-          ASSERT_TRUE(x.vertex.allFinite()) << name;
-          ASSERT_TRUE(x.normal.allFinite()) << name;
-        }
+        EXPECT_GE(v.size(), frames * level.sides) << "n=" << n;
+        EXPECT_LE(v.size(), (frames + n - 1) * level.sides) << "n=" << n;
+        EXPECT_EQ(idx.size(), (frames - 1) * level.sides * 6);
+        ASSERT_TRUE(allFinite(v));
         for (unsigned int i : idx)
-          ASSERT_LT(i, v.size()) << name;
+          ASSERT_LT(i, v.size());
         totalVertices += v.size();
       }
       std::printf("%-5s %6zu residues %3zu curves  %2zu x %2zu: %9zu "
                   "vertices (%.1f MB)\n",
-                  name, bb.residues(), bb.chains.size(), level.segments,
+                  name.c_str(), bb.residues(), bb.chains.size(), level.segments,
                   level.sides, totalVertices,
                   totalVertices * sizeof(ColorNormalVertex) / 1.0e6);
     }
-  }
-  if (!missing.empty()) {
-    std::string list;
-    for (const auto& m : missing)
-      list += " " + m;
-    if (missing.size() == sizeof(kProteins) / sizeof(kProteins[0])) {
-      GTEST_SKIP() << "no protein files in avogadrodata:" << list;
-    }
-    std::printf("skipped (not in avogadrodata):%s\n", list.c_str());
   }
 }
 
 TEST(CartoonProteinsTest, curveIsContinuousAndAligned)
 {
-  std::vector<std::string> missing;
-  for (const char* name : kProteins) {
-    Backbone bb;
-    if (!loadBackbone(name, bb)) {
-      missing.push_back(name);
-      continue;
-    }
+  LOAD_PROTEINS_OR_SKIP(proteins)
+  for (const auto& [name, bb] : proteins) {
+    SCOPED_TRACE(name);
     float worstRatio = 0.0f, worstOldRatio = 0.0f, worstExcess = 0.0f;
-    size_t reversals = 0, oldReversals = 0, rows = 0, exact = 0;
+    size_t oldReversals = 0, rows = 0, exact = 0;
     for (const auto& chain : bb.chains) {
       const size_t n = chain.pos.size();
       if (n < 2)
         continue;
       BSplineGeometry g(false);
-      for (size_t i = 0; i < n; ++i)
-        g.addPoint(chain.pos[i], idColor(i), 0.1f, 0, i);
-      std::vector<ColorNormalVertex> v;
-      std::vector<unsigned int> idx;
-      g.tessellate(0, v, idx);
-      const Rings r = rings(v, 12);
-      const StepStats now = steps(r.centre);
-      reversals += now.reversals;
-      // A segment's speed is at most the longer of its two chords per unit
-      // of f, so no step can exceed that over 15 samples; a jump can.
-      float maxChord = 0.0f;
-      for (size_t i = 1; i < n; ++i)
-        maxChord = std::max(maxChord, (chain.pos[i] - chain.pos[i - 1]).norm());
-      const float bound = maxChord / 15.0f;
-      worstRatio = std::max(worstRatio, now.max / bound);
+      const Rings r = ringsOf(tessellateTube(chain.pos, g), 12);
+      worstRatio = std::max(worstRatio, checkChain(chain.pos, r));
 
       size_t previousOwner = 0;
       for (size_t i = 0; i < r.centre.size(); ++i) {
-        ASSERT_LT(r.owner[i], n) << name;
-        EXPECT_GE(r.owner[i], previousOwner) << name;
+        ASSERT_LT(r.owner[i], n);
+        EXPECT_GE(r.owner[i], previousOwner);
         previousOwner = r.owner[i];
         size_t nearest = 0;
         for (size_t m = 1; m < n; ++m)
@@ -297,42 +144,26 @@ TEST(CartoonProteinsTest, curveIsContinuousAndAligned)
         legacy.push_back(s.pos);
       if (legacy.size() > 30) {
         const StepStats old = steps(legacy);
-        worstOldRatio = std::max(worstOldRatio, old.max / bound);
+        worstOldRatio =
+          std::max(worstOldRatio, old.max / (longestChord(chain.pos) / 15.0f));
         oldReversals += old.reversals;
       }
     }
-    std::printf("%-5s largest step / (longest chord / 15): new %.2f (%zu "
-                "reversals), old %.2f "
+    std::printf("%-5s largest step / (longest chord / 15): new %.2f, old %.2f "
                 "(%zu reversals); owner is nearest CA for %zu of %zu rings, "
                 "worst excess %.3f A\n",
-                name, worstRatio, reversals, worstOldRatio, oldReversals, exact,
+                name.c_str(), worstRatio, worstOldRatio, oldReversals, exact,
                 rows, worstExcess);
-    EXPECT_LE(worstRatio, 1.0f + 1e-3f) << name;
-    EXPECT_EQ(reversals, 0u) << name;
-    EXPECT_LT(worstExcess, 1.0f) << name;
-  }
-  if (!missing.empty()) {
-    std::string list;
-    for (const auto& m : missing)
-      list += " " + m;
-    if (missing.size() == sizeof(kProteins) / sizeof(kProteins[0])) {
-      GTEST_SKIP() << "no protein files in avogadrodata:" << list;
-    }
-    std::printf("skipped (not in avogadrodata):%s\n", list.c_str());
+    EXPECT_LT(worstExcess, 1.0f);
   }
 }
 
 TEST(CartoonProteinsTest, ropeIsFiniteContinuousAndReachesTheTermini)
 {
-  std::vector<std::string> missing;
-  for (const char* name : kProteins) {
-    Backbone bb;
-    if (!loadBackbone(name, bb)) {
-      missing.push_back(name);
-      continue;
-    }
+  LOAD_PROTEINS_OR_SKIP(proteins)
+  for (const auto& [name, bb] : proteins) {
+    SCOPED_TRACE(name);
     float worst = 0.0f;
-    size_t reversals = 0;
     for (const auto& chain : bb.chains) {
       const size_t n = chain.pos.size();
       if (n < 2)
@@ -343,34 +174,13 @@ TEST(CartoonProteinsTest, ropeIsFiniteContinuousAndReachesTheTermini)
       std::vector<ColorNormalVertex> v;
       std::vector<unsigned int> idx;
       g.tessellate(0, v, idx);
-      const Rings r = rings(v, 12);
-      ASSERT_FALSE(r.centre.empty()) << name;
-      for (const auto& x : v)
-        ASSERT_TRUE(x.vertex.allFinite() && x.normal.allFinite()) << name;
-      EXPECT_LT((r.centre.front() - chain.pos.front()).norm(), 1e-3f) << name;
-      EXPECT_LT((r.centre.back() - chain.pos.back()).norm(), 1e-3f) << name;
-      EXPECT_EQ(r.owner.front(), 0u) << name;
-      EXPECT_EQ(r.owner.back(), n - 1) << name;
-      size_t previousOwner = 0;
-      for (size_t o : r.owner) {
-        EXPECT_GE(o, previousOwner) << name;
-        previousOwner = o;
-      }
-      float maxChord = 0.0f;
-      for (size_t i = 1; i < n; ++i)
-        maxChord = std::max(maxChord, (chain.pos[i] - chain.pos[i - 1]).norm());
-      const StepStats now = steps(r.centre);
-      worst = std::max(worst, now.max / (maxChord / 15.0f));
-      reversals += now.reversals;
+      ASSERT_TRUE(allFinite(v));
+      const Rings r = ringsOf(v, 12);
+      worst = std::max(worst, checkChain(chain.pos, r));
+      EXPECT_TRUE(std::is_sorted(r.owner.begin(), r.owner.end()));
     }
-    std::printf("%-5s rope: largest step / (longest chord / 15) %.2f "
-                "(%zu reversals)\n",
-                name, worst, reversals);
-    EXPECT_LE(worst, 1.0f + 1e-3f) << name;
-    EXPECT_EQ(reversals, 0u) << name;
-  }
-  if (missing.size() == sizeof(kProteins) / sizeof(kProteins[0])) {
-    GTEST_SKIP() << "no protein files in avogadrodata";
+    std::printf("%-5s rope: largest step / (longest chord / 15) %.2f\n",
+                name.c_str(), worst);
   }
 }
 

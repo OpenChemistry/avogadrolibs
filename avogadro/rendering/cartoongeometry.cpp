@@ -125,7 +125,8 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
   CartoonType ct = secondaryToCartoonType(sec);
   size_t idCartoon = 0;
   if (m_type.size() > 0) {
-    idCartoon = ct == m_type.back().first && m_type.size() > (SKIPPED + 1)
+    // (a run only continues once there are more than two residues)
+    idCartoon = ct == m_type.back().first && m_type.size() > 2
                   ? m_type.back().second + 1
                   : 0;
     if (Tail == m_type.back().first && ct == Body) {

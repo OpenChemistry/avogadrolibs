@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 
+#include "curvetesthelpers.h"
 #include "legacyspline.h"
 
 #include <avogadro/core/vector.h>
@@ -18,6 +19,7 @@
 #include <random>
 #include <vector>
 
+using namespace CurveTest;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Core::Residue;
@@ -32,10 +34,6 @@ class TestSpline : public BSplineGeometry
 {
 public:
   using BSplineGeometry::BSplineGeometry;
-  Vector3f eval(float t) const
-  {
-    return computeCurvePoint(t, lines()[0]->points);
-  }
   Vector3f segment(size_t k, float f) const
   {
     return computeSegmentPoint(k, f, lines()[0]->points);
@@ -56,83 +54,13 @@ protected:
   }
 };
 
-size_t colorId(const Vector3ub& c)
-{
-  return static_cast<size_t>(c[0]) | static_cast<size_t>(c[1]) << 8 |
-         static_cast<size_t>(c[2]) << 16;
-}
-
-Vector3ub idColor(size_t id)
-{
-  return Vector3ub(static_cast<unsigned char>(id & 255),
-                   static_cast<unsigned char>((id >> 8) & 255),
-                   static_cast<unsigned char>((id >> 16) & 255));
-}
-
-// alpha helix C-alpha trace: 2.3 A radius, 1.5 A rise, 100 degrees per residue
-std::vector<Vector3f> helix(int n)
-{
-  std::vector<Vector3f> pts;
-  for (int i = 0; i < n; ++i) {
-    float t = static_cast<float>(i) * 100.0f * 3.14159265f / 180.0f;
-    pts.emplace_back(2.3f * std::cos(t), 2.3f * std::sin(t), 1.5f * i);
-  }
-  return pts;
-}
-
-struct Rings
-{
-  std::vector<Vector3f> centre;
-  std::vector<size_t> owner; // from the colour
-  std::vector<float> radius;
-};
-
-// One entry per ring, in drawing order (a ring is duplicated where the
-// colour changes).
-Rings rings(const BSplineGeometry& g, size_t sides)
+// One entry per ring of a 12-sided tube.
+Rings rings(const BSplineGeometry& g)
 {
   std::vector<ColorNormalVertex> v;
   std::vector<unsigned int> idx;
   g.tessellate(0, v, idx);
-  Rings r;
-  for (size_t base = 0; base + sides <= v.size(); base += sides) {
-    Vector3f c = Vector3f::Zero();
-    for (size_t j = 0; j < sides; ++j)
-      c += v[base + j].vertex;
-    c /= static_cast<float>(sides);
-    r.centre.push_back(c);
-    r.owner.push_back(colorId(v[base].color));
-    r.radius.push_back((v[base].vertex - c).norm());
-  }
-  return r;
-}
-
-struct StepStats
-{
-  float max = 0.0f, median = 0.0f;
-  size_t reversals = 0;
-};
-
-StepStats steps(const std::vector<Vector3f>& p)
-{
-  std::vector<float> d;
-  std::vector<Vector3f> s;
-  for (size_t i = 1; i < p.size(); ++i) {
-    Vector3f step = p[i] - p[i - 1];
-    if (step.norm() < 1e-6f)
-      continue; // duplicated ring
-    d.push_back(step.norm());
-    s.push_back(step);
-  }
-  StepStats r;
-  r.max = *std::max_element(d.begin(), d.end());
-  std::vector<float> sorted(d);
-  std::sort(sorted.begin(), sorted.end());
-  r.median = sorted[sorted.size() / 2];
-  for (size_t i = 1; i < s.size(); ++i)
-    if (s[i].dot(s[i - 1]) < 0.0f)
-      ++r.reversals;
-  return r;
+  return ringsOf(v, 12);
 }
 
 // Control point nearest to p, and by how much `owner` is further than that.
@@ -192,10 +120,6 @@ TEST(BSplineGeometryTest, matchesUniformBasisDefinition)
         Vector3f a = spline.segment(k, f);
         Vector3f b = referenceSegmentPoint(k, f, pts);
         maxDiff = std::max(maxDiff, (a - b).cwiseAbs().maxCoeff());
-        // the t in [0, 1] form lands on the same curve
-        const float t = (static_cast<float>(k) + f) / static_cast<float>(n);
-        Vector3f c = spline.eval(t);
-        maxDiff = std::max(maxDiff, (a - c).cwiseAbs().maxCoeff());
       }
     }
   }
@@ -212,8 +136,6 @@ TEST(BSplineGeometryTest, endsAtTheEndPointsAndIsC1)
   const size_t n = pts.size();
   EXPECT_LT((spline.segment(0, 0.0f) - pts.front()).norm(), 1e-5f);
   EXPECT_LT((spline.segment(n - 1, 1.0f) - pts.back()).norm(), 1e-5f);
-  EXPECT_LT((spline.eval(0.0f) - pts.front()).norm(), 1e-5f);
-  EXPECT_LT((spline.eval(1.0f) - pts.back()).norm(), 1e-5f);
   // the first segment leaves P0 towards P1
   Vector3f d = spline.segment(0, 0.2f) - pts[0];
   EXPECT_GT(d.normalized().dot((pts[1] - pts[0]).normalized()), 0.999f);
@@ -236,16 +158,13 @@ TEST(BSplineGeometryTest, endsAtTheEndPointsAndIsC1)
 
 TEST(BSplineGeometryTest, fewPointsAreSafe)
 {
-  for (int n = 0; n <= 4; ++n) {
+  for (int n = 1; n <= 4; ++n) {
     TestSpline spline;
     for (int i = 0; i < n; ++i)
       spline.addPoint(Vector3f(i, 0, 0), Vector3ub(1, 2, 3), 0.1f, 0, i);
-    if (n == 0)
-      continue;
-    Vector3f p = spline.eval(0.5f);
-    EXPECT_TRUE(p.allFinite());
-    EXPECT_TRUE(spline.eval(-1.0f).allFinite());
-    EXPECT_TRUE(spline.eval(2.0f).allFinite());
+    for (size_t k = 0; k < static_cast<size_t>(n) + 2; ++k)
+      for (float f : { 0.0f, 0.5f, 1.0f })
+        EXPECT_TRUE(spline.segment(k, f).allFinite());
   }
 }
 
@@ -254,9 +173,10 @@ TEST(BSplineGeometryTest, helixIsContinuous)
   const auto pts = helix(60);
   BSplineGeometry g(false);
   fill(g, pts, 0.1f);
-  const Rings r = rings(g, 12);
+  const Rings r = rings(g);
   ASSERT_GT(r.centre.size(), 500u);
   const StepStats now = steps(r.centre);
+  checkChain(pts, r);
 
   std::vector<Vector3f> legacy;
   for (const auto& s : LegacySpline::samples(pts))
@@ -266,8 +186,6 @@ TEST(BSplineGeometryTest, helixIsContinuous)
               "new %.3f/%.3f = %.2f (%zu reversals)\n",
               old.max, old.median, old.max / old.median, old.reversals, now.max,
               now.median, now.max / now.median, now.reversals);
-  EXPECT_LT(now.max, 1.25f * now.median);
-  EXPECT_EQ(now.reversals, 0u);
   // the test is sensitive to the old jumps
   EXPECT_GT(old.max, 1.5f * old.median);
 }
@@ -277,7 +195,7 @@ TEST(BSplineGeometryTest, colourAndScaleBelongToTheNearestControlPoint)
   const auto pts = helix(60);
   ScaleProbe g;
   fill(g, pts, 0.1f);
-  const Rings r = rings(g, 12);
+  const Rings r = rings(g);
   ASSERT_GT(r.centre.size(), 500u);
   float worst = 0.0f;
   size_t exact = 0, previousOwner = 0, scaleMismatch = 0;
@@ -353,14 +271,6 @@ namespace {
 
 using SS = Residue::SecondaryStructure;
 
-std::vector<Vector3f> wobble(int n)
-{
-  std::vector<Vector3f> pts;
-  for (int i = 0; i < n; ++i)
-    pts.emplace_back(3.5f * i, 1.5f * std::sin(0.9f * i), 1.2f * std::cos(i));
-  return pts;
-}
-
 float meanDistanceToRing(const std::vector<ColorNormalVertex>& v, size_t first,
                          size_t count, const Vector3f& p)
 {
@@ -370,11 +280,24 @@ float meanDistanceToRing(const std::vector<ColorNormalVertex>& v, size_t first,
   return (c / static_cast<float>(count) - p).norm();
 }
 
+// The first and last ring (ringSize vertices each) of a tessellated chain are
+// centred on its end points.
+void expectReachesTheEnds(const std::vector<ColorNormalVertex>& v,
+                          size_t ringSize, const std::vector<Vector3f>& pts,
+                          float tolerance)
+{
+  ASSERT_FALSE(v.empty());
+  EXPECT_LT(meanDistanceToRing(v, 0, ringSize, pts.front()), tolerance);
+  EXPECT_LT(meanDistanceToRing(v, v.size() - ringSize, ringSize, pts.back()),
+            tolerance);
+}
+
 } // namespace
 
 TEST(BSplineGeometryTest, everyStyleStartsAndEndsAtTheTermini)
 {
   for (int n : { 2, 3, 4, 5, 9, 40 }) {
+    SCOPED_TRACE(n);
     const auto pts = wobble(n);
     std::vector<ColorNormalVertex> v;
     std::vector<unsigned int> idx;
@@ -382,10 +305,7 @@ TEST(BSplineGeometryTest, everyStyleStartsAndEndsAtTheTermini)
       BSplineGeometry tube(false);
       fill(tube, pts, 0.1f);
       tube.tessellate(0, v, idx);
-      ASSERT_FALSE(v.empty()) << n;
-      EXPECT_LT(meanDistanceToRing(v, 0, 12, pts.front()), 1e-4f) << n;
-      EXPECT_LT(meanDistanceToRing(v, v.size() - 12, 12, pts.back()), 1e-4f)
-        << n;
+      expectReachesTheEnds(v, 12, pts, 1e-4f);
     }
     // widths are tiny, so a ring is within a few thousandths of its centre
     {
@@ -393,38 +313,28 @@ TEST(BSplineGeometryTest, everyStyleStartsAndEndsAtTheTermini)
       for (size_t i = 0; i < pts.size(); ++i)
         c.addPoint(pts[i], idColor(i), 0, i, i % 2 ? SS::alphaHelix : SS::coil);
       c.tessellate(0, v, idx);
-      ASSERT_FALSE(v.empty()) << n;
-      EXPECT_LT(meanDistanceToRing(v, 0, 20, pts.front()), 0.01f) << n;
-      EXPECT_LT(meanDistanceToRing(v, v.size() - 20, 20, pts.back()), 0.01f)
-        << n;
+      expectReachesTheEnds(v, 20, pts, 0.01f);
     }
     {
-      Cartoon c;
+      Cartoon c; // a plain tube of the cartoon's cross-section
       for (size_t i = 0; i < pts.size(); ++i)
         c.CurveGeometry::addPoint(pts[i], idColor(i), 0.001f, 0, i);
       c.tessellate(0, v, idx);
-      ASSERT_FALSE(v.empty()) << n;
-      EXPECT_LT(meanDistanceToRing(v, 0, 20, pts.front()), 0.01f) << n;
-      EXPECT_LT(meanDistanceToRing(v, v.size() - 20, 20, pts.back()), 0.01f)
-        << n;
+      expectReachesTheEnds(v, 20, pts, 0.01f);
     }
     {
       Cartoon ribbon(-0.001f, -0.001f); // flat ribbon, two vertices a ring
       for (size_t i = 0; i < pts.size(); ++i)
         ribbon.CurveGeometry::addPoint(pts[i], idColor(i), -0.001f, 0, i);
       ribbon.tessellate(0, v, idx);
-      ASSERT_FALSE(v.empty()) << n;
-      EXPECT_LT(meanDistanceToRing(v, 0, 2, pts.front()), 0.01f) << n;
-      EXPECT_LT(meanDistanceToRing(v, v.size() - 2, 2, pts.back()), 0.01f) << n;
+      expectReachesTheEnds(v, 2, pts, 0.01f);
     }
     {
       BSplineGeometry trace; // a line
       for (size_t i = 0; i < pts.size(); ++i)
         trace.addPoint(pts[i], idColor(i), -0.15f, 0, i);
       trace.tessellate(0, v, idx);
-      ASSERT_FALSE(v.empty()) << n;
-      EXPECT_LT((v.front().vertex - pts.front()).norm(), 1e-4f) << n;
-      EXPECT_LT((v.back().vertex - pts.back()).norm(), 1e-4f) << n;
+      expectReachesTheEnds(v, 1, pts, 1e-4f);
       EXPECT_EQ(colorId(v.front().color), 0u);
       EXPECT_EQ(colorId(v.back().color), pts.size() - 1);
     }
@@ -482,8 +392,7 @@ TEST(BSplineGeometryTest, shortChains)
       }
       EXPECT_FALSE(v.empty()) << n;
       EXPECT_FALSE(idx.empty()) << n;
-      for (const auto& x : v)
-        ASSERT_TRUE(x.vertex.allFinite() && x.normal.allFinite());
+      EXPECT_TRUE(allFinite(v));
       for (unsigned int i : idx)
         ASSERT_LT(i, v.size());
     }
@@ -492,16 +401,14 @@ TEST(BSplineGeometryTest, shortChains)
   const auto pts = wobble(2);
   BSplineGeometry g(false);
   fill(g, pts, 0.1f);
-  const Rings r = rings(g, 12);
+  const Rings r = rings(g);
   ASSERT_GT(r.centre.size(), 10u);
-  EXPECT_LT((r.centre.front() - pts[0]).norm(), 1e-4f);
-  EXPECT_LT((r.centre.back() - pts[1]).norm(), 1e-4f);
+  checkChain(pts, r);
   const Vector3f axis = (pts[1] - pts[0]).normalized();
   for (const auto& c : r.centre) {
     // within the capsule of the chord, and the sweep never goes backwards
     EXPECT_LT((c - pts[0] - axis * (c - pts[0]).dot(axis)).norm(), 1e-3f);
   }
-  EXPECT_EQ(steps(r.centre).reversals, 0u);
 }
 
 TEST(BSplineGeometryTest, cartoonWidthsStayPositiveAtTheEnds)
@@ -642,5 +549,5 @@ TEST(BSplineGeometryTest, ellipseOrientationDoesNotJumpAtTheEnds)
   for (size_t r = 1; r < shapes.size(); ++r)
     worst = std::min(worst, std::abs(shapes[r].major.dot(shapes[r - 1].major)));
   // consecutive rings never turn their broad side by more than 35 degrees
-  EXPECT_GT(worst, std::cos(35.0f * 3.14159265f / 180.0f));
+  EXPECT_GT(worst, std::cos(35.0f * Avogadro::DEG_TO_RAD_F));
 }
