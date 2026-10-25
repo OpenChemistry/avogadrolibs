@@ -49,36 +49,17 @@ size_t CurveGeometry::circleResolution(bool flat) const
   return flat ? 1u : sidesOr(kDefaultTubeSides);
 }
 
-void CurveGeometry::appendRingPoints(std::vector<ColorNormalVertex>& result,
-                                     const Eigen::Affine3f& frame,
+void CurveGeometry::fillRingTemplate(std::vector<Vector3f>& ring,
                                      bool flat) const
 {
+  ring.clear();
   const size_t resolution = circleResolution(flat);
   const float resolutionRadians =
     2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
 
   for (size_t i = 0; i < resolution; ++i) {
     float theta = i * resolutionRadians;
-    Vector3f circle = Vector3f(std::cos(theta), 0.0f, std::sin(theta));
-    ColorNormalVertex vert;
-    vert.normal = frame.linear() * circle;
-    vert.vertex = frame * circle;
-    vert.color = Vector3ub(0, 0, 0);
-    result.push_back(vert);
-  }
-}
-
-void CurveGeometry::appendCirclePoints(std::vector<ColorNormalVertex>& result,
-                                       const Eigen::Affine3f& a,
-                                       const Eigen::Affine3f& b,
-                                       bool flat) const
-{
-  std::vector<ColorNormalVertex> ringA, ringB;
-  appendRingPoints(ringA, a, flat);
-  appendRingPoints(ringB, b, flat);
-  for (size_t i = 0; i < ringA.size() && i < ringB.size(); ++i) {
-    result.push_back(ringA[i]);
-    result.push_back(ringB[i]);
+    ring.emplace_back(std::cos(theta), 0.0f, std::sin(theta));
   }
 }
 
@@ -265,16 +246,14 @@ void CurveGeometry::tessellate(size_t lineIndex,
                      resolution);
     indices.reserve(segmentCount * resolution * 6);
 
-    std::vector<ColorNormalVertex> ring;
-    ring.reserve(resolution);
+    // the cross-section in the local space of a frame, the same for every ring
+    std::vector<Vector3f> ringTemplate;
+    ringTemplate.reserve(resolution);
+    fillRingTemplate(ringTemplate, line->flat);
     auto emitRing = [&](const Eigen::Affine3f& frame, const Vector3ub& color) {
-      ring.clear();
-      appendRingPoints(ring, frame, line->flat);
       const auto start = static_cast<unsigned int>(vertices.size());
-      for (auto& vertex : ring) {
-        vertex.color = color;
-        vertices.push_back(vertex);
-      }
+      for (const Vector3f& p : ringTemplate)
+        vertices.emplace_back(color, frame.linear() * p, frame * p);
       return start;
     };
 

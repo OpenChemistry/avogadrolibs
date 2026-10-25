@@ -181,19 +181,12 @@ protected:
     return m_sides > 0 ? std::max<size_t>(m_sides, 3) : builtIn;
   }
   /**
-   * Append the vertices of one cross-section ring (circleResolution(flat)
-   * vertices) for the given frame. Subclasses override this to change the
-   * cross-section shape. Colours are filled in by the caller.
+   * Fill @p ring (cleared first) with the circleResolution(flat) points of the
+   * cross-section in the local space of a frame: the frame's affine transform
+   * places each of them on the curve, and its linear part gives their
+   * normals. Subclasses override this to change the cross-section shape.
    */
-  virtual void appendRingPoints(std::vector<ColorNormalVertex>& result,
-                                const Eigen::Affine3f& frame, bool flat) const;
-  /**
-   * Append the rings of two frames interleaved (a, b, a, b, ...), built from
-   * appendRingPoints(). tessellate() uses appendRingPoints() directly.
-   */
-  virtual void appendCirclePoints(std::vector<ColorNormalVertex>& result,
-                                  const Eigen::Affine3f& a,
-                                  const Eigen::Affine3f& b, bool flat) const;
+  virtual void fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const;
   virtual float computeScale(size_t index, float t, float scale) const;
 
   void processShaderError(bool error);

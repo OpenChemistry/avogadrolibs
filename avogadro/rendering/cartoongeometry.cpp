@@ -30,9 +30,9 @@ size_t Cartoon::circleResolution(bool flat) const
   return flat ? 2u : sidesOr(kDefaultSides);
 }
 
-void Cartoon::appendRingPoints(std::vector<ColorNormalVertex>& result,
-                               const Eigen::Affine3f& frame, bool flat) const
+void Cartoon::fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const
 {
+  ring.clear();
   const size_t resolution = circleResolution(flat);
   const float resolutionRadians =
     2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
@@ -43,13 +43,7 @@ void Cartoon::appendRingPoints(std::vector<ColorNormalVertex>& result,
   for (size_t i = 0; i < resolution; ++i) {
     float theta = resolutionRadians * i;
     float r = (elipseA * (1.0f - (e * e))) / (1.0f + e * std::cos(theta));
-    Vector3f elipse =
-      Vector3f(r * std::sin(theta), 0.0f, c + r * std::cos(theta));
-
-    ColorNormalVertex vert;
-    vert.normal = frame.linear() * elipse;
-    vert.vertex = frame * elipse;
-    result.push_back(vert);
+    ring.emplace_back(r * std::sin(theta), 0.0f, c + r * std::cos(theta));
   }
 }
 

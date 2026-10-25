@@ -36,8 +36,7 @@ public:
 protected:
   // create an ellipsis and adapt it to the affine A
   size_t circleResolution(bool flat) const override;
-  void appendRingPoints(std::vector<ColorNormalVertex>& result,
-                        const Eigen::Affine3f& frame, bool flat) const override;
+  void fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const override;
 
   float computeScale(size_t index, float t, float scale) const override;
 

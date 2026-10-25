@@ -114,14 +114,22 @@ public:
       return;
     ASSERT_FALSE(line->flat && this->m_canBeFlat);
     const size_t resolution = this->circleResolution(line->flat);
+    std::vector<Vector3f> ringTemplate;
+    this->fillRingTemplate(ringTemplate, line->flat);
     std::vector<ColorNormalVertex> radials;
     for (size_t i = 1; i < points.size(); ++i) {
+      // the two rings of this segment interleaved (a, b, a, b, ...)
       radials.clear();
-      this->appendCirclePoints(radials, points[i], points[i - 1], line->flat);
-      for (auto& radial : radials) {
-        radial.color = line->points[color[i]].color;
-        vertices.push_back(radial);
+      for (const Vector3f& p : ringTemplate) {
+        for (const auto* frame : { &points[i], &points[i - 1] }) {
+          ColorNormalVertex vertex;
+          vertex.normal = frame->linear() * p;
+          vertex.vertex = *frame * p;
+          vertex.color = line->points[color[i]].color;
+          radials.push_back(vertex);
+        }
       }
+      vertices.insert(vertices.end(), radials.begin(), radials.end());
       const auto tubeStart =
         static_cast<unsigned int>(vertices.size() - radials.size());
       for (size_t j = 0; j < resolution; ++j) {
