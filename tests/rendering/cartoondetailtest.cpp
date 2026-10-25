@@ -127,7 +127,8 @@ TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
 {
   // the plugin's ring vertex arithmetic must agree with what is tessellated
   const int n = 40;
-  const size_t drawn = n - 3; // the last spline segment is not drawn
+  // one spline segment per residue, and one ring more than segment samples
+  const size_t drawn = n;
   for (const auto& level : kCartoonDetailLevels) {
     {
       Cartoon cartoon(0.1f, 0.5f);
@@ -140,7 +141,7 @@ TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
       std::vector<ColorNormalVertex> v;
       std::vector<unsigned int> idx;
       cartoon.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), drawn * level.segments * level.sides);
+      EXPECT_EQ(v.size(), (drawn * level.segments + 1) * level.sides);
     }
     {
       BSplineGeometry tube(false);
@@ -150,7 +151,7 @@ TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
       std::vector<ColorNormalVertex> v;
       std::vector<unsigned int> idx;
       tube.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), drawn * level.segments * tubeSides(level));
+      EXPECT_EQ(v.size(), (drawn * level.segments + 1) * tubeSides(level));
     }
     {
       // flat ribbon (negative radius, as the plugin draws it): two vertices
@@ -164,7 +165,7 @@ TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
       std::vector<ColorNormalVertex> v;
       std::vector<unsigned int> idx;
       flat.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), drawn * flatSegments(level) * 2);
+      EXPECT_EQ(v.size(), (drawn * flatSegments(level) + 1) * 2);
       EXPECT_EQ(flat.segmentsFor(true), flatSegments(level));
     }
     {
@@ -177,7 +178,7 @@ TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
       std::vector<ColorNormalVertex> v;
       std::vector<unsigned int> idx;
       trace.tessellate(0, v, idx);
-      EXPECT_EQ(v.size(), drawn * flatSegments(level));
+      EXPECT_EQ(v.size(), drawn * flatSegments(level) + 1);
       EXPECT_TRUE(idx.empty());
     }
   }
@@ -197,7 +198,7 @@ TEST(CartoonDetailTest, defaultsLeaveOtherUsersUnchanged)
   explicitDefault.tessellate(0, b, ib);
   ASSERT_EQ(a.size(), b.size());
   ASSERT_EQ(ia, ib);
-  EXPECT_EQ(a.size(), 27u * 15u * 12u);
+  EXPECT_EQ(a.size(), (30u * 15u + 1u) * 12u);
   for (size_t i = 0; i < a.size(); ++i)
     ASSERT_EQ(a[i].vertex, b[i].vertex);
 }

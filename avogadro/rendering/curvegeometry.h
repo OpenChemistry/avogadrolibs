@@ -141,17 +141,18 @@ protected:
   virtual Vector3f computeCurvePoint(
     float t, const std::vector<Point>& points) const = 0;
   /**
-   * @return true if the curve is a global uniform spline with one knot
-   * interval per control point, evaluated with computeSegmentPoint(). The
-   * residue that "owns" segment k (the nearest control point over the whole
-   * segment) is k + 1, so the sample's colour, computeScale() index and
-   * secondary structure come from control point k + 1. Otherwise
-   * tessellate() walks computeCurvePoint(t) over [0, 1] as it always has.
+   * @return true if the curve is a uniform spline with one segment per
+   * control point, evaluated with computeSegmentPoint(), that starts at the
+   * first and ends at the last control point. Segment k belongs to control
+   * point k (the nearest one over the whole segment), so its colour,
+   * computeScale() index and secondary structure come from control point k.
+   * Otherwise tessellate() walks computeCurvePoint(t) over [0, 1] as it
+   * always has.
    */
   virtual bool hasUniformSegments() const { return false; }
   /**
-   * Point on segment @p segment (control points segment .. segment + 2) at
-   * local parameter @p f in [0, 1]. Only used if hasUniformSegments().
+   * Point on segment @p segment in [0, points.size()) at local parameter
+   * @p f in [0, 1]. Only used if hasUniformSegments().
    */
   virtual Vector3f computeSegmentPoint(size_t segment, float f,
                                        const std::vector<Point>& points) const;

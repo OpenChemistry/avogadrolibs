@@ -96,11 +96,6 @@ bool CurveGeometry::isFlatLine(size_t lineIndex) const
 
 namespace {
 
-// Uniform-spline curves stop this many segments before the natural end of
-// the spline (the midpoint of the last chord), which keeps the C-terminal end
-// where the windowed spline used to stop. Set to 0 to draw every segment.
-constexpr size_t kEndSegmentsTrimmed = 1;
-
 // One position along the curve, with what it needs to be drawn.
 struct CurveSample
 {
@@ -139,24 +134,25 @@ void CurveGeometry::tessellate(size_t lineIndex,
   const size_t qttyPoints = line->points.size();
   const bool uniform = hasUniformSegments();
 
-  // Sample q of the curve. Sample 0 only seeds the first tangent; every later
-  // sample gets a frame, and the strip between frames i - 1 and i takes the
+  // Sample q of the curve; the strip between frames i - 1 and i takes the
   // colour of frame i.
   //
-  // Uniform splines: segment k (control points k .. k + 2) is owned by
-  // control point k + 1, which is nearest to the whole segment, so a sample
-  // at (k, f) uses the type and width of k + 1, and the strip arriving at it
-  // the colour of k + 1 (of k at the first sample of a segment, the end of
-  // the previous one). The last segment is dropped, see kEndSegmentsTrimmed.
+  // Uniform splines: there is one segment per control point (see
+  // computeSegmentPoint(); the curve runs from the first to the last control
+  // point). Segment k is owned by control point k, which is nearest to the
+  // whole of it, so a sample at (k, f) uses the type and width of k, and the
+  // strip arriving at it the colour of k (of k - 1 at the first sample of a
+  // segment, which ends the previous one). The last sample is the end of
+  // segment n - 1. Every sample gets a frame; the first one looks towards the
+  // second.
   //
-  // Otherwise (Bezier): the original mapping, residue i for t in
-  // [i, i + 1) / n and colours starting at control point 3.
+  // Otherwise: the original mapping, residue i for t in [i, i + 1) / n and
+  // colours starting at control point 3. Sample 0 only seeds the tangent.
   size_t totalSamples = 0;
   size_t top = 0;
   if (uniform) {
-    if (qttyPoints >= 3 + kEndSegmentsTrimmed)
-      totalSamples =
-        (qttyPoints - 2 - kEndSegmentsTrimmed) * lineResolution + 1;
+    if (qttyPoints >= 2)
+      totalSamples = qttyPoints * lineResolution + 1;
   } else {
     // B-spline valid parameter range requires a margin of ~n/6 at the end;
     // for long chains (n >= 24), 4 points suffice
@@ -175,9 +171,15 @@ void CurveGeometry::tessellate(size_t lineIndex,
       const float f =
         static_cast<float>(j) / static_cast<float>(lineResolution);
       s.pos = computeSegmentPoint(k, f, line->points);
-      s.scaleIndex = k + 1;
-      s.scaleT = f;
-      s.colorIndex = std::min(j > 0 ? k + 1 : k, lastControl);
+      if (k >= qttyPoints) { // the end of the last segment
+        s.scaleIndex = lastControl;
+        s.scaleT = 1.0f;
+        s.colorIndex = lastControl;
+      } else {
+        s.scaleIndex = k;
+        s.scaleT = f;
+        s.colorIndex = j > 0 || k == 0 ? k : k - 1;
+      }
     } else {
       const size_t i = SKIPPED + q / lineResolution;
       const size_t j = q % lineResolution;
@@ -201,8 +203,8 @@ void CurveGeometry::tessellate(size_t lineIndex,
   for (size_t q = 0; q < totalSamples && !nanDetected; ++q) {
     const CurveSample sample = sampleAt(q);
     const Vector3f p = sample.pos;
-    if (q > 0) {
-      Vector3f tangent = p - previous;
+    if (q > 0 || (uniform && totalSamples > 1)) {
+      Vector3f tangent = q > 0 ? p - previous : sampleAt(1).pos - p;
       if (tangent.squaredNorm() < 1e-10f) {
         previous = p;
         continue;

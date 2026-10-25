@@ -105,15 +105,20 @@ TEST(CurveGeometryTest, shortAndDegenerateInput)
       EXPECT_LT(index, vertices.size());
   }
 
-  // Too few points to build a spline: nothing, but no crash either.
-  Cartoon two(0.1f, 0.5f);
-  two.addPoint(Vector3f(0, 0, 0), Vector3ub(1, 2, 3), 0, 0,
+  // One point draws nothing, two a short tube between them.
+  Cartoon one(0.1f, 0.5f);
+  one.addPoint(Vector3f(0, 0, 0), Vector3ub(1, 2, 3), 0, 0,
                Residue::SecondaryStructure::coil);
-  two.addPoint(Vector3f(1, 0, 0), Vector3ub(1, 2, 3), 0, 1,
-               Residue::SecondaryStructure::coil);
-  two.tessellate(0, vertices, indices);
+  one.tessellate(0, vertices, indices);
   EXPECT_TRUE(vertices.empty());
   EXPECT_TRUE(indices.empty());
+  one.addPoint(Vector3f(1, 0, 0), Vector3ub(1, 2, 3), 0, 1,
+               Residue::SecondaryStructure::coil);
+  one.tessellate(0, vertices, indices);
+  EXPECT_FALSE(vertices.empty());
+  EXPECT_TRUE(allFinite(vertices));
+  for (unsigned int index : indices)
+    EXPECT_LT(index, vertices.size());
 }
 
 TEST(CurveGeometryTest, coincidentPoints)

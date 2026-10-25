@@ -204,15 +204,15 @@ TEST(CartoonProteinsTest, tessellationIsFiniteAndCountedAtEveryLevel)
         std::vector<ColorNormalVertex> v;
         std::vector<unsigned int> idx;
         cartoon.tessellate(0, v, idx);
-        if (n < 4) {
+        if (n < 2) {
           EXPECT_TRUE(v.empty()) << name;
           continue;
         }
-        // the last spline segment is not drawn; the first sample only seeds
-        // the tangent; rings are only repeated where the colour changes
-        const size_t frames = (n - 3) * level.segments;
+        // a ring at every sample of the n segments (including both ends);
+        // rings are only repeated where the colour changes
+        const size_t frames = n * level.segments + 1;
         EXPECT_GE(v.size(), frames * level.sides) << name << " n=" << n;
-        EXPECT_LE(v.size(), (frames + n - 4) * level.sides)
+        EXPECT_LE(v.size(), (frames + n - 1) * level.sides)
           << name << " n=" << n;
         EXPECT_EQ(idx.size(), (frames - 1) * level.sides * 6) << name;
         for (const auto& x : v) {
@@ -254,7 +254,7 @@ TEST(CartoonProteinsTest, curveIsContinuousAndAligned)
     size_t reversals = 0, oldReversals = 0, rows = 0, exact = 0;
     for (const auto& chain : bb.chains) {
       const size_t n = chain.pos.size();
-      if (n < 8)
+      if (n < 2)
         continue;
       BSplineGeometry g(false);
       for (size_t i = 0; i < n; ++i)

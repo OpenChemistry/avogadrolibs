@@ -55,10 +55,9 @@ public:
     const auto* line = this->lines()[lineIndex];
     const size_t lineResolution = line->flat ? 20u : 15u;
     const size_t n = line->points.size();
-    // the last segment of the spline is not drawn
-    if (n < 4)
+    if (n < 2)
       return;
-    const size_t segments = n - 3;
+    const size_t segments = n;
     Vector3f previous = Vector3f::Zero();
     std::vector<Eigen::Affine3f> points;
     std::vector<size_t> color;
@@ -68,8 +67,12 @@ public:
       const float f =
         static_cast<float>(j) / static_cast<float>(lineResolution);
       Vector3f p = this->computeSegmentPoint(k, f, line->points);
-      if (q > 0) {
-        Vector3f tangent = p - previous;
+      {
+        // the first frame looks towards the second sample
+        Vector3f tangent = q > 0 ? p - previous
+                                 : this->computeSegmentPoint(
+                                     0, 1.0f / lineResolution, line->points) -
+                                     p;
         if (tangent.squaredNorm() < 1e-10f) {
           previous = p;
           continue;
@@ -99,10 +102,11 @@ public:
         Eigen::Affine3f affine;
         affine.translation() = p;
         affine.linear() = m;
-        // segment k is owned by control point k + 1
-        affine.scale(this->computeScale(k + 1, f, line->radius));
+        // segment k is owned by control point k
+        const size_t owner = std::min(k, n - 1);
+        affine.scale(this->computeScale(owner, k < n ? f : 1.0f, line->radius));
         points.push_back(affine);
-        color.push_back(j > 0 ? k + 1 : k);
+        color.push_back(k >= n ? n - 1 : (j > 0 || k == 0 ? k : k - 1));
       }
       previous = p;
     }

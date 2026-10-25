@@ -9,17 +9,22 @@
 
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/bsplinegeometry.h>
+#include <avogadro/rendering/cartoongeometry.h>
 
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <initializer_list>
 #include <random>
 #include <vector>
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
+using Avogadro::Core::Residue;
 using Avogadro::Rendering::BSplineGeometry;
+using Avogadro::Rendering::Cartoon;
 using Avogadro::Rendering::ColorNormalVertex;
+using Avogadro::Rendering::CurveGeometry;
 
 namespace {
 
@@ -149,15 +154,20 @@ void fill(BSplineGeometry& g, const std::vector<Vector3f>& pts, float radius)
     g.addPoint(pts[i], idColor(i), radius, 0, i);
 }
 
-// independent global uniform quadratic B-spline: Cox-de Boor with knots at
-// the integers, evaluated at x = segment + 2 + f
+// independent uniform quadratic B-spline: Cox-de Boor with knots at the
+// integers over the control points with both ends doubled, evaluated at
+// x = segment + 2 + f
 Vector3f referenceSegmentPoint(size_t k, float f,
                                const std::vector<Vector3f>& pts)
 {
+  std::vector<Vector3f> padded;
+  padded.push_back(pts.front());
+  padded.insert(padded.end(), pts.begin(), pts.end());
+  padded.push_back(pts.back());
   Vector3f q = Vector3f::Zero();
   const float x = static_cast<float>(k) + 2.0f + f;
-  for (size_t i = 0; i < pts.size(); ++i)
-    q += pts[i] * LegacySpline::basis(static_cast<float>(i), 3.0f, x, 1.0f);
+  for (size_t i = 0; i < padded.size(); ++i)
+    q += padded[i] * LegacySpline::basis(static_cast<float>(i), 3.0f, x, 1.0f);
   return q;
 }
 
@@ -168,7 +178,7 @@ TEST(BSplineGeometryTest, matchesUniformBasisDefinition)
   std::mt19937 rng(12345);
   std::uniform_real_distribution<float> coord(-20.0f, 20.0f);
   float maxDiff = 0.0f;
-  for (int n = 3; n <= 40; ++n) {
+  for (int n = 2; n <= 40; ++n) {
     TestSpline spline;
     std::vector<Vector3f> pts;
     for (int i = 0; i < n; ++i) {
@@ -176,14 +186,14 @@ TEST(BSplineGeometryTest, matchesUniformBasisDefinition)
       spline.addPoint(pts.back(), Vector3ub(1, 2, 3), 0.1f, 0,
                       static_cast<size_t>(i));
     }
-    for (size_t k = 0; k + 2 < static_cast<size_t>(n); ++k) {
+    for (size_t k = 0; k < static_cast<size_t>(n); ++k) {
       for (int j = 0; j < 20; ++j) {
         const float f = static_cast<float>(j) / 20.0f;
         Vector3f a = spline.segment(k, f);
         Vector3f b = referenceSegmentPoint(k, f, pts);
         maxDiff = std::max(maxDiff, (a - b).cwiseAbs().maxCoeff());
         // the t in [0, 1] form lands on the same curve
-        const float t = (static_cast<float>(k) + f) / static_cast<float>(n - 2);
+        const float t = (static_cast<float>(k) + f) / static_cast<float>(n);
         Vector3f c = spline.eval(t);
         maxDiff = std::max(maxDiff, (a - c).cwiseAbs().maxCoeff());
       }
@@ -193,18 +203,29 @@ TEST(BSplineGeometryTest, matchesUniformBasisDefinition)
   EXPECT_LT(maxDiff, 1e-3f);
 }
 
-TEST(BSplineGeometryTest, knotsAreChordMidpointsAndCurveIsC1)
+TEST(BSplineGeometryTest, endsAtTheEndPointsAndIsC1)
 {
   TestSpline spline;
   std::vector<Vector3f> pts = helix(12);
   for (size_t i = 0; i < pts.size(); ++i)
     spline.addPoint(pts[i], Vector3ub(1, 2, 3), 0.1f, 0, i);
-  for (size_t k = 0; k + 3 < pts.size(); ++k) {
-    EXPECT_LT((spline.segment(k, 0.0f) - 0.5f * (pts[k] + pts[k + 1])).norm(),
+  const size_t n = pts.size();
+  EXPECT_LT((spline.segment(0, 0.0f) - pts.front()).norm(), 1e-5f);
+  EXPECT_LT((spline.segment(n - 1, 1.0f) - pts.back()).norm(), 1e-5f);
+  EXPECT_LT((spline.eval(0.0f) - pts.front()).norm(), 1e-5f);
+  EXPECT_LT((spline.eval(1.0f) - pts.back()).norm(), 1e-5f);
+  // the first segment leaves P0 towards P1
+  Vector3f d = spline.segment(0, 0.2f) - pts[0];
+  EXPECT_GT(d.normalized().dot((pts[1] - pts[0]).normalized()), 0.999f);
+  for (size_t k = 1; k + 1 < n; ++k)
+    EXPECT_LT((spline.segment(k, 0.0f) - 0.5f * (pts[k - 1] + pts[k])).norm(),
               1e-5f);
+  for (size_t k = 0; k + 1 < n; ++k) {
     // end of segment k is the start of segment k + 1, with the same tangent
     EXPECT_LT((spline.segment(k, 1.0f) - spline.segment(k + 1, 0.0f)).norm(),
               1e-5f);
+    if (k == 0)
+      continue; // the speed at P0 itself is zero
     const float h = 1e-2f;
     Vector3f d1 = (spline.segment(k, 1.0f) - spline.segment(k, 1.0f - h)) / h;
     Vector3f d2 = (spline.segment(k + 1, h) - spline.segment(k + 1, 0.0f)) / h;
@@ -314,9 +335,8 @@ TEST(BSplineGeometryTest, honoursSegmentAndSideCounts)
       std::vector<ColorNormalVertex> v;
       std::vector<unsigned int> idx;
       g.tessellate(0, v, idx);
-      // 27 segments are drawn (the last is dropped); the first sample only
-      // seeds the first tangent
-      const size_t frames = 27 * segments;
+      // one segment per control point, and a frame at every sample
+      const size_t frames = 30 * segments + 1;
       EXPECT_EQ(v.size(), frames * sides);
       EXPECT_EQ(idx.size(), (frames - 1) * sides * 6);
       for (unsigned int i : idx)
@@ -327,4 +347,192 @@ TEST(BSplineGeometryTest, honoursSegmentAndSideCounts)
   BSplineGeometry g(false);
   EXPECT_EQ(g.segmentsFor(false), 15u);
   EXPECT_EQ(g.segmentsFor(true), 20u);
+}
+
+namespace {
+
+using SS = Residue::SecondaryStructure;
+
+std::vector<Vector3f> wobble(int n)
+{
+  std::vector<Vector3f> pts;
+  for (int i = 0; i < n; ++i)
+    pts.emplace_back(3.5f * i, 1.5f * std::sin(0.9f * i), 1.2f * std::cos(i));
+  return pts;
+}
+
+float meanDistanceToRing(const std::vector<ColorNormalVertex>& v, size_t first,
+                         size_t count, const Vector3f& p)
+{
+  Vector3f c = Vector3f::Zero();
+  for (size_t i = 0; i < count; ++i)
+    c += v[first + i].vertex;
+  return (c / static_cast<float>(count) - p).norm();
+}
+
+} // namespace
+
+TEST(BSplineGeometryTest, everyStyleStartsAndEndsAtTheTermini)
+{
+  for (int n : { 2, 3, 4, 5, 9, 40 }) {
+    const auto pts = wobble(n);
+    std::vector<ColorNormalVertex> v;
+    std::vector<unsigned int> idx;
+    {
+      BSplineGeometry tube(false);
+      fill(tube, pts, 0.1f);
+      tube.tessellate(0, v, idx);
+      ASSERT_FALSE(v.empty()) << n;
+      EXPECT_LT(meanDistanceToRing(v, 0, 12, pts.front()), 1e-4f) << n;
+      EXPECT_LT(meanDistanceToRing(v, v.size() - 12, 12, pts.back()), 1e-4f)
+        << n;
+    }
+    // widths are tiny, so a ring is within a few thousandths of its centre
+    {
+      Cartoon c(0.001f, 0.001f);
+      for (size_t i = 0; i < pts.size(); ++i)
+        c.addPoint(pts[i], idColor(i), 0, i, i % 2 ? SS::alphaHelix : SS::coil);
+      c.tessellate(0, v, idx);
+      ASSERT_FALSE(v.empty()) << n;
+      EXPECT_LT(meanDistanceToRing(v, 0, 20, pts.front()), 0.01f) << n;
+      EXPECT_LT(meanDistanceToRing(v, v.size() - 20, 20, pts.back()), 0.01f)
+        << n;
+    }
+    {
+      Cartoon c;
+      for (size_t i = 0; i < pts.size(); ++i)
+        c.CurveGeometry::addPoint(pts[i], idColor(i), 0.001f, 0, i);
+      c.tessellate(0, v, idx);
+      ASSERT_FALSE(v.empty()) << n;
+      EXPECT_LT(meanDistanceToRing(v, 0, 20, pts.front()), 0.01f) << n;
+      EXPECT_LT(meanDistanceToRing(v, v.size() - 20, 20, pts.back()), 0.01f)
+        << n;
+    }
+    {
+      Cartoon ribbon(-0.001f, -0.001f); // flat ribbon, two vertices a ring
+      for (size_t i = 0; i < pts.size(); ++i)
+        ribbon.CurveGeometry::addPoint(pts[i], idColor(i), -0.001f, 0, i);
+      ribbon.tessellate(0, v, idx);
+      ASSERT_FALSE(v.empty()) << n;
+      EXPECT_LT(meanDistanceToRing(v, 0, 2, pts.front()), 0.01f) << n;
+      EXPECT_LT(meanDistanceToRing(v, v.size() - 2, 2, pts.back()), 0.01f) << n;
+    }
+    {
+      BSplineGeometry trace; // a line
+      for (size_t i = 0; i < pts.size(); ++i)
+        trace.addPoint(pts[i], idColor(i), -0.15f, 0, i);
+      trace.tessellate(0, v, idx);
+      ASSERT_FALSE(v.empty()) << n;
+      EXPECT_LT((v.front().vertex - pts.front()).norm(), 1e-4f) << n;
+      EXPECT_LT((v.back().vertex - pts.back()).norm(), 1e-4f) << n;
+      EXPECT_EQ(colorId(v.front().color), 0u);
+      EXPECT_EQ(colorId(v.back().color), pts.size() - 1);
+    }
+  }
+}
+
+TEST(BSplineGeometryTest, endRingsHaveASensibleFrame)
+{
+  const auto pts = helix(20);
+  BSplineGeometry g(false);
+  fill(g, pts, 0.1f);
+  std::vector<ColorNormalVertex> v;
+  std::vector<unsigned int> idx;
+  g.tessellate(0, v, idx);
+  for (size_t ring : { size_t(0), v.size() / 12 - 1 }) {
+    // finite, radius 0.1
+    Vector3f c = Vector3f::Zero();
+    for (size_t j = 0; j < 12; ++j)
+      c += v[ring * 12 + j].vertex / 12.0f;
+    for (size_t j = 0; j < 12; ++j) {
+      const auto& x = v[ring * 12 + j];
+      ASSERT_TRUE(x.vertex.allFinite());
+      EXPECT_NEAR((x.vertex - c).norm(), 0.1f, 1e-4f);
+      // normals carry the scale; the shader normalises them
+      EXPECT_NEAR(x.normal.norm(), 0.1f, 1e-4f);
+    }
+  }
+  // the first ring's axis points from P0 towards P1 (the ring is
+  // perpendicular to it)
+  Vector3f axis = (pts[1] - pts[0]).normalized();
+  for (size_t j = 0; j < 12; ++j)
+    EXPECT_NEAR((v[j].vertex - pts[0]).dot(axis), 0.0f, 1e-3f);
+}
+
+TEST(BSplineGeometryTest, shortChains)
+{
+  for (int n = 0; n <= 3; ++n) {
+    const auto pts = wobble(n);
+    BSplineGeometry g(false);
+    fill(g, pts, 0.1f);
+    Cartoon c(0.2f, 1.5f);
+    for (size_t i = 0; i < pts.size(); ++i)
+      c.addPoint(pts[i], idColor(i), 0, i, SS::alphaHelix);
+    for (CurveGeometry* geometry :
+         std::initializer_list<CurveGeometry*>{ &g, &c }) {
+      std::vector<ColorNormalVertex> v;
+      std::vector<unsigned int> idx;
+      if (n == 0)
+        continue; // no line at all
+      geometry->tessellate(0, v, idx);
+      if (n == 1) {
+        EXPECT_TRUE(v.empty());
+        EXPECT_TRUE(idx.empty());
+        continue;
+      }
+      EXPECT_FALSE(v.empty()) << n;
+      EXPECT_FALSE(idx.empty()) << n;
+      for (const auto& x : v)
+        ASSERT_TRUE(x.vertex.allFinite() && x.normal.allFinite());
+      for (unsigned int i : idx)
+        ASSERT_LT(i, v.size());
+    }
+  }
+  // two residues: a short tube between the two C-alphas
+  const auto pts = wobble(2);
+  BSplineGeometry g(false);
+  fill(g, pts, 0.1f);
+  const Rings r = rings(g, 12);
+  ASSERT_GT(r.centre.size(), 10u);
+  EXPECT_LT((r.centre.front() - pts[0]).norm(), 1e-4f);
+  EXPECT_LT((r.centre.back() - pts[1]).norm(), 1e-4f);
+  const Vector3f axis = (pts[1] - pts[0]).normalized();
+  for (const auto& c : r.centre) {
+    // within the capsule of the chord, and the sweep never goes backwards
+    EXPECT_LT((c - pts[0] - axis * (c - pts[0]).dot(axis)).norm(), 1e-3f);
+  }
+  EXPECT_EQ(steps(r.centre).reversals, 0u);
+}
+
+TEST(BSplineGeometryTest, cartoonWidthsStayPositiveAtTheEnds)
+{
+  const SS kinds[] = { SS::alphaHelix, SS::betaSheet, SS::coil };
+  for (SS kind : kinds) {
+    for (int n : { 2, 3, 4, 6, 12 }) {
+      for (int mix = 0; mix < 2; ++mix) {
+        const auto pts = wobble(n);
+        Cartoon c(0.2f, 1.5f);
+        for (int i = 0; i < n; ++i)
+          c.addPoint(pts[i], idColor(i), 0, i,
+                     mix && i == n / 2 ? SS::coil : kind);
+        std::vector<ColorNormalVertex> v;
+        std::vector<unsigned int> idx;
+        c.tessellate(0, v, idx);
+        ASSERT_FALSE(v.empty());
+        for (size_t ring = 0; ring * 20 < v.size(); ++ring) {
+          Vector3f lo = v[ring * 20].vertex, hi = lo;
+          for (size_t j = 0; j < 20; ++j) {
+            const auto& x = v[ring * 20 + j];
+            ASSERT_TRUE(x.vertex.allFinite() && x.normal.allFinite());
+            lo = lo.cwiseMin(x.vertex);
+            hi = hi.cwiseMax(x.vertex);
+          }
+          // the cross-section has a size, between the thinnest and the
+          // widest cartoon
+          EXPECT_GT((hi - lo).norm(), 0.05f);
+          EXPECT_LT((hi - lo).norm(), 4.0f);
+        }
+      }
+    }
+  }
 }

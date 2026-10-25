@@ -19,9 +19,9 @@ public:
 
 protected:
   /**
-   * Global uniform quadratic B-spline through all control points with one
-   * knot interval per control point. @p t in [0, 1] maps onto the
-   * points.size() - 2 segments.
+   * Uniform quadratic B-spline with one segment per control point, running
+   * from the first to the last control point. @p t in [0, 1] maps onto the
+   * points.size() segments.
    */
   Vector3f computeCurvePoint(float t,
                              const std::vector<Point>& points) const override;

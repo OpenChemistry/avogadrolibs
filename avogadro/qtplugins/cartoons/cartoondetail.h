@@ -25,7 +25,9 @@ struct CartoonDetail
 };
 
 // Levels in order of decreasing detail; the first is the built-in detail of
-// Rendering::Cartoon (15 segments x 20 sides). The last is the floor.
+// Rendering::Cartoon (15 segments x 20 sides). The last is the floor. The
+// floor may exceed the budget for very large systems (9MB0 is 6.2 million at
+// (6,8)); that is deliberate, there is no coarser level.
 constexpr std::array<CartoonDetail, 5> kCartoonDetailLevels = { {
   { 15, 20 },
   { 12, 16 },
@@ -35,8 +37,9 @@ constexpr std::array<CartoonDetail, 5> kCartoonDetailLevels = { {
 } };
 
 // The most ring vertices (residues x segments x sides, summed over every
-// curve drawn) that is accepted before dropping to the next level: 5 million
-// is about 160 MB of vertices.
+// curve drawn, ignoring the one extra ring a curve has) that is accepted
+// before dropping to the next level: 5 million is about 160 MB of vertices.
+// The last level is used even if it does not fit.
 constexpr size_t kCartoonRingVertexBudget = 5000000;
 
 // Residues drawn in each curve style. Cartoon and simple cartoon are 20-sided
