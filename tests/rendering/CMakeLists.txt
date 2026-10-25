@@ -3,6 +3,7 @@ set(tests
   BSplineGeometry
   Camera
   CartoonDetail
+  CartoonProteins
   CurveGeometry
   CurveTessellation
   CylinderGeometry
@@ -33,7 +34,9 @@ add_executable(AvogadroRenderingTests ${testSrcs})
 # cartoondetail.h is a Qt-free header of the Cartoons plugin.
 target_include_directories(AvogadroRenderingTests PRIVATE
   "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/cartoons")
-target_link_libraries(AvogadroRenderingTests Avogadro::Rendering
+target_compile_definitions(AvogadroRenderingTests PRIVATE
+  AVOGADRO_DATA="${AVOGADRO_DATA_ROOT}")
+target_link_libraries(AvogadroRenderingTests Avogadro::Rendering Avogadro::IO
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
