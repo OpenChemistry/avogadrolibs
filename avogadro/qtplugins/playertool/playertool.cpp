@@ -10,13 +10,13 @@
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/utilities.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/qtopengl/imagesizedialog.h>
 
 #include <QAction>
 #include <QOpenGLWidget>
 #include <QtCore/QBuffer>
-#include <QtCore/QProcess>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QWindow>
@@ -34,7 +34,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <vector>
 
 namespace Avogadro::QtPlugins {
 
@@ -497,23 +496,17 @@ void PlayerTool::recordMovie()
     const int delay = 100 / std::min(m_animationFPS->value(), 100);
     GifBegin(&writer, (baseName + ".gif").toLatin1().data(), exportWidth,
              exportHeight, delay);
-    std::vector<uint8_t> imageData(static_cast<size_t>(exportWidth) *
-                                   exportHeight * 4);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
       QImage exportImage;
       if (!renderFrame(i, exportImage))
         break;
 
-      // GIF-H wants tightly packed RGBA; scanlines may be padded.
+      // GIF-H wants tightly packed RGBA, which is what RGBA8888 scanlines
+      // are (4 bytes per pixel is always 32-bit aligned).
       exportImage = exportImage.convertToFormat(QImage::Format_RGBA8888);
       if (exportImage.size() != renderOptions.size)
         break;
-      const size_t rowBytes = static_cast<size_t>(exportWidth) * 4;
-      for (int y = 0; y < exportHeight; ++y) {
-        std::copy_n(exportImage.constScanLine(y), rowBytes,
-                    imageData.begin() + y * rowBytes);
-      }
-      GifWriteFrame(&writer, imageData.data(), exportWidth, exportHeight,
+      GifWriteFrame(&writer, exportImage.constBits(), exportWidth, exportHeight,
                     delay);
     }
     GifEnd(&writer);
@@ -567,19 +560,13 @@ void PlayerTool::recordMovie()
     QStringList args;
     args << "-y"
          << "-r" << QString::number(m_animationFPS->value()) << "-i"
-         << baseName + "%0" + QString::number(numberLength) + "d.png"
-         << "-c:v"
+         << baseName + "%0" + QString::number(numberLength) + "d.png" << "-c:v"
          << "libx264"
          << "-r"
          << "30"
          << "-pix_fmt"
          << "yuv420p" << baseName + ".mp4";
-    // ffmpeg is the current name; avconv is its old Libav fork. execute()
-    // returns -2 when the program cannot be started.
-    int result = QProcess::execute("ffmpeg", args);
-    if (result == -2)
-      result = QProcess::execute("avconv", args);
-    if (result == -2) {
+    if (!QtGui::Utilities::runVideoEncoder(args)) {
       QMessageBox::warning(
         qobject_cast<QWidget*>(parent()), tr("Avogadro"),
         tr("Cannot run ffmpeg or avconv to encode the movie. The frames were "

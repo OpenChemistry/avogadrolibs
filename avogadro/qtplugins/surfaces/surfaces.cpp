@@ -30,6 +30,7 @@ namespace {
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/slatersetconcurrent.h>
 #include <avogadro/qtgui/timedprogressdialog.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
@@ -57,7 +58,6 @@ namespace {
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QProcess>
 #include <QtCore/QVariantMap>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -1191,8 +1191,6 @@ void Surfaces::recordMovie()
     return;
   }
   d->movieSize = sizeDialog.imageSize();
-  const int movieWidth = d->movieSize.width();
-  const int movieHeight = d->movieSize.height();
 
   m_baseFileName = baseName;
   m_numberLength = static_cast<int>(
@@ -1206,12 +1204,13 @@ void Surfaces::recordMovie()
   if (selectedFilter == tr("GIF (*.gif)")) {
     d->gwaviWriter = nullptr;
     d->gifWriter = new GifWriter;
-    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), movieWidth,
-             movieHeight, 100 / 4);
+    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(),
+             d->movieSize.width(), d->movieSize.height(), 100 / 4);
   } else if (selectedFilter == tr("Movie AVI (*.avi)")) {
     d->gifWriter = nullptr;
-    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(),
-                                movieWidth, movieHeight, "MJPG", 4, nullptr);
+    d->gwaviWriter =
+      gwavi_open((baseName + ".avi").toLatin1().data(), d->movieSize.width(),
+                 d->movieSize.height(), "MJPG", 4, nullptr);
   } else {
     d->gwaviWriter = nullptr;
     d->gifWriter = nullptr;
@@ -1253,18 +1252,17 @@ void Surfaces::movieFrame()
   }
 
   if (d->gifWriter) {
-    // GIF-H wants tightly packed RGBA; scanlines may be padded.
+    // GIF-H wants tightly packed RGBA, which is what RGBA8888 scanlines are
+    // (4 bytes per pixel is always 32-bit aligned).
     exportImage = exportImage.convertToFormat(QImage::Format_RGBA8888);
-    const int frameWidth = exportImage.width();
-    const int frameHeight = exportImage.height();
-    const size_t rowBytes = static_cast<size_t>(frameWidth) * 4;
-    std::vector<uint8_t> imageData(rowBytes * frameHeight);
-    for (int y = 0; y < frameHeight; ++y) {
-      std::copy_n(exportImage.constScanLine(y), rowBytes,
-                  imageData.begin() + y * rowBytes);
+    if (exportImage.size() != d->movieSize) {
+      closeMovieWriters(d->gifWriter, d->gwaviWriter);
+      m_recordingMovie = false;
+      m_dialog->enableRecord();
+      return;
     }
-    GifWriteFrame(d->gifWriter, imageData.data(), frameWidth, frameHeight,
-                  100 / 4);
+    GifWriteFrame(d->gifWriter, exportImage.constBits(), exportImage.width(),
+                  exportImage.height(), 100 / 4);
   } else if (d->gwaviWriter) {
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -1314,12 +1312,7 @@ void Surfaces::movieFrame()
            << "30"
            << "-pix_fmt"
            << "yuv420p" << m_baseFileName + ".mp4";
-      // ffmpeg is the current name; avconv is its old Libav fork.
-      // execute() returns -2 when the program cannot be started.
-      int result = QProcess::execute("ffmpeg", args);
-      if (result == -2)
-        result = QProcess::execute("avconv", args);
-      if (result == -2) {
+      if (!QtGui::Utilities::runVideoEncoder(args)) {
         QMessageBox::warning(
           qobject_cast<QWidget*>(parent()), tr("Avogadro"),
           tr("Cannot run ffmpeg or avconv to encode the movie. The frames "
