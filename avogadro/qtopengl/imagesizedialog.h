@@ -69,6 +69,8 @@ private slots:
   void lockToggled(bool locked);
 
 private:
+  void dimensionEdited(QSpinBox* changed, QSpinBox* other, int value);
+  void updateAspect();
   QSize viewPixelSize() const;
   int normalized(int value) const;
   void applyPreset(int scale);
@@ -76,11 +78,10 @@ private:
   GLWidget* m_glWidget;
   QString m_settingsKey;
   bool m_even;
-  bool m_showTransparent;
   QSpinBox* m_width;
   QSpinBox* m_height;
   QCheckBox* m_lock;
-  QCheckBox* m_transparent;
+  QCheckBox* m_transparent; // null unless the check box is offered
   double m_aspect = 1.0;
 };
 

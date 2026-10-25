@@ -16,7 +16,6 @@
 #include <avogadro/rendering/camera.h>
 
 #include <QAction>
-#include <QColor>
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLFramebufferObjectFormat>
@@ -33,44 +32,6 @@
 #include <memory>
 
 namespace Avogadro::QtOpenGL {
-
-namespace {
-
-// Hard cap on either side of the render (output size times supersampling).
-// 8192^2 needs about 1.5 GiB (24 bytes per pixel across the FBO, the
-// SolidPipeline textures and the read-back).
-constexpr int MaxRenderDimension = 8192;
-
-struct RenderLayout
-{
-  int logicalWidth;
-  int logicalHeight;
-  float pixelRatio;
-};
-
-// Logical size and pixel ratio for rendering an outW x outH image at
-// supersampling k from a view viewH logical pixels tall.
-//
-// The logical height stays the view's, so labels and line widths keep their
-// on-screen proportions, and the ratio maps it onto the output height:
-// ratio = outH * k / viewH. The logical width is that of the output aspect
-// ratio, rounded to a whole logical pixel. The camera's aspect therefore
-// differs from outW / outH by at most 0.5 / logicalWidth, which is negligible
-// (text labels, which derive a viewport from logical width times ratio, are
-// off by the same fraction). The framebuffer and viewport do not depend on
-// the rounding: renderImage passes the exact device size to
-// GLRenderer::resize().
-RenderLayout chooseLayout(int outW, int outH, int k, int viewH)
-{
-  const int logicalH = std::max(1, viewH);
-  const auto logicalW = static_cast<int>(std::max<long long>(
-    1, std::llround(static_cast<double>(outW) * logicalH / outH)));
-  const auto ratio =
-    static_cast<float>(static_cast<double>(outH) * k / logicalH);
-  return { logicalW, logicalH, ratio };
-}
-
-} // namespace
 
 GLWidget::GLWidget(QWidget* p)
   : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr)
@@ -323,6 +284,13 @@ void GLWidget::paintGL()
   m_renderer.render();
 }
 
+QSize GLWidget::pixelSize() const
+{
+  const qreal dpr = devicePixelRatioF();
+  return QSize(static_cast<int>(std::lround(width() * dpr)),
+               static_cast<int>(std::lround(height() * dpr)));
+}
+
 QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
 {
   auto fail = [error](const QString& message) {
@@ -333,19 +301,15 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   if (error != nullptr)
     error->clear();
 
-  // 1. Validate.
   QSize outSize = options.size;
   // A default-constructed QSize (-1, -1) means "the view size"; any other
   // non-positive size is a mistake and is rejected below.
-  if (outSize == QSize()) {
-    const qreal dpr = devicePixelRatioF();
-    outSize = QSize(static_cast<int>(std::lround(width() * dpr)),
-                    static_cast<int>(std::lround(height() * dpr)));
-  }
+  if (outSize == QSize())
+    outSize = pixelSize();
   if (outSize.width() <= 0 || outSize.height() <= 0)
     return fail(tr("The image size must be positive."));
   const int k = options.supersample;
-  if (k < 1 || k > 4)
+  if (k < 1 || k > RenderOptions::MaxSupersample)
     return fail(tr("Supersampling must be between 1 and 4."));
   if (m_updatingScene)
     return fail(tr("The scene is being rebuilt; try again in a moment."));
@@ -356,12 +320,13 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   // Check the cheap limits before touching GL.
   const long long renderW = static_cast<long long>(outSize.width()) * k;
   const long long renderH = static_cast<long long>(outSize.height()) * k;
-  if (renderW > MaxRenderDimension || renderH > MaxRenderDimension) {
+  if (renderW > RenderOptions::MaxDimension ||
+      renderH > RenderOptions::MaxDimension) {
     return fail(tr("The image is too large: %1 x %2 pixels (including "
                    "supersampling) exceeds the maximum of %3.")
                   .arg(renderW)
                   .arg(renderH)
-                  .arg(MaxRenderDimension));
+                  .arg(RenderOptions::MaxDimension));
   }
 
   makeCurrent();
@@ -396,7 +361,6 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
       QOpenGLContext::currentContext()->functions()->glBindFramebuffer(
         GL_FRAMEBUFFER, widget.defaultFramebufferObject());
       widget.doneCurrent();
-      widget.update();
     }
   } restore{ *this,
              fbo,
@@ -406,7 +370,6 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
              m_renderer.projectionScale(),
              m_renderer.scene().backgroundColor() };
 
-  // 2. Check the GL limits.
   QOpenGLFunctions* gl = ctx->functions();
   GLint maxTexture = 0, maxRenderbuffer = 0;
   GLint maxViewport[2] = { 0, 0 };
@@ -432,25 +395,26 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   // plugin may have spun an event loop; make sure we are still current.
   makeCurrent();
 
-  // 4. Logical size and pixel ratio. The logical height stays close to the
-  // widget's so labels keep their on-screen proportions.
+  // The logical height stays the view's, so labels and line widths keep their
+  // on-screen proportions; the pixel ratio maps it onto the output height. The
+  // logical width follows the output aspect ratio. The framebuffer and
+  // viewport use the exact device size passed to GLRenderer::resize().
   const int viewW = std::max(1, restore.logicalWidth);
-  const int viewH = std::max(1, restore.logicalHeight);
-  const RenderLayout layout =
-    chooseLayout(outSize.width(), outSize.height(), k, viewH);
+  const int logicalH = std::max(1, restore.logicalHeight);
+  const auto pixelRatio =
+    static_cast<float>(static_cast<double>(outSize.height()) * k / logicalH);
+  const int logicalW = static_cast<int>(
+    std::max<long long>(1, std::llround(static_cast<double>(outSize.width()) *
+                                        logicalH / outSize.height())));
 
-  // 5. Framing.
   float projectionScale = 1.0f;
   if (options.framing == RenderOptions::Framing::Fit) {
-    const float viewAspect = static_cast<float>(viewW) / viewH;
+    const float viewAspect = static_cast<float>(viewW) / logicalH;
     const float outAspect =
       static_cast<float>(outSize.width()) / outSize.height();
     projectionScale = std::max(1.0f, viewAspect / outAspect);
   }
 
-  // 7. Render. An opaque image is drawn straight over the real background
-  // colour, exactly as the window is. A transparent one is drawn over (0, 0, 0,
-  // 0), which leaves a premultiplied image in the framebuffer.
   QOpenGLFramebufferObjectFormat format;
   format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
   format.setInternalTextureFormat(GL_RGBA8);
@@ -462,6 +426,9 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
                    "image may be too large for the available memory."));
   }
 
+  // An opaque image is drawn straight over the real background colour, exactly
+  // as the window is. A transparent one is drawn over (0, 0, 0, 0), which
+  // leaves a premultiplied image in the framebuffer.
   const Vector4ub background = restore.background;
   if (options.transparentBackground)
     m_renderer.scene().setBackgroundColor(Vector4ub(0, 0, 0, 0));
@@ -469,9 +436,9 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
     m_renderer.scene().setBackgroundColor(
       Vector4ub(background[0], background[1], background[2], 255));
   m_renderer.setProjectionScale(projectionScale);
-  m_renderer.setPixelRatio(layout.pixelRatio);
-  m_renderer.resize(layout.logicalWidth, layout.logicalHeight,
-                    static_cast<int>(renderW), static_cast<int>(renderH));
+  m_renderer.setPixelRatio(pixelRatio);
+  m_renderer.resize(logicalW, logicalH, static_cast<int>(renderW),
+                    static_cast<int>(renderH));
 
   // Bind immediately before rendering: SolidPipeline::begin() records the
   // bound framebuffer as its output, and a pipeline that initialized lazily
@@ -479,9 +446,7 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   if (!fbo->bind())
     return fail(tr("The offscreen framebuffer could not be bound."));
   m_renderer.render();
-  gl->glFinish();
 
-  // 8. Read back.
   QImage image = fbo->toImage();
   fbo->release();
   if (image.isNull())

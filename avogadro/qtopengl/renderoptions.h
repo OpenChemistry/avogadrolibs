@@ -16,6 +16,13 @@ namespace Avogadro::QtOpenGL {
  */
 struct RenderOptions
 {
+  /** Hard cap on either side of the render (size times supersample).
+   *  8192^2 needs about 1.5 GiB. */
+  static constexpr int MaxDimension = 8192;
+
+  /** The largest supersample factor. */
+  static constexpr int MaxSupersample = 4;
+
   /** Output size in pixels. An invalid size means the view size times the
    *  widget's device pixel ratio. */
   QSize size;
@@ -35,7 +42,8 @@ struct RenderOptions
   };
   Framing framing = Framing::Fit;
 
-  /** 1-4: render this many times larger, then downsample to size. */
+  /** 1 to MaxSupersample: render this many times larger, then downsample to
+   * size. */
   int supersample = 1;
 };
 

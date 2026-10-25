@@ -24,14 +24,14 @@
 namespace Avogadro::QtOpenGL {
 
 namespace {
-constexpr int MaxDimension = 8192;
+constexpr int MaxDimension = RenderOptions::MaxDimension;
 }
 
 ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
                                  bool showTransparent, bool evenDimensions,
                                  QWidget* parent, bool defaultTransparent)
   : QDialog(parent), m_glWidget(glWidget), m_settingsKey(settingsKey),
-    m_even(evenDimensions), m_showTransparent(showTransparent)
+    m_even(evenDimensions), m_transparent(nullptr)
 {
   setWindowTitle(tr("Image Size"));
 
@@ -47,12 +47,8 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
   }
 
   m_lock = new QCheckBox(tr("&Lock aspect ratio"));
-  // Parented to the dialog even when not shown, so it is never a top-level
-  // window and is freed with the dialog. It only joins the layout (and so
-  // only appears) when asked for.
-  m_transparent = new QCheckBox(tr("&Transparent background"), this);
-  if (!m_showTransparent)
-    m_transparent->hide();
+  if (showTransparent)
+    m_transparent = new QCheckBox(tr("&Transparent background"));
 
   auto* widthLabel = new QLabel(tr("&Width:"));
   widthLabel->setBuddy(m_width);
@@ -77,7 +73,7 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
   form->addRow(heightLabel, m_height);
   form->addRow(QString(), m_lock);
   form->addRow(tr("Size of view:"), presets);
-  if (m_showTransparent)
+  if (m_transparent != nullptr)
     form->addRow(QString(), m_transparent);
 
   auto* buttons =
@@ -97,11 +93,13 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
   if (size.width() < 1 || size.height() < 1)
     size = viewPixelSize();
   m_lock->setChecked(settings.value("aspectLock", true).toBool());
-  m_transparent->setChecked(
-    settings.value("transparent", defaultTransparent).toBool());
+  if (m_transparent != nullptr) {
+    m_transparent->setChecked(
+      settings.value("transparent", defaultTransparent).toBool());
+  }
   settings.endGroup();
   setImageSize(size);
-  m_aspect = static_cast<double>(m_width->value()) / m_height->value();
+  updateAspect();
 
   connect(m_width, &QSpinBox::valueChanged, this,
           &ImageSizeDialog::widthEdited);
@@ -112,13 +110,9 @@ ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
 
 QSize ImageSizeDialog::viewPixelSize() const
 {
-  if (m_glWidget == nullptr)
-    return QSize(800, 600);
-  const qreal dpr = m_glWidget->devicePixelRatioF();
-  QSize size(static_cast<int>(std::lround(m_glWidget->width() * dpr)),
-             static_cast<int>(std::lround(m_glWidget->height() * dpr)));
+  const QSize size = m_glWidget != nullptr ? m_glWidget->pixelSize() : QSize();
   if (size.width() < 1 || size.height() < 1)
-    size = QSize(800, 600);
+    return QSize(800, 600);
   return size;
 }
 
@@ -137,7 +131,7 @@ QSize ImageSizeDialog::imageSize() const
 
 bool ImageSizeDialog::transparentBackground() const
 {
-  return m_showTransparent && m_transparent->isChecked();
+  return m_transparent != nullptr && m_transparent->isChecked();
 }
 
 RenderOptions ImageSizeDialog::renderOptions() const
@@ -156,40 +150,43 @@ void ImageSizeDialog::setImageSize(const QSize& size)
   m_height->setValue(normalized(size.height()));
 }
 
-void ImageSizeDialog::widthEdited(int value)
+void ImageSizeDialog::dimensionEdited(QSpinBox* changed, QSpinBox* other,
+                                      int value)
 {
-  const int w = normalized(value);
-  if (w != value) {
-    QSignalBlocker block(m_width);
-    m_width->setValue(w);
+  const int v = normalized(value);
+  if (v != value) {
+    QSignalBlocker block(changed);
+    changed->setValue(v);
   }
   if (m_lock->isChecked()) {
-    QSignalBlocker block(m_height);
-    m_height->setValue(normalized(static_cast<int>(std::lround(w / m_aspect))));
+    // The width is aspect times the height; the height is the width over it.
+    const double scaled = changed == m_width ? v / m_aspect : v * m_aspect;
+    QSignalBlocker block(other);
+    other->setValue(normalized(static_cast<int>(std::lround(scaled))));
   } else {
-    m_aspect = static_cast<double>(w) / m_height->value();
+    updateAspect();
   }
+}
+
+void ImageSizeDialog::widthEdited(int value)
+{
+  dimensionEdited(m_width, m_height, value);
 }
 
 void ImageSizeDialog::heightEdited(int value)
 {
-  const int h = normalized(value);
-  if (h != value) {
-    QSignalBlocker block(m_height);
-    m_height->setValue(h);
-  }
-  if (m_lock->isChecked()) {
-    QSignalBlocker block(m_width);
-    m_width->setValue(normalized(static_cast<int>(std::lround(h * m_aspect))));
-  } else {
-    m_aspect = static_cast<double>(m_width->value()) / h;
-  }
+  dimensionEdited(m_height, m_width, value);
+}
+
+void ImageSizeDialog::updateAspect()
+{
+  m_aspect = static_cast<double>(m_width->value()) / m_height->value();
 }
 
 void ImageSizeDialog::lockToggled(bool locked)
 {
   if (locked)
-    m_aspect = static_cast<double>(m_width->value()) / m_height->value();
+    updateAspect();
 }
 
 void ImageSizeDialog::applyPreset(int scale)
@@ -207,7 +204,7 @@ void ImageSizeDialog::accept()
   settings.setValue("width", m_width->value());
   settings.setValue("height", m_height->value());
   settings.setValue("aspectLock", m_lock->isChecked());
-  if (m_showTransparent)
+  if (m_transparent != nullptr)
     settings.setValue("transparent", m_transparent->isChecked());
   settings.endGroup();
   QDialog::accept();

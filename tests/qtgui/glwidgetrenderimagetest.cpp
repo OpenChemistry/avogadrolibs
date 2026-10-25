@@ -22,7 +22,6 @@
 
 #include <algorithm>
 #include <cstdlib>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -109,6 +108,38 @@ double meanAbsDiff(const QImage& a, const QImage& b)
   return sum / (3.0 * ia.width() * ia.height());
 }
 
+// The largest difference in any one channel of any pixel.
+int maxAbsDiff(const QImage& a, const QImage& b)
+{
+  QImage ia = a.convertToFormat(QImage::Format_RGB32);
+  QImage ib = b.convertToFormat(QImage::Format_RGB32);
+  if (ia.size() != ib.size())
+    return 1 << 30;
+  int maxDiff = 0;
+  for (int y = 0; y < ia.height(); ++y) {
+    for (int x = 0; x < ia.width(); ++x) {
+      QRgb p = ia.pixel(x, y), q = ib.pixel(x, y);
+      maxDiff = std::max({ maxDiff, std::abs(qRed(p) - qRed(q)),
+                           std::abs(qGreen(p) - qGreen(q)),
+                           std::abs(qBlue(p) - qBlue(q)) });
+    }
+  }
+  return maxDiff;
+}
+
+// Let queued scene updates and repaints run.
+void settle()
+{
+  QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+}
+
+void clearScene(GLWidget& widget)
+{
+  widget.makeCurrent();
+  widget.renderer().scene().clear();
+  widget.doneCurrent();
+}
+
 class GLWidgetRenderImageTest : public ::testing::Test
 {
 protected:
@@ -166,9 +197,7 @@ protected:
       GTEST_SKIP() << skipReason;
 
     // Fresh scene: a small cluster of spheres, added directly.
-    widget->makeCurrent();
-    widget->renderer().scene().clear();
-    widget->doneCurrent();
+    clearScene(*widget);
     auto* geometry = new GeometryNode;
     auto* spheres = new SphereGeometry;
     geometry->addDrawable(spheres);
@@ -180,7 +209,7 @@ protected:
     widget->renderer().scene().setBackgroundColor(Background);
     widget->renderer().resetGeometry();
     widget->renderer().resetCamera();
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+    settle();
   }
 
   QImage render(int w, int h, bool transparent = false, int supersample = 1,
@@ -326,13 +355,10 @@ TEST_F(GLWidgetRenderImageTest, resolutionIndependent)
   QImage reduced =
     large.scaled(small.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   const double diff = meanAbsDiff(small, reduced);
-  std::cout << "mean abs diff 400 vs 1600 downscaled: " << diff << "\n";
   EXPECT_LT(diff, 6.0);
 
   QImage super = render(400, 400, false, 4);
   const double superDiff = meanAbsDiff(super, reduced);
-  std::cout << "mean abs diff supersample 4 vs 1600 downscaled: " << superDiff
-            << "\n";
   EXPECT_LT(superDiff, 6.0);
 }
 
@@ -415,9 +441,7 @@ TEST_F(GLWidgetRenderImageTest, widgetWithoutContextFails)
 
 TEST_F(GLWidgetRenderImageTest, emptySceneIsBackground)
 {
-  widget->makeCurrent();
-  widget->renderer().scene().clear();
-  widget->doneCurrent();
+  clearScene(*widget);
   QImage image = render(320, 200);
   ASSERT_FALSE(image.isNull());
   EXPECT_TRUE(objectBounds(image).empty);
@@ -459,14 +483,12 @@ void addTranslucentQuad(GLWidget& widget, unsigned char opacity)
   widget.renderer().scene().rootNode().addChild(node);
   widget.renderer().resetGeometry();
   widget.renderer().resetCamera();
-  QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+  settle();
 }
 
 TEST_F(GLWidgetRenderImageTest, translucentAloneKeepsPartialAlpha)
 {
-  widget->makeCurrent();
-  widget->renderer().scene().clear();
-  widget->doneCurrent();
+  clearScene(*widget);
   addTranslucentQuad(*widget, 128);
 
   QImage image = render(400, 300, true, 1, RenderOptions::Framing::Fit,
@@ -493,7 +515,7 @@ TEST_F(GLWidgetRenderImageTest, opaqueMatchesWindowWithTranslucent)
   const Vector4ub white(255, 255, 255, 255);
   widget->renderer().scene().setBackgroundColor(white);
   widget->renderer().solidPipeline().setBackgroundColor(white);
-  QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+  settle();
 
   QImage window = widget->grabFramebuffer();
   ASSERT_FALSE(window.isNull());
@@ -503,17 +525,8 @@ TEST_F(GLWidgetRenderImageTest, opaqueMatchesWindowWithTranslucent)
   ASSERT_EQ(window.size(), exported.size());
   EXPECT_EQ(exported.format(), QImage::Format_RGB32);
 
-  QImage a = window.convertToFormat(QImage::Format_RGB32);
-  QImage b = exported.convertToFormat(QImage::Format_RGB32);
-  int maxDiff = 0;
-  for (int y = 0; y < a.height(); ++y) {
-    for (int x = 0; x < a.width(); ++x) {
-      QRgb p = a.pixel(x, y), q = b.pixel(x, y);
-      maxDiff = std::max({ maxDiff, std::abs(qRed(p) - qRed(q)),
-                           std::abs(qGreen(p) - qGreen(q)),
-                           std::abs(qBlue(p) - qBlue(q)) });
-    }
-  }
+  const QImage b = exported.convertToFormat(QImage::Format_RGB32);
+  const int maxDiff = maxAbsDiff(window, exported);
   EXPECT_LE(maxDiff, 2);
   // Not a trivial comparison: the quad tints the white background.
   EXPECT_LT(qGreen(b.pixel(b.width() / 2, b.height() / 2)), 200);

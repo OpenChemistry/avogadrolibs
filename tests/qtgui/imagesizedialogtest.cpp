@@ -153,9 +153,8 @@ TEST_F(ImageSizeDialogTest, transparentHiddenWhenNotOffered)
   ImageSizeDialog dialog(nullptr, Key, false, false);
   dialog.accept();
   EXPECT_FALSE(dialog.transparentBackground());
-  // The unused check box is still owned by the dialog.
-  for (auto* c : dialog.findChildren<QCheckBox*>())
-    EXPECT_EQ(c->window(), &dialog);
+  // No transparent check box is created at all.
+  EXPECT_EQ(checkBox(dialog, "ransparent"), nullptr);
 }
 
 TEST_F(ImageSizeDialogTest, transparentDefaultOnlyWithoutRememberedChoice)

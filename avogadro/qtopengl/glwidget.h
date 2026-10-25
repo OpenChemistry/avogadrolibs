@@ -15,6 +15,7 @@
 
 #include <QImage>
 #include <QPointer>
+#include <QSize>
 #include <QString>
 
 #if QT_VERSION >= 0x060000
@@ -139,6 +140,12 @@ public:
    * @return The image, or a null image on failure.
    */
   QImage renderImage(const RenderOptions& options, QString* error = nullptr);
+
+  /**
+   * @return The widget size in device pixels (the logical size times the
+   * device pixel ratio), which is what renderImage() uses by default.
+   */
+  QSize pixelSize() const;
 
 signals:
   void rendererInvalid();
