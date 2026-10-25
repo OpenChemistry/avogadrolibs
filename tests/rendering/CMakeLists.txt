@@ -3,6 +3,7 @@ set(tests
   BSplineGeometry
   Camera
   CurveGeometry
+  CurveTessellation
   CylinderGeometry
   GeometryVisitor
   Node

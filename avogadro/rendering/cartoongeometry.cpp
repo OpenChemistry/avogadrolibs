@@ -29,9 +29,8 @@ size_t Cartoon::circleResolution(bool flat) const
   return flat ? 2u : 20u;
 }
 
-void Cartoon::appendCirclePoints(std::vector<ColorNormalVertex>& result,
-                                 const Eigen::Affine3f& a,
-                                 const Eigen::Affine3f& b, bool flat) const
+void Cartoon::appendRingPoints(std::vector<ColorNormalVertex>& result,
+                               const Eigen::Affine3f& frame, bool flat) const
 {
   const size_t resolution = circleResolution(flat);
   const float resolutionRadians =
@@ -46,15 +45,10 @@ void Cartoon::appendCirclePoints(std::vector<ColorNormalVertex>& result,
     Vector3f elipse =
       Vector3f(r * std::sin(theta), 0.0f, c + r * std::cos(theta));
 
-    ColorNormalVertex vert1;
-    vert1.normal = a.linear() * elipse;
-    vert1.vertex = a * elipse;
-    result.push_back(vert1);
-
-    ColorNormalVertex vert2;
-    vert2.normal = b.linear() * elipse;
-    vert2.vertex = b * elipse;
-    result.push_back(vert2);
+    ColorNormalVertex vert;
+    vert.normal = frame.linear() * elipse;
+    vert.vertex = frame * elipse;
+    result.push_back(vert);
   }
 }
 

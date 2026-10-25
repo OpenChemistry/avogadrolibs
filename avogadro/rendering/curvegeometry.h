@@ -89,7 +89,7 @@ public:
    * Compute the triangle mesh (or, for flat lines, the centre-line polyline)
    * for one line, without touching OpenGL. This is exactly the data uploaded
    * to the GPU by render(), and honours the circleResolution(),
-   * appendCirclePoints() and computeScale() hooks of subclasses.
+   * appendRingPoints() and computeScale() hooks of subclasses.
    *
    * @param lineIndex Index into lines().
    * @param vertices Output vertices (cleared first). Empty if the line is too
@@ -121,6 +121,17 @@ protected:
   virtual Vector3f computeCurvePoint(
     float t, const std::vector<Point>& points) const = 0;
   virtual size_t circleResolution(bool flat) const;
+  /**
+   * Append the vertices of one cross-section ring (circleResolution(flat)
+   * vertices) for the given frame. Subclasses override this to change the
+   * cross-section shape. Colours are filled in by the caller.
+   */
+  virtual void appendRingPoints(std::vector<ColorNormalVertex>& result,
+                                const Eigen::Affine3f& frame, bool flat) const;
+  /**
+   * Append the rings of two frames interleaved (a, b, a, b, ...), built from
+   * appendRingPoints(). tessellate() uses appendRingPoints() directly.
+   */
   virtual void appendCirclePoints(std::vector<ColorNormalVertex>& result,
                                   const Eigen::Affine3f& a,
                                   const Eigen::Affine3f& b, bool flat) const;
