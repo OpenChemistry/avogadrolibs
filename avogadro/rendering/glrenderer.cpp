@@ -89,7 +89,7 @@ void GLRenderer::resize(int width, int height, int deviceWidth,
              static_cast<GLsizei>(deviceHeight));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
-  m_solidPipeline.resize(width, height, deviceWidth, deviceHeight);
+  m_solidPipeline.resizeDevice(deviceWidth, deviceHeight);
 }
 
 void GLRenderer::setPixelRatio(float ratio)

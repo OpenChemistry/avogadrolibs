@@ -306,11 +306,11 @@ void SolidPipeline::adjustOffset(const Camera& cam)
 
 void SolidPipeline::resize(int width, int height)
 {
-  resize(width, height, static_cast<int>(width * m_pixelRatio),
-         static_cast<int>(height * m_pixelRatio));
+  resizeDevice(static_cast<int>(width * m_pixelRatio),
+               static_cast<int>(height * m_pixelRatio));
 }
 
-void SolidPipeline::resize(int, int, int deviceWidth, int deviceHeight)
+void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
 {
   m_width = deviceWidth;
   m_height = deviceHeight;

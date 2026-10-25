@@ -6,6 +6,7 @@
 #include "textlabelbase.h"
 
 #include "avogadrogl.h"
+#include "blendstateguard_p.h"
 #include "bufferobject.h"
 #include "camera.h"
 #include "shader.h"
@@ -201,25 +202,13 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   // GL_SRC_ALPHA, which would multiply by alpha a second time. Save and
   // restore the caller's blend state. The alpha channel is "over" blended too,
   // so a label over a transparent background keeps its partial alpha.
-  const GLboolean blendWasEnabled = glIsEnabled(GL_BLEND);
-  GLint srcRgb = GL_SRC_ALPHA, dstRgb = GL_ONE_MINUS_SRC_ALPHA;
-  GLint srcAlpha = GL_ONE, dstAlpha = GL_ONE;
-  glGetIntegerv(GL_BLEND_SRC_RGB, &srcRgb);
-  glGetIntegerv(GL_BLEND_DST_RGB, &dstRgb);
-  glGetIntegerv(GL_BLEND_SRC_ALPHA, &srcAlpha);
-  glGetIntegerv(GL_BLEND_DST_ALPHA, &dstAlpha);
+  BlendStateGuard blendState;
   glEnable(GL_BLEND);
   glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
                       GL_ONE_MINUS_SRC_ALPHA);
 
   // Draw texture
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-  glBlendFuncSeparate(static_cast<GLenum>(srcRgb), static_cast<GLenum>(dstRgb),
-                      static_cast<GLenum>(srcAlpha),
-                      static_cast<GLenum>(dstAlpha));
-  if (!blendWasEnabled)
-    glDisable(GL_BLEND);
 
   // Release resources:
   vao.release();
