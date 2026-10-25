@@ -46,7 +46,7 @@ CurveGeometry::~CurveGeometry()
 
 size_t CurveGeometry::circleResolution(bool flat) const
 {
-  return flat ? 1u : (m_sides > 0 ? std::max<size_t>(m_sides, 3) : 12u);
+  return flat ? 1u : sidesOr(kDefaultTubeSides);
 }
 
 void CurveGeometry::appendRingPoints(std::vector<ColorNormalVertex>& result,
@@ -107,9 +107,10 @@ struct CurveSample
 
 size_t CurveGeometry::segmentsFor(bool flat) const
 {
-  const size_t base = m_segmentsPerResidue > 0 ? m_segmentsPerResidue : 15u;
+  const size_t base =
+    m_segmentsPerResidue > 0 ? m_segmentsPerResidue : kDefaultSegments;
   // flat lines have always been sampled 4/3 as finely
-  return flat ? (base * 4 + 1) / 3 : base;
+  return flat ? flatSegmentsFor(base) : base;
 }
 
 void CurveGeometry::tessellate(size_t lineIndex,
@@ -232,7 +233,8 @@ void CurveGeometry::tessellate(size_t lineIndex,
     const size_t segmentCount = points.size() > 1 ? points.size() - 1 : 0;
     // Each ring is shared by the two segments that meet there; it is only
     // duplicated where the colour changes between consecutive segments.
-    vertices.reserve((segmentCount + 1) * resolution);
+    vertices.reserve(ringVertices(qttyPoints, lineResolution, resolution) +
+                     resolution);
     indices.reserve(segmentCount * resolution * 6);
 
     std::vector<ColorNormalVertex> ring;

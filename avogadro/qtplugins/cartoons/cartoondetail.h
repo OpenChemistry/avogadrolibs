@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_QTPLUGINS_CARTOONDETAIL_H
 #define AVOGADRO_QTPLUGINS_CARTOONDETAIL_H
 
+#include <avogadro/rendering/cartoongeometry.h>
+
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -29,7 +31,8 @@ struct CartoonDetail
 // floor may exceed the budget for very large systems (9MB0 is 6.2 million at
 // (6,8)); that is deliberate, there is no coarser level.
 constexpr std::array<CartoonDetail, 5> kCartoonDetailLevels = { {
-  { 15, 20 },
+  { Rendering::CurveGeometry::kDefaultSegments,
+    Rendering::Cartoon::kDefaultSides },
   { 12, 16 },
   { 10, 12 },
   { 8, 10 },
@@ -52,27 +55,32 @@ struct CartoonResidueCounts
   size_t trace = 0;
 };
 
-// Sides of a plain tube at a detail level: 12 at the first level, in
-// proportion to the cartoon sides, and at least 6.
+// Sides of a plain tube at a detail level: the tube default at the first
+// level, in proportion to the cartoon sides, and at least 6.
 constexpr size_t tubeSides(const CartoonDetail& detail)
 {
-  return std::max<size_t>(6, (12 * detail.sides + 10) / 20);
+  return std::max<size_t>(
+    6, (Rendering::CurveGeometry::kDefaultTubeSides * detail.sides +
+        Rendering::Cartoon::kDefaultSides / 2) /
+         Rendering::Cartoon::kDefaultSides);
 }
 
-// Segments of a flat line (ribbon, trace); flat lines are sampled 4/3 as
-// finely, as in Rendering::CurveGeometry::segmentsFor().
+// Segments of a flat line (ribbon, trace); flat lines are sampled more finely.
 constexpr size_t flatSegments(const CartoonDetail& detail)
 {
-  return (detail.segments * 4 + 1) / 3;
+  return Rendering::CurveGeometry::flatSegmentsFor(detail.segments);
 }
 
 constexpr size_t cartoonRingVertices(const CartoonResidueCounts& counts,
                                      const CartoonDetail& detail)
 {
-  return counts.cartoon * detail.segments * detail.sides +
-         counts.tube * detail.segments * tubeSides(detail) +
-         counts.ribbon * flatSegments(detail) * 2 +
-         counts.trace * flatSegments(detail);
+  using Rendering::CurveGeometry;
+  return CurveGeometry::ringVertices(counts.cartoon, detail.segments,
+                                     detail.sides) +
+         CurveGeometry::ringVertices(counts.tube, detail.segments,
+                                     tubeSides(detail)) +
+         CurveGeometry::ringVertices(counts.ribbon, flatSegments(detail), 2) +
+         CurveGeometry::ringVertices(counts.trace, flatSegments(detail), 1);
 }
 
 // Index into kCartoonDetailLevels: the first level that fits the budget, or

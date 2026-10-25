@@ -53,7 +53,7 @@ public:
     if (lineIndex >= this->lines().size())
       return;
     const auto* line = this->lines()[lineIndex];
-    const size_t lineResolution = line->flat ? 20u : 15u;
+    const size_t lineResolution = this->segmentsFor(line->flat);
     const size_t n = line->points.size();
     if (n < 2)
       return;

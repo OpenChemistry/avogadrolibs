@@ -27,7 +27,7 @@ Cartoon::Cartoon(float minRadius, float maxRadius)
 
 size_t Cartoon::circleResolution(bool flat) const
 {
-  return flat ? 2u : (m_sides > 0 ? std::max<size_t>(m_sides, 3) : 20u);
+  return flat ? 2u : sidesOr(kDefaultSides);
 }
 
 void Cartoon::appendRingPoints(std::vector<ColorNormalVertex>& result,

@@ -263,8 +263,9 @@ TEST(BSplineGeometryTest, honoursSegmentAndSideCounts)
   }
   // the defaults are unchanged
   BSplineGeometry g(false);
-  EXPECT_EQ(g.segmentsFor(false), 15u);
-  EXPECT_EQ(g.segmentsFor(true), 20u);
+  EXPECT_EQ(g.segmentsFor(false), CurveGeometry::kDefaultSegments);
+  EXPECT_EQ(g.segmentsFor(true),
+            CurveGeometry::flatSegmentsFor(CurveGeometry::kDefaultSegments));
 }
 
 namespace {

@@ -67,10 +67,17 @@ size_t vertexCount(const CurveGeometry& g, size_t* indexCount = nullptr)
 
 TEST(CartoonDetailTest, firstLevelIsTheBuiltInDetail)
 {
-  EXPECT_EQ(kCartoonDetailLevels[0].segments, 15u);
-  EXPECT_EQ(kCartoonDetailLevels[0].sides, 20u);
-  EXPECT_EQ(tubeSides(kCartoonDetailLevels[0]), 12u);
-  EXPECT_EQ(flatSegments(kCartoonDetailLevels[0]), 20u);
+  EXPECT_EQ(kCartoonDetailLevels[0].segments, CurveGeometry::kDefaultSegments);
+  EXPECT_EQ(kCartoonDetailLevels[0].sides, Cartoon::kDefaultSides);
+  EXPECT_EQ(tubeSides(kCartoonDetailLevels[0]),
+            CurveGeometry::kDefaultTubeSides);
+  EXPECT_EQ(flatSegments(kCartoonDetailLevels[0]),
+            CurveGeometry::flatSegmentsFor(CurveGeometry::kDefaultSegments));
+  // the values themselves, which drawn proteins depend on
+  EXPECT_EQ(CurveGeometry::kDefaultSegments, 15u);
+  EXPECT_EQ(CurveGeometry::kDefaultTubeSides, 12u);
+  EXPECT_EQ(Cartoon::kDefaultSides, 20u);
+  EXPECT_EQ(CurveGeometry::flatSegmentsFor(15), 20u);
 }
 
 TEST(CartoonDetailTest, levelsAreOrderedAndTubesStayAtLeastSix)
@@ -190,13 +197,16 @@ TEST(CartoonDetailTest, defaultsLeaveOtherUsersUnchanged)
   BSplineGeometry plain(false), explicitDefault(false);
   addHelix(plain, 30);
   addHelix(explicitDefault, 30);
-  explicitDefault.setSegmentsPerResidue(15);
-  explicitDefault.setSides(12);
+  explicitDefault.setSegmentsPerResidue(CurveGeometry::kDefaultSegments);
+  explicitDefault.setSides(CurveGeometry::kDefaultTubeSides);
   plain.tessellate(0, a, ia);
   explicitDefault.tessellate(0, b, ib);
   ASSERT_EQ(a.size(), b.size());
   ASSERT_EQ(ia, ib);
-  EXPECT_EQ(a.size(), (30u * 15u + 1u) * 12u);
+  EXPECT_EQ(a.size(),
+            CurveGeometry::ringVertices(30, CurveGeometry::kDefaultSegments,
+                                        CurveGeometry::kDefaultTubeSides) +
+              CurveGeometry::kDefaultTubeSides);
   for (size_t i = 0; i < a.size(); ++i)
     ASSERT_EQ(a[i].vertex, b[i].vertex);
 }

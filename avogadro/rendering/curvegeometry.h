@@ -12,6 +12,7 @@
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
 #include <avogadro/core/vector.h>
+#include <algorithm>
 #include <map>
 #include <vector>
 
@@ -108,12 +109,29 @@ public:
    */
   bool isFlatLine(size_t lineIndex) const;
 
+  /** Built-in tessellation detail, used where the settings below are 0. */
+  static constexpr size_t kDefaultSegments = 15; // per control point
+  static constexpr size_t kDefaultTubeSides = 12;
+
+  /** Segments of a flat line (ribbon, trace) given those of a tube: 4/3. */
+  static constexpr size_t flatSegmentsFor(size_t segments)
+  {
+    return (segments * 4 + 1) / 3;
+  }
+
+  /** Vertices of the rings of @p controlPoints control points. */
+  static constexpr size_t ringVertices(size_t controlPoints, size_t segments,
+                                       size_t sides)
+  {
+    return controlPoints * segments * sides;
+  }
+
   /**
-   * Tessellation detail. Both default to 0, which means "the built-in
-   * value": 15 segments per control point (20 for flat lines), and
-   * circleResolution() sides (12 for tubes, 20 for Cartoon, 2 for flat
-   * Cartoon ribbons, 1 for flat lines). Flat lines keep their 4/3 ratio of
-   * segments; sides do not apply to them.
+   * Tessellation detail. Both default to 0, which means the built-in value:
+   * kDefaultSegments segments per control point (flatSegmentsFor() of that
+   * for flat lines), and circleResolution() sides (kDefaultTubeSides for
+   * tubes, Cartoon::kDefaultSides for Cartoon, 2 for flat Cartoon ribbons, 1
+   * for flat lines). Sides do not apply to flat lines.
    */
   void setSegmentsPerResidue(size_t segments)
   {
@@ -146,6 +164,11 @@ protected:
   virtual Vector3f computeSegmentPoint(
     size_t segment, float f, const std::vector<Point>& points) const = 0;
   virtual size_t circleResolution(bool flat) const;
+  /** The sides setting if it is set (at least 3), else @p builtIn. */
+  size_t sidesOr(size_t builtIn) const
+  {
+    return m_sides > 0 ? std::max<size_t>(m_sides, 3) : builtIn;
+  }
   /**
    * Append the vertices of one cross-section ring (circleResolution(flat)
    * vertices) for the given frame. Subclasses override this to change the

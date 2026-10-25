@@ -28,6 +28,7 @@ public:
   Cartoon();
   Cartoon(float minRadius, float maxRadius);
   static const float ELIPSE_RATIO;
+  static constexpr size_t kDefaultSides = 20;
 
   void addPoint(const Vector3f& pos, const Vector3ub& color, size_t group,
                 size_t id, Core::Residue::SecondaryStructure sec);
