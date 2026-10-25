@@ -5,6 +5,8 @@
 
 #include "extensionplugin.h"
 
+#include "commandregistry.h"
+
 #include <QWidget>
 
 namespace Avogadro::QtGui {
@@ -12,6 +14,30 @@ namespace Avogadro::QtGui {
 ExtensionPlugin::ExtensionPlugin(QObject* parent_) : QObject(parent_) {}
 
 ExtensionPlugin::~ExtensionPlugin() {}
+
+void ExtensionPlugin::registerCommands()
+{
+  if (m_commandRegistry) {
+    m_commandRegistry->announce(
+      [this](const QString& name, const QString& description) {
+        emit registerCommand(name, description);
+      });
+  }
+}
+
+QJsonObject ExtensionPlugin::commandSchema(const QString& command) const
+{
+  return m_commandRegistry ? m_commandRegistry->schema(command) : QJsonObject();
+}
+
+CommandRegistry& ExtensionPlugin::commandRegistry()
+{
+  if (!m_commandRegistry) {
+    m_commandRegistry = std::make_unique<CommandRegistry>(
+      [this](const QString& message) { emit commandFailed(message); });
+  }
+  return *m_commandRegistry;
+}
 
 QList<Io::FileFormat*> ExtensionPlugin::fileFormats() const
 {
