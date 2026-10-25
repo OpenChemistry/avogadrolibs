@@ -839,12 +839,30 @@ QJsonObject CommandRegistry::schema(const QString& name) const
 
   QJsonObject properties;
   QJsonArray required;
+  QJsonArray anyOfGroups; // one "anyOf" per required option with aliases
   for (const auto& argument : command->arguments) {
-    properties[argument.name] = argumentSchema(argument);
-    if (argument.required)
-      required.append(argument.name);
+    const QJsonObject property = argumentSchema(argument);
+    properties[argument.name] = property;
+
+    if (argument.required) {
+      if (argument.aliases.isEmpty()) {
+        required.append(argument.name);
+      } else {
+        // Any one of the name or its aliases satisfies the requirement.
+        QJsonArray alternatives;
+        QStringList keys{ argument.name };
+        keys << argument.aliases;
+        for (const auto& key : keys) {
+          QJsonObject alternative;
+          alternative[QStringLiteral("required")] = QJsonArray{ key };
+          alternatives.append(alternative);
+        }
+        anyOfGroups.append(alternatives);
+      }
+    }
+
     for (const auto& alias : argument.aliases) {
-      QJsonObject aliasProperty;
+      QJsonObject aliasProperty = property;
       aliasProperty[QStringLiteral("deprecated")] = true;
       aliasProperty[QStringLiteral("description")] =
         QStringLiteral("Alias of %1.").arg(argument.name);
@@ -857,6 +875,17 @@ QJsonObject CommandRegistry::schema(const QString& name) const
   result[QStringLiteral("description")] = command->description;
   result[QStringLiteral("properties")] = properties;
   result[QStringLiteral("required")] = required;
+  if (anyOfGroups.size() == 1) {
+    result[QStringLiteral("anyOf")] = anyOfGroups.at(0).toArray();
+  } else if (anyOfGroups.size() > 1) {
+    QJsonArray allOf;
+    for (const auto& group : anyOfGroups) {
+      QJsonObject wrapper;
+      wrapper[QStringLiteral("anyOf")] = group.toArray();
+      allOf.append(wrapper);
+    }
+    result[QStringLiteral("allOf")] = allOf;
+  }
   result[QStringLiteral("additionalProperties")] = command->allowUnknownOptions;
   result[QStringLiteral("x-avogadro-async")] = command->async;
   result[QStringLiteral("x-avogadro-needs-molecule")] = command->needsMolecule;

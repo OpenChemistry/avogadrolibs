@@ -533,3 +533,108 @@ TEST(CommandRegistryTest, schema)
     h.registry.schema("loose")["x-avogadro-needs-molecule"].toBool(false),
     true);
 }
+
+TEST(CommandRegistryTest, schemaRequiredAliased)
+{
+  Harness h;
+  CommandSpec spec;
+  spec.name = "one";
+  spec.handler = [](const CommandArguments&) {};
+  spec.arguments = {
+    CommandArgumentSpec::atomIndices("atoms", "Atoms.")
+      .withCount(2, 4)
+      .withRequired()
+      .withAliases({ "indices", "ids" }),
+    CommandArgumentSpec::real("value", "Value.").withRequired(),
+    CommandArgumentSpec::boolean("flag", "Flag.")
+  };
+  ASSERT_TRUE(h.registry.add(spec));
+
+  const QJsonObject s = h.registry.schema("one");
+  // the aliased option is not unconditionally required...
+  EXPECT_EQ(s["required"].toArray(), QJsonArray{ "value" });
+  EXPECT_FALSE(s.contains("allOf"));
+  // ...any of its names satisfies the requirement
+  const QJsonArray anyOf = s["anyOf"].toArray();
+  ASSERT_EQ(anyOf.size(), 3);
+  EXPECT_EQ(anyOf[0].toObject()["required"].toArray(), QJsonArray{ "atoms" });
+  EXPECT_EQ(anyOf[1].toObject()["required"].toArray(), QJsonArray{ "indices" });
+  EXPECT_EQ(anyOf[2].toObject()["required"].toArray(), QJsonArray{ "ids" });
+
+  // and handle() agrees with the schema
+  Molecule mol = makeMolecule();
+  EXPECT_TRUE(h.registry.handle(
+    "one", { { "indices", list({ 0, 1 }) }, { "value", 1.0 } }, &mol));
+
+  // a command with no required aliased option has neither key
+  Harness g;
+  g.add("plain", { CommandArgumentSpec::real("x", "x").withRequired() });
+  EXPECT_FALSE(g.registry.schema("plain").contains("anyOf"));
+  EXPECT_FALSE(g.registry.schema("plain").contains("allOf"));
+}
+
+TEST(CommandRegistryTest, schemaTwoRequiredAliased)
+{
+  Harness h;
+  CommandSpec spec;
+  spec.name = "two";
+  spec.handler = [](const CommandArguments&) {};
+  spec.arguments = {
+    CommandArgumentSpec::atomIndices("atoms", "Atoms.")
+      .withRequired()
+      .withAliases({ "indices" }),
+    CommandArgumentSpec::real("value", "Value.")
+      .withRequired()
+      .withAliases({ "amount" }),
+    CommandArgumentSpec::string("name", "Name.").withRequired()
+  };
+  ASSERT_TRUE(h.registry.add(spec));
+
+  const QJsonObject s = h.registry.schema("two");
+  EXPECT_EQ(s["required"].toArray(), QJsonArray{ "name" });
+  EXPECT_FALSE(s.contains("anyOf"));
+  const QJsonArray allOf = s["allOf"].toArray();
+  ASSERT_EQ(allOf.size(), 2);
+  const QJsonArray first = allOf[0].toObject()["anyOf"].toArray();
+  ASSERT_EQ(first.size(), 2);
+  EXPECT_EQ(first[0].toObject()["required"].toArray(), QJsonArray{ "atoms" });
+  EXPECT_EQ(first[1].toObject()["required"].toArray(), QJsonArray{ "indices" });
+  const QJsonArray second = allOf[1].toObject()["anyOf"].toArray();
+  ASSERT_EQ(second.size(), 2);
+  EXPECT_EQ(second[0].toObject()["required"].toArray(), QJsonArray{ "value" });
+  EXPECT_EQ(second[1].toObject()["required"].toArray(), QJsonArray{ "amount" });
+}
+
+TEST(CommandRegistryTest, schemaAliasCarriesType)
+{
+  Harness h;
+  CommandSpec spec;
+  spec.name = "alias";
+  spec.handler = [](const CommandArguments&) {};
+  spec.arguments = { CommandArgumentSpec::atomIndices("atoms", "Atoms.")
+                       .withCount(2, 4)
+                       .withAliases({ "indices" }),
+                     CommandArgumentSpec::integer("n", "Count.")
+                       .withRange(1, 9)
+                       .withAliases({ "count" }) };
+  ASSERT_TRUE(h.registry.add(spec));
+
+  const QJsonObject p = h.registry.schema("alias")["properties"].toObject();
+  const QJsonObject alias = p["indices"].toObject();
+  EXPECT_EQ(alias["type"].toString(), "array");
+  EXPECT_EQ(alias["items"].toObject()["type"].toString(), "integer");
+  EXPECT_EQ(alias["minItems"].toInt(), 2);
+  EXPECT_EQ(alias["maxItems"].toInt(), 4);
+  EXPECT_EQ(alias["uniqueItems"].toBool(false), true);
+  EXPECT_EQ(alias["deprecated"].toBool(false), true);
+  EXPECT_EQ(alias["description"].toString(), "Alias of atoms.");
+
+  const QJsonObject count = p["count"].toObject();
+  EXPECT_EQ(count["type"].toString(), "integer");
+  EXPECT_EQ(count["minimum"].toInt(), 1);
+  EXPECT_EQ(count["maximum"].toInt(), 9);
+  EXPECT_EQ(count["deprecated"].toBool(false), true);
+  EXPECT_EQ(count["description"].toString(), "Alias of n.");
+  // the canonical property is not marked deprecated
+  EXPECT_FALSE(p["n"].toObject().contains("deprecated"));
+}
