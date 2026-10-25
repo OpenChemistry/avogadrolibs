@@ -12,23 +12,11 @@ BezierGeometry::BezierGeometry() : CurveGeometry() {}
 Vector3f BezierGeometry::computeSegmentPoint(
   size_t segment, float f, const std::vector<Point>& points) const
 {
-  const size_t size = points.size();
-  if (size == 0)
-    return Vector3f::Zero();
-  if (size == 1)
-    return points.front().pos;
-  const size_t last = size - 1;
-  if (segment >= size)
-    return points.back().pos;
-  // index of the control point the curve is centred on
-  float centre;
-  if (segment == 0)
-    centre = 0.5f * f;
-  else if (segment == last)
-    centre = static_cast<float>(last) - 0.5f + 0.5f * f;
-  else
-    centre = static_cast<float>(segment) - 0.5f + f;
-  return computeCurvePoint(centre / static_cast<float>(last), points);
+  if (points.size() < 2)
+    return points.empty() ? Vector3f::Zero() : points.front().pos;
+  const float last = static_cast<float>(points.size() - 1);
+  return computeCurvePoint(residueCoordinate(segment, f, points.size()) / last,
+                           points);
 }
 
 Vector3f BezierGeometry::computeCurvePoint(

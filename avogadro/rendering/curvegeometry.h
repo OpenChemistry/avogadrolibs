@@ -119,6 +119,14 @@ public:
     return (segments * 4 + 1) / 3;
   }
 
+  /**
+   * Where the curve is centred, as a (fractional) control point index in
+   * [0, count - 1], at fraction @p f of segment @p segment of a curve with one
+   * segment per control point: segment k covers the half residue before and
+   * after k, and the first and last only the half inside the chain.
+   */
+  static float residueCoordinate(size_t segment, float f, size_t count);
+
   /** Vertices of the rings of @p controlPoints control points. */
   static constexpr size_t ringVertices(size_t controlPoints, size_t segments,
                                        size_t sides)
@@ -157,9 +165,12 @@ protected:
   /**
    * The curve has one segment per control point, running from the first
    * control point to the last. Segment k (0 <= k < points.size()) belongs to
-   * control point k, the one nearest to the whole segment, so the colour,
-   * computeScale() index and secondary structure of its samples come from
-   * control point k. @p f in [0, 1] is the position within the segment.
+   * control point k, the one nearest to the whole segment (see
+   * residueCoordinate()), so the colour, computeScale() index and secondary
+   * structure of its samples come from control point k. A sample takes the
+   * colour of k for the strip that arrives at it (of k - 1 at f = 0, which
+   * ends the previous segment). @p f in [0, 1] is the position within the
+   * segment.
    */
   virtual Vector3f computeSegmentPoint(
     size_t segment, float f, const std::vector<Point>& points) const = 0;
