@@ -373,3 +373,44 @@ TEST(CartoonProteinsTest, ropeIsFiniteContinuousAndReachesTheTermini)
     GTEST_SKIP() << "no protein files in avogadrodata";
   }
 }
+
+TEST(CartoonProteinsTest, crambinEndsAreThinCoilAndStrand)
+{
+  // 1CRN's last residue is a lone sheet residue after coil; its cartoon
+  // used to end in a block several times wider than the coil. The first
+  // residues are a strand, which ends the chain at the strand width.
+  Backbone bb;
+  if (!loadBackbone("1CRN", bb))
+    GTEST_SKIP() << "1CRN.pdb is not in avogadrodata";
+  ASSERT_EQ(bb.chains.size(), 1u);
+  const auto& chain = bb.chains[0];
+  const size_t n = chain.pos.size();
+  Cartoon cartoon(0.2f, 1.5f);
+  for (size_t i = 0; i < n; ++i)
+    cartoon.addPoint(chain.pos[i], idColor(i), 0, i, chain.ss[i]);
+  std::vector<ColorNormalVertex> v;
+  std::vector<unsigned int> idx;
+  cartoon.tessellate(0, v, idx);
+  float coilMax = 0.0f, firstMax = 0.0f;
+  size_t coilRings = 0;
+  for (size_t base = 0; base + 20 <= v.size(); base += 20) {
+    float diameter = 0.0f;
+    for (size_t j = 0; j < 20; ++j)
+      for (size_t k = j + 1; k < 20; ++k)
+        diameter =
+          std::max(diameter, (v[base + j].vertex - v[base + k].vertex).norm());
+    const size_t owner = colorId(v[base].color);
+    if (owner >= n - 3) {
+      coilMax = std::max(coilMax, diameter);
+      ++coilRings;
+    }
+    if (owner < 2)
+      firstMax = std::max(firstMax, diameter);
+  }
+  ASSERT_GT(coilRings, 20u);
+  std::printf("1CRN: last three residues' widest ring %.3f (coil 0.300), "
+              "first two residues' widest %.3f (strand 0.975)\n",
+              coilMax, firstMax);
+  EXPECT_NEAR(coilMax, 0.3f, 2e-3f);
+  EXPECT_LE(firstMax, 0.975f + 2e-3f);
+}

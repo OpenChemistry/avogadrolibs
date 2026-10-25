@@ -536,3 +536,111 @@ TEST(BSplineGeometryTest, cartoonWidthsStayPositiveAtTheEnds)
     }
   }
 }
+
+namespace {
+
+// Largest distance between two vertices of one 20-sided ring, and the
+// direction of that chord.
+struct RingShape
+{
+  float diameter = 0.0f;
+  Vector3f major = Vector3f::UnitX();
+};
+
+std::vector<RingShape> ringShapes(const std::vector<ColorNormalVertex>& v)
+{
+  std::vector<RingShape> shapes;
+  for (size_t base = 0; base + 20 <= v.size(); base += 20) {
+    RingShape s;
+    for (size_t j = 0; j < 20; ++j) {
+      for (size_t k = j + 1; k < 20; ++k) {
+        const Vector3f d = v[base + j].vertex - v[base + k].vertex;
+        if (d.norm() > s.diameter) {
+          s.diameter = d.norm();
+          s.major = d.normalized();
+        }
+      }
+    }
+    shapes.push_back(s);
+  }
+  return shapes;
+}
+
+// ring diameter of a Cartoon(0.2, 1.5) tube of a given scale
+constexpr float kBody = 0.3f;     // 1.5 x the 0.2 minimum radius
+constexpr float kStrand = 0.975f; // 1.5 x (0.3 x 1.5 + 0.2)
+
+// widths of the rings owned by residue `owner` (colour = residue index)
+std::vector<float> widthsOwnedBy(const std::vector<ColorNormalVertex>& v,
+                                 size_t owner)
+{
+  std::vector<float> widths;
+  const auto shapes = ringShapes(v);
+  for (size_t r = 0; r < shapes.size(); ++r)
+    if (colorId(v[r * 20].color) == owner)
+      widths.push_back(shapes[r].diameter);
+  return widths;
+}
+
+std::vector<ColorNormalVertex> cartoonWithTypes(const std::vector<SS>& types)
+{
+  const auto pts = wobble(static_cast<int>(types.size()));
+  Cartoon c(0.2f, 1.5f);
+  for (size_t i = 0; i < pts.size(); ++i)
+    c.addPoint(pts[i], idColor(i), 0, i, types[i]);
+  std::vector<ColorNormalVertex> v;
+  std::vector<unsigned int> idx;
+  c.tessellate(0, v, idx);
+  return v;
+}
+
+} // namespace
+
+TEST(BSplineGeometryTest, terminalSheetResiduesAreNotBlocks)
+{
+  // 1CRN ends in a lone sheet residue (46) after coil, and starts with a
+  // strand; a head squeezed into the half residue at a terminus used to flare
+  // to five times the coil width
+  const size_t n = 20;
+  for (int mirror = 0; mirror < 2; ++mirror) {
+    // a lone sheet residue at the end, then at the start
+    std::vector<SS> types(n, SS::coil);
+    types[mirror ? 0 : n - 1] = SS::betaSheet;
+    const auto v = cartoonWithTypes(types);
+    for (size_t owner = 0; owner < n; ++owner)
+      for (float w : widthsOwnedBy(v, owner))
+        EXPECT_NEAR(w, kBody, 2e-3f) << "lone sheet at " << (mirror ? "N" : "C")
+                                     << "-terminus, residue " << owner;
+  }
+  for (int mirror = 0; mirror < 2; ++mirror) {
+    // a strand running to the terminus: flat strand width, no flare, at the
+    // terminal residues
+    std::vector<SS> types(n, SS::coil);
+    for (size_t i = 0; i < 4; ++i)
+      types[mirror ? i : n - 1 - i] = SS::betaSheet;
+    const auto v = cartoonWithTypes(types);
+    const size_t end = mirror ? 0 : n - 1;
+    const size_t inner = mirror ? 1 : n - 2;
+    for (size_t owner : { end, inner })
+      for (float w : widthsOwnedBy(v, owner))
+        EXPECT_LE(w, kStrand + 2e-3f) << (mirror ? "N" : "C") << " " << owner;
+    for (float w : widthsOwnedBy(v, end))
+      EXPECT_NEAR(w, kStrand, 2e-3f);
+  }
+}
+
+TEST(BSplineGeometryTest, ellipseOrientationDoesNotJumpAtTheEnds)
+{
+  const size_t n = 24;
+  std::vector<SS> types(n, SS::coil);
+  for (size_t i : { size_t(0), size_t(1), n - 2, n - 1 })
+    types[i] = SS::betaSheet;
+  const auto v = cartoonWithTypes(types);
+  const auto shapes = ringShapes(v);
+  ASSERT_GT(shapes.size(), 100u);
+  float worst = 1.0f;
+  for (size_t r = 1; r < shapes.size(); ++r)
+    worst = std::min(worst, std::abs(shapes[r].major.dot(shapes[r - 1].major)));
+  // consecutive rings never turn their broad side by more than 35 degrees
+  EXPECT_GT(worst, std::cos(35.0f * 3.14159265f / 180.0f));
+}

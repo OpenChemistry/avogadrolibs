@@ -84,6 +84,14 @@ float Cartoon::computeScale(size_t index, float p, float radius) const
       return m_minRadius;
     case Arrow:
       if (m_type[index].second == 0) {
+        // The first and last control points own only half a residue of curve,
+        // too short for the flare of an arrow head: it would be a wide block.
+        // A head that ends the chain continues the strand's width, and a lone
+        // sheet residue there is as thin as coil.
+        if (index == 0 || index + 1 == m_type.size()) {
+          const bool strand = index > 0 && m_type[index - 1].first == Arrow;
+          return strand ? 0.3f * m_maxRadius + m_minRadius : m_minRadius;
+        }
         return (arrowFunction(1.0f - t) * m_maxRadius) + m_minRadius;
       } else {
         return 0.3 * m_maxRadius + m_minRadius;
