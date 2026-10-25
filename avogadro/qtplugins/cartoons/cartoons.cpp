@@ -371,11 +371,9 @@ void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
   bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
 
-  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.pos, bone.color1 + color, radius, bone.group,
+    bezier->addPoint(bone.pos, ownColor(bone), radius, bone.group,
                      bone.residueID);
-    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 

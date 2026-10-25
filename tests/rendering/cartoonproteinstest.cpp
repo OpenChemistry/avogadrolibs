@@ -23,6 +23,7 @@
 #include <avogadro/core/residue.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/io/pdbformat.h>
+#include <avogadro/rendering/beziergeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
 #include <avogadro/rendering/cartoongeometry.h>
 
@@ -42,6 +43,7 @@ using Avogadro::Io::PdbFormat;
 using Avogadro::QtPlugins::CartoonResidueCounts;
 using Avogadro::QtPlugins::chooseCartoonDetailLevel;
 using Avogadro::QtPlugins::kCartoonDetailLevels;
+using Avogadro::Rendering::BezierGeometry;
 using Avogadro::Rendering::BSplineGeometry;
 using Avogadro::Rendering::Cartoon;
 using Avogadro::Rendering::ColorNormalVertex;
@@ -317,5 +319,57 @@ TEST(CartoonProteinsTest, curveIsContinuousAndAligned)
       GTEST_SKIP() << "no protein files in avogadrodata:" << list;
     }
     std::printf("skipped (not in avogadrodata):%s\n", list.c_str());
+  }
+}
+
+TEST(CartoonProteinsTest, ropeIsFiniteContinuousAndReachesTheTermini)
+{
+  std::vector<std::string> missing;
+  for (const char* name : kProteins) {
+    Backbone bb;
+    if (!loadBackbone(name, bb)) {
+      missing.push_back(name);
+      continue;
+    }
+    float worst = 0.0f;
+    size_t reversals = 0;
+    for (const auto& chain : bb.chains) {
+      const size_t n = chain.pos.size();
+      if (n < 2)
+        continue;
+      BezierGeometry g;
+      for (size_t i = 0; i < n; ++i)
+        g.addPoint(chain.pos[i], idColor(i), 0.1f, 0, i);
+      std::vector<ColorNormalVertex> v;
+      std::vector<unsigned int> idx;
+      g.tessellate(0, v, idx);
+      const Rings r = rings(v, 12);
+      ASSERT_FALSE(r.centre.empty()) << name;
+      for (const auto& x : v)
+        ASSERT_TRUE(x.vertex.allFinite() && x.normal.allFinite()) << name;
+      EXPECT_LT((r.centre.front() - chain.pos.front()).norm(), 1e-3f) << name;
+      EXPECT_LT((r.centre.back() - chain.pos.back()).norm(), 1e-3f) << name;
+      EXPECT_EQ(r.owner.front(), 0u) << name;
+      EXPECT_EQ(r.owner.back(), n - 1) << name;
+      size_t previousOwner = 0;
+      for (size_t o : r.owner) {
+        EXPECT_GE(o, previousOwner) << name;
+        previousOwner = o;
+      }
+      float maxChord = 0.0f;
+      for (size_t i = 1; i < n; ++i)
+        maxChord = std::max(maxChord, (chain.pos[i] - chain.pos[i - 1]).norm());
+      const StepStats now = steps(r.centre);
+      worst = std::max(worst, now.max / (maxChord / 15.0f));
+      reversals += now.reversals;
+    }
+    std::printf("%-5s rope: largest step / (longest chord / 15) %.2f "
+                "(%zu reversals)\n",
+                name, worst, reversals);
+    EXPECT_LE(worst, 1.0f + 1e-3f) << name;
+    EXPECT_EQ(reversals, 0u) << name;
+  }
+  if (missing.size() == sizeof(kProteins) / sizeof(kProteins[0])) {
+    GTEST_SKIP() << "no protein files in avogadrodata";
   }
 }

@@ -17,8 +17,23 @@ public:
   BezierGeometry();
 
 protected:
+  /**
+   * The Bezier curve of degree n - 1 over all the control points. Its point
+   * at t is a weighted mean of the control points around index t * (n - 1),
+   * with a width that grows as sqrt(n t (1 - t)): a loose, smoothed path
+   * that runs from the first to the last control point.
+   */
   Vector3f computeCurvePoint(float t,
                              const std::vector<Point>& points) const override;
+  /**
+   * Segment k covers the curve where that centre index is within half a
+   * control point of k (the first and last segments cover half of that), so
+   * the stretch drawn for a residue is the part of the rope that is centred
+   * on it.
+   */
+  bool hasUniformSegments() const override { return true; }
+  Vector3f computeSegmentPoint(size_t segment, float f,
+                               const std::vector<Point>& points) const override;
 };
 
 } // End namespace Rendering
