@@ -1,0 +1,89 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#ifndef AVOGADRO_QTPLUGINS_CARTOONDETAIL_H
+#define AVOGADRO_QTPLUGINS_CARTOONDETAIL_H
+
+#include <algorithm>
+#include <array>
+#include <cstddef>
+
+// How finely the Cartoons plugin tessellates its curves. A residue costs
+// segments x sides vertices (32 bytes each, plus indices), so a whole capsid
+// at the full detail is gigabytes; the level is chosen once per process()
+// call from the number of residues of every curve that is about to be drawn.
+// Header only and free of Qt, so that it can be unit tested.
+
+namespace Avogadro::QtPlugins {
+
+struct CartoonDetail
+{
+  size_t segments; // per residue, for tubes (flat ribbons and lines use 4/3)
+  size_t sides;    // of a cartoon tube; see tubeSides() for plain tubes
+};
+
+// Levels in order of decreasing detail; the first is the built-in detail of
+// Rendering::Cartoon (15 segments x 20 sides). The last is the floor.
+constexpr std::array<CartoonDetail, 5> kCartoonDetailLevels = { {
+  { 15, 20 },
+  { 12, 16 },
+  { 10, 12 },
+  { 8, 10 },
+  { 6, 8 },
+} };
+
+// The most ring vertices (residues x segments x sides, summed over every
+// curve drawn) that is accepted before dropping to the next level: 5 million
+// is about 160 MB of vertices.
+constexpr size_t kCartoonRingVertexBudget = 5000000;
+
+// Residues drawn in each curve style. Cartoon and simple cartoon are 20-sided
+// tubes, a tube is 12-sided, a ribbon is two vertices wide, a trace is a line.
+struct CartoonResidueCounts
+{
+  size_t cartoon = 0;
+  size_t tube = 0;
+  size_t ribbon = 0;
+  size_t trace = 0;
+};
+
+// Sides of a plain tube at a detail level: 12 at the first level, in
+// proportion to the cartoon sides, and at least 6.
+constexpr size_t tubeSides(const CartoonDetail& detail)
+{
+  return std::max<size_t>(6, (12 * detail.sides + 10) / 20);
+}
+
+// Segments of a flat line (ribbon, trace); flat lines are sampled 4/3 as
+// finely, as in Rendering::CurveGeometry::segmentsFor().
+constexpr size_t flatSegments(const CartoonDetail& detail)
+{
+  return (detail.segments * 4 + 1) / 3;
+}
+
+constexpr size_t cartoonRingVertices(const CartoonResidueCounts& counts,
+                                     const CartoonDetail& detail)
+{
+  return counts.cartoon * detail.segments * detail.sides +
+         counts.tube * detail.segments * tubeSides(detail) +
+         counts.ribbon * flatSegments(detail) * 2 +
+         counts.trace * flatSegments(detail);
+}
+
+// Index into kCartoonDetailLevels: the first level that fits the budget, or
+// the last one.
+constexpr size_t chooseCartoonDetailLevel(
+  const CartoonResidueCounts& counts, size_t budget = kCartoonRingVertexBudget)
+{
+  for (size_t i = 0; i < kCartoonDetailLevels.size(); ++i) {
+    if (cartoonRingVertices(counts, kCartoonDetailLevels[i]) <= budget)
+      return i;
+  }
+  return kCartoonDetailLevels.size() - 1;
+}
+
+} // namespace Avogadro::QtPlugins
+
+#endif

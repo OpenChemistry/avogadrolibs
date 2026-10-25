@@ -5,6 +5,8 @@
 
 #include "cartoons.h"
 
+#include "cartoondetail.h"
+
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QVBoxLayout>
@@ -378,12 +380,15 @@ void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
 }
 
 void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node, float radius)
+                Rendering::GroupNode& node, float radius,
+                const CartoonDetail& detail)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   auto* bezier = new BSplineGeometry;
+  bezier->setSegmentsPerResidue(detail.segments);
+  bezier->setSides(tubeSides(detail));
   bezier->identifier().molecule = &molecule;
   bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
@@ -396,12 +401,14 @@ void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
 
 void renderSimpleCartoon(const AtomsPairList& backbone,
                          const Molecule& molecule, Rendering::GroupNode& node,
-                         float radius)
+                         float radius, const CartoonDetail& detail)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   auto* cartoon = new Cartoon;
+  cartoon->setSegmentsPerResidue(detail.segments);
+  cartoon->setSides(detail.sides);
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
@@ -412,12 +419,15 @@ void renderSimpleCartoon(const AtomsPairList& backbone,
 }
 
 void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
-                   Rendering::GroupNode& node, float radius)
+                   Rendering::GroupNode& node, float radius,
+                   const CartoonDetail& detail)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
   auto* cartoon = new Cartoon(radius * 0.2f, radius * 1.5f);
+  cartoon->setSegmentsPerResidue(detail.segments);
+  cartoon->setSides(detail.sides); // flat ribbons stay two wide
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
@@ -431,6 +441,16 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
 {
   m_layerManager.load<LayerCartoon>();
   m_group = &node;
+
+  // Find every backbone that is going to be drawn first: the level of detail
+  // depends on the total number of residues, not on one chain or layer.
+  struct LayerBackbones
+  {
+    const LayerCartoon* interface;
+    map<size_t, AtomsPairList> backbones;
+  };
+  vector<LayerBackbones> layers;
+  CartoonResidueCounts counts;
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     auto* interface = m_layerManager.getSetting<LayerCartoon>(layer);
     if (interface->showBackbone || interface->showTrace ||
@@ -445,29 +465,49 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
         continue; // maybe something in a different layer
       }
       for (const auto& group : backbones) {
-        const auto& backbone = group.second;
-        if (interface->showBackbone) {
-          renderBackbone(backbone, molecule, node, 0.1f);
-        }
-        if (interface->showTrace) {
-          renderTube(backbone, molecule, node, -0.15f);
-        }
-        if (interface->showTube) {
-          renderTube(backbone, molecule, node, 0.15f);
-        }
-        if (interface->showRibbon) {
-          renderCartoon(backbone, molecule, node,
-                        -1.0f * Cartoon::ELIPSE_RATIO);
-        }
-        if (interface->showSimpleCartoon) {
-          renderSimpleCartoon(backbone, molecule, node, 1.0f);
-        }
-        if (interface->showCartoon) {
-          renderCartoon(backbone, molecule, node, 1.0f);
-        }
-        if (interface->showRope) {
-          renderRope(backbone, molecule, node, 1.0f);
-        }
+        const size_t residues = group.second.size();
+        if (interface->showTrace)
+          counts.trace += residues;
+        if (interface->showTube)
+          counts.tube += residues;
+        if (interface->showRibbon)
+          counts.ribbon += residues;
+        if (interface->showSimpleCartoon)
+          counts.cartoon += residues;
+        if (interface->showCartoon)
+          counts.cartoon += residues;
+      }
+      layers.push_back({ interface, std::move(backbones) });
+    }
+  }
+  const CartoonDetail& detail =
+    kCartoonDetailLevels[chooseCartoonDetailLevel(counts)];
+
+  for (const auto& layer : layers) {
+    const auto* interface = layer.interface;
+    for (const auto& group : layer.backbones) {
+      const auto& backbone = group.second;
+      if (interface->showBackbone) {
+        renderBackbone(backbone, molecule, node, 0.1f);
+      }
+      if (interface->showTrace) {
+        renderTube(backbone, molecule, node, -0.15f, detail);
+      }
+      if (interface->showTube) {
+        renderTube(backbone, molecule, node, 0.15f, detail);
+      }
+      if (interface->showRibbon) {
+        renderCartoon(backbone, molecule, node, -1.0f * Cartoon::ELIPSE_RATIO,
+                      detail);
+      }
+      if (interface->showSimpleCartoon) {
+        renderSimpleCartoon(backbone, molecule, node, 1.0f, detail);
+      }
+      if (interface->showCartoon) {
+        renderCartoon(backbone, molecule, node, 1.0f, detail);
+      }
+      if (interface->showRope) {
+        renderRope(backbone, molecule, node, 1.0f);
       }
     }
   }
