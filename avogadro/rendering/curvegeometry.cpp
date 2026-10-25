@@ -130,6 +130,40 @@ struct CurveFrame
   unsigned int colorIndex;
 };
 
+// The frame for a step along `tangent`: the columns are the broad axis, the
+// tangent and the third axis. The broad axis turns as little as possible from
+// that of the previous frame (which carries its scale), by flipping it if it
+// is more than 90 degrees away and by bisecting if it is still more than 25
+// degrees away. Returns false if the angle is not a number.
+bool nextFrame(const Eigen::Affine3f* previous, const Vector3f& tangent,
+               Eigen::Matrix3f& m)
+{
+  static const float cosMaxTurn = std::cos(25.0f * DEG_TO_RAD_F);
+  m.col(1) = tangent.normalized();
+  m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
+  if (previous != nullptr) {
+    const Vector3f previousAxis = previous->linear().col(0);
+    float angle = previousAxis.dot(m.col(0));
+    if (std::isnan(angle))
+      return false;
+    // if angle > 90 flip it
+    if (angle <= 0.0f)
+      m.col(0) *= -1.0f;
+    // the previous axis has the length of its scale; this one is a unit vector
+    const float scale = previousAxis.norm();
+    float cosAngle =
+      std::clamp(previousAxis.dot(m.col(0)) / scale, -1.0f, 1.0f);
+    // if the angle is > 25 degrees get the bisector
+    int maxIter = 10;
+    while (cosAngle < cosMaxTurn && --maxIter > 0) {
+      m.col(0) = (m.col(0) + previousAxis).normalized();
+      cosAngle = std::clamp(previousAxis.dot(m.col(0)) / scale, -1.0f, 1.0f);
+    }
+  }
+  m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
+  return true;
+}
+
 } // namespace
 
 float CurveGeometry::residueCoordinate(size_t segment, float f, size_t count)
@@ -189,33 +223,11 @@ void CurveGeometry::tessellate(size_t lineIndex,
       continue;
     }
     Eigen::Matrix3f m;
-    m.col(1) = tangent.normalized();
-    m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
-    if (!frames.empty()) {
-      const auto& previousAngle = frames.back().transform.linear().col(0);
-      float angle = previousAngle.dot(m.col(0));
-      if (std::isnan(angle)) {
-        nanDetected = true;
-        break;
-      }
-      // if angle > 90 flip it
-      if (angle <= 0.0f)
-        m.col(0) *= -1.0f;
-      angle = previousAngle.dot(m.col(0));
-      float denom = m.col(0).norm() * previousAngle.norm();
-      float cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-      float degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
-      // if angle is > 25 degrees get the bisector
-      int maxIter = 10;
-      while (degrees > 25.0f && --maxIter > 0) {
-        m.col(0) = (m.col(0) + previousAngle).normalized();
-        angle = previousAngle.dot(m.col(0));
-        denom = m.col(0).norm() * previousAngle.norm();
-        cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-        degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
-      }
+    if (!nextFrame(frames.empty() ? nullptr : &frames.back().transform, tangent,
+                   m)) {
+      nanDetected = true;
+      break;
     }
-    m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
     const SamplePosition s = samplePosition(q, lineResolution, qttyPoints);
     Eigen::Affine3f affine;
     affine.translation() = p;
