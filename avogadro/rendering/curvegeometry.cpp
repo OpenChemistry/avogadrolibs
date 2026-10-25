@@ -48,7 +48,7 @@ CurveGeometry::~CurveGeometry()
 
 size_t CurveGeometry::circleResolution(bool flat) const
 {
-  return flat ? 1u : 12u;
+  return flat ? 1u : (m_sides > 0 ? std::max<size_t>(m_sides, 3) : 12u);
 }
 
 void CurveGeometry::appendRingPoints(std::vector<ColorNormalVertex>& result,
@@ -94,6 +94,37 @@ bool CurveGeometry::isFlatLine(size_t lineIndex) const
   return lineIndex < m_lines.size() && m_lines[lineIndex]->flat && m_canBeFlat;
 }
 
+namespace {
+
+// Uniform-spline curves stop this many segments before the natural end of
+// the spline (the midpoint of the last chord), which keeps the C-terminal end
+// where the windowed spline used to stop. Set to 0 to draw every segment.
+constexpr size_t kEndSegmentsTrimmed = 1;
+
+// One position along the curve, with what it needs to be drawn.
+struct CurveSample
+{
+  Vector3f pos;
+  size_t scaleIndex; // control point passed to computeScale()
+  float scaleT;      // position within that control point's stretch, [0, 1]
+  size_t colorIndex; // control point whose colour the strip ending here uses
+};
+
+} // namespace
+
+size_t CurveGeometry::segmentsFor(bool flat) const
+{
+  const size_t base = m_segmentsPerResidue > 0 ? m_segmentsPerResidue : 15u;
+  // flat lines have always been sampled 4/3 as finely
+  return flat ? (base * 4 + 1) / 3 : base;
+}
+
+Vector3f CurveGeometry::computeSegmentPoint(size_t, float,
+                                            const std::vector<Point>&) const
+{
+  return Vector3f::Zero();
+}
+
 void CurveGeometry::tessellate(size_t lineIndex,
                                std::vector<ColorNormalVertex>& vertices,
                                std::vector<unsigned int>& indices) const
@@ -103,98 +134,134 @@ void CurveGeometry::tessellate(size_t lineIndex,
   if (lineIndex >= m_lines.size())
     return;
 
-  // compute the middle points
   const Line* line = m_lines[lineIndex];
-  const size_t lineResolution = line->flat ? 20u : 15u;
+  const size_t lineResolution = segmentsFor(line->flat);
   const size_t qttyPoints = line->points.size();
+  const bool uniform = hasUniformSegments();
 
+  // Sample q of the curve. Sample 0 only seeds the first tangent; every later
+  // sample gets a frame, and the strip between frames i - 1 and i takes the
+  // colour of frame i.
+  //
+  // Uniform splines: segment k (control points k .. k + 2) is owned by
+  // control point k + 1, which is nearest to the whole segment, so a sample
+  // at (k, f) uses the type and width of k + 1, and the strip arriving at it
+  // the colour of k + 1 (of k at the first sample of a segment, the end of
+  // the previous one). The last segment is dropped, see kEndSegmentsTrimmed.
+  //
+  // Otherwise (Bezier): the original mapping, residue i for t in
+  // [i, i + 1) / n and colours starting at control point 3.
+  size_t totalSamples = 0;
+  size_t top = 0;
+  if (uniform) {
+    if (qttyPoints >= 3 + kEndSegmentsTrimmed)
+      totalSamples =
+        (qttyPoints - 2 - kEndSegmentsTrimmed) * lineResolution + 1;
+  } else {
+    // B-spline valid parameter range requires a margin of ~n/6 at the end;
+    // for long chains (n >= 24), 4 points suffice
+    const size_t margin = std::min<size_t>(4, (qttyPoints + 5) / 6);
+    top = qttyPoints <= margin + 2 ? 0 : qttyPoints - margin;
+    totalSamples = top > SKIPPED ? (top - SKIPPED) * lineResolution : 0;
+  }
+  const size_t lastControl = qttyPoints > 0 ? qttyPoints - 1 : 0;
+  const size_t firstColor = qttyPoints > 3 ? 3u : 0u;
   const size_t qttySegments = lineResolution * qttyPoints;
-  Vector3f previous;
-  std::vector<Eigen::Affine3f> points;
-  points.reserve(qttySegments);
-  // B-spline valid parameter range requires a margin of ~n/6 at the end;
-  // for long chains (n >= 24), 4 points suffice
-  size_t margin = std::min<size_t>(4, (qttyPoints + 5) / 6);
-  size_t top = qttyPoints <= margin + 2 ? 0 : qttyPoints - margin;
-  bool nanDetected = false;
-  for (size_t i = SKIPPED; i < top && !nanDetected; ++i) {
-    for (size_t j = 0; j < lineResolution; ++j) {
-      float t = (i * lineResolution + j) / float(qttySegments);
-      auto p = computeCurvePoint(t, line->points);
-      if (i > SKIPPED) {
-        Vector3f tangent = p - previous;
-        if (tangent.squaredNorm() < 1e-10f) {
-          previous = p;
-          continue;
-        }
-        Eigen::Matrix3f m;
-        m.col(1) = tangent.normalized();
-        m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
-        if (i > SKIPPED + 1) {
-          const auto& previousAngle = points.back().linear().col(0);
-          float angle = previousAngle.dot(m.col(0));
-          if (std::isnan(angle)) {
-            nanDetected = true;
-            break;
-          }
-          // if angle > 90 flip it
-          if (angle <= 0.0f)
-            m.col(0) *= -1.0f;
-          angle = previousAngle.dot(m.col(0));
-          float denom = m.col(0).norm() * previousAngle.norm();
-          float cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-          float degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
-          // if angle is > 25 degrees get the bisector
-          int maxIter = 10;
-          while (degrees > 25.0f && --maxIter > 0) {
-            m.col(0) = (m.col(0) + previousAngle).normalized();
-            angle = previousAngle.dot(m.col(0));
-            denom = m.col(0).norm() * previousAngle.norm();
-            cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-            degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
-          }
-        }
-        m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
-        Eigen::Affine3f affine;
-        affine.translation() = p;
-        affine.linear() = m;
-        float r = !m_canBeFlat || !line->flat
-                    ? computeScale(i, j / static_cast<float>(lineResolution),
-                                   line->radius)
-                    : 0.01f;
-        affine.scale(r);
-        points.push_back(affine);
-      }
-      previous = p;
+  auto sampleAt = [&](size_t q) {
+    CurveSample s;
+    if (uniform) {
+      const size_t k = q / lineResolution;
+      const size_t j = q % lineResolution;
+      const float f =
+        static_cast<float>(j) / static_cast<float>(lineResolution);
+      s.pos = computeSegmentPoint(k, f, line->points);
+      s.scaleIndex = k + 1;
+      s.scaleT = f;
+      s.colorIndex = std::min(j > 0 ? k + 1 : k, lastControl);
+    } else {
+      const size_t i = SKIPPED + q / lineResolution;
+      const size_t j = q % lineResolution;
+      const float t = (i * lineResolution + j) / float(qttySegments);
+      s.pos = computeCurvePoint(t, line->points);
+      s.scaleIndex = i;
+      s.scaleT = j / static_cast<float>(lineResolution);
+      s.colorIndex =
+        q > 0 ? std::min(firstColor + (q - 1) / lineResolution, lastControl)
+              : firstColor;
     }
+    return s;
+  };
+
+  Vector3f previous = Vector3f::Zero();
+  std::vector<Eigen::Affine3f> points;
+  std::vector<unsigned int> pointColor;
+  points.reserve(totalSamples);
+  pointColor.reserve(totalSamples);
+  bool nanDetected = false;
+  for (size_t q = 0; q < totalSamples && !nanDetected; ++q) {
+    const CurveSample sample = sampleAt(q);
+    const Vector3f p = sample.pos;
+    if (q > 0) {
+      Vector3f tangent = p - previous;
+      if (tangent.squaredNorm() < 1e-10f) {
+        previous = p;
+        continue;
+      }
+      Eigen::Matrix3f m;
+      m.col(1) = tangent.normalized();
+      m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
+      if (!points.empty()) {
+        const auto& previousAngle = points.back().linear().col(0);
+        float angle = previousAngle.dot(m.col(0));
+        if (std::isnan(angle)) {
+          nanDetected = true;
+          break;
+        }
+        // if angle > 90 flip it
+        if (angle <= 0.0f)
+          m.col(0) *= -1.0f;
+        angle = previousAngle.dot(m.col(0));
+        float denom = m.col(0).norm() * previousAngle.norm();
+        float cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
+        float degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
+        // if angle is > 25 degrees get the bisector
+        int maxIter = 10;
+        while (degrees > 25.0f && --maxIter > 0) {
+          m.col(0) = (m.col(0) + previousAngle).normalized();
+          angle = previousAngle.dot(m.col(0));
+          denom = m.col(0).norm() * previousAngle.norm();
+          cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
+          degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
+        }
+      }
+      m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
+      Eigen::Affine3f affine;
+      affine.translation() = p;
+      affine.linear() = m;
+      float r = !m_canBeFlat || !line->flat
+                  ? computeScale(sample.scaleIndex, sample.scaleT, line->radius)
+                  : 0.01f;
+      affine.scale(r);
+      points.push_back(affine);
+      pointColor.push_back(static_cast<unsigned int>(sample.colorIndex));
+    }
+    previous = p;
   }
 
   if (points.empty())
     return;
 
-  // Map spline sample index to control point color
-  const size_t numControlPoints = line->points.size();
-  size_t colorIndex = numControlPoints > 3 ? 3u : 0u;
-  auto advanceColor = [&](size_t i) {
-    if (i != 0 && i % lineResolution == 0 &&
-        colorIndex + 1 < numControlPoints) {
-      ++colorIndex;
-    }
-  };
-
   if (line->flat && m_canBeFlat) {
     vertices.reserve(points.size());
 
     for (size_t i = 0; i < points.size(); ++i) {
-      advanceColor(i);
-
       Vector3f normal = points[i].linear().col(0);
       if (normal.squaredNorm() < 1e-10f) {
         normal = Vector3f::UnitX();
       } else {
         normal.normalize();
       }
-      vertices.emplace_back(line->points[colorIndex].color, normal,
+      vertices.emplace_back(line->points[pointColor[i]].color, normal,
                             points[i].translation());
     }
   } else {
@@ -221,8 +288,7 @@ void CurveGeometry::tessellate(size_t lineIndex,
     unsigned int previousRing = 0;
     Vector3ub previousColor(0, 0, 0);
     for (size_t i = 1; i < points.size(); ++i) {
-      advanceColor(i);
-      const Vector3ub color = line->points[colorIndex].color;
+      const Vector3ub color = line->points[pointColor[i]].color;
       // ring of points[i - 1] (the "b" ring of this segment)
       unsigned int bStart;
       if (i > 1 && color == previousColor)

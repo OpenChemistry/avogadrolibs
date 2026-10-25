@@ -315,6 +315,15 @@ map<size_t, AtomsPairList> Cartoons::getBackboneManually(
   return result;
 }
 
+// The colour of the residue itself (plus the selection highlight). The curve
+// geometries colour the stretch of curve nearest a control point with that
+// point's colour. color1 is the previous residue's colour, which would put
+// every colour and selection highlight one residue downstream.
+Vector3ub ownColor(const BackboneResidue& bone)
+{
+  return bone.selected ? bone.color2 + Vector3ub(155, 0, 0) : bone.color2;
+}
+
 void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
                     Rendering::GroupNode& node, float radius)
 {
@@ -379,11 +388,9 @@ void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
   bezier->identifier().type = Rendering::AtomType;
   geometry->addDrawable(bezier);
 
-  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.pos, bone.color1 + color, radius, bone.group,
+    bezier->addPoint(bone.pos, ownColor(bone), radius, bone.group,
                      bone.residueID);
-    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 
@@ -398,11 +405,9 @@ void renderSimpleCartoon(const AtomsPairList& backbone,
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
-  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    cartoon->CurveGeometry::addPoint(bone.pos, bone.color1 + color, radius,
+    cartoon->CurveGeometry::addPoint(bone.pos, ownColor(bone), radius,
                                      bone.group, bone.residueID);
-    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 
@@ -416,11 +421,9 @@ void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
   cartoon->identifier().molecule = &molecule;
   cartoon->identifier().type = Rendering::AtomType;
   geometry->addDrawable(cartoon);
-  Vector3ub color = Vector3ub::Zero();
   for (const auto& bone : backbone) {
-    cartoon->addPoint(bone.pos, bone.color1 + color, bone.group, bone.residueID,
+    cartoon->addPoint(bone.pos, ownColor(bone), bone.group, bone.residueID,
                       bone.secondaryStructure);
-    color = bone.selected ? Vector3ub(155, 0, 0) : Vector3ub::Zero();
   }
 }
 

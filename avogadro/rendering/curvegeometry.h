@@ -108,6 +108,24 @@ public:
    */
   bool isFlatLine(size_t lineIndex) const;
 
+  /**
+   * Tessellation detail. Both default to 0, which means "the built-in
+   * value": 15 segments per control point (20 for flat lines), and
+   * circleResolution() sides (12 for tubes, 20 for Cartoon, 2 for flat
+   * Cartoon ribbons, 1 for flat lines). Flat lines keep their 4/3 ratio of
+   * segments; sides do not apply to them.
+   */
+  void setSegmentsPerResidue(size_t segments)
+  {
+    m_segmentsPerResidue = segments;
+  }
+  void setSides(size_t sides) { m_sides = sides; }
+  size_t segmentsPerResidue() const { return m_segmentsPerResidue; }
+  size_t sides() const { return m_sides; }
+
+  /** Segments sampled per control point for a line of the given kind. */
+  size_t segmentsFor(bool flat) const;
+
   const static size_t SKIPPED;
 
 protected:
@@ -116,10 +134,27 @@ protected:
   ShaderInfo m_shaderInfo;
   bool m_dirty;
   bool m_canBeFlat;
+  size_t m_segmentsPerResidue = 0;
+  size_t m_sides = 0;
 
   virtual void update(int index);
   virtual Vector3f computeCurvePoint(
     float t, const std::vector<Point>& points) const = 0;
+  /**
+   * @return true if the curve is a global uniform spline with one knot
+   * interval per control point, evaluated with computeSegmentPoint(). The
+   * residue that "owns" segment k (the nearest control point over the whole
+   * segment) is k + 1, so the sample's colour, computeScale() index and
+   * secondary structure come from control point k + 1. Otherwise
+   * tessellate() walks computeCurvePoint(t) over [0, 1] as it always has.
+   */
+  virtual bool hasUniformSegments() const { return false; }
+  /**
+   * Point on segment @p segment (control points segment .. segment + 2) at
+   * local parameter @p f in [0, 1]. Only used if hasUniformSegments().
+   */
+  virtual Vector3f computeSegmentPoint(size_t segment, float f,
+                                       const std::vector<Point>& points) const;
   virtual size_t circleResolution(bool flat) const;
   /**
    * Append the vertices of one cross-section ring (circleResolution(flat)

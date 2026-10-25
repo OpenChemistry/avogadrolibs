@@ -32,8 +32,10 @@ namespace {
 
 using SS = Residue::SecondaryStructure;
 
-// Exposes a copy of the original tessellate() tube loop, which emitted the
-// ring at every segment end twice (once per neighbouring segment).
+// Exposes a plain reference loop for tessellate(): frames from the global
+// uniform spline are computed directly, and every segment emits both of its
+// own rings (the ring at each segment end twice, once per neighbouring
+// segment). tessellate() must produce the same triangles with shared rings.
 template <class G>
 class Reference : public G
 {
@@ -52,82 +54,68 @@ public:
       return;
     const auto* line = this->lines()[lineIndex];
     const size_t lineResolution = line->flat ? 20u : 15u;
-    const size_t qttyPoints = line->points.size();
-    const size_t qttySegments = lineResolution * qttyPoints;
-    Vector3f previous;
+    const size_t n = line->points.size();
+    // the last segment of the spline is not drawn
+    if (n < 4)
+      return;
+    const size_t segments = n - 3;
+    Vector3f previous = Vector3f::Zero();
     std::vector<Eigen::Affine3f> points;
-    size_t margin = std::min<size_t>(4, (qttyPoints + 5) / 6);
-    size_t top = qttyPoints <= margin + 2 ? 0 : qttyPoints - margin;
-    bool nanDetected = false;
-    const size_t SKIPPED = CurveGeometry::SKIPPED;
-    for (size_t i = SKIPPED; i < top && !nanDetected; ++i) {
-      for (size_t j = 0; j < lineResolution; ++j) {
-        float t = (i * lineResolution + j) / float(qttySegments);
-        auto p = this->computeCurvePoint(t, line->points);
-        if (i > SKIPPED) {
-          Vector3f tangent = p - previous;
-          if (tangent.squaredNorm() < 1e-10f) {
-            previous = p;
-            continue;
-          }
-          Eigen::Matrix3f m;
-          m.col(1) = tangent.normalized();
-          m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
-          if (i > SKIPPED + 1) {
-            const auto& previousAngle = points.back().linear().col(0);
-            float angle = previousAngle.dot(m.col(0));
-            if (std::isnan(angle)) {
-              nanDetected = true;
-              break;
-            }
-            if (angle <= 0.0f)
-              m.col(0) *= -1.0f;
-            angle = previousAngle.dot(m.col(0));
-            float denom = m.col(0).norm() * previousAngle.norm();
-            float cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-            float degrees = std::acos(cosAngle) * 180.0f / 3.14159265358979f;
-            int maxIter = 10;
-            while (degrees > 25.0f && --maxIter > 0) {
-              m.col(0) = (m.col(0) + previousAngle).normalized();
-              angle = previousAngle.dot(m.col(0));
-              denom = m.col(0).norm() * previousAngle.norm();
-              cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-              degrees = std::acos(cosAngle) * 180.0f / 3.14159265358979f;
-            }
-          }
-          m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
-          Eigen::Affine3f affine;
-          affine.translation() = p;
-          affine.linear() = m;
-          float r =
-            !this->m_canBeFlat || !line->flat
-              ? this->computeScale(i, j / static_cast<float>(lineResolution),
-                                   line->radius)
-              : 0.01f;
-          affine.scale(r);
-          points.push_back(affine);
+    std::vector<size_t> color;
+    for (size_t q = 0; q <= segments * lineResolution; ++q) {
+      const size_t k = q / lineResolution;
+      const size_t j = q % lineResolution;
+      const float f =
+        static_cast<float>(j) / static_cast<float>(lineResolution);
+      Vector3f p = this->computeSegmentPoint(k, f, line->points);
+      if (q > 0) {
+        Vector3f tangent = p - previous;
+        if (tangent.squaredNorm() < 1e-10f) {
+          previous = p;
+          continue;
         }
-        previous = p;
+        Eigen::Matrix3f m;
+        m.col(1) = tangent.normalized();
+        m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
+        if (!points.empty()) {
+          const auto& previousAngle = points.back().linear().col(0);
+          float angle = previousAngle.dot(m.col(0));
+          if (angle <= 0.0f)
+            m.col(0) *= -1.0f;
+          angle = previousAngle.dot(m.col(0));
+          float denom = m.col(0).norm() * previousAngle.norm();
+          float cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
+          float degrees = std::acos(cosAngle) * 180.0f / 3.14159265358979f;
+          int maxIter = 10;
+          while (degrees > 25.0f && --maxIter > 0) {
+            m.col(0) = (m.col(0) + previousAngle).normalized();
+            angle = previousAngle.dot(m.col(0));
+            denom = m.col(0).norm() * previousAngle.norm();
+            cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
+            degrees = std::acos(cosAngle) * 180.0f / 3.14159265358979f;
+          }
+        }
+        m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
+        Eigen::Affine3f affine;
+        affine.translation() = p;
+        affine.linear() = m;
+        // segment k is owned by control point k + 1
+        affine.scale(this->computeScale(k + 1, f, line->radius));
+        points.push_back(affine);
+        color.push_back(j > 0 ? k + 1 : k);
       }
+      previous = p;
     }
     if (points.empty())
       return;
-    const size_t numControlPoints = line->points.size();
-    size_t colorIndex = numControlPoints > 3 ? 3u : 0u;
-    auto advanceColor = [&](size_t i) {
-      if (i != 0 && i % lineResolution == 0 &&
-          colorIndex + 1 < numControlPoints)
-        ++colorIndex;
-    };
     ASSERT_FALSE(line->flat && this->m_canBeFlat);
     const size_t resolution = this->circleResolution(line->flat);
     std::vector<ColorNormalVertex> radials;
     for (size_t i = 1; i < points.size(); ++i) {
-      advanceColor(i);
       radials.clear();
       this->appendCirclePoints(radials, points[i], points[i - 1], line->flat);
       for (auto& radial : radials) {
-        radial.color = line->points[colorIndex].color;
+        radial.color = line->points[color[i]].color;
         vertices.push_back(radial);
       }
       const auto tubeStart =
