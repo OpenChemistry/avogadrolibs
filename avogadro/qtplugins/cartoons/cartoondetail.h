@@ -24,6 +24,22 @@ struct CartoonDetail
 {
   size_t segments; // per residue, for tubes (flat ribbons and lines use 4/3)
   size_t sides;    // of a cartoon tube; see tubeSides() for plain tubes
+
+  // Set this detail on a curve: @p tube is true for a plain tube (the trace,
+  // the tube and the rope) and false for the Cartoon cross-section. Flat
+  // curves ignore the sides.
+  void apply(Rendering::CurveGeometry& curve, bool tube) const;
+};
+
+// The curve styles of the Cartoons plugin that are drawn with a CurveGeometry.
+enum class CartoonStyle
+{
+  Trace,
+  Tube,
+  Ribbon,
+  SimpleCartoon,
+  Cartoon,
+  Rope
 };
 
 // Levels in order of decreasing detail; the first is the built-in detail of
@@ -45,14 +61,36 @@ constexpr std::array<CartoonDetail, 5> kCartoonDetailLevels = { {
 // The last level is used even if it does not fit.
 constexpr size_t kCartoonRingVertexBudget = 5000000;
 
-// Residues drawn in each curve style. Cartoon and simple cartoon are 20-sided
-// tubes, a tube is 12-sided, a ribbon is two vertices wide, a trace is a line.
+// Residues drawn in each kind of curve. Cartoon and simple cartoon are
+// 20-sided tubes, a tube (and the rope) is 12-sided, a ribbon is two vertices
+// wide, a trace is a line.
 struct CartoonResidueCounts
 {
   size_t cartoon = 0;
   size_t tube = 0;
   size_t ribbon = 0;
   size_t trace = 0;
+
+  // Count the @p residues of a curve drawn in @p style.
+  void add(CartoonStyle style, size_t residues)
+  {
+    switch (style) {
+      case CartoonStyle::Trace:
+        trace += residues;
+        break;
+      case CartoonStyle::Tube:
+      case CartoonStyle::Rope:
+        tube += residues;
+        break;
+      case CartoonStyle::Ribbon:
+        ribbon += residues;
+        break;
+      case CartoonStyle::SimpleCartoon:
+      case CartoonStyle::Cartoon:
+        cartoon += residues;
+        break;
+    }
+  }
 };
 
 // Sides of a plain tube at a detail level: the tube default at the first
@@ -63,6 +101,13 @@ constexpr size_t tubeSides(const CartoonDetail& detail)
     6, (Rendering::CurveGeometry::kDefaultTubeSides * detail.sides +
         Rendering::Cartoon::kDefaultSides / 2) /
          Rendering::Cartoon::kDefaultSides);
+}
+
+inline void CartoonDetail::apply(Rendering::CurveGeometry& curve,
+                                 bool tube) const
+{
+  curve.setSegmentsPerResidue(segments);
+  curve.setSides(tube ? tubeSides(*this) : sides);
 }
 
 // Segments of a flat line (ribbon, trace); flat lines are sampled more finely.

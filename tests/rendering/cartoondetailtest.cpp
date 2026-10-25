@@ -150,6 +150,45 @@ TEST(CartoonDetailTest, allStylesCountTowardsTheBudget)
   EXPECT_EQ(chooseCartoonDetailLevel(c, 0), 4u);
 }
 
+TEST(CartoonDetailTest, everyStyleIsCountedWhereItsGeometryIs)
+{
+  CartoonResidueCounts c;
+  c.add(CartoonStyle::Trace, 1);
+  c.add(CartoonStyle::Tube, 2);
+  c.add(CartoonStyle::Rope, 4); // a rope is a tube of the same sides
+  c.add(CartoonStyle::Ribbon, 8);
+  c.add(CartoonStyle::SimpleCartoon, 16);
+  c.add(CartoonStyle::Cartoon, 32);
+  EXPECT_EQ(c.trace, 1u);
+  EXPECT_EQ(c.tube, 6u);
+  EXPECT_EQ(c.ribbon, 8u);
+  EXPECT_EQ(c.cartoon, 48u);
+
+  // a rope alone fits at full detail where a cartoon of the same residues
+  // does not, and both together drop a level
+  CartoonResidueCounts rope, cartoon, both;
+  rope.add(CartoonStyle::Rope, 23220);
+  cartoon.add(CartoonStyle::Cartoon, 23220);
+  both.add(CartoonStyle::Rope, 23220);
+  both.add(CartoonStyle::Cartoon, 23220);
+  EXPECT_EQ(chooseCartoonDetailLevel(rope), 0u);
+  EXPECT_EQ(chooseCartoonDetailLevel(cartoon), 1u);
+  EXPECT_GT(chooseCartoonDetailLevel(both), chooseCartoonDetailLevel(cartoon));
+}
+
+TEST(CartoonDetailTest, applySetsTheDetailOnACurve)
+{
+  const CartoonDetail& level = kCartoonDetailLevels[2];
+  BSplineGeometry tube(false);
+  level.apply(tube, true);
+  EXPECT_EQ(tube.segmentsPerResidue(), level.segments);
+  EXPECT_EQ(tube.sides(), tubeSides(level));
+  Cartoon cartoon;
+  level.apply(cartoon, false);
+  EXPECT_EQ(cartoon.segmentsPerResidue(), level.segments);
+  EXPECT_EQ(cartoon.sides(), level.sides);
+}
+
 TEST(CartoonDetailTest, geometryCountsMatchTheAccounting)
 {
   // the plugin's ring vertex arithmetic must agree with what is tessellated:

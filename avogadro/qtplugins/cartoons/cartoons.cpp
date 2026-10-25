@@ -104,6 +104,31 @@ struct LayerCartoon : Core::LayerData
   bool showCartoon = true;
   bool showRope = false;
 
+  // Calls f(style) for every curve style that is shown, in drawing order.
+  template <class F>
+  void forEachCurveStyle(F&& f) const
+  {
+    if (showTrace)
+      f(CartoonStyle::Trace);
+    if (showTube)
+      f(CartoonStyle::Tube);
+    if (showRibbon)
+      f(CartoonStyle::Ribbon);
+    if (showSimpleCartoon)
+      f(CartoonStyle::SimpleCartoon);
+    if (showCartoon)
+      f(CartoonStyle::Cartoon);
+    if (showRope)
+      f(CartoonStyle::Rope);
+  }
+
+  bool anyShown() const
+  {
+    bool any = showBackbone;
+    forEachCurveStyle([&any](CartoonStyle) { any = true; });
+    return any;
+  }
+
   using JumpTable = void (Cartoons::*)(bool);
   JumpTable jumpTable[7];
 
@@ -326,21 +351,37 @@ Vector3ub ownColor(const BackboneResidue& bone)
   return bone.selected ? bone.color2 + Vector3ub(155, 0, 0) : bone.color2;
 }
 
+// A node in the scene holding one drawable of the molecule's atoms.
+template <class Drawable>
+Drawable* addDrawable(GeometryNode* geometry, const Molecule& molecule,
+                      Drawable* drawable)
+{
+  drawable->identifier().molecule = &molecule;
+  drawable->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(drawable);
+  return drawable;
+}
+
+// A new curve of the given kind in its own node of @p node, with the detail
+// of @p detail.
+template <class Curve, class... Args>
+Curve* addCurve(Rendering::GroupNode& node, const Molecule& molecule,
+                const CartoonDetail& detail, bool tube, Args... args)
+{
+  auto* geometry = new GeometryNode;
+  node.addChild(geometry);
+  auto* curve = addDrawable(geometry, molecule, new Curve(args...));
+  detail.apply(*curve, tube);
+  return curve;
+}
+
 void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
                     Rendering::GroupNode& node, float radius)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
-
-  auto* spheres = new SphereGeometry;
-  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
-  spheres->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(spheres);
-
-  auto* cylinders = new CylinderGeometry;
-  cylinders->identifier().molecule = &molecule;
-  cylinders->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(cylinders);
+  auto* spheres = addDrawable(geometry, molecule, new SphereGeometry);
+  auto* cylinders = addDrawable(geometry, molecule, new CylinderGeometry);
 
   for (auto it = backbone.begin(); it != backbone.end(); ++it) {
     const auto& bone = *it;
@@ -360,40 +401,16 @@ void renderBackbone(const AtomsPairList& backbone, const Molecule& molecule,
   }
 }
 
-void renderRope(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node, float radius)
+// A plain tube, line or rope: Curve is BSplineGeometry or BezierGeometry.
+template <class Curve>
+void renderPlainCurve(const AtomsPairList& backbone, const Molecule& molecule,
+                      Rendering::GroupNode& node, float radius,
+                      const CartoonDetail& detail)
 {
-  auto* geometry = new GeometryNode;
-  node.addChild(geometry);
-
-  auto* bezier = new BezierGeometry;
-  bezier->identifier().molecule = &molecule;
-  bezier->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(bezier);
-
+  auto* curve = addCurve<Curve>(node, molecule, detail, true);
   for (const auto& bone : backbone) {
-    bezier->addPoint(bone.pos, ownColor(bone), radius, bone.group,
-                     bone.residueID);
-  }
-}
-
-void renderTube(const AtomsPairList& backbone, const Molecule& molecule,
-                Rendering::GroupNode& node, float radius,
-                const CartoonDetail& detail)
-{
-  auto* geometry = new GeometryNode;
-  node.addChild(geometry);
-
-  auto* bezier = new BSplineGeometry;
-  bezier->setSegmentsPerResidue(detail.segments);
-  bezier->setSides(tubeSides(detail));
-  bezier->identifier().molecule = &molecule;
-  bezier->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(bezier);
-
-  for (const auto& bone : backbone) {
-    bezier->addPoint(bone.pos, ownColor(bone), radius, bone.group,
-                     bone.residueID);
+    curve->addPoint(bone.pos, ownColor(bone), radius, bone.group,
+                    bone.residueID);
   }
 }
 
@@ -401,15 +418,7 @@ void renderSimpleCartoon(const AtomsPairList& backbone,
                          const Molecule& molecule, Rendering::GroupNode& node,
                          float radius, const CartoonDetail& detail)
 {
-  auto* geometry = new GeometryNode;
-  node.addChild(geometry);
-
-  auto* cartoon = new Cartoon;
-  cartoon->setSegmentsPerResidue(detail.segments);
-  cartoon->setSides(detail.sides);
-  cartoon->identifier().molecule = &molecule;
-  cartoon->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(cartoon);
+  auto* cartoon = addCurve<Cartoon>(node, molecule, detail, false);
   for (const auto& bone : backbone) {
     cartoon->CurveGeometry::addPoint(bone.pos, ownColor(bone), radius,
                                      bone.group, bone.residueID);
@@ -420,18 +429,41 @@ void renderCartoon(const AtomsPairList& backbone, const Molecule& molecule,
                    Rendering::GroupNode& node, float radius,
                    const CartoonDetail& detail)
 {
-  auto* geometry = new GeometryNode;
-  node.addChild(geometry);
-
-  auto* cartoon = new Cartoon(radius * 0.2f, radius * 1.5f);
-  cartoon->setSegmentsPerResidue(detail.segments);
-  cartoon->setSides(detail.sides); // flat ribbons stay two wide
-  cartoon->identifier().molecule = &molecule;
-  cartoon->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(cartoon);
+  // flat ribbons (negative radius) stay two wide
+  auto* cartoon = addCurve<Cartoon>(node, molecule, detail, false,
+                                    radius * 0.2f, radius * 1.5f);
   for (const auto& bone : backbone) {
     cartoon->addPoint(bone.pos, ownColor(bone), bone.group, bone.residueID,
                       bone.secondaryStructure);
+  }
+}
+
+void renderCurve(CartoonStyle style, const AtomsPairList& backbone,
+                 const Molecule& molecule, Rendering::GroupNode& node,
+                 const CartoonDetail& detail)
+{
+  switch (style) {
+    case CartoonStyle::Trace:
+      renderPlainCurve<BSplineGeometry>(backbone, molecule, node, -0.15f,
+                                        detail);
+      break;
+    case CartoonStyle::Tube:
+      renderPlainCurve<BSplineGeometry>(backbone, molecule, node, 0.15f,
+                                        detail);
+      break;
+    case CartoonStyle::Ribbon:
+      renderCartoon(backbone, molecule, node, -1.0f * Cartoon::ELIPSE_RATIO,
+                    detail);
+      break;
+    case CartoonStyle::SimpleCartoon:
+      renderSimpleCartoon(backbone, molecule, node, 1.0f, detail);
+      break;
+    case CartoonStyle::Cartoon:
+      renderCartoon(backbone, molecule, node, 1.0f, detail);
+      break;
+    case CartoonStyle::Rope:
+      renderPlainCurve<BezierGeometry>(backbone, molecule, node, 1.0f, detail);
+      break;
   }
 }
 
@@ -451,10 +483,7 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
   CartoonResidueCounts counts;
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     auto* interface = m_layerManager.getSetting<LayerCartoon>(layer);
-    if (interface->showBackbone || interface->showTrace ||
-        interface->showTube || interface->showRibbon ||
-        interface->showSimpleCartoon || interface->showCartoon ||
-        interface->showRope) {
+    if (interface->anyShown()) {
       map<size_t, AtomsPairList> backbones;
       if (!molecule.residues().empty()) {
         backbones = getBackboneByResidues(molecule, layer);
@@ -463,17 +492,8 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
         continue; // maybe something in a different layer
       }
       for (const auto& group : backbones) {
-        const size_t residues = group.second.size();
-        if (interface->showTrace)
-          counts.trace += residues;
-        if (interface->showTube)
-          counts.tube += residues;
-        if (interface->showRibbon)
-          counts.ribbon += residues;
-        if (interface->showSimpleCartoon)
-          counts.cartoon += residues;
-        if (interface->showCartoon)
-          counts.cartoon += residues;
+        interface->forEachCurveStyle(
+          [&](CartoonStyle style) { counts.add(style, group.second.size()); });
       }
       layers.push_back({ interface, std::move(backbones) });
     }
@@ -488,25 +508,9 @@ void Cartoons::process(const Molecule& molecule, Rendering::GroupNode& node)
       if (interface->showBackbone) {
         renderBackbone(backbone, molecule, node, 0.1f);
       }
-      if (interface->showTrace) {
-        renderTube(backbone, molecule, node, -0.15f, detail);
-      }
-      if (interface->showTube) {
-        renderTube(backbone, molecule, node, 0.15f, detail);
-      }
-      if (interface->showRibbon) {
-        renderCartoon(backbone, molecule, node, -1.0f * Cartoon::ELIPSE_RATIO,
-                      detail);
-      }
-      if (interface->showSimpleCartoon) {
-        renderSimpleCartoon(backbone, molecule, node, 1.0f, detail);
-      }
-      if (interface->showCartoon) {
-        renderCartoon(backbone, molecule, node, 1.0f, detail);
-      }
-      if (interface->showRope) {
-        renderRope(backbone, molecule, node, 1.0f);
-      }
+      interface->forEachCurveStyle([&](CartoonStyle style) {
+        renderCurve(style, backbone, molecule, node, detail);
+      });
     }
   }
 }
