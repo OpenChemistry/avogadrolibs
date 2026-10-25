@@ -90,7 +90,7 @@ public:
    * Compute the triangle mesh (or, for flat lines, the centre-line polyline)
    * for one line, without touching OpenGL. This is exactly the data uploaded
    * to the GPU by render(), and honours the circleResolution(),
-   * appendRingPoints() and computeScale() hooks of subclasses.
+   * fillRingTemplate() and computeScale() hooks of subclasses.
    *
    * @param lineIndex Index into lines().
    * @param vertices Output vertices (cleared first). Empty if the line is too

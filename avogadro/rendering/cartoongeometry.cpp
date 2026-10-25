@@ -15,6 +15,10 @@ using std::vector;
 
 const float Cartoon::ELIPSE_RATIO = 0.75f;
 
+// A run of equal secondary structure counts up its residues only once more than
+// this many are in; the first three each restart at 0.
+constexpr size_t kMinSizeToExtendRun = 2;
+
 Cartoon::Cartoon()
   : BSplineGeometry(false), m_minRadius(-1.0f), m_maxRadius(-1.0f)
 {
@@ -119,8 +123,7 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
   CartoonType ct = secondaryToCartoonType(sec);
   size_t idCartoon = 0;
   if (m_type.size() > 0) {
-    // (a run only continues once there are more than two residues)
-    idCartoon = ct == m_type.back().first && m_type.size() > 2
+    idCartoon = ct == m_type.back().first && m_type.size() > kMinSizeToExtendRun
                   ? m_type.back().second + 1
                   : 0;
     if (Tail == m_type.back().first && ct == Body) {

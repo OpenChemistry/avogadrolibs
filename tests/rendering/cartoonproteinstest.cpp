@@ -12,7 +12,6 @@
 #include <gtest/gtest.h>
 
 #include "curvetesthelpers.h"
-#include "legacyspline.h"
 
 #include <cartoondetail.h>
 
@@ -112,8 +111,8 @@ TEST(CartoonProteinsTest, curveIsContinuousAndAligned)
   LOAD_PROTEINS_OR_SKIP(proteins)
   for (const auto& [name, bb] : proteins) {
     SCOPED_TRACE(name);
-    float worstRatio = 0.0f, worstOldRatio = 0.0f, worstExcess = 0.0f;
-    size_t oldReversals = 0, rows = 0, exact = 0;
+    float worstRatio = 0.0f, worstExcess = 0.0f;
+    size_t rows = 0, exact = 0;
     for (const auto& chain : bb.chains) {
       const size_t n = chain.pos.size();
       if (n < 2)
@@ -138,22 +137,10 @@ TEST(CartoonProteinsTest, curveIsContinuousAndAligned)
         exact += nearest == r.owner[i];
         ++rows;
       }
-
-      std::vector<Vector3f> legacy;
-      for (const auto& s : LegacySpline::samples(chain.pos))
-        legacy.push_back(s.pos);
-      if (legacy.size() > 30) {
-        const StepStats old = steps(legacy);
-        worstOldRatio =
-          std::max(worstOldRatio, old.max / (longestChord(chain.pos) / 15.0f));
-        oldReversals += old.reversals;
-      }
     }
-    std::printf("%-5s largest step / (longest chord / 15): new %.2f, old %.2f "
-                "(%zu reversals); owner is nearest CA for %zu of %zu rings, "
-                "worst excess %.3f A\n",
-                name.c_str(), worstRatio, worstOldRatio, oldReversals, exact,
-                rows, worstExcess);
+    std::printf("%-5s largest step / (longest chord / 15): %.2f; owner is "
+                "nearest CA for %zu of %zu rings, worst excess %.3f A\n",
+                name.c_str(), worstRatio, exact, rows, worstExcess);
     EXPECT_LT(worstExcess, 1.0f);
   }
 }

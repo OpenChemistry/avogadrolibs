@@ -21,7 +21,6 @@ namespace {
 #include <vector>
 
 using std::cout;
-using std::endl;
 
 namespace Avogadro::Rendering {
 

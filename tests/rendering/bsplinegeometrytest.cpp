@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 
 #include "curvetesthelpers.h"
-#include "legacyspline.h"
+#include "coxdeboor.h"
 
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/bsplinegeometry.h>
@@ -95,7 +95,7 @@ Vector3f referenceSegmentPoint(size_t k, float f,
   Vector3f q = Vector3f::Zero();
   const float x = static_cast<float>(k) + 2.0f + f;
   for (size_t i = 0; i < padded.size(); ++i)
-    q += padded[i] * LegacySpline::basis(static_cast<float>(i), 3.0f, x, 1.0f);
+    q += padded[i] * coxDeBoor(static_cast<float>(i), 3.0f, x, 1.0f);
   return q;
 }
 
@@ -175,19 +175,7 @@ TEST(BSplineGeometryTest, helixIsContinuous)
   fill(g, pts, 0.1f);
   const Rings r = rings(g);
   ASSERT_GT(r.centre.size(), 500u);
-  const StepStats now = steps(r.centre);
   checkChain(pts, r);
-
-  std::vector<Vector3f> legacy;
-  for (const auto& s : LegacySpline::samples(pts))
-    legacy.push_back(s.pos);
-  const StepStats old = steps(legacy);
-  std::printf("helix step max/median: old %.3f/%.3f = %.2f (%zu reversals), "
-              "new %.3f/%.3f = %.2f (%zu reversals)\n",
-              old.max, old.median, old.max / old.median, old.reversals, now.max,
-              now.median, now.max / now.median, now.reversals);
-  // the test is sensitive to the old jumps
-  EXPECT_GT(old.max, 1.5f * old.median);
 }
 
 TEST(BSplineGeometryTest, colourAndScaleBelongToTheNearestControlPoint)
@@ -221,22 +209,6 @@ TEST(BSplineGeometryTest, colourAndScaleBelongToTheNearestControlPoint)
   EXPECT_LT(worst, 0.25f);
   EXPECT_EQ(scaleMismatch, 0u);
   EXPECT_GT(exact, r.centre.size() * 9 / 10);
-
-  // the old code coloured by a control point about one residue behind
-  float oldWorst = 0.0f;
-  size_t oldExact = 0;
-  const auto legacy = LegacySpline::samples(pts);
-  for (const auto& s : legacy) {
-    size_t nearest;
-    // the old colour is that of the plugin's "previous" convention, so the
-    // stretch is the residue of the *geometry* when colour index - 1 is
-    // nearest; compare against the colour index itself
-    oldWorst = std::max(oldWorst, excess(s.pos, s.colorIndex, pts, &nearest));
-    oldExact += nearest == s.colorIndex;
-  }
-  std::printf("old: %zu of %zu samples have their colour's control point as "
-              "nearest, worst excess distance %.3f A\n",
-              oldExact, legacy.size(), oldWorst);
 }
 
 TEST(BSplineGeometryTest, honoursSegmentAndSideCounts)

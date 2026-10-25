@@ -14,8 +14,7 @@ namespace Rendering {
 class AVOGADRORENDERING_EXPORT BSplineGeometry : public CurveGeometry
 {
 public:
-  BSplineGeometry();
-  BSplineGeometry(bool flat);
+  using CurveGeometry::CurveGeometry;
 
 protected:
   /**

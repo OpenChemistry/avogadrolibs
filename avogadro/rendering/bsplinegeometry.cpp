@@ -9,9 +9,6 @@
 
 namespace Avogadro::Rendering {
 
-BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
-BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
-
 Vector3f BSplineGeometry::computeSegmentPoint(
   size_t segment, float f, const std::vector<Point>& points) const
 {
@@ -25,15 +22,13 @@ Vector3f BSplineGeometry::computeSegmentPoint(
   if (size == 0)
     return Vector3f::Zero();
   const size_t last = size - 1;
-  const float weights[3] = { (1.0f - f) * (1.0f - f) * 0.5f,
-                             (-2.0f * f * f + 2.0f * f + 1.0f) * 0.5f,
-                             f * f * 0.5f };
-  const size_t index[3] = { segment > 0 ? std::min(segment - 1, last) : 0,
-                            std::min(segment, last),
-                            std::min(segment + 1, last) };
+  const float w0 = (1.0f - f) * (1.0f - f) * 0.5f;
+  const float w1 = (-2.0f * f * f + 2.0f * f + 1.0f) * 0.5f;
+  const float w2 = f * f * 0.5f;
   Vector3f q = Vector3f::Zero();
-  for (size_t n = 0; n < 3; ++n)
-    q += points[index[n]].pos * weights[n];
+  q += points[segment > 0 ? std::min(segment - 1, last) : 0].pos * w0;
+  q += points[std::min(segment, last)].pos * w1;
+  q += points[std::min(segment + 1, last)].pos * w2;
   return q;
 }
 

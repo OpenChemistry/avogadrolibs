@@ -34,7 +34,6 @@ public:
                 size_t id, Core::Residue::SecondaryStructure sec);
 
 protected:
-  // create an ellipsis and adapt it to the affine A
   size_t circleResolution(bool flat) const override;
   void fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const override;
 
