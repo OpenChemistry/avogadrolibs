@@ -33,7 +33,7 @@ Camera& Camera::operator=(const Camera& o)
     m_height = o.m_height;
     m_projectionType = o.m_projectionType;
     m_orthographicScale = o.m_orthographicScale;
-    m_data = std::move(std::unique_ptr<EigenData>(new EigenData(*o.m_data)));
+    m_data = std::unique_ptr<EigenData>(new EigenData(*o.m_data));
   }
 
   return *this;

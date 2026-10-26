@@ -78,7 +78,8 @@ bool hallNumberFromOptions(const QVariantMap& options,
   const bool hasSpaceGroup = options.contains(QStringLiteral("spaceGroup"));
 
   if (hasHallNumber && hasSpaceGroup) {
-    error = QStringLiteral("Give either hallNumber or spaceGroup, not both.");
+    error = Avogadro::QtPlugins::SpaceGroup::tr(
+      "Give either hallNumber or spaceGroup, not both.");
     return false;
   }
 
@@ -92,7 +93,8 @@ bool hallNumberFromOptions(const QVariantMap& options,
     double number = isNumber ? value.toDouble() : 0.0;
     if (!isNumber || number != std::floor(number) || number < 1.0 ||
         number > Core::SpaceGroups::lastHallNumber) {
-      error = QStringLiteral("hallNumber must be an integer from 1 to %1.")
+      error = Avogadro::QtPlugins::SpaceGroup::tr(
+                "hallNumber must be an integer from 1 to %1.")
                 .arg(Core::SpaceGroups::lastHallNumber);
       return false;
     }
@@ -100,17 +102,18 @@ bool hallNumberFromOptions(const QVariantMap& options,
   } else if (hasSpaceGroup) {
     const QVariant value = options.value(QStringLiteral("spaceGroup"));
     if (value.typeId() != QMetaType::QString) {
-      error =
-        QStringLiteral("spaceGroup must be a space group symbol (a string).");
+      error = Avogadro::QtPlugins::SpaceGroup::tr(
+        "spaceGroup must be a space group symbol (a string).");
       return false;
     }
     const QString symbol = value.toString();
     hallNumber = Core::SpaceGroups::hallNumber(symbol.toStdString());
     if (hallNumber == 0) {
-      error = QStringLiteral("spaceGroup \"%1\" does not name a single space "
-                             "group setting; use hallNumber (1 to %2) or a "
-                             "symbol that includes the setting, e.g. \"F d "
-                             "-3 m :2\".")
+      error = Avogadro::QtPlugins::SpaceGroup::tr(
+                "spaceGroup \"%1\" does not name a single space "
+                "group setting; use hallNumber (1 to %2) or a "
+                "symbol that includes the setting, e.g. \"F d "
+                "-3 m :2\".")
                 .arg(symbol)
                 .arg(Core::SpaceGroups::lastHallNumber);
       return false;
@@ -128,8 +131,8 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
-    m_fillTranslationalCellAction(new QAction(this)),
     m_fillUnitCellAction(new QAction(this)),
+    m_fillTranslationalCellAction(new QAction(this)),
     m_reduceToAsymmetricUnitAction(new QAction(this)),
     m_setToleranceAction(new QAction(this))
 {
@@ -610,7 +613,7 @@ bool SpaceGroup::performFill(bool allCopies, FillSource source,
 
   if (!m_molecule->unitCell()) {
     if (errorMessage)
-      *errorMessage = QStringLiteral("The molecule has no unit cell.");
+      *errorMessage = tr("The molecule has no unit cell.");
     return false;
   }
 
@@ -630,11 +633,10 @@ bool SpaceGroup::performFill(bool allCopies, FillSource source,
       // happen.
       if (source == FillSource::Command) {
         if (errorMessage)
-          *errorMessage =
-            QStringLiteral("The space group of the molecule is not known: "
-                           "give the hallNumber (1 to %1) or spaceGroup "
-                           "parameter.")
-              .arg(Core::SpaceGroups::lastHallNumber);
+          *errorMessage = tr("The space group of the molecule is not known: "
+                             "give the hallNumber (1 to %1) or spaceGroup "
+                             "parameter.")
+                            .arg(Core::SpaceGroups::lastHallNumber);
       } else {
         qDebug() << "SpaceGroup: not filling the unit cell, the space group "
                     "is unknown and dialogs are skipped.";
@@ -756,61 +758,49 @@ bool SpaceGroup::checkPrimitiveCell(unsigned short hallNumber, bool mayPrompt,
   // a centered cell. This can cause unexpected atom duplication.
   std::string hallSymbol = Core::SpaceGroups::hallSymbol(hallNumber);
   if (!hallSymbol.empty()) {
-    char centering = hallSymbol[0];
-    // F, I, A, B, C are centered lattice types
-    if (centering == 'F' || centering == 'I' || centering == 'A' ||
-        centering == 'B' || centering == 'C') {
-      // Check if cell angles deviate significantly from 90 degrees
-      // which would suggest a primitive cell basis
-      Core::UnitCell* uc = m_molecule->unitCell();
-      if (uc) {
-        double alpha = uc->alpha() * 180.0 / M_PI;
-        double beta = uc->beta() * 180.0 / M_PI;
-        double gamma = uc->gamma() * 180.0 / M_PI;
-        double tolerance = 5.0; // degrees
+    // Centred lattices (F, I, A, B, C) expect a conventional cell. Whether
+    // the angles look wrong depends on the crystal system.
+    Core::UnitCell* uc = m_molecule->unitCell();
+    if (uc) {
+      const bool nonConventionalAngles =
+        Core::SpaceGroups::cellLooksPrimitive(hallNumber, *uc);
 
-        bool nonConventionalAngles = (std::abs(alpha - 90.0) > tolerance) ||
-                                     (std::abs(beta - 90.0) > tolerance) ||
-                                     (std::abs(gamma - 90.0) > tolerance);
-
-        if (nonConventionalAngles) {
-          if (!mayPrompt) {
-            // Nobody to ask. A command asked for this space group, so use it
-            // on the cell as it is (the answer "No" below). An automatic fill
-            // does nothing rather than add atoms that may be wrong.
-            const bool proceed = source == FillSource::Command;
-            qWarning() << "SpaceGroup: the cell looks primitive but space "
-                          "group"
-                       << hallSymbol.c_str() << "is centered;"
-                       << (proceed ? "filling without conventionalizing."
-                                   : "not filling automatically.");
-            return proceed;
-          }
-
-          QMessageBox::StandardButton reply;
-          reply = QMessageBox::warning(
-            nullptr, tr("Primitive Cell Detected"),
-            tr(
-              "The current unit cell appears to be a primitive cell "
-              "(non-90° angles), but the space group %1 expects a "
-              "centered conventional cell.\n\n"
-              "Filling the unit cell may create unexpected duplicate atoms.\n\n"
-              "Would you like to create a conventional cell first?")
-              .arg(hallSymbol.c_str()),
-            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-
-          if (reply == QMessageBox::Cancel)
-            return false;
-          if (reply == QMessageBox::Yes) {
-            // Conventionalize first, then fill
-            if (!m_molecule->undoMolecule()->conventionalizeCell(m_spgTol)) {
-              QMessageBox::warning(nullptr, tr("Error"),
-                                   tr("Failed to conventionalize the cell."));
-              return false;
-            }
-          }
-          // If No, continue with fill anyway (user's choice)
+      if (nonConventionalAngles) {
+        if (!mayPrompt) {
+          // Nobody to ask. A command asked for this space group, so use it
+          // on the cell as it is (the answer "No" below). An automatic fill
+          // does nothing rather than add atoms that may be wrong.
+          const bool proceed = source == FillSource::Command;
+          qWarning() << "SpaceGroup: the cell looks primitive but space "
+                        "group"
+                     << hallSymbol.c_str() << "is centered;"
+                     << (proceed ? "filling without conventionalizing."
+                                 : "not filling automatically.");
+          return proceed;
         }
+
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::warning(
+          nullptr, tr("Primitive Cell Detected"),
+          tr("The current unit cell appears to be a primitive cell "
+             "(non-90° angles), but the space group %1 expects a "
+             "centered conventional cell.\n\n"
+             "Filling the unit cell may create unexpected duplicate atoms.\n\n"
+             "Would you like to create a conventional cell first?")
+            .arg(hallSymbol.c_str()),
+          QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+        if (reply == QMessageBox::Cancel)
+          return false;
+        if (reply == QMessageBox::Yes) {
+          // Conventionalize first, then fill
+          if (!m_molecule->undoMolecule()->conventionalizeCell(m_spgTol)) {
+            QMessageBox::warning(nullptr, tr("Error"),
+                                 tr("Failed to conventionalize the cell."));
+            return false;
+          }
+        }
+        // If No, continue with fill anyway (user's choice)
       }
     }
   }

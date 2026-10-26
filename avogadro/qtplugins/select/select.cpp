@@ -623,12 +623,10 @@ void Select::registerCommands()
   emit registerCommand("createLayerFromSelection",
                        tr("Separate the selected atoms into a new layer."));
 
-  // TODO: tr() after 2.1 (string freeze)
   emit registerCommand(
-    "selectAtoms",
-    QStringLiteral("Select atoms by index. Options: \"indices\" (list of "
-                   "atom indices) and optional \"mode\": \"replace\" "
-                   "(default), \"add\" or \"remove\"."));
+    "selectAtoms", tr("Select atoms by index. Options: \"indices\" (list of "
+                      "atom indices) and optional \"mode\": \"replace\" "
+                      "(default), \"add\" or \"remove\"."));
 }
 
 bool Select::handleCommand(const QString& command, const QVariantMap& options)
@@ -721,12 +719,11 @@ bool Select::handleCommand(const QString& command, const QVariantMap& options)
   }
 
   if (command == "selectAtoms") {
-    // TODO: tr() after 2.1 (string freeze)
     const QVariant indicesValue = options.value(QStringLiteral("indices"));
     if (indicesValue.typeId() != QMetaType::QVariantList) {
-      emit commandFailed(QStringLiteral(
-        "selectAtoms requires an \"indices\" option (a list of atom "
-        "indices)."));
+      emit commandFailed(
+        tr("selectAtoms requires an \"indices\" option (a list of atom "
+           "indices)."));
       return true;
     }
 
@@ -738,7 +735,7 @@ bool Select::handleCommand(const QString& command, const QVariantMap& options)
       if (mode != QLatin1String("replace") && mode != QLatin1String("add") &&
           mode != QLatin1String("remove")) {
         emit commandFailed(
-          QStringLiteral("mode must be \"replace\", \"add\" or \"remove\"."));
+          tr("mode must be \"replace\", \"add\" or \"remove\"."));
         return true;
       }
     }
@@ -762,20 +759,19 @@ bool Select::handleCommand(const QString& command, const QVariantMap& options)
       const double raw = numeric ? list[i].toDouble() : 0.0;
       if (!numeric || std::isnan(raw) || std::floor(raw) != raw) {
         emit commandFailed(
-          QStringLiteral("atom index #%1 in indices must be a whole number.")
-            .arg(i + 1));
+          tr("atom index #%1 in indices must be a whole number.").arg(i + 1));
         return true;
       }
       if (raw < 0.0) {
         emit commandFailed(
-          QStringLiteral("atom index #%1 in indices is negative.").arg(i + 1));
+          tr("atom index #%1 in indices is negative.").arg(i + 1));
         return true;
       }
       // Compare as doubles so a huge value cannot overflow Index.
       if (!(raw < static_cast<double>(m_molecule->atomCount()))) {
         emit commandFailed(
-          QStringLiteral("atom index %1 is out of range (the molecule has %2 "
-                         "atoms).")
+          tr("atom index %1 is out of range (the molecule has %2 "
+             "atoms).")
             .arg(raw, 0, 'f', 0)
             .arg(m_molecule->atomCount()));
         return true;

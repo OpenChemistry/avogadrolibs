@@ -267,6 +267,19 @@ unsigned char Elements::valenceElectrons(unsigned char atomicNumber)
     return valence_electrons[0];
 }
 
+bool Elements::isMetal(unsigned char atomicNumber)
+{
+  // The boundary cases are a judgement call: Be, Mg and Po count as metals;
+  //    B, Si, Ge, As, Sb, Te and At do not;
+  // Nh-Lv count as metals, but Ts and Og do not.
+  return (atomicNumber >= 3 && atomicNumber <= 4) ||   // Li, Be
+         (atomicNumber >= 11 && atomicNumber <= 13) || // Na, Mg, Al
+         (atomicNumber >= 19 && atomicNumber <= 31) || // K to Ga
+         (atomicNumber >= 37 && atomicNumber <= 50) || // Rb to Sn
+         (atomicNumber >= 55 && atomicNumber <= 84) || // Cs to Po
+         (atomicNumber >= 87 && atomicNumber <= 116);  // Fr to Lv
+}
+
 double Elements::isotopeMass(unsigned char atomicNumber, unsigned short isotope)
 {
   if (atomicNumber >= element_count)

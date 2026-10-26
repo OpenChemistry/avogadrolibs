@@ -13,6 +13,7 @@
 #include <avogadro/core/color3f.h>
 
 #include <QtCore/QFutureWatcher>
+#include <QtCore/QPointer>
 
 class QAction;
 class QDialog;
@@ -116,13 +117,20 @@ private:
    */
   void clearSurfaceData();
 
-  float resolution(float specified = 0.0);
+  /**
+   * The grid resolution to use. An explicit @p specified value, or the
+   * dialog's manual value, is returned unchanged. Otherwise the automatic
+   * resolution is chosen, limited by SurfaceVoxelBudget for a grid padded
+   * by @p padding Angstrom around the atoms.
+   */
+  float resolution(float specified = 0.0, double padding = 0.0);
   Core::Color3f chargeGradient(double value, double clamp,
                                tinycolormap::ColormapType colormap) const;
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
-  QtGui::TimedProgressDialog* m_progressDialog = nullptr;
+  // Parented to parent() when that is a widget, which may delete it first.
+  QPointer<QtGui::TimedProgressDialog> m_progressDialog;
 
   QtGui::Molecule* m_molecule = nullptr;
   Core::BasisSet* m_basis = nullptr;

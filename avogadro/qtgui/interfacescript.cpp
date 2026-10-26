@@ -796,7 +796,8 @@ QString InterfaceScript::generateZMatrixBlock(const QString& spec,
          "undetermined. The geometry is written correctly, but these "
          "coordinates cannot be varied, and a program that rebuilds Cartesian "
          "coordinates from them may not reproduce this structure exactly. "
-         "Adding a dummy atom off the axis avoids this.")
+         "Adding a dummy atom off the axis avoids this.",
+         "", static_cast<int>(linearRows.size()))
         .arg(rowNumbers.join(QLatin1String(", "))));
     if (!m_warnings.contains(warning))
       m_warnings << warning;

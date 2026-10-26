@@ -12,6 +12,10 @@
 #include <string_view>
 #include <vector>
 
+namespace Avogadro::Core {
+class Molecule;
+}
+
 namespace Avogadro::Io {
 
 /**
@@ -50,6 +54,17 @@ struct CifSymmetry
   {
     return hallFromOperations != 0 ? hallFromOperations : hallFromSymbol;
   }
+
+  /**
+   * @return true if the file lists several operations that are not those of
+   * any table entry (a non-standard setting such as A-1 or I-1, or an origin
+   * shift). The table cannot describe such a file, so its atoms should be
+   * expanded with its own operations; see expandCifAtoms().
+   */
+  bool hasUntabulatedOperations() const
+  {
+    return operations.size() > 1 && hallFromOperations == 0;
+  }
 };
 
 /**
@@ -67,6 +82,24 @@ struct CifSymmetry
  * empty result. This never fails.
  */
 AVOGADROIO_EXPORT CifSymmetry readCifSymmetry(std::string_view cifText);
+
+/**
+ * Fill the unit cell of @p molecule, which holds the asymmetric unit of a CIF
+ * file, by applying the symmetry operations of the file, for a file whose
+ * operations match no entry of the space group table
+ * (CifSymmetry::hasUntabulatedOperations()). Atoms within 0.25 angstrom of
+ * another are not added, so a molecule that was already expanded is left as it
+ * is. Afterwards the molecule has Hall number 1 (P1), as if it had been read
+ * from a calculation: every atom is present and no further symmetry applies.
+ * If atoms were added, the bonds are perceived again from the coordinates (the
+ * original bonds only cover the asymmetric unit).
+ *
+ * @return true if the operations were applied. Nothing is changed, and false
+ * is returned, if the file has no untabulated operations, the molecule has no
+ * unit cell, or any operation cannot be parsed.
+ */
+AVOGADROIO_EXPORT bool expandCifAtoms(const CifSymmetry& symmetry,
+                                      Core::Molecule& molecule);
 
 } // namespace Avogadro::Io
 

@@ -5,6 +5,7 @@
 
 #include "cifsymmetry.h"
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/spacegroups.h>
 #include <avogadro/core/utilities.h>
 
@@ -314,6 +315,38 @@ CifSymmetry readCifSymmetry(std::string_view cifText)
   result.hallFromOperations =
     Core::SpaceGroups::hallNumberFromTransforms(result.operations);
   return result;
+}
+
+namespace {
+// How close two atoms may be before they are one atom, in angstrom. This is
+// the tolerance of the Fill Unit Cell action, so that a structure expands the
+// same way whether or not its setting is in the table.
+constexpr double expandTolerance = 0.25;
+} // namespace
+
+bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule)
+{
+  if (!symmetry.hasUntabulatedOperations() || molecule.unitCell() == nullptr)
+    return false;
+
+  const auto before = molecule.atomCount();
+  if (!Core::SpaceGroups::fillUnitCellFromOperations(
+        molecule, symmetry.operations, expandTolerance, true, false))
+    return false;
+
+  if (molecule.atomCount() > before) {
+    // The bonds were perceived for the asymmetric unit only; the new atoms
+    // have none. Bond them like CrystalTools::wrapAtomsToUnitCell() does.
+    // Bonds across the cell boundary are found when they are needed
+    // (CrystalTools::perceivePeriodicBonds()).
+    molecule.clearBonds();
+    molecule.perceiveBondsSimple();
+    molecule.perceiveBondOrders();
+  }
+
+  // Every atom is present now: nothing is left for a space group to expand
+  molecule.setHallNumber(1);
+  return true;
 }
 
 } // namespace Avogadro::Io

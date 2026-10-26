@@ -204,15 +204,16 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(selectedSpheres);
 
+  auto layers = m_layerManager.snapshot<LayerBallAndStick>();
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    if (!m_layerManager.atomEnabled(i)) {
+    size_t layer = layers.getLayerID(i);
+    if (!layers.layerEnabled(layer)) {
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
 
-    auto* interface = m_layerManager.getSetting<LayerBallAndStick>(
-      m_layerManager.getLayerID(i));
+    auto* interface = layers.setting(layer);
     if (atomicNumber == 1 && !interface->showHydrogens)
       continue;
 
@@ -251,15 +252,16 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
 
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!m_layerManager.bondEnabled(bond.atom1().index(),
-                                    bond.atom2().index())) {
+    Index a1 = bond.atom1().index();
+    Index a2 = bond.atom2().index();
+    size_t layer1 = layers.getLayerID(a1);
+    size_t layer2 = layers.getLayerID(a2);
+    if (!layers.layerEnabled(layer1) && !layers.layerEnabled(layer2)) {
       continue;
     }
 
-    auto* interface1 = m_layerManager.getSetting<LayerBallAndStick>(
-      m_layerManager.getLayerID(bond.atom1().index()));
-    auto* interface2 = m_layerManager.getSetting<LayerBallAndStick>(
-      m_layerManager.getLayerID(bond.atom2().index()));
+    auto* interface1 = layers.setting(layer1);
+    auto* interface2 = layers.setting(layer2);
 
     if (!interface1->showHydrogens && !interface2->showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||

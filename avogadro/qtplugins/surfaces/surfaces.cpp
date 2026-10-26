@@ -5,6 +5,7 @@
 
 #include "surfaces.h"
 #include "surfacedialog.h"
+#include "surfaceresolution.h"
 
 // Header only, but duplicate symbols if included globally...
 namespace {
@@ -29,9 +30,11 @@ namespace {
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/slatersetconcurrent.h>
 #include <avogadro/qtgui/timedprogressdialog.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/imagesizedialog.h>
 
 #include <avogadro/core/basisset.h>
 #include <avogadro/core/gaussiansettools.h>
@@ -50,19 +53,14 @@ namespace {
 #include <avogadro/quantumio/qcschema.h>
 
 #include <QAction>
-#include <QOpenGLFramebufferObject>
 #include <QtConcurrent/QtConcurrentMap>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QProcess>
 #include <QtCore/QVariantMap>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-
-#include <QGuiApplication>
-#include <QScreen>
 
 #include <algorithm>
 #include <numeric>
@@ -85,6 +83,8 @@ class Surfaces::PIMPL
 public:
   GifWriter* gifWriter = nullptr;
   gwavi_t* gwaviWriter = nullptr;
+  // Frame size chosen when recording started.
+  QSize movieSize = QSize(800, 600);
 };
 
 namespace {
@@ -94,6 +94,20 @@ void registerQuantumFormat(Io::FileFormat* format)
 {
   if (!Io::FileFormatManager::registerFormat(format))
     delete format;
+}
+
+// Finish and release whichever movie writer is open.
+void closeMovieWriters(GifWriter*& gif, gwavi_t*& avi)
+{
+  if (gif != nullptr) {
+    GifEnd(gif);
+    delete gif;
+    gif = nullptr;
+  }
+  if (avi != nullptr) {
+    gwavi_close(avi);
+    avi = nullptr;
+  }
 }
 } // namespace
 
@@ -126,6 +140,8 @@ Surfaces::~Surfaces()
   // Parentless QThreads; ~MeshGenerator() waits for a running thread.
   delete m_meshGenerator1;
   delete m_meshGenerator2;
+  // Parentless when the plugin has no widget parent (e.g., in tests).
+  delete m_progressDialog;
   delete d;
   // delete m_cube; // should be freed by the molecule
 }
@@ -158,7 +174,9 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   int index = -1;
   int homo = -1;
   float isoValue = 0.03;
-  float cubeResolution = resolution(); // use default resolution
+  // Zero means "automatic": calculateEDT() and calculateQM() choose it once
+  // they know the grid padding.
+  float cubeResolution = 0.0f;
 
   if (options.contains("resolution") &&
       options["resolution"].canConvert<float>()) {
@@ -219,7 +237,8 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   }
 
   // Everything below hands work to a background thread, so the caller's reply
-  // is held until meshFinished() reports back.
+  // is held until meshFinished() reports back. The calculation records the
+  // resolution it actually used in m_commandResolution.
   m_commandResolution = cubeResolution;
 
   if ((command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) ||
@@ -468,7 +487,7 @@ void Surfaces::surfacesActivated()
   m_dialog->activateWindow();
 }
 
-float Surfaces::resolution(float specified)
+float Surfaces::resolution(float specified, double padding)
 {
   if (specified != 0.0)
     return specified;
@@ -476,9 +495,7 @@ float Surfaces::resolution(float specified)
   if (m_dialog != nullptr && !m_dialog->automaticResolution())
     return m_dialog->resolution();
 
-  float r = 0.02 * powf(m_molecule->atomCount(), 1.0f / 3.0f);
   float minimum = 0.05;
-  float maximum = 0.5;
 
   if (m_dialog != nullptr) {
     switch (m_dialog->surfaceType()) {
@@ -489,8 +506,21 @@ float Surfaces::resolution(float specified)
     }
   }
 
-  r = std::clamp(r, minimum, maximum);
-  return r;
+  // The grid spans the atoms' bounding box (as in Cube::setLimits) plus the
+  // padding on every side; the voxel budget is applied to that volume.
+  Vector3 extent = Vector3::Zero();
+  const Array<Vector3>& positions = m_molecule->atomPositions3d();
+  if (!positions.empty()) {
+    Vector3 low = positions[0];
+    Vector3 high = positions[0];
+    for (const Vector3& position : positions) {
+      low = low.cwiseMin(position);
+      high = high.cwiseMax(position);
+    }
+    extent = (high - low) + Vector3::Constant(2.0 * padding);
+  }
+
+  return automaticSurfaceResolution(m_molecule->atomCount(), extent, minimum);
 }
 
 void Surfaces::calculateSurface()
@@ -554,8 +584,25 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
   // Decide the resolution here, on the main thread, and remember it:
   // performEDTStep() must erode with the grid spacing the cube was built with.
-  const float res = resolution(defaultResolution);
+  //
+  // The padding here has to match the one computed in the worker below, which
+  // skips atoms in hidden layers. Using every atom gives the same value or a
+  // slightly larger one, so the voxel budget is never underestimated.
+  const double probe = (type == SolventAccessible || type == SolventExcluded)
+                         ? SolventProbeRadius
+                         : 0.0;
+  double maxRadius = probe;
+  for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
+    const double radius =
+      Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probe;
+    maxRadius = std::max(maxRadius, radius);
+  }
+  const double edtPadding = maxRadius + probe + 0.2;
+
+  const float res = resolution(defaultResolution, edtPadding);
   m_edtResolution = res;
+  if (m_commandPending)
+    m_commandResolution = res;
 
   QFuture future = QtConcurrent::run([=]() {
     double probeRadius = 0.0;
@@ -785,18 +832,21 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_isoValue = m_dialog->isosurfaceValue();
   else
     m_isoValue = isoValue;
-  float cubeResolution = resolution(defaultResolution);
-  float padding = 5.0;
   // TODO: allow extra padding for some molecules / properties
+  const float padding = 5.0;
+  const float cubeResolution = resolution(defaultResolution, padding);
+  if (m_commandPending)
+    m_commandResolution = cubeResolution;
   m_cube->setLimits(*m_molecule, cubeResolution, padding);
 
   QString progressText;
+  bool started = true;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
     m_cube->setName("Electron Density");
     m_cube->setCubeType(Core::Cube::Type::ElectronDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateElectronDensity(m_cube);
+      started = m_gaussianConcurrent->calculateElectronDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateElectronDensity(m_cube);
     }
@@ -805,7 +855,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_cube->setName("Spin Density");
     m_cube->setCubeType(Core::Cube::Type::SpinDensity);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateSpinDensity(m_cube);
+      started = m_gaussianConcurrent->calculateSpinDensity(m_cube);
     } else {
       m_slaterConcurrent->calculateSpinDensity(m_cube);
     }
@@ -814,10 +864,29 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_cube->setName("Molecular Orbital " + std::to_string(index + 1));
     m_cube->setCubeType(Core::Cube::Type::MO);
     if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
+      started =
+        m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
     } else {
       m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
     }
+  }
+
+  // The calculator refuses a basis set it cannot evaluate safely; there is
+  // nothing to wait for, so drop the empty cube rather than show progress.
+  // displayMesh() will never run, so do its bookkeeping here: the dialog's
+  // button was disabled on click, and a command caller is waiting on a reply.
+  if (!started) {
+    clearSurfaceData();
+    if (m_dialog != nullptr)
+      m_dialog->reenableCalculateButton();
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_commandResolution = 0.0f;
+      // TODO: translate after 2.1 (string freeze)
+      emit commandFailed(
+        QStringLiteral("The basis set is inconsistent and cannot be used."));
+    }
+    return;
   }
 
   // Set up the progress dialog.
@@ -1112,6 +1181,17 @@ void Surfaces::recordMovie()
   if (!fileInfo.suffix().isEmpty())
     baseName = fileInfo.absolutePath() + "/" + fileInfo.baseName();
 
+  // Ask for the frame size. Video encoders need even dimensions.
+  auto* activeWidget = QtOpenGL::ActiveObjects::instance().activeGLWidget();
+  QtOpenGL::ImageSizeDialog sizeDialog(activeWidget, "surfaces/movie", false,
+                                       true, qobject_cast<QWidget*>(parent()));
+  sizeDialog.setWindowTitle(tr("Movie Size"));
+  if (sizeDialog.exec() != QDialog::Accepted) {
+    m_dialog->enableRecord();
+    return;
+  }
+  d->movieSize = sizeDialog.imageSize();
+
   m_baseFileName = baseName;
   m_numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
@@ -1124,12 +1204,13 @@ void Surfaces::recordMovie()
   if (selectedFilter == tr("GIF (*.gif)")) {
     d->gwaviWriter = nullptr;
     d->gifWriter = new GifWriter;
-    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), 800, 600,
-             100 / 4);
+    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(),
+             d->movieSize.width(), d->movieSize.height(), 100 / 4);
   } else if (selectedFilter == tr("Movie AVI (*.avi)")) {
     d->gifWriter = nullptr;
-    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(), 800, 600,
-                                "MJPG", 4, nullptr);
+    d->gwaviWriter =
+      gwavi_open((baseName + ".avi").toLatin1().data(), d->movieSize.width(),
+                 d->movieSize.height(), "MJPG", 4, nullptr);
   } else {
     d->gwaviWriter = nullptr;
     d->gifWriter = nullptr;
@@ -1156,35 +1237,32 @@ void Surfaces::movieFrame()
     m_dialog->enableRecord();
     return;
   }
-  glWidget->resize(800 / glWidget->devicePixelRatio(),
-                   600 / glWidget->devicePixelRatio());
-  QImage exportImage;
-  glWidget->raise();
-  glWidget->repaint();
-  if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-    exportImage = glWidget->grabFramebuffer();
-  } else {
-    auto* screen = QGuiApplication::primaryScreen();
-    auto pixmap = screen->grabWindow(glWidget->winId());
-    exportImage = pixmap.toImage();
+  QtOpenGL::RenderOptions renderOptions;
+  renderOptions.size = d->movieSize;
+  QString renderError;
+  QImage exportImage = glWidget->renderImage(renderOptions, &renderError);
+  if (exportImage.isNull()) {
+    QMessageBox::warning(
+      qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+      tr("Cannot render the movie frame: %1").arg(renderError));
+    closeMovieWriters(d->gifWriter, d->gwaviWriter);
+    m_recordingMovie = false;
+    m_dialog->enableRecord();
+    return;
   }
 
   if (d->gifWriter) {
-    int pixelCount = exportImage.width() * exportImage.height();
-    auto* imageData = new uint8_t[pixelCount * 4];
-    int imageIndex = 0;
-    for (int j = 0; j < exportImage.height(); ++j) {
-      for (int k = 0; k < exportImage.width(); ++k) {
-        QColor color = exportImage.pixel(k, j);
-        imageData[imageIndex] = static_cast<uint8_t>(color.red());
-        imageData[imageIndex + 1] = static_cast<uint8_t>(color.green());
-        imageData[imageIndex + 2] = static_cast<uint8_t>(color.blue());
-        imageData[imageIndex + 3] = static_cast<uint8_t>(color.alpha());
-        imageIndex += 4;
-      }
+    // GIF-H wants tightly packed RGBA, which is what RGBA8888 scanlines are
+    // (4 bytes per pixel is always 32-bit aligned).
+    exportImage = exportImage.convertToFormat(QImage::Format_RGBA8888);
+    if (exportImage.size() != d->movieSize) {
+      closeMovieWriters(d->gifWriter, d->gwaviWriter);
+      m_recordingMovie = false;
+      m_dialog->enableRecord();
+      return;
     }
-    GifWriteFrame(d->gifWriter, imageData, 800, 600, 100 / 4);
-    delete[] imageData;
+    GifWriteFrame(d->gifWriter, exportImage.constBits(), exportImage.width(),
+                  exportImage.height(), 100 / 4);
   } else if (d->gwaviWriter) {
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -1221,15 +1299,9 @@ void Surfaces::movieFrame()
     calculateSurface();
   } else {
     qDebug() << "We are done! Make some movies.";
-    if (d->gifWriter) {
-      GifEnd(d->gifWriter);
-      delete d->gifWriter;
-      d->gifWriter = nullptr;
-    } else if (d->gwaviWriter) {
-      gwavi_close(d->gwaviWriter);
-      d->gwaviWriter = nullptr;
+    if (d->gifWriter || d->gwaviWriter) {
+      closeMovieWriters(d->gifWriter, d->gwaviWriter);
     } else {
-      QProcess proc;
       QStringList args;
       args << "-y"
            << "-r" << QString::number(10) << "-i"
@@ -1240,7 +1312,12 @@ void Surfaces::movieFrame()
            << "30"
            << "-pix_fmt"
            << "yuv420p" << m_baseFileName + ".mp4";
-      proc.execute("avconv", args);
+      if (!QtGui::Utilities::runVideoEncoder(args)) {
+        QMessageBox::warning(
+          qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+          tr("Cannot run ffmpeg or avconv to encode the movie. The frames "
+             "were saved as PNG files."));
+      }
     }
     /*
     args.clear();

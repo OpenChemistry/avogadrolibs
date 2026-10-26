@@ -5,13 +5,15 @@
 # Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2023, 2024, 2025, 2026.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2025.
+# Remus-Gabriel Chelu <remus-gabriel@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-10-02 20:13+0000\n"
-"PO-Revision-Date: 2026-10-10 19:51+0000\n"
-"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
+"POT-Creation-Date: 2026-10-13 17:39+0000\n"
+"PO-Revision-Date: 2026-10-18 09:51+0000\n"
+"Last-Translator: Remus-Gabriel Chelu <remus-"
+"gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ro/>\n"
 "Language: ro\n"
@@ -20,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -173,20 +175,38 @@ msgstr ""
 "Avogadro."
 
 #: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:795
-#, qt-format
+#, qt-format, qt-plural-format
+msgctxt ""
 msgid ""
 "A linear fragment leaves the angle or torsion on z-matrix row(s) %1 "
 "undetermined. The geometry is written correctly, but these coordinates "
 "cannot be varied, and a program that rebuilds Cartesian coordinates from "
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
-msgstr ""
-"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândul "
-"(rândurile) %1 al (ale) matricei z. Geometria este scrisă corect, dar aceste "
-"coordonate nu pot fi modificate, iar un program care reconstruiește "
-"coordonatele carteziene pe baza acestora s-ar putea să nu reproducă exact "
-"această structură. Adăugarea unui atom fictiv în afara axei permite evitarea "
-"acestei situații."
+msgid_plural ""
+"A linear fragment leaves the angle or torsion on z-matrix row(s) %1 "
+"undetermined. The geometry is written correctly, but these coordinates "
+"cannot be varied, and a program that rebuilds Cartesian coordinates from "
+"them may not reproduce this structure exactly. Adding a dummy atom off the "
+"axis avoids this."
+msgstr[0] ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândul %1 al "
+"matricei z. Geometria este scrisă corect, dar aceste coordonate nu pot fi "
+"modificate, iar un program care reconstruiește coordonatele carteziene pe "
+"baza acestora s-ar putea să nu reproducă exact această structură. Adăugarea "
+"unui atom fictiv în afara axei permite evitarea acestei situații."
+msgstr[1] ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândurile %1 "
+"ale matricei z. Geometria este scrisă corect, dar aceste coordonate nu pot "
+"fi modificate, iar un program care reconstruiește coordonatele carteziene pe "
+"baza acestora s-ar putea să nu reproducă exact această structură. Adăugarea "
+"unui atom fictiv în afara axei permite evitarea acestei situații."
+msgstr[2] ""
+"Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândurile %1 "
+"ale matricei z. Geometria este scrisă corect, dar aceste coordonate nu pot "
+"fi modificate, iar un program care reconstruiește coordonatele carteziene pe "
+"baza acestora s-ar putea să nu reproducă exact această structură. Adăugarea "
+"unui atom fictiv în afara axei permite evitarea acestei situații."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -223,7 +243,7 @@ msgstr "Închide"
 #: molequeue/inputgeneratorwidget.cpp:220 qtgui/elementtranslator.cpp:372
 #: qtplugins/configurepython/configurepythondialog.cpp:188
 #: qtplugins/configurepython/configurepythondialog.cpp:191
-#: qtplugins/spacegroup/spacegroup.cpp:634
+#: qtplugins/spacegroup/spacegroup.cpp:750
 msgid "Unknown"
 msgstr "Necunoscut"
 
@@ -1208,15 +1228,15 @@ msgstr "Fișiere comprimate"
 msgid "All supported formats"
 msgstr "Toate formatele acceptate"
 
-#: qtgui/fragmenttools.cpp:309
+#: qtgui/fragmenttools.cpp:382
 msgid "Adjust Distance"
 msgstr "Ajustează distanța"
 
-#: qtgui/fragmenttools.cpp:361
+#: qtgui/fragmenttools.cpp:425
 msgid "Adjust Angle"
 msgstr "Ajustează unghiul"
 
-#: qtgui/fragmenttools.cpp:424
+#: qtgui/fragmenttools.cpp:488
 msgid "Adjust Torsion"
 msgstr "Ajustează torsiunea"
 
@@ -1421,7 +1441,7 @@ msgstr "Bastonaș"
 
 #: qtgui/layermodel.cpp:194 qtplugins/surfacerender/surfacerender.h:29
 #: qtplugins/surfaces/orbitals.cpp:506 qtplugins/surfaces/orbitals.cpp:598
-#: qtplugins/surfaces/surfaces.cpp:1004 qtplugins/surfaces/surfaces.h:71
+#: qtplugins/surfaces/surfaces.cpp:1063 qtplugins/surfaces/surfaces.h:71
 msgid "Surfaces"
 msgstr "Suprafețe"
 
@@ -1477,6 +1497,63 @@ msgstr "Nu a fost salvat"
 #: qtgui/multiviewwidget.cpp:187
 msgid "Create a new view"
 msgstr "Creează o nouă vizualizare"
+
+#: qtgui/packagemanager.cpp:674
+msgid "pixi: the package declares no pixi workspace"
+msgstr "pixi: pachetul nu declară niciun spațiu de lucru pixi"
+
+#: qtgui/packagemanager.cpp:694
+msgid "pixi install timed out"
+msgstr "Instalarea pixi a depășit limita de timp"
+
+#: qtgui/packagemanager.cpp:702
+#, qt-format
+msgid ""
+"pixi install failed:\n"
+"%1"
+msgstr ""
+"Instalarea pixi a eșuat:\n"
+"%1"
+
+#: qtgui/packagemanager.cpp:714
+#, qt-format
+msgid "pixi install did not provide %1"
+msgstr "Instalarea pixi nu a furnizat %1"
+
+#: qtgui/packagemanager.cpp:743
+msgid "pip: creating the virtual environment timed out"
+msgstr "pip: timpul de așteptare pentru crearea mediului virtual a expirat"
+
+#: qtgui/packagemanager.cpp:752
+#, qt-format
+msgid ""
+"pip: creating the virtual environment failed:\n"
+"%1"
+msgstr ""
+"pip: timpul de așteptare pentru crearea mediului virtual a eșuat:\n"
+"%1"
+
+#: qtgui/packagemanager.cpp:770
+msgid "pip install timed out"
+msgstr "Instalarea pip a depășit limita de timp"
+
+#: qtgui/packagemanager.cpp:778
+#, qt-format
+msgid ""
+"pip install failed:\n"
+"%1"
+msgstr ""
+"Instalarea pip a eșuat:\n"
+"%1"
+
+#: qtgui/packagemanager.cpp:790
+#, qt-format
+msgid "pip install did not provide %1"
+msgstr "Instalarea pip nu a furnizat %1"
+
+#: qtgui/packagemanager.cpp:853
+msgid "neither pixi nor Python was found"
+msgstr "nu s-a găsit nici „pixi”, nici „Python”"
 
 #: qtgui/periodictableview.cpp:31
 msgid "Periodic Table"
@@ -1620,8 +1697,8 @@ msgstr "Adăugare informații despre strat"
 #. i18n: file: qtplugins/selectiontool/selectiontoolwidget.ui:39
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: qtgui/rwlayermanager.cpp:375 qtgui/rwlayermanager.cpp:382
-#: qtplugins/select/select.cpp:566
-#: qtplugins/selectiontool/selectiontool.cpp:264:1891
+#: qtplugins/select/select.cpp:569
+#: qtplugins/selectiontool/selectiontool.cpp:273:1891
 msgid "Change Layer"
 msgstr "Schimbare strat"
 
@@ -1630,7 +1707,7 @@ msgid "Add Atom"
 msgstr "Adăugare atom"
 
 #: qtgui/rwmolecule.cpp:78 qtgui/rwmolecule.cpp:93
-#: qtplugins/editor/editor.cpp:185
+#: qtplugins/editor/editor.cpp:301 qtplugins/editor/editor.cpp:1233
 msgid "Remove Atom"
 msgstr "Eliminare atom"
 
@@ -1736,16 +1813,16 @@ msgstr "Reducere Niggli"
 msgid "Rotate to Standard Orientation"
 msgstr "Rotiți la orientarea standard"
 
-#: qtgui/rwmolecule.cpp:820 qtplugins/spacegroup/spacegroup.cpp:66
+#: qtgui/rwmolecule.cpp:820 qtplugins/spacegroup/spacegroup.cpp:145
 msgid "Reduce to Primitive"
 msgstr "Reducere la celulă primitivă"
 
-#: qtgui/rwmolecule.cpp:855 qtplugins/spacegroup/spacegroup.cpp:72
-#: qtplugins/spacegroup/spacegroup.cpp:472
+#: qtgui/rwmolecule.cpp:855 qtplugins/spacegroup/spacegroup.cpp:151
+#: qtplugins/spacegroup/spacegroup.cpp:557
 msgid "Conventionalize Cell"
 msgstr "Convenționalizare celulă"
 
-#: qtgui/rwmolecule.cpp:890 qtplugins/spacegroup/spacegroup.cpp:500
+#: qtgui/rwmolecule.cpp:890 qtplugins/spacegroup/spacegroup.cpp:585
 msgid "Symmetrize Cell"
 msgstr "Simetrizare celulă"
 
@@ -1833,6 +1910,10 @@ msgstr[0] "o oră rămasă"
 msgstr[1] "%n ore rămase"
 msgstr[2] "%n de ore rămase"
 
+#: qtplugins/3dmol/3dmol.cpp:31
+msgid "&3DMol HTML Snippet…"
+msgstr "Fragment HTML &3DMol…"
+
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
 msgstr "Bloc HTML 3DMol."
@@ -1840,13 +1921,13 @@ msgstr "Bloc HTML 3DMol."
 #: qtplugins/3dmol/3dmol.cpp:47 qtplugins/fetchpdb/fetchpdb.cpp:54
 #: qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
-#: qtplugins/networkdatabases/networkdatabases.cpp:42 qtplugins/ply/ply.cpp:44
+#: qtplugins/networkdatabases/networkdatabases.cpp:42 qtplugins/ply/ply.cpp:88
 #: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:44
 msgid "&File"
 msgstr "&Fişier"
 
-#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:44
+#: qtplugins/3dmol/3dmol.cpp:47 qtplugins/ply/ply.cpp:88
 #: qtplugins/povray/povray.cpp:44 qtplugins/svg/svg.cpp:46
 #: qtplugins/vrml/vrml.cpp:44
 msgid "&Export"
@@ -1994,6 +2075,14 @@ msgstr "Eroare la citirea fișierului OpenDX: %1"
 msgid "Error reading OpenDX file: No cube found"
 msgstr "Eroare la citirea fișierului OpenDX: Nu s-a găsit niciun cub"
 
+#: qtplugins/apbs/apbs.cpp:151
+msgid "Generating Positive Potential Mesh"
+msgstr "Se generează o rețea cu potențial pozitiv"
+
+#: qtplugins/apbs/apbs.cpp:165
+msgid "Generating Negative Potential Mesh"
+msgstr "Se generează o rețea cu potențial negativ"
+
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
 #: qtplugins/apbs/apbs.h:30:96
@@ -2029,8 +2118,8 @@ msgstr "Fișiere PQR (*.pqr)"
 #: qtplugins/insertpolymer/insertpolymer.cpp:81
 #: qtplugins/insertpolymer/insertpolymer.cpp:103
 #: qtplugins/insertpolymer/insertpolymerdialog.cpp:165
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:616
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:625
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:615
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:624
 #: qtplugins/lammpsinput/lammpsinput.cpp:62
 #: qtplugins/molecularproperties/molecularview.cpp:150
 #: qtplugins/molecularproperties/molecularview.cpp:184
@@ -2047,8 +2136,8 @@ msgstr "Fișiere PQR (*.pqr)"
 #: qtplugins/openbabel/openbabel.cpp:896 qtplugins/openbabel/openbabel.cpp:938
 #: qtplugins/openbabel/openbabel.cpp:970
 #: qtplugins/openmminput/openmminput.cpp:62
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:553
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:754
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:560
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:775
 #: qtplugins/propertytables/propertyview.cpp:819
 #: qtplugins/propertytables/propertyview.cpp:852
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:162
@@ -2056,7 +2145,7 @@ msgstr "Fișiere PQR (*.pqr)"
 #: qtplugins/qtaim/qtaimwavefunction.h:48
 #: qtplugins/qtaim/qtaimwavefunction.h:81
 #: qtplugins/quantuminput/quantuminput.cpp:152
-#: qtplugins/spacegroup/spacegroup.cpp:679
+#: qtplugins/spacegroup/spacegroup.cpp:809
 msgid "Error"
 msgstr "Eroare"
 
@@ -2098,9 +2187,9 @@ msgid "Input file written to '%1'"
 msgstr "Fișier de intrare scris la „%1”"
 
 #: qtplugins/apbs/apbsdialog.cpp:190 qtplugins/fetchpdb/fetchpdb.cpp:299
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:554
-#: qtplugins/playertool/playertool.cpp:560
-#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1151
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:561
+#: qtplugins/playertool/playertool.cpp:561
+#: qtplugins/qtaim/qtaimwavefunction.h:49 qtplugins/surfaces/surfaces.cpp:1210
 #, qt-format
 msgid "Cannot save file %1."
 msgstr "Nu se poate salva fișierul %1."
@@ -2144,66 +2233,66 @@ msgstr "După schema de culori"
 
 #: qtplugins/applycolors/applycolors.cpp:108
 #: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:924
+#: qtplugins/applycolors/applycolors.cpp:314
+#: qtplugins/surfaces/surfaces.cpp:983
 msgctxt "colormap"
 msgid "Parula"
 msgstr "Parula"
 
 #: qtplugins/applycolors/applycolors.cpp:110
-#: qtplugins/surfaces/surfaces.cpp:926
+#: qtplugins/surfaces/surfaces.cpp:985
 msgctxt "colormap"
 msgid "Heat"
 msgstr "Heat"
 
 #: qtplugins/applycolors/applycolors.cpp:112
-#: qtplugins/surfaces/surfaces.cpp:928
+#: qtplugins/surfaces/surfaces.cpp:987
 msgctxt "colormap"
 msgid "Hot"
 msgstr "Hot"
 
 #: qtplugins/applycolors/applycolors.cpp:114
-#: qtplugins/surfaces/surfaces.cpp:930
+#: qtplugins/surfaces/surfaces.cpp:989
 msgctxt "colormap"
 msgid "Gray"
 msgstr "Gri"
 
 #: qtplugins/applycolors/applycolors.cpp:116
 #: qtplugins/applycolors/applycolors.cpp:211
-#: qtplugins/applycolors/applycolors.cpp:312
-#: qtplugins/surfaces/surfaces.cpp:932
+#: qtplugins/applycolors/applycolors.cpp:314
+#: qtplugins/surfaces/surfaces.cpp:991
 msgctxt "colormap"
 msgid "Magma"
 msgstr "Magma"
 
 #: qtplugins/applycolors/applycolors.cpp:118
 #: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:934
+#: qtplugins/applycolors/applycolors.cpp:315
+#: qtplugins/surfaces/surfaces.cpp:993
 msgctxt "colormap"
 msgid "Inferno"
 msgstr "Inferno"
 
 #: qtplugins/applycolors/applycolors.cpp:120
 #: qtplugins/applycolors/applycolors.cpp:212
-#: qtplugins/applycolors/applycolors.cpp:313
-#: qtplugins/surfaces/surfaces.cpp:936
+#: qtplugins/applycolors/applycolors.cpp:315
+#: qtplugins/surfaces/surfaces.cpp:995
 msgctxt "colormap"
 msgid "Plasma"
 msgstr "Plasma"
 
 #: qtplugins/applycolors/applycolors.cpp:122
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:938
+#: qtplugins/applycolors/applycolors.cpp:316
+#: qtplugins/surfaces/surfaces.cpp:997
 msgctxt "colormap"
 msgid "Viridis"
 msgstr "Viridis"
 
 #: qtplugins/applycolors/applycolors.cpp:124
 #: qtplugins/applycolors/applycolors.cpp:213
-#: qtplugins/applycolors/applycolors.cpp:314
-#: qtplugins/surfaces/surfaces.cpp:940
+#: qtplugins/applycolors/applycolors.cpp:316
+#: qtplugins/surfaces/surfaces.cpp:999
 msgctxt "colormap"
 msgid "Cividis"
 msgstr "Cividis"
@@ -2214,8 +2303,8 @@ msgstr "Cividis"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:126
 #: qtplugins/applycolors/applycolors.cpp:214
-#: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:942:183 rc.cpp:2081
+#: qtplugins/applycolors/applycolors.cpp:317
+#: qtplugins/surfaces/surfaces.cpp:1001:183 rc.cpp:2081
 msgctxt "colormap"
 msgid "Spectral"
 msgstr "Spectral"
@@ -2225,7 +2314,7 @@ msgstr "Spectral"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:169
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:128
-#: qtplugins/surfaces/surfaces.cpp:944:180 rc.cpp:2078
+#: qtplugins/surfaces/surfaces.cpp:1003:180 rc.cpp:2078
 msgctxt "colormap"
 msgid "Coolwarm"
 msgstr "Coolwarm"
@@ -2235,7 +2324,7 @@ msgstr "Coolwarm"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:159
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:130
-#: qtplugins/surfaces/surfaces.cpp:946:174 rc.cpp:2072
+#: qtplugins/surfaces/surfaces.cpp:1005:174 rc.cpp:2072
 msgctxt "colormap"
 msgid "Balance"
 msgstr "Balance"
@@ -2245,7 +2334,7 @@ msgstr "Balance"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:164
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:132
-#: qtplugins/surfaces/surfaces.cpp:948:177 rc.cpp:2075
+#: qtplugins/surfaces/surfaces.cpp:1007:177 rc.cpp:2075
 msgctxt "colormap"
 msgid "Blue-DarkRed"
 msgstr "Blue-DarkRed"
@@ -2256,8 +2345,8 @@ msgstr "Blue-DarkRed"
 #. i18n: ectx: property (text), item, widget (QComboBox, colormapCombo)
 #: qtplugins/applycolors/applycolors.cpp:134
 #: qtplugins/applycolors/applycolors.cpp:214
-#: qtplugins/applycolors/applycolors.cpp:315
-#: qtplugins/surfaces/surfaces.cpp:950:186 rc.cpp:2084
+#: qtplugins/applycolors/applycolors.cpp:317
+#: qtplugins/surfaces/surfaces.cpp:1009:186 rc.cpp:2084
 msgctxt "colormap"
 msgid "Turbo"
 msgstr "Turbo"
@@ -2281,7 +2370,7 @@ msgid "Color Residues"
 msgstr "Reziduuri colorate"
 
 #: qtplugins/applycolors/applycolors.cpp:217
-#: qtplugins/applycolors/applycolors.cpp:318
+#: qtplugins/applycolors/applycolors.cpp:320
 msgid "Select Colormap"
 msgstr "Selectați schema de culori"
 
@@ -2290,7 +2379,7 @@ msgstr "Selectați schema de culori"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:143
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: qtplugins/applycolors/applycolors.cpp:217
-#: qtplugins/applycolors/applycolors.cpp:318:171 rc.cpp:2069
+#: qtplugins/applycolors/applycolors.cpp:320:171 rc.cpp:2069
 msgid "Colormap:"
 msgstr "Schema de culori:"
 
@@ -2298,67 +2387,67 @@ msgstr "Schema de culori:"
 msgid "Apply Index Colors"
 msgstr "Aplică culorile indexului"
 
-#: qtplugins/applycolors/applycolors.cpp:289
+#: qtplugins/applycolors/applycolors.cpp:291
 msgid "Apply Charge Colors"
 msgstr "Aplică culorile de încărcare"
 
-#: qtplugins/applycolors/applycolors.cpp:327
+#: qtplugins/applycolors/applycolors.cpp:329
 msgid "Apply Distance Colors"
 msgstr "Aplică culorile de distanță"
 
-#: qtplugins/applycolors/applycolors.cpp:353
+#: qtplugins/applycolors/applycolors.cpp:355
 msgid "Reset Atom Colors"
 msgstr "Restabilește culorile atomilor"
 
-#: qtplugins/applycolors/applycolors.cpp:379
+#: qtplugins/applycolors/applycolors.cpp:381
 msgid "Apply Custom Color"
 msgstr "Aplică culoarea personalizată"
 
-#: qtplugins/applycolors/applycolors.cpp:416
+#: qtplugins/applycolors/applycolors.cpp:418
 msgid "Apply Custom Residue Color"
 msgstr "Aplică culoarea reziduurilor personalizată"
 
-#: qtplugins/applycolors/applycolors.cpp:440
+#: qtplugins/applycolors/applycolors.cpp:442
 msgid "Reset Residue Colors"
 msgstr "Restabilește culorile reziduurilor"
 
-#: qtplugins/applycolors/applycolors.cpp:474
+#: qtplugins/applycolors/applycolors.cpp:476
 msgid "Apply Secondary Structure Colors"
 msgstr "Aplică culorile structurii secundare"
 
-#: qtplugins/applycolors/applycolors.cpp:562
+#: qtplugins/applycolors/applycolors.cpp:564
 msgid "Apply Amino Acid Colors"
 msgstr "Aplică culorile aminoacizilor"
 
-#: qtplugins/applycolors/applycolors.cpp:589
+#: qtplugins/applycolors/applycolors.cpp:591
 msgid "Apply Shapely Colors"
 msgstr "Aplică culori modelatoare"
 
-#: qtplugins/applycolors/applycolors.cpp:611
+#: qtplugins/applycolors/applycolors.cpp:613
 msgid "Apply a custom color to atoms."
 msgstr "Aplică o culoare personalizată atomilor."
 
-#: qtplugins/applycolors/applycolors.cpp:614
+#: qtplugins/applycolors/applycolors.cpp:616
 msgid "Reset atom colors to their default element colors."
 msgstr "Restabilește culorile atomilor la culorile implicite ale elementelor."
 
-#: qtplugins/applycolors/applycolors.cpp:616
+#: qtplugins/applycolors/applycolors.cpp:618
 msgid "Apply a custom color to residues."
 msgstr "Aplică o culoare personalizată reziduurilor."
 
-#: qtplugins/applycolors/applycolors.cpp:618
+#: qtplugins/applycolors/applycolors.cpp:620
 msgid "Color residues by their amino acid type."
 msgstr "Colorează reziduurile în funcție de tipul de aminoacid."
 
-#: qtplugins/applycolors/applycolors.cpp:620
+#: qtplugins/applycolors/applycolors.cpp:622
 msgid "Color residues using the Shapely color scheme."
 msgstr "Colorează reziduurile folosind schema de culori Shapely."
 
-#: qtplugins/applycolors/applycolors.cpp:622
+#: qtplugins/applycolors/applycolors.cpp:624
 msgid "Color residues by secondary structure."
 msgstr "Colorează reziduurile în funcție de structura secundară."
 
-#: qtplugins/applycolors/applycolors.cpp:624
+#: qtplugins/applycolors/applycolors.cpp:626
 msgid "Reset residue colors to default chain colors."
 msgstr "Restabilește culorile reziduurilor la culorile implicite ale lanțului."
 
@@ -2404,6 +2493,10 @@ msgstr ""
 "Butonul drept al mouse-ului:\t    Faceți clic și trageți pentru a roti "
 "atomii."
 
+#: qtplugins/autoopt/autoopt.cpp:261
+msgid "AutoOptimization"
+msgstr "Optimizare automată"
+
 #: qtplugins/autoopt/autoopt.cpp:268
 msgid "Optimize"
 msgstr "Optimizare"
@@ -2447,8 +2540,8 @@ msgid "Relax for Dynamics"
 msgstr "Relaxare pentru studiul dinamicii"
 
 #: qtplugins/autoopt/autoopt.cpp:571 qtplugins/forcefield/forcefield.cpp:77
-#: qtplugins/forcefield/forcefield.cpp:991
-#: qtplugins/forcefield/forcefield.cpp:1085
+#: qtplugins/forcefield/forcefield.cpp:992
+#: qtplugins/forcefield/forcefield.cpp:1086
 #: qtplugins/openbabel/openbabel.cpp:50 qtplugins/openbabel/openbabel.cpp:561
 msgid "Optimize Geometry"
 msgstr "Optimizează geometria"
@@ -2497,12 +2590,12 @@ msgid "Opacity"
 msgstr "Opacitate"
 
 #: qtplugins/ballandstick/ballandstick.cpp:155
-#: qtplugins/wireframe/wireframe.cpp:123
+#: qtplugins/wireframe/wireframe.cpp:124
 msgid "Show multiple bonds"
 msgstr "Afișează legături multiple"
 
 #: qtplugins/ballandstick/ballandstick.cpp:161
-#: qtplugins/wireframe/wireframe.cpp:129
+#: qtplugins/wireframe/wireframe.cpp:130
 msgid "Show hydrogens"
 msgstr "Afișează hidrogenii"
 
@@ -2561,15 +2654,15 @@ msgstr ""
 "Instrument utilizat pentru editarea geometriei moleculare prin modificarea "
 "lungimilor și unghiurilor legăturilor."
 
-#: qtplugins/bonding/bonding.cpp:32 qtplugins/bonding/bonding.cpp:234
+#: qtplugins/bonding/bonding.cpp:32 qtplugins/bonding/bonding.cpp:236
 msgid "Bond Atoms"
 msgstr "Legare atomi"
 
-#: qtplugins/bonding/bonding.cpp:33 qtplugins/bonding/bonding.cpp:253
+#: qtplugins/bonding/bonding.cpp:33 qtplugins/bonding/bonding.cpp:255
 msgid "Perceive Bond Orders"
 msgstr "Percepe ordinea legăturilor"
 
-#: qtplugins/bonding/bonding.cpp:34 qtplugins/bonding/bonding.cpp:286
+#: qtplugins/bonding/bonding.cpp:34 qtplugins/bonding/bonding.cpp:288
 msgid "Remove Bonds"
 msgstr "Eliminare legături"
 
@@ -2577,7 +2670,7 @@ msgstr "Eliminare legături"
 msgid "Configure Bonding…"
 msgstr "Configurare legături…"
 
-#: qtplugins/bonding/bonding.cpp:36 qtplugins/bonding/bonding.cpp:160
+#: qtplugins/bonding/bonding.cpp:36 qtplugins/bonding/bonding.cpp:162
 msgid "Bond Selected Atoms"
 msgstr "Legarea atomilor selectați"
 
@@ -2606,37 +2699,37 @@ msgstr "Legarea"
 msgid "Perform bonding operations."
 msgstr "Efectuează operațiile de legare."
 
-#: qtplugins/cartoons/cartoons.cpp:139
+#: qtplugins/cartoons/cartoons.cpp:144
 msgctxt "protein rendering style"
 msgid "Backbone"
 msgstr "Scheletul"
 
-#: qtplugins/cartoons/cartoons.cpp:140
+#: qtplugins/cartoons/cartoons.cpp:145
 msgctxt "protein rendering style"
 msgid "Trace"
 msgstr "Trasare"
 
-#: qtplugins/cartoons/cartoons.cpp:141
+#: qtplugins/cartoons/cartoons.cpp:146
 msgctxt "protein rendering style"
 msgid "Tube"
 msgstr "Tub"
 
-#: qtplugins/cartoons/cartoons.cpp:142
+#: qtplugins/cartoons/cartoons.cpp:147
 msgctxt "protein rendering style"
 msgid "Ribbon"
 msgstr "Panglică"
 
-#: qtplugins/cartoons/cartoons.cpp:143
+#: qtplugins/cartoons/cartoons.cpp:148
 msgctxt "protein rendering style"
 msgid "Simple Cartoon"
 msgstr "Animație simplă"
 
-#: qtplugins/cartoons/cartoons.cpp:144
+#: qtplugins/cartoons/cartoons.cpp:149
 msgctxt "protein rendering style"
 msgid "Cartoon"
 msgstr "Animație"
 
-#: qtplugins/cartoons/cartoons.cpp:145
+#: qtplugins/cartoons/cartoons.cpp:150
 msgctxt "protein rendering style"
 msgid "Rope"
 msgstr "Coardă"
@@ -2698,7 +2791,7 @@ msgstr "Distanța maximă:"
 #: qtplugins/crystal/crystalscene.cpp:147
 #: qtplugins/noncovalent/noncovalent.cpp:403
 #: qtplugins/surfacerender/surfacerender.cpp:297
-#: qtplugins/wireframe/wireframe.cpp:119
+#: qtplugins/wireframe/wireframe.cpp:120
 msgid "Line width:"
 msgstr "Lățimea liniei:"
 
@@ -2930,12 +3023,11 @@ msgid "Could not measure the current geometry for these atoms."
 msgstr "Nu s-a putut determina geometria curentă a acestor atomi."
 
 #: qtplugins/constraints/constraintsextension.cpp:319
-#: qtplugins/measuretool/measuretool.cpp:791
 msgid "value must be a distance greater than 0 Å."
 msgstr "valoarea trebuie să fie o distanță mai mare de 0Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:324
-#: qtplugins/measuretool/measuretool.cpp:795
+#: qtplugins/measuretool/measuretool.cpp:800
 msgid "value must be an angle from 0 to 180 degrees."
 msgstr "valoarea trebuie să fie un unghi cuprins între 0 și 180 de grade."
 
@@ -2955,14 +3047,14 @@ msgstr ""
 
 #: qtplugins/constraints/constraintsextension.cpp:388
 #: qtplugins/constraints/constraintsextension.cpp:394
-#: qtplugins/measuretool/measuretool.cpp:885
-#: qtplugins/measuretool/measuretool.cpp:891
+#: qtplugins/measuretool/measuretool.cpp:890
+#: qtplugins/measuretool/measuretool.cpp:896
 #, qt-format
 msgid "atom index #%1 in atoms must be a whole number."
 msgstr "indicele atomului #%1 din atomi trebuie să fie un număr întreg."
 
 #: qtplugins/constraints/constraintsextension.cpp:398
-#: qtplugins/measuretool/measuretool.cpp:895
+#: qtplugins/measuretool/measuretool.cpp:900
 #, qt-format
 msgid ""
 "atom index #%1 in atoms is negative; atom indices must be zero or greater."
@@ -2971,7 +3063,7 @@ msgstr ""
 "fie egali cu zero sau mai mari."
 
 #: qtplugins/constraints/constraintsextension.cpp:416
-#: qtplugins/measuretool/measuretool.cpp:913
+#: qtplugins/measuretool/measuretool.cpp:918
 #, qt-format
 msgid "atom index %1 is repeated in atoms; each atom must be different."
 msgstr ""
@@ -3184,8 +3276,8 @@ msgstr "Editarea coordonatelor atomice"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:390
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/coordinateeditor/coordinateeditordialog.cpp:639
-#: qtplugins/label/label.cpp:265 qtplugins/label/label.cpp:288
-#: qtplugins/label/label.cpp:303:2111 rc.cpp:2136
+#: qtplugins/label/label.cpp:274 qtplugins/label/label.cpp:297
+#: qtplugins/label/label.cpp:312:2111 rc.cpp:2136
 msgid "Custom"
 msgstr "Personalizat"
 
@@ -3488,8 +3580,8 @@ msgid "Reduce Cell (&Niggli)"
 msgstr "Reduce celula (&Niggli)"
 
 #: qtplugins/crystal/crystal.cpp:103 qtplugins/plotpdf/plotpdf.cpp:54
-#: qtplugins/plotxrd/plotxrd.cpp:54 qtplugins/spacegroup/spacegroup.cpp:124
-#: qtplugins/spacegroup/spacegroup.cpp:126
+#: qtplugins/plotxrd/plotxrd.cpp:54 qtplugins/spacegroup/spacegroup.cpp:203
+#: qtplugins/spacegroup/spacegroup.cpp:205
 msgid "&Crystal"
 msgstr "&Cristal"
 
@@ -3600,16 +3692,36 @@ msgstr "Moment dipolar"
 msgid "Render the dipole moment of the molecule."
 msgstr "Redă momentul dipolar al moleculei."
 
-#: qtplugins/editor/editor.cpp:76
+#: qtplugins/editor/editor.cpp:94
+msgid "atoms must list exactly 2 atom indices."
+msgstr "atomii trebuie să listeze exact 2 indici de atom."
+
+#: qtplugins/editor/editor.cpp:101
+msgid "atoms must be whole-number atom indices within the molecule."
+msgstr ""
+"atomii trebuie să fie indici de atomi exprimați prin numere întregi în "
+"cadrul moleculei."
+
+#: qtplugins/editor/editor.cpp:106
+msgid "atoms must be two different atoms."
+msgstr "atomii trebuie să fie doi atomi diferiți."
+
+#: qtplugins/editor/editor.cpp:122
+#, qt-format
+msgid "%1 must be 1, 2 or 3."
+msgstr "%1 trebuie să fie 1, 2 sau 3."
+
+#: qtplugins/editor/editor.cpp:152
 msgctxt "control-key 2"
 msgid "Ctrl+2"
 msgstr "Ctrl+2"
 
-#: qtplugins/editor/editor.cpp:77 qtplugins/editor/editor.cpp:132
+#: qtplugins/editor/editor.cpp:153 qtplugins/editor/editor.cpp:221
+#: qtplugins/editor/editor.cpp:1200
 msgid "Draw"
 msgstr "Desenare"
 
-#: qtplugins/editor/editor.cpp:79
+#: qtplugins/editor/editor.cpp:155
 #, qt-format
 msgid ""
 "Draw Tool\t(%1)\n"
@@ -3623,24 +3735,113 @@ msgstr ""
 "legături\n"
 "Butonul drept al mouse-ului:\tȘterge atomul"
 
-#: qtplugins/editor/editor.cpp:126
+#: qtplugins/editor/editor.cpp:205 qtplugins/editor/editor.cpp:1146
 msgid "Draw Atom"
 msgstr "Desenează atom"
 
-#: qtplugins/editor/editor.cpp:136
+#: qtplugins/editor/editor.cpp:230
 msgid "Change Bond Type"
 msgstr "Schimbă tipul legăturii"
 
-#: qtplugins/editor/editor.cpp:190
+#: qtplugins/editor/editor.cpp:306 qtplugins/editor/editor.cpp:1181
 msgid "Remove Bond"
 msgstr "Elimină legătura"
 
-#: qtplugins/editor/editor.cpp:280 qtplugins/measuretool/measuretool.cpp:428
+#: qtplugins/editor/editor.cpp:396 qtplugins/measuretool/measuretool.cpp:428
 #: qtplugins/measuretool/measuretool.cpp:449
 msgid "Distance:"
 msgstr "Distanța:"
 
-#: qtplugins/editor/editor.h:34 qtplugins/editor/editor.h:35
+#: qtplugins/editor/editor.cpp:1027
+msgid ""
+"Add an atom. Options: \"element\" (symbol or atomic number), \"position\" "
+"([x, y, z] in Angstroms), optional \"bondTo\" (atom index) and \"bondOrder\" "
+"(1-3). Returns the new atom \"index\"."
+msgstr ""
+"Adaugă un atom. Opțiuni: „element” (simbol sau număr atomic), „poziție” ([x, "
+"y, z] în angstromi), opțional „bondTo” (indicele atomului) și „bondOrder” (1-"
+"3). Returnează „indicele” noului atom."
+
+#: qtplugins/editor/editor.cpp:1032
+msgid ""
+"Add a bond between two unbonded atoms. Options: \"atoms\" ([i, j]) and "
+"optional \"order\" (1-3). Returns the bond \"index\"."
+msgstr ""
+"Adaugă o legătură între doi atomi care nu sunt legați. Opțiuni: „atomi” ([i, "
+"j]) și „ordine” opțională (1-3). Returnează „indicele” legăturii."
+
+#: qtplugins/editor/editor.cpp:1035
+msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
+msgstr "Elimină legătura dintre doi atomi. Opțiuni: „atomi” ([i, j])."
+
+#: qtplugins/editor/editor.cpp:1039
+msgid ""
+"Remove the selected atoms and their bonds. Returns the number \"removed\"."
+msgstr ""
+"Elimină atomii selectați și legăturile acestora. Returnează numărul de "
+"elemente „eliminate”."
+
+#: qtplugins/editor/editor.cpp:1053 qtplugins/measuretool/measuretool.cpp:764
+#: qtplugins/select/select.cpp:647
+msgid "No molecule"
+msgstr "Nicio moleculă"
+
+#: qtplugins/editor/editor.cpp:1061
+msgid "The active layer is locked; unlock it to edit."
+msgstr "Stratul activ este blocat; deblocați-l pentru a-l edita."
+
+#: qtplugins/editor/editor.cpp:1069
+#, qt-format
+msgid "Atom %1 is in a locked layer; unlock it to edit."
+msgstr "Atomul %1 se află într-un strat blocat; deblochează-l pentru a-l edita."
+
+#: qtplugins/editor/editor.cpp:1080
+msgid ""
+"addAtom requires an \"element\" option (an element symbol or atomic number)."
+msgstr ""
+"Funcția addAtom necesită o opțiune „element” (un simbol al elementului sau "
+"un număr atomic)."
+
+#: qtplugins/editor/editor.cpp:1094 qtplugins/select/select.cpp:705
+#, qt-format
+msgid "Unknown element \"%1\"."
+msgstr "Element necunoscut „%1”."
+
+#: qtplugins/editor/editor.cpp:1098 qtplugins/select/select.cpp:709
+#, qt-format
+msgid "Atomic number %1 is out of range (1 to %2)."
+msgstr "Numărul atomic %1 este în afara intervalului (1 până la %2)."
+
+#: qtplugins/editor/editor.cpp:1110
+msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
+msgstr ""
+"poziția trebuie să fie o listă formată din 3 numere [x, y, z] exprimate în "
+"angstromi."
+
+#: qtplugins/editor/editor.cpp:1118
+msgid "position must be a list of 3 finite numbers [x, y, z]."
+msgstr "poziția trebuie să fie o listă formată din 3 numere finite [x, y, z]."
+
+#: qtplugins/editor/editor.cpp:1131
+msgid "bondTo must be the index of an atom in the molecule."
+msgstr "bondTo trebuie să fie indicele unui atom din moleculă."
+
+#: qtplugins/editor/editor.cpp:1178
+msgid "There is no bond between those atoms."
+msgstr "Nu există nicio legătură între acești atomi."
+
+#: qtplugins/editor/editor.cpp:1197
+msgid "Those atoms are already bonded."
+msgstr "Acești atomi sunt deja legați între ei."
+
+#: qtplugins/editor/editor.cpp:1226
+#, qt-format
+msgid "Atom %1 or a bonded atom is in a locked layer; unlock it to edit."
+msgstr ""
+"Atomul %1 sau un atom legat se află într-un strat blocat; deblochează-l "
+"pentru a-l edita."
+
+#: qtplugins/editor/editor.h:35 qtplugins/editor/editor.h:36
 msgid "Editor tool"
 msgstr "Instrument de editare"
 
@@ -3663,6 +3864,10 @@ msgstr "Dublu"
 #: qtplugins/editor/editortoolwidget.cpp:217
 msgid "Triple"
 msgstr "Triplu"
+
+#: qtplugins/fetchpdb/fetchpdb.cpp:40
+msgid "Fetch from &PDB…"
+msgstr "Preluare din &PDB…"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -3787,12 +3992,12 @@ msgid "Forces"
 msgstr "Forțe"
 
 #: qtplugins/forcefield/forcefield.cpp:104
-#: qtplugins/forcefield/forcefield.cpp:1498
+#: qtplugins/forcefield/forcefield.cpp:1499
 msgid "Energies (All Conformers)"
 msgstr "Energii (Toți conformerii)"
 
 #: qtplugins/forcefield/forcefield.cpp:112
-#: qtplugins/forcefield/forcefield.cpp:1497
+#: qtplugins/forcefield/forcefield.cpp:1498
 msgid "Forces (All Conformers)"
 msgstr "Forțe (Toți conformerii)"
 
@@ -3863,58 +4068,62 @@ msgstr "Dezgheață atomii selectați."
 msgid "Freeze a specific axis (X, Y, or Z) of selected atoms."
 msgstr "Îngheață o anumită axă (X, Y sau Z) a atomilor selectați."
 
-#: qtplugins/forcefield/forcefield.cpp:379
-#, qt-format
-msgid "%1 force field(s) available."
-msgstr "%1 câmp(uri) de forță disponibil(e)."
+#: qtplugins/forcefield/forcefield.cpp:380
+#, qt-plural-format
+msgctxt ""
+msgid "%n force field(s) available."
+msgid_plural "%n force field(s) available."
+msgstr[0] "%n câmp de forță disponibil."
+msgstr[1] "%n câmpuri de forță disponibile."
+msgstr[2] "%n de câmpuri de forță disponibile."
 
-#: qtplugins/forcefield/forcefield.cpp:386
-#: qtplugins/forcefield/forcefield.cpp:412
-#: qtplugins/forcefield/forcefield.cpp:438
-#: qtplugins/forcefield/forcefield.cpp:499
-#: qtplugins/forcefield/forcefield.cpp:524
-#: qtplugins/forcefield/forcefield.cpp:549
+#: qtplugins/forcefield/forcefield.cpp:387
+#: qtplugins/forcefield/forcefield.cpp:413
+#: qtplugins/forcefield/forcefield.cpp:439
+#: qtplugins/forcefield/forcefield.cpp:500
+#: qtplugins/forcefield/forcefield.cpp:525
+#: qtplugins/forcefield/forcefield.cpp:550
 msgid "No molecule is open."
 msgstr "Nicio moleculă nu este deschisă."
 
-#: qtplugins/forcefield/forcefield.cpp:390
-#: qtplugins/forcefield/forcefield.cpp:416
-#: qtplugins/forcefield/forcefield.cpp:442
+#: qtplugins/forcefield/forcefield.cpp:391
+#: qtplugins/forcefield/forcefield.cpp:417
+#: qtplugins/forcefield/forcefield.cpp:443
 msgid "A force field calculation is already running."
 msgstr "Se execută deja o calculare a câmpului de forță."
 
-#: qtplugins/forcefield/forcefield.cpp:394
+#: qtplugins/forcefield/forcefield.cpp:395
 msgid "No atoms provided for energy calculation."
 msgstr "Nu au fost furnizați atomi pentru calcularea energiei."
 
-#: qtplugins/forcefield/forcefield.cpp:420
+#: qtplugins/forcefield/forcefield.cpp:421
 msgid "No atoms provided for force calculation."
 msgstr "Nu au fost furnizați atomi pentru calcularea forței."
 
-#: qtplugins/forcefield/forcefield.cpp:446
+#: qtplugins/forcefield/forcefield.cpp:447
 msgid "No atoms provided for optimization."
 msgstr "Nu au fost furnizați atomi pentru optimizare."
 
-#: qtplugins/forcefield/forcefield.cpp:466
+#: qtplugins/forcefield/forcefield.cpp:467
 msgid "\"steps\" must be a positive integer."
 msgstr "\"steps\" trebuie să fie un număr întreg pozitiv."
 
-#: qtplugins/forcefield/forcefield.cpp:476
+#: qtplugins/forcefield/forcefield.cpp:477
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
 msgstr "\"gradientTolerance\" trebuie să fie un număr finit, nenegativ."
 
-#: qtplugins/forcefield/forcefield.cpp:486
+#: qtplugins/forcefield/forcefield.cpp:487
 msgid "\"energyTolerance\" must be a finite, non-negative number."
 msgstr "\"energyTolerance\" trebuie să fie un număr finit, nenegativ."
 
-#: qtplugins/forcefield/forcefield.cpp:503
-#: qtplugins/forcefield/forcefield.cpp:528
-#: qtplugins/forcefield/forcefield.cpp:553
+#: qtplugins/forcefield/forcefield.cpp:504
+#: qtplugins/forcefield/forcefield.cpp:529
+#: qtplugins/forcefield/forcefield.cpp:554
 msgid "No atoms are selected."
 msgstr "Nu este selectat niciun atom."
 
-#: qtplugins/forcefield/forcefield.cpp:518
-#: qtplugins/forcefield/forcefield.cpp:600
+#: qtplugins/forcefield/forcefield.cpp:519
+#: qtplugins/forcefield/forcefield.cpp:601
 #, qt-plural-format
 msgctxt ""
 msgid "Froze %n atom(s)."
@@ -3923,7 +4132,7 @@ msgstr[0] "A înghețat %n atom."
 msgstr[1] "Au înghețat %n atomi."
 msgstr[2] "Au înghețat %n de atomi."
 
-#: qtplugins/forcefield/forcefield.cpp:543
+#: qtplugins/forcefield/forcefield.cpp:544
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
@@ -3932,100 +4141,100 @@ msgstr[0] "S-a dezghețat %n atom."
 msgstr[1] "S-au dezghețat %n atomi."
 msgstr[2] "S-au dezghețat %n de atomi."
 
-#: qtplugins/forcefield/forcefield.cpp:557
+#: qtplugins/forcefield/forcefield.cpp:558
 msgid "No axis was given."
 msgstr "Nu s-a specificat nicio axă."
 
-#: qtplugins/forcefield/forcefield.cpp:584
+#: qtplugins/forcefield/forcefield.cpp:585
 msgid "Axis must be x, y, z or 0, 1, 2."
 msgstr "Axa trebuie să fie x, y, z sau 0, 1, 2."
 
-#: qtplugins/forcefield/forcefield.cpp:822
+#: qtplugins/forcefield/forcefield.cpp:823
 msgid "The force field calculation was interrupted."
 msgstr "Calcularea câmpului de forță a fost întreruptă."
 
-#: qtplugins/forcefield/forcefield.cpp:892
+#: qtplugins/forcefield/forcefield.cpp:893
 msgid "No force field is available for this molecule."
 msgstr "Pentru această moleculă nu este disponibil niciun câmp de forță."
 
-#: qtplugins/forcefield/forcefield.cpp:913
+#: qtplugins/forcefield/forcefield.cpp:914
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
 msgstr "Câmpul de forță „%1” nu este compatibil cu această moleculă."
 
-#: qtplugins/forcefield/forcefield.cpp:916
+#: qtplugins/forcefield/forcefield.cpp:917
 #, qt-format
 msgid "Unknown force field \"%1\"."
 msgstr "Câmp de forță necunoscut „%1”."
 
-#: qtplugins/forcefield/forcefield.cpp:932
-#: qtplugins/forcefield/forcefield.cpp:1215
-#: qtplugins/forcefield/forcefield.cpp:1289
-#: qtplugins/forcefield/forcefield.cpp:1303
-#: qtplugins/forcefield/forcefield.cpp:1424
-#: qtplugins/forcefield/forcefield.cpp:1473
-#: qtplugins/playertool/playertool.cpp:527
-#: qtplugins/playertool/playertool.cpp:559 qtplugins/surfaces/surfaces.cpp:1094
-#: qtplugins/surfaces/surfaces.cpp:1138 qtplugins/surfaces/surfaces.cpp:1150
+#: qtplugins/forcefield/forcefield.cpp:933
+#: qtplugins/forcefield/forcefield.cpp:1216
+#: qtplugins/forcefield/forcefield.cpp:1290
+#: qtplugins/forcefield/forcefield.cpp:1304
+#: qtplugins/forcefield/forcefield.cpp:1425
+#: qtplugins/forcefield/forcefield.cpp:1474
+#: qtplugins/playertool/playertool.cpp:528
+#: qtplugins/playertool/playertool.cpp:560 qtplugins/surfaces/surfaces.cpp:1153
+#: qtplugins/surfaces/surfaces.cpp:1197 qtplugins/surfaces/surfaces.cpp:1209
 #: qtplugins/yaehmop/yaehmop.cpp:534
 msgid "Avogadro"
 msgstr "Avogadro"
 
-#: qtplugins/forcefield/forcefield.cpp:933
+#: qtplugins/forcefield/forcefield.cpp:934
 msgid "No atoms provided for optimization"
 msgstr "Nu au fost furnizați atomi pentru optimizare"
 
-#: qtplugins/forcefield/forcefield.cpp:976
-#: qtplugins/forcefield/forcefield.cpp:1235
-#: qtplugins/forcefield/forcefield.cpp:1323
+#: qtplugins/forcefield/forcefield.cpp:977
+#: qtplugins/forcefield/forcefield.cpp:1236
+#: qtplugins/forcefield/forcefield.cpp:1324
 #, qt-format
 msgid "Could not create a calculator for \"%1\"."
 msgstr "Nu s-a putut crea un calculator pentru „%1”."
 
-#: qtplugins/forcefield/forcefield.cpp:1054
+#: qtplugins/forcefield/forcefield.cpp:1055
 #, qt-format
 msgctxt "force field energy"
 msgid "Energy: %L1"
 msgstr "Energie: %L1"
 
-#: qtplugins/forcefield/forcefield.cpp:1161
+#: qtplugins/forcefield/forcefield.cpp:1162
 msgid "The optimizer stopped without producing a result."
 msgstr "Optimizatorul s-a oprit fără a genera un rezultat."
 
-#: qtplugins/forcefield/forcefield.cpp:1178
-#: qtplugins/forcefield/forcefield.cpp:1273
+#: qtplugins/forcefield/forcefield.cpp:1179
+#: qtplugins/forcefield/forcefield.cpp:1274
 #, qt-format
 msgid "%1 Energy = %L2"
 msgstr "%1 Energie = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:1216
+#: qtplugins/forcefield/forcefield.cpp:1217
 msgid "No atoms provided for energy calculation"
 msgstr "Nu au fost furnizați atomi pentru calcularea energiei"
 
-#: qtplugins/forcefield/forcefield.cpp:1277
+#: qtplugins/forcefield/forcefield.cpp:1278
 #, qt-format
 msgid "%1 returned a non-finite energy."
 msgstr "%1 a returnat o energie nefinită."
 
-#: qtplugins/forcefield/forcefield.cpp:1304
+#: qtplugins/forcefield/forcefield.cpp:1305
 msgid "No atoms provided for force calculation"
 msgstr "Nu au fost furnizați atomi pentru calcularea forței"
 
-#: qtplugins/forcefield/forcefield.cpp:1359
+#: qtplugins/forcefield/forcefield.cpp:1360
 msgid "The molecule changed during the calculation."
 msgstr "Molecula s-a modificat în timpul calculului."
 
-#: qtplugins/forcefield/forcefield.cpp:1372
+#: qtplugins/forcefield/forcefield.cpp:1373
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
 msgstr "%1 a returnat un rezultat nefinit sau incomplet."
 
-#: qtplugins/forcefield/forcefield.cpp:1394
+#: qtplugins/forcefield/forcefield.cpp:1395
 #, qt-format
 msgid "%1 Force Norm = %L2"
 msgstr "%1 Normă de forță = %L2"
 
-#: qtplugins/forcefield/forcefield.cpp:1474
+#: qtplugins/forcefield/forcefield.cpp:1475
 msgid "This molecule has only one coordinate set."
 msgstr "Această moleculă are un singur set de coordonate."
 
@@ -4118,8 +4327,8 @@ msgstr "Potențialul nucleului"
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:370
 #. i18n: ectx: property (text), item, widget (QComboBox, smoothingCombo)
 #: qtplugins/gamessinput/gamessinputdialog.cpp:419
-#: qtplugins/label/label.cpp:255 qtplugins/label/label.cpp:285
-#: qtplugins/label/label.cpp:298:1626 rc.cpp:1709 rc.cpp:2063
+#: qtplugins/label/label.cpp:264 qtplugins/label/label.cpp:294
+#: qtplugins/label/label.cpp:307:1626 rc.cpp:1709 rc.cpp:2063
 msgid "None"
 msgstr "Nimic"
 
@@ -4252,6 +4461,20 @@ msgstr "Import din PQR"
 msgid "Download a molecule from PQR."
 msgstr "Descarcă o moleculă din PQR."
 
+#: qtplugins/importpqr/pqrwidget.cpp:16 qtplugins/label/label.cpp:309
+#: qtplugins/packageinstaller/packagemodel.cpp:175
+#: qtplugins/propertytables/propertymodel.cpp:834
+msgid "Name"
+msgstr "Nume"
+
+#: qtplugins/importpqr/pqrwidget.cpp:16
+msgid "Formula"
+msgstr "Formula"
+
+#: qtplugins/importpqr/pqrwidget.cpp:16
+msgid "Mass (g/mol)"
+msgstr "Masa (g/mol)"
+
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
 msgstr "ADN/ARN…"
@@ -4377,7 +4600,7 @@ msgstr ""
 #: qtplugins/insertpolymer/insertpolymer.cpp:89
 #: qtplugins/insertpolymer/insertpolymer.cpp:108
 #: qtplugins/insertpolymer/insertpolymer.h:23
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:637:904 rc.cpp:979
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:636:904 rc.cpp:979
 msgid "Insert Polymer"
 msgstr "Inserare polimer"
 
@@ -4412,87 +4635,81 @@ msgstr "Alegeți monomerul"
 msgid "Filter:"
 msgstr "Filtru:"
 
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:617
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:616
 #, qt-format
 msgid "Monomer percentages must sum to 100 (current total: %1)."
 msgstr "Procentele monomerilor trebuie să însumeze 100 (total actual: %1)."
 
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:626
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:625
 msgid "No monomer specified. Please choose at least monomer A."
 msgstr ""
 "Nu s-a specificat niciun monomer. Vă rugăm să alegeți cel puțin monomerul A."
 
-#: qtplugins/insertpolymer/insertpolymerdialog.cpp:632
+#: qtplugins/insertpolymer/insertpolymerdialog.cpp:631
 msgid "Working"
 msgstr "În curs de efectuare"
 
-#: qtplugins/label/label.cpp:225 qtplugins/surfacerender/surfacerender.cpp:313
+#: qtplugins/label/label.cpp:234 qtplugins/surfacerender/surfacerender.cpp:313
 #: qtplugins/surfacerender/surfacerender.cpp:319
 msgid "Color:"
 msgstr "Culoare:"
 
-#: qtplugins/label/label.cpp:235
+#: qtplugins/label/label.cpp:244
 msgid "Distance from center:"
 msgstr "Distanța de la centru:"
 
-#: qtplugins/label/label.cpp:245
+#: qtplugins/label/label.cpp:254
 msgid "Label scale:"
 msgstr "Scala etichetei:"
 
-#: qtplugins/label/label.cpp:256 qtplugins/label/label.cpp:287
+#: qtplugins/label/label.cpp:265 qtplugins/label/label.cpp:296
 msgid "Index"
 msgstr "Index"
 
-#: qtplugins/label/label.cpp:257
+#: qtplugins/label/label.cpp:266
 msgid "Unique ID"
 msgstr "ID unic"
 
-#: qtplugins/label/label.cpp:258 qtplugins/propertytables/propertymodel.cpp:779
+#: qtplugins/label/label.cpp:267 qtplugins/propertytables/propertymodel.cpp:779
 #: qtplugins/symmetry/operationstablemodel.cpp:61
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:119
 msgid "Element"
 msgstr "Element"
 
-#: qtplugins/label/label.cpp:259
+#: qtplugins/label/label.cpp:268
 msgid "Element & Number"
 msgstr "Element și număr"
 
-#: qtplugins/label/label.cpp:261
+#: qtplugins/label/label.cpp:270
 msgid "Element & ID"
 msgstr "Element și ID"
 
-#: qtplugins/label/label.cpp:263
+#: qtplugins/label/label.cpp:272
 msgctxt "atomic partial charge"
 msgid "Partial Charge"
 msgstr "Sarcină parțială"
 
-#: qtplugins/label/label.cpp:278
+#: qtplugins/label/label.cpp:287
 msgid "Atom Label:"
 msgstr "Etichetă atom:"
 
-#: qtplugins/label/label.cpp:286
+#: qtplugins/label/label.cpp:295
 msgid "Length"
 msgstr "Lungime"
 
-#: qtplugins/label/label.cpp:292
+#: qtplugins/label/label.cpp:301
 msgid "Bond Label:"
 msgstr "Etichetă legătură:"
 
-#: qtplugins/label/label.cpp:299 qtplugins/propertytables/propertymodel.cpp:836
+#: qtplugins/label/label.cpp:308 qtplugins/propertytables/propertymodel.cpp:836
 msgid "ID"
 msgstr "ID"
 
-#: qtplugins/label/label.cpp:300
-#: qtplugins/packageinstaller/packagemodel.cpp:175
-#: qtplugins/propertytables/propertymodel.cpp:834
-msgid "Name"
-msgstr "Nume"
-
-#: qtplugins/label/label.cpp:301
+#: qtplugins/label/label.cpp:310
 msgid "Name & ID"
 msgstr "Nume și ID"
 
-#: qtplugins/label/label.cpp:308
+#: qtplugins/label/label.cpp:317
 msgid "Residue Label:"
 msgstr "Etichetă reziduu:"
 
@@ -4683,7 +4900,7 @@ msgid "Angle:"
 msgstr "Unghi:"
 
 #: qtplugins/measuretool/measuretool.cpp:602
-#: qtplugins/measuretool/measuretool.cpp:992
+#: qtplugins/measuretool/measuretool.cpp:997
 msgid "One of these atoms no longer exists."
 msgstr "Unul dintre acești atomi nu mai există."
 
@@ -4692,21 +4909,21 @@ msgid "That's not a value this can be set to."
 msgstr "Aceasta nu este o valoare care poate fi definită."
 
 #: qtplugins/measuretool/measuretool.cpp:610
-#: qtplugins/measuretool/measuretool.cpp:1005
+#: qtplugins/measuretool/measuretool.cpp:1010
 msgid "These atoms are in the same place, so this distance isn't defined."
 msgstr ""
 "Acești atomi se află în același loc, așa că această distanță nu este "
 "definită."
 
 #: qtplugins/measuretool/measuretool.cpp:613
-#: qtplugins/measuretool/measuretool.cpp:1010
+#: qtplugins/measuretool/measuretool.cpp:1015
 msgid ""
 "Three of these atoms are in a straight line, so this dihedral isn't defined."
 msgstr ""
 "Trei dintre acești atomi sunt aliniați, așa că acest diedru nu este definit."
 
 #: qtplugins/measuretool/measuretool.cpp:616
-#: qtplugins/measuretool/measuretool.cpp:1008
+#: qtplugins/measuretool/measuretool.cpp:1013
 msgid "These atoms are in a straight line, so this angle isn't defined."
 msgstr ""
 "Acești atomi sunt aliniați în linie dreaptă, așa că acest unghi nu este "
@@ -4775,8 +4992,8 @@ msgid ""
 msgstr ""
 "Stabilește distanța, în Å, dintre doi atomi indicați prin indici de la zero: "
 "{\"atoms\": [i, j], \"value\": ...}; al doilea atom și tot ce este legat de "
-"el pe acea parte se deplasează. Returnează noua structură {\"distance\": "
-"..., \"atoms\": [i, j]}."
+"el pe acea parte se deplasează. Returnează noua structură "
+"{\"distance\": ..., \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:715
 msgid ""
@@ -4802,44 +5019,45 @@ msgstr ""
 "și tot ce este legat de el pe acea parte se deplasează. Returnează noua "
 "structură {\"dihedral\": ..., \"atoms\": [i, j, k, l]}."
 
-#: qtplugins/measuretool/measuretool.cpp:764 qtplugins/select/select.cpp:638
-msgid "No molecule"
-msgstr "Nicio moleculă"
+#: qtplugins/measuretool/measuretool.cpp:794
+#, qt-format
+msgid "value must be a distance from %1 to %2 Å."
+msgstr "Valoarea trebuie să fie o distanță cuprinsă între %1 și %2 Å."
 
-#: qtplugins/measuretool/measuretool.cpp:856
+#: qtplugins/measuretool/measuretool.cpp:861
 msgid "atoms must list exactly 2 atom indices for a distance."
 msgstr "atomii trebuie să listeze exact 2 indici de atom pentru o distanță."
 
-#: qtplugins/measuretool/measuretool.cpp:859
+#: qtplugins/measuretool/measuretool.cpp:864
 msgid "atoms must list exactly 3 atom indices for an angle."
 msgstr "atomii trebuie să listeze exact 3 indici de atom pentru un unghi."
 
-#: qtplugins/measuretool/measuretool.cpp:862
+#: qtplugins/measuretool/measuretool.cpp:867
 msgid "atoms must list exactly 4 atom indices for a dihedral."
 msgstr "atomii trebuie să listeze exact 4 indici de atom pentru un diedru."
 
-#: qtplugins/measuretool/measuretool.cpp:933
+#: qtplugins/measuretool/measuretool.cpp:938
 msgid "value is required and must be a distance in Å."
 msgstr "valoarea este obligatorie și trebuie să fie o distanță exprimată în Å."
 
-#: qtplugins/measuretool/measuretool.cpp:934
+#: qtplugins/measuretool/measuretool.cpp:939
 msgid "value is required and must be an angle in degrees."
 msgstr ""
 "valoarea este obligatorie și trebuie să fie un unghi exprimat în grade."
 
-#: qtplugins/measuretool/measuretool.cpp:996
+#: qtplugins/measuretool/measuretool.cpp:1001
 msgid "That's not a value this distance can be set to."
 msgstr "Aceasta nu este o valoare la care poate fi definită această distanță."
 
-#: qtplugins/measuretool/measuretool.cpp:998
+#: qtplugins/measuretool/measuretool.cpp:1003
 msgid "That's not a value this angle can be set to."
 msgstr "Aceasta nu este o valoare la care poate fi definit acest unghi."
 
-#: qtplugins/measuretool/measuretool.cpp:1000
+#: qtplugins/measuretool/measuretool.cpp:1005
 msgid "That's not a value this dihedral can be set to."
 msgstr "Aceasta nu este o valoare la care poate fi definit acest diedru."
 
-#: qtplugins/measuretool/measuretool.cpp:1021
+#: qtplugins/measuretool/measuretool.cpp:1026
 #, qt-format
 msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this angle can't change "
@@ -4848,7 +5066,7 @@ msgstr ""
 "Legătura dintre atomii nr.%1 și nr.%2 formează un inel, astfel că acest "
 "unghi nu poate fi modificat fără a deforma inelul."
 
-#: qtplugins/measuretool/measuretool.cpp:1025
+#: qtplugins/measuretool/measuretool.cpp:1030
 #, qt-format
 msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this dihedral can't change "
@@ -4857,7 +5075,7 @@ msgstr ""
 "Legătura dintre atomii %1 și %2 formează un inel, așa că acest unghi diedru "
 "nu se poate modifica fără a-l deforma."
 
-#: qtplugins/measuretool/measuretool.cpp:1039
+#: qtplugins/measuretool/measuretool.cpp:1044
 #, qt-format
 msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
@@ -4866,7 +5084,7 @@ msgstr ""
 "Atomii %1 și %2 sunt conectați prin moleculă, astfel că această distanță nu "
 "poate fi modificată fără a o deforma. Încercați instrumentul Manipulare."
 
-#: qtplugins/measuretool/measuretool.cpp:1045
+#: qtplugins/measuretool/measuretool.cpp:1050
 #, qt-format
 msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this angle can't "
@@ -4875,7 +5093,7 @@ msgstr ""
 "Atomii %1 și %2 sunt conectați prin moleculă, așa că acest unghi nu se poate "
 "modifica fără a deforma molecula. Încercați instrumentul „Manipulare”."
 
-#: qtplugins/measuretool/measuretool.cpp:1051
+#: qtplugins/measuretool/measuretool.cpp:1056
 #, qt-format
 msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this dihedral can't "
@@ -4889,7 +5107,7 @@ msgstr ""
 msgid "Measure tool"
 msgstr "Instrument de măsurare"
 
-#: qtplugins/measuretool/measurewidget.cpp:23
+#: qtplugins/measuretool/measurewidget.cpp:28
 msgid ""
 "Click up to four atoms to measure them.\n"
 "Type a new value to move the atoms."
@@ -4897,141 +5115,141 @@ msgstr ""
 "Faceți clic pe cel mult patru atomi pentru a-i măsura.\n"
 "Introduceți o nouă valoare pentru a muta atomii."
 
-#: qtplugins/measuretool/measurewidget.cpp:34
+#: qtplugins/measuretool/measurewidget.cpp:39
 msgid "Distance 1–2"
 msgstr "Distanță 1-2"
 
-#: qtplugins/measuretool/measurewidget.cpp:34
-#: qtplugins/measuretool/measurewidget.cpp:36
-#: qtplugins/measuretool/measurewidget.cpp:38
+#: qtplugins/measuretool/measurewidget.cpp:39
+#: qtplugins/measuretool/measurewidget.cpp:42
+#: qtplugins/measuretool/measurewidget.cpp:45
 msgid " Å"
 msgstr " Å"
 
-#: qtplugins/measuretool/measurewidget.cpp:36
+#: qtplugins/measuretool/measurewidget.cpp:42
 msgid "Distance 2–3"
 msgstr "Distanță 2–3"
 
-#: qtplugins/measuretool/measurewidget.cpp:38
+#: qtplugins/measuretool/measurewidget.cpp:45
 msgid "Distance 3–4"
 msgstr "Distanță 3–4"
 
-#: qtplugins/measuretool/measurewidget.cpp:40
+#: qtplugins/measuretool/measurewidget.cpp:48
 msgid "Angle 1–2–3"
 msgstr "Unghi 1-2-3"
 
-#: qtplugins/measuretool/measurewidget.cpp:40
-#: qtplugins/measuretool/measurewidget.cpp:42
-#: qtplugins/measuretool/measurewidget.cpp:44
+#: qtplugins/measuretool/measurewidget.cpp:48
+#: qtplugins/measuretool/measurewidget.cpp:50
+#: qtplugins/measuretool/measurewidget.cpp:52
 msgid "°"
 msgstr "°"
 
-#: qtplugins/measuretool/measurewidget.cpp:42
+#: qtplugins/measuretool/measurewidget.cpp:50
 msgid "Angle 2–3–4"
 msgstr "Unghi 2-3-4"
 
-#: qtplugins/measuretool/measurewidget.cpp:44
+#: qtplugins/measuretool/measurewidget.cpp:52
 msgid "Dihedral 1–2–3–4"
 msgstr "Diedru 1-2-3-4"
 
-#: qtplugins/measuretool/measurewidget.cpp:145
+#: qtplugins/measuretool/measurewidget.cpp:155
 #, qt-format
 msgid "#1 stays fixed; edits move toward #%1."
 msgstr "nr.1 rămâne fix; modificările se deplasează spre nr.%1."
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:60
+#: qtplugins/molecularproperties/molecularmodel.cpp:61
 msgid "(pending)"
 msgstr "(în așteptare)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:167
+#: qtplugins/molecularproperties/molecularmodel.cpp:168
 msgid "Property"
 msgstr "Proprietate"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:174
+#: qtplugins/molecularproperties/molecularmodel.cpp:175
 msgid "Molecule Name"
 msgstr "Numele moleculei"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:176
+#: qtplugins/molecularproperties/molecularmodel.cpp:177
 msgid "Molecular Mass (g/mol)"
 msgstr "Masa moleculară (g/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:178
+#: qtplugins/molecularproperties/molecularmodel.cpp:179
 msgid "Monoisotopic Mass (g/mol)"
 msgstr "Masa izotopică (g/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:180
+#: qtplugins/molecularproperties/molecularmodel.cpp:181
 msgid "Chemical Formula"
 msgstr "Formula chimică"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:182
+#: qtplugins/molecularproperties/molecularmodel.cpp:183
 msgid "Number of Atoms"
 msgstr "Numărul de atomi"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:184
+#: qtplugins/molecularproperties/molecularmodel.cpp:185
 msgid "Number of Bonds"
 msgstr "Numărul de legături"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:186
+#: qtplugins/molecularproperties/molecularmodel.cpp:187
 msgid "Coordinate Sets"
 msgstr "Seturi de coordonate"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:188
+#: qtplugins/molecularproperties/molecularmodel.cpp:189
 msgid "Number of Residues"
 msgstr "Numărul de reziduuri"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:190
+#: qtplugins/molecularproperties/molecularmodel.cpp:191
 msgid "Number of Chains"
 msgstr "Număr de lanțuri"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:192
+#: qtplugins/molecularproperties/molecularmodel.cpp:193
 msgid "Net Charge"
 msgstr "Sarcina netă"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:194
+#: qtplugins/molecularproperties/molecularmodel.cpp:195
 msgid "Net Spin Multiplicity"
 msgstr "Multiplicitatea spinului net"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:196
+#: qtplugins/molecularproperties/molecularmodel.cpp:197
 msgid "Dipole Moment (Debye)"
 msgstr "Moment dipolar (Debye)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:198
+#: qtplugins/molecularproperties/molecularmodel.cpp:199
 msgctxt "highest occupied molecular orbital"
 msgid "HOMO Energy (eV)"
 msgstr "Energia HOMO (eV)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:200
+#: qtplugins/molecularproperties/molecularmodel.cpp:201
 msgctxt "lowest unoccupied molecular orbital"
 msgid "LUMO Energy (eV)"
 msgstr "Energia LUMO (eV)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:202
+#: qtplugins/molecularproperties/molecularmodel.cpp:203
 msgctxt "singly-occupied molecular orbital"
 msgid "SOMO Energy (eV)"
 msgstr "Energia SOMO (eV)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:204
+#: qtplugins/molecularproperties/molecularmodel.cpp:205
 msgctxt "total electronic energy in Hartrees"
 msgid "Total Energy (Hartree)"
 msgstr "Energia totală (Hartree)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:207
+#: qtplugins/molecularproperties/molecularmodel.cpp:208
 msgctxt "zero point vibrational energy"
 msgid "Zero Point Energy (kcal/mol)"
 msgstr "Energia punctului zero (kcal/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:210
+#: qtplugins/molecularproperties/molecularmodel.cpp:211
 msgid "Enthalpy (kcal/mol)"
 msgstr "Entalpia (kcal/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:212
+#: qtplugins/molecularproperties/molecularmodel.cpp:213
 msgid "Entropy (kcal/mol•K)"
 msgstr "Entropia (kcal/mol-K)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:214
+#: qtplugins/molecularproperties/molecularmodel.cpp:215
 msgid "Gibbs Free Energy (kcal/mol)"
 msgstr "Energia liberă Gibbs (kcal/mol)"
 
-#: qtplugins/molecularproperties/molecularmodel.cpp:216
+#: qtplugins/molecularproperties/molecularmodel.cpp:217
 msgctxt "point group symmetry"
 msgid "Point Group"
 msgstr "Grup de puncte"
@@ -5048,7 +5266,7 @@ msgstr "Vizualizați proprietățile generale ale unei molecule."
 #: qtplugins/plotconformer/plotconformer.cpp:185
 #: qtplugins/propertytables/propertytables.cpp:86
 #: qtplugins/qtaim/qtaimextension.cpp:68 qtplugins/spectra/spectra.cpp:43
-#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:388
+#: qtplugins/surfaces/orbitals.cpp:62 qtplugins/surfaces/surfaces.cpp:411
 #: qtplugins/symmetry/symmetry.cpp:81 qtplugins/vibrations/vibrations.cpp:44
 msgid "&Analyze"
 msgstr "&Analizează"
@@ -5169,6 +5387,10 @@ msgstr ""
 #: qtplugins/navigator/navigator.h:31 qtplugins/navigator/navigator.h:32
 msgid "Navigate tool"
 msgstr "Instrument de navigare"
+
+#: qtplugins/networkdatabases/networkdatabases.cpp:28
+msgid "Download by &Name…"
+msgstr "Descărcare după &nume…"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
@@ -5539,25 +5761,25 @@ msgstr "Program de instalare a pachetelor"
 msgid "Install, update, and remove Avogadro packages."
 msgstr "Instalează, actualizează și dezinstalează pachetele Avogadro."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:180
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:186
 #, qt-format
 msgid "Error downloading plugin list: %1"
 msgstr "Eroare la descărcarea listei de module: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:189
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:195
 msgid "Error: empty response from server."
 msgstr "Eroare: răspuns gol de la server."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:308
 #, qt-format
 msgid "Authors: %1"
 msgstr "Autori: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:302
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:308
 msgid ", "
 msgstr ", "
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:309
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:315
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
@@ -5566,29 +5788,29 @@ msgstr[0] "%n descărcare în ultimele %1 zile"
 msgstr[1] "%n descărcări în ultimele %1 zile"
 msgstr[2] "%n de descărcări în ultimele %1 de zile"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:358
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:364
 #, qt-format
 msgid "Error fetching README: %1"
 msgstr "Eroare la preluarea fișierului README: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:397
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:403
 msgid "Nothing Selected"
 msgstr "Nu este selectat nimic"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:398
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:404
 msgid "Select a plugin to install or update."
 msgstr "Selectați un modul pentru a-l instala sau actualiza."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:408
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:414
 #, qt-format
 msgid "%1 (requires %2)"
 msgstr "%1 (necesită %2)"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:412
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:418
 msgid "Version Incompatibility"
 msgstr "Incompatibilitate între versiuni"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:413
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:419
 #, qt-format
 msgid ""
 "The following plugins require a newer version of Avogadro:\n"
@@ -5603,83 +5825,101 @@ msgstr ""
 "\n"
 "Instalați oricum?"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:440
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:446
 msgid "No Download Available"
 msgstr "Nu este disponibilă nicio descărcare"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:441
-#, qt-format
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:447
+#, qt-format, qt-plural-format
+msgctxt ""
 msgid ""
 "The selected plugin(s) do not provide a downloadable source URL:\n"
 "\n"
 "%1"
-msgstr ""
-"Modulul/modulele selectate nu oferă o adresă URL sursă de unde pot fi "
-"descărcate:\n"
+msgid_plural ""
+"The selected plugin(s) do not provide a downloadable source URL:\n"
+"\n"
+"%1"
+msgstr[0] ""
+"Modulul selectat nu oferă o adresă URL sursă de unde poate fi descărcat:\n"
+"\n"
+"%1"
+msgstr[1] ""
+"Modulele selectate nu oferă o adresă URL sursă de unde pot fi descărcate:\n"
+"\n"
+"%1"
+msgstr[2] ""
+"Modulele selectate nu oferă o adresă URL sursă de unde pot fi descărcate:\n"
 "\n"
 "%1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:488
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:495
 #, qt-format
 msgid "Failed to follow redirect while downloading %1.\n"
 msgstr "Nu s-a reușit redirecționarea în timpul descărcării %1.\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:505
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:512
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
 msgstr "Descărcarea de la %1 a eșuat: stare %2, %3\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:514
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:521
 #, qt-format
 msgid "Failed to download from %1: %2\n"
 msgstr "Descărcarea de la %1 a eșuat: %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:549
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:556
 #, qt-format
 msgid "Downloading %1 to %2\n"
 msgstr "Se descarcă %1 în %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:563
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:570
 #, qt-format
 msgid "Extracting %1…\n"
 msgstr "Se extrage %1…\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:571
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:578
 #, qt-format
 msgid "Extraction complete (%1 files)\n"
 msgstr "Extragere finalizată (%1 fișiere)\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:606
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:613
 #, qt-format
 msgid "Error: could not move extracted package %1 to %2\n"
 msgstr "Eroare: nu s-a putut muta pachetul extras %1 în %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:619
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:626
 #, qt-format
 msgid "Extraction error: %1"
 msgstr "Eroare de extragere: %1"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:621
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:628
 msgid "Extraction yielded no files.\n"
 msgstr "Extragerea nu a generat niciun fișier.\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:631
-msgid "Installation complete.\n"
-msgstr "Instalare finalizată.\n"
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:638
+#, qt-format
+msgid "Installation complete for %1.\n"
+msgstr "Instalarea pentru %1 s-a finalizat.\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:667
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:646
+#, qt-format
+msgid "Installation failed for %1: %2\n"
+msgstr "Instalarea pentru %1 eșuat: %2\n"
+
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:687
 msgid "Nothing to Remove"
 msgstr "Nu este nimic de eliminat"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:668
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:688
 msgid "Select an installed plugin to remove it."
 msgstr "Selectați un modul instalat pentru a-l elimina."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:674
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:694
 msgid "Remove Plugins"
 msgstr "Elimină module"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:675
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:695
 #, qt-plural-format
 msgctxt ""
 msgid "Remove %n selected plugin(s)?"
@@ -5688,46 +5928,46 @@ msgstr[0] "Eliminați %n modul selectat?"
 msgstr[1] "Eliminați %n module selectate?"
 msgstr[2] "Eliminați %n de module selectate?"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:679
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:699
 msgid "Keep Files"
 msgstr "Păstrează fișierele"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:681
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:701
 msgid "Delete Files"
 msgstr "Șterge fișiere"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:713
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:734
 msgid "Select Plugin Directory"
 msgstr "Selectați directorul modulelor"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:719
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:740
 msgid "Invalid Directory"
 msgstr "Director nevalid"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:720
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:741
 msgid "The selected directory does not contain a pyproject.toml file."
 msgstr "Directorul selectat nu conține un fișier pyproject.toml."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:734
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:755
 #, qt-format
 msgid "Plugin already installed as symlink: %1\n"
 msgstr "Modulul este deja instalat ca legătură simbolică: %1\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:749
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:770
 #, qt-format
 msgid "Created symlink: %1 → %2\n"
 msgstr "S-a creat legătură simbolică: %1 → %2\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:752
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:773
 msgid "Symlink creation failed; copying files instead…\n"
 msgstr "Crearea legăturii simbolice a eșuat; se copiază fișierele în schimb…\n"
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:755
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:776
 #, qt-format
 msgid "Failed to copy package to %1."
 msgstr "Nu s-a reușit copierea pachetului în %1."
 
-#: qtplugins/packageinstaller/packagemanagerdialog.cpp:760
+#: qtplugins/packageinstaller/packagemanagerdialog.cpp:781
 #, qt-format
 msgid "Installing plugin from %1…\n"
 msgstr "Se instalează modulul din %1…\n"
@@ -5830,97 +6070,97 @@ msgctxt "%1 is the message from libarchive"
 msgid "Warning: (%1)"
 msgstr "Avertisment: (%1)"
 
-#: qtplugins/playertool/playertool.cpp:70
+#: qtplugins/playertool/playertool.cpp:71
 msgctxt "control-key 9"
 msgid "Ctrl+9"
 msgstr "Ctrl+9"
 
-#: qtplugins/playertool/playertool.cpp:71
+#: qtplugins/playertool/playertool.cpp:72
 msgid "Player"
 msgstr "Dispozitiv redare"
 
-#: qtplugins/playertool/playertool.cpp:72
+#: qtplugins/playertool/playertool.cpp:73
 #, qt-format
 msgid "Animation Tool\t(%1)"
 msgstr "Instrument de animație\t(%1)"
 
 #. i18n: file: qtplugins/surfaces/surfacedialog.ui:432
 #. i18n: ectx: property (text), widget (QLabel, frameLabel)
-#: qtplugins/playertool/playertool.cpp:104:2139
+#: qtplugins/playertool/playertool.cpp:105:2139
 msgid "Frame:"
 msgstr "Cadrul:"
 
-#: qtplugins/playertool/playertool.cpp:134
+#: qtplugins/playertool/playertool.cpp:135
 msgctxt "start or first frame index"
 msgid "Start:"
 msgstr "Începe:"
 
-#: qtplugins/playertool/playertool.cpp:145
+#: qtplugins/playertool/playertool.cpp:146
 msgctxt "end or last frame index"
 msgid "End:"
 msgstr "Final:"
 
-#: qtplugins/playertool/playertool.cpp:159
+#: qtplugins/playertool/playertool.cpp:160
 msgid "Dynamic bonding?"
 msgstr "Legături dinamice?"
 
-#: qtplugins/playertool/playertool.cpp:167
+#: qtplugins/playertool/playertool.cpp:168
 msgid "Frame rate:"
 msgstr "Frecvența cadrelor:"
 
-#: qtplugins/playertool/playertool.cpp:173
+#: qtplugins/playertool/playertool.cpp:174
 msgctxt "frames per second"
 msgid " FPS"
 msgstr " FPS"
 
-#: qtplugins/playertool/playertool.cpp:181
-#: qtplugins/playertool/playertool.cpp:345
+#: qtplugins/playertool/playertool.cpp:182
+#: qtplugins/playertool/playertool.cpp:346
 msgid "Play"
 msgstr "Redare"
 
-#: qtplugins/playertool/playertool.cpp:186
+#: qtplugins/playertool/playertool.cpp:187
 msgid "Record…"
 msgstr "Înregistrare…"
 
-#: qtplugins/playertool/playertool.cpp:325
+#: qtplugins/playertool/playertool.cpp:326
 msgid "Pause"
 msgstr "Pauză"
 
-#: qtplugins/playertool/playertool.cpp:427
-#: qtplugins/playertool/playertool.cpp:532
+#: qtplugins/playertool/playertool.cpp:428
+#: qtplugins/playertool/playertool.cpp:533
 msgid "Movie (*.mp4)"
 msgstr "Videoclip (*.mp4)"
 
-#: qtplugins/playertool/playertool.cpp:429
+#: qtplugins/playertool/playertool.cpp:430
 msgid "Export Bitmap Graphics"
 msgstr "Exportă ca imagine bitmap"
 
-#: qtplugins/playertool/playertool.cpp:430
+#: qtplugins/playertool/playertool.cpp:431
 msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "Videoclip (*.mp4);;Videoclip (*.avi);;GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:444 qtplugins/surfaces/surfaces.cpp:1065
+#: qtplugins/playertool/playertool.cpp:445 qtplugins/surfaces/surfaces.cpp:1124
 msgid "GIF (*.gif)"
 msgstr "GIF (*.gif)"
 
-#: qtplugins/playertool/playertool.cpp:450
+#: qtplugins/playertool/playertool.cpp:451
 msgid "GIF FPS support warning"
 msgstr "Avertisment privind suportul pentru FPS GIF"
 
-#: qtplugins/playertool/playertool.cpp:451
+#: qtplugins/playertool/playertool.cpp:452
 msgid "The GIF file format does not support frame rates over 100 FPS."
 msgstr ""
 "Formatul de fișier GIF nu acceptă frecvențe ale cadrelor mai mari de 100 FPS."
 
-#: qtplugins/playertool/playertool.cpp:496
+#: qtplugins/playertool/playertool.cpp:497
 msgid "Movie (*.avi)"
 msgstr "Videoclip (*.avi)"
 
-#: qtplugins/playertool/playertool.cpp:528 qtplugins/surfaces/surfaces.cpp:1139
+#: qtplugins/playertool/playertool.cpp:529 qtplugins/surfaces/surfaces.cpp:1198
 msgid "Error: cannot add frame to video."
 msgstr "Eroare: nu se poate adăuga un cadru la video."
 
-#: qtplugins/playertool/playertool.cpp:669
+#: qtplugins/playertool/playertool.cpp:670
 msgid ""
 "Advance one coordinate set, looping to the first frame after the last. "
 "Returns {\"frame\": …, \"count\": …}."
@@ -5928,7 +6168,7 @@ msgstr ""
 "Avansează cu un set de coordonate, revenind la primul cadru după ultimul. "
 "Returnează {\"frame\": …, \"count\": …}."
 
-#: qtplugins/playertool/playertool.cpp:673
+#: qtplugins/playertool/playertool.cpp:674
 msgid ""
 "Step back one coordinate set, looping to the last frame before the first. "
 "Returns {\"frame\": …, \"count\": …}."
@@ -5936,7 +6176,7 @@ msgstr ""
 "Revine cu un set de coordonate înapoi, parcurgând în buclă până la ultimul "
 "cadru dinaintea primului. Returnează {\"frame\": …, \"count\": …}."
 
-#: qtplugins/playertool/playertool.cpp:677
+#: qtplugins/playertool/playertool.cpp:678
 msgid ""
 "Jump to a coordinate set, given as a zero-based index: {\"index\": n}. "
 "Returns {\"frame\": …, \"count\": …}."
@@ -5944,7 +6184,7 @@ msgstr ""
 "Trece la un set de coordonate, specificat ca un index cu punct de pornire de "
 "la zero: {\"index\": n}. Returnează {\"frame\": …, \"count\": …}."
 
-#: qtplugins/playertool/playertool.cpp:681
+#: qtplugins/playertool/playertool.cpp:682
 msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
@@ -5952,19 +6192,19 @@ msgstr ""
 "Afișează cadrul curent și numărul de seturi de coordonate, fără a modifica "
 "nimic. Returnează {\"frame\": …, \"count\": …}."
 
-#: qtplugins/playertool/playertool.cpp:697
+#: qtplugins/playertool/playertool.cpp:698
 msgid "There is no molecule."
 msgstr "Nu există nicio moleculă."
 
-#: qtplugins/playertool/playertool.cpp:701
+#: qtplugins/playertool/playertool.cpp:702
 msgid "The molecule has no coordinate sets."
 msgstr "Molecula nu are seturi de coordonate."
 
-#: qtplugins/playertool/playertool.cpp:711
+#: qtplugins/playertool/playertool.cpp:712
 msgid "index is required."
 msgstr "este necesar un index."
 
-#: qtplugins/playertool/playertool.cpp:720
+#: qtplugins/playertool/playertool.cpp:721
 #, qt-format
 msgid "index must be a whole number from 0 to %1."
 msgstr "indexul trebuie să fie un număr întreg cuprins între 0 și %1."
@@ -6096,17 +6336,17 @@ msgstr "Conversia moleculei în formatul CIF a eșuat."
 msgid "Data read from genXrdPattern appears to be corrupt!"
 msgstr "Datele citite din genXrdPattern par a fi corupte!"
 
-#: qtplugins/plotxrd/plotxrd.cpp:257
+#: qtplugins/plotxrd/plotxrd.cpp:256
 msgid "Error: could not find genXrdPattern executable!"
 msgstr "Eroare: nu a putut fi găsit executabilul genXrdPattern!"
 
-#: qtplugins/plotxrd/plotxrd.cpp:269 qtplugins/plotxrd/plotxrd.cpp:281
-#: qtplugins/plotxrd/plotxrd.cpp:292 qtplugins/plotxrd/plotxrd.cpp:299
+#: qtplugins/plotxrd/plotxrd.cpp:268 qtplugins/plotxrd/plotxrd.cpp:280
+#: qtplugins/plotxrd/plotxrd.cpp:291 qtplugins/plotxrd/plotxrd.cpp:298
 #: qtplugins/yaehmop/yaehmop.cpp:556
 msgid "Error: "
 msgstr "Eroare: "
 
-#: qtplugins/plotxrd/plotxrd.cpp:313
+#: qtplugins/plotxrd/plotxrd.cpp:312
 msgid "Show XRD plot."
 msgstr "Afișează graficul XRD."
 
@@ -6118,18 +6358,32 @@ msgstr "TraseazăXrd"
 msgid "Generate and plot a theoretical XRD pattern using ObjCryst++."
 msgstr "Generează și trasează un model XRD teoretic utilizând ObjCryst++."
 
-#: qtplugins/ply/ply.cpp:29
+#: qtplugins/ply/ply.cpp:73
 msgid "PLY Render…"
 msgstr "Prelucrare PLY…"
 
-#: qtplugins/ply/ply.cpp:68 qtplugins/povray/povray.cpp:68
+#: qtplugins/ply/ply.cpp:112 qtplugins/povray/povray.cpp:68
 #: qtplugins/svg/svg.cpp:257 qtplugins/vrml/vrml.cpp:68
 msgid "Save File"
 msgstr "Salvează fișierul"
 
-#: qtplugins/ply/ply.cpp:69
-msgid "PLY (*.ply);;Text file (*.txt)"
-msgstr "PLY (*.ply);;Fișier text (*.txt)"
+#: qtplugins/ply/ply.cpp:113
+msgid "PLY (*.ply)"
+msgstr "PLY (*.ply)"
+
+#: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
+msgid "PLY Export"
+msgstr "Export PLY"
+
+#: qtplugins/ply/ply.cpp:123
+#, qt-format
+msgid "Cannot open %1 for writing: %2"
+msgstr "Nu se poate deschide %1 pentru scriere: %2"
+
+#: qtplugins/ply/ply.cpp:156
+#, qt-format
+msgid "Writing %1 failed: %2"
+msgstr "Scrierea %1 a eșuat: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6457,9 +6711,31 @@ msgstr "Elimină constrângerea"
 msgid "Cannot read file %1."
 msgstr "Nu se poate citi fișierul %1."
 
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:396
+msgid "Nuclear Critical Points Search"
+msgstr "Căutare a punctelor critice nucleare"
+
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
 msgstr "Nu s-a putut crea fișierul temporar."
+
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:497
+msgid "Bond Critical Points Search"
+msgstr "Căutare a punctelor critice ale legăturilor"
+
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:644
+msgid "Electron Density Sources Search"
+msgstr "Căutare a surselor de densitate electronică"
+
+#: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:789
+msgid "Electron Density Sinks Search"
+msgstr "Căutare a zonelor de scădere a densității electronice"
+
+#: qtplugins/qtaim/qtaimcubature.cpp:1412
+#: qtplugins/qtaim/qtaimcubature.cpp:1692
+#: qtplugins/qtaim/qtaimcubature.cpp:2172
+msgid "Atomic Basin Integration"
+msgstr "Integrarea bazinului atomic"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -6538,107 +6814,107 @@ msgstr "Formate de fișiere script"
 msgid "Load file reader/writers from external scripts."
 msgstr "Încarcă cititori/scriitori de fișiere din scripturi externe."
 
-#: qtplugins/select/select.cpp:33
+#: qtplugins/select/select.cpp:36
 msgid "Select All"
 msgstr "Selectează tot"
 
-#: qtplugins/select/select.cpp:39
+#: qtplugins/select/select.cpp:42
 msgid "Select None"
 msgstr "Nu selectează nimic"
 
-#: qtplugins/select/select.cpp:50 qtplugins/select/select.cpp:555
+#: qtplugins/select/select.cpp:53 qtplugins/select/select.cpp:558
 msgid "Invert Selection"
 msgstr "Inversează selecția"
 
-#: qtplugins/select/select.cpp:55
+#: qtplugins/select/select.cpp:58
 msgid "Select by Element…"
 msgstr "Selectare după element…"
 
-#: qtplugins/select/select.cpp:60
+#: qtplugins/select/select.cpp:63
 msgid "Select by Atom Index…"
 msgstr "Selectare după indicele atomic…"
 
-#: qtplugins/select/select.cpp:65
+#: qtplugins/select/select.cpp:68
 msgid "Select by Residue…"
 msgstr "Selectare după reziduu…"
 
-#: qtplugins/select/select.cpp:70
+#: qtplugins/select/select.cpp:73
 msgid "Select Backbone Atoms…"
 msgstr "Selectare atomi din scheletul de bază…"
 
-#: qtplugins/select/select.cpp:75
+#: qtplugins/select/select.cpp:78
 msgid "Select Sidechain Atoms…"
 msgstr "Selectare atomi din lanțul lateral…"
 
-#: qtplugins/select/select.cpp:80 qtplugins/select/select.cpp:219
+#: qtplugins/select/select.cpp:83 qtplugins/select/select.cpp:222
 msgid "Select Water"
 msgstr "Selectare apă"
 
-#: qtplugins/select/select.cpp:90 qtplugins/select/select.cpp:379
+#: qtplugins/select/select.cpp:93 qtplugins/select/select.cpp:382
 msgid "Enlarge Selection"
 msgstr "Mărește selecția"
 
-#: qtplugins/select/select.cpp:95 qtplugins/select/select.cpp:418
+#: qtplugins/select/select.cpp:98 qtplugins/select/select.cpp:421
 msgid "Shrink Selection"
 msgstr "Micșorează selecția"
 
-#: qtplugins/select/select.cpp:105
+#: qtplugins/select/select.cpp:108
 msgid "Create New Layer from Selection"
 msgstr "Creează un strat nou din selecție"
 
-#: qtplugins/select/select.cpp:119
+#: qtplugins/select/select.cpp:122
 msgid "Change selections"
 msgstr "Modifică selecțiile"
 
-#: qtplugins/select/select.cpp:129
+#: qtplugins/select/select.cpp:132
 msgid "&Select"
 msgstr "&Selectați"
 
-#: qtplugins/select/select.cpp:182
+#: qtplugins/select/select.cpp:185
 msgid "Select Element"
 msgstr "Selectare element"
 
-#: qtplugins/select/select.cpp:271
+#: qtplugins/select/select.cpp:274
 msgid "Select Backbone"
 msgstr "Selectare schelet"
 
-#: qtplugins/select/select.cpp:310
+#: qtplugins/select/select.cpp:313
 msgid "Select Sidechain"
 msgstr "Selectare lanț lateral"
 
-#: qtplugins/select/select.cpp:442
+#: qtplugins/select/select.cpp:445
 msgid "Select Atoms by Index"
 msgstr "Selectare atomi după indice"
 
-#: qtplugins/select/select.cpp:443
+#: qtplugins/select/select.cpp:446
 msgid "Atoms to Select:"
 msgstr "Atomi pentru selecție:"
 
-#: qtplugins/select/select.cpp:448
+#: qtplugins/select/select.cpp:451
 msgid "Select Atom"
 msgstr "Selectare atom"
 
-#: qtplugins/select/select.cpp:487
+#: qtplugins/select/select.cpp:490
 msgid "Select Atoms by Residue"
 msgstr "Selectare atomi după reziduu"
 
-#: qtplugins/select/select.cpp:488
+#: qtplugins/select/select.cpp:491
 msgid "Residues to Select:"
 msgstr "Reziduuri pentru selecție:"
 
-#: qtplugins/select/select.cpp:493
+#: qtplugins/select/select.cpp:496
 msgid "Select Residue"
 msgstr "Selectare reziduu"
 
-#: qtplugins/select/select.cpp:589
+#: qtplugins/select/select.cpp:592
 msgid "Select all atoms."
 msgstr "Selectează toți atomii."
 
-#: qtplugins/select/select.cpp:591
+#: qtplugins/select/select.cpp:594
 msgid "Deselect all atoms"
 msgstr "Deselectează toți atomii"
 
-#: qtplugins/select/select.cpp:594
+#: qtplugins/select/select.cpp:597
 msgid ""
 "Select all atoms which are not currently selected, and deselect all "
 "currently selected atoms."
@@ -6646,24 +6922,24 @@ msgstr ""
 "Selectează toți atomii care nu sunt selectați în acest moment și "
 "deselectează toți atomii selectați în acest moment."
 
-#: qtplugins/select/select.cpp:598
+#: qtplugins/select/select.cpp:601
 msgid "Select all atoms of a certain element type."
 msgstr "Selectează toți atomii unui anumit tip de element."
 
-#: qtplugins/select/select.cpp:602
+#: qtplugins/select/select.cpp:605
 msgid "Select all atoms that belong to amino acid backbones"
 msgstr "Selectează toți atomii care aparțin scheletelor aminoacizilor."
 
-#: qtplugins/select/select.cpp:606
+#: qtplugins/select/select.cpp:609
 msgid "Select all atoms that belong to amino acid sidechains"
 msgstr ""
 "Selectează toți atomii care aparțin lanțurilor laterale ale aminoacizilor."
 
-#: qtplugins/select/select.cpp:608
+#: qtplugins/select/select.cpp:611
 msgid "Select all water molecules"
 msgstr "Selectează toate moleculele de apă"
 
-#: qtplugins/select/select.cpp:612
+#: qtplugins/select/select.cpp:615
 msgid ""
 "Select all atoms within 2 atoms of a selected atom. In other words, select "
 "all atoms next to a selected atom, and additionally all atoms that are next "
@@ -6673,16 +6949,24 @@ msgstr ""
 "atom selectat. Cu alte cuvinte, selectează toți atomii aflați lângă un atom "
 "selectat și, în plus, toți atomii aflați lângă acești atomi."
 
-#: qtplugins/select/select.cpp:618
+#: qtplugins/select/select.cpp:621
 msgid "Shrink selection. Note: One shrink is equivalent to two enlarges!"
 msgstr ""
 "Micșorează selecția. Notă: O micșorare este echivalentă cu două extinderi!"
 
-#: qtplugins/select/select.cpp:621
+#: qtplugins/select/select.cpp:624
 msgid "Separate the selected atoms into a new layer."
 msgstr "Separă atomii selectați într-un strat nou."
 
-#: qtplugins/select/select.cpp:678
+#: qtplugins/select/select.cpp:627
+msgid ""
+"Select atoms by index. Options: \"indices\" (list of atom indices) and "
+"optional \"mode\": \"replace\" (default), \"add\" or \"remove\"."
+msgstr ""
+"Selectează atomii după indice. Opțiuni: „indices” (lista indicilor atomilor) "
+"și opțional, modul „mode”: „replace” (implicit), „add” sau „remove”."
+
+#: qtplugins/select/select.cpp:687
 msgid ""
 "selectElement requires an \"element\" option (an element symbol or atomic "
 "number)."
@@ -6690,15 +6974,30 @@ msgstr ""
 "selectElement necesită o opțiune “element” (un simbol al elementului sau un "
 "număr atomic)."
 
-#: qtplugins/select/select.cpp:696
-#, qt-format
-msgid "Unknown element \"%1\"."
-msgstr "Element necunoscut „%1”."
+#: qtplugins/select/select.cpp:725
+msgid "selectAtoms requires an \"indices\" option (a list of atom indices)."
+msgstr ""
+"Funcția selectAtom necesită o opțiune „indices” (o listă de indici ai "
+"atomilor)."
 
-#: qtplugins/select/select.cpp:700
+#: qtplugins/select/select.cpp:738
+msgid "mode must be \"replace\", \"add\" or \"remove\"."
+msgstr "modul trebuie să fie „replace”, „add” sau „remove”."
+
+#: qtplugins/select/select.cpp:762
 #, qt-format
-msgid "Atomic number %1 is out of range (1 to %2)."
-msgstr "Numărul atomic %1 este în afara intervalului (1 până la %2)."
+msgid "atom index #%1 in indices must be a whole number."
+msgstr "indicele atomului nr.%1 din indici trebuie să fie un număr întreg."
+
+#: qtplugins/select/select.cpp:767
+#, qt-format
+msgid "atom index #%1 in indices is negative."
+msgstr "indicele atomului nr.%1 din indici este negativ."
+
+#: qtplugins/select/select.cpp:773
+#, qt-format
+msgid "atom index %1 is out of range (the molecule has %2 atoms)."
+msgstr "indicele atomic %1 este în afara intervalului (molecula are %2 atomi)."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6737,7 +7036,7 @@ msgstr ""
 "la selecție.\n"
 "Dublu clic:\tSelectează un fragment întreg."
 
-#: qtplugins/selectiontool/selectiontool.cpp:248
+#: qtplugins/selectiontool/selectiontool.cpp:257
 msgid "Paint Atoms"
 msgstr "Colorează atomii"
 
@@ -6750,52 +7049,77 @@ msgstr "Instrument de selecție"
 msgid "New Layer"
 msgstr "Strat nou"
 
-#: qtplugins/spacegroup/spacegroup.cpp:60
+#: qtplugins/spacegroup/spacegroup.cpp:82
+msgid "Give either hallNumber or spaceGroup, not both."
+msgstr "Specificați fie hallNumber, fie spaceGroup, nu ambele."
+
+#: qtplugins/spacegroup/spacegroup.cpp:97
+#, qt-format
+msgid "hallNumber must be an integer from 1 to %1."
+msgstr "hallNumber trebuie să fie un număr întreg cuprins între 1 și %1."
+
+#: qtplugins/spacegroup/spacegroup.cpp:106
+msgid "spaceGroup must be a space group symbol (a string)."
+msgstr ""
+"spaceGroup trebuie să fie un simbol al unui grup spațial (un șir de "
+"caractere)."
+
+#: qtplugins/spacegroup/spacegroup.cpp:113
+#, qt-format
+msgid ""
+"spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
+"(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
+msgstr ""
+"spaceGroup „%1” nu corespunde niciunei configurații de grup spațial; "
+"utilizați hallNumber (de la 1 la %2) sau un simbol care include configurația "
+"respectivă, de exemplu „F d -3 m :2”."
+
+#: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
 msgstr "Detectează grupul spațial…"
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:99
 #. i18n: ectx: property (text), widget (QPushButton, symmetrizeMoleculeButton)
-#: qtplugins/spacegroup/spacegroup.cpp:78 qtplugins/symmetry/symmetry.cpp:426
+#: qtplugins/spacegroup/spacegroup.cpp:157 qtplugins/symmetry/symmetry.cpp:426
 msgid "Symmetrize"
 msgstr "Simetrizare"
 
-#: qtplugins/spacegroup/spacegroup.cpp:83
-#: qtplugins/spacegroup/spacegroup.cpp:580
+#: qtplugins/spacegroup/spacegroup.cpp:162
+#: qtplugins/spacegroup/spacegroup.cpp:696
 msgid "Reduce to Asymmetric Unit"
 msgstr "Reducere la o unitate asimetrică"
 
-#: qtplugins/spacegroup/spacegroup.cpp:89
+#: qtplugins/spacegroup/spacegroup.cpp:168
 msgid "Set Tolerance…"
 msgstr "Stabilește toleranța…"
 
-#: qtplugins/spacegroup/spacegroup.cpp:95
+#: qtplugins/spacegroup/spacegroup.cpp:174
 msgid "Fill Unit Cell…"
 msgstr "Umple celula unitară…"
 
-#: qtplugins/spacegroup/spacegroup.cpp:101
+#: qtplugins/spacegroup/spacegroup.cpp:180
 msgctxt "fill the translationally unique repeat unit"
 msgid "Fill Translation Cell…"
 msgstr "Umple celula de translație…"
 
-#: qtplugins/spacegroup/spacegroup.cpp:126
+#: qtplugins/spacegroup/spacegroup.cpp:205
 msgid "Space Group"
 msgstr "Grupul spațial"
 
-#: qtplugins/spacegroup/spacegroup.cpp:133
+#: qtplugins/spacegroup/spacegroup.cpp:212
 msgid "Fill symmetric atoms based on the crystal space group."
 msgstr "Completează atomii simetrici pe baza grupului spațial al cristalului."
 
-#: qtplugins/spacegroup/spacegroup.cpp:135
+#: qtplugins/spacegroup/spacegroup.cpp:214
 msgid "Fill all atoms based on the crystal space group."
 msgstr "Completează toți atomii pe baza grupului spațial al cristalului."
 
-#: qtplugins/spacegroup/spacegroup.cpp:394
-#: qtplugins/spacegroup/spacegroup.cpp:422
+#: qtplugins/spacegroup/spacegroup.cpp:479
+#: qtplugins/spacegroup/spacegroup.cpp:507
 msgid "Perceive Space Group"
 msgstr "Detectează grupul spațial"
 
-#: qtplugins/spacegroup/spacegroup.cpp:395
+#: qtplugins/spacegroup/spacegroup.cpp:480
 #, qt-format
 msgid ""
 "The space group is already set to: %1.\n"
@@ -6804,7 +7128,7 @@ msgstr ""
 "Grupul spațial este deja configurat la: %1.\n"
 "Doriți să îl suprascrieți?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:411
+#: qtplugins/spacegroup/spacegroup.cpp:496
 #, qt-format
 msgid ""
 "Space group perception succeeded:\n"
@@ -6819,11 +7143,11 @@ msgstr ""
 "Simbol Hall: %3\n"
 "Simbol internațional: %4"
 
-#: qtplugins/spacegroup/spacegroup.cpp:428
+#: qtplugins/spacegroup/spacegroup.cpp:513
 msgid "Failure"
 msgstr "Eșec"
 
-#: qtplugins/spacegroup/spacegroup.cpp:429
+#: qtplugins/spacegroup/spacegroup.cpp:514
 msgid ""
 "Space group perception failed.\n"
 "Would you like to try again with a different tolerance?"
@@ -6831,13 +7155,13 @@ msgstr ""
 "Detectarea grupului spațial a eșuat.\n"
 "Doriți să încercați din nou cu o toleranță diferită?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:444
+#: qtplugins/spacegroup/spacegroup.cpp:529
 msgid "Primitive Reduction"
 msgstr "Reducere primitivă"
 
-#: qtplugins/spacegroup/spacegroup.cpp:445
-#: qtplugins/spacegroup/spacegroup.cpp:473
-#: qtplugins/spacegroup/spacegroup.cpp:501
+#: qtplugins/spacegroup/spacegroup.cpp:530
+#: qtplugins/spacegroup/spacegroup.cpp:558
+#: qtplugins/spacegroup/spacegroup.cpp:586
 #, qt-format
 msgid ""
 "The tolerance is currently set to: %1.\n"
@@ -6846,7 +7170,7 @@ msgstr ""
 "Toleranța este stabilită în prezent la: %1.\n"
 "Continuați cu această toleranță?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:461
+#: qtplugins/spacegroup/spacegroup.cpp:546
 msgid ""
 "Primitive reduction failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -6855,7 +7179,7 @@ msgstr ""
 "Vă rugăm să verificați cristalul și să încercați din nou cu o toleranță "
 "diferită."
 
-#: qtplugins/spacegroup/spacegroup.cpp:489
+#: qtplugins/spacegroup/spacegroup.cpp:574
 msgid ""
 "Conventionalize cell failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -6864,7 +7188,7 @@ msgstr ""
 "Vă rugăm să verificați cristalul și să încercați din nou cu o toleranță "
 "diferită."
 
-#: qtplugins/spacegroup/spacegroup.cpp:515
+#: qtplugins/spacegroup/spacegroup.cpp:600
 msgid ""
 "Symmetrization failed.\n"
 "Please check your crystal and try again with a different tolerance."
@@ -6873,7 +7197,20 @@ msgstr ""
 "Vă rugăm să verificați cristalul și să încercați din nou cu o toleranță "
 "diferită."
 
-#: qtplugins/spacegroup/spacegroup.cpp:569
+#: qtplugins/spacegroup/spacegroup.cpp:616
+msgid "The molecule has no unit cell."
+msgstr "Molecula nu are celulă unitară."
+
+#: qtplugins/spacegroup/spacegroup.cpp:636
+#, qt-format
+msgid ""
+"The space group of the molecule is not known: give the hallNumber (1 to %1) "
+"or spaceGroup parameter."
+msgstr ""
+"Grupul spațial al moleculei nu este cunoscut: specificați parametrul "
+"hallNumber (1 până la %1) sau spaceGroup."
+
+#: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
 msgid ""
 "With a tolerance of %1  Å, the space group information was perceived to be "
@@ -6892,59 +7229,59 @@ msgstr ""
 "\n"
 "Continuați cu acest grup spațial?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:600 qtplugins/yaehmop/yaehmop.cpp:208
+#: qtplugins/spacegroup/spacegroup.cpp:716 qtplugins/yaehmop/yaehmop.cpp:208
 #: qtplugins/yaehmop/yaehmop.cpp:298 qtplugins/yaehmop/yaehmop.cpp:310
 #: qtplugins/yaehmop/yaehmop.cpp:323 qtplugins/yaehmop/yaehmop.cpp:433
 msgid "Avogadro2"
 msgstr "Avogadro2"
 
-#: qtplugins/spacegroup/spacegroup.cpp:601
+#: qtplugins/spacegroup/spacegroup.cpp:717
 msgid "Select tolerance in Å:"
 msgstr "Selectați toleranța în Å:"
 
-#: qtplugins/spacegroup/spacegroup.cpp:618
+#: qtplugins/spacegroup/spacegroup.cpp:734
 msgid "Triclinic"
 msgstr "Triclinic"
 
-#: qtplugins/spacegroup/spacegroup.cpp:620
-#: qtplugins/spacegroup/spacegroup.cpp:769
+#: qtplugins/spacegroup/spacegroup.cpp:736
+#: qtplugins/spacegroup/spacegroup.cpp:902
 msgid "Monoclinic"
 msgstr "Monoclinic"
 
-#: qtplugins/spacegroup/spacegroup.cpp:622
-#: qtplugins/spacegroup/spacegroup.cpp:766
+#: qtplugins/spacegroup/spacegroup.cpp:738
+#: qtplugins/spacegroup/spacegroup.cpp:899
 msgid "Orthorhombic"
 msgstr "Ortorombic"
 
-#: qtplugins/spacegroup/spacegroup.cpp:624
-#: qtplugins/spacegroup/spacegroup.cpp:762
+#: qtplugins/spacegroup/spacegroup.cpp:740
+#: qtplugins/spacegroup/spacegroup.cpp:895
 msgid "Tetragonal"
 msgstr "Tetragonal"
 
-#: qtplugins/spacegroup/spacegroup.cpp:626
+#: qtplugins/spacegroup/spacegroup.cpp:742
 msgid "Trigonal"
 msgstr "Trigonal"
 
-#: qtplugins/spacegroup/spacegroup.cpp:628
-#: qtplugins/spacegroup/spacegroup.cpp:764
+#: qtplugins/spacegroup/spacegroup.cpp:744
+#: qtplugins/spacegroup/spacegroup.cpp:897
 msgid "Rhombohedral"
 msgstr "Romboedric"
 
-#: qtplugins/spacegroup/spacegroup.cpp:630
-#: qtplugins/spacegroup/spacegroup.cpp:760
+#: qtplugins/spacegroup/spacegroup.cpp:746
+#: qtplugins/spacegroup/spacegroup.cpp:893
 msgid "Hexagonal"
 msgstr "Hexagonal"
 
-#: qtplugins/spacegroup/spacegroup.cpp:632
-#: qtplugins/spacegroup/spacegroup.cpp:758
+#: qtplugins/spacegroup/spacegroup.cpp:748
+#: qtplugins/spacegroup/spacegroup.cpp:891
 msgid "Cubic"
 msgstr "Cubic"
 
-#: qtplugins/spacegroup/spacegroup.cpp:664
+#: qtplugins/spacegroup/spacegroup.cpp:794
 msgid "Primitive Cell Detected"
 msgstr "Celulă primitivă detectată"
 
-#: qtplugins/spacegroup/spacegroup.cpp:666
+#: qtplugins/spacegroup/spacegroup.cpp:796
 #, qt-format
 msgid ""
 "The current unit cell appears to be a primitive cell (non-90° angles), but "
@@ -6961,27 +7298,27 @@ msgstr ""
 "\n"
 "Doriți să creați mai întâi o celulă convențională?"
 
-#: qtplugins/spacegroup/spacegroup.cpp:680
+#: qtplugins/spacegroup/spacegroup.cpp:810
 msgid "Failed to conventionalize the cell."
 msgstr "Convenționalizarea celulei a eșuat."
 
-#: qtplugins/spacegroup/spacegroup.cpp:696
+#: qtplugins/spacegroup/spacegroup.cpp:826
 msgid "International"
 msgstr "Internațional"
 
-#: qtplugins/spacegroup/spacegroup.cpp:696
+#: qtplugins/spacegroup/spacegroup.cpp:826
 msgid "Hall"
 msgstr "Hall"
 
-#: qtplugins/spacegroup/spacegroup.cpp:696
+#: qtplugins/spacegroup/spacegroup.cpp:826
 msgid "Hermann-Mauguin"
 msgstr "Hermann-Mauguin"
 
-#: qtplugins/spacegroup/spacegroup.cpp:697
+#: qtplugins/spacegroup/spacegroup.cpp:827
 msgid "Crystal System"
 msgstr "Sistem cristalin"
 
-#: qtplugins/spacegroup/spacegroup.cpp:729
+#: qtplugins/spacegroup/spacegroup.cpp:859
 msgid "Select Space Group"
 msgstr "Selectează grupul spațial"
 
@@ -6989,7 +7326,7 @@ msgstr "Selectează grupul spațial"
 msgid "SpaceGroup"
 msgstr "Grup spațial"
 
-#: qtplugins/spacegroup/spacegroup.h:87
+#: qtplugins/spacegroup/spacegroup.h:111
 msgid "Space group features for crystals."
 msgstr "Caracteristici de grup spațial pentru cristale."
 
@@ -7269,55 +7606,55 @@ msgstr "Din fișier"
 msgid " of %0"
 msgstr " din %0"
 
-#: qtplugins/surfaces/surfaces.cpp:89
+#: qtplugins/surfaces/surfaces.cpp:103
 msgid "Create Surfaces…"
 msgstr "Creează suprafețe…"
 
-#: qtplugins/surfaces/surfaces.cpp:119
+#: qtplugins/surfaces/surfaces.cpp:136
 msgid "Render the van der Waals surface."
 msgstr "Afișează suprafața van der Waals."
 
-#: qtplugins/surfaces/surfaces.cpp:121
+#: qtplugins/surfaces/surfaces.cpp:138
 msgid "Render the van der Waals molecular surface."
 msgstr "Afișează suprafața moleculară van der Waals."
 
-#: qtplugins/surfaces/surfaces.cpp:123
+#: qtplugins/surfaces/surfaces.cpp:140
 msgid "Render the solvent-accessible molecular surface."
 msgstr "Afișează suprafața moleculară accesibilă solventului."
 
-#: qtplugins/surfaces/surfaces.cpp:125
+#: qtplugins/surfaces/surfaces.cpp:142
 msgid "Render the solvent-excluded molecular surface."
 msgstr "Afișează suprafața moleculară exclusă solventului."
 
-#: qtplugins/surfaces/surfaces.cpp:126 qtplugins/surfaces/surfaces.cpp:127
+#: qtplugins/surfaces/surfaces.cpp:143 qtplugins/surfaces/surfaces.cpp:144
 msgid "Render a molecular orbital."
 msgstr "Afișează un orbital molecular."
 
-#: qtplugins/surfaces/surfaces.cpp:129
+#: qtplugins/surfaces/surfaces.cpp:146
 msgid "Render the electron density."
 msgstr "Afișează densitatea electronică."
 
-#: qtplugins/surfaces/surfaces.cpp:130
+#: qtplugins/surfaces/surfaces.cpp:147
 msgid "Render the spin density."
 msgstr "Afișează densitatea spinului."
 
-#: qtplugins/surfaces/surfaces.cpp:132
+#: qtplugins/surfaces/surfaces.cpp:149
 msgid "Render a cube supplied with the file."
 msgstr "Afișează un cub furnizat cu fișierul."
 
-#: qtplugins/surfaces/surfaces.cpp:229
+#: qtplugins/surfaces/surfaces.cpp:246
 msgid ""
 "This file does not contain a basis set, so no orbital can be calculated."
 msgstr ""
 "Acest fișier nu conține un set de funcții, așa că nu se poate calcula nicio "
 "orbitală."
 
-#: qtplugins/surfaces/surfaces.cpp:235
+#: qtplugins/surfaces/surfaces.cpp:252
 #, qt-format
 msgid "Orbital %1 is out of range."
 msgstr "Orbitala %1 se află în afara intervalului."
 
-#: qtplugins/surfaces/surfaces.cpp:245
+#: qtplugins/surfaces/surfaces.cpp:262
 msgid ""
 "This file does not contain a basis set, so no electron density can be "
 "calculated."
@@ -7325,68 +7662,68 @@ msgstr ""
 "Acest fișier nu conține un set de funcții, prin urmare nu se poate calcula "
 "densitatea electronică."
 
-#: qtplugins/surfaces/surfaces.cpp:255
+#: qtplugins/surfaces/surfaces.cpp:272
 msgid ""
 "This file does not contain a basis set, so no spin density can be calculated."
 msgstr ""
 "Acest fișier nu conține un set de funcții, așa că nu se poate calcula "
 "densitatea de spin."
 
-#: qtplugins/surfaces/surfaces.cpp:265
+#: qtplugins/surfaces/surfaces.cpp:282
 msgid "This file does not contain any cube data."
 msgstr "Acest fișier nu conține date de tip cub (grilă tridimensională)."
 
-#: qtplugins/surfaces/surfaces.cpp:275
+#: qtplugins/surfaces/surfaces.cpp:292
 #, qt-format
 msgid "Cube %1 is out of range, this file has %2."
 msgstr "Cubul %1 se află în afara intervalului; acest fișier conține %2."
 
-#: qtplugins/surfaces/surfaces.cpp:281
+#: qtplugins/surfaces/surfaces.cpp:298
 #, qt-format
 msgid "Cube %1 could not be read."
 msgstr "Cubul %1 nu a putut fi citit."
 
-#: qtplugins/surfaces/surfaces.cpp:424
+#: qtplugins/surfaces/surfaces.cpp:447
 #, qt-format
 msgctxt "3D Volume Data Set"
 msgid "Cube %1"
 msgstr "Cubul %1"
 
-#: qtplugins/surfaces/surfaces.cpp:736
+#: qtplugins/surfaces/surfaces.cpp:795
 msgid "Calculating electron density"
 msgstr "Se calculează densitatea electronică"
 
-#: qtplugins/surfaces/surfaces.cpp:745
+#: qtplugins/surfaces/surfaces.cpp:804
 msgid "Calculating spin density"
 msgstr "Se calculează densitatea de spin"
 
-#: qtplugins/surfaces/surfaces.cpp:754
+#: qtplugins/surfaces/surfaces.cpp:813
 #, qt-format
 msgid "Calculating molecular orbital %L1"
 msgstr "Se calculează orbitalul molecular %L1"
 
-#: qtplugins/surfaces/surfaces.cpp:855
+#: qtplugins/surfaces/surfaces.cpp:914
 msgid "The calculation was interrupted."
 msgstr "Calcularea a fost întreruptă."
 
-#: qtplugins/surfaces/surfaces.cpp:1029
+#: qtplugins/surfaces/surfaces.cpp:1088
 msgctxt "finished rendering surface or molecular orbital"
 msgid "Surface Finished"
 msgstr "Suprafață finisată"
 
-#: qtplugins/surfaces/surfaces.cpp:1042 qtplugins/surfaces/surfaces.cpp:1070
+#: qtplugins/surfaces/surfaces.cpp:1101 qtplugins/surfaces/surfaces.cpp:1129
 msgid "Movie AVI (*.avi)"
 msgstr "Videoclip AVI (*.avi)"
 
-#: qtplugins/surfaces/surfaces.cpp:1044
+#: qtplugins/surfaces/surfaces.cpp:1103
 msgid "Export Movie"
 msgstr "Exportare videoclip"
 
-#: qtplugins/surfaces/surfaces.cpp:1045
+#: qtplugins/surfaces/surfaces.cpp:1104
 msgid "Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"
 msgstr "Videoclip MP4 (*.mp4);; Videoclip AVI (*.avi);; GIF (*.gif)"
 
-#: qtplugins/surfaces/surfaces.cpp:1095
+#: qtplugins/surfaces/surfaces.cpp:1154
 msgid "Couldn't find the active render widget, failing."
 msgstr "Nu s-a găsit elementul grafic de redare activ, eșec."
 
@@ -11346,6 +11683,42 @@ msgstr "Remus-Gabriel Chelu"
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026"
+
+#, qt-format
+#~ msgid ""
+#~ "A linear fragment leaves the angle or torsion on z-matrix row(s) %1 "
+#~ "undetermined. The geometry is written correctly, but these coordinates "
+#~ "cannot be varied, and a program that rebuilds Cartesian coordinates from "
+#~ "them may not reproduce this structure exactly. Adding a dummy atom off "
+#~ "the axis avoids this."
+#~ msgstr ""
+#~ "Un fragment liniar lasă nedeterminat unghiul sau torsiunea pe rândul "
+#~ "(rândurile) %1 al (ale) matricei z. Geometria este scrisă corect, dar "
+#~ "aceste coordonate nu pot fi modificate, iar un program care "
+#~ "reconstruiește coordonatele carteziene pe baza acestora s-ar putea să nu "
+#~ "reproducă exact această structură. Adăugarea unui atom fictiv în afara "
+#~ "axei permite evitarea acestei situații."
+
+#, qt-format
+#~ msgid "%1 force field(s) available."
+#~ msgstr "%1 câmp(uri) de forță disponibil(e)."
+
+#, qt-format
+#~ msgid ""
+#~ "The selected plugin(s) do not provide a downloadable source URL:\n"
+#~ "\n"
+#~ "%1"
+#~ msgstr ""
+#~ "Modulul/modulele selectate nu oferă o adresă URL sursă de unde pot fi "
+#~ "descărcate:\n"
+#~ "\n"
+#~ "%1"
+
+#~ msgid "Installation complete.\n"
+#~ msgstr "Instalare finalizată.\n"
+
+#~ msgid "PLY (*.ply);;Text file (*.txt)"
+#~ msgstr "PLY (*.ply);;Fișier text (*.txt)"
 
 #~ msgid ""
 #~ "Measure the distance in Å between two atoms, given as zero-based indices: "

@@ -18,9 +18,11 @@
 
 #include <cmath>
 #include <limits>
+#include <vector>
 
 using namespace Avogadro::Calc;
 using namespace Avogadro::Core;
+using Avogadro::Index;
 using Avogadro::MaxIndex;
 using Avogadro::Real;
 using Avogadro::Vector3;
@@ -86,6 +88,47 @@ Eigen::VectorXd anotherDistortedWaterPositions()
   // A different, independent distortion: short bonds, different angle.
   x << 0.10, -0.05, 0.02, 0.70, -0.75, 0.05, -0.65, -0.70, -0.05;
   return x;
+}
+
+// A bonded n-alkane (C_n H_{2n+2}) on a zigzag backbone, with every atom
+// displaced by a fixed pseudo-random offset (no RNG state: the offsets are a
+// pure function of the coordinate index). Big enough that L-BFGS needs
+// hundreds of iterations, so a chunked run exercises the stopping criteria.
+Molecule perturbedAlkane(size_t nCarbons, Eigen::VectorXd& positions)
+{
+  Molecule molecule;
+  std::vector<Vector3> pos;
+  std::vector<Index> carbons;
+  for (size_t i = 0; i < nCarbons; ++i) {
+    carbons.push_back(molecule.addAtom(6).index());
+    pos.emplace_back(1.25 * static_cast<Real>(i), (i % 2) ? 0.4 : 0.0, 0.0);
+    if (i > 0)
+      molecule.addBond(carbons[i - 1], carbons[i], 1);
+  }
+  const Real side = (nCarbons > 0) ? 1.0 : 0.0;
+  for (size_t i = 0; i < nCarbons; ++i) {
+    const Real up = (i % 2) ? 1.0 : -1.0;
+    const size_t nH = (i == 0 || i + 1 == nCarbons) ? 3 : 2;
+    for (size_t h = 0; h < nH; ++h) {
+      const Real dz = (h == 0) ? 0.9 : -0.9;
+      Vector3 p = pos[i] + Vector3(h == 2 ? -0.6 * side : 0.0, 0.5 * up,
+                                   h == 2 ? 0.0 : dz);
+      Index a = molecule.addAtom(1).index();
+      pos.push_back(p);
+      molecule.addBond(carbons[i], a, 1);
+    }
+  }
+  positions.resize(3 * static_cast<Eigen::Index>(pos.size()));
+  for (size_t i = 0; i < pos.size(); ++i) {
+    for (size_t k = 0; k < 3; ++k) {
+      const Real offset =
+        std::sin(12.9898 * static_cast<Real>(3 * i + k) + 1.0);
+      positions[3 * static_cast<Eigen::Index>(i) + k] =
+        pos[i][k] + 0.1 * offset;
+    }
+    molecule.setAtomPosition3d(i, positions.segment<3>(3 * i));
+  }
+  return molecule;
 }
 
 } // namespace
@@ -481,4 +524,64 @@ TEST(AdaptChunkIterationsTest, NegativeTargetIsNoop)
 {
   size_t next = adaptChunkIterations(7, 5.0, -10.0, 0.7, 1, 200);
   EXPECT_EQ(next, 7u);
+}
+
+// --- chunked L-BFGS must keep going until the caller says stop ------------
+//
+// Regression: DefaultStoppingSolverProgress enables a relative past-delta
+// test (cppoptlib 2.0) that ended every chunk after ~4 iterations near a
+// minimum, discarding the L-BFGS memory, so the GUI loop never converged.
+
+TEST(EnergyOptimizerTest, ChunkedLbfgsConvergesGradientBelowTolerance)
+{
+  Eigen::VectorXd x;
+  Molecule molecule = perturbedAlkane(10, x);
+  ASSERT_EQ(molecule.atomCount(), 32u);
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 50;
+
+  OptimizerState state;
+  Eigen::VectorXd grad(x.size());
+  Real gInf = std::numeric_limits<Real>::infinity();
+  const int maxChunks = 400; // 20000 requested iterations
+  for (int chunk = 0; chunk < maxChunks; ++chunk) {
+    ASSERT_TRUE(optimizeSteps(uff, x, options, &state));
+    uff.gradient(x, grad);
+    gInf = grad.cwiseAbs().maxCoeff();
+    if (gInf < 1e-4)
+      break;
+  }
+  EXPECT_LT(gInf, 1e-4);
+}
+
+TEST(EnergyOptimizerTest, LbfgsChunkRunsRequestedIterationsNearMinimum)
+{
+  Eigen::VectorXd x;
+  Molecule molecule = perturbedAlkane(10, x);
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 20;
+  OptimizerState state;
+  // Get close to the minimum (but not onto it).
+  for (int i = 0; i < 4; ++i)
+    ASSERT_TRUE(optimizeSteps(uff, x, options, &state));
+
+  Eigen::VectorXd grad(x.size());
+  uff.gradient(x, grad);
+  const Real gBefore = grad.cwiseAbs().maxCoeff();
+  ASSERT_GT(gBefore, 1e-2) << "already converged; test would prove nothing";
+
+  // A single long chunk must keep iterating (not stop after a few steps on
+  // a tiny energy change) and so converge.
+  options.chunkIterations = 1000;
+  ASSERT_TRUE(optimizeSteps(uff, x, options, &state));
+  uff.gradient(x, grad);
+  EXPECT_LT(grad.cwiseAbs().maxCoeff(), 1e-4);
 }

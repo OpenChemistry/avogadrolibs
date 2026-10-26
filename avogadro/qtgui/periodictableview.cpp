@@ -17,6 +17,13 @@ using Core::Elements;
 PeriodicTableView::PeriodicTableView(QWidget* parent_)
   : QGraphicsView(parent_), m_element(6) // Everyone loves carbon.
 {
+  // Clears the key buffer after a pause between keys (multi-character symbols)
+  m_keyPressTimer = new QTimer(this);
+  m_keyPressTimer->setSingleShot(true);
+  m_keyPressTimer->setInterval(2000);
+  connect(m_keyPressTimer, &QTimer::timeout, this,
+          &PeriodicTableView::clearKeyPressBuffer);
+
   // Make the periodic table view a standard dialog.
   setWindowFlags(Qt::Dialog);
 
@@ -60,17 +67,11 @@ void PeriodicTableView::mouseDoubleClickEvent(QMouseEvent*)
 void PeriodicTableView::clearKeyPressBuffer()
 {
   m_keyPressBuffer.clear();
+  m_keyPressTimer->stop();
 }
 
 void PeriodicTableView::keyPressEvent(QKeyEvent* event_)
 {
-  if (m_keyPressBuffer.isEmpty()) {
-    // This is the first character typed.
-    // Wait for 2 seconds, then clear the buffer,
-    // this ensures we can get multi-character elements.
-    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
-  }
-
   if (event_->key() == Qt::Key_Escape || event_->key() == Qt::Key_Return ||
       event_->key() == Qt::Key_Enter) {
     close();
@@ -116,6 +117,8 @@ void PeriodicTableView::keyPressEvent(QKeyEvent* event_)
     }
   } else {
     // This is a normal character.
+    // The typing limit applies between keys: restart the timer on every key
+    m_keyPressTimer->start();
     m_keyPressBuffer += event_->text();
     // Try setting an element symbol from this string.
     elem = m_keyPressBuffer.toInt();

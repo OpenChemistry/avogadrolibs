@@ -258,7 +258,7 @@ QWidget* AutoOpt::toolWidget() const
   QSettings settings;
   if (!m_toolWidget && m_molecule) {
     m_toolWidget = new QWidget();
-    m_toolWidget->setWindowTitle("AutoOptimization");
+    m_toolWidget->setWindowTitle(tr("AutoOptimization"));
 
     // set up a form layout
     QFormLayout* form = new QFormLayout(m_toolWidget);
@@ -820,35 +820,43 @@ QUndoCommand* AutoOpt::keyPressEvent(QKeyEvent* e)
   if (m_molecule == nullptr)
     return nullptr;
 
+  // Translation step in Angstroms
+  double transStep = 0.1;
+  if (e->modifiers() & Qt::AltModifier)
+    transStep = 0.5;
+
+  bool moved = true;
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
     case Qt::Key_A:
-      translate(Vector3(-0.1, 0.0, 0.0));
-      e->accept();
+      translate(Vector3(-transStep, 0.0, 0.0));
       break;
     case Qt::Key_Right:
     case Qt::Key_L:
     case Qt::Key_D:
-      translate(Vector3(+0.1, 0.0, 0.0));
-      e->accept();
+      translate(Vector3(+transStep, 0.0, 0.0));
       break;
     case Qt::Key_Up:
     case Qt::Key_K:
     case Qt::Key_W:
-      translate(Vector3(0.0, +0.1, 0.0));
-      e->accept();
+      translate(Vector3(0.0, +transStep, 0.0));
       break;
     case Qt::Key_Down:
     case Qt::Key_J:
     case Qt::Key_S:
-      translate(Vector3(0.0, -0.1, 0.0));
-      e->accept();
+      translate(Vector3(0.0, -transStep, 0.0));
       break;
     default:
-      e->ignore();
+      moved = false;
   }
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+
+  if (moved) {
+    e->accept();
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+  } else {
+    e->ignore();
+  }
   return nullptr;
 }
 

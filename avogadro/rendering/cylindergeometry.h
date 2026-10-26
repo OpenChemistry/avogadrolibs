@@ -13,6 +13,8 @@
 namespace Avogadro {
 namespace Rendering {
 
+struct ColorNormalVertex;
+
 struct CylinderColor
 {
   CylinderColor(const Vector3f& pos1, const Vector3f& pos2, float r,
@@ -49,6 +51,17 @@ public:
    * Accept a visit from our friendly visitor.
    */
   void accept(Visitor&) override;
+
+  /**
+   * Build the triangle mesh for all of the cylinders on the CPU. No OpenGL
+   * is touched, so this is safe to call without a context (and from another
+   * thread, provided the cylinders are not modified meanwhile).
+   * @param vertices Output vertices (cleared first): for each cylinder, two
+   * rings of 8 vertices, interleaved end1/end2 per point on the circle.
+   * @param indices Output triangle list into @p vertices (cleared first).
+   */
+  void tessellate(std::vector<ColorNormalVertex>& vertices,
+                  std::vector<unsigned int>& indices) const;
 
   /**
    * @brief Update the VBOs, IBOs etc ready for rendering.
@@ -151,7 +164,10 @@ public:
 private:
   std::vector<CylinderColor> m_cylinders;
   std::vector<size_t> m_indices;
-  std::map<size_t, size_t> m_indexMap;
+  // Explicit index of the cylinder at each position, or MaxIndex. May be
+  // shorter than m_cylinders; positions past the end have no explicit index.
+  std::vector<size_t> m_indexMap;
+  void setIndex(size_t cylinder, size_t index);
   float m_opacity = 1.0f;
 
   bool m_dirty;

@@ -139,7 +139,7 @@ void SlaterSet::initCalculation()
         break;
       default:
         std::cout << "Orbital " << i << " not handled, type "
-                  << m_slaterTypes[i] << std::endl;
+                  << m_slaterTypes[i] << '\n';
     }
   }
   // Convert the exponents into Angstroms

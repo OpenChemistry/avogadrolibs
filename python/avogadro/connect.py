@@ -415,27 +415,40 @@ class connect:
         """
         return self.send("saveGraphic", {"fileName": str(filename)})
 
-    def render_image(self, width=None, height=None, transparent=False, filename=None):
+    def render_image(
+        self, width=None, height=None, transparent=False, filename=None, supersample=1
+    ):
         """
         Render the current view, at any size, in or out of process memory.
 
-        Unlike save_graphic(), this can render larger or smaller than the
-        on-screen view, and can hand back the image bytes directly instead
+        The image is rendered natively at the requested size, framed for
+        its aspect ratio: it is not a scaled or padded copy of the window,
+        and the window is not resized. A narrower image than the view
+        zooms out so nothing the view shows is cropped. Unlike
+        save_graphic(), this can hand back the image bytes directly instead
         of only writing a file.
 
-        :param width: Image width in pixels. Defaults to the current view
-            size. Clamped to the range [1, 8192].
-        :param height: Image height in pixels. Same default and clamping
-            as width.
+        :param width: Image width in pixels, 1 to 8192. If only one of
+            width and height is given, the other follows the aspect ratio
+            of the view. If neither is, the image is the view size times
+            the display's device pixel ratio.
+        :param height: Image height in pixels. Same range and defaults as
+            width.
         :param transparent: If True, render with a transparent background.
         :param filename: Path to write the PNG to. ".png" is appended if
             the name has no extension, matching save_graphic(). If left
             out, the image is returned inline instead of written to disk.
+        :param supersample: 1 to 4. Render this many times larger in each
+            direction, then downsample, for smoother edges. The enlarged
+            size (width x supersample) must still fit the limits below.
         :returns: bytes of a PNG image when filename is not given;
             True when it is (the file was written). No PIL dependency --
             decode the bytes yourself if you want an image object, e.g.
             with ``PIL.Image.open(io.BytesIO(data))``.
-        :raises RPCError: with code -1 for an unwritable path.
+        :raises RPCError: with code -1 for an unwritable path, a size or
+            supersample outside the ranges above, or a size the graphics
+            driver cannot render. Oversize requests are rejected, never
+            clamped.
         """
         params = {}
         if width is not None:
@@ -444,6 +457,8 @@ class connect:
             params["height"] = height
         if transparent:
             params["transparentBackground"] = True
+        if supersample != 1:
+            params["supersample"] = supersample
         if filename is not None:
             params["fileName"] = str(filename)
 

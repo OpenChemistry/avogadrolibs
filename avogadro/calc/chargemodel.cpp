@@ -39,8 +39,7 @@ Vector3 ChargeModel::dipoleMoment(const Molecule& mol) const
   if (charges.cols() < 1 ||
       static_cast<std::size_t>(charges.rows()) != positions.size())
     std::cout << "Error: charges " << charges.rows() << "x" << charges.cols()
-              << " does not match " << positions.size() << " positions"
-              << std::endl;
+              << " does not match " << positions.size() << " positions" << '\n';
 
   const Eigen::Index count =
     std::min(charges.rows(), static_cast<Eigen::Index>(positions.size()));

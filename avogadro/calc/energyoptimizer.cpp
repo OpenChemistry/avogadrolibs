@@ -64,6 +64,11 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   stopProgress.f_delta = 0.0;
   stopProgress.gradient_norm = 0.0;
   stopProgress.condition_hessian = 0.0;
+  // DefaultStoppingSolverProgress also enables a relative past-delta test
+  // (since cppoptlib 2.0). Near a minimum it would end every chunk after a
+  // few iterations and discard the L-BFGS memory; the caller decides when
+  // to stop.
+  stopProgress.past = 0;
   solver.stopping_progress = stopProgress;
 
   auto [solution, solverProgress] = solver.Minimize(objective, initialState);

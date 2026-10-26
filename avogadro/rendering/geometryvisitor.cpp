@@ -7,6 +7,7 @@
 
 #include "curvegeometry.h"
 #include "linestripgeometry.h"
+#include "meshgeometry.h"
 #include "spheregeometry.h"
 #include "widelinegeometry.h"
 
@@ -24,7 +25,7 @@ void GeometryVisitor::visit(Drawable&) {}
 void GeometryVisitor::visit(SphereGeometry& geometry)
 {
   const Core::Array<SphereColor>& spheres = geometry.spheres();
-  if (!spheres.size())
+  if (spheres.empty())
     return;
 
   m_dirty = true;
@@ -50,10 +51,28 @@ void GeometryVisitor::visit(SphereGeometry& geometry)
   m_radii.push_back(tmpRadius);
 }
 
+void GeometryVisitor::visit(MeshGeometry& mesh)
+{
+  // 2D overlay meshes (e.g. the selection rubber band) are in screen
+  // coordinates, not scene coordinates.
+  if (mesh.renderPass() == Overlay2DPass)
+    return;
+
+  // Use the bounding box cached by the mesh rather than scanning vertices;
+  // surface meshes can have tens of millions of them.
+  Vector3f minimum, maximum;
+  if (!mesh.bounds(minimum, maximum))
+    return;
+
+  m_dirty = true;
+  m_centers.push_back(0.5f * (minimum + maximum));
+  m_radii.push_back(0.5f * (maximum - minimum).norm());
+}
+
 void GeometryVisitor::visit(CurveGeometry& cg)
 {
   const auto& lines = cg.lines();
-  if (lines.size() == 0) {
+  if (lines.empty()) {
     return;
   }
   m_dirty = true;
@@ -83,7 +102,7 @@ void GeometryVisitor::visit(LineStripGeometry& lsg)
 {
   typedef Core::Array<LineStripGeometry::PackedVertex> VertexArray;
   const VertexArray verts(lsg.vertices());
-  if (!verts.size())
+  if (verts.empty())
     return;
 
   m_dirty = true;

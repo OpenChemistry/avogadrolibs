@@ -53,7 +53,6 @@ const unsigned char INVALID_ATOMIC_NUMBER =
 
 // Helpers for the RPC commands. Options arrive from JSON, so numbers may be
 // of any numeric QVariant type.
-// TODO: tr() after 2.1 (string freeze) for the messages below.
 bool isNumber(const QVariant& value)
 {
   switch (value.typeId()) {
@@ -91,18 +90,20 @@ bool parseAtomPair(const QVariantMap& options, Avogadro::Index atomCount,
 {
   const QVariant value = options.value(QStringLiteral("atoms"));
   if (value.typeId() != QMetaType::QVariantList || value.toList().size() != 2) {
-    error = QStringLiteral("atoms must list exactly 2 atom indices.");
+    error = Avogadro::QtPlugins::Editor::tr(
+      "atoms must list exactly 2 atom indices.");
     return false;
   }
   const QVariantList list = value.toList();
   if (!toIndex(list[0], atomCount, first) ||
       !toIndex(list[1], atomCount, second)) {
-    error = QStringLiteral(
+    error = Avogadro::QtPlugins::Editor::tr(
       "atoms must be whole-number atom indices within the molecule.");
     return false;
   }
   if (first == second) {
-    error = QStringLiteral("atoms must be two different atoms.");
+    error =
+      Avogadro::QtPlugins::Editor::tr("atoms must be two different atoms.");
     return false;
   }
   return true;
@@ -118,7 +119,7 @@ bool parseBondOrder(const QVariantMap& options, const QString& key,
   const QVariant value = options.value(key);
   const double raw = isNumber(value) ? value.toDouble() : 0.0;
   if (!isNumber(value) || raw != std::floor(raw) || raw < 1.0 || raw > 3.0) {
-    error = QStringLiteral("%1 must be 1, 2 or 3.").arg(key);
+    error = Avogadro::QtPlugins::Editor::tr("%1 must be 1, 2 or 3.").arg(key);
     return false;
   }
   order = static_cast<unsigned char>(raw);
@@ -155,6 +156,12 @@ Editor::Editor(QObject* parent_)
        "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
        "Right Mouse:\tDelete Atom")
       .arg(shortcut));
+  m_keyPressTimer = new QTimer(this);
+  m_keyPressTimer->setSingleShot(true);
+  m_keyPressTimer->setInterval(2000);
+  connect(m_keyPressTimer, &QTimer::timeout, this,
+          &Editor::clearKeyPressBuffer);
+
   setIcon();
   reset();
 }
@@ -193,8 +200,11 @@ QUndoCommand* Editor::mousePressEvent(QMouseEvent* e)
 
   // check if we have modifier keys
   // if so, revert to navigation mode
-  // e.g., rotate, zoom
-  if (e->modifiers() == Qt::ShiftModifier || e->modifiers() == Qt::AltModifier)
+  // e.g., rotate, zoom, pan
+  if (e->modifiers() == Qt::ShiftModifier ||
+      e->modifiers() == Qt::AltModifier ||
+      e->modifiers() == Qt::ControlModifier ||
+      e->modifiers() == Qt::MetaModifier)
     return nullptr;
 
   if (m_pressedButtons & Qt::LeftButton) {
@@ -354,9 +364,8 @@ QUndoCommand* Editor::keyPressEvent(QKeyEvent* e)
   if (m_layerManager.activeLayerLocked()) {
     return nullptr;
   }
-  // Set a timer to clear the buffer on first keypress:
-  if (m_keyPressBuffer.isEmpty())
-    QTimer::singleShot(2000, this, SLOT(clearKeyPressBuffer()));
+  // The typing limit applies between keys: restart the timer on every key
+  m_keyPressTimer->start();
 
   m_keyPressBuffer.append(m_keyPressBuffer.isEmpty() ? e->text().toUpper()
                                                      : e->text().toLower());
@@ -524,9 +533,11 @@ void Editor::emptyLeftClick(QMouseEvent* e)
     m_fixValenceLater = true;
   }
 
-  // Update the clicked object
+  // Update the clicked object. The molecule must be the QtGui::Molecule
+  // address that scene plugins put in their identifiers, or comparisons
+  // against renderer hits never match.
   m_clickedObject.type = Rendering::AtomType;
-  m_clickedObject.molecule = m_molecule;
+  m_clickedObject.molecule = &m_molecule->molecule();
   m_clickedObject.index = newAtom.index();
 
   // Emit changed signal
@@ -713,9 +724,10 @@ void Editor::atomRightClick(QMouseEvent* e)
   // okay, now adjust any valence on the bonded atoms
   // (e.g., add back some hydrogens)
   for (Index atomIndex : bondedAtoms) {
-    RWAtom atom = m_molecule->atomByUniqueId(atomIndex);
-    if (atom.isValid())
-      QtGui::HydrogenTools::adjustHydrogens(atom, QtGui::HydrogenTools::Add);
+    RWAtom atomToAdjust = m_molecule->atomByUniqueId(atomIndex);
+    if (atomToAdjust.isValid())
+      QtGui::HydrogenTools::adjustHydrogens(atomToAdjust,
+                                            QtGui::HydrogenTools::Add);
   }
 
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Removed);
@@ -815,7 +827,7 @@ void Editor::atomLeftDrag(QMouseEvent* e)
     // ...and if we've created a new atom, remove the new atom and reset the
     // clicked atom's atomic number
     if (m_newObject.type == Rendering::AtomType &&
-        m_molecule == m_newObject.molecule) {
+        m_newObject.molecule == &m_molecule->molecule()) {
       m_molecule->removeAtom(m_newObject.index);
       changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Removed;
       m_newObject = Identifier();
@@ -969,8 +981,10 @@ void Editor::atomLeftDrag(QMouseEvent* e)
     changes |= Molecule::Atoms | Molecule::Bonds | Molecule::Added;
     m_newObject.type = Rendering::AtomType;
     m_newObject.index = newAtom.index();
-    const Core::Molecule* mol = &m_molecule->molecule();
-    m_newObject.molecule = mol;
+    // Not via a Core::Molecule pointer: the base-class conversion shifts the
+    // address past QObject, so the new atom would never match its own hit
+    // and would hide any atom behind it from atomToBond below.
+    m_newObject.molecule = &m_molecule->molecule();
   } else if (m_newObject.type == Rendering::AtomType) {
     // Grab the previously created atom
     newAtom = m_molecule->atom(m_newObject.index);
@@ -1022,25 +1036,21 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
 void Editor::registerCommands()
 {
-  // TODO: tr() after 2.1 (string freeze)
-  emit registerCommand(
-    "addAtom",
-    QStringLiteral("Add an atom. Options: \"element\" (symbol or atomic "
-                   "number), \"position\" ([x, y, z] in Angstroms), "
-                   "optional \"bondTo\" (atom index) and \"bondOrder\" "
-                   "(1-3). Returns the new atom \"index\"."));
-  emit registerCommand(
-    "addBond",
-    QStringLiteral("Add a bond between two unbonded atoms. Options: "
-                   "\"atoms\" ([i, j]) and optional \"order\" (1-3). "
-                   "Returns the bond \"index\"."));
-  emit registerCommand("removeBond",
-                       QStringLiteral("Remove the bond between two atoms. "
-                                      "Options: \"atoms\" ([i, j])."));
+  emit registerCommand("addAtom",
+                       tr("Add an atom. Options: \"element\" (symbol or atomic "
+                          "number), \"position\" ([x, y, z] in Angstroms), "
+                          "optional \"bondTo\" (atom index) and \"bondOrder\" "
+                          "(1-3). Returns the new atom \"index\"."));
+  emit registerCommand("addBond",
+                       tr("Add a bond between two unbonded atoms. Options: "
+                          "\"atoms\" ([i, j]) and optional \"order\" (1-3). "
+                          "Returns the bond \"index\"."));
+  emit registerCommand("removeBond", tr("Remove the bond between two atoms. "
+                                        "Options: \"atoms\" ([i, j])."));
   emit registerCommand(
     "removeSelectedAtoms",
-    QStringLiteral("Remove the selected atoms and their bonds. Returns the "
-                   "number \"removed\"."));
+    tr("Remove the selected atoms and their bonds. Returns the "
+       "number \"removed\"."));
 }
 
 bool Editor::handleCommand(const QString& command, const QVariantMap& options)
@@ -1060,9 +1070,8 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
   // Like the mouse handlers, which only ever consult the active layer: a
   // locked active layer refuses every edit. (Locks on other atoms' layers
   // are not checked by the GUI, so they are not checked here either.)
-  // TODO: tr() after 2.1 (string freeze)
   const QString lockedMessage =
-    QStringLiteral("The active layer is locked; unlock it to edit.");
+    tr("The active layer is locked; unlock it to edit.");
   if (!isRemoveSelected && m_layerManager.activeLayerLocked()) {
     emit commandFailed(lockedMessage);
     return true;
@@ -1070,8 +1079,7 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
   // An edit also touches the atoms it bonds to, unbonds or deletes; if any
   // of them is in a locked layer the whole command is refused.
   auto lockedAtomMessage = [](Index atom) {
-    return QStringLiteral("Atom %1 is in a locked layer; unlock it to edit.")
-      .arg(atom);
+    return tr("Atom %1 is in a locked layer; unlock it to edit.").arg(atom);
   };
 
   const Molecule::MoleculeChanges allChanges =
@@ -1081,9 +1089,9 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
 
   if (isAddAtom) {
     if (!options.contains(QStringLiteral("element"))) {
-      emit commandFailed(QStringLiteral(
-        "addAtom requires an \"element\" option (an element symbol or "
-        "atomic number)."));
+      emit commandFailed(
+        tr("addAtom requires an \"element\" option (an element symbol or "
+           "atomic number)."));
       return true;
     }
     const QVariant elementData = options.value(QStringLiteral("element"));
@@ -1095,15 +1103,14 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
     if (atomicNum == InvalidElement) {
       const double raw = isNumber(elementData) ? elementData.toDouble() : 0.0;
       if (!isNumber(elementData) || raw != std::floor(raw)) {
-        emit commandFailed(QStringLiteral("Unknown element \"%1\".")
-                             .arg(elementData.toString()));
+        emit commandFailed(
+          tr("Unknown element \"%1\".").arg(elementData.toString()));
         return true;
       }
       if (raw < 1.0 || !(raw < Core::Elements::elementCount())) {
-        emit commandFailed(
-          QStringLiteral("Atomic number %1 is out of range (1 to %2).")
-            .arg(raw, 0, 'f', 0)
-            .arg(Core::Elements::elementCount() - 1));
+        emit commandFailed(tr("Atomic number %1 is out of range (1 to %2).")
+                             .arg(raw, 0, 'f', 0)
+                             .arg(Core::Elements::elementCount() - 1));
         return true;
       }
       atomicNum = static_cast<int>(raw);
@@ -1112,16 +1119,16 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
     const QVariant positionData = options.value(QStringLiteral("position"));
     if (positionData.typeId() != QMetaType::QVariantList ||
         positionData.toList().size() != 3) {
-      emit commandFailed(QStringLiteral(
-        "position must be a list of 3 numbers [x, y, z] in Angstroms."));
+      emit commandFailed(
+        tr("position must be a list of 3 numbers [x, y, z] in Angstroms."));
       return true;
     }
     Vector3 position = Vector3::Zero();
     const QVariantList coords = positionData.toList();
     for (int i = 0; i < 3; ++i) {
       if (!isNumber(coords[i]) || !std::isfinite(coords[i].toDouble())) {
-        emit commandFailed(QStringLiteral(
-          "position must be a list of 3 finite numbers [x, y, z]."));
+        emit commandFailed(
+          tr("position must be a list of 3 finite numbers [x, y, z]."));
         return true;
       }
       position[i] = coords[i].toDouble();
@@ -1133,8 +1140,8 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
     if (options.contains(QStringLiteral("bondTo"))) {
       if (!toIndex(options.value(QStringLiteral("bondTo")),
                    m_molecule->atomCount(), bondTo)) {
-        emit commandFailed(QStringLiteral(
-          "bondTo must be the index of an atom in the molecule."));
+        emit commandFailed(
+          tr("bondTo must be the index of an atom in the molecule."));
         return true;
       }
       bonded = true;
@@ -1181,8 +1188,7 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
 
     if (isRemoveBond) {
       if (!m_molecule->bond(first, second).isValid()) {
-        emit commandFailed(
-          QStringLiteral("There is no bond between those atoms."));
+        emit commandFailed(tr("There is no bond between those atoms."));
         return true;
       }
       m_molecule->beginMergeMode(tr("Remove Bond"));
@@ -1201,7 +1207,7 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
     // RWMolecule::addBond() would quietly change an existing bond's order;
     // this command must refuse instead.
     if (m_molecule->bond(first, second).isValid()) {
-      emit commandFailed(QStringLiteral("Those atoms are already bonded."));
+      emit commandFailed(tr("Those atoms are already bonded."));
       return true;
     }
     m_molecule->beginMergeMode(tr("Draw"));
@@ -1230,10 +1236,9 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
   // bonded to one, is locked: removing the atom removes that bond.
   for (Index i = 0; i < m_molecule->atomCount(); ++i) {
     if (m_molecule->atomSelected(i) && touchesLockedAtom(i, Neighbors::All)) {
-      emit commandFailed(
-        QStringLiteral("Atom %1 or a bonded atom is in a locked layer; "
-                       "unlock it to edit.")
-          .arg(i));
+      emit commandFailed(tr("Atom %1 or a bonded atom is in a locked layer; "
+                            "unlock it to edit.")
+                           .arg(i));
       return true;
     }
   }

@@ -214,9 +214,9 @@ void ApbsDialog::updatePreviewTextImmediately()
 
   if (!success) {
     // FIXME: show in a dialog
-    std::cerr << "errors: " << std::endl;
+    std::cerr << "errors: " << '\n';
     foreach (const QString& error, m_inputGenerator->errorList()) {
-      std::cerr << "  " << error.toStdString() << std::endl;
+      std::cerr << "  " << error.toStdString() << '\n';
     }
   }
 

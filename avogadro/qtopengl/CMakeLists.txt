@@ -7,12 +7,15 @@ add_library(QtOpenGL)
 avogadro_headers(QtOpenGL
   activeobjects.h
   glwidget.h
+  imagesizedialog.h
   qttextrenderstrategy.h
+  renderoptions.h
 )
 
 target_sources(QtOpenGL PRIVATE
   activeobjects.cpp
   glwidget.cpp
+  imagesizedialog.cpp
   qttextrenderstrategy.cpp
 )
 

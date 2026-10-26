@@ -95,8 +95,10 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
   # builds a target that silently tests nothing. QCSchema's extension is
   # "qcjson"; "qcschema" matched nothing and never reached a parser.
   set(fuzz
+    aux
     cube
     fchk
+    gamess
     molden
     nwchem
     orca

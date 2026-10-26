@@ -161,7 +161,6 @@ private:
   QFutureWatcher<void> m_displayMeshWatcher;
   QtGui::MeshGenerator* m_meshGenerator = nullptr;
 
-  float m_isoValue = 0.03;
   int m_smoothingPasses = 1;
   int m_meshesLeft = 0;
   bool m_updateMesh = false;

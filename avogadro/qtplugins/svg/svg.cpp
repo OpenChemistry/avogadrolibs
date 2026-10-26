@@ -271,6 +271,20 @@ void SVG::render()
   generator.setSize(QSize(m_width, m_height));
   generator.setViewBox(QRect(0, 0, m_width, m_height));
 
+  // Add accessible SVG metadata.
+  QString formula = QString::fromStdString(m_molecule->formula());
+  QString moleculeName = QString::fromStdString(m_molecule->data("name").toString());
+
+  if (moleculeName.trimmed().isEmpty())
+    moleculeName = formula;
+
+  generator.setTitle(moleculeName);
+
+  generator.setDescription(
+    tr("Ball-and-stick view of %1, %2 atoms")
+      .arg(formula)
+      .arg(m_molecule->atomCount()));
+
   QPainter painter;
   painter.begin(&generator);
   paintSVG(painter);

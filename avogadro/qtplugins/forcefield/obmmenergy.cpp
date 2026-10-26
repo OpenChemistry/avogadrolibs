@@ -13,11 +13,62 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFileInfo>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QThread>
 #include <QtCore/QTimer>
 
 namespace Avogadro::QtPlugins {
+
+namespace {
+
+#if defined(_WIN32)
+const char* obmmExecutableName = "obmm.exe";
+#else
+const char* obmmExecutableName = "obmm";
+#endif
+
+// Resolve the obmm executable: the AVO_OBMM_EXECUTABLE override, then an obmm
+// next to the application, then PATH. Returns an empty string if none is
+// found. If bundled is non-null, it is set to true when the executable was
+// found next to the application.
+QString resolveObmmExecutable(bool* bundled = nullptr)
+{
+  if (bundled != nullptr)
+    *bundled = false;
+
+  const QString envPath =
+    QString::fromLocal8Bit(qgetenv("AVO_OBMM_EXECUTABLE"));
+  if (!envPath.isEmpty()) {
+    if (QFileInfo(envPath).isAbsolute()) {
+      QFileInfo info(envPath);
+      return info.isFile() && info.isExecutable() ? envPath : QString();
+    }
+    return QStandardPaths::findExecutable(envPath);
+  }
+
+  // If not overridden, look for an obmm next to the executable.
+  QDir baseDir(QCoreApplication::applicationDirPath());
+  if (!baseDir.absolutePath().startsWith("/usr/")) {
+    const QString path = baseDir.absolutePath() + '/' + obmmExecutableName;
+    QFileInfo info(path);
+    if (info.isFile() && info.isExecutable()) {
+      if (bundled != nullptr)
+        *bundled = true;
+      return path;
+    }
+  }
+
+  return QStandardPaths::findExecutable(obmmExecutableName);
+}
+
+} // namespace
+
+bool OBMMEnergy::isAvailable()
+{
+  return !resolveObmmExecutable().isEmpty();
+}
 
 OBMMEnergy::OBMMEnergy(const std::string& method)
   : m_molecule(nullptr), m_process(nullptr), m_executable(
@@ -132,36 +183,32 @@ void OBMMEnergy::setupProcess()
 
   m_process = new QProcess();
 
-  // Read the AVO_OBMM_EXECUTABLE env var to optionally override the
-  // executable used.
-  QByteArray obmmExec = qgetenv("AVO_OBMM_EXECUTABLE");
-  if (!obmmExec.isEmpty()) {
-    m_executable = obmmExec;
-  } else {
-    // If not overridden, look for an obmm next to the executable.
-    QDir baseDir(QCoreApplication::applicationDirPath());
-    if (!baseDir.absolutePath().startsWith("/usr/") &&
-        QFileInfo(baseDir.absolutePath() + '/' + m_executable).exists()) {
-      m_executable = baseDir.absolutePath() + '/' + m_executable;
-      QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  // Use the same resolution as isAvailable(). If nothing is found, keep the
+  // plain name and let starting the process fail.
+  bool bundled = false;
+  const QString executable = resolveObmmExecutable(&bundled);
+  if (!executable.isEmpty())
+    m_executable = executable;
 
-      // Leave any setting from the environment alone.
-      if (env.value("BABEL_DATADIR").isEmpty()) {
-        const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
-        if (!dataDir.isEmpty())
-          env.insert("BABEL_DATADIR", dataDir);
-        else
-          qDebug() << "Error, Open Babel data directory not found.";
-      }
+  if (bundled) {
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
-      if (env.value("BABEL_LIBDIR").isEmpty()) {
-        const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
-        if (!pluginDir.isEmpty())
-          env.insert("BABEL_LIBDIR", pluginDir);
-      }
-
-      m_process->setProcessEnvironment(env);
+    // Leave any setting from the environment alone.
+    if (env.value("BABEL_DATADIR").isEmpty()) {
+      const QString dataDir = QtGui::Utilities::openBabelDataDirectory();
+      if (!dataDir.isEmpty())
+        env.insert("BABEL_DATADIR", dataDir);
+      else
+        qDebug() << "Error, Open Babel data directory not found.";
     }
+
+    if (env.value("BABEL_LIBDIR").isEmpty()) {
+      const QString pluginDir = QtGui::Utilities::openBabelLibraryDirectory();
+      if (!pluginDir.isEmpty())
+        env.insert("BABEL_LIBDIR", pluginDir);
+    }
+
+    m_process->setProcessEnvironment(env);
   }
 }
 

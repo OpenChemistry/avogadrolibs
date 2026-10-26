@@ -365,6 +365,9 @@ void Molecule::emitChanged(unsigned int change)
       m_basisSet = nullptr;
       m_spectra.clear();
       clearVibrations();
+      // Charges computed or read for the old structure no longer describe it.
+      for (const std::string& type : partialChargeTypes())
+        removePartialCharges(type);
     }
     emit changed(change);
   }

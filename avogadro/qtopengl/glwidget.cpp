@@ -16,6 +16,10 @@
 #include <avogadro/rendering/camera.h>
 
 #include <QAction>
+#include <QOpenGLContext>
+#include <QOpenGLFramebufferObject>
+#include <QOpenGLFramebufferObjectFormat>
+#include <QOpenGLFunctions>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
@@ -23,11 +27,14 @@
 #include <QtGui/QWheelEvent>
 #include <QtWidgets/QApplication>
 
+#include <algorithm>
+#include <cmath>
+#include <memory>
+
 namespace Avogadro::QtOpenGL {
 
 GLWidget::GLWidget(QWidget* p)
-  : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
-    m_renderTimer(nullptr)
+  : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginStateChanged, this,
@@ -90,36 +97,58 @@ void GLWidget::updateMolecule()
 
 void GLWidget::updateScene()
 {
-  // Build up the scene with the scene plugins, creating the appropriate nodes.
-  QtGui::Molecule* mol = m_molecule;
-  if (!mol)
-    mol = new QtGui::Molecule(this);
-  if (mol) {
-    Rendering::GroupNode& node = m_renderer.scene().rootNode();
-    node.clear();
-    auto* moleculeNode = new Rendering::GroupNode(&node);
-
-    foreach (QtGui::ScenePlugin* scenePlugin,
-             m_scenePlugins.activeScenePlugins()) {
-      auto* engineNode = new Rendering::GroupNode(moleculeNode);
-      scenePlugin->process(*mol, *engineNode);
-    }
-
-    // Let the tools perform any drawing they need to do.
-    foreach (QtGui::ToolPlugin* tool, m_tools) {
-      auto* toolNode = new Rendering::GroupNode(moleculeNode);
-      tool->draw(*toolNode);
-    }
-
-    m_renderer.resetGeometry();
-    update();
+  // A scene plugin or tool can spin a nested event loop while it builds the
+  // scene (e.g. waiting on an external process), which may deliver another
+  // change to this widget. Rebuilding then would free the nodes the outer
+  // pass is still filling, so defer: remember the request and rebuild once
+  // the current pass has finished.
+  if (m_updatingScene) {
+    m_sceneUpdatePending = true;
+    return;
   }
-  if (mol != m_molecule)
-    delete mol;
+
+  m_updatingScene = true;
+  do {
+    m_sceneUpdatePending = false;
+
+    // Build up the scene with the scene plugins, creating the appropriate
+    // nodes. m_molecule is a QPointer and may change between passes.
+    QtGui::Molecule* mol = m_molecule;
+    if (!mol)
+      mol = new QtGui::Molecule(this);
+    if (mol) {
+      Rendering::GroupNode& node = m_renderer.scene().rootNode();
+      node.clear();
+      auto* moleculeNode = new Rendering::GroupNode(&node);
+
+      foreach (QtGui::ScenePlugin* scenePlugin,
+               m_scenePlugins.activeScenePlugins()) {
+        auto* engineNode = new Rendering::GroupNode(moleculeNode);
+        scenePlugin->process(*mol, *engineNode);
+      }
+
+      // Let the tools perform any drawing they need to do.
+      foreach (QtGui::ToolPlugin* tool, m_tools) {
+        auto* toolNode = new Rendering::GroupNode(moleculeNode);
+        tool->draw(*toolNode);
+      }
+    }
+    if (mol != m_molecule)
+      delete mol;
+  } while (m_sceneUpdatePending);
+  m_updatingScene = false;
+
+  m_renderer.resetGeometry();
+  update();
 }
 
 void GLWidget::clearScene()
 {
+  // Clearing now would free nodes the running build is still using
+  if (m_updatingScene) {
+    m_sceneUpdatePending = true;
+    return;
+  }
   m_renderer.scene().clear();
 }
 
@@ -222,20 +251,8 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
 
 void GLWidget::requestUpdate()
 {
-  if (!m_renderTimer) {
-    m_renderTimer = new QTimer(this);
-    connect(m_renderTimer, &QTimer::timeout, this, &GLWidget::updateTimeout);
-    m_renderTimer->setSingleShot(1000 / 30); // 30 fps
-    m_renderTimer->start();
-  }
-}
-
-void GLWidget::updateTimeout()
-{
-  if (m_renderTimer) {
-    m_renderTimer->deleteLater();
-    m_renderTimer = nullptr;
-  }
+  // update() only schedules a repaint, so bursts of requests (e.g. mouse
+  // moves while navigating) coalesce into one frame paced by the display.
   update();
 }
 
@@ -265,6 +282,188 @@ void GLWidget::paintGL()
     resizeGL(width(), height());
 
   m_renderer.render();
+}
+
+QSize GLWidget::pixelSize() const
+{
+  const qreal dpr = devicePixelRatioF();
+  return QSize(static_cast<int>(std::lround(width() * dpr)),
+               static_cast<int>(std::lround(height() * dpr)));
+}
+
+QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
+{
+  auto fail = [error](const QString& message) {
+    if (error != nullptr)
+      *error = message;
+    return QImage();
+  };
+  if (error != nullptr)
+    error->clear();
+
+  QSize outSize = options.size;
+  // A default-constructed QSize (-1, -1) means "the view size"; any other
+  // non-positive size is a mistake and is rejected below.
+  if (outSize == QSize())
+    outSize = pixelSize();
+  if (outSize.width() <= 0 || outSize.height() <= 0)
+    return fail(tr("The image size must be positive."));
+  const int k = options.supersample;
+  if (k < 1 || k > RenderOptions::MaxSupersample)
+    return fail(tr("Supersampling must be between 1 and 4."));
+  if (m_updatingScene)
+    return fail(tr("The scene is being rebuilt; try again in a moment."));
+  if (!m_renderer.isValid())
+    return fail(tr("The renderer is not valid: %1")
+                  .arg(QString::fromStdString(m_renderer.error())));
+
+  // Check the cheap limits before touching GL.
+  const long long renderW = static_cast<long long>(outSize.width()) * k;
+  const long long renderH = static_cast<long long>(outSize.height()) * k;
+  if (renderW > RenderOptions::MaxDimension ||
+      renderH > RenderOptions::MaxDimension) {
+    return fail(tr("The image is too large: %1 x %2 pixels (including "
+                   "supersampling) exceeds the maximum of %3.")
+                  .arg(renderW)
+                  .arg(renderH)
+                  .arg(RenderOptions::MaxDimension));
+  }
+
+  makeCurrent();
+  QOpenGLContext* ctx = QOpenGLContext::currentContext();
+  if (context() == nullptr || ctx == nullptr) {
+    return fail(tr("There is no OpenGL context. The view must have been "
+                   "shown at least once."));
+  }
+
+  // From here on every exit path must restore the widget (see the guard).
+  std::unique_ptr<QOpenGLFramebufferObject> fbo;
+  struct Restore
+  {
+    GLWidget& widget;
+    std::unique_ptr<QOpenGLFramebufferObject>& fbo;
+    float pixelRatio;
+    int logicalWidth;
+    int logicalHeight;
+    float projectionScale;
+    Vector4ub background;
+    ~Restore()
+    {
+      // Free the FBO while the context is still current.
+      fbo.reset();
+      Rendering::GLRenderer& r = widget.m_renderer;
+      r.scene().setBackgroundColor(background);
+      r.setProjectionScale(projectionScale);
+      r.setPixelRatio(pixelRatio);
+      // Reallocates the SolidPipeline textures at the on-screen size.
+      r.resize(logicalWidth, logicalHeight);
+      // Put back the framebuffer Qt expects to paint into.
+      QOpenGLContext::currentContext()->functions()->glBindFramebuffer(
+        GL_FRAMEBUFFER, widget.defaultFramebufferObject());
+      widget.doneCurrent();
+    }
+  } restore{ *this,
+             fbo,
+             m_renderer.pixelRatio(),
+             m_renderer.camera().width(),
+             m_renderer.camera().height(),
+             m_renderer.projectionScale(),
+             m_renderer.scene().backgroundColor() };
+
+  QOpenGLFunctions* gl = ctx->functions();
+  GLint maxTexture = 0, maxRenderbuffer = 0;
+  GLint maxViewport[2] = { 0, 0 };
+  gl->glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexture);
+  gl->glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &maxRenderbuffer);
+  gl->glGetIntegerv(GL_MAX_VIEWPORT_DIMS, maxViewport);
+  const long long limit = std::min({ static_cast<long long>(maxTexture),
+                                     static_cast<long long>(maxRenderbuffer),
+                                     static_cast<long long>(maxViewport[0]),
+                                     static_cast<long long>(maxViewport[1]) });
+  if (renderW > limit || renderH > limit) {
+    return fail(tr("The image is too large for this graphics driver: "
+                   "%1 x %2 pixels exceeds its limit of %3.")
+                  .arg(renderW)
+                  .arg(renderH)
+                  .arg(limit));
+  }
+
+  // A scene change that has not been built yet must not be missed.
+  if (m_sceneUpdatePending)
+    updateScene();
+  // updateScene() calls update() and leaves the context alone, but a scene
+  // plugin may have spun an event loop; make sure we are still current.
+  makeCurrent();
+
+  // The logical height stays the view's, so labels and line widths keep their
+  // on-screen proportions; the pixel ratio maps it onto the output height. The
+  // logical width follows the output aspect ratio. The framebuffer and
+  // viewport use the exact device size passed to GLRenderer::resize().
+  const int viewW = std::max(1, restore.logicalWidth);
+  const int logicalH = std::max(1, restore.logicalHeight);
+  const auto pixelRatio =
+    static_cast<float>(static_cast<double>(outSize.height()) * k / logicalH);
+  const int logicalW = static_cast<int>(
+    std::max<long long>(1, std::llround(static_cast<double>(outSize.width()) *
+                                        logicalH / outSize.height())));
+
+  float projectionScale = 1.0f;
+  if (options.framing == RenderOptions::Framing::Fit) {
+    const float viewAspect = static_cast<float>(viewW) / logicalH;
+    const float outAspect =
+      static_cast<float>(outSize.width()) / outSize.height();
+    projectionScale = std::max(1.0f, viewAspect / outAspect);
+  }
+
+  QOpenGLFramebufferObjectFormat format;
+  format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+  format.setInternalTextureFormat(GL_RGBA8);
+  fbo = std::make_unique<QOpenGLFramebufferObject>(
+    static_cast<int>(renderW), static_cast<int>(renderH), format);
+  if (!fbo->isValid()) {
+    fbo.reset();
+    return fail(tr("The offscreen framebuffer could not be created. The "
+                   "image may be too large for the available memory."));
+  }
+
+  // An opaque image is drawn straight over the real background colour, exactly
+  // as the window is. A transparent one is drawn over (0, 0, 0, 0), which
+  // leaves a premultiplied image in the framebuffer.
+  const Vector4ub background = restore.background;
+  if (options.transparentBackground)
+    m_renderer.scene().setBackgroundColor(Vector4ub(0, 0, 0, 0));
+  else
+    m_renderer.scene().setBackgroundColor(
+      Vector4ub(background[0], background[1], background[2], 255));
+  m_renderer.setProjectionScale(projectionScale);
+  m_renderer.setPixelRatio(pixelRatio);
+  m_renderer.resize(logicalW, logicalH, static_cast<int>(renderW),
+                    static_cast<int>(renderH));
+
+  // Bind immediately before rendering: SolidPipeline::begin() records the
+  // bound framebuffer as its output, and a pipeline that initialized lazily
+  // would have left its own bound.
+  if (!fbo->bind())
+    return fail(tr("The offscreen framebuffer could not be bound."));
+  m_renderer.render();
+
+  QImage image = fbo->toImage();
+  fbo->release();
+  if (image.isNull())
+    return fail(tr("Reading back the rendered image failed."));
+  image.setDevicePixelRatio(1.0);
+  if (k > 1) {
+    image =
+      image.scaled(outSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    image.setDevicePixelRatio(1.0);
+  }
+
+  if (!options.transparentBackground)
+    return image.convertToFormat(QImage::Format_RGB32);
+
+  // The framebuffer holds premultiplied colour. Qt labels the image that way,
+  // so converting un-premultiplies it.
+  return image.convertToFormat(QImage::Format_ARGB32);
 }
 
 Qt::KeyboardModifiers GLWidget::navigationModifier() const

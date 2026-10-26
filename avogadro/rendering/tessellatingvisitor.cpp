@@ -441,7 +441,7 @@ const TessellatingVisitor::Icosphere& TessellatingVisitor::icosphere(
 void TessellatingVisitor::visit(SphereGeometry& geometry)
 {
   const auto& spheres = geometry.spheres();
-  if (spheres.size() == 0)
+  if (spheres.empty())
     return;
 
   const unsigned char alpha = alphaFromOpacity(geometry.opacity());

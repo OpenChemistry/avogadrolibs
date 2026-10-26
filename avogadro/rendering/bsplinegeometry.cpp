@@ -12,33 +12,11 @@ namespace Avogadro::Rendering {
 BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
 BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
 
-float B(float i, float k, float t, float knot)
-{
-  float ti = knot * i;           // t_i
-  float ti1 = knot * (i + 1.0f); // t_(i+1)
-  if (k == 1) {
-    if (ti <= t && t < ti1) {
-      return 1.0f;
-    } else {
-      return 0.0f;
-    }
-  }
-
-  float tik = knot * (i + k);         // t_(i+k)
-  float tik1 = knot * (i + k - 1.0f); // t_(i+k-1)
-
-  float a1 = (t - ti) / (tik1 - ti);
-  float a2 = B(i, k - 1, t, knot);
-
-  float b1 = (tik - t) / (tik - ti1);
-  float b2 = B(i + 1, k - 1, t, knot);
-  return a1 * a2 + b1 * b2;
-}
-
 Vector3f BSplineGeometry::computeCurvePoint(
   float t, const std::vector<Point>& points) const
 {
-  // degree: linear = 1, quadratic = 2, cubic = 3
+  // order (degree + 1): linear = 2, quadratic = 3, cubic = 4
+  // (this is a quadratic B-spline)
   float k = 3.0f;
   // how many points in either way for approximation
   const int lookahead = 10;
@@ -53,10 +31,22 @@ Vector3f BSplineGeometry::computeCurvePoint(
     std::clamp(static_cast<int>(size * t) - lookahead, 0, maxStart);
   float t2 = (t - startIndex / (float)size) * size / (2 * lookahead);
   const int endIndex = std::min(size, startIndex + 2 * lookahead);
-  float i = 0.0f;
-  for (int pointIndex = startIndex; pointIndex < endIndex; ++pointIndex) {
-    Q += points[pointIndex].pos * B(i, k, t2, knot);
-    i += 1.0f;
+  const int count = endIndex - startIndex;
+  // Uniform knots at i * knot: for u = t2 / knot in [s, s + 1) only the basis
+  // functions s - 2, s - 1 and s (quadratic, order 3) are non-zero. Basis
+  // functions outside the [0, count) window of control points are dropped.
+  const float u = t2 / knot;
+  if (!(u >= 0.0f) || u >= static_cast<float>(count + 2))
+    return Q;
+  const int s = static_cast<int>(u);
+  const float f = u - static_cast<float>(s);
+  const float weights[3] = { (1.0f - f) * (1.0f - f) * 0.5f,
+                             (-2.0f * f * f + 2.0f * f + 1.0f) * 0.5f,
+                             f * f * 0.5f };
+  for (int n = 0; n < 3; ++n) {
+    const int i = s - 2 + n;
+    if (i >= 0 && i < count)
+      Q += points[startIndex + i].pos * weights[n];
   }
   return Q;
 }

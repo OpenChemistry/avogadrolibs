@@ -234,37 +234,36 @@ QString InsertPolymerDialog::chooseMonomerFile()
           });
 
   // Preview on selection change
-  connect(
-    treeView->selectionModel(), &QItemSelectionModel::currentChanged,
-    [model, proxy, preview](const QModelIndex& current, const QModelIndex&) {
-      QString filePath =
-        current.data(QFileSystemModel::FilePathRole).toString();
-      QFileInfo info(filePath);
-      if (!info.isDir()) {
-        // Look for matching image
-        QString imgPath = info.absolutePath() + '/' + info.baseName() + ".svg";
-        if (!QFile::exists(imgPath))
-          imgPath = info.absolutePath() + '/' + info.baseName() + ".png";
-        if (QFile::exists(imgPath)) {
-          preview->setIcon(QIcon(imgPath));
-          preview->show();
-        } else {
-          preview->hide();
-        }
-      } else {
-        preview->hide();
-      }
-    });
+  connect(treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+          [preview](const QModelIndex& current, const QModelIndex&) {
+            QString filePath =
+              current.data(QFileSystemModel::FilePathRole).toString();
+            QFileInfo info(filePath);
+            if (!info.isDir()) {
+              // Look for matching image
+              QString imgPath =
+                info.absolutePath() + '/' + info.baseName() + ".svg";
+              if (!QFile::exists(imgPath))
+                imgPath = info.absolutePath() + '/' + info.baseName() + ".png";
+              if (QFile::exists(imgPath)) {
+                preview->setIcon(QIcon(imgPath));
+                preview->show();
+              } else {
+                preview->hide();
+              }
+            } else {
+              preview->hide();
+            }
+          });
 
   // Double-click to accept
-  connect(treeView, &QTreeView::doubleClicked,
-          [&chooser, model, proxy](const QModelIndex& idx) {
-            QString filePath =
-              idx.data(QFileSystemModel::FilePathRole).toString();
-            QFileInfo info(filePath);
-            if (info.isFile())
-              chooser.accept();
-          });
+  connect(
+    treeView, &QTreeView::doubleClicked, [&chooser](const QModelIndex& idx) {
+      QString filePath = idx.data(QFileSystemModel::FilePathRole).toString();
+      QFileInfo info(filePath);
+      if (info.isFile())
+        chooser.accept();
+    });
 
   if (chooser.exec() != QDialog::Accepted)
     return QString();

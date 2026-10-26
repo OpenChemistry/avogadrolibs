@@ -153,13 +153,38 @@ jobs:
         rm appdir/AppRun
         cp ../avogadrolibs/openchemistry/avogadrolibs/scripts/AppImage.sh appdir/AppRun
         chmod a+x appdir/AppRun
+        # Bundled programs must run without LD_LIBRARY_PATH, since Avogadro
+        # strips it from child processes
+        checked=0
+        missing=""
+        for f in appdir/usr/bin/* appdir/usr/lib/openbabel/*.so; do
+          if file -b "$f" | grep -q ELF; then
+            checked=$((checked + 1))
+            deps=$(env -u LD_LIBRARY_PATH ldd "$f" 2>&1 | grep "not found" || true)
+            if [ -n "$deps" ]; then
+              missing="$missing$(echo "$deps" | sed "s|^|$f: |")"$'\n'
+            fi
+          fi
+        done
+        echo "Checked $checked ELF files with ldd"
+        if [ "$checked" -eq 0 ]; then
+          echo "No ELF files found to check"
+          exit 1
+        fi
+        if [ -n "$missing" ]; then
+          printf '%s' "$missing"
+          exit 1
+        fi
+        out=$(env -u LD_LIBRARY_PATH BABEL_LIBDIR=appdir/usr/lib/openbabel BABEL_DATADIR=$(echo appdir/usr/share/openbabel/*) appdir/usr/bin/obabel -:CCO -oinchi)
+        echo "$out"
+        echo "$out" | grep -q "InChI=1S/C2H6O" || exit 1
         ./appimagetool-aarch64.AppImage appdir
         mv Avogadro*.AppImage avogadroapp/Avogadro2-aarch64.AppImage # for upload
       working-directory: ${{ runner.workspace }}/build
 
     - name: Upload
       if: matrix.config.artifact != 0
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         path: ${{ runner.workspace }}/build/avogadroapp/Avogadro2*.*
         name: ${{ matrix.config.artifact }}

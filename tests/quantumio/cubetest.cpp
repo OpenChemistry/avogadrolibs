@@ -450,6 +450,34 @@ TEST(GaussianCubeTest, skewedPlaneWithZeroStepIsResampled)
   EXPECT_NEAR((*cube->data())[0], 1.0f, 1.0e-5);
 }
 
+// A step that is almost zero must not make the resampled grid enormous: its
+// size is bounded by a multiple of the number of values in the file.
+TEST(GaussianCubeTest, skewedGridWithTinyStepStaysSmall)
+{
+  GaussianCube reader;
+  Molecule molecule;
+  std::ostringstream out;
+  out << "Comment line\n";
+  out << "Second comment line\n";
+  out << "    1    0.000000    0.000000    0.000000\n";
+  out << "    5    0.200000    0.000000    0.000000\n";
+  out << "    4    0.000000   -1.0e-7      1.2e-7\n";
+  out << "    3    0.000000    0.000000    0.200000\n";
+  out << "    1    1.000000    0.000000    0.000000    0.000000\n";
+  const size_t valueCount = 5 * 4 * 3;
+  for (size_t i = 0; i < valueCount; ++i)
+    out << " 1.0" << ((i % 6 == 5) ? "\n" : "");
+  out << "\n";
+
+  ASSERT_TRUE(reader.readString(out.str(), molecule)) << reader.error();
+  const auto* cube = molecule.cube(0);
+  ASSERT_NE(cube, nullptr);
+  const Avogadro::Vector3i dim = cube->dimensions();
+  const size_t points = static_cast<size_t>(dim(0)) * dim(1) * dim(2);
+  EXPECT_LE(points, 8 * valueCount);
+  EXPECT_EQ(cube->data()->size(), points);
+}
+
 namespace {
 
 // Switches the C locale to one with a comma as the decimal separator, and

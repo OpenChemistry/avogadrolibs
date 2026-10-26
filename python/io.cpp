@@ -13,6 +13,9 @@
 #include <avogadro/quantumio/nwchemlog.h>
 #include <avogadro/quantumio/orca.h>
 
+#include <stdexcept>
+#include <string>
+
 namespace py = pybind11;
 
 using namespace Avogadro;
@@ -27,34 +30,52 @@ class ffm
 public:
   ffm() : m_ffm(FileFormatManager::instance()) {}
 
+  // Each operation starts by clearing the manager's (thread-local) error, so
+  // error() describes only the call that just failed.
+  [[noreturn]] void fail(const char* what) const
+  {
+    std::string message = m_ffm.error();
+    while (!message.empty() &&
+           (message.back() == '\n' || message.back() == '\r'))
+      message.pop_back();
+    if (message.empty())
+      message = std::string(what) + " failed";
+    throw std::runtime_error(message);
+  }
+
   bool readFile(Core::Molecule& molecule, const std::string& fileName,
                 const std::string& fileExtension = std::string(),
                 const std::string& options = std::string()) const
   {
-    return m_ffm.readFile(molecule, fileName, fileExtension, options);
+    if (!m_ffm.readFile(molecule, fileName, fileExtension, options))
+      fail("Reading the file");
+    return true;
   }
 
   bool writeFile(const Core::Molecule& molecule, const std::string& fileName,
                  const std::string& fileExtension = std::string(),
                  const std::string& options = std::string()) const
   {
-    return m_ffm.writeFile(molecule, fileName, fileExtension, options);
+    if (!m_ffm.writeFile(molecule, fileName, fileExtension, options))
+      fail("Writing the file");
+    return true;
   }
 
   bool readString(Core::Molecule& molecule, const std::string& string,
                   const std::string& fileExtension,
                   const std::string& options = std::string()) const
   {
-    return m_ffm.readString(molecule, string, fileExtension, options);
+    if (!m_ffm.readString(molecule, string, fileExtension, options))
+      fail("Reading the string");
+    return true;
   }
 
   std::string writeString(const Molecule& mol, const std::string& ext,
                           const std::string& options = std::string())
   {
     std::string fileStr;
-    bool ok = m_ffm.writeString(mol, fileStr, ext, options);
-    if (!ok)
-      fileStr = "Error: " + FileFormatManager::instance().error();
+    if (!m_ffm.writeString(mol, fileStr, ext, options))
+      fail("Writing the string");
     return fileStr;
   }
 
@@ -81,19 +102,29 @@ PYBIND11_MODULE(io, m)
   /// This class uses a singleton pattern, make it accessible through Python.
   py::class_<ffm>(m, "FileFormatManager")
     .def(py::init<>())
-    .def("read_file", &ffm::readFile,
-         "Read in a molecule from the supplied file path", py::arg("molecule"),
-         py::arg("file_name"), py::arg("file_extension") = std::string(),
-         py::arg("options") = std::string())
-    .def("write_file", &ffm::writeFile,
-         "Write the molecule to the supplied file path", py::arg("molecule"),
-         py::arg("file_name"), py::arg("file_extension") = std::string(),
-         py::arg("options") = std::string())
+    .def(
+      "read_file", &ffm::readFile,
+      "Read in a molecule from the supplied file path. Returns True, or raises "
+      "RuntimeError (with the reason) on failure",
+      py::arg("molecule"), py::arg("file_name"),
+      py::arg("file_extension") = std::string(),
+      py::arg("options") = std::string())
+    .def(
+      "write_file", &ffm::writeFile,
+      "Write the molecule to the supplied file path. Returns True, or raises "
+      "RuntimeError (with the reason) on failure",
+      py::arg("molecule"), py::arg("file_name"),
+      py::arg("file_extension") = std::string(),
+      py::arg("options") = std::string())
     .def("read_string", &ffm::readString,
-         "Read in a molecule from the supplied string", py::arg("molecule"),
-         py::arg("string"), py::arg("file_extension"),
+         "Read in a molecule from the supplied string. Returns True, or raises "
+         "RuntimeError (with the reason) on failure",
+         py::arg("molecule"), py::arg("string"), py::arg("file_extension"),
          py::arg("options") = std::string())
-    .def("write_string", &ffm::writeString,
-         "Write a molecule to the supplied string", py::arg("mol"),
-         py::arg("file_extension"), py::arg("options") = std::string());
+    .def(
+      "write_string", &ffm::writeString,
+      "Write a molecule to a string and return it. Raises RuntimeError (with "
+      "the reason) on failure",
+      py::arg("mol"), py::arg("file_extension"),
+      py::arg("options") = std::string());
 }

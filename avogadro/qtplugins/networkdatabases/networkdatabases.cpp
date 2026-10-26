@@ -25,7 +25,7 @@ NetworkDatabases::NetworkDatabases(QObject* parent_)
     m_network(nullptr), m_progressDialog(nullptr)
 {
   m_action->setEnabled(true);
-  m_action->setText("Download by &Name…");
+  m_action->setText(tr("Download by &Name…"));
   m_action->setProperty("menu priority", 190);
   connect(m_action, SIGNAL(triggered()), SLOT(showDialog()));
 }

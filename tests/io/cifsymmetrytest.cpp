@@ -7,12 +7,15 @@
 
 #include <avogadro/io/cifsymmetry.h>
 
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/spacegroups.h>
+#include <avogadro/core/unitcell.h>
 
 #include <string>
 
 using Avogadro::Core::SpaceGroups;
 using Avogadro::Io::CifSymmetry;
+using Avogadro::Io::expandCifAtoms;
 using Avogadro::Io::readCifSymmetry;
 
 namespace {
@@ -539,4 +542,126 @@ TEST(CifSymmetryTest, malformedInput)
   for (int i = 0; i < 5000; ++i)
     junk.push_back(static_cast<char>((i * 7919) % 256));
   EXPECT_EQ(readCifSymmetry(junk).hallNumber(), 0);
+}
+
+namespace {
+// Two carbons 1.5 angstrom apart in a triclinic cell, bonded, in P1
+Avogadro::Core::Molecule bondedPair()
+{
+  using namespace Avogadro;
+  Core::Molecule mol;
+  mol.setUnitCell(new Core::UnitCell(10.0, 11.0, 12.0, 1.4, 1.5, 1.6));
+  Core::Molecule::AtomType a = mol.addAtom(6);
+  Core::Molecule::AtomType b = mol.addAtom(6);
+  a.setPosition3d(Vector3(1.0, 1.0, 1.0));
+  b.setPosition3d(Vector3(2.5, 1.0, 1.0));
+  mol.addBond(a, b, 1);
+  mol.setHallNumber(2); // what a reader might have guessed
+  return mol;
+}
+} // namespace
+
+TEST(CifSymmetryTest, expandCifAtomsUntabulatedSetting)
+{
+  // I -1 is not in the table
+  const char* cif = R"CIF(data_test
+loop_
+_symmetry_equiv_pos_as_xyz
+'x,y,z'
+'-x,-y,-z'
+'x+1/2,y+1/2,z+1/2'
+'-x+1/2,-y+1/2,-z+1/2'
+)CIF";
+  const CifSymmetry symmetry = readCifSymmetry(cif);
+  EXPECT_EQ(symmetry.hallFromOperations, 0);
+  EXPECT_TRUE(symmetry.hasUntabulatedOperations());
+
+  Avogadro::Core::Molecule mol = bondedPair();
+  ASSERT_TRUE(expandCifAtoms(symmetry, mol));
+  EXPECT_EQ(mol.atomCount(), 8u);
+  EXPECT_EQ(mol.hallNumber(), 1);
+  // every atom has its partner: four pairs, so four bonds
+  EXPECT_EQ(mol.bondCount(), 4u);
+  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_EQ(mol.bonds(i).size(), 1u);
+
+  // expanding again changes nothing
+  ASSERT_TRUE(expandCifAtoms(symmetry, mol));
+  EXPECT_EQ(mol.atomCount(), 8u);
+  EXPECT_EQ(mol.bondCount(), 4u);
+}
+
+TEST(CifSymmetryTest, expandCifAtomsAlreadyExpandedKeepsBonds)
+{
+  const char* cif = R"CIF(data_test
+loop_
+_symmetry_equiv_pos_as_xyz
+'x,y,z'
+'x+1/2,y+1/2,z'
+)CIF";
+  const CifSymmetry symmetry = readCifSymmetry(cif);
+  ASSERT_TRUE(symmetry.hasUntabulatedOperations());
+
+  // C 1: a centred triclinic cell. Once all the atoms are there, expanding
+  // again adds nothing, so the bonds stay.
+  Avogadro::Core::Molecule mol = bondedPair();
+  ASSERT_TRUE(expandCifAtoms(symmetry, mol));
+  const auto count = mol.atomCount();
+  EXPECT_EQ(count, 4u);
+  Avogadro::Core::Molecule again = mol;
+  ASSERT_TRUE(expandCifAtoms(symmetry, again));
+  EXPECT_EQ(again.atomCount(), count);
+  EXPECT_EQ(again.bondCount(), mol.bondCount());
+  EXPECT_EQ(again.hallNumber(), 1);
+}
+
+TEST(CifSymmetryTest, expandCifAtomsLeavesOtherCasesAlone)
+{
+  // a tabulated group (P -1): no expansion
+  const char* tabulated = R"CIF(data_test
+loop_
+_symmetry_equiv_pos_as_xyz
+'x,y,z'
+'-x,-y,-z'
+)CIF";
+  Avogadro::Core::Molecule mol = bondedPair();
+  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(tabulated), mol));
+  EXPECT_EQ(mol.atomCount(), 2u);
+  EXPECT_EQ(mol.hallNumber(), 2);
+
+  // one operation, or none
+  const char* single = R"CIF(data_test
+loop_
+_symmetry_equiv_pos_as_xyz
+'x+1/12,y,z'
+)CIF";
+  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(single), mol));
+  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(""), mol));
+
+  // an operation that cannot be parsed keeps the reader's result
+  const char* bad = R"CIF(data_test
+loop_
+_symmetry_equiv_pos_as_xyz
+'x,y,z'
+'-x,-y,-z'
+'x+1/7,y,z'
+)CIF";
+  const CifSymmetry badSymmetry = readCifSymmetry(bad);
+  EXPECT_EQ(badSymmetry.hallFromOperations, 0);
+  EXPECT_FALSE(expandCifAtoms(badSymmetry, mol));
+  EXPECT_EQ(mol.atomCount(), 2u);
+  EXPECT_EQ(mol.bondCount(), 1u);
+  EXPECT_EQ(mol.hallNumber(), 2);
+
+  // no unit cell
+  const char* untabulated = R"CIF(data_test
+loop_
+_symmetry_equiv_pos_as_xyz
+'x,y,z'
+'x+1/2,y+1/2,z'
+)CIF";
+  Avogadro::Core::Molecule noCell;
+  noCell.addAtom(6);
+  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(untabulated), noCell));
+  EXPECT_EQ(noCell.atomCount(), 1u);
 }

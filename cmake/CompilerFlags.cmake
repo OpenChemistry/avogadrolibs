@@ -66,4 +66,23 @@ elseif(MSVC)
   set(CMAKE_SHARED_LINKER_FLAGS_ASAN "/INCREMENTAL:NO /DEBUG")
   set(CMAKE_MODULE_LINKER_FLAGS_ASAN "/INCREMENTAL:NO /DEBUG")
 
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+
+  include(CheckCXXCompilerFlag)
+
+  # Additional warnings for Clang (including AppleClang): the same set as
+  # GCC, minus -pedantic
+  set(CMAKE_CXX_FLAGS_WARN "-Wall -Wextra -Wshadow -Wnon-virtual-dtor -Woverloaded-virtual -Wcast-align -Wpointer-arith -Wformat-security")
+
+  # Not returning from a non-void function is an error with MSVC
+  check_cxx_compiler_flag("-Werror=return-type" HAVE_CLANG_ERROR_RETURN_TYPE)
+  if(HAVE_CLANG_ERROR_RETURN_TYPE)
+    set(CMAKE_CXX_FLAGS_ERROR "-Werror=return-type")
+  endif()
+
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${CMAKE_CXX_FLAGS_WARN}")
+  set(CMAKE_CXX_FLAGS_DEBUG
+    "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_WARN} ${CMAKE_CXX_FLAGS_ERROR}")
+
 endif()

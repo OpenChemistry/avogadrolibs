@@ -12,9 +12,8 @@ PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p)
   ui->setupUi(this);
 
   ui->tableWidget->setColumnCount(3);
-  ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Name"
-                                                           << "Formula"
-                                                           << "Mass (g/mol)");
+  ui->tableWidget->setHorizontalHeaderLabels(
+    QStringList() << tr("Name") << tr("Formula") << tr("Mass (g/mol)"));
   ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
   ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);

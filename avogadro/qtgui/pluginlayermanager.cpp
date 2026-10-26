@@ -81,16 +81,13 @@ bool PluginLayerManager::atomEnabled(Index atom) const
   if (layer == MaxIndex) {
     return false;
   }
-  // visible is sized per layer independently of Layer itself, so bounds check
-  // it separately rather than assuming the two agree.
-  return layer < it->second.size() && it->second[layer] &&
-         layer < molecule->visible.size() && molecule->visible[layer];
+  return enabledAndVisible(*molecule, it->second, layer);
 }
 
 size_t PluginLayerManager::getLayerID(Index atom) const
 {
   auto molecule = activeMoleculeInfo();
-  if (molecule == nullptr || atom >= molecule->layer.atomCount())
+  if (molecule == nullptr)
     return MaxIndex;
   return molecule->layer.getLayerID(atom);
 }
