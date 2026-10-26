@@ -10,6 +10,8 @@
 #include <avogadro/core/gaussiansettools.h>
 #include <avogadro/core/molecule.h>
 
+#include <cstring>
+
 namespace py = pybind11;
 
 using namespace Avogadro;
@@ -45,27 +47,27 @@ void exportBasisSet(py::module_& m)
     .def(
       "mo_energy",
       [](BasisSet& self, BasisSet::ElectronType type) -> py::array_t<double> {
-        auto& energies = self.moEnergy(type);
-        if (energies.empty())
-          return py::array_t<double>(0);
-        return py::array_t<double>({ static_cast<Py_ssize_t>(energies.size()) },
-                                   { static_cast<Py_ssize_t>(sizeof(double)) },
-                                   energies.data(), py::cast(self));
+        const auto& energies = self.moEnergy(type);
+        py::array_t<double> result(static_cast<Py_ssize_t>(energies.size()));
+        if (!energies.empty())
+          std::memcpy(result.mutable_data(), energies.data(),
+                      energies.size() * sizeof(double));
+        return result;
       },
       py::arg("type") = BasisSet::Paired,
-      "MO energies as a numpy array (Hartrees)")
+      "MO energies as a numpy array (Hartrees; a copy)")
     .def(
       "mo_occupancy",
       [](BasisSet& self, BasisSet::ElectronType type) -> py::array_t<uint8_t> {
-        auto& occ = self.moOccupancy(type);
-        if (occ.empty())
-          return py::array_t<uint8_t>(0);
-        return py::array_t<uint8_t>(
-          { static_cast<Py_ssize_t>(occ.size()) },
-          { static_cast<Py_ssize_t>(sizeof(uint8_t)) }, occ.data(),
-          py::cast(self));
+        const auto& occ = self.moOccupancy(type);
+        py::array_t<uint8_t> result(static_cast<Py_ssize_t>(occ.size()));
+        if (!occ.empty())
+          std::memcpy(result.mutable_data(), occ.data(),
+                      occ.size() * sizeof(uint8_t));
+        return result;
       },
-      py::arg("type") = BasisSet::Paired, "MO occupancies as a numpy array");
+      py::arg("type") = BasisSet::Paired,
+      "MO occupancies as a numpy array (a copy)");
 
   // --- ScfType enum (namespace level) ---
 

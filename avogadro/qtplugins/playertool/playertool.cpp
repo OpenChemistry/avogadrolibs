@@ -10,15 +10,15 @@
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/utilities.h>
+#include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/imagesizedialog.h>
 
 #include <QAction>
-#include <QOpenGLFramebufferObject>
 #include <QOpenGLWidget>
 #include <QtCore/QBuffer>
-#include <QtCore/QProcess>
 #include <QtGui/QIcon>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QScreen>
 #include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
@@ -31,8 +31,6 @@
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QVBoxLayout>
-
-#include <QScreen>
 
 #include <algorithm>
 #include <cmath>
@@ -66,7 +64,8 @@ PlayerTool::PlayerTool(QObject* parent_)
     m_dynamicBonding(nullptr), m_glWidget(nullptr), m_slider(nullptr),
     playButton(nullptr)
 {
-  connect(&m_timer, &QTimer::timeout, this, [this]() { animate(); });
+  m_timer.setTimerType(Qt::PreciseTimer);
+  connect(&m_timer, &QTimer::timeout, this, &PlayerTool::animateDue);
 
   QString shortcut = tr("Ctrl+9", "control-key 9");
   m_activateAction->setText(tr("Player"));
@@ -334,7 +333,25 @@ void PlayerTool::play()
   int timeOut = static_cast<int>(1000 / fps);
   if (m_timer.isActive())
     m_timer.stop();
+  m_playFps = fps;
+  m_playTicks = 0;
+  m_playClock.start();
   m_timer.start(timeOut);
+}
+
+void PlayerTool::animateDue()
+{
+  // Advance by the frames due on the wall clock so playback skips frames,
+  // rather than falling behind, when rendering can't keep up. Rounding puts
+  // each tick mid-frame, so timer jitter can't flip between skip and repeat;
+  // a tick that arrives before the next frame is due does nothing.
+  const auto due =
+    static_cast<qint64>(m_playClock.elapsed() * m_playFps / 1000.0 + 0.5);
+  if (due <= m_playTicks)
+    return;
+  const auto advance = static_cast<int>(due - m_playTicks);
+  m_playTicks = due;
+  animate(advance);
 }
 
 void PlayerTool::stop()
@@ -407,14 +424,9 @@ void PlayerTool::syncWidgets()
 
 void PlayerTool::recordMovie()
 {
-  // Qt 5.14 or later gives the more reliable way for multi-screen
-#if QT_VERSION >= 0x050E00
-  qreal scaling = m_glWidget->screen()->devicePixelRatio();
-#else
-  qreal scaling = qApp->devicePixelRatio();
-#endif
-  int EXPORT_WIDTH = m_glWidget->width() * scaling;
-  int EXPORT_HEIGHT = m_glWidget->height() * scaling;
+  auto* glWidget = qobject_cast<QtOpenGL::GLWidget*>(m_glWidget);
+  if (glWidget == nullptr || m_molecule == nullptr)
+    return;
 
   if (m_timer.isActive())
     m_timer.stop();
@@ -437,10 +449,40 @@ void PlayerTool::recordMovie()
   if (!fileInfo.suffix().isEmpty())
     baseName = fileInfo.absolutePath() + "/" + fileInfo.baseName();
 
+  // Ask for the frame size. Video encoders need even dimensions.
+  QtOpenGL::ImageSizeDialog sizeDialog(glWidget, "playerTool/movie", false,
+                                       true, qobject_cast<QWidget*>(parent()));
+  sizeDialog.setWindowTitle(tr("Movie Size"));
+  if (sizeDialog.exec() != QDialog::Accepted)
+    return;
+  QtOpenGL::RenderOptions renderOptions = sizeDialog.renderOptions();
+  const int exportWidth = renderOptions.size.width();
+  const int exportHeight = renderOptions.size.height();
+
   bool bonding = m_dynamicBonding->isChecked();
   int numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
-  // m_glWidget->resize(EXPORT_WIDTH, EXPORT_HEIGHT);
+
+  // Advance to frame i and render it at the chosen size.
+  auto renderFrame = [&](int i, QImage& image) {
+    qApp->processEvents();
+    m_molecule->setCoordinate3d(i);
+    if (bonding) {
+      m_molecule->clearBonds();
+      m_molecule->perceiveBondsSimple();
+    }
+    m_molecule->emitChanged(frameChangeFlags(bonding));
+
+    QString error;
+    image = glWidget->renderImage(renderOptions, &error);
+    if (image.isNull()) {
+      QMessageBox::warning(
+        qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+        tr("Cannot render frame %1: %2").arg(i + 1).arg(error));
+      return false;
+    }
+    return true;
+  };
 
   if (selfFilter == tr("GIF (*.gif)")) {
     GifWriter writer;
@@ -451,72 +493,37 @@ void PlayerTool::recordMovie()
         qobject_cast<QWidget*>(parent()), tr("GIF FPS support warning"),
         tr("The GIF file format does not support frame rates over 100 FPS."));
     }
-    GifBegin(&writer, (baseName + ".gif").toLatin1().data(), EXPORT_WIDTH,
-             EXPORT_HEIGHT, 100 / std::min(m_animationFPS->value(), 100));
+    const int delay = 100 / std::min(m_animationFPS->value(), 100);
+    GifBegin(&writer, (baseName + ".gif").toLatin1().data(), exportWidth,
+             exportHeight, delay);
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-      qApp->processEvents();
-      m_molecule->setCoordinate3d(i);
-      if (bonding) {
-        m_molecule->clearBonds();
-        m_molecule->perceiveBondsSimple();
-      }
-      m_molecule->emitChanged(frameChangeFlags(bonding));
-
       QImage exportImage;
-      m_glWidget->raise();
-      m_glWidget->repaint();
-      if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-        exportImage = m_glWidget->grabFramebuffer();
-      } else {
-        auto* screen = QGuiApplication::primaryScreen();
-        auto pixmap = screen->grabWindow(m_glWidget->winId());
-        exportImage = pixmap.toImage();
-      }
+      if (!renderFrame(i, exportImage))
+        break;
 
-      int frameWidth = exportImage.width();
-      int frameHeight = exportImage.height();
-      int numbPixels = frameWidth * frameHeight;
-
-      auto* imageData = new uint8_t[numbPixels * 4];
-      int imageIndex = 0;
-      for (int j = 0; j < frameHeight; ++j) {
-        for (int k = 0; k < frameWidth; ++k) {
-          QColor color = exportImage.pixel(k, j);
-          imageData[imageIndex] = (uint8_t)color.red();
-          imageData[imageIndex + 1] = (uint8_t)color.green();
-          imageData[imageIndex + 2] = (uint8_t)color.blue();
-          imageData[imageIndex + 3] = (uint8_t)color.alpha();
-          imageIndex += 4;
-        }
-      }
-      GifWriteFrame(&writer, imageData, EXPORT_WIDTH, EXPORT_HEIGHT,
-                    100 / std::min(m_animationFPS->value(), 100));
-      delete[] imageData;
+      // GIF-H wants tightly packed RGBA, which is what RGBA8888 scanlines
+      // are (4 bytes per pixel is always 32-bit aligned).
+      exportImage = exportImage.convertToFormat(QImage::Format_RGBA8888);
+      if (exportImage.size() != renderOptions.size)
+        break;
+      GifWriteFrame(&writer, exportImage.constBits(), exportWidth, exportHeight,
+                    delay);
     }
     GifEnd(&writer);
   } else if (selfFilter == tr("Movie (*.avi)")) {
     gwavi_t* gwavi;
-    gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), EXPORT_WIDTH,
-                       EXPORT_HEIGHT, "MJPG", m_animationFPS->value(), nullptr);
+    gwavi = gwavi_open((baseName + ".avi").toLatin1().data(), exportWidth,
+                       exportHeight, "MJPG", m_animationFPS->value(), nullptr);
+    if (gwavi == nullptr) {
+      QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+                           tr("Cannot create the video file."));
+      return;
+    }
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-      qApp->processEvents();
-      m_molecule->setCoordinate3d(i);
-      if (bonding) {
-        m_molecule->clearBonds();
-        m_molecule->perceiveBondsSimple();
-      }
-      m_molecule->emitChanged(frameChangeFlags(bonding));
-
       QImage exportImage;
-      m_glWidget->raise();
-      m_glWidget->repaint();
-      if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-        exportImage = m_glWidget->grabFramebuffer();
-      } else {
-        auto* screen = QGuiApplication::primaryScreen();
-        auto pixmap = screen->grabWindow(m_glWidget->winId());
-        exportImage = pixmap.toImage();
-      }
+      if (!renderFrame(i, exportImage))
+        break;
+
       QByteArray ba;
       QBuffer buffer(&ba);
       buffer.open(QIODevice::WriteOnly);
@@ -532,47 +539,38 @@ void PlayerTool::recordMovie()
     gwavi_close(gwavi);
   } else if (selfFilter == tr("Movie (*.mp4)")) {
     for (int i = 0; i < m_molecule->coordinate3dCount(); ++i) {
-      qApp->processEvents();
-      m_molecule->setCoordinate3d(i);
-      if (bonding) {
-        m_molecule->clearBonds();
-        m_molecule->perceiveBondsSimple();
-      }
-      m_molecule->emitChanged(frameChangeFlags(bonding));
+      QImage exportImage;
+      if (!renderFrame(i, exportImage))
+        return;
+
       QString fileName = QString::number(i);
       while (fileName.length() < numberLength)
         fileName.prepend('0');
       fileName.prepend(baseName);
       fileName.append(".png");
 
-      QImage exportImage;
-      m_glWidget->raise();
-      m_glWidget->repaint();
-      if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-        exportImage = m_glWidget->grabFramebuffer();
-      } else {
-        auto* screen = QGuiApplication::primaryScreen();
-        auto pixmap = screen->grabWindow(m_glWidget->winId());
-        exportImage = pixmap.toImage();
-      }
-
       if (!exportImage.save(fileName)) {
         QMessageBox::warning(qobject_cast<QWidget*>(parent()), tr("Avogadro"),
                              tr("Cannot save file %1.").arg(fileName));
         return;
       }
-      QProcess proc;
-      QStringList args;
-      args << "-y"
-           << "-r" << QString::number(m_animationFPS->value()) << "-i"
-           << baseName + "%0" + QString::number(numberLength) + "d.png"
-           << "-c:v"
-           << "libx264"
-           << "-r"
-           << "30"
-           << "-pix_fmt"
-           << "yuv420p" << baseName + ".mp4";
-      proc.execute("avconv", args);
+    }
+
+    // Encode once, after all of the frames have been written.
+    QStringList args;
+    args << "-y"
+         << "-r" << QString::number(m_animationFPS->value()) << "-i"
+         << baseName + "%0" + QString::number(numberLength) + "d.png" << "-c:v"
+         << "libx264"
+         << "-r"
+         << "30"
+         << "-pix_fmt"
+         << "yuv420p" << baseName + ".mp4";
+    if (!QtGui::Utilities::runVideoEncoder(args)) {
+      QMessageBox::warning(
+        qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+        tr("Cannot run ffmpeg or avconv to encode the movie. The frames were "
+           "saved as PNG files."));
     }
   }
 }

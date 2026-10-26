@@ -6,6 +6,7 @@
 #include "volumegeometry.h"
 
 #include "avogadrogl.h"
+#include "blendstateguard_p.h"
 #include "bufferobject.h"
 #include "camera.h"
 #include "scene.h"
@@ -154,7 +155,7 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texColor, GLuint* texDepth,
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if (status != GL_FRAMEBUFFER_COMPLETE) {
     std::cerr << "Error: " << label << " framebuffer incomplete: 0x" << std::hex
-              << status << std::endl;
+              << status << '\n';
   }
 
   // Unbind the FBO:
@@ -442,7 +443,7 @@ void VolumeGeometry::initialize()
     d->fragmentShader = new Shader(Shader::Fragment);
     d->fragmentShader->setSource(volume_fs);
     if (!d->fragmentShader->compile())
-      std::cout << d->fragmentShader->error() << std::endl;
+      std::cout << d->fragmentShader->error() << '\n';
   }
 
   if (!d->program) {
@@ -588,6 +589,9 @@ void VolumeGeometry::render(const Camera& camera)
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
 
+  // The guard puts the caller's blend state back when we return.
+  BlendStateGuard blendState;
+
   // Enable premultiplied alpha blending so volume composites over existing
   // scene
   glEnable(GL_BLEND);
@@ -653,8 +657,7 @@ void VolumeGeometry::render(const Camera& camera)
 
   d->program->release();
 
-  // Restore GL state for other translucent objects
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // Blend state is restored by blendState; restore the rest by hand.
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }

@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 using std::exp;
@@ -573,9 +574,32 @@ void GaussianSetTools::buildShellData()
   for (Index a = 0; a < atomsSize; ++a)
     atomPosBohr.col(a) = m_molecule->atom(a).position3d() * ANGSTROM_TO_BOHR;
 
-  m_shells.resize(sym.size());
-  for (size_t i = 0; i < sym.size(); ++i) {
-    ShellInfo& s = m_shells[i];
+  // The parallel arrays come from file readers, so none of them can be
+  // trusted to match sym. A basis that is inconsistent anywhere is rejected
+  // as a whole: dropping a single shell would give plausible but wrong
+  // orbitals.
+  auto reject = [this](const char* reason) {
+    m_shells.clear();
+    m_valid = false;
+    std::cout << "Invalid Gaussian basis set: " << reason << '\n';
+  };
+
+  const size_t nShells = sym.size();
+  if (atomIndices.size() < nShells || moIndices.size() < nShells ||
+      cIndices.size() < nShells || gtoIndices.size() < nShells + 1) {
+    reject("shell index arrays are shorter than the symmetry array.");
+    return;
+  }
+
+  std::vector<ShellInfo> shells(nShells);
+  size_t requiredRows = 0;
+  for (size_t i = 0; i < nShells; ++i) {
+    if (sym[i] < 0 || sym[i] >= 13) {
+      reject("unknown shell type.");
+      return;
+    }
+
+    ShellInfo& s = shells[i];
     s.type = sym[i];
     s.L = symToL[sym[i]];
     s.atomIndex = atomIndices[i];
@@ -584,6 +608,30 @@ void GaussianSetTools::buildShellData()
     s.gtoEnd = gtoIndices[i + 1];
     s.cStart = cIndices[i];
     s.nComponents = symToNComp[sym[i]];
+
+    if (s.atomIndex >= atomsSize) {
+      reject("shell atom index is out of range.");
+      return;
+    }
+    if (s.gtoStart > s.gtoEnd || s.gtoEnd > m_gtoA.size()) {
+      reject("shell primitive range is out of range.");
+      return;
+    }
+
+    // Evaluated shells read nComponents normalized coefficients per primitive
+    // and write nComponents rows of the MO matrix.
+    if (isEvaluatedShell(s.type)) {
+      const size_t nCoefficients =
+        static_cast<size_t>(s.gtoEnd - s.gtoStart) * s.nComponents;
+      if (s.cStart > m_gtoCN.size() ||
+          nCoefficients > m_gtoCN.size() - s.cStart) {
+        reject("shell coefficient range is out of range.");
+        return;
+      }
+      requiredRows =
+        std::max(requiredRows, static_cast<size_t>(s.moIndex) +
+                                 static_cast<size_t>(s.nComponents));
+    }
 
     // Cache center in Bohr
     s.centerBohr[0] = atomPosBohr(0, s.atomIndex);
@@ -595,6 +643,9 @@ void GaussianSetTools::buildShellData()
     // cutoff makes both evaluators skip them.
     s.cutoffSquared = isEvaluatedShell(s.type) ? calculateShellCutoff(s) : 0.0;
   }
+
+  m_shells = std::move(shells);
+  m_requiredRows = requiredRows;
 }
 
 double GaussianSetTools::calculateShellCutoff(const ShellInfo& shell) const
@@ -637,7 +688,7 @@ bool GaussianSetTools::calculateMolecularOrbitalGrid(Cube& cube,
   return calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
 }
 
-void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
+bool GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
                                       const Vector3& minBohr,
                                       const Vector3& spBohr,
                                       const std::vector<double>& gridX,
@@ -645,16 +696,20 @@ void GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
                                       const std::vector<double>& gridZ, int nx,
                                       int ny, int nz, double* output) const
 {
-  evaluateMOGrid(moIndex, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx, ny,
-                 nz, 0, nx, output);
+  return evaluateMOGrid(moIndex, moMat, minBohr, spBohr, gridX, gridY, gridZ,
+                        nx, ny, nz, 0, nx, output);
 }
 
-void GaussianSetTools::evaluateMOGrid(
+bool GaussianSetTools::evaluateMOGrid(
   int moIndex, const MatrixX& moMat, const Vector3& minBohr,
   const Vector3& spBohr, const std::vector<double>& gridX,
   const std::vector<double>& gridY, const std::vector<double>& gridZ, int nx,
   int ny, int nz, int iStart, int iEnd, double* output) const
 {
+  // The shells index moMat directly, so it has to cover all of them.
+  if (!moMatrixFits(moMat) || moIndex < 0 || moIndex >= moMat.cols())
+    return false;
+
   const double* gtoA = m_gtoA.data();
   const double* gtoCN = m_gtoCN.data();
 
@@ -740,12 +795,14 @@ void GaussianSetTools::evaluateMOGrid(
         break;
     }
   }
+  return true;
 }
 
 bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
                                                      int iStart, int iEnd) const
 {
-  if (moNumber > static_cast<int>(m_basis->molecularOrbitalCount()))
+  if (!isValid() ||
+      moNumber > static_cast<int>(m_basis->molecularOrbitalCount()))
     return false;
 
   const int nx = cube.nx(), ny = cube.ny(), nz = cube.nz();
@@ -771,8 +828,9 @@ bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
   std::vector<double> output(slabSize, 0.0);
 
   const MatrixX& moMat = m_basis->moMatrix(m_type);
-  evaluateMOGrid(moNumber, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx, ny,
-                 nz, iStart, iEnd, output.data());
+  if (!evaluateMOGrid(moNumber, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx,
+                      ny, nz, iStart, iEnd, output.data()))
+    return false;
 
   // Copy slab results to cube. Each thread's slab does not overlap with
   // others, so this is safe to do in parallel from multiple slab calls.
@@ -787,13 +845,17 @@ bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
 double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
                                                    int mo) const
 {
-  if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
+  if (!isValid() || mo < 0 ||
+      mo >= static_cast<int>(m_basis->molecularOrbitalCount()))
+    return 0.0;
+
+  const MatrixX& matrix = m_basis->moMatrix(m_type);
+  if (mo >= matrix.cols() || !moMatrixFits(matrix) ||
+      !moMatrixFits(m_basis->moMatrix()))
     return 0.0;
 
   Eigen::VectorXd values;
   calculateValues(position, values);
-
-  const MatrixX& matrix = m_basis->moMatrix(m_type);
 
   // Use Eigen's optimized dot product
   return matrix.col(mo).dot(values);
@@ -812,6 +874,9 @@ bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
 bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
                                                     int iEnd) const
 {
+  if (!isValid())
+    return false;
+
   // Determine occupied MOs and their weights
   // RHF: ρ = 2 · Σ |ψ_i|² for i = 0..n_occ-1
   // UHF/ROHF: ρ = Σ |ψ_i^α|² + Σ |ψ_i^β|²
@@ -887,7 +952,8 @@ bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
     }
 
     int matrixSize = static_cast<int>(m_basis->moMatrix().rows());
-    if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
+    if (matrix.rows() != matrixSize || matrix.cols() != matrixSize ||
+        !moMatrixFits(m_basis->moMatrix()))
       return false;
 
     const size_t startIdx = static_cast<size_t>(iStart) * ny * nz;
@@ -926,8 +992,9 @@ bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
     if (moMat.rows() == 0)
       continue;
 
-    evaluateMOGrid(occ.index, moMat, minBohr, spBohr, gridX, gridY, gridZ, nx,
-                   ny, nz, iStart, iEnd, moGrid.data());
+    if (!evaluateMOGrid(occ.index, moMat, minBohr, spBohr, gridX, gridY, gridZ,
+                        nx, ny, nz, iStart, iEnd, moGrid.data()))
+      return false;
 
     // Accumulate: density += weight * |ψ|²
     double w = occ.weight;
@@ -946,10 +1013,14 @@ bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
 
 double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 {
+  if (!isValid())
+    return 0.0;
+
   const MatrixX& matrix = m_basis->densityMatrix();
   int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
 
-  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
+  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize ||
+      !moMatrixFits(m_basis->moMatrix())) {
     return 0.0;
   }
 
@@ -969,9 +1040,13 @@ bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
 bool GaussianSetTools::calculateSpinDensitySlab(Cube& cube, int iStart,
                                                 int iEnd) const
 {
+  if (!isValid())
+    return false;
+
   const MatrixX& matrix = m_basis->spinDensityMatrix();
   int matrixSize = static_cast<int>(m_basis->moMatrix().rows());
-  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
+  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize ||
+      !moMatrixFits(m_basis->moMatrix()))
     return false;
 
   const int nx = cube.nx(), ny = cube.ny(), nz = cube.nz();
@@ -997,9 +1072,13 @@ bool GaussianSetTools::calculateSpinDensitySlab(Cube& cube, int iStart,
 
 double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 {
+  if (!isValid())
+    return 0.0;
+
   const MatrixX& matrix = m_basis->spinDensityMatrix();
   int matrixSize(static_cast<int>(m_basis->moMatrix().rows()));
-  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize) {
+  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize ||
+      !moMatrixFits(m_basis->moMatrix())) {
     return 0.0;
   }
 
@@ -1014,8 +1093,13 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 
 bool GaussianSetTools::isValid() const
 {
-  return (m_molecule != nullptr) &&
+  return m_valid && (m_molecule != nullptr) &&
          (dynamic_cast<GaussianSet*>(m_molecule->basisSet()) != nullptr);
+}
+
+bool GaussianSetTools::moMatrixFits(const MatrixX& moMat) const
+{
+  return static_cast<size_t>(moMat.rows()) >= m_requiredRows;
 }
 
 inline void GaussianSetTools::calculateValues(const Vector3& position,

@@ -51,10 +51,9 @@ size_t CurveGeometry::circleResolution(bool flat) const
   return flat ? 1u : 12u;
 }
 
-void CurveGeometry::appendCirclePoints(std::vector<ColorNormalVertex>& result,
-                                       const Eigen::Affine3f& a,
-                                       const Eigen::Affine3f& b,
-                                       bool flat) const
+void CurveGeometry::appendRingPoints(std::vector<ColorNormalVertex>& result,
+                                     const Eigen::Affine3f& frame,
+                                     bool flat) const
 {
   const size_t resolution = circleResolution(flat);
   const float resolutionRadians =
@@ -63,17 +62,25 @@ void CurveGeometry::appendCirclePoints(std::vector<ColorNormalVertex>& result,
   for (size_t i = 0; i < resolution; ++i) {
     float theta = i * resolutionRadians;
     Vector3f circle = Vector3f(std::cos(theta), 0.0f, std::sin(theta));
-    ColorNormalVertex vert1;
-    vert1.normal = a.linear() * circle;
-    vert1.vertex = a * circle;
-    vert1.color = Vector3ub(0, 0, 0);
-    result.push_back(vert1);
+    ColorNormalVertex vert;
+    vert.normal = frame.linear() * circle;
+    vert.vertex = frame * circle;
+    vert.color = Vector3ub(0, 0, 0);
+    result.push_back(vert);
+  }
+}
 
-    ColorNormalVertex vert2;
-    vert2.normal = b.linear() * circle;
-    vert2.vertex = b * circle;
-    vert2.color = Vector3ub(0, 0, 0);
-    result.push_back(vert2);
+void CurveGeometry::appendCirclePoints(std::vector<ColorNormalVertex>& result,
+                                       const Eigen::Affine3f& a,
+                                       const Eigen::Affine3f& b,
+                                       bool flat) const
+{
+  std::vector<ColorNormalVertex> ringA, ringB;
+  appendRingPoints(ringA, a, flat);
+  appendRingPoints(ringB, b, flat);
+  for (size_t i = 0; i < ringA.size() && i < ringB.size(); ++i) {
+    result.push_back(ringA[i]);
+    result.push_back(ringB[i]);
   }
 }
 
@@ -192,35 +199,52 @@ void CurveGeometry::tessellate(size_t lineIndex,
     }
   } else {
     const size_t resolution = circleResolution(line->flat);
-    const size_t radialVertexCount = resolution * 2;
     const size_t segmentCount = points.size() > 1 ? points.size() - 1 : 0;
-    vertices.reserve(segmentCount * radialVertexCount);
+    // Each ring is shared by the two segments that meet there; it is only
+    // duplicated where the colour changes between consecutive segments.
+    vertices.reserve((segmentCount + 1) * resolution);
     indices.reserve(segmentCount * resolution * 6);
 
-    std::vector<ColorNormalVertex> radials;
-    radials.reserve(radialVertexCount);
+    std::vector<ColorNormalVertex> ring;
+    ring.reserve(resolution);
+    auto emitRing = [&](const Eigen::Affine3f& frame, const Vector3ub& color) {
+      ring.clear();
+      appendRingPoints(ring, frame, line->flat);
+      const auto start = static_cast<unsigned int>(vertices.size());
+      for (auto& vertex : ring) {
+        vertex.color = color;
+        vertices.push_back(vertex);
+      }
+      return start;
+    };
 
+    unsigned int previousRing = 0;
+    Vector3ub previousColor(0, 0, 0);
     for (size_t i = 1; i < points.size(); ++i) {
       advanceColor(i);
-      radials.clear();
-      appendCirclePoints(radials, points[i], points[i - 1], line->flat);
-      for (auto& radial : radials) {
-        radial.color = line->points[colorIndex].color;
-        vertices.push_back(radial);
-      }
-      const auto tubeStart =
-        static_cast<unsigned int>(vertices.size() - radials.size());
-      for (size_t j = 0; j < resolution; ++j) {
-        unsigned int r1 = static_cast<unsigned int>(j * 2);
-        unsigned int r2 =
-          j != 0 ? r1 - 2 : static_cast<unsigned int>(radials.size() - 2);
-        indices.push_back(tubeStart + r1);
-        indices.push_back(tubeStart + r1 + 1);
-        indices.push_back(tubeStart + r2);
+      const Vector3ub color = line->points[colorIndex].color;
+      // ring of points[i - 1] (the "b" ring of this segment)
+      unsigned int bStart;
+      if (i > 1 && color == previousColor)
+        bStart = previousRing;
+      else
+        bStart = emitRing(points[i - 1], color);
+      // ring of points[i] (the "a" ring of this segment)
+      const unsigned int aStart = emitRing(points[i], color);
+      previousRing = aStart;
+      previousColor = color;
 
-        indices.push_back(tubeStart + r2);
-        indices.push_back(tubeStart + r1 + 1);
-        indices.push_back(tubeStart + r2 + 1);
+      for (size_t j = 0; j < resolution; ++j) {
+        const auto r1 = static_cast<unsigned int>(j);
+        const auto r2 =
+          static_cast<unsigned int>(j != 0 ? j - 1 : resolution - 1);
+        indices.push_back(aStart + r1);
+        indices.push_back(bStart + r1);
+        indices.push_back(aStart + r2);
+
+        indices.push_back(aStart + r2);
+        indices.push_back(bStart + r1);
+        indices.push_back(bStart + r2);
       }
     }
   }
@@ -293,20 +317,20 @@ void checkShaderInfo(ShaderInfo& shaderInfo, const std::string& fs,
     shaderInfo.fragmentShader.setType(Shader::Fragment);
     shaderInfo.fragmentShader.setSource(fs);
     if (!shaderInfo.vertexShader.compile())
-      cout << shaderInfo.vertexShader.error() << endl;
+      cout << shaderInfo.vertexShader.error() << '\n';
     if (!shaderInfo.fragmentShader.compile())
-      cout << shaderInfo.fragmentShader.error() << endl;
+      cout << shaderInfo.fragmentShader.error() << '\n';
     shaderInfo.program.attachShader(shaderInfo.vertexShader);
     shaderInfo.program.attachShader(shaderInfo.fragmentShader);
     if (!shaderInfo.program.link())
-      cout << shaderInfo.program.error() << endl;
+      cout << shaderInfo.program.error() << '\n';
   }
 }
 
 void CurveGeometry::processShaderError(bool error)
 {
   if (error) {
-    cout << m_shaderInfo.program.error() << endl;
+    cout << m_shaderInfo.program.error() << '\n';
   }
 }
 

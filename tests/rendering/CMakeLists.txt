@@ -1,7 +1,12 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  BSplineGeometry
   Camera
   CurveGeometry
+  CurveTessellation
+  CylinderGeometry
+  GLRenderer
+  GeometryVisitor
   Node
   PLYVisitor
   SphereGeometry

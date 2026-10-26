@@ -279,7 +279,7 @@ void Orbitals::precalculateOrbitals()
 #endif
     addCalculationToQueue(
       i, // orbital
-      OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
+      OrbitalWidget::OrbitalQualityToDouble(m_dialog->quality()),
       m_dialog->isovalue(), Core::BasisSet::Paired, priority);
 
     // Update priority. Stays the same when i = homo.
@@ -465,7 +465,7 @@ void Orbitals::calculatePosMesh()
     m_meshGenerator = new QtGui::MeshGenerator;
   }
   connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculatePosMeshDone()));
-  m_meshGenerator->initialize(cube, posMesh, m_isoValue, smoothingPasses);
+  m_meshGenerator->initialize(cube, posMesh, info->isovalue, smoothingPasses);
   m_meshGenerator->start();
 }
 
@@ -491,7 +491,7 @@ void Orbitals::calculateNegMesh()
   }
   connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculateNegMeshDone()));
   // true indicates that we want to reverse the surface
-  m_meshGenerator->initialize(cube, negMesh, -m_isoValue, smoothingPasses,
+  m_meshGenerator->initialize(cube, negMesh, -info->isovalue, smoothingPasses,
                               true);
   m_meshGenerator->start();
 }
@@ -550,29 +550,24 @@ void Orbitals::renderOrbital(unsigned int orbital,
            << " electronType: " << static_cast<int>(electronType);
 #endif
 
-  // Find the most recent calc matching the selected orbital and electron type:
-  calcInfo calc;
+  double targetResolution =
+    OrbitalWidget::OrbitalQualityToDouble(m_dialog->quality());
+
+  // Reuse a completed cube at the requested resolution or finer
   int index = -1;
-  // in the event of ties, pick the best resolution
-  double resolution = OrbitalWidget::OrbitalQualityToDouble(0);
   for (int i = 0; i < m_queue.size(); i++) {
-    calc = m_queue[i];
+    const calcInfo& calc = m_queue[i];
     if (calc.orbital == orbital && calc.electronType == electronType &&
-        calc.state == Completed) {
-      if (calc.resolution <= resolution) {
-        resolution = calc.resolution;
-        index = i;
-      }
+        calc.state == Completed && calc.resolution <= targetResolution + 1e-6 &&
+        (index == -1 || calc.resolution < m_queue[index].resolution)) {
+      index = i;
     }
   }
 
   // calculate the meshes
   if (index == -1) {
-    // need to calculate the cube first
-    calculateOrbitalFromWidget(
-      orbital,
-      OrbitalWidget::OrbitalQualityToDouble(m_dialog->defaultQuality()),
-      electronType);
+    // need to calculate the cube first with the selected quality resolution
+    calculateOrbitalFromWidget(orbital, targetResolution, electronType);
   } else {
     // Set this cube as the active cube for volume rendering
     Core::Cube* activeCube = m_queue[index].cube;
@@ -583,7 +578,8 @@ void Orbitals::renderOrbital(unsigned int orbital,
       }
     }
 
-    // just need to update the meshes
+    // just need to update the meshes, using the current isovalue
+    m_queue[index].isovalue = m_dialog->isovalue();
     if (m_currentMeshCalculation == -1) {
       m_currentMeshCalculation = index;
       calculatePosMesh(); // will eventually call negMesh too

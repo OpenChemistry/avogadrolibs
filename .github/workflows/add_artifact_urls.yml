@@ -1,21 +1,221 @@
-name: add artifact links to pull request
+# Post build-artifact download links to pull requests and to the issues
+# that those pull requests are linked to (closing keywords / sidebar link).
+#
+# One comment is kept per PR (and one per PR on each linked issue). It is
+# created once and then edited in place every time a build workflow finishes,
+# so there is no comment spam.
+#
+# Why workflow_run: pull requests from forks get a read-only token and no
+# secrets in their own workflows, so the build workflows cannot comment. A
+# workflow_run workflow runs in the context of the base repository with a
+# write token. Because of that, this workflow must NEVER check out or run code
+# from the pull request, and must never interpolate event data into the
+# script text. Everything is read from context.payload inside the script and
+# treated as untrusted text.
+#
+# KEEP IN SYNC: the list of workflow names under `workflows:` below must match
+# the BUILD_WORKFLOWS constant in the script (and the `name:` of the build
+# workflows). Add new build workflows to both.
+name: Post build artifact links
+
 on:
   workflow_run:
-    workflows: ['Qt5 Build Matrix']
+    workflows: ['Linux Build Matrix', 'Linux ARM64 Build Matrix', 'Mac Build Matrix', 'Windows Build', 'Windows ARM Build', 'Build Flatpak']
     types: [completed]
 
+permissions: {}
+
+# Serialize per commit so concurrent completions do not race when editing the
+# comment. Later runs see the results of all earlier ones anyway.
+concurrency:
+  group: artifact-comment-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+
 jobs:
-  artifacts-url-comments:
-    name: add artifact links to pull request job
-    runs-on: windows-latest
+  artifact-comments:
+    name: Comment with build artifact links
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pull-requests: write
+      issues: write
+      contents: read
     steps:
-      - name: add artifact links to pull request step
-        uses: tonyhallett/artifacts-url-comments@0965ff1a7ae03c5c1644d3c30f956effea4e05ef # v1.1.0
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update artifact comments
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-            prefix: Here are the build results
-            suffix: Artifacts will only be retained for 90 days.
-            format: name
-            addTo: pull
-        continue-on-error: true
+          script: |
+            // Keep in sync with `workflows:` in the trigger above.
+            const BUILD_WORKFLOWS = [
+              'Linux Build Matrix',
+              'Linux ARM64 Build Matrix',
+              'Mac Build Matrix',
+              'Windows Build',
+              'Windows ARM Build',
+              'Build Flatpak',
+            ];
+            // Debugging output from failed tests, not installers.
+            const ARTIFACT_DENYLIST = new Set(['rpc-reproducers']);
+            const MARKER = '<!-- avogadro-build-artifacts -->';
+            const BOT = 'github-actions[bot]';
+
+            const { owner, repo } = context.repo;
+            const run = context.payload.workflow_run;
+            const sha = run.head_sha;
+            const shortSha = sha.slice(0, 7);
+
+            // Everything printed from the workflow runs is untrusted text.
+            const esc = (s) => String(s)
+              .replace(/[\\`|<>\[\]]/g, (c) => '\\' + c)
+              .replace(/[\r\n]+/g, ' ');
+
+            // ---- 1. Find the pull request(s) for this commit ----
+            let prs = (run.pull_requests || [])
+              .filter((pr) => pr.base && pr.base.repo && pr.base.repo.id === run.repository.id)
+              .map((pr) => pr.number);
+            if (prs.length === 0) {
+              // Empty for pull requests from forks: match on head sha instead.
+              const open = await github.paginate(github.rest.pulls.list, {
+                owner, repo, state: 'open', per_page: 100,
+              });
+              prs = open.filter((pr) => pr.head.sha === sha).map((pr) => pr.number);
+            }
+            // A build of an older push can finish after a newer push; it must
+            // not overwrite the comment with stale links.
+            const current = [];
+            for (const number of prs) {
+              const { data: pr } = await github.rest.pulls.get({
+                owner, repo, pull_number: number });
+              if (pr.state === 'open' && pr.head.sha === sha) {
+                current.push(number);
+              } else {
+                core.info(`#${number} is no longer at ${shortSha}; skipping.`);
+              }
+            }
+            prs = current;
+            if (prs.length === 0) {
+              core.info(`No open pull request found for ${sha}; nothing to do.`);
+              return;
+            }
+
+            // ---- 2. Gather the newest run of each build workflow ----
+            const allRuns = await github.paginate(
+              github.rest.actions.listWorkflowRunsForRepo,
+              { owner, repo, head_sha: sha, event: 'pull_request', per_page: 100 });
+            const newest = new Map();
+            for (const r of allRuns) {
+              if (!BUILD_WORKFLOWS.includes(r.name)) continue;
+              const prev = newest.get(r.name);
+              if (!prev || new Date(r.created_at) > new Date(prev.created_at)) {
+                newest.set(r.name, r);
+              }
+            }
+
+            const rows = [];
+            let artifactCount = 0;
+            let earliestExpiry = null;
+            for (const name of BUILD_WORKFLOWS) {
+              const r = newest.get(name);
+              if (!r) continue;
+              const runLink = `[run](${r.html_url})`;
+              if (r.status !== 'completed') {
+                rows.push(`| ${esc(name)} | in progress (${runLink}) | |`);
+                continue;
+              }
+              if (r.conclusion !== 'success') {
+                rows.push(`| ${esc(name)} | ${esc(r.conclusion || 'unknown')}, see ${runLink} | |`);
+                continue;
+              }
+              const artifacts = (await github.paginate(
+                github.rest.actions.listWorkflowRunArtifacts,
+                { owner, repo, run_id: r.id, per_page: 100 }))
+                .filter((a) => !a.expired && !ARTIFACT_DENYLIST.has(a.name));
+              if (artifacts.length === 0) {
+                rows.push(`| ${esc(name)} | no artifacts (${runLink}) | |`);
+                continue;
+              }
+              for (const a of artifacts) {
+                artifactCount++;
+                if (a.expires_at) {
+                  const t = new Date(a.expires_at);
+                  if (!earliestExpiry || t < earliestExpiry) earliestExpiry = t;
+                }
+                const url = `https://github.com/${owner}/${repo}/actions/runs/${r.id}/artifacts/${a.id}`;
+                const mb = (a.size_in_bytes / 1048576).toFixed(1);
+                // Flatpak uploads a generic name, so lead with the workflow name.
+                const label = a.name === 'artifact' || a.name === name
+                  ? esc(name) : `${esc(name)}: ${esc(a.name)}`;
+                rows.push(`| ${label} | [Download](${url}) | ${mb} MB |`);
+              }
+            }
+
+            const expiry = earliestExpiry
+              ? ` and expire on ${earliestExpiry.toISOString().slice(0, 10)}`
+              : ' and expire';
+            const table = [
+              '| Platform | Download | Size |',
+              '| --- | --- | --- |',
+              ...rows,
+            ].join('\n');
+            const footer =
+              `Downloading requires being signed in to GitHub. Artifacts${expiry}. ` +
+              'These builds are for testing only and may not be signed: on macOS you may need ' +
+              'to allow the app in System Settings > Privacy & Security, and on Windows SmartScreen may warn.';
+            const content = `### Build artifacts for ${shortSha}\n\n${table}\n\n${footer}`;
+
+            // ---- 3. Comment helpers ----
+            async function upsert(number, marker, body, allowCreate) {
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner, repo, issue_number: number, per_page: 100,
+              });
+              const existing = comments.find((c) =>
+                c.user && c.user.login === BOT && c.body && c.body.includes(marker));
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  owner, repo, comment_id: existing.id, body });
+              } else if (allowCreate) {
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number: number, body });
+              }
+            }
+
+            // ---- 4. Update each PR and its linked issues ----
+            for (const prNumber of prs) {
+              await upsert(prNumber, MARKER, `${MARKER}\n${content}`, true);
+
+              let issues = [];
+              try {
+                const res = await github.graphql(`
+                  query($owner: String!, $repo: String!, $number: Int!) {
+                    repository(owner: $owner, name: $repo) {
+                      pullRequest(number: $number) {
+                        closingIssuesReferences(first: 20) {
+                          nodes { number state repository { nameWithOwner } }
+                        }
+                      }
+                    }
+                  }`, { owner, repo, number: prNumber });
+                issues = res.repository.pullRequest.closingIssuesReferences.nodes;
+              } catch (e) {
+                core.warning(`Could not look up issues linked to #${prNumber}: ${e.message}`);
+                continue;
+              }
+
+              for (const issue of issues) {
+                if (issue.repository.nameWithOwner.toLowerCase() !== `${owner}/${repo}`.toLowerCase()) {
+                  core.info(`Skipping #${issue.number} in ${issue.repository.nameWithOwner}: other repository.`);
+                  continue;
+                }
+                try {
+                  const issueMarker = `<!-- avogadro-build-artifacts pr=${prNumber} -->`;
+                  const body = `${issueMarker}\nTest builds from #${prNumber}, which should fix this issue:\n\n${content}`;
+                  // New comments only if there is something to download and
+                  // the issue is open; existing comments are always updated.
+                  await upsert(issue.number, issueMarker, body,
+                    artifactCount > 0 && issue.state === 'OPEN');
+                } catch (e) {
+                  core.warning(`Could not update issue #${issue.number}: ${e.message}`);
+                }
+              }
+            }

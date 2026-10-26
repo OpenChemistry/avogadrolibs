@@ -7,8 +7,16 @@
 
 #include "editor.h"
 
+#include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/scene.h>
+#include <avogadro/rendering/spheregeometry.h>
+
+#include <QtGui/QMouseEvent>
+
 #include <gtest/gtest.h>
 
+#include <cmath>
 #include <limits>
 #include <vector>
 
@@ -453,4 +461,186 @@ TEST_F(EditorCommandTest, lockedAtomLeavesUntouchedAtomsEditable)
   out = m_harness.run(
     "addAtom", { { "element", "C" }, { "position", list({ 5, 0, 0 }) } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+}
+
+namespace {
+
+Index countHeavyAtoms(const Avogadro::QtGui::Molecule& mol)
+{
+  Index count = 0;
+  for (Index i = 0; i < mol.atomCount(); ++i)
+    if (mol.atomicNumber(i) != 1)
+      ++count;
+  return count;
+}
+
+// Drives the Draw tool with real mouse events against a CPU-only renderer.
+//
+// Scene plugins tag their atom spheres with the QtGui::Molecule address (see
+// BallAndStick::process), and the renderer's hit test is pure CPU, so no GL
+// context is needed. The scene is rebuilt after every event, as the app does
+// on each molecule change: the editor always hits the previous frame.
+class EditorDragScene
+{
+public:
+  static constexpr int Width = 800;
+  static constexpr int Height = 600;
+  static constexpr float AtomRadius = 0.5f;
+
+  EditorDragScene(Editor& editor, CommandTestHarness& harness)
+    : m_editor(editor), m_harness(harness)
+  {
+    Avogadro::Rendering::Camera& camera = m_renderer.camera();
+    camera.setViewport(Width, Height);
+    camera.calculatePerspective(40.0f, 1.0f, 100.0f);
+    camera.lookAt(Avogadro::Vector3f(0.0f, 0.0f, 10.0f),
+                  Avogadro::Vector3f::Zero(), Avogadro::Vector3f::UnitY());
+    m_editor.setGLRenderer(&m_renderer);
+  }
+
+  // Mimic a scene plugin: one sphere per atom, identified by the
+  // QtGui::Molecule address, exactly as in ballandstick.cpp.
+  void rebuildScene()
+  {
+    using namespace Avogadro::Rendering;
+    m_renderer.scene().clear();
+    auto* geometry = new GeometryNode;
+    m_renderer.scene().rootNode().addChild(geometry);
+    auto* spheres = new SphereGeometry;
+    const Avogadro::QtGui::Molecule& mol = *m_harness.molecule();
+    spheres->identifier().molecule = reinterpret_cast<const void*>(&mol);
+    spheres->identifier().type = AtomType;
+    geometry->addDrawable(spheres);
+    for (Index i = 0; i < mol.atomCount(); ++i) {
+      spheres->addSphere(mol.atomPosition3d(i).cast<float>(),
+                         Avogadro::Vector3ub(100, 100, 100), AtomRadius, i);
+    }
+  }
+
+  // Window coordinates (Qt: y down) of a world point.
+  QPoint pixel(const Avogadro::Vector3f& world, float dx = 0.0f) const
+  {
+    const Avogadro::Vector3f p = m_renderer.camera().project(world);
+    return QPoint(static_cast<int>(std::lround(p.x() + dx)),
+                  static_cast<int>(std::lround(Height - p.y())));
+  }
+
+  // Index of the nearest atom under a pixel, or MaxIndex.
+  Index atomAt(const QPoint& pos) const
+  {
+    const Avogadro::Rendering::Identifier id = m_renderer.hit(pos.x(), pos.y());
+    return id.type == Avogadro::Rendering::AtomType ? id.index
+                                                    : Avogadro::MaxIndex;
+  }
+
+  void press(const QPoint& pos) { send(QEvent::MouseButtonPress, pos); }
+  void move(const QPoint& pos) { send(QEvent::MouseMove, pos); }
+  void release(const QPoint& pos) { send(QEvent::MouseButtonRelease, pos); }
+
+  Index heavyAtomCount() const
+  {
+    return countHeavyAtoms(*m_harness.molecule());
+  }
+
+private:
+  void send(QEvent::Type type, const QPoint& pos)
+  {
+    const bool released = type == QEvent::MouseButtonRelease;
+    QMouseEvent event(type, QPointF(pos), QPointF(pos), Qt::LeftButton,
+                      released ? Qt::NoButton : Qt::LeftButton, Qt::NoModifier);
+    if (type == QEvent::MouseButtonPress)
+      m_editor.mousePressEvent(&event);
+    else if (type == QEvent::MouseMove)
+      m_editor.mouseMoveEvent(&event);
+    else
+      m_editor.mouseReleaseEvent(&event);
+    rebuildScene();
+  }
+
+  Avogadro::Rendering::GLRenderer m_renderer;
+  Editor& m_editor;
+  CommandTestHarness& m_harness;
+};
+
+// Drag from atom 0 (origin) to atom 1, offset along x by 'x' and in depth by
+// 'z', stopping first just outside atom 1 where the provisional atom, which
+// follows the cursor at atom 0's depth, overlaps atom 1's centre.
+void dragBondTo(Editor& editor, CommandTestHarness& harness, double x, double z,
+                float approachPixels, bool provisionalCoversTarget)
+{
+  harness.buildEmpty();
+  harness.molecule()->addAtom(6, Vector3(0.0, 0.0, 0.0));
+  harness.molecule()->addAtom(6, Vector3(x, 0.0, z));
+
+  EditorDragScene scene(editor, harness);
+  scene.rebuildScene();
+
+  const Avogadro::Vector3f a(0.0f, 0.0f, 0.0f);
+  const Avogadro::Vector3f b(static_cast<float>(x), 0.0f,
+                             static_cast<float>(z));
+  const QPoint start = scene.pixel(a);
+  const QPoint target = scene.pixel(b);
+  const QPoint approach = scene.pixel(b, -approachPixels);
+  ASSERT_EQ(scene.atomAt(start), Index(0));
+  ASSERT_EQ(scene.atomAt(target), Index(1));
+  // The approach point must be off atom 1, or no provisional atom is drawn.
+  ASSERT_EQ(scene.atomAt(approach), Avogadro::MaxIndex);
+
+  scene.press(start);
+  scene.move(approach);
+  // The provisional atom exists, and (behind case) covers atom 1's centre.
+  ASSERT_EQ(harness.molecule()->atomCount(), Index(3));
+  if (provisionalCoversTarget)
+    ASSERT_EQ(scene.atomAt(target), Index(2));
+  scene.move(target);
+  scene.release(target);
+}
+
+} // namespace
+
+// Atom 1 lies behind atom 0 as seen from the camera. The provisional atom
+// follows the cursor at atom 0's depth, so it is the nearest hit over atom 1;
+// the editor must not mistake it for the atom to bond to.
+TEST_F(EditorCommandTest, dragBondsToAtomBehindClickedAtom)
+{
+  dragBondTo(m_editor, m_harness, 2.0, -3.0, 38.0f, true);
+  ASSERT_FALSE(::testing::Test::HasFatalFailure());
+  const auto* mol = m_harness.molecule();
+  ASSERT_TRUE(mol->bond(0, 1).isValid());
+  // The provisional atom is gone; hydrogens may have been added.
+  EXPECT_EQ(countHeavyAtoms(*mol), Index(2));
+  EXPECT_EQ(mol->bond(0, 1).order(), 1);
+}
+
+TEST_F(EditorCommandTest, dragBondsToAtomInFrontOfClickedAtom)
+{
+  dragBondTo(m_editor, m_harness, 2.0, 3.0, 70.0f, false);
+  ASSERT_FALSE(::testing::Test::HasFatalFailure());
+  EXPECT_TRUE(m_harness.molecule()->bond(0, 1).isValid());
+  EXPECT_EQ(countHeavyAtoms(*m_harness.molecule()), Index(2));
+}
+
+// Dragging back over the clicked atom removes the provisional atom.
+TEST_F(EditorCommandTest, dragBackOverClickedAtomRemovesNewAtom)
+{
+  m_harness.buildEmpty();
+  m_harness.molecule()->addAtom(6, Vector3(0.0, 0.0, 0.0));
+  EditorDragScene scene(m_editor, m_harness);
+  scene.rebuildScene();
+
+  const QPoint start = scene.pixel(Avogadro::Vector3f(0.0f, 0.0f, 0.0f));
+  ASSERT_EQ(scene.atomAt(start), Index(0));
+  scene.press(start);
+  scene.move(start + QPoint(200, 0));
+  EXPECT_EQ(scene.heavyAtomCount(), Index(2));
+  scene.move(start + QPoint(100, 0));
+  EXPECT_EQ(scene.heavyAtomCount(), Index(2));
+  // Back over atom 0, where the provisional atom is also under the cursor.
+  scene.move(start);
+  EXPECT_EQ(scene.heavyAtomCount(), Index(1));
+  scene.release(start);
+  EXPECT_EQ(scene.heavyAtomCount(), Index(1));
+  // Hydrogens aside, atom 0 is bonded to nothing.
+  for (Index i = 1; i < m_harness.molecule()->atomCount(); ++i)
+    EXPECT_EQ(m_harness.molecule()->atomicNumber(i), 1);
 }

@@ -162,27 +162,27 @@ void SolidPipeline::initialize()
   d->screenVertexShader.setType(Shader::Vertex);
   d->screenVertexShader.setSource(solid_vs);
   if (!d->screenVertexShader.compile())
-    std::cout << d->screenVertexShader.error() << std::endl;
+    std::cout << d->screenVertexShader.error() << '\n';
 
   d->firstFragmentShader.setType(Shader::Fragment);
   d->firstFragmentShader.setSource(solid_first_fs);
   if (!d->firstFragmentShader.compile())
-    std::cout << d->firstFragmentShader.error() << std::endl;
+    std::cout << d->firstFragmentShader.error() << '\n';
 
   d->firstStageShaders.attachShader(d->screenVertexShader);
   d->firstStageShaders.attachShader(d->firstFragmentShader);
   if (!d->firstStageShaders.link())
-    std::cout << d->firstStageShaders.error() << std::endl;
+    std::cout << d->firstStageShaders.error() << '\n';
 
   d->aoFragmentShader.setType(Shader::Fragment);
   d->aoFragmentShader.setSource(solid_ao_fs);
   if (!d->aoFragmentShader.compile())
-    std::cout << d->aoFragmentShader.error() << std::endl;
+    std::cout << d->aoFragmentShader.error() << '\n';
 
   d->aoStageShaders.attachShader(d->screenVertexShader);
   d->aoStageShaders.attachShader(d->aoFragmentShader);
   if (!d->aoStageShaders.link())
-    std::cout << d->aoStageShaders.error() << std::endl;
+    std::cout << d->aoStageShaders.error() << '\n';
 }
 
 void SolidPipeline::begin()
@@ -306,8 +306,14 @@ void SolidPipeline::adjustOffset(const Camera& cam)
 
 void SolidPipeline::resize(int width, int height)
 {
-  m_width = width * m_pixelRatio;
-  m_height = height * m_pixelRatio;
+  resizeDevice(static_cast<int>(width * m_pixelRatio),
+               static_cast<int>(height * m_pixelRatio));
+}
+
+void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
+{
+  m_width = deviceWidth;
+  m_height = deviceHeight;
 
   glBindTexture(GL_TEXTURE_2D, d->renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGBA,

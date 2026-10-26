@@ -29,6 +29,7 @@
 #include <QtCore/QVariant>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QIcon>
+#include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QStyleHints>
 
@@ -326,6 +327,21 @@ QUndoCommand* MeasureTool::mouseDoubleClickEvent(QMouseEvent* e)
 {
   // Reset the atom list
   if (e->button() == Qt::LeftButton && !m_atomIds.isEmpty()) {
+    m_atomIds.clear();
+    m_undoMerge.endRun();
+    refreshWidget();
+    emit drawablesChanged();
+    e->accept();
+  }
+  return nullptr;
+}
+
+QUndoCommand* MeasureTool::keyPressEvent(QKeyEvent* e)
+{
+  // Escape resets the atom list, like a double-click. Escape inside the
+  // panel's spin boxes is handled by the widget and never reaches the tool.
+  if (e->key() == Qt::Key_Escape && e->modifiers() == Qt::NoModifier &&
+      !m_atomIds.isEmpty()) {
     m_atomIds.clear();
     m_undoMerge.endRun();
     refreshWidget();

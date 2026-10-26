@@ -42,8 +42,13 @@ env:
   # Run tests
   CIBW_TEST_REQUIRES: pytest
 
-  # Run a very simple test to make sure the wheels are working
-  CIBW_TEST_COMMAND: pytest {project}/scripts/github-actions/simple_test.py
+  # Run a very simple test, plus the binding safety tests, to make sure the
+  # wheels are working
+  CIBW_TEST_COMMAND: >
+    pytest {project}/scripts/github-actions/simple_test.py
+    {project}/python/tests/test_core_bindings.py
+    {project}/python/tests/test_io_bindings.py
+    {project}/python/tests/test_calc_bindings.py
 
   # We can't currently test Mac arm64 builds on x64
   CIBW_TEST_SKIP: "*_arm64"
@@ -95,7 +100,7 @@ jobs:
         run: . ./scripts/github-actions/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@adba99c781d3746d38b3a09b1cf797965bcb7fe6 # v4.3.0
+        uses: pypa/cibuildwheel@b9e566a2b284570af229f6c2a33673410d0389a3 # v4.3.4
         env:
           CIBW_PLATFORM: ${{ matrix.platform || 'auto' }}
           CIBW_ARCHS: ${{ matrix.archs || 'auto' }}
@@ -141,6 +146,6 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           password: ${{ secrets.pypi_api_token }}

@@ -1742,9 +1742,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       properties[element.first] = vector;
     } else if (element.second.type() == Variant::Matrix) {
       MatrixX m = element.second.toMatrix();
-      json matrix;
+      // A default json is null, so an empty matrix would otherwise be written
+      // as null instead of an empty list.
+      json matrix = json::array();
       for (int i = 0; i < m.rows(); ++i) {
-        json row;
+        json row = json::array();
         for (int j = 0; j < m.cols(); ++j) {
           row.push_back(m(i, j));
         }

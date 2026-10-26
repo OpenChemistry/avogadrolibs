@@ -27,7 +27,7 @@ InsertPolymer::InsertPolymer(QObject* parent_)
     m_dialog(nullptr)
 {
   auto* action = new QAction(tr("Polymer…"), this);
-  action->setProperty("menu priority", 780);
+  action->setProperty("menu priority", 870);
   connect(action, &QAction::triggered, this, &InsertPolymer::showDialog);
   m_actions.append(action);
 }

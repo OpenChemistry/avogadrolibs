@@ -114,3 +114,31 @@ TEST(ElementTest, customElements)
     EXPECT_EQ((int)Elements::atomicNumberFromSymbol(symbol), (int)i);
   }
 }
+
+TEST(ElementTest, isMetal)
+{
+  // Metals: alkali, alkaline earth (Be and Mg included), transition metals
+  // with the f-block, post-transition metals, and Nh-Lv.
+  const char* metals[] = { "Li", "Be", "Na", "Mg", "Al", "K",  "Ca", "Sc", "Ti",
+                           "Fe", "Cu", "Zn", "Ga", "Rb", "Sr", "Y",  "Pd", "Cd",
+                           "In", "Sn", "Cs", "Ba", "La", "Lu", "Hf", "Pt", "Au",
+                           "Hg", "Tl", "Pb", "Bi", "Po", "Fr", "Ra", "Ac", "Lr",
+                           "Rf", "Cn", "Nh", "Fl", "Mc", "Lv" };
+  for (const char* symbol : metals) {
+    EXPECT_TRUE(Elements::isMetal(Elements::atomicNumberFromSymbol(symbol)))
+      << symbol;
+  }
+
+  // Non-metals, noble gases, halogens and the metalloids B, Si, Ge, As, Sb, Te.
+  const char* others[] = { "H",  "He", "B",  "C",  "N",  "O",  "F",  "Ne", "Si",
+                           "P",  "S",  "Cl", "Ar", "Ge", "As", "Se", "Br", "Kr",
+                           "Sb", "Te", "I",  "Xe", "At", "Rn", "Ts", "Og" };
+  for (const char* symbol : others) {
+    EXPECT_FALSE(Elements::isMetal(Elements::atomicNumberFromSymbol(symbol)))
+      << symbol;
+  }
+
+  // The dummy element and custom elements are not metals.
+  EXPECT_FALSE(Elements::isMetal(0));
+  EXPECT_FALSE(Elements::isMetal(Avogadro::CustomElementMin));
+}

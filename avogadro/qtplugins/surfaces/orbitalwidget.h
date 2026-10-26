@@ -41,7 +41,7 @@ public:
   ~OrbitalWidget() override;
 
   double isovalue() { return m_isovalue; };
-  OrbitalQuality defaultQuality() { return m_quality; };
+  OrbitalQuality quality() const;
 
   bool precalcLimit() { return m_precalc_limit; }
   int precalcRange() { return m_precalc_range; }
@@ -81,7 +81,6 @@ private slots:
 private:
   Ui::OrbitalWidget ui;
   OrbitalSettingsDialog* m_settings;
-  OrbitalQuality m_quality;
   double m_isovalue;
 
   bool m_precalc_limit;

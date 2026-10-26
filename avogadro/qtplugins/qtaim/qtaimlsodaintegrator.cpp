@@ -160,12 +160,9 @@ QVector3D QTAIMLSODAIntegrator::integrate(QVector3D x0y0z0)
   return QVector3D(y[1], y[2], y[3]);
 }
 
-void QTAIMLSODAIntegrator::f(int neq, double t, double* y, double* ydot)
+void QTAIMLSODAIntegrator::f([[maybe_unused]] int neq,
+                             [[maybe_unused]] double t, double* y, double* ydot)
 {
-
-  neq = neq; // suppress warning
-  t = t;     // suppress warning
-
   Matrix<qreal, 3, 1> gradient;
 
   Matrix<qreal, 3, 4> gH;

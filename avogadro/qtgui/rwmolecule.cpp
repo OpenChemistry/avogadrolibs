@@ -305,7 +305,7 @@ bool RWMolecule::setHybridization(Index atomId, Core::AtomHybridization hyb)
   if (atomId >= atomCount())
     return false;
 
-  auto* comm = new SetAtomicNumberCommand(
+  auto* comm = new SetAtomHybridizationCommand(
     *this, atomId, m_molecule.hybridization(atomId), hyb);
   comm->setText(tr("Change Atom Hybridization"));
   m_undoStack.push(comm);

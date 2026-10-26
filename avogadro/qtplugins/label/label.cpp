@@ -11,6 +11,7 @@
 #include <iostream>
 #include <limits>
 #include <locale>
+#include <set>
 #include <sstream>
 
 // for partial charges
@@ -27,6 +28,7 @@
 #include <avogadro/rendering/textlabel3d.h>
 
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -229,8 +231,8 @@ struct LayerLabel : Core::LayerData
       auto* form = new QFormLayout;
       // color button
       auto* colorButton = new QtGui::ColorButton;
-      QObject::connect(colorButton, SIGNAL(colorChanged(const QColor&)), slot,
-                       SLOT(setColor(const QColor&)));
+      QObject::connect(colorButton, &QtGui::ColorButton::colorChanged, slot,
+                       &Label::setColor);
       form->addRow(QObject::tr("Color:"), colorButton);
 
       // radius scalar
@@ -239,8 +241,8 @@ struct LayerLabel : Core::LayerData
       spin->setSingleStep(0.1);
       spin->setDecimals(1);
       spin->setValue(radiusScalar);
-      QObject::connect(spin, SIGNAL(valueChanged(double)), slot,
-                       SLOT(setRadiusScalar(double)));
+      QObject::connect(spin, &QDoubleSpinBox::valueChanged, slot,
+                       &Label::setRadiusScalar);
       form->addRow(QObject::tr("Distance from center:"), spin);
 
       // label scale
@@ -249,16 +251,12 @@ struct LayerLabel : Core::LayerData
       scaleSpin->setSingleStep(0.1);
       scaleSpin->setDecimals(2);
       scaleSpin->setValue(labelScale);
-      QObject::connect(scaleSpin, SIGNAL(valueChanged(double)), slot,
-                       SLOT(setLabelScale(double)));
+      QObject::connect(scaleSpin, &QDoubleSpinBox::valueChanged, slot,
+                       &Label::setLabelScale);
       form->addRow(QObject::tr("Label scale:"), scaleSpin);
 
       auto* atom = new QComboBox;
       atom->setObjectName("atom");
-
-      // set up the various atom options
-      [[maybe_unused]] char val = LabelOptions::None;
-      QStringList text;
 
       // first add the individual options
       atom->addItem(QObject::tr("None"), int(LabelOptions::None));
@@ -281,8 +279,8 @@ struct LayerLabel : Core::LayerData
         }
       }
 
-      QObject::connect(atom, SIGNAL(currentIndexChanged(int)), slot,
-                       SLOT(atomLabelType(int)));
+      QObject::connect(atom, &QComboBox::currentIndexChanged, slot,
+                       &Label::atomLabelType);
 
       form->addRow(QObject::tr("Atom Label:"), atom);
 
@@ -296,8 +294,8 @@ struct LayerLabel : Core::LayerData
       bond->addItem(QObject::tr("Index"), int(LabelOptions::Index));
       bond->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
 
-      QObject::connect(bond, SIGNAL(currentIndexChanged(int)), slot,
-                       SLOT(bondLabelType(int)));
+      QObject::connect(bond, &QComboBox::currentIndexChanged, slot,
+                       &Label::bondLabelType);
       form->addRow(QObject::tr("Bond Label:"), bond);
 
       auto* residue = new QComboBox;
@@ -310,8 +308,8 @@ struct LayerLabel : Core::LayerData
       residue->addItem(QObject::tr("Name & ID"),
                        int(LabelOptions::Index + LabelOptions::Name));
       residue->addItem(QObject::tr("Custom"), int(LabelOptions::Custom));
-      QObject::connect(residue, SIGNAL(currentIndexChanged(int)), slot,
-                       SLOT(residueLabelType(int)));
+      QObject::connect(residue, &QComboBox::currentIndexChanged, slot,
+                       &Label::residueLabelType);
 
       // residue->model()->sort(0, Qt::AscendingOrder);
       form->addRow(QObject::tr("Residue Label:"), residue);
@@ -326,12 +324,91 @@ struct LayerLabel : Core::LayerData
 Label::Label(QObject* parent_) : QtGui::ScenePlugin(parent_)
 {
   m_layerManager = PluginLayerManager(m_name);
+
+  // Drags and optimizations change the molecule on every frame, so every
+  // charge calculation waits for the changes to settle.
+  m_chargeTimer.setSingleShot(true);
+  m_chargeTimer.setInterval(300);
+  connect(&m_chargeTimer, &QTimer::timeout, this, &Label::chargeTimerFired);
 }
 
 Label::~Label() {}
 
+void Label::watchMolecule(const QtGui::Molecule& molecule)
+{
+  auto* mol = const_cast<QtGui::Molecule*>(&molecule);
+  if (m_watchedMolecule == mol)
+    return;
+  QObject::disconnect(m_changedConnection);
+  m_chargeTimer.stop();
+  m_movedPending = false;
+  m_chargePending = false;
+  m_chargeMolecule.clear();
+  m_displayedCharges.resize(0, 0);
+  m_watchedMolecule = mol;
+  m_changedConnection =
+    connect(mol, &QtGui::Molecule::changed, this, &Label::moleculeChanged);
+}
+
+bool Label::showsPartialCharges()
+{
+  for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
+    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
+    if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge)
+      return true;
+  }
+  return false;
+}
+
+void Label::moleculeChanged(unsigned int change)
+{
+  // Structural edits already discard the charges (see
+  // QtGui::Molecule::emitChanged()) and process() requests a new calculation.
+  // Only a move keeps them, so only a move leaves ours out of date.
+  if (!(change & QtGui::Molecule::Moved) ||
+      !(change & QtGui::Molecule::Atoms) ||
+      QtGui::Molecule::invalidatesDerivedData(change))
+    return;
+  QtGui::Molecule* molecule = m_watchedMolecule;
+  if (molecule == nullptr || m_ownChargeMolecule != molecule ||
+      m_ownChargeType.empty() ||
+      molecule->partialChargeTypes().count(m_ownChargeType) == 0 ||
+      !showsPartialCharges())
+    return;
+  m_movedPending = true;
+  m_chargeTimer.start();
+}
+
+void Label::chargeTimerFired()
+{
+  if (m_movedPending) {
+    m_movedPending = false;
+    recomputeMovedCharges();
+  }
+  // Does nothing if the recompute above already ran the calculation.
+  if (m_chargePending)
+    calculatePartialCharges();
+}
+
+void Label::recomputeMovedCharges()
+{
+  QtGui::Molecule* molecule = m_ownChargeMolecule;
+  if (molecule == nullptr || m_ownChargeType.empty() ||
+      molecule->partialChargeTypes().count(m_ownChargeType) == 0)
+    return;
+
+  // Keep the old charges on screen until the new ones are stored.
+  m_lastChargeMolecule.clear();
+  molecule->removePartialCharges(m_ownChargeType);
+  m_chargeMolecule = molecule;
+  m_recomputeType = m_ownChargeType;
+  calculatePartialCharges();
+  m_recomputeType.clear();
+}
+
 void Label::process(const QtGui::Molecule& molecule, Rendering::GroupNode& node)
 {
+  watchMolecule(molecule);
   m_layerManager.load<LayerLabel>();
   for (size_t layer = 0; layer < m_layerManager.layerCount(); ++layer) {
     auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
@@ -396,47 +473,111 @@ void Label::processResidue(const Core::Molecule& molecule,
   }
 }
 
-QString partialCharge(Molecule* molecule, int atom)
+namespace {
+// Choose a charge type: GFN2 or AM1BCC, then MMFF94, then Gasteiger, else
+// whatever comes first. Returns an empty string for an empty set.
+std::string preferredChargeType(const std::set<std::string>& types)
 {
-  // TODO: we need to track type and/or calling the charge calculator
-  float charge = 0.0;
-  std::set<std::string> types = molecule->partialChargeTypes();
-  if (types.size() > 0) {
-    auto first = types.cbegin();
-    MatrixX charges = molecule->partialCharges((*first));
-    charge = charges(atom, 0);
-  } else {
-    // find something
-    const auto options =
-      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
-    if (options.size() > 0) {
-      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
-      std::string type;
-      if (options.find("GFN2") != options.end())
-        type = "GFN2";
-      else if (options.find("am1bcc") != options.end())
-        type = "am1bcc";
-      else if (options.find("mmff94") != options.end())
-        type = "mmff94";
-      else if (options.find("gasteiger") != options.end())
-        type = "gasteiger";
-      else
-        type = *options.begin();
-
-      MatrixX charges =
-        Calc::ChargeManager::instance().partialCharges(type, *molecule);
-      charge = charges(atom, 0);
-    }
+  if (types.empty())
+    return std::string();
+  for (const char* preferred : { "GFN2", "am1bcc", "mmff94", "gasteiger" }) {
+    if (types.find(preferred) != types.end())
+      return preferred;
   }
-  // e.g. '-0.12' => 5 characters
-  return QString("%L1").arg(charge, 5, 'f', 2);
+  return *types.begin();
+}
+} // namespace
+
+void Label::requestPartialCharges(const QtGui::Molecule& molecule)
+{
+  auto* mol = const_cast<QtGui::Molecule*>(&molecule);
+  if (molecule.atomCount() == 0)
+    return;
+  // Don't retry a calculation that already failed for this molecule
+  if (m_lastChargeMolecule == mol &&
+      m_lastChargeAtomCount == molecule.atomCount())
+    return;
+
+  // Restart the timer on every request: during a drag this runs once per
+  // frame, and the calculation should happen once, after the last one.
+  m_chargeMolecule = mol;
+  m_chargePending = true;
+  m_chargeTimer.start();
 }
 
-void Label::processAtom(const Core::Molecule& molecule,
+void Label::calculatePartialCharges()
+{
+  m_chargePending = false;
+  QtGui::Molecule* molecule = m_chargeMolecule;
+  m_chargeMolecule.clear();
+  // A recompute replaces our own type even if other types are stored too.
+  if (molecule == nullptr ||
+      (m_recomputeType.empty() && !molecule->partialChargeTypes().empty()))
+    return;
+
+  const QPointer<QtGui::Molecule> guard(molecule);
+  const Index atomCount = molecule->atomCount();
+
+  // Remember only failed attempts: charges are cleared by edits, and a
+  // successful calculation must run again after an edit that returns to the
+  // same atom count (remove a bond, undo/redo).
+  const auto recordFailure = [&]() {
+    m_lastChargeMolecule = guard;
+    m_lastChargeAtomCount = atomCount;
+  };
+
+  const std::string type =
+    !m_recomputeType.empty()
+      ? m_recomputeType
+      : preferredChargeType(
+          Calc::ChargeManager::instance().identifiersForMolecule(*molecule));
+  if (type.empty()) {
+    recordFailure();
+    return;
+  }
+
+  // This can run a nested event loop (Open Babel), so check afterwards that
+  // the molecule is still there and still the same size.
+  MatrixX charges =
+    Calc::ChargeManager::instance().partialCharges(type, *molecule);
+  if (!guard.isNull() && static_cast<Index>(charges.rows()) == atomCount &&
+      molecule->atomCount() == atomCount) {
+    molecule->setPartialCharges(type, charges);
+    m_ownChargeMolecule = molecule;
+    m_ownChargeType = type;
+    m_lastChargeMolecule.clear();
+    emit drawablesChanged();
+  } else {
+    recordFailure();
+  }
+}
+
+void Label::processAtom(const QtGui::Molecule& molecule,
                         Rendering::GroupNode& node, size_t layer)
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
+
+  // Use only the charges the molecule already has. Calculating them here can
+  // run an external program and a nested event loop in the middle of a scene
+  // rebuild, so that is deferred instead (see requestPartialCharges()).
+  MatrixX charges;
+  if (m_layerManager.getSetting<LayerLabel>(layer)->atomOptions &
+      LayerLabel::LabelOptions::PartialCharge) {
+    const std::string type = preferredChargeType(molecule.partialChargeTypes());
+    if (type.empty()) {
+      requestPartialCharges(molecule);
+      // Keep showing the last values while the new ones are calculated, so
+      // labels don't blink during an edit. Only if the atoms still line up.
+      if (m_chargePending && m_displayedCharges.cols() > 0 &&
+          static_cast<Index>(m_displayedCharges.rows()) == molecule.atomCount())
+        charges = m_displayedCharges;
+    } else {
+      charges = molecule.partialCharges(type);
+      if (m_watchedMolecule == &molecule)
+        m_displayedCharges = charges;
+    }
+  }
   std::map<unsigned char, size_t> atomCount;
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
@@ -456,8 +597,11 @@ void Label::processAtom(const Core::Molecule& molecule,
     std::string text = atom.label();
 
     if (interface->atomOptions & LayerLabel::LabelOptions::PartialCharge) {
-      QString charge = partialCharge(const_cast<Molecule*>(&molecule), i);
-      text += charge.toStdString();
+      // Stored charges can be shorter than the atom list after an edit
+      if (static_cast<Index>(charges.rows()) > i && charges.cols() > 0) {
+        // e.g. '-0.12' => 5 characters
+        text += QString("%L1").arg(charges(i, 0), 5, 'f', 2).toStdString();
+      }
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Custom) {
       // already set
