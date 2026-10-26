@@ -155,18 +155,30 @@ QString countMessage(const CommandArgumentSpec& spec)
     .arg(spec.maxCount);
 }
 
+/// @p value with @p unit appended: directly for angle symbols, with a space
+/// otherwise (the SI convention).
+QString formatQuantity(double value, const QString& unit)
+{
+  const QString number = formatNumber(value);
+  if (unit.isEmpty())
+    return number;
+  const bool tight = unit == QStringLiteral("°") ||
+                     unit == QStringLiteral("′") || unit == QStringLiteral("″");
+  return tight ? number + unit : number + QLatin1Char(' ') + unit;
+}
+
 bool checkRange(const CommandArgumentSpec& spec, double number, QString& error)
 {
   if (spec.minimum && number < *spec.minimum) {
     error = CommandRegistry::tr("%1 must be at least %2.")
               .arg(spec.name)
-              .arg(formatNumber(*spec.minimum));
+              .arg(formatQuantity(*spec.minimum, spec.unit));
     return false;
   }
   if (spec.maximum && number > *spec.maximum) {
     error = CommandRegistry::tr("%1 must be at most %2.")
               .arg(spec.name)
-              .arg(formatNumber(*spec.maximum));
+              .arg(formatQuantity(*spec.maximum, spec.unit));
     return false;
   }
   return true;
@@ -249,9 +261,15 @@ bool parseVector3(const QVariant& value, const CommandArgumentSpec& spec,
             std::isfinite(components[i].toDouble());
   }
   if (!valid) {
-    error = CommandRegistry::tr("%1 must be a list of 3 finite numbers "
-                                "[x, y, z].")
-              .arg(spec.name);
+    // The unit is inside the message so that translators can place it.
+    error = spec.unit.isEmpty()
+              ? CommandRegistry::tr("%1 must be a list of 3 finite numbers "
+                                    "[x, y, z].")
+                  .arg(spec.name)
+              : CommandRegistry::tr("%1 must be a list of 3 finite numbers "
+                                    "[x, y, z] in %2.")
+                  .arg(spec.name)
+                  .arg(spec.unit);
     return false;
   }
   out.clear();
@@ -547,6 +565,8 @@ QJsonObject argumentSchema(const CommandArgumentSpec& spec)
       property[QStringLiteral("maximum")] = *spec.maximum;
   }
 
+  if (!spec.unit.isEmpty())
+    property[QStringLiteral("x-avogadro-unit")] = spec.unit;
   if (!spec.description.isEmpty())
     property[QStringLiteral("description")] = spec.description;
   if (spec.defaultValue.isValid())
@@ -655,6 +675,13 @@ CommandArgumentSpec CommandArgumentSpec::withAliases(
 {
   CommandArgumentSpec copy(*this);
   copy.aliases = aliasNames;
+  return copy;
+}
+
+CommandArgumentSpec CommandArgumentSpec::withUnit(const QString& unitText) const
+{
+  CommandArgumentSpec copy(*this);
+  copy.unit = unitText;
   return copy;
 }
 

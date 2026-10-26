@@ -703,7 +703,8 @@ QtGui::CommandArgumentSpec editValueSpec(int atomCount)
     CommandArgumentSpec::real(
       "value", atomCount == 2 ? MeasureTool::tr("The new distance in Å.")
                               : MeasureTool::tr("The new angle in degrees."))
-      .withRequired();
+      .withRequired()
+      .withUnit(atomCount == 2 ? QStringLiteral("Å") : QStringLiteral("°"));
   if (atomCount == 2) {
     value = value.withRange(QtGui::FragmentTools::minimumChainDistance,
                             QtGui::FragmentTools::maximumChainDistance);

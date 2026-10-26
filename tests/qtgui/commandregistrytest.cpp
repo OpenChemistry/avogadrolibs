@@ -934,3 +934,69 @@ TEST(CommandRegistryTest, colorDefaultAndSchema)
             "RRGGBBAA");
   EXPECT_EQ(alphaOne[1].toObject()["maxItems"].toInt(), 4);
 }
+
+TEST(CommandRegistryTest, unitInMessagesAndSchema)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c",
+        { CommandArgumentSpec::real("x", "x").withRange(0.5, 180).withUnit("°"),
+          CommandArgumentSpec::integer("n", "n").withRange(1, 3) });
+  EXPECT_FALSE(h.run("c", { { "x", 0.1 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QString::fromUtf8("x must be at least 0.5°."));
+  EXPECT_FALSE(h.run("c", { { "x", 181 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QString::fromUtf8("x must be at most 180°."));
+  // no unit: the message is unchanged
+  EXPECT_FALSE(h.run("c", { { "n", 4 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QStringLiteral("n must be at most 3."));
+
+  const QJsonObject props = h.registry.schema("c")["properties"].toObject();
+  EXPECT_EQ(props["x"].toObject()["x-avogadro-unit"].toString(),
+            QString::fromUtf8("°"));
+  EXPECT_FALSE(props["n"].toObject().contains("x-avogadro-unit"));
+}
+
+TEST(CommandRegistryTest, unitSpacing)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c", { CommandArgumentSpec::real("len", "x")
+                 .withRange(std::nullopt, 10)
+                 .withUnit("Å"),
+               CommandArgumentSpec::real("ang", "x")
+                 .withRange(std::nullopt, 180)
+                 .withUnit("°"),
+               CommandArgumentSpec::real("arc", "x")
+                 .withRange(std::nullopt, 59)
+                 .withUnit("′"),
+               CommandArgumentSpec::real("sec", "x")
+                 .withRange(std::nullopt, 59)
+                 .withUnit("″") });
+  // SI-style units take a space...
+  EXPECT_FALSE(h.run("c", { { "len", 11 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QString::fromUtf8("len must be at most 10 Å."));
+  // ...angle symbols do not.
+  EXPECT_FALSE(h.run("c", { { "ang", 181 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QString::fromUtf8("ang must be at most 180°."));
+  EXPECT_FALSE(h.run("c", { { "arc", 60 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QString::fromUtf8("arc must be at most 59′."));
+  EXPECT_FALSE(h.run("c", { { "sec", 60 } }, &mol));
+  EXPECT_EQ(h.failures.first(), QString::fromUtf8("sec must be at most 59″."));
+}
+
+TEST(CommandRegistryTest, vector3Unit)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c",
+        { CommandArgumentSpec::vector3("pos", "Position.").withUnit("Å") });
+  EXPECT_FALSE(h.run("c", { { "pos", list({ 1, 2 }) } }, &mol));
+  EXPECT_EQ(h.failures.first(),
+            QString::fromUtf8(
+              "pos must be a list of 3 finite numbers [x, y, z] in Å."));
+  EXPECT_EQ(h.registry.schema("c")["properties"]
+              .toObject()["pos"]
+              .toObject()["x-avogadro-unit"]
+              .toString(),
+            QString::fromUtf8("Å"));
+}

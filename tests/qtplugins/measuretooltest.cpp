@@ -488,16 +488,32 @@ TEST_F(MeasureToolCommandTest, commandSchema)
   const QJsonObject value = props["value"].toObject();
   EXPECT_EQ(value["minimum"].toDouble(-1), 0.0);
   EXPECT_EQ(value["maximum"].toDouble(-1), 180.0);
+  EXPECT_EQ(value["x-avogadro-unit"].toString(), QString::fromUtf8("°"));
   EXPECT_EQ(schema["required"].toArray(), (QJsonArray{ "atoms", "value" }));
 
   props = m_tool.commandSchema("editDistance")["properties"].toObject();
   EXPECT_EQ(props["atoms"].toObject()["maxItems"].toInt(), 2);
   EXPECT_EQ(props["value"].toObject()["minimum"].toDouble(), 0.5);
   EXPECT_EQ(props["value"].toObject()["maximum"].toDouble(), 1000.0);
+  EXPECT_EQ(props["value"].toObject()["x-avogadro-unit"].toString(),
+            QString::fromUtf8("Å"));
 
   schema = m_tool.commandSchema("measureDihedral");
   props = schema["properties"].toObject();
   EXPECT_EQ(props["atoms"].toObject()["minItems"].toInt(), 4);
   EXPECT_FALSE(props.contains("value"));
   EXPECT_TRUE(m_tool.commandSchema("notACommand").isEmpty());
+}
+
+TEST_F(MeasureToolCommandTest, rangeErrorsShowUnits)
+{
+  CommandOutcome out = m_harness.run(
+    "editDistance", { { "atoms", atomList({ 1, 2 }) }, { "value", 5000.0 } });
+  EXPECT_EQ(out.status, CommandStatus::Failed);
+  EXPECT_NE(out.message.indexOf(QString::fromUtf8("1000 Å")), -1)
+    << out.message.toStdString();
+  out = m_harness.run(
+    "editAngle", { { "atoms", atomList({ 0, 1, 2 }) }, { "value", -5.0 } });
+  EXPECT_NE(out.message.indexOf(QString::fromUtf8("0°")), -1)
+    << out.message.toStdString();
 }
