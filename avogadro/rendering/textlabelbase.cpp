@@ -341,7 +341,7 @@ void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
     bytesPerPixel);
 
   // Render the text to the buffer
-  if (m_imageRgba.size() > 0) {
+  if (!m_imageRgba.empty()) {
     tren.render(m_text, scaledProperties, m_imageRgba.data(),
                 m_imageDimensions);
   }

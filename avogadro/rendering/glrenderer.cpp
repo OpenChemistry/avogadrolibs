@@ -321,7 +321,7 @@ float GLRenderer::hit(const Vector3f& rayOrigin, const Vector3f& rayEnd,
 {
   std::multimap<float, Identifier> results =
     hits(&m_scene.rootNode(), rayOrigin, rayEnd, rayDirection);
-  if (results.size())
+  if (!results.empty())
     return results.begin()->first;
   return std::numeric_limits<float>::max();
 }
