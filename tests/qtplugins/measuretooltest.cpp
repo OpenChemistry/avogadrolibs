@@ -25,6 +25,7 @@
 using Avogadro::Index;
 using Avogadro::Vector3;
 using Avogadro::QtPlugins::MeasureTool;
+using Avogadro::QtPluginsTests::atomList;
 using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
@@ -44,14 +45,6 @@ namespace {
 
 constexpr double PosTol = 1e-9;
 constexpr double AngleTol = 1e-6;
-
-QVariantList atoms(std::initializer_list<qlonglong> ids)
-{
-  QVariantList list;
-  for (qlonglong id : ids)
-    list << id;
-  return list;
-}
 
 class MeasureToolCommandTest : public ::testing::Test
 {
@@ -117,20 +110,20 @@ TEST_F(MeasureToolCommandTest, registersDocumentedCommands)
 TEST_F(MeasureToolCommandTest, measureDistance)
 {
   // |O2 - O1| = |(1.5, 0, 0)| = 1.5
-  EXPECT_NEAR(measure("measureDistance", atoms({ 1, 2 }), "distance"), 1.5,
+  EXPECT_NEAR(measure("measureDistance", atomList({ 1, 2 }), "distance"), 1.5,
               PosTol);
   // |H3 - H0| = |(1.5, -1, 1)| = sqrt(2.25 + 1 + 1) = sqrt(4.25)
-  EXPECT_NEAR(measure("measureDistance", atoms({ 0, 3 }), "distance"),
+  EXPECT_NEAR(measure("measureDistance", atomList({ 0, 3 }), "distance"),
               std::sqrt(4.25), PosTol);
 }
 
 TEST_F(MeasureToolCommandTest, measureAngle)
 {
   // At O1: O1->H0 = (0, 1, 0), O1->O2 = (1.5, 0, 0); perpendicular.
-  EXPECT_NEAR(measure("measureAngle", atoms({ 0, 1, 2 }), "angle"), 90.0,
+  EXPECT_NEAR(measure("measureAngle", atomList({ 0, 1, 2 }), "angle"), 90.0,
               AngleTol);
   // At O2: O2->O1 = (-1.5, 0, 0), O2->H3 = (0, 0, 1); perpendicular.
-  EXPECT_NEAR(measure("measureAngle", atoms({ 1, 2, 3 }), "angle"), 90.0,
+  EXPECT_NEAR(measure("measureAngle", atomList({ 1, 2, 3 }), "angle"), 90.0,
               AngleTol);
 }
 
@@ -140,10 +133,10 @@ TEST_F(MeasureToolCommandTest, measureDihedral)
   // n1 = b1 x b2 = (0,0,1.5), n2 = b2 x b3 = (0,-1.5,0).
   // atan2(|b2| b1.n2, n1.n2) = atan2(2.25, 0) = +90 (IUPAC sign: looking
   // down O1->O2, H0 at +y turns clockwise onto H3 at +z).
-  EXPECT_NEAR(measure("measureDihedral", atoms({ 0, 1, 2, 3 }), "dihedral"),
+  EXPECT_NEAR(measure("measureDihedral", atomList({ 0, 1, 2, 3 }), "dihedral"),
               90.0, AngleTol);
   // Reversal reads the same dihedral.
-  EXPECT_NEAR(measure("measureDihedral", atoms({ 3, 2, 1, 0 }), "dihedral"),
+  EXPECT_NEAR(measure("measureDihedral", atomList({ 3, 2, 1, 0 }), "dihedral"),
               90.0, AngleTol);
 }
 
@@ -153,7 +146,7 @@ TEST_F(MeasureToolCommandTest, editDistanceUndoRedo)
 {
   const MoleculeSnapshot before = m_harness.snapshot();
   const CommandOutcome out = m_harness.run(
-    "editDistance", { { "atoms", atoms({ 1, 2 }) }, { "value", 2.0 } });
+    "editDistance", { { "atoms", atomList({ 1, 2 }) }, { "value", 2.0 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);
   EXPECT_NEAR(out.result.value("distance").toDouble(), 2.0, PosTol);
@@ -181,7 +174,7 @@ TEST_F(MeasureToolCommandTest, editAngleUndoRedo)
 {
   const MoleculeSnapshot before = m_harness.snapshot();
   const CommandOutcome out = m_harness.run(
-    "editAngle", { { "atoms", atoms({ 0, 1, 2 }) }, { "value", 120.0 } });
+    "editAngle", { { "atoms", atomList({ 0, 1, 2 }) }, { "value", 120.0 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);
   EXPECT_NEAR(out.result.value("angle").toDouble(), 120.0, AngleTol);
@@ -192,7 +185,7 @@ TEST_F(MeasureToolCommandTest, editAngleUndoRedo)
   expectNear(position(2), Vector3(x, -0.75, 0.0), PosTol, "O2");
   expectNear(position(3), Vector3(x, -0.75, 1.0), PosTol, "H3");
   // The O1-O2 bond length is untouched by the rotation.
-  EXPECT_NEAR(measure("measureDistance", atoms({ 1, 2 }), "distance"), 1.5,
+  EXPECT_NEAR(measure("measureDistance", atomList({ 1, 2 }), "distance"), 1.5,
               PosTol);
 
   const MoleculeSnapshot edited = m_harness.snapshot();
@@ -209,7 +202,7 @@ TEST_F(MeasureToolCommandTest, editAngleUndoRedo)
 TEST_F(MeasureToolCommandTest, editAngleTo180IsAccepted)
 {
   const CommandOutcome out = m_harness.run(
-    "editAngle", { { "atoms", atoms({ 0, 1, 2 }) }, { "value", 180.0 } });
+    "editAngle", { { "atoms", atomList({ 0, 1, 2 }) }, { "value", 180.0 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);
   EXPECT_NEAR(out.result.value("angle").toDouble(), 180.0, AngleTol);
@@ -228,12 +221,12 @@ TEST_F(MeasureToolCommandTest, editAngleFoldingTheEndsTogetherIsRefused)
 
   for (const double bad : { 0.0, 20.0 })
     expectRefused("editAngle",
-                  { { "atoms", atoms({ 0, 1, 2 }) }, { "value", bad } },
+                  { { "atoms", atomList({ 0, 1, 2 }) }, { "value", bad } },
                   "ends too close at " + std::to_string(bad));
 
   // A wider angle is fine: 60 degrees leaves them 1.0 A apart.
   const CommandOutcome out = m_harness.run(
-    "editAngle", { { "atoms", atoms({ 0, 1, 2 }) }, { "value", 60.0 } });
+    "editAngle", { { "atoms", atomList({ 0, 1, 2 }) }, { "value", 60.0 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
 }
 
@@ -245,8 +238,9 @@ TEST_F(MeasureToolCommandTest, editAngleFoldingTheEndsTogetherIsRefused)
 TEST_F(MeasureToolCommandTest, editDihedralUndoRedo)
 {
   const MoleculeSnapshot before = m_harness.snapshot();
-  const CommandOutcome out = m_harness.run(
-    "editDihedral", { { "atoms", atoms({ 0, 1, 2, 3 }) }, { "value", 60.0 } });
+  const CommandOutcome out =
+    m_harness.run("editDihedral",
+                  { { "atoms", atomList({ 0, 1, 2, 3 }) }, { "value", 60.0 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);
   EXPECT_NEAR(out.result.value("dihedral").toDouble(), 60.0, AngleTol);
@@ -269,17 +263,17 @@ TEST_F(MeasureToolCommandTest, editDihedralUndoRedo)
 TEST_F(MeasureToolCommandTest, measureEditUndoSequence)
 {
   const MoleculeSnapshot before = m_harness.snapshot();
-  EXPECT_NEAR(measure("measureDistance", atoms({ 1, 2 }), "distance"), 1.5,
+  EXPECT_NEAR(measure("measureDistance", atomList({ 1, 2 }), "distance"), 1.5,
               PosTol);
 
   const CommandOutcome out = m_harness.run(
-    "editDistance", { { "atoms", atoms({ 1, 2 }) }, { "value", 2.0 } });
+    "editDistance", { { "atoms", atomList({ 1, 2 }) }, { "value", 2.0 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_NEAR(measure("measureDistance", atoms({ 1, 2 }), "distance"), 2.0,
+  EXPECT_NEAR(measure("measureDistance", atomList({ 1, 2 }), "distance"), 2.0,
               PosTol);
 
   EXPECT_TRUE(m_harness.undo().isEmpty());
-  EXPECT_NEAR(measure("measureDistance", atoms({ 1, 2 }), "distance"), 1.5,
+  EXPECT_NEAR(measure("measureDistance", atomList({ 1, 2 }), "distance"), 1.5,
               PosTol);
   const MoleculeSnapshot after = m_harness.snapshot();
   EXPECT_EQ(after.differences(before, false), QStringList());
@@ -289,8 +283,8 @@ TEST_F(MeasureToolCommandTest, measureEditUndoSequence)
 
 TEST_F(MeasureToolCommandTest, invalidAtomListsAreRefused)
 {
-  const QVariantList tooFew = atoms({ 1 });
-  const QVariantList tooMany = atoms({ 0, 1, 2 });
+  const QVariantList tooFew = atomList({ 1 });
+  const QVariantList tooMany = atomList({ 0, 1, 2 });
   const QVariantList text = { qlonglong(1), QStringLiteral("2") };
   const QVariantList boolean = { qlonglong(1), true };
   const QVariantList fractional = { qlonglong(1), 1.5 };
@@ -305,10 +299,10 @@ TEST_F(MeasureToolCommandTest, invalidAtomListsAreRefused)
     { "bool index", { { "atoms", boolean } } },
     { "fractional index", { { "atoms", fractional } } },
     { "NaN index", { { "atoms", notANumber } } },
-    { "negative index", { { "atoms", atoms({ -1, 1 }) } } },
-    { "index == atomCount", { { "atoms", atoms({ 1, 4 }) } } },
-    { "huge index", { { "atoms", atoms({ 1, qlonglong(1) << 40 }) } } },
-    { "repeated index", { { "atoms", atoms({ 1, 1 }) } } },
+    { "negative index", { { "atoms", atomList({ -1, 1 }) } } },
+    { "index == atomCount", { { "atoms", atomList({ 1, 4 }) } } },
+    { "huge index", { { "atoms", atomList({ 1, qlonglong(1) << 40 }) } } },
+    { "repeated index", { { "atoms", atomList({ 1, 1 }) } } },
   };
   for (const auto& [label, options] : cases) {
     expectRefused("measureDistance", options, "measureDistance " + label);
@@ -317,9 +311,9 @@ TEST_F(MeasureToolCommandTest, invalidAtomListsAreRefused)
     expectRefused("editDistance", edit, "editDistance " + label);
   }
   // Angle and dihedral counts are checked per command.
-  expectRefused("measureAngle", { { "atoms", atoms({ 0, 1 }) } },
+  expectRefused("measureAngle", { { "atoms", atomList({ 0, 1 }) } },
                 "measureAngle with 2 atoms");
-  expectRefused("measureDihedral", { { "atoms", atoms({ 0, 1, 2 }) } },
+  expectRefused("measureDihedral", { { "atoms", atomList({ 0, 1, 2 }) } },
                 "measureDihedral with 3 atoms");
 }
 
@@ -327,7 +321,7 @@ TEST_F(MeasureToolCommandTest, invalidAtomListsAreRefused)
 // then 6.9e-323), which used to leave atoms at inf/NaN.
 TEST_F(MeasureToolCommandTest, editDistanceRangeIsEnforced)
 {
-  const QVariantList pair = atoms({ 1, 2 });
+  const QVariantList pair = atomList({ 1, 2 });
   for (const double bad : { 2.9e161, 6.9e-323, 0.4999, 0.1, 1000.001 }) {
     expectRefused("editDistance", { { "atoms", pair }, { "value", bad } },
                   "out of range " + std::to_string(bad));
@@ -347,9 +341,9 @@ TEST_F(MeasureToolCommandTest, invalidEditValuesAreRefused)
 {
   const double nan = std::numeric_limits<double>::quiet_NaN();
   const double inf = std::numeric_limits<double>::infinity();
-  const QVariantList pair = atoms({ 1, 2 });
-  const QVariantList triple = atoms({ 0, 1, 2 });
-  const QVariantList quad = atoms({ 0, 1, 2, 3 });
+  const QVariantList pair = atomList({ 1, 2 });
+  const QVariantList triple = atomList({ 0, 1, 2 });
+  const QVariantList quad = atomList({ 0, 1, 2, 3 });
 
   expectRefused("editDistance", { { "atoms", pair } }, "missing value");
   expectRefused("editDistance", { { "atoms", pair }, { "value", "2.0" } },
@@ -381,11 +375,11 @@ TEST_F(MeasureToolCommandTest, editsWithoutARigidFragmentAreRefused)
 {
   // H0 and O2 are in one molecule but not bonded.
   expectRefused("editDistance",
-                { { "atoms", atoms({ 0, 2 }) }, { "value", 2.0 } },
+                { { "atoms", atomList({ 0, 2 }) }, { "value", 2.0 } },
                 "unbonded pair in one molecule");
   // No O1-H3 bond for the dihedral to turn about.
   expectRefused("editDihedral",
-                { { "atoms", atoms({ 0, 1, 3, 2 }) }, { "value", 60.0 } },
+                { { "atoms", atomList({ 0, 1, 3, 2 }) }, { "value", 60.0 } },
                 "no central bond");
 }
 
@@ -407,8 +401,8 @@ TEST_F(MeasureToolCommandTest, noMoleculeFails)
   const MoleculeSnapshot before = m_harness.snapshot();
   for (const char* name :
        { "measureDistance", "editDistance", "editAngle", "measureDihedral" }) {
-    const CommandOutcome out =
-      m_harness.run(name, { { "atoms", atoms({ 0, 1 }) }, { "value", 1.0 } });
+    const CommandOutcome out = m_harness.run(
+      name, { { "atoms", atomList({ 0, 1 }) }, { "value", 1.0 } });
     EXPECT_TRUE(out.claimed) << name;
     EXPECT_EQ(out.status, CommandStatus::Failed) << name;
     EXPECT_EQ(out.message, QString(NoMoleculeMessage)) << name;
@@ -427,7 +421,7 @@ TEST_F(MeasureToolCommandTest, knownDeviationNoOpEditPushesUndoEntry)
 
   const MoleculeSnapshot before = m_harness.snapshot();
   const CommandOutcome out = m_harness.run(
-    "editDistance", { { "atoms", atoms({ 1, 2 }) }, { "value", 1.5 } });
+    "editDistance", { { "atoms", atomList({ 1, 2 }) }, { "value", 1.5 } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
   const MoleculeSnapshot after = m_harness.snapshot();
   EXPECT_EQ(before.differences(after, false), QStringList());
@@ -472,13 +466,14 @@ TEST(MeasureWidgetTest, outOfRangeMeasuredDistanceIsShownNotClamped)
 TEST_F(MeasureToolCommandTest, unknownOptionIsRejected)
 {
   expectRefused("measureDistance",
-                { { "atoms", atoms({ 1, 2 }) }, { "unknownopt", 1.0 } },
+                { { "atoms", atomList({ 1, 2 }) }, { "unknownopt", 1.0 } },
                 "typo in option name");
-  expectRefused("editDistance",
-                { { "atoms", atoms({ 1, 2 }) }, { "value", 1.0 }, { "x", 1 } },
-                "extra option");
+  expectRefused(
+    "editDistance",
+    { { "atoms", atomList({ 1, 2 }) }, { "value", 1.0 }, { "x", 1 } },
+    "extra option");
   const CommandOutcome out = m_harness.run(
-    "measureAngle", { { "atoms", atoms({ 0, 1, 2 }) }, { "mode", "x" } });
+    "measureAngle", { { "atoms", atomList({ 0, 1, 2 }) }, { "mode", "x" } });
   EXPECT_NE(out.message.indexOf("mode"), -1) << out.message.toStdString();
 }
 

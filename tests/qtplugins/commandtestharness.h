@@ -14,9 +14,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QtCore/QVariantList>
 #include <QtCore/QVariantMap>
 
 #include <functional>
+#include <initializer_list>
 #include <iosfwd>
 #include <memory>
 #include <string>
@@ -87,6 +89,15 @@ const char* toString(CommandStatus status);
  * molecule (design note decision 1: `true` + `commandFailed("No molecule")`).
  */
 inline const char* NoMoleculeMessage = "No molecule";
+
+/** A QVariantList of integer atom indices, as a JSON array would arrive. */
+inline QVariantList atomList(std::initializer_list<qlonglong> ids)
+{
+  QVariantList list;
+  for (qlonglong id : ids)
+    list << id;
+  return list;
+}
 
 /** Readable gtest failure output instead of a byte dump. */
 void PrintTo(const MoleculeSnapshot& snapshot, std::ostream* os);
