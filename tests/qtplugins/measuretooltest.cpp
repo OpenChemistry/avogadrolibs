@@ -17,6 +17,9 @@
 
 #include <cmath>
 #include <limits>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+
 #include <vector>
 
 using Avogadro::Index;
@@ -462,4 +465,44 @@ TEST(MeasureWidgetTest, outOfRangeMeasuredDistanceIsShownNotClamped)
   EXPECT_DOUBLE_EQ(spin->minimum(), FragmentTools::minimumChainDistance);
   EXPECT_DOUBLE_EQ(spin->maximum(), FragmentTools::maximumChainDistance);
   EXPECT_EQ(edited.count(), 0);
+}
+
+// ---- CommandRegistry integration -----------------------------------------
+
+TEST_F(MeasureToolCommandTest, unknownOptionIsRejected)
+{
+  expectRefused("measureDistance",
+                { { "atoms", atoms({ 1, 2 }) }, { "unknownopt", 1.0 } },
+                "typo in option name");
+  expectRefused("editDistance",
+                { { "atoms", atoms({ 1, 2 }) }, { "value", 1.0 }, { "x", 1 } },
+                "extra option");
+  const CommandOutcome out = m_harness.run(
+    "measureAngle", { { "atoms", atoms({ 0, 1, 2 }) }, { "mode", "x" } });
+  EXPECT_NE(out.message.indexOf("mode"), -1) << out.message.toStdString();
+}
+
+TEST_F(MeasureToolCommandTest, commandSchema)
+{
+  QJsonObject schema = m_tool.commandSchema("editAngle");
+  ASSERT_FALSE(schema.isEmpty());
+  QJsonObject props = schema["properties"].toObject();
+  const QJsonObject atomsProp = props["atoms"].toObject();
+  EXPECT_EQ(atomsProp["minItems"].toInt(), 3);
+  EXPECT_EQ(atomsProp["maxItems"].toInt(), 3);
+  const QJsonObject value = props["value"].toObject();
+  EXPECT_EQ(value["minimum"].toDouble(-1), 0.0);
+  EXPECT_EQ(value["maximum"].toDouble(-1), 180.0);
+  EXPECT_EQ(schema["required"].toArray(), (QJsonArray{ "atoms", "value" }));
+
+  props = m_tool.commandSchema("editDistance")["properties"].toObject();
+  EXPECT_EQ(props["atoms"].toObject()["maxItems"].toInt(), 2);
+  EXPECT_EQ(props["value"].toObject()["minimum"].toDouble(), 0.5);
+  EXPECT_EQ(props["value"].toObject()["maximum"].toDouble(), 1000.0);
+
+  schema = m_tool.commandSchema("measureDihedral");
+  props = schema["properties"].toObject();
+  EXPECT_EQ(props["atoms"].toObject()["minItems"].toInt(), 4);
+  EXPECT_FALSE(props.contains("value"));
+  EXPECT_TRUE(m_tool.commandSchema("notACommand").isEmpty());
 }

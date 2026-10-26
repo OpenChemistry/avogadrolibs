@@ -5,6 +5,8 @@
 
 #include "measuretool.h"
 
+#include <avogadro/qtgui/commandregistry.h>
+
 #include <avogadro/qtopengl/glwidget.h>
 
 #include <avogadro/rendering/geometrynode.h>
@@ -103,26 +105,6 @@ GeometryValues computeGeometry(const QVector<Vector3>& positions)
   return values;
 }
 
-/// Whether @p value holds an actual JSON number, as opposed to some other
-/// JSON type that QVariant would still convert on request -- a QString
-/// "3" or a JSON boolean, say. The RPC contract for the measure/edit
-/// commands only accepts real numbers for atom indices and values, so
-/// those must be rejected rather than silently coerced.
-bool isNumericVariant(const QVariant& value)
-{
-  switch (value.typeId()) {
-    case QMetaType::Double:
-    case QMetaType::Float:
-    case QMetaType::Int:
-    case QMetaType::UInt:
-    case QMetaType::LongLong:
-    case QMetaType::ULongLong:
-      return true;
-    default:
-      return false;
-  }
-}
-
 /// How many atoms must be picked before @p field means anything.
 int requiredAtomCount(MeasureField field)
 {
@@ -159,6 +141,7 @@ MeasureTool::MeasureTool(QObject* parent_)
        "Values can also be typed into the tool panel to move the atoms.")
       .arg(shortcut));
   setIcon();
+  registerMeasureCommands();
 }
 
 MeasureTool::~MeasureTool()
@@ -703,119 +686,126 @@ QString MeasureTool::refusalMessage(
   return QString();
 }
 
-void MeasureTool::registerCommands()
+namespace {
+
+/// The "value" option of an edit command for @p atomCount atoms (2 = distance,
+/// 3 = angle, 4 = dihedral).
+QtGui::CommandArgumentSpec editValueSpec(int atomCount)
 {
-  emit registerCommand(
-    "measureDistance",
-    tr("Measure the distance in Å between two atoms, given as "
-       "zero-based indices: {\"atoms\": [i, j]}. Returns {\"distance\": "
-       "…, \"atoms\": [i, j]}."));
-  emit registerCommand(
-    "measureAngle",
-    tr("Measure the angle in degrees at the middle of three atoms, given "
-       "as zero-based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": "
-       "…, \"atoms\": [i, j, k]}."));
-  emit registerCommand(
-    "measureDihedral",
-    tr("Measure the dihedral angle in degrees (-180 to 180) of four "
-       "atoms, given as zero-based indices: {\"atoms\": [i, j, k, l]}. "
-       "Returns {\"dihedral\": …, \"atoms\": [i, j, k, l]}."));
-  emit registerCommand(
-    "editDistance",
-    tr("Set the distance in Å between two atoms, given as zero-based "
-       "indices: {\"atoms\": [i, j], \"value\": …}; the second atom and "
-       "everything bonded to it on that side move. Returns the new "
-       "{\"distance\": …, \"atoms\": [i, j]}."));
-  emit registerCommand(
-    "editAngle",
-    tr("Set the angle in degrees at the middle of three atoms, given as "
-       "zero-based indices: {\"atoms\": [i, j, k], \"value\": …}; the "
-       "last atom and everything bonded to it on that side move. Returns "
-       "the new {\"angle\": …, \"atoms\": [i, j, k]}."));
-  emit registerCommand(
-    "editDihedral",
-    tr("Set the dihedral angle in degrees of four atoms, given as "
-       "zero-based indices: {\"atoms\": [i, j, k, l], \"value\": …}; "
-       "the last atom and everything bonded to it on that side move. "
-       "Returns the new {\"dihedral\": …, \"atoms\": [i, j, k, l]}."));
+  using QtGui::CommandArgumentSpec;
+
+  // Match the panel's spin box ranges. A distance outside the supported
+  // range would stack atoms or fling them out of the universe (the fuzzer
+  // found values that overflowed to infinity), and an angle outside 0-180
+  // degrees lands on the supplement. Dihedrals wrap, so any finite value is
+  // meaningful.
+  CommandArgumentSpec value =
+    CommandArgumentSpec::real(
+      "value", atomCount == 2 ? MeasureTool::tr("The new distance in Å.")
+                              : MeasureTool::tr("The new angle in degrees."))
+      .withRequired();
+  if (atomCount == 2) {
+    value = value.withRange(QtGui::FragmentTools::minimumChainDistance,
+                            QtGui::FragmentTools::maximumChainDistance);
+  } else if (atomCount == 3) {
+    value = value.withRange(0.0, 180.0);
+  }
+  return value;
+}
+
+} // namespace
+
+void MeasureTool::registerMeasureCommands()
+{
+  using QtGui::CommandArgumentSpec;
+
+  struct Row
+  {
+    QString name;
+    QString description;
+    int atomCount;
+    QString resultKey;
+    bool isEdit;
+  };
+  const Row rows[] = {
+    { "measureDistance",
+      tr("Measure the distance in Å between two atoms, given as "
+         "zero-based indices: {\"atoms\": [i, j]}. Returns {\"distance\": "
+         "…, \"atoms\": [i, j]}."),
+      2, "distance", false },
+    { "measureAngle",
+      tr("Measure the angle in degrees at the middle of three atoms, given "
+         "as zero-based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": "
+         "…, \"atoms\": [i, j, k]}."),
+      3, "angle", false },
+    { "measureDihedral",
+      tr("Measure the dihedral angle in degrees (-180 to 180) of four "
+         "atoms, given as zero-based indices: {\"atoms\": [i, j, k, l]}. "
+         "Returns {\"dihedral\": …, \"atoms\": [i, j, k, l]}."),
+      4, "dihedral", false },
+    { "editDistance",
+      tr("Set the distance in Å between two atoms, given as zero-based "
+         "indices: {\"atoms\": [i, j], \"value\": …}; the second atom and "
+         "everything bonded to it on that side move. Returns the new "
+         "{\"distance\": …, \"atoms\": [i, j]}."),
+      2, "distance", true },
+    { "editAngle",
+      tr("Set the angle in degrees at the middle of three atoms, given as "
+         "zero-based indices: {\"atoms\": [i, j, k], \"value\": …}; the "
+         "last atom and everything bonded to it on that side move. Returns "
+         "the new {\"angle\": …, \"atoms\": [i, j, k]}."),
+      3, "angle", true },
+    { "editDihedral",
+      tr("Set the dihedral angle in degrees of four atoms, given as "
+         "zero-based indices: {\"atoms\": [i, j, k, l], \"value\": …}; "
+         "the last atom and everything bonded to it on that side move. "
+         "Returns the new {\"dihedral\": …, \"atoms\": [i, j, k, l]}."),
+      4, "dihedral", true },
+  };
+
+  for (const Row& row : rows) {
+    QtGui::CommandSpec spec;
+    spec.name = row.name;
+    spec.description = row.description;
+    spec.arguments = { CommandArgumentSpec::atomIndices(
+                         "atoms", tr("Zero-based atom indices, in chain "
+                                     "order."))
+                         .withRequired()
+                         .withCount(row.atomCount, row.atomCount) };
+    if (row.isEdit)
+      spec.arguments.push_back(editValueSpec(row.atomCount));
+
+    spec.handler = [this, row](const QtGui::CommandArguments& args) {
+      runCommand(row.atomCount, row.resultKey, row.isEdit, args);
+    };
+    commandRegistry().add(std::move(spec));
+  }
 }
 
 bool MeasureTool::handleCommand(const QString& command,
                                 const QVariantMap& options)
 {
+  return commandRegistry().handle(command, options, m_molecule);
+}
+
+void MeasureTool::runCommand(int requiredCount, const QString& resultKey,
+                             bool isEdit, const QtGui::CommandArguments& args)
+{
   // requiredCount also doubles as which of distance/angle/dihedral this is
-  // (2/3/4 atoms), since that is all computeGeometry() needs to know.
-  //
-  // Every user-facing message below is chosen whole by requiredCount rather
-  // than assembled from translated fragments, so translators can reword
-  // each one to suit their language's grammar.
-  int requiredCount = 0;
-  QString resultKey;
-  bool isEdit = false;
-
-  if (command == QLatin1String("measureDistance") ||
-      command == QLatin1String("editDistance")) {
-    requiredCount = 2;
-    resultKey = QStringLiteral("distance");
-    isEdit = command == QLatin1String("editDistance");
-  } else if (command == QLatin1String("measureAngle") ||
-             command == QLatin1String("editAngle")) {
-    requiredCount = 3;
-    resultKey = QStringLiteral("angle");
-    isEdit = command == QLatin1String("editAngle");
-  } else if (command == QLatin1String("measureDihedral") ||
-             command == QLatin1String("editDihedral")) {
-    requiredCount = 4;
-    resultKey = QStringLiteral("dihedral");
-    isEdit = command == QLatin1String("editDihedral");
-  } else {
-    // Not one of ours.
-    return false;
-  }
-
-  // Every one of the six commands needs a molecule to measure or edit, and
-  // edits specifically need the undo stack that only setMolecule() (not
-  // setEditMolecule()) provides -- see the comment in setEditMolecule().
-  if (!m_molecule) {
-    emit commandFailed(tr("No molecule"));
-    return true;
-  }
-
+  // (2/3/4 atoms), since that is all computeGeometry() needs to know. The
+  // registry has already checked the molecule, the atom indices (exactly
+  // requiredCount, in range, distinct) and, for edits, the value and its
+  // range.
   QVector<Index> atomIndices;
-  QString error;
-  if (!parseAtomIndices(options, requiredCount, atomIndices, error)) {
-    emit commandFailed(error);
-    return true;
-  }
+  for (Index index : args.atoms(QStringLiteral("atoms")))
+    atomIndices.push_back(index);
 
   if (!isEdit) {
     emit commandFinished(QString(), measuredResult(atomIndices, resultKey));
-    return true;
+    return;
   }
 
-  double value = 0.0;
-  if (!parseValue(options, requiredCount, value, error)) {
-    emit commandFailed(error);
-    return true;
-  }
-
-  // Match the panel's spin box ranges. A distance outside the supported
-  // range would stack atoms or fling them out of the universe (the fuzzer
-  // found values that overflowed to infinity), and an angle outside 0-180
-  // degrees lands on the supplement, so the caller would get back a value it
-  // never asked for. Dihedrals wrap, so any value is meaningful.
-  if (requiredCount == 2 &&
-      !(value >= QtGui::FragmentTools::minimumChainDistance &&
-        value <= QtGui::FragmentTools::maximumChainDistance)) {
-    emit commandFailed(tr("value must be a distance from %1 to %2 Å.")
-                         .arg(QtGui::FragmentTools::minimumChainDistance)
-                         .arg(QtGui::FragmentTools::maximumChainDistance));
-    return true;
-  }
-  if (requiredCount == 3 && !(value >= 0.0 && value <= 180.0)) {
-    emit commandFailed(tr("value must be an angle from 0 to 180 degrees."));
-    return true;
-  }
+  const double value = args.real(QStringLiteral("value"));
 
   using QtGui::FragmentTools;
   using Result = FragmentTools::CoordinateEditResult;
@@ -849,7 +839,7 @@ bool MeasureTool::handleCommand(const QString& command,
   if (editResult != Result::Ok) {
     emit commandFailed(
       rpcRefusalMessage(requiredCount, editResult, atomIndices));
-    return true;
+    return;
   }
 
   // This runs refreshWidget() synchronously (moleculeChanged() is connected
@@ -862,102 +852,6 @@ bool MeasureTool::handleCommand(const QString& command,
   // same after applyEdit() succeeds, and a caller should see what the
   // molecule actually ended up at rather than what was asked for.
   emit commandFinished(QString(), measuredResult(atomIndices, resultKey));
-  return true;
-}
-
-bool MeasureTool::parseAtomIndices(const QVariantMap& options,
-                                   int requiredCount, QVector<Index>& indices,
-                                   QString& error) const
-{
-  indices.clear();
-
-  const auto countMismatch = [&]() {
-    switch (requiredCount) {
-      case 2:
-        error = tr("atoms must list exactly 2 atom indices for a distance.");
-        break;
-      case 3:
-        error = tr("atoms must list exactly 3 atom indices for an angle.");
-        break;
-      default:
-        error = tr("atoms must list exactly 4 atom indices for a dihedral.");
-        break;
-    }
-  };
-
-  const QVariant atomsValue = options.value(QStringLiteral("atoms"));
-  if (atomsValue.typeId() != QMetaType::QVariantList) {
-    countMismatch();
-    return false;
-  }
-
-  const QVariantList atomsList = atomsValue.toList();
-  if (atomsList.size() != requiredCount) {
-    countMismatch();
-    return false;
-  }
-
-  const Index atomCount = m_molecule->atomCount();
-  QVector<Index> parsed;
-  parsed.reserve(requiredCount);
-
-  for (int i = 0; i < atomsList.size(); ++i) {
-    if (!isNumericVariant(atomsList[i])) {
-      error = tr("atom index #%1 in atoms must be a whole number.").arg(i + 1);
-      return false;
-    }
-
-    const double raw = atomsList[i].toDouble();
-    if (std::isnan(raw) || std::floor(raw) != raw) {
-      error = tr("atom index #%1 in atoms must be a whole number.").arg(i + 1);
-      return false;
-    }
-    if (raw < 0.0) {
-      error = tr("atom index #%1 in atoms is negative; atom indices must "
-                 "be zero or greater.")
-                .arg(i + 1);
-      return false;
-    }
-    // Comparing as doubles, before casting, keeps an absurdly large index
-    // from overflowing Index rather than simply failing this check.
-    if (!(raw < static_cast<double>(atomCount))) {
-      // %n lets each language supply its own plural forms for "atoms".
-      error = tr("atom index %1 is out of range (the molecule has %n "
-                 "atom(s)).",
-                 nullptr, static_cast<int>(atomCount))
-                .arg(raw, 0, 'f', 0);
-      return false;
-    }
-
-    const auto index = static_cast<Index>(raw);
-    if (parsed.contains(index)) {
-      error = tr("atom index %1 is repeated in atoms; each atom must be "
-                 "different.")
-                .arg(index);
-      return false;
-    }
-
-    parsed.push_back(index);
-  }
-
-  indices = parsed;
-  return true;
-}
-
-bool MeasureTool::parseValue(const QVariantMap& options, int requiredCount,
-                             double& value, QString& error) const
-{
-  const QVariant valueVariant = options.value(QStringLiteral("value"));
-  if (!options.contains(QStringLiteral("value")) ||
-      !isNumericVariant(valueVariant)) {
-    error = requiredCount == 2
-              ? tr("value is required and must be a distance in Å.")
-              : tr("value is required and must be an angle in degrees.");
-    return false;
-  }
-
-  value = valueVariant.toDouble();
-  return true;
 }
 
 QVector<Index> MeasureTool::uniqueIdsForIndices(
