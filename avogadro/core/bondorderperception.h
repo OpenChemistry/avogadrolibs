@@ -19,19 +19,24 @@ struct BondOrderOptions
 {
   /**
    * Use the 3D coordinates, when the molecule has them, to decide which of
-   * several equally valid assignments to try first (see
-   * Molecule::perceiveBondOrders()). Never changes whether a valid assignment
-   * is found.
+   * several equally valid assignments to try first, and to rule out a second
+   * pi bond on a bent two-coordinate period-2 atom (see
+   * Molecule::perceiveBondOrders()). The second use can change whether a
+   * valid assignment is found: a bare C6 ring has an all-double cumulene
+   * solution that geometry excludes.
    */
   bool useGeometry = true;
 
   /**
    * How many branching steps the search may spend on each connected group of
-   * unsaturated atoms before giving that group up. Isolated double and triple
-   * bonds are settled by propagation alone, but rings and other conjugated
-   * systems need branching: benzene and naphthalene take one step, biphenyl
-   * two, coronene five. A budget of zero therefore fails every group that
-   * propagation cannot settle.
+   * unsaturated atoms before falling back to a best-effort completion. Isolated
+   * double and triple bonds are settled by propagation alone, but rings and
+   * other conjugated systems need branching: benzene and naphthalene take one
+   * step, biphenyl two, coronene five. A group the exact search cannot settle
+   * within the budget is completed on a best-effort basis (see
+   * Molecule::perceiveBondOrders()), and is reported as failed only if some
+   * atom is still unsatisfied. A budget of zero sends every group that
+   * propagation cannot settle straight to best effort.
    */
   std::size_t stepBudgetPerComponent = 100000;
 };
@@ -39,10 +44,14 @@ struct BondOrderOptions
 /** What Molecule::perceiveBondOrders() did. */
 struct BondOrderResult
 {
-  /** True if every atom's valence was satisfied. */
+  /**
+   * True if every atom's valence was satisfied. When false, the bonds of each
+   * group of atoms that could not be solved exactly still hold a best-effort
+   * partial assignment; @a failedAtoms are the atoms left short.
+   */
   bool success = true;
 
-  /** The atoms left unsatisfied, in increasing order. */
+  /** The atoms still unsatisfied after the best effort, in increasing order. */
   std::vector<Index> failedAtoms;
 
   /** A human-readable explanation when @a success is false; empty otherwise. */

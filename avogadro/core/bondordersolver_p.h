@@ -63,14 +63,17 @@ struct ComponentFailure
   Index culprit = MaxIndex;
   BondOrderFailure reason = BondOrderFailure::Contradiction;
 
-  /** The component's vertices that still have demand, in increasing order. */
+  /** The component's vertices that still have demand, in increasing order.
+   * With best-effort completion, only those left unsatisfied by it. */
   std::vector<Index> vertices;
 };
 
 struct BondOrderSolution
 {
-  /** One entry per edge: the extra order assigned, valid where the edge's
-   * component was solved and zero otherwise. */
+  /** One entry per edge: the extra order assigned. Exact where the edge's
+   * component was solved, a best-effort partial assignment (demand treated as
+   * an upper bound) where it was not and best-effort completion was
+   * requested, and zero otherwise. */
   std::vector<unsigned char> extra;
 
   /** One entry per failed component, in component order (by first vertex). */
@@ -91,9 +94,18 @@ struct BondOrderSolution
  * vertex. Isolated multiple bonds resolve by propagation alone; rings and
  * other conjugated systems need a few branching steps (benzene one, biphenyl
  * two, coronene five), which then propagate to settle the rest.
+ *
+ * If @a bestEffort is true, a component that cannot be solved exactly (for
+ * any reason) is completed as far as possible instead of being left empty:
+ * demand becomes an upper bound and the assignment is grown greedily and then
+ * by augmenting paths (optimal on bipartite graphs, a heuristic otherwise).
+ * If that satisfies every vertex the component counts as solved; otherwise
+ * it is still reported as a failure, listing only the vertices left over.
+ * Kekulization leaves this off, since a partial Kekule structure is not one.
  */
 BondOrderSolution solveBondOrders(const BondOrderProblem& problem,
-                                  std::size_t stepBudget);
+                                  std::size_t stepBudget,
+                                  bool bestEffort = false);
 
 } // namespace Avogadro::Core
 
