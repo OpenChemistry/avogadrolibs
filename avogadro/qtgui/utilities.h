@@ -9,6 +9,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 namespace Avogadro {
 namespace QtGui {
@@ -39,6 +40,12 @@ AVOGADROQTGUI_EXPORT bool dialogsSkipped();
 //! avogadroapp sets directly. Does nothing without a QCoreApplication.
 //! \sa dialogsSkipped()
 AVOGADROQTGUI_EXPORT void setDialogsSkipped(bool skipped);
+
+//! Run a video encoder (ffmpeg, else its old Libav fork avconv) with the given
+//! arguments and wait for it to finish.
+//! \return false only if neither program could be started; the encoder's own
+//! exit status is not checked.
+AVOGADROQTGUI_EXPORT bool runVideoEncoder(const QStringList& arguments);
 
 } // namespace Utilities
 } // namespace QtGui
