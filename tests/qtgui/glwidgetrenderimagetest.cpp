@@ -56,6 +56,15 @@ QApplication* ensureApp()
   static int argc = 1;
   static char arg0[] = "glwidgetrenderimagetest";
   static char* argv[] = { arg0, nullptr };
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MACOS)
+  // With no display the default platform plugin aborts inside the
+  // QApplication constructor, before the suite can skip. Fall back to the
+  // offscreen platform, which SetUpTestSuite() then skips on.
+  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM") &&
+      qEnvironmentVariableIsEmpty("DISPLAY") &&
+      qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY"))
+    qputenv("QT_QPA_PLATFORM", "offscreen");
+#endif
   // Heap allocated and destroyed by the fixture before exit: a function-local
   // static QApplication that has shown a widget is destroyed after Qt's
   // thread-local font cache and crashes on the way out.

@@ -47,6 +47,12 @@ protected:
   {
     if (ensureApp() == nullptr)
       GTEST_SKIP() << "A QApplication is required for QWidget tests.";
+    // Without an organization name QSettings cannot read or write anything on
+    // Windows, so remembered choices would never come back.
+    if (QCoreApplication::organizationName().isEmpty())
+      QCoreApplication::setOrganizationName(QStringLiteral("OpenChemistry"));
+    if (QCoreApplication::applicationName().isEmpty())
+      QCoreApplication::setApplicationName(QStringLiteral("AvogadroLibsTests"));
     clearSettings();
   }
   void TearDown() override { clearSettings(); }
