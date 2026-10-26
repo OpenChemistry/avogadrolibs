@@ -821,7 +821,11 @@ public:
    *    whose bond angle is below 150 degrees is sp2 and can carry at most one
    *    pi bond, so it is not offered a second one (a bare C6 ring becomes
    *    benzene, not a cumulene). A near-linear atom, and any atom of period 3
-   *    or later, is not limited.
+   *    or later, is not limited. The cap is also waived if at least one of
+   *    the atom's bonds to a non-metal neighbor is closer to its ideal
+   *    triple-bond length than to its ideal double-bond length
+   *    (AtomUtilities::idealBondLength()), as in an aryne such as
+   *    o-benzyne.
    *  - If the molecule has 3D coordinates and @p options asks for it, bond
    *    lengths decide which of several valid assignments is tried first. For
    *    a bond of length d the order k nearest to d, among the

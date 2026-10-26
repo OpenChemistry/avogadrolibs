@@ -65,6 +65,7 @@ public:
     std::vector<std::vector<std::size_t>> componentEdges;
     findComponents(componentVertices, componentEdges);
 
+    BestEffortScratch scratch;
     for (std::size_t c = 0; c < componentVertices.size(); ++c) {
       ComponentFailure failure;
       if (solveComponent(componentVertices[c], stepBudget, failure.culprit,
@@ -72,17 +73,17 @@ public:
         for (std::size_t e : componentEdges[c])
           solution.extra[e] = m_lo[e];
       } else {
-        std::vector<int> residual;
         if (bestEffort) {
-          residual = completeBestEffort(componentVertices[c], componentEdges[c],
-                                        solution.extra);
-        } else {
-          residual.assign(m_vertexCount, 0);
-          for (Index v : componentVertices[c])
-            residual[v] = m_problem.demand[v];
+          // Sized on the first failure, so a molecule that solves pays nothing.
+          if (scratch.residual.empty())
+            scratch.resize(m_vertexCount);
+          completeBestEffort(componentVertices[c], componentEdges[c],
+                             solution.extra, scratch);
         }
         for (Index v : componentVertices[c]) {
-          if (residual[v] > 0)
+          const int unmet =
+            bestEffort ? scratch.residual[v] : m_problem.demand[v];
+          if (unmet > 0)
             failure.vertices.push_back(v);
         }
         // The best effort may have satisfied everything after all.
@@ -94,6 +95,28 @@ public:
   }
 
 private:
+  // Work arrays for completeBestEffort(), indexed by vertex and reused across
+  // components so each failed component costs only its own size.
+  struct BestEffortScratch
+  {
+    std::vector<int> residual;
+    std::vector<char> retired;
+    std::vector<char> visited; //!< All zero between searches.
+    std::vector<std::size_t> viaEdge;
+    std::vector<Index> parent;
+    std::vector<Index> touched, queue;
+    std::vector<char> odd;
+
+    void resize(std::size_t vertexCount)
+    {
+      residual.assign(vertexCount, 0);
+      retired.assign(vertexCount, 0);
+      visited.assign(vertexCount, 0);
+      viaEdge.assign(vertexCount, 0);
+      parent.assign(vertexCount, 0);
+    }
+  };
+
   // ------------------------------------------------------------------
   // Components: union-find over the edge endpoints. A vertex that wants
   // order but has no edge at all is a component of its own, and fails.
@@ -434,8 +457,9 @@ private:
 
   /**
    * Fills @a extra for one component that has no exact solution, treating
-   * each demand as an upper bound, and returns the residual demand of every
-   * vertex (indexed by vertex, only the component's entries are meaningful).
+   * each demand as an upper bound. On return @a scratch.residual holds the
+   * demand still unmet at each of the component's vertices; no other entry is
+   * set by this call, so only the component's entries are meaningful.
    *
    * A greedy pass seeds the assignment, then augmenting paths improve it:
    * an alternating path v0, e1, v1, ..., ek, vk (k odd) between two distinct
@@ -447,13 +471,26 @@ private:
    * contracted, and it may stop short of the optimum. The search is
    * iterative, so a large fused system cannot overflow the stack.
    */
-  std::vector<int> completeBestEffort(const std::vector<Index>& vertices,
-                                      const std::vector<std::size_t>& edges,
-                                      std::vector<unsigned char>& extra) const
+  void completeBestEffort(const std::vector<Index>& vertices,
+                          const std::vector<std::size_t>& edges,
+                          std::vector<unsigned char>& extra,
+                          BestEffortScratch& scratch) const
   {
-    std::vector<int> residual(m_vertexCount, 0);
-    for (Index v : vertices)
+    std::vector<int>& residual = scratch.residual;
+    std::vector<char>& retired = scratch.retired;
+    std::vector<char>& visited = scratch.visited;
+    std::vector<std::size_t>& viaEdge = scratch.viaEdge;
+    std::vector<Index>& parent = scratch.parent;
+    std::vector<Index>& touched = scratch.touched;
+    std::vector<Index>& queue = scratch.queue;
+    std::vector<char>& odd = scratch.odd;
+
+    // Only this component's entries are reset; viaEdge and parent are always
+    // written before they are read, and visited is cleared after each search.
+    for (Index v : vertices) {
       residual[v] = m_problem.demand[v];
+      retired[v] = 0;
+    }
 
     // Pass 1 gives each edge the order the caller preferred, pass 2 fills
     // whatever room is left; both visit the most double-looking bonds first.
@@ -479,12 +516,6 @@ private:
     // Augmenting paths, found by a breadth-first search from each vertex
     // that still wants order. A vertex with no path now never gets one later
     // (the assignment only grows), so it is tried once and then retired.
-    std::vector<char> retired(m_vertexCount, 0);
-    std::vector<char> visited(m_vertexCount, 0);
-    std::vector<std::size_t> viaEdge(m_vertexCount, 0);
-    std::vector<Index> parent(m_vertexCount, 0);
-    std::vector<Index> touched, queue;
-    std::vector<char> odd;
     for (Index root : vertices) {
       while (residual[root] > 0 && !retired[root]) {
         // The parity of a vertex is its depth in the search tree. From an
@@ -540,7 +571,6 @@ private:
           visited[v] = 0;
       }
     }
-    return residual;
   }
 
   const BondOrderProblem& m_problem;
