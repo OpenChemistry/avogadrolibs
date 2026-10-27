@@ -17,6 +17,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 set(tests
   BackgroundFileFormat
   CalcWorker
+  CommandRegistry
   ElementTranslator
   EnergyUnits
   FileFormatDialog
