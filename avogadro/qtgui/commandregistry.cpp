@@ -11,6 +11,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QJsonArray>
 #include <QtCore/QMetaType>
+#include <QtCore/QSet>
 #include <QtGui/QColor>
 
 #include <algorithm>
@@ -773,6 +774,29 @@ bool CommandRegistry::add(CommandSpec spec)
                << "is already registered; ignoring the duplicate.";
     return false;
   }
+
+  // Options are looked up by name or alias, so every key must be unique
+  // across the whole command or the schema and the handler would disagree.
+  QSet<QString> seen;
+  for (const auto& argument : spec.arguments) {
+    QStringList keys{ argument.name };
+    keys << argument.aliases;
+    for (const auto& key : keys) {
+      if (key.isEmpty()) {
+        qWarning() << "CommandRegistry: command" << spec.name
+                   << "has an option with an empty name or alias.";
+        return false;
+      }
+      if (seen.contains(key)) {
+        qWarning() << "CommandRegistry: command" << spec.name
+                   << "uses the option name or alias" << key
+                   << "more than once.";
+        return false;
+      }
+      seen.insert(key);
+    }
+  }
+
   m_commands.push_back(std::move(spec));
   return true;
 }
@@ -1042,26 +1066,44 @@ QJsonObject CommandRegistry::schema(const QString& name) const
 
   QJsonObject properties;
   QJsonArray required;
-  QJsonArray anyOfGroups; // one "anyOf" per required option with aliases
+  // Cross-key constraints for options with aliases, in argument order.
+  QJsonArray constraints;
   for (const auto& argument : command->arguments) {
     const QJsonObject property = argumentSchema(argument);
     properties[argument.name] = property;
 
-    if (argument.required) {
-      if (argument.aliases.isEmpty()) {
+    if (argument.aliases.isEmpty()) {
+      if (argument.required)
         required.append(argument.name);
-      } else {
-        // Any one of the name or its aliases satisfies the requirement.
+    } else {
+      // Runtime validation accepts only one of the name and its aliases.
+      QStringList keys{ argument.name };
+      keys << argument.aliases;
+      QJsonObject constraint;
+      if (argument.required) {
+        // exactly one of the keys
         QJsonArray alternatives;
-        QStringList keys{ argument.name };
-        keys << argument.aliases;
         for (const auto& key : keys) {
           QJsonObject alternative;
           alternative[QStringLiteral("required")] = QJsonArray{ key };
           alternatives.append(alternative);
         }
-        anyOfGroups.append(alternatives);
+        constraint[QStringLiteral("oneOf")] = alternatives;
+      } else {
+        // at most one of the keys: no pair may appear together
+        QJsonArray pairs;
+        for (qsizetype i = 0; i < keys.size(); ++i) {
+          for (qsizetype j = i + 1; j < keys.size(); ++j) {
+            QJsonObject pair;
+            pair[QStringLiteral("required")] = QJsonArray{ keys[i], keys[j] };
+            pairs.append(pair);
+          }
+        }
+        QJsonObject anyOf;
+        anyOf[QStringLiteral("anyOf")] = pairs;
+        constraint[QStringLiteral("not")] = anyOf;
       }
+      constraints.append(constraint);
     }
 
     for (const auto& alias : argument.aliases) {
@@ -1078,17 +1120,8 @@ QJsonObject CommandRegistry::schema(const QString& name) const
   result[QStringLiteral("description")] = command->description;
   result[QStringLiteral("properties")] = properties;
   result[QStringLiteral("required")] = required;
-  if (anyOfGroups.size() == 1) {
-    result[QStringLiteral("anyOf")] = anyOfGroups.at(0).toArray();
-  } else if (anyOfGroups.size() > 1) {
-    QJsonArray allOf;
-    for (const auto& group : anyOfGroups) {
-      QJsonObject wrapper;
-      wrapper[QStringLiteral("anyOf")] = group.toArray();
-      allOf.append(wrapper);
-    }
-    result[QStringLiteral("allOf")] = allOf;
-  }
+  if (!constraints.isEmpty())
+    result[QStringLiteral("allOf")] = constraints;
   result[QStringLiteral("additionalProperties")] = command->allowUnknownOptions;
   result[QStringLiteral("x-avogadro-async")] = command->async;
   result[QStringLiteral("x-avogadro-needs-molecule")] = command->needsMolecule;

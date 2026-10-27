@@ -423,6 +423,40 @@ TEST(CommandRegistryTest, unregisteredAndDuplicate)
   EXPECT_TRUE(quiet.handle("q", {}, nullptr));
 }
 
+TEST(CommandRegistryTest, rejectsConflictingOptionKeys)
+{
+  Harness h;
+  const auto real = [](const char* name) {
+    return CommandArgumentSpec::real(name, "x");
+  };
+
+  // duplicate argument names
+  EXPECT_FALSE(h.add("dupName", { real("x"), real("x") }));
+  // alias equal to another argument's name
+  EXPECT_FALSE(
+    h.add("aliasIsName", { real("x"), real("y").withAliases({ "x" }) }));
+  // alias shared by two arguments
+  EXPECT_FALSE(h.add("sharedAlias", { real("x").withAliases({ "z" }),
+                                      real("y").withAliases({ "z" }) }));
+  // alias equal to its own argument's name
+  EXPECT_FALSE(h.add("ownName", { real("x").withAliases({ "x" }) }));
+  // alias repeated within one argument
+  EXPECT_FALSE(h.add("dupAlias", { real("x").withAliases({ "z", "z" }) }));
+  // empty argument name or alias
+  EXPECT_FALSE(h.add("emptyName", { real("") }));
+  EXPECT_FALSE(h.add("emptyAlias", { real("x").withAliases({ "" }) }));
+
+  for (const char* name : { "dupName", "aliasIsName", "sharedAlias", "ownName",
+                            "dupAlias", "emptyName", "emptyAlias" })
+    EXPECT_FALSE(h.registry.contains(name)) << name;
+  EXPECT_TRUE(h.registry.names().isEmpty());
+
+  // distinct keys are still accepted
+  EXPECT_TRUE(h.add("ok", { real("x").withAliases({ "a", "b" }),
+                            real("y").withAliases({ "c" }) }));
+  EXPECT_TRUE(h.registry.contains("ok"));
+}
+
 TEST(CommandRegistryTest, announceVisitsCommandsInOrder)
 {
   Harness h;
@@ -554,20 +588,22 @@ TEST(CommandRegistryTest, schemaRequiredAliased)
   const QJsonObject s = h.registry.schema("one");
   // the aliased option is not unconditionally required...
   EXPECT_EQ(s["required"].toArray(), QJsonArray{ "value" });
-  EXPECT_FALSE(s.contains("allOf"));
-  // ...any of its names satisfies the requirement
-  const QJsonArray anyOf = s["anyOf"].toArray();
-  ASSERT_EQ(anyOf.size(), 3);
-  EXPECT_EQ(anyOf[0].toObject()["required"].toArray(), QJsonArray{ "atoms" });
-  EXPECT_EQ(anyOf[1].toObject()["required"].toArray(), QJsonArray{ "indices" });
-  EXPECT_EQ(anyOf[2].toObject()["required"].toArray(), QJsonArray{ "ids" });
+  EXPECT_FALSE(s.contains("anyOf"));
+  // ...exactly one of its names is needed
+  const QJsonArray allOf = s["allOf"].toArray();
+  ASSERT_EQ(allOf.size(), 1);
+  const QJsonArray oneOf = allOf[0].toObject()["oneOf"].toArray();
+  ASSERT_EQ(oneOf.size(), 3);
+  EXPECT_EQ(oneOf[0].toObject()["required"].toArray(), QJsonArray{ "atoms" });
+  EXPECT_EQ(oneOf[1].toObject()["required"].toArray(), QJsonArray{ "indices" });
+  EXPECT_EQ(oneOf[2].toObject()["required"].toArray(), QJsonArray{ "ids" });
 
   // and handle() agrees with the schema
   Molecule mol = makeMolecule();
   EXPECT_TRUE(h.registry.handle(
     "one", { { "indices", list({ 0, 1 }) }, { "value", 1.0 } }, &mol));
 
-  // a command with no required aliased option has neither key
+  // a command with no aliased option has neither key
   Harness g;
   g.add("plain", { CommandArgumentSpec::real("x", "x").withRequired() });
   EXPECT_FALSE(g.registry.schema("plain").contains("anyOf"));
@@ -596,14 +632,64 @@ TEST(CommandRegistryTest, schemaTwoRequiredAliased)
   EXPECT_FALSE(s.contains("anyOf"));
   const QJsonArray allOf = s["allOf"].toArray();
   ASSERT_EQ(allOf.size(), 2);
-  const QJsonArray first = allOf[0].toObject()["anyOf"].toArray();
+  const QJsonArray first = allOf[0].toObject()["oneOf"].toArray();
   ASSERT_EQ(first.size(), 2);
   EXPECT_EQ(first[0].toObject()["required"].toArray(), QJsonArray{ "atoms" });
   EXPECT_EQ(first[1].toObject()["required"].toArray(), QJsonArray{ "indices" });
-  const QJsonArray second = allOf[1].toObject()["anyOf"].toArray();
+  const QJsonArray second = allOf[1].toObject()["oneOf"].toArray();
   ASSERT_EQ(second.size(), 2);
   EXPECT_EQ(second[0].toObject()["required"].toArray(), QJsonArray{ "value" });
   EXPECT_EQ(second[1].toObject()["required"].toArray(), QJsonArray{ "amount" });
+}
+
+TEST(CommandRegistryTest, schemaOptionalAliased)
+{
+  Harness h;
+  ASSERT_TRUE(h.add("opt", { CommandArgumentSpec::atomIndices("atoms", "Atoms.")
+                               .withAliases({ "indices", "ids" }) }));
+
+  const QJsonObject s = h.registry.schema("opt");
+  EXPECT_TRUE(s["required"].toArray().isEmpty());
+  EXPECT_FALSE(s.contains("anyOf"));
+  const QJsonArray allOf = s["allOf"].toArray();
+  ASSERT_EQ(allOf.size(), 1);
+  const QJsonObject constraint = allOf[0].toObject();
+  EXPECT_FALSE(constraint.contains("oneOf"));
+  // at most one: no pair of keys may appear together
+  const QJsonArray pairs = constraint["not"].toObject()["anyOf"].toArray();
+  ASSERT_EQ(pairs.size(), 3);
+  EXPECT_EQ(pairs[0].toObject()["required"].toArray(),
+            (QJsonArray{ "atoms", "indices" }));
+  EXPECT_EQ(pairs[1].toObject()["required"].toArray(),
+            (QJsonArray{ "atoms", "ids" }));
+  EXPECT_EQ(pairs[2].toObject()["required"].toArray(),
+            (QJsonArray{ "indices", "ids" }));
+}
+
+TEST(CommandRegistryTest, schemaMixedAliased)
+{
+  Harness h;
+  ASSERT_TRUE(h.add(
+    "mix",
+    { CommandArgumentSpec::atomIndices("atoms", "Atoms.")
+        .withRequired()
+        .withAliases({ "indices" }),
+      CommandArgumentSpec::real("value", "Value.").withAliases({ "amount" }),
+      CommandArgumentSpec::boolean("flag", "Flag.") }));
+
+  const QJsonObject s = h.registry.schema("mix");
+  EXPECT_TRUE(s["required"].toArray().isEmpty());
+  const QJsonArray allOf = s["allOf"].toArray();
+  ASSERT_EQ(allOf.size(), 2);
+  // argument order: the required one first, then the optional one
+  const QJsonArray oneOf = allOf[0].toObject()["oneOf"].toArray();
+  ASSERT_EQ(oneOf.size(), 2);
+  EXPECT_EQ(oneOf[1].toObject()["required"].toArray(), QJsonArray{ "indices" });
+  const QJsonArray pairs =
+    allOf[1].toObject()["not"].toObject()["anyOf"].toArray();
+  ASSERT_EQ(pairs.size(), 1);
+  EXPECT_EQ(pairs[0].toObject()["required"].toArray(),
+            (QJsonArray{ "value", "amount" }));
 }
 
 TEST(CommandRegistryTest, schemaAliasCarriesType)

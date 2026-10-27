@@ -237,6 +237,8 @@ struct AVOGADROQTGUI_EXPORT CommandSpec
  * spec as JSON Schema (draft 2020-12).
  *
  * Command names share one flat namespace, so add() rejects a duplicate.
+ * add() also rejects a command with an empty option name or with any option
+ * name or alias used more than once, since options are looked up by either.
  */
 class AVOGADROQTGUI_EXPORT CommandRegistry
 {
@@ -288,7 +290,10 @@ public:
   /** @return A JSON Schema (draft 2020-12) for the options object of
    *  @p name, or {} if it is not registered. Aliases appear as deprecated
    *  properties; "x-avogadro-async" and "x-avogadro-needs-molecule" carry
-   *  the metadata flags. */
+   *  the metadata flags. A required option with aliases needs exactly one of
+   *  its name and aliases ("oneOf"); an optional one allows at most one
+   *  ("not" + "anyOf" over each pair). These constraints are collected in a
+   *  top-level "allOf", in argument order. */
   QJsonObject schema(const QString& name) const;
 
   /** @name Validators, usable without a registry.
