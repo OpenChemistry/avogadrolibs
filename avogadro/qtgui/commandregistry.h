@@ -23,6 +23,8 @@
 #include <optional>
 #include <vector>
 
+class QColor;
+
 namespace Avogadro {
 namespace Core {
 class Molecule;
@@ -41,7 +43,8 @@ enum class CommandArgumentType
   String,
   Enum,
   Bool,
-  Vector3 ///< list of exactly three finite numbers [x, y, z]
+  Vector3, ///< list of exactly three finite numbers [x, y, z]
+  Color    ///< "#RRGGBB" hex, a color name, or [r, g, b] (0-255)
 };
 
 /**
@@ -82,6 +85,10 @@ struct AVOGADROQTGUI_EXPORT CommandArgumentSpec
   /** AtomIndices: when the option is absent, use the selected atoms. */
   bool selectionFallback = false;
 
+  /** Color: also accept an alpha channel, as "#RRGGBBAA" / "#RGBA" (CSS
+   *  order, alpha last), the name "transparent", or [r, g, b, a]. */
+  bool allowAlpha = false;
+
   /** Enum: the accepted values, matched case-sensitively. */
   QStringList allowedValues;
 
@@ -104,6 +111,8 @@ struct AVOGADROQTGUI_EXPORT CommandArgumentSpec
                                      const QString& description);
   static CommandArgumentSpec vector3(const QString& name,
                                      const QString& description);
+  static CommandArgumentSpec color(const QString& name,
+                                   const QString& description);
 
   CommandArgumentSpec withRequired(bool isRequired = true) const;
   CommandArgumentSpec withDefault(const QVariant& value) const;
@@ -114,6 +123,7 @@ struct AVOGADROQTGUI_EXPORT CommandArgumentSpec
   CommandArgumentSpec withCount(int minimumCount, int maximumCount) const;
   CommandArgumentSpec withUnique(bool mustBeUnique) const;
   CommandArgumentSpec withSelectionFallback(bool useSelection = true) const;
+  CommandArgumentSpec withAlpha(bool allow = true) const;
 };
 
 /**
@@ -138,6 +148,8 @@ public:
   QString string(const QString& name) const;
   bool boolean(const QString& name) const;
   Vector3 vector3(const QString& name) const;
+  /** Alpha is 255 unless the caller gave one. Include <QtGui/QColor>. */
+  QColor color(const QString& name) const;
 
 private:
   friend class CommandRegistry;

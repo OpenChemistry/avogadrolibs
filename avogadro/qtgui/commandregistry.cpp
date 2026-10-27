@@ -11,6 +11,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QJsonArray>
 #include <QtCore/QMetaType>
+#include <QtGui/QColor>
 
 #include <algorithm>
 #include <cmath>
@@ -258,6 +259,96 @@ bool parseVector3(const QVariant& value, const CommandArgumentSpec& spec,
   return true;
 }
 
+QString colorMessage(const CommandArgumentSpec& spec)
+{
+  return spec.allowAlpha
+           ? CommandRegistry::tr("%1 must be a color: \"#RRGGBB\", a color "
+                                 "name, or [r, g, b, a] with values 0-255.")
+               .arg(spec.name)
+           : CommandRegistry::tr("%1 must be a color: \"#RRGGBB\", a color "
+                                 "name, or [r, g, b] with values 0-255.")
+               .arg(spec.name);
+}
+
+/// Parse "#RGB", "#RRGGBB" and, with alpha, "#RGBA" / "#RRGGBBAA".
+///
+/// This is done by hand rather than with QColor(QString), because Qt reads
+/// an 8-digit string as #AARRGGBB while CSS, and so most scripts and web
+/// tools, put the alpha last (#RRGGBBAA). We follow CSS.
+bool parseHexColor(const QString& text, const CommandArgumentSpec& spec,
+                   QColor& out, QString& error)
+{
+  const QString digits = text.mid(1);
+  bool hex = !digits.isEmpty();
+  for (const QChar c : digits) {
+    const QChar lower = c.toLower();
+    hex = hex && ((c >= QLatin1Char('0') && c <= QLatin1Char('9')) ||
+                  (lower >= QLatin1Char('a') && lower <= QLatin1Char('f')));
+  }
+  const qsizetype n = digits.size();
+  if (!hex || (n != 3 && n != 4 && n != 6 && n != 8)) {
+    error = colorMessage(spec);
+    return false;
+  }
+  if ((n == 4 || n == 8) && !spec.allowAlpha) {
+    error = CommandRegistry::tr("%1 does not take an alpha channel; give "
+                                "\"#RRGGBB\" or [r, g, b].")
+              .arg(spec.name);
+    return false;
+  }
+
+  const int step = (n == 3 || n == 4) ? 1 : 2;
+  int channel[4] = { 0, 0, 0, 255 };
+  for (int i = 0; i * step < n; ++i) {
+    const QString part = digits.mid(i * step, step);
+    // "#f08" means "#ff0088": a single digit is doubled.
+    channel[i] = (step == 1 ? part + part : part).toInt(nullptr, 16);
+  }
+  out = QColor(channel[0], channel[1], channel[2], channel[3]);
+  return true;
+}
+
+bool parseColor(const QVariant& value, const CommandArgumentSpec& spec,
+                QColor& out, QString& error)
+{
+  if (value.typeId() == QMetaType::QString) {
+    const QString text = value.toString().trimmed();
+    if (text.startsWith(QLatin1Char('#')))
+      return parseHexColor(text, spec, out, error);
+    // QColor is used only to look up names, which are all alpha 255 except
+    // "transparent".
+    if (!text.isEmpty() && QColor::isValidColorName(text)) {
+      const QColor named(text);
+      if (named.alpha() == 255 || spec.allowAlpha) {
+        out = named;
+        return true;
+      }
+    }
+    error = colorMessage(spec);
+    return false;
+  }
+
+  if (value.typeId() == QMetaType::QVariantList) {
+    const QVariantList list = value.toList();
+    const qsizetype count = list.size();
+    bool valid = count == 3 || (count == 4 && spec.allowAlpha);
+    int channel[4] = { 0, 0, 0, 255 };
+    for (qsizetype i = 0; valid && i < count; ++i) {
+      double number = 0.0;
+      valid = wholeNumber(list[i], number) && number >= 0.0 && number <= 255.0;
+      if (valid)
+        channel[i] = static_cast<int>(number);
+    }
+    if (valid) {
+      out = QColor(channel[0], channel[1], channel[2], channel[3]);
+      return true;
+    }
+  }
+
+  error = colorMessage(spec);
+  return false;
+}
+
 /// Convert and store one present (or defaulted) value.
 bool convert(const CommandArgumentSpec& spec, const QVariant& value,
              const Core::Molecule* molecule, QVariantMap& scalars,
@@ -343,6 +434,13 @@ bool convert(const CommandArgumentSpec& spec, const QVariant& value,
       scalars[spec.name] = components;
       return true;
     }
+    case CommandArgumentType::Color: {
+      QColor parsed;
+      if (!parseColor(value, spec, parsed, error))
+        return false;
+      scalars[spec.name] = parsed;
+      return true;
+    }
   }
   return false;
 }
@@ -406,6 +504,25 @@ QJsonObject argumentSchema(const CommandArgumentSpec& spec)
       property[QStringLiteral("items")] = items;
       property[QStringLiteral("minItems")] = 3;
       property[QStringLiteral("maxItems")] = 3;
+      break;
+    }
+    case CommandArgumentType::Color: {
+      QJsonObject text;
+      text[QStringLiteral("type")] = QStringLiteral("string");
+      text[QStringLiteral("x-avogadro-format")] = QStringLiteral("color");
+      if (spec.allowAlpha)
+        text[QStringLiteral("x-avogadro-hex-order")] =
+          QStringLiteral("RRGGBBAA");
+      QJsonObject channel;
+      channel[QStringLiteral("type")] = QStringLiteral("integer");
+      channel[QStringLiteral("minimum")] = 0;
+      channel[QStringLiteral("maximum")] = 255;
+      QJsonObject list;
+      list[QStringLiteral("type")] = QStringLiteral("array");
+      list[QStringLiteral("items")] = channel;
+      list[QStringLiteral("minItems")] = 3;
+      list[QStringLiteral("maxItems")] = spec.allowAlpha ? 4 : 3;
+      property[QStringLiteral("oneOf")] = QJsonArray{ text, list };
       break;
     }
   }
@@ -500,6 +617,12 @@ CommandArgumentSpec CommandArgumentSpec::vector3(const QString& name,
   return makeSpec(CommandArgumentType::Vector3, name, description);
 }
 
+CommandArgumentSpec CommandArgumentSpec::color(const QString& name,
+                                               const QString& description)
+{
+  return makeSpec(CommandArgumentType::Color, name, description);
+}
+
 CommandArgumentSpec CommandArgumentSpec::withRequired(bool isRequired) const
 {
   CommandArgumentSpec copy(*this);
@@ -556,6 +679,13 @@ CommandArgumentSpec CommandArgumentSpec::withSelectionFallback(
   return copy;
 }
 
+CommandArgumentSpec CommandArgumentSpec::withAlpha(bool allow) const
+{
+  CommandArgumentSpec copy(*this);
+  copy.allowAlpha = allow;
+  return copy;
+}
+
 // ---- CommandArguments ----------------------------------------------------
 
 bool CommandArguments::has(const QString& name) const
@@ -607,6 +737,11 @@ Vector3 CommandArguments::vector3(const QString& name) const
     return Vector3::Zero();
   return Vector3(components[0].toDouble(), components[1].toDouble(),
                  components[2].toDouble());
+}
+
+QColor CommandArguments::color(const QString& name) const
+{
+  return m_values.value(name).value<QColor>();
 }
 
 // ---- CommandRegistry -----------------------------------------------------

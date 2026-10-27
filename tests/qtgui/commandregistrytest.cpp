@@ -9,6 +9,7 @@
 #include <avogadro/qtgui/commandregistry.h>
 
 #include <QtCore/QJsonArray>
+#include <QtGui/QColor>
 #include <QtCore/QJsonObject>
 
 #include <cmath>
@@ -696,4 +697,154 @@ TEST(CommandRegistryTest, vector3DefaultAndSchema)
   EXPECT_EQ(v["description"].toString(), "A vector.");
   EXPECT_EQ(v["default"].toArray(), (QJsonArray{ 0, 0, 1 }));
   EXPECT_EQ(s["required"].toArray(), QJsonArray{ "w" });
+}
+
+namespace {
+// Run a color option and report whether the handler ran.
+bool runColor(Harness& h, const QVariant& value, Molecule* mol)
+{
+  return h.run("c", { { "c", value } }, mol);
+}
+} // namespace
+
+TEST(CommandRegistryTest, colorAccepted)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c", { CommandArgumentSpec::color("c", "A color.") });
+
+  const struct
+  {
+    QVariant input;
+    int r, g, b;
+  } good[] = {
+    { QStringLiteral("#f00"), 255, 0, 0 },
+    { QStringLiteral("#FF0000"), 255, 0, 0 },
+    { QStringLiteral("#Ff8000"), 255, 128, 0 },
+    { QStringLiteral("red"), 255, 0, 0 },
+    { QStringLiteral("steelblue"), 70, 130, 180 },
+    { list({ 255, 0, 0 }), 255, 0, 0 },
+    { list({ 0.0, 128.0, 255.0 }), 0, 128, 255 },
+  };
+  for (const auto& c : good) {
+    ASSERT_TRUE(runColor(h, c.input, &mol)) << c.input.toString().toStdString();
+    const QColor color = h.last.color("c");
+    EXPECT_EQ(color.red(), c.r);
+    EXPECT_EQ(color.green(), c.g);
+    EXPECT_EQ(color.blue(), c.b);
+    EXPECT_EQ(color.alpha(), 255);
+    EXPECT_TRUE(h.last.has("c"));
+  }
+}
+
+TEST(CommandRegistryTest, colorRejected)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c", { CommandArgumentSpec::color("c", "A color.") });
+
+  const QVariant bad[] = { QStringLiteral("notacolor"),
+                           QStringLiteral(""),
+                           QStringLiteral("#"),
+                           QStringLiteral("#12"),
+                           QStringLiteral("#ggg"),
+                           QStringLiteral("#ff00008"),
+                           QStringLiteral("#ff0000800"),
+                           QStringLiteral("transparent"), // alpha not allowed
+                           list({ 255, 0, 0, 128 }),
+                           list({ 1.5, 0, 0 }),
+                           list({ 256, 0, 0 }),
+                           list({ -1, 0, 0 }),
+                           list({ true, 0, 0 }),
+                           list({ QStringLiteral("1"), 0, 0 }),
+                           list({ std::nan(""), 0, 0 }),
+                           list({ 255, 0 }),
+                           list({}),
+                           255,
+                           true,
+                           QVariant() };
+  for (const QVariant& value : bad) {
+    EXPECT_FALSE(runColor(h, value, &mol)) << value.toString().toStdString();
+    ASSERT_EQ(h.failures.size(), 1);
+  }
+
+  runColor(h, QStringLiteral("nope"), &mol);
+  EXPECT_EQ(h.failures.first(),
+            QStringLiteral("c must be a color: \"#RRGGBB\", a color name, or "
+                           "[r, g, b] with values 0-255."));
+  // 8- and 4-digit hex have a dedicated message without alpha
+  for (const char* text : { "#ff000080", "#f008" }) {
+    EXPECT_FALSE(runColor(h, QString(text), &mol)) << text;
+    EXPECT_EQ(h.failures.first(),
+              QStringLiteral("c does not take an alpha channel; give "
+                             "\"#RRGGBB\" or [r, g, b]."));
+  }
+}
+
+TEST(CommandRegistryTest, colorWithAlpha)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c", { CommandArgumentSpec::color("c", "A color.").withAlpha() });
+
+  ASSERT_TRUE(
+    runColor(h, QStringLiteral("#ff000080"), &mol)); // CSS: alpha last
+  QColor c = h.last.color("c");
+  EXPECT_EQ(c.red(), 255);
+  EXPECT_EQ(c.green(), 0);
+  EXPECT_EQ(c.blue(), 0);
+  EXPECT_EQ(c.alpha(), 128);
+
+  ASSERT_TRUE(runColor(h, QStringLiteral("#f008"), &mol));
+  EXPECT_EQ(h.last.color("c").alpha(), 136); // 0x88
+  EXPECT_EQ(h.last.color("c").red(), 255);
+
+  ASSERT_TRUE(runColor(h, list({ 255, 0, 0, 128 }), &mol));
+  EXPECT_EQ(h.last.color("c").alpha(), 128);
+  ASSERT_TRUE(runColor(h, list({ 1, 2, 3 }), &mol));
+  EXPECT_EQ(h.last.color("c").alpha(), 255);
+  ASSERT_TRUE(runColor(h, QStringLiteral("transparent"), &mol));
+  EXPECT_EQ(h.last.color("c").alpha(), 0);
+
+  EXPECT_FALSE(runColor(h, QStringLiteral("#ff00008"), &mol));   // 7 digits
+  EXPECT_FALSE(runColor(h, QStringLiteral("#ff0000800"), &mol)); // 9 digits
+  EXPECT_FALSE(runColor(h, list({ 1, 2, 3, 256 }), &mol));
+  EXPECT_FALSE(runColor(h, list({ 1, 2, 3, 4, 5 }), &mol));
+  EXPECT_EQ(h.failures.first(),
+            QStringLiteral("c must be a color: \"#RRGGBB\", a color name, or "
+                           "[r, g, b, a] with values 0-255."));
+}
+
+TEST(CommandRegistryTest, colorDefaultAndSchema)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c",
+        { CommandArgumentSpec::color("plain", "Plain.").withDefault("#00ff00"),
+          CommandArgumentSpec::color("alpha", "Alpha.").withAlpha() });
+  EXPECT_TRUE(h.run("c", {}, &mol));
+  EXPECT_EQ(h.last.color("plain").green(), 255);
+  EXPECT_FALSE(h.last.has("alpha"));
+
+  const QJsonObject props = h.registry.schema("c")["properties"].toObject();
+  const QJsonObject plain = props["plain"].toObject();
+  const QJsonArray plainOne = plain["oneOf"].toArray();
+  ASSERT_EQ(plainOne.size(), 2);
+  EXPECT_EQ(plainOne[0].toObject()["type"].toString(), "string");
+  EXPECT_EQ(plainOne[0].toObject()["x-avogadro-format"].toString(), "color");
+  EXPECT_FALSE(plainOne[0].toObject().contains("x-avogadro-hex-order"));
+  const QJsonObject list3 = plainOne[1].toObject();
+  EXPECT_EQ(list3["type"].toString(), "array");
+  EXPECT_EQ(list3["minItems"].toInt(), 3);
+  EXPECT_EQ(list3["maxItems"].toInt(), 3);
+  EXPECT_EQ(list3["items"].toObject()["type"].toString(), "integer");
+  EXPECT_EQ(list3["items"].toObject()["minimum"].toInt(-1), 0);
+  EXPECT_EQ(list3["items"].toObject()["maximum"].toInt(), 255);
+  EXPECT_EQ(plain["default"].toString(), "#00ff00");
+  EXPECT_EQ(plain["description"].toString(), "Plain.");
+
+  const QJsonArray alphaOne = props["alpha"].toObject()["oneOf"].toArray();
+  EXPECT_EQ(alphaOne[0].toObject()["x-avogadro-hex-order"].toString(),
+            "RRGGBBAA");
+  EXPECT_EQ(alphaOne[1].toObject()["maxItems"].toInt(), 4);
 }
