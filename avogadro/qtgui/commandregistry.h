@@ -290,7 +290,10 @@ public:
   /** @return A JSON Schema (draft 2020-12) for the options object of
    *  @p name, or {} if it is not registered. Aliases appear as deprecated
    *  properties; "x-avogadro-async" and "x-avogadro-needs-molecule" carry
-   *  the metadata flags. */
+   *  the metadata flags. A required option with aliases needs exactly one of
+   *  its name and aliases ("oneOf"); an optional one allows at most one
+   *  ("not" + "anyOf" over each pair). These constraints are collected in a
+   *  top-level "allOf", in argument order. */
   QJsonObject schema(const QString& name) const;
 
   /** @name Validators, usable without a registry.
