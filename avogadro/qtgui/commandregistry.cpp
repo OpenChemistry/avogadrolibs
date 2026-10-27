@@ -11,6 +11,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QJsonArray>
 #include <QtCore/QMetaType>
+#include <QtCore/QSet>
 #include <QtGui/QColor>
 
 #include <algorithm>
@@ -773,6 +774,29 @@ bool CommandRegistry::add(CommandSpec spec)
                << "is already registered; ignoring the duplicate.";
     return false;
   }
+
+  // Options are looked up by name or alias, so every key must be unique
+  // across the whole command or the schema and the handler would disagree.
+  QSet<QString> seen;
+  for (const auto& argument : spec.arguments) {
+    QStringList keys{ argument.name };
+    keys << argument.aliases;
+    for (const auto& key : keys) {
+      if (key.isEmpty()) {
+        qWarning() << "CommandRegistry: command" << spec.name
+                   << "has an option with an empty name or alias.";
+        return false;
+      }
+      if (seen.contains(key)) {
+        qWarning() << "CommandRegistry: command" << spec.name
+                   << "uses the option name or alias" << key
+                   << "more than once.";
+        return false;
+      }
+      seen.insert(key);
+    }
+  }
+
   m_commands.push_back(std::move(spec));
   return true;
 }

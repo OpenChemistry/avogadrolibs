@@ -423,6 +423,40 @@ TEST(CommandRegistryTest, unregisteredAndDuplicate)
   EXPECT_TRUE(quiet.handle("q", {}, nullptr));
 }
 
+TEST(CommandRegistryTest, rejectsConflictingOptionKeys)
+{
+  Harness h;
+  const auto real = [](const char* name) {
+    return CommandArgumentSpec::real(name, "x");
+  };
+
+  // duplicate argument names
+  EXPECT_FALSE(h.add("dupName", { real("x"), real("x") }));
+  // alias equal to another argument's name
+  EXPECT_FALSE(
+    h.add("aliasIsName", { real("x"), real("y").withAliases({ "x" }) }));
+  // alias shared by two arguments
+  EXPECT_FALSE(h.add("sharedAlias", { real("x").withAliases({ "z" }),
+                                      real("y").withAliases({ "z" }) }));
+  // alias equal to its own argument's name
+  EXPECT_FALSE(h.add("ownName", { real("x").withAliases({ "x" }) }));
+  // alias repeated within one argument
+  EXPECT_FALSE(h.add("dupAlias", { real("x").withAliases({ "z", "z" }) }));
+  // empty argument name or alias
+  EXPECT_FALSE(h.add("emptyName", { real("") }));
+  EXPECT_FALSE(h.add("emptyAlias", { real("x").withAliases({ "" }) }));
+
+  for (const char* name : { "dupName", "aliasIsName", "sharedAlias", "ownName",
+                            "dupAlias", "emptyName", "emptyAlias" })
+    EXPECT_FALSE(h.registry.contains(name)) << name;
+  EXPECT_TRUE(h.registry.names().isEmpty());
+
+  // distinct keys are still accepted
+  EXPECT_TRUE(h.add("ok", { real("x").withAliases({ "a", "b" }),
+                            real("y").withAliases({ "c" }) }));
+  EXPECT_TRUE(h.registry.contains("ok"));
+}
+
 TEST(CommandRegistryTest, announceVisitsCommandsInOrder)
 {
   Harness h;

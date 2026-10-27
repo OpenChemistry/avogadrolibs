@@ -237,6 +237,8 @@ struct AVOGADROQTGUI_EXPORT CommandSpec
  * spec as JSON Schema (draft 2020-12).
  *
  * Command names share one flat namespace, so add() rejects a duplicate.
+ * add() also rejects a command with an empty option name or with any option
+ * name or alias used more than once, since options are looked up by either.
  */
 class AVOGADROQTGUI_EXPORT CommandRegistry
 {
