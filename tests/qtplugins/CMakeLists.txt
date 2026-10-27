@@ -20,6 +20,7 @@ set(plugins
   Focus
   Forcefield
   MeasureTool
+  PlayerTool
   ScriptFileFormats
   Select
   SpaceGroup
