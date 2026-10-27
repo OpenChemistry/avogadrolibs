@@ -20,6 +20,7 @@ set(tests
   CommandRegistry
   ElementTranslator
   EnergyUnits
+  ExtensionPlugin
   FileFormatDialog
   FragmentTools
   GenericHighlighter

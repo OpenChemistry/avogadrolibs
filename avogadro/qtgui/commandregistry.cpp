@@ -63,7 +63,7 @@ QString formatNumber(double value)
 
 QString noMoleculeMessage()
 {
-  return CommandRegistry::tr("No molecule is open.");
+  return CommandRegistry::tr("No molecule");
 }
 
 /// Check one index. @p position is the 1-based place in a list, or 0 for a
