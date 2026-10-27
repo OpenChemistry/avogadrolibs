@@ -308,6 +308,17 @@ bool parseHexColor(const QString& text, const CommandArgumentSpec& spec,
   return true;
 }
 
+/// Whether @p name is a color name QColor knows. QColor::isValidColorName()
+/// is new in Qt 6.4; older Qt 6 releases only have isValidColor().
+bool isValidColorName(const QString& name)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+  return QColor::isValidColorName(name);
+#else
+  return QColor::isValidColor(name);
+#endif
+}
+
 bool parseColor(const QVariant& value, const CommandArgumentSpec& spec,
                 QColor& out, QString& error)
 {
@@ -317,7 +328,7 @@ bool parseColor(const QVariant& value, const CommandArgumentSpec& spec,
       return parseHexColor(text, spec, out, error);
     // QColor is used only to look up names, which are all alpha 255 except
     // "transparent".
-    if (!text.isEmpty() && QColor::isValidColorName(text)) {
+    if (!text.isEmpty() && isValidColorName(text)) {
       const QColor named(text);
       if (named.alpha() == 255 || spec.allowAlpha) {
         out = named;
