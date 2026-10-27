@@ -638,3 +638,62 @@ TEST(CommandRegistryTest, schemaAliasCarriesType)
   // the canonical property is not marked deprecated
   EXPECT_FALSE(p["n"].toObject().contains("deprecated"));
 }
+
+TEST(CommandRegistryTest, vector3)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c", { CommandArgumentSpec::vector3("v", "A vector.") });
+
+  EXPECT_TRUE(h.run("c", { { "v", list({ 1.5, -2.0, 3.25 }) } }, &mol));
+  EXPECT_TRUE(h.last.has("v"));
+  EXPECT_DOUBLE_EQ(h.last.vector3("v").x(), 1.5);
+  EXPECT_DOUBLE_EQ(h.last.vector3("v").y(), -2.0);
+  EXPECT_DOUBLE_EQ(h.last.vector3("v").z(), 3.25);
+
+  // integer components, in any integer type
+  EXPECT_TRUE(
+    h.run("c", { { "v", list({ 1, QVariant::fromValue<qlonglong>(2), 3u }) } },
+          &mol));
+  EXPECT_DOUBLE_EQ(h.last.vector3("v").y(), 2.0);
+
+  EXPECT_FALSE(h.run("c", { { "v", list({ 1, 2 }) } }, &mol));
+  EXPECT_EQ(h.failures.first(),
+            QStringLiteral("v must be a list of 3 finite numbers [x, y, z]."));
+  EXPECT_FALSE(h.run("c", { { "v", list({ 1, 2, 3, 4 }) } }, &mol));
+  EXPECT_FALSE(h.run("c", { { "v", list({}) } }, &mol));
+  EXPECT_FALSE(h.run("c", { { "v", 1.0 } }, &mol));
+  EXPECT_FALSE(h.run("c", { { "v", QStringLiteral("1,2,3") } }, &mol));
+  EXPECT_FALSE(h.run("c", { { "v", list({ 1, true, 3 }) } }, &mol));
+  EXPECT_FALSE(
+    h.run("c", { { "v", list({ 1, QStringLiteral("2"), 3 }) } }, &mol));
+  EXPECT_FALSE(h.run("c", { { "v", list({ 1, std::nan(""), 3 }) } }, &mol));
+  EXPECT_FALSE(h.run(
+    "c", { { "v", list({ std::numeric_limits<double>::infinity(), 1, 3 }) } },
+    &mol));
+  EXPECT_FALSE(h.run("c", { { "v", QVariantList{ QVariant(), 1, 2 } } }, &mol));
+  EXPECT_FALSE(h.last.has("nothing"));
+}
+
+TEST(CommandRegistryTest, vector3DefaultAndSchema)
+{
+  Molecule mol = makeMolecule();
+  Harness h;
+  h.add("c", { CommandArgumentSpec::vector3("v", "A vector.")
+                 .withDefault(list({ 0, 0, 1 })),
+               CommandArgumentSpec::vector3("w", "Another.").withRequired() });
+  EXPECT_FALSE(h.run("c", {}, &mol)); // w is required
+  EXPECT_TRUE(h.run("c", { { "w", list({ 1, 2, 3 }) } }, &mol));
+  EXPECT_DOUBLE_EQ(h.last.vector3("v").z(), 1.0); // default applied
+  EXPECT_FALSE(h.last.vector3("v").isZero());
+
+  const QJsonObject s = h.registry.schema("c");
+  const QJsonObject v = s["properties"].toObject()["v"].toObject();
+  EXPECT_EQ(v["type"].toString(), "array");
+  EXPECT_EQ(v["items"].toObject()["type"].toString(), "number");
+  EXPECT_EQ(v["minItems"].toInt(), 3);
+  EXPECT_EQ(v["maxItems"].toInt(), 3);
+  EXPECT_EQ(v["description"].toString(), "A vector.");
+  EXPECT_EQ(v["default"].toArray(), (QJsonArray{ 0, 0, 1 }));
+  EXPECT_EQ(s["required"].toArray(), QJsonArray{ "w" });
+}

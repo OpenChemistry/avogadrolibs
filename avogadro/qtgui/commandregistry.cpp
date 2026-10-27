@@ -232,6 +232,32 @@ bool parseReal(const QVariant& value, const CommandArgumentSpec& spec,
   return true;
 }
 
+/// Three finite numbers, as a JSON [x, y, z] arrives.
+bool parseVector3(const QVariant& value, const CommandArgumentSpec& spec,
+                  QVariantList& out, QString& error)
+{
+  bool valid = value.typeId() == QMetaType::QVariantList;
+  QVariantList components;
+  if (valid) {
+    components = value.toList();
+    valid = components.size() == 3;
+  }
+  for (qsizetype i = 0; valid && i < components.size(); ++i) {
+    valid = isNumericVariant(components[i]) &&
+            std::isfinite(components[i].toDouble());
+  }
+  if (!valid) {
+    error = CommandRegistry::tr("%1 must be a list of 3 finite numbers "
+                                "[x, y, z].")
+              .arg(spec.name);
+    return false;
+  }
+  out.clear();
+  for (const QVariant& component : components)
+    out << component.toDouble();
+  return true;
+}
+
 /// Convert and store one present (or defaulted) value.
 bool convert(const CommandArgumentSpec& spec, const QVariant& value,
              const Core::Molecule* molecule, QVariantMap& scalars,
@@ -310,6 +336,13 @@ bool convert(const CommandArgumentSpec& spec, const QVariant& value,
       scalars[spec.name] = value.toBool();
       return true;
     }
+    case CommandArgumentType::Vector3: {
+      QVariantList components;
+      if (!parseVector3(value, spec, components, error))
+        return false;
+      scalars[spec.name] = components;
+      return true;
+    }
   }
   return false;
 }
@@ -366,6 +399,15 @@ QJsonObject argumentSchema(const CommandArgumentSpec& spec)
     case CommandArgumentType::String:
       property[QStringLiteral("type")] = QStringLiteral("string");
       break;
+    case CommandArgumentType::Vector3: {
+      property[QStringLiteral("type")] = QStringLiteral("array");
+      QJsonObject items;
+      items[QStringLiteral("type")] = QStringLiteral("number");
+      property[QStringLiteral("items")] = items;
+      property[QStringLiteral("minItems")] = 3;
+      property[QStringLiteral("maxItems")] = 3;
+      break;
+    }
   }
 
   if (spec.type == CommandArgumentType::Integer ||
@@ -450,6 +492,12 @@ CommandArgumentSpec CommandArgumentSpec::boolean(const QString& name,
                                                  const QString& description)
 {
   return makeSpec(CommandArgumentType::Bool, name, description);
+}
+
+CommandArgumentSpec CommandArgumentSpec::vector3(const QString& name,
+                                                 const QString& description)
+{
+  return makeSpec(CommandArgumentType::Vector3, name, description);
 }
 
 CommandArgumentSpec CommandArgumentSpec::withRequired(bool isRequired) const
@@ -550,6 +598,15 @@ QString CommandArguments::string(const QString& name) const
 bool CommandArguments::boolean(const QString& name) const
 {
   return m_values.value(name).toBool();
+}
+
+Vector3 CommandArguments::vector3(const QString& name) const
+{
+  const QVariantList components = m_values.value(name).toList();
+  if (components.size() != 3)
+    return Vector3::Zero();
+  return Vector3(components[0].toDouble(), components[1].toDouble(),
+                 components[2].toDouble());
 }
 
 // ---- CommandRegistry -----------------------------------------------------

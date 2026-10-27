@@ -9,6 +9,7 @@
 #include "avogadroqtguiexport.h"
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QJsonObject>
@@ -39,7 +40,8 @@ enum class CommandArgumentType
   Real,
   String,
   Enum,
-  Bool
+  Bool,
+  Vector3 ///< list of exactly three finite numbers [x, y, z]
 };
 
 /**
@@ -100,6 +102,8 @@ struct AVOGADROQTGUI_EXPORT CommandArgumentSpec
                                          const QStringList& allowedValues);
   static CommandArgumentSpec boolean(const QString& name,
                                      const QString& description);
+  static CommandArgumentSpec vector3(const QString& name,
+                                     const QString& description);
 
   CommandArgumentSpec withRequired(bool isRequired = true) const;
   CommandArgumentSpec withDefault(const QVariant& value) const;
@@ -133,11 +137,14 @@ public:
   double real(const QString& name) const;
   QString string(const QString& name) const;
   bool boolean(const QString& name) const;
+  Vector3 vector3(const QString& name) const;
 
 private:
   friend class CommandRegistry;
 
-  QVariantMap m_values; ///< scalars, converted
+  /// Converted scalars. A Vector3 is kept as a QVariantList of three doubles,
+  /// which needs no extra map and keeps has() correct.
+  QVariantMap m_values;
   std::map<QString, std::vector<Index>> m_atomLists;
 };
 
