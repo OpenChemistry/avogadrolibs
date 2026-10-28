@@ -57,7 +57,14 @@ struct LayerVdW : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerVdW(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerVdW(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerVdW() override
   {
