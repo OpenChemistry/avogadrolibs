@@ -14,6 +14,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets Test REQUIRED)
 # through avogadroapp's RPC harness instead.
 set(plugins
   AlignTool
+  ApplyColors
   Bonding
   Crystal
   Editor
@@ -108,8 +109,8 @@ if(TARGET Avogadro::Rendering)
   target_link_libraries(AvogadroQtPluginsTests Avogadro::Rendering)
 endif()
 
-# surfaces.h includes tinycolormap.hpp.
-if(TARGET Surfaces AND TARGET tinycolormap)
+# surfaces.h and applycolors.h include tinycolormap.hpp.
+if((TARGET Surfaces OR TARGET ApplyColors) AND TARGET tinycolormap)
   target_link_libraries(AvogadroQtPluginsTests tinycolormap)
 endif()
 

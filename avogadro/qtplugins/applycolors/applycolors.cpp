@@ -20,6 +20,8 @@
 
 #include <QDebug>
 
+#include <array>
+
 using namespace tinycolormap;
 
 namespace Avogadro::QtPlugins {
@@ -102,38 +104,127 @@ ApplyColors::~ApplyColors()
     m_dialog->deleteLater();
 }
 
+namespace {
+
+// Lookup table mapping normalized lowercase keys and display names to
+// ColormapType.
+struct ColormapEntry
+{
+  const char* key;
+  const char* displayName;
+  ColormapType type;
+};
+
+// All 21 colormaps supported by tinycolormap with aliases.
+constexpr std::array<ColormapEntry, 21> s_colormaps = {
+  { { "parula", "Parula", ColormapType::Parula },
+    { "heat", "Heat", ColormapType::Heat },
+    { "jet", "Jet", ColormapType::Jet },
+    { "turbo", "Turbo", ColormapType::Turbo },
+    { "hot", "Hot", ColormapType::Hot },
+    { "gray", "Gray", ColormapType::Gray },
+    { "grey", "Gray", ColormapType::Gray },
+    { "magma", "Magma", ColormapType::Magma },
+    { "inferno", "Inferno", ColormapType::Inferno },
+    { "plasma", "Plasma", ColormapType::Plasma },
+    { "viridis", "Viridis", ColormapType::Viridis },
+    { "cividis", "Cividis", ColormapType::Cividis },
+    { "github", "Github", ColormapType::Github },
+    { "cubehelix", "Cubehelix", ColormapType::Cubehelix },
+    { "spectral", "Spectral", ColormapType::Spectral },
+    { "coolwarm", "Coolwarm", ColormapType::Coolwarm },
+    { "vlag", "Vlag", ColormapType::Vlag },
+    { "vik", "Vik", ColormapType::Vik },
+    { "balance", "Balance", ColormapType::Balance },
+    { "bluedarkred", "Blue-DarkRed", ColormapType::BlueDkRed },
+    { "bluedkred", "Blue-DarkRed", ColormapType::BlueDkRed } }
+};
+
+// Normalize key by stripping non-alphanumeric characters and converting to
+// lowercase.
+QString normalizeKey(const QString& str)
+{
+  QString result;
+  result.reserve(str.size());
+  for (QChar ch : str) {
+    if (ch.isLetterOrNumber())
+      result.append(ch.toLower());
+  }
+  return result;
+}
+
+// Compute Levenshtein distance between two strings with early exit for large
+// differences.
+int levenshteinDistance(const QString& s1, const QString& s2)
+{
+  const auto m = s1.size();
+  const auto n = s2.size();
+  if (std::abs(m - n) >= 3)
+    return 3;
+
+  std::vector<int> prev(n + 1);
+  std::vector<int> curr(n + 1);
+
+  for (qsizetype j = 0; j <= n; ++j)
+    prev[j] = static_cast<int>(j);
+
+  for (qsizetype i = 1; i <= m; ++i) {
+    curr[0] = static_cast<int>(i);
+    for (qsizetype k = 1; k <= n; ++k) {
+      int cost = (s1[i - 1] == s2[k - 1]) ? 0 : 1;
+      curr[k] = std::min({ curr[k - 1] + 1, prev[k] + 1, prev[k - 1] + cost });
+    }
+    prev = curr;
+  }
+
+  return prev[n];
+}
+
+} // namespace
+
+// Match a colormap name against known entries, with fuzzy matching for typo
+// suggestions.
+bool ApplyColors::colormapFromString(const QString& name, ColormapType& type,
+                                     QString* suggestion)
+{
+  const QString key = normalizeKey(name);
+
+  // Check normalized keys.
+  for (const auto& entry : s_colormaps) {
+    if (key == entry.key) {
+      type = entry.type;
+      return true;
+    }
+  }
+
+  // Check translated display names.
+  for (const auto& entry : s_colormaps) {
+    if (name == tr(entry.displayName, "colormap")) {
+      type = entry.type;
+      return true;
+    }
+  }
+
+  // Find nearest match for typo suggestion.
+  if (suggestion != nullptr) {
+    int bestDistance = 3;
+    for (const auto& entry : s_colormaps) {
+      int d = levenshteinDistance(key, QString::fromLatin1(entry.key));
+      if (d < bestDistance) {
+        bestDistance = d;
+        *suggestion = entry.displayName;
+      }
+    }
+  }
+
+  return false;
+}
+
 ColormapType ApplyColors::getColormapFromString(const QString& name) const
 {
-  // Just do all of them, even though we won't use them all
-  if (name == tr("Parula", "colormap"))
-    return ColormapType::Parula;
-  else if (name == tr("Heat", "colormap"))
-    return ColormapType::Heat;
-  else if (name == tr("Hot", "colormap"))
-    return ColormapType::Hot;
-  else if (name == tr("Gray", "colormap"))
-    return ColormapType::Gray;
-  else if (name == tr("Magma", "colormap"))
-    return ColormapType::Magma;
-  else if (name == tr("Inferno", "colormap"))
-    return ColormapType::Inferno;
-  else if (name == tr("Plasma", "colormap"))
-    return ColormapType::Plasma;
-  else if (name == tr("Viridis", "colormap"))
-    return ColormapType::Viridis;
-  else if (name == tr("Cividis", "colormap"))
-    return ColormapType::Cividis;
-  else if (name == tr("Spectral", "colormap"))
-    return ColormapType::Spectral;
-  else if (name == tr("Coolwarm", "colormap"))
-    return ColormapType::Coolwarm;
-  else if (name == tr("Balance", "colormap"))
-    return ColormapType::Balance;
-  else if (name == tr("Blue-DarkRed", "colormap"))
-    return ColormapType::BlueDkRed;
-  else if (name == tr("Turbo", "colormap"))
-    return ColormapType::Turbo;
-
+  ColormapType type = ColormapType::Turbo;
+  if (colormapFromString(name, type))
+    return type;
   return ColormapType::Turbo;
 }
 
@@ -199,6 +290,8 @@ Vector3ub chargeGradient(const float value, const float clamp,
   return ci;
 }
 
+// GUI slot: prompts user to select a colormap, then delegates to headless
+// implementation.
 void ApplyColors::applyIndexColors()
 {
   if (m_molecule == nullptr)
@@ -219,6 +312,15 @@ void ApplyColors::applyIndexColors()
     type = getColormapFromString(item);
   }
 
+  applyIndexColors(type);
+}
+
+// Headless implementation: applies index colormap gradient to atoms.
+void ApplyColors::applyIndexColors(ColormapType type)
+{
+  if (m_molecule == nullptr)
+    return;
+
   bool isSelection = !m_molecule->isSelectionEmpty();
 
   auto* rwmol = m_molecule->undoMolecule();
@@ -229,7 +331,8 @@ void ApplyColors::applyIndexColors()
     if (isSelection && !m_molecule->atomSelected(i))
       continue;
 
-    float indexFraction = float(i) / (float(numAtoms) - 1);
+    float indexFraction =
+      (numAtoms > 1) ? float(i) / (float(numAtoms) - 1) : 0.0f;
 
     rwmol->setColor(i, rainbowGradient(indexFraction, type));
   }
@@ -239,12 +342,11 @@ void ApplyColors::applyIndexColors()
   m_molecule->emitChanged(QtGui::Molecule::Properties);
 }
 
+// GUI slot: prompts user to select a charge model and colormap, then delegates.
 void ApplyColors::applyChargeColors()
 {
   if (m_molecule == nullptr)
     return;
-
-  bool isSelection = !m_molecule->isSelectionEmpty();
 
   // get the list of possible models
   const auto identifiers =
@@ -267,11 +369,28 @@ void ApplyColors::applyChargeColors()
   const auto colormapName = dialog.colorMapCombo->currentText();
   const auto type = getColormapFromString(colormapName);
 
-  // first off, get the range of partial charges
+  QString error;
+  applyChargeColors(model, type, error);
+}
+
+// Headless implementation: computes partial charges and applies clamped
+// colormap gradient.
+bool ApplyColors::applyChargeColors(const std::string& model, ColormapType type,
+                                    QString& error)
+{
+  if (m_molecule == nullptr) {
+    error = tr("No molecule available.");
+    return false;
+  }
+
   auto numAtoms = m_molecule->atomCount();
-  float minCharge = 0.0f;
-  float maxCharge = 0.0f;
-  auto charges =
+  if (numAtoms == 0) {
+    error = tr("Molecule has no atoms.");
+    return false;
+  }
+
+  // first off, get the range of partial charges
+  MatrixX charges =
     Calc::ChargeManager::instance().partialCharges(model, *m_molecule);
   // check if the model string is already a partial charge type
   if (m_molecule->partialChargeTypes().find(model) !=
@@ -279,6 +398,14 @@ void ApplyColors::applyChargeColors()
     charges = m_molecule->partialCharges(model);
   }
 
+  if (charges.rows() < static_cast<Eigen::Index>(numAtoms)) {
+    error = tr("Failed to compute partial charges for model \"%1\".")
+              .arg(QString::fromStdString(model));
+    return false;
+  }
+
+  float minCharge = 0.0f;
+  float maxCharge = 0.0f;
   for (Index i = 0; i < numAtoms; ++i) {
     float charge = charges(i, 0);
     minCharge = std::min(minCharge, charge);
@@ -287,6 +414,11 @@ void ApplyColors::applyChargeColors()
 
   // now apply the colors
   float clamp = std::max(std::abs(minCharge), std::abs(maxCharge));
+  if (clamp == 0.0f)
+    clamp = 1.0f;
+
+  bool isSelection = !m_molecule->isSelectionEmpty();
+
   auto* rwmol = m_molecule->undoMolecule();
   rwmol->beginMergeMode(tr("Apply Charge Colors"));
   for (Index i = 0; i < numAtoms; ++i) {
@@ -298,14 +430,15 @@ void ApplyColors::applyChargeColors()
   }
   rwmol->endMergeMode();
   m_molecule->emitChanged(QtGui::Molecule::Properties);
+  return true;
 }
 
+// GUI slot: prompts user to select a colormap, then delegates to headless
+// implementation.
 void ApplyColors::applyDistanceColors()
 {
   if (m_molecule == nullptr || m_molecule->atomCount() == 0)
     return;
-
-  bool isSelection = !m_molecule->isSelectionEmpty();
 
   // check on colormap
   ColormapType type = ColormapType::Turbo;
@@ -322,6 +455,21 @@ void ApplyColors::applyDistanceColors()
     type = getColormapFromString(item);
   }
 
+  applyDistanceColors(type);
+}
+
+// Headless implementation: applies distance colormap gradient relative to the
+// first atom.
+void ApplyColors::applyDistanceColors(ColormapType type)
+{
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
+  if (m_molecule->atomPositions3d().size() != m_molecule->atomCount())
+    return;
+
+  bool isSelection = !m_molecule->isSelectionEmpty();
+
   Vector3 firstPos = m_molecule->atomPosition3d(0);
   Real size = 2.0 * m_molecule->radius();
 
@@ -336,7 +484,7 @@ void ApplyColors::applyDistanceColors()
     Vector3 currPos = m_molecule->atomPosition3d(i);
     Vector3 diff = currPos - firstPos;
     Real distance = diff.norm();
-    Real distanceFraction = distance / size;
+    Real distanceFraction = (size > 0.0) ? distance / size : 0.0;
 
     rwmol->setColor(i, rainbowGradient(distanceFraction, type));
   }
@@ -624,62 +772,232 @@ void ApplyColors::registerCommands()
                        tr("Color residues by secondary structure."));
   emit registerCommand("resetResidueColors",
                        tr("Reset residue colors to default chain colors."));
+
+  emit registerCommand(
+    "colorAtomsByIndex",
+    tr("Color atoms along a colormap gradient by atomic index. Options: "
+       "optional \"colormap\" (e.g. \"Turbo\", \"Viridis\", \"Magma\")."));
+  emit registerCommand(
+    "colorAtomsByDistance",
+    tr("Color atoms along a colormap gradient by distance from the first atom. "
+       "Options: optional \"colormap\" (e.g. \"Turbo\", \"Viridis\")."));
+  emit registerCommand(
+    "colorAtomsByCharge",
+    tr("Color atoms along a colormap gradient by partial charge. Options: "
+       "optional \"colormap\" (e.g. \"Coolwarm\"), optional \"model\" (e.g. "
+       "\"MMFF94\", \"Gasteiger\")."));
 }
 
 bool ApplyColors::handleCommand(const QString& command,
                                 [[maybe_unused]] const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command
+  static const QStringList knownCommands = {
+    "colorAtomsCustom",     "resetAtomColors",
+    "colorResiduesCustom",  "colorResiduesByAminoAcid",
+    "colorResiduesShapely", "colorResiduesBySecondaryStructure",
+    "resetResidueColors",   "colorAtomsByIndex",
+    "colorAtomsByDistance", "colorAtomsByCharge"
+  };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "colorAtomsCustom") {
-    if (options.contains("color")) {
-      QString colorString = options["color"].toString();
-
-      QColor color(colorString);
-
-      if (color.isValid()) {
-        applyCustomColor(color);
-        return true;
-      }
+    if (!options.contains("color")) {
+      emit commandFailed(tr("colorAtomsCustom requires a \"color\" option "
+                            "(a color name or \"#rrggbb\" value)."));
+      return true;
     }
+    const QColor color(options["color"].toString());
+    if (!color.isValid()) {
+      emit commandFailed(
+        tr("Unknown color \"%1\".").arg(options["color"].toString()));
+      return true;
+    }
+    applyCustomColor(color);
+    emit commandFinished();
+    return true;
   }
 
   if (command == "resetAtomColors") {
     resetColors();
+    emit commandFinished();
     return true;
   }
 
   if (command == "colorResiduesCustom") {
-    if (options.contains("color")) {
-      QString colorString = options["color"].toString();
-
-      QColor color(colorString);
-
-      if (color.isValid()) {
-        applyCustomColorResidue(color);
-        return true;
-      }
+    if (!options.contains("color")) {
+      emit commandFailed(tr("colorResiduesCustom requires a \"color\" option "
+                            "(a color name or \"#rrggbb\" value)."));
+      return true;
     }
+    const QColor color(options["color"].toString());
+    if (!color.isValid()) {
+      emit commandFailed(
+        tr("Unknown color \"%1\".").arg(options["color"].toString()));
+      return true;
+    }
+    applyCustomColorResidue(color);
+    emit commandFinished();
+    return true;
   }
 
   if (command == "colorResiduesByAminoAcid") {
     applyAminoColors();
+    emit commandFinished();
     return true;
   }
 
   if (command == "colorResiduesShapely") {
     applyShapelyColors();
+    emit commandFinished();
     return true;
   }
 
   if (command == "colorResiduesBySecondaryStructure") {
     applySecondaryStructureColors();
+    emit commandFinished();
     return true;
   }
 
   if (command == "resetResidueColors") {
     resetColorsResidue();
+    emit commandFinished();
+    return true;
+  }
+
+  // Color atoms along a colormap gradient by index.
+  if (command == "colorAtomsByIndex" || command == "applyIndexColors") {
+    if (m_molecule->atomCount() == 0) {
+      emit commandFailed(tr("Molecule has no atoms."));
+      return true;
+    }
+
+    ColormapType type = ColormapType::Turbo;
+    if (options.contains("colormap")) {
+      const QString colormapName = options["colormap"].toString();
+      QString suggestion;
+      if (!colormapFromString(colormapName, type, &suggestion)) {
+        if (!suggestion.isEmpty()) {
+          emit commandFailed(tr(R"(Unknown colormap "%1". Did you mean "%2"?)")
+                               .arg(colormapName, suggestion));
+        } else {
+          emit commandFailed(tr(R"(Unknown colormap "%1".)").arg(colormapName));
+        }
+        return true;
+      }
+    }
+
+    applyIndexColors(type);
+    emit commandFinished();
+    return true;
+  }
+
+  // Color atoms along a colormap gradient by distance from the first atom.
+  if (command == "colorAtomsByDistance" || command == "applyDistanceColors") {
+    if (m_molecule->atomCount() == 0) {
+      emit commandFailed(tr("Molecule has no atoms."));
+      return true;
+    }
+
+    if (m_molecule->atomPositions3d().size() != m_molecule->atomCount()) {
+      emit commandFailed(tr("Molecule does not have 3D coordinates."));
+      return true;
+    }
+
+    ColormapType type = ColormapType::Turbo;
+    if (options.contains("colormap")) {
+      const QString colormapName = options["colormap"].toString();
+      QString suggestion;
+      if (!colormapFromString(colormapName, type, &suggestion)) {
+        if (!suggestion.isEmpty()) {
+          emit commandFailed(tr(R"(Unknown colormap "%1". Did you mean "%2"?)")
+                               .arg(colormapName, suggestion));
+        } else {
+          emit commandFailed(tr(R"(Unknown colormap "%1".)").arg(colormapName));
+        }
+        return true;
+      }
+    }
+
+    applyDistanceColors(type);
+    emit commandFinished();
+    return true;
+  }
+
+  // Color atoms along a colormap gradient by partial charge.
+  if (command == "colorAtomsByCharge" || command == "applyChargeColors") {
+    if (m_molecule->atomCount() == 0) {
+      emit commandFailed(tr("Molecule has no atoms."));
+      return true;
+    }
+
+    ColormapType type = ColormapType::Coolwarm;
+    if (options.contains("colormap")) {
+      const QString colormapName = options["colormap"].toString();
+      QString suggestion;
+      if (!colormapFromString(colormapName, type, &suggestion)) {
+        if (!suggestion.isEmpty()) {
+          emit commandFailed(tr(R"(Unknown colormap "%1". Did you mean "%2"?)")
+                               .arg(colormapName, suggestion));
+        } else {
+          emit commandFailed(tr(R"(Unknown colormap "%1".)").arg(colormapName));
+        }
+        return true;
+      }
+    }
+
+    std::string model;
+    const auto identifiers =
+      Calc::ChargeManager::instance().identifiersForMolecule(*m_molecule);
+    const auto existingTypes = m_molecule->partialChargeTypes();
+
+    if (options.contains("model")) {
+      const QString requested = options["model"].toString();
+      const std::string requestedStd = requested.toStdString();
+      if (existingTypes.find(requestedStd) != existingTypes.end()) {
+        model = requestedStd;
+      } else {
+        for (const auto& id : identifiers) {
+          const auto name = Calc::ChargeManager::instance().nameForModel(id);
+          if (id == requestedStd ||
+              QString::fromStdString(name).compare(requested,
+                                                   Qt::CaseInsensitive) == 0 ||
+              QString::fromStdString(id).compare(requested,
+                                                 Qt::CaseInsensitive) == 0) {
+            model = id;
+            break;
+          }
+        }
+      }
+      if (model.empty()) {
+        emit commandFailed(
+          tr("Unknown or unavailable charge model \"%1\".").arg(requested));
+        return true;
+      }
+    } else {
+      if (!existingTypes.empty()) {
+        model = *existingTypes.begin();
+      } else if (!identifiers.empty()) {
+        model = *identifiers.begin();
+      } else {
+        emit commandFailed(tr("No charge models available for this molecule."));
+        return true;
+      }
+    }
+
+    QString error;
+    if (!applyChargeColors(model, type, error)) {
+      emit commandFailed(error);
+      return true;
+    }
+
+    emit commandFinished();
     return true;
   }
 
