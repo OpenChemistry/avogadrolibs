@@ -70,7 +70,14 @@ struct LayerWireframe : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerWireframe(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerWireframe(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerWireframe() override
   {

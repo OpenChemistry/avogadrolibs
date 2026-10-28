@@ -59,7 +59,14 @@ struct LayerLicorice : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerLicorice(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerLicorice(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerLicorice() override
   {
