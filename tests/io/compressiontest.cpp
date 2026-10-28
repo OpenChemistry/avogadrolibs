@@ -119,7 +119,7 @@ std::string compress(const std::string& payload, Compression type,
                      std::size_t sliceSize)
 {
   auto sink = std::unique_ptr<std::ostream>(new std::ostringstream());
-  auto* rawSink = static_cast<std::ostringstream*>(sink.get());
+  auto* rawSink = dynamic_cast<std::ostringstream*>(sink.get());
   CompressingOStream cs(std::move(sink), type);
 
   std::size_t step =

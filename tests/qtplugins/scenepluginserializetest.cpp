@@ -134,7 +134,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "BallAndStick", "Ball and Stick",
                     [] { return std::make_unique<BallAndStick>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<BallAndStick&>(plugin);
+                      auto& p = dynamic_cast<BallAndStick&>(plugin);
                       p.atomRadiusChanged(5);
                       p.bondRadiusChanged(2);
                       p.opacityChanged(40);
@@ -154,7 +154,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "Cartoons", "Cartoons",
                     [] { return std::make_unique<Cartoons>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<Cartoons&>(plugin);
+                      auto& p = dynamic_cast<Cartoons&>(plugin);
                       p.showBackbone(true);
                       p.showCartoon(false);
                       p.showRope(true);
@@ -176,7 +176,7 @@ std::vector<Spec> buildSpecs()
   // spin box is 0-1.5 and the scale spin box 0.25-3.
   specs.push_back({ "Label", "Labels", [] { return std::make_unique<Label>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<Label&>(plugin);
+                      auto& p = dynamic_cast<Label&>(plugin);
                       p.atomLabelType(2);
                       p.residueLabelType(3);
                       p.bondLabelType(1);
@@ -199,7 +199,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "Licorice", "Licorice",
                     [] { return std::make_unique<Licorice>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      static_cast<Licorice&>(plugin).setOpacity(40);
+                      dynamic_cast<Licorice&>(plugin).setOpacity(40);
                     },
                     "1", "0.4",
                     [](const Tokens& t) {
@@ -209,7 +209,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "VanDerWaals", "Van der Waals",
                     [] { return std::make_unique<VanDerWaals>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      static_cast<VanDerWaals&>(plugin).setOpacity(40);
+                      dynamic_cast<VanDerWaals&>(plugin).setOpacity(40);
                     },
                     "1", "0.4",
                     [](const Tokens& t) {
@@ -220,7 +220,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "Wireframe", "Wireframe",
                     [] { return std::make_unique<Wireframe>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<Wireframe&>(plugin);
+                      auto& p = dynamic_cast<Wireframe&>(plugin);
                       p.multiBonds(false);
                       p.showHydrogens(false);
                       p.setWidth(2.5);
