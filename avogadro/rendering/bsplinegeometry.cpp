@@ -9,7 +9,7 @@
 
 namespace Avogadro::Rendering {
 
-BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
+BSplineGeometry::BSplineGeometry() {}
 BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
 
 Vector3f BSplineGeometry::computeCurvePoint(

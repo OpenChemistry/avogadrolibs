@@ -125,9 +125,8 @@ bool hallNumberFromOptions(const QVariantMap& options,
 } // namespace
 
 SpaceGroup::SpaceGroup(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_spgTol(1e-5),
-    m_perceiveSpaceGroupAction(new QAction(this)),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_spgTol(1e-5), m_perceiveSpaceGroupAction(new QAction(this)),
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),

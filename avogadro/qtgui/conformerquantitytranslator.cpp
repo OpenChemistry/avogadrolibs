@@ -11,7 +11,7 @@ namespace Avogadro::QtGui {
 
 using Core::ConformerQuantity;
 
-ConformerQuantityTranslator::ConformerQuantityTranslator() : QObject() {}
+ConformerQuantityTranslator::ConformerQuantityTranslator() {}
 
 QString ConformerQuantityTranslator::name(const ConformerQuantity& quantity)
 {
