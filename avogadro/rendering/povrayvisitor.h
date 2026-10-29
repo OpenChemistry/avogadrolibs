@@ -35,16 +35,16 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node&) override { return; }
-  void visit(GroupNode&) override { return; }
-  void visit(GeometryNode&) override { return; }
+  void visit(Node&) override {}
+  void visit(GroupNode&) override {}
+  void visit(GeometryNode&) override {}
   void visit(Drawable&) override;
   void visit(SphereGeometry&) override;
-  void visit(CurveGeometry&) override { return; }
+  void visit(CurveGeometry&) override {}
   void visit(CylinderGeometry&) override;
   void visit(MeshGeometry&) override;
-  void visit(TextLabel2D&) override { return; }
-  void visit(TextLabel3D&) override { return; }
+  void visit(TextLabel2D&) override {}
+  void visit(TextLabel3D&) override {}
   void visit(LineStripGeometry& geometry) override;
 
   void setCamera(const Camera& c) { m_camera = c; }
