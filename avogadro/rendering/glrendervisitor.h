@@ -43,9 +43,9 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node&) override { return; }
-  void visit(GroupNode&) override { return; }
-  void visit(GeometryNode&) override { return; }
+  void visit(Node&) override {}
+  void visit(GroupNode&) override {}
+  void visit(GeometryNode&) override {}
   void visit(Drawable&) override;
   void visit(SphereGeometry&) override;
   void visit(CurveGeometry&) override;

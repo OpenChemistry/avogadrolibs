@@ -131,21 +131,21 @@ public:
   float lineRadius() const { return m_lineRadius; }
   /** @} */
 
-  void visit(Node&) override { return; }
-  void visit(GroupNode&) override { return; }
-  void visit(GeometryNode&) override { return; }
-  void visit(Drawable&) override { return; }
+  void visit(Node&) override {}
+  void visit(GroupNode&) override {}
+  void visit(GeometryNode&) override {}
+  void visit(Drawable&) override {}
   void visit(SphereGeometry& geometry) override;
   void visit(CurveGeometry& geometry) override;
   void visit(CylinderGeometry& geometry) override;
   void visit(MeshGeometry& geometry) override;
-  void visit(TextLabel2D&) override { return; }
-  void visit(TextLabel3D&) override { return; }
+  void visit(TextLabel2D&) override {}
+  void visit(TextLabel3D&) override {}
   void visit(LineStripGeometry& geometry) override;
   void visit(WideLineGeometry& geometry) override;
   void visit(DashedLineGeometry& geometry) override;
   void visit(ArrowGeometry& geometry) override;
-  void visit(VolumeGeometry&) override { return; }
+  void visit(VolumeGeometry&) override {}
 
 private:
   struct Icosphere
