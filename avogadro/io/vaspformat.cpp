@@ -361,7 +361,7 @@ bool OutcarFormat::read(std::istream& inStream, Core::Molecule& mol)
   std::vector<unsigned char> elementTypes; // atomic numbers from VRHFIN
   std::vector<unsigned int> atomCounts;    // counts from "ions per type"
 
-  typedef map<string, unsigned char> AtomTypeMap;
+  using AtomTypeMap = map<string, unsigned char>;
   AtomTypeMap atomTypes;
   unsigned char customElementCounter = CustomElementMin;
 

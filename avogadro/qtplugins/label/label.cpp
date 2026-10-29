@@ -49,7 +49,7 @@ using Rendering::GeometryNode;
 using Rendering::GroupNode;
 using std::map;
 
-typedef Array<Molecule::BondType> NeighborListType;
+using NeighborListType = Array<Molecule::BondType>;
 
 namespace {
 // Tokens are written with a classic-locale ostringstream (see serialize()

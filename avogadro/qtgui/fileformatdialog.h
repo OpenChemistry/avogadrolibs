@@ -37,7 +37,7 @@ public:
    * @note The FileFormat points to the reference instance held by the
    * FileFormatManager. Use FileFormat::newInstance() to create a usable copy.
    */
-  typedef QPair<const Io::FileFormat*, QString> FormatFilePair;
+  using FormatFilePair = QPair<const Io::FileFormat*, QString>;
 
   /**
    * @brief Show a QFileDialog to prompt the user for a file to open and resolve

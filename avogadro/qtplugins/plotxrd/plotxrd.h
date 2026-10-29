@@ -24,7 +24,7 @@ namespace QtPlugins {
 class XrdOptionsDialog;
 
 // First item in the pair is 2*theta. Second is the intensity.
-typedef std::vector<std::pair<double, double>> XrdData;
+using XrdData = std::vector<std::pair<double, double>>;
 
 /**
  * @brief Generate and plot a theoretical XRD pattern using ObjCryst++

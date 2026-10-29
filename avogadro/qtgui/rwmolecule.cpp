@@ -465,7 +465,7 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
     return false;
 
   // Correct any pairs that are ordered improperly:
-  typedef std::pair<Index, Index> BondPair;
+  using BondPair = std::pair<Index, Index>;
   Array<BondPair> p(pairs);
   // Use for reading to prevent copies unless needed (Array is copy-on-write):
   const Array<BondPair>& p_const = p;
