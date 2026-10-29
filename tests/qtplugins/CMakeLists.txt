@@ -15,6 +15,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets Test REQUIRED)
 set(plugins
   AlignTool
   Bonding
+  ConstraintsExtension
   Crystal
   Editor
   Focus

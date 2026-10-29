@@ -77,6 +77,11 @@ struct AVOGADROQTGUI_EXPORT CommandArgumentSpec
   /** Deprecated alternative names. Giving the name and an alias is an error. */
   QStringList aliases;
 
+  /** Display unit for Integer, Real and Vector3, e.g. "Å" or "°". Shown in
+   *  range errors (and the Vector3 format error) and exported as
+   *  "x-avogadro-unit". Not translated. */
+  QString unit;
+
   /** Inclusive limits for Integer and Real. */
   std::optional<double> minimum;
   std::optional<double> maximum; ///< see minimum
@@ -138,6 +143,10 @@ struct AVOGADROQTGUI_EXPORT CommandArgumentSpec
   /** @return A copy that also accepts the deprecated names @p aliasNames.
    *  They resolve to the canonical name; giving two of them is an error. */
   CommandArgumentSpec withAliases(const QStringList& aliasNames) const;
+  /** @return A copy with the display unit @p unitText, e.g. "Å" or "°".
+   *  Angle symbols (° ′ ″) are written directly after the number in
+   *  messages, other units after a space. The unit is not translated. */
+  CommandArgumentSpec withUnit(const QString& unitText) const;
   /** @return A copy with inclusive limits for Integer and Real. Pass
    *  std::nullopt for a side with no limit. */
   CommandArgumentSpec withRange(std::optional<double> minimumValue,
