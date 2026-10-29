@@ -33,6 +33,27 @@ protected:
     m_harness.registerCommands();
   }
 
+  /// The constraints listed by listConstraints.
+  QVariantList constraints()
+  {
+    return m_harness.run("listConstraints")
+      .result.value("constraints")
+      .toList();
+  }
+
+  int constraintCount() { return static_cast<int>(constraints().size()); }
+
+  /// The listed entry whose atoms are exactly @p atoms, or an empty map.
+  QVariantMap findConstraint(const QVariantList& atoms)
+  {
+    for (const QVariant& entry : constraints()) {
+      const QVariantMap map = entry.toMap();
+      if (map.value("atoms").toList() == atoms)
+        return map;
+    }
+    return QVariantMap();
+  }
+
   ConstraintsExtension m_plugin;
   CommandTestHarness m_harness;
 };
@@ -59,20 +80,59 @@ TEST_F(ConstraintsCommandTest, addListRemoveClear)
   EXPECT_NEAR(out.result.value("value").toDouble(), 1.5, 1e-9);
   EXPECT_FALSE(out.result.value("updated").toBool());
 
-  // Same atoms, reversed, updates rather than duplicates.
+  // Same atoms, reversed, updates rather than duplicates. The stored atom
+  // order is kept, so it is still listed as [1, 2].
   out = m_harness.run("addConstraint",
                       { { "atoms", atomList({ 2, 1 }) }, { "value", 2.0 } });
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.result.value("updated").toBool());
+  EXPECT_EQ(constraintCount(), 1);
+  QVariantMap entry = findConstraint(atomList({ 1, 2 }));
+  ASSERT_FALSE(entry.isEmpty());
+  EXPECT_EQ(entry.value("type").toString(), "distance");
+  EXPECT_NEAR(entry.value("value").toDouble(), 2.0, 1e-9);
 
   out = m_harness.run("addConstraint",
                       { { "atoms", atomList({ 0, 1, 2 }) }, { "value", 100 } });
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_EQ(out.result.value("type").toString(), "angle");
+  EXPECT_EQ(constraintCount(), 2);
 
-  out = m_harness.run("listConstraints");
+  // Reversed angle updates in place.
+  out = m_harness.run("addConstraint",
+                      { { "atoms", atomList({ 2, 1, 0 }) }, { "value", 110 } });
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_EQ(out.result.value("constraints").toList().size(), 2);
+  EXPECT_TRUE(out.result.value("updated").toBool());
+  EXPECT_EQ(constraintCount(), 2);
+  entry = findConstraint(atomList({ 0, 1, 2 }));
+  ASSERT_FALSE(entry.isEmpty());
+  EXPECT_EQ(entry.value("type").toString(), "angle");
+  EXPECT_NEAR(entry.value("value").toDouble(), 110.0, 1e-9);
+
+  // A torsion is added once, then updated when given reversed.
+  out = m_harness.run("addConstraint", { { "atoms", atomList({ 0, 1, 2, 3 }) },
+                                         { "value", 60 } });
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(out.result.value("type").toString(), "torsion");
+  EXPECT_FALSE(out.result.value("updated").toBool());
+  EXPECT_EQ(constraintCount(), 3);
+  out = m_harness.run("addConstraint", { { "atoms", atomList({ 3, 2, 1, 0 }) },
+                                         { "value", 90 } });
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.result.value("updated").toBool());
+  EXPECT_EQ(constraintCount(), 3);
+  entry = findConstraint(atomList({ 0, 1, 2, 3 }));
+  ASSERT_FALSE(entry.isEmpty());
+  EXPECT_EQ(entry.value("type").toString(), "torsion");
+  EXPECT_NEAR(entry.value("value").toDouble(), 90.0, 1e-9);
+
+  // Removing the angle with its atoms reversed.
+  out =
+    m_harness.run("removeConstraint", { { "atoms", atomList({ 2, 1, 0 }) } });
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(out.result.value("removed").toLongLong(), 1);
+  EXPECT_TRUE(findConstraint(atomList({ 0, 1, 2 })).isEmpty());
+  EXPECT_EQ(constraintCount(), 2);
 
   out = m_harness.run("removeConstraint", { { "atoms", atomList({ 1, 2 }) } });
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
@@ -80,9 +140,32 @@ TEST_F(ConstraintsCommandTest, addListRemoveClear)
   out = m_harness.run("removeConstraint", { { "atoms", atomList({ 1, 2 }) } });
   EXPECT_EQ(out.status, CommandStatus::Failed);
 
+  // Only the torsion is left.
+  EXPECT_EQ(constraintCount(), 1);
   out = m_harness.run("clearConstraints");
   ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_EQ(out.result.value("removed").toLongLong(), 1);
+  EXPECT_EQ(constraintCount(), 0);
+}
+
+TEST_F(ConstraintsCommandTest, removeConstraintRejectsUnknownOption)
+{
+  CommandOutcome out =
+    m_harness.run("addConstraint", { { "atoms", atomList({ 0, 1 }) } });
+  ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+
+  // The constraint exists, so this fails because of the option alone.
+  out = m_harness.run("removeConstraint",
+                      { { "atoms", atomList({ 0, 1 }) }, { "value", 1 } });
+  EXPECT_TRUE(out.claimed);
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(out.failedCount, 1);
+  EXPECT_NE(out.message.indexOf("value"), -1) << out.message.toStdString();
+  EXPECT_NE(out.message.indexOf("unknown option"), -1)
+    << out.message.toStdString();
+
+  EXPECT_EQ(constraintCount(), 1);
+  EXPECT_FALSE(findConstraint(atomList({ 0, 1 })).isEmpty());
 }
 
 TEST_F(ConstraintsCommandTest, invalidOptionsFail)
@@ -97,7 +180,6 @@ TEST_F(ConstraintsCommandTest, invalidOptionsFail)
     { "addConstraint", { { "atoms", atomList({ 0, 1 }) }, { "value", 0.0 } } },
     { "addConstraint",
       { { "atoms", atomList({ 0, 1, 2 }) }, { "value", 181 } } },
-    { "removeConstraint", { { "atoms", atomList({ 0, 1 }) }, { "value", 1 } } },
     { "listConstraints", { { "x", 1 } } },
     { "clearConstraints", { { "x", 1 } } },
   };
