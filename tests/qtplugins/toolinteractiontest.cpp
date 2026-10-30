@@ -19,6 +19,8 @@
 #include <avogadro/rendering/glrenderer.h>
 
 #include <QtGui/QUndoStack>
+#include <QtWidgets/QAbstractButton>
+#include <QtWidgets/QDialogButtonBox>
 
 #include <gtest/gtest.h>
 
@@ -301,3 +303,35 @@ TEST_F(ToolInteractionTest, manipulatorDragMovesOnlyThatAtom)
 }
 
 } // namespace
+
+// Regression: the Manipulator dereferenced its molecule in mouseMoveEvent()
+// (and in the tool panel's Apply handler) without checking for null, which is
+// what a tool holds before a molecule is set and after one is closed.
+TEST_F(ToolInteractionTest, manipulatorWithoutMoleculeDoesNothing)
+{
+  QtGui::ToolPlugin* tool = activate("Manipulator");
+  tool->setEditMolecule(nullptr);
+  tool->setMolecule(nullptr);
+
+  const QPoint from = h.pointOnAtom(1);
+  const QPoint to = from + QPoint(30, -20);
+  h.click(from);
+  h.drag(from, to);
+  h.drag(h.emptyPoint(), to);
+  h.drag(from, to, Qt::RightButton, Qt::ShiftModifier);
+  h.move(to);
+  h.wheel(to, 120);
+  for (int key : { int(Qt::Key_Left), int(Qt::Key_Up), int(Qt::Key_Escape) }) {
+    h.keyPress(key);
+    h.keyRelease(key);
+  }
+
+  // The tool panel's Apply and Reset buttons.
+  auto* buttons = tool->toolWidget()->findChild<QDialogButtonBox*>();
+  ASSERT_NE(buttons, nullptr);
+  for (QAbstractButton* button : buttons->buttons())
+    button->click();
+
+  // Nothing else in the molecule changed hands.
+  expectClean();
+}

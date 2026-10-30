@@ -108,6 +108,9 @@ void Manipulator::buttonClicked(QAbstractButton* button)
     return;
   }
 
+  if (m_molecule == nullptr)
+    return;
+
   bool moveSelected = (m_toolWidget->moveComboBox->currentIndex() == 0);
 
   // apply values
@@ -296,6 +299,13 @@ QUndoCommand* Manipulator::mouseReleaseEvent(QMouseEvent* e)
 
 QUndoCommand* Manipulator::mouseMoveEvent(QMouseEvent* e)
 {
+  // Nothing to move without a molecule (and a camera to move it with): fall
+  // back to the navigate tool.
+  if (m_molecule == nullptr || m_renderer == nullptr) {
+    e->ignore();
+    return nullptr;
+  }
+
   // if we're dragging through empty space, just return and ignore
   // (e.g., fall back to the navigate tool)
   const Core::Molecule* mol = &m_molecule->molecule();
