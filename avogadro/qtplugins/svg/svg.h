@@ -16,7 +16,7 @@
 
 namespace Avogadro {
 namespace QtPlugins {
-typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
+using NeighborListType = Avogadro::Core::Array<Avogadro::Core::Bond>;
 
 class SVG : public Avogadro::QtGui::ExtensionPlugin
 {

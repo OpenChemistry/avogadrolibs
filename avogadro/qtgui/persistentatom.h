@@ -21,8 +21,8 @@ template <typename Molecule_T>
 class PersistentAtom
 {
 public:
-  typedef Molecule_T MoleculeType;
-  typedef typename Molecule_T::AtomType AtomType;
+  using MoleculeType = Molecule_T;
+  using AtomType = typename Molecule_T::AtomType;
 
   /**
    * @brief Create a persistent atom, with the specified unique id.
