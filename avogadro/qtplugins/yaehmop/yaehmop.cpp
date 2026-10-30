@@ -41,8 +41,7 @@ using Avogadro::QtGui::Molecule;
 namespace Avogadro::QtPlugins {
 
 Yaehmop::Yaehmop(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_yaehmopSettings(),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
     m_bandDialog(
       new BandDialog(qobject_cast<QWidget*>(parent()), m_yaehmopSettings)),
     m_displayBandDialogAction(new QAction(this))

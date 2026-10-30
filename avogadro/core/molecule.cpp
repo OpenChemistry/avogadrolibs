@@ -53,7 +53,7 @@ Molecule::Molecule(const Molecule& other)
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
-    m_meshes(), m_cubes(),
+
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
     m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),

@@ -48,7 +48,7 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
     m_velocityDist(gaussian), m_velocityTemp(298.15), m_zeroMOM(true),
     m_zeroL(true), m_thermoStyle(one), m_thermoInterval(50),
 
-    m_output(), m_dirty(false), m_warned(false), readData(false),
+    m_dirty(false), m_warned(false), readData(false),
 
     m_jobEdit(nullptr), m_moleculeEdit(nullptr)
 {
