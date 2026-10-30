@@ -592,7 +592,7 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   }
   // now loop through and add the resiudes
   for (size_t i = 0; i < mol.residueCount(); ++i) {
-    const Core::Residue res = mol.residue(i);
+    const Core::Residue& res = mol.residue(i);
     addResidue(res, offset);
   }
   endMergeMode();
