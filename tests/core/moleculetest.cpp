@@ -4409,3 +4409,55 @@ TEST_F(MoleculeTest, removePartialCharges)
   molecule.removePartialCharges("missing");
   EXPECT_EQ(molecule.partialChargeTypes().size(), 1u);
 }
+
+TEST_F(MoleculeTest, unitCellCopyIsDeep)
+{
+  Molecule a;
+  a.setUnitCell(new UnitCell(5.0, 6.0, 7.0, M_PI / 2, M_PI / 2, M_PI / 2));
+
+  Molecule b(a);
+  ASSERT_NE(b.unitCell(), nullptr);
+  EXPECT_NE(b.unitCell(), a.unitCell());
+  EXPECT_DOUBLE_EQ(b.unitCell()->a(), 5.0);
+
+  Molecule c;
+  c.setUnitCell(new UnitCell(1.0, 1.0, 1.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  c = a;
+  ASSERT_NE(c.unitCell(), nullptr);
+  EXPECT_NE(c.unitCell(), a.unitCell());
+  EXPECT_DOUBLE_EQ(c.unitCell()->b(), 6.0);
+
+  // Assigning a molecule without a cell clears the target's cell.
+  Molecule empty;
+  c = empty;
+  EXPECT_EQ(c.unitCell(), nullptr);
+}
+
+TEST_F(MoleculeTest, unitCellMoveTransfersOwnership)
+{
+  Molecule a;
+  a.setUnitCell(new UnitCell(5.0, 6.0, 7.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  const UnitCell* original = a.unitCell();
+
+  Molecule b(std::move(a));
+  EXPECT_EQ(b.unitCell(), original);
+  EXPECT_EQ(a.unitCell(), nullptr);
+
+  Molecule c;
+  c = std::move(b);
+  EXPECT_EQ(c.unitCell(), original);
+  EXPECT_EQ(b.unitCell(), nullptr);
+}
+
+TEST_F(MoleculeTest, setUnitCellSamePointerIsNoOp)
+{
+  Molecule m;
+  UnitCell* cell = new UnitCell(5.0, 5.0, 5.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  m.setUnitCell(cell);
+  m.setUnitCell(cell); // must not free the cell it already owns
+  EXPECT_EQ(m.unitCell(), cell);
+  EXPECT_DOUBLE_EQ(m.unitCell()->a(), 5.0);
+
+  m.setUnitCell(nullptr);
+  EXPECT_EQ(m.unitCell(), nullptr);
+}

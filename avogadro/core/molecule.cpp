@@ -55,7 +55,8 @@ Molecule::Molecule(const Molecule& other)
     m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
     m_meshes(), m_cubes(),
     m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
-    m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
+    m_unitCell(other.m_unitCell ? std::make_unique<UnitCell>(*other.m_unitCell)
+                                : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
     m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
@@ -207,8 +208,9 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
     if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
       m_basisSet->setMolecule(this);
-    delete m_unitCell;
-    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
+    m_unitCell = other.m_unitCell
+                   ? std::make_unique<UnitCell>(*other.m_unitCell)
+                   : nullptr;
 
     // Assign into the existing MoleculeInfo rather than replacing the handle,
     // so anything already sharing it (an undo command, say) sees the update.
@@ -253,8 +255,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     clearCubes();
     delete m_basisSet;
     m_basisSet = nullptr;
-    delete m_unitCell;
-    m_unitCell = nullptr;
+    m_unitCell.reset();
 
     takeContentsFrom(other);
 
@@ -358,7 +359,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   // The basis set points back at its molecule, which is now this one.
   if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
     m_basisSet->setMolecule(this);
-  m_unitCell = std::exchange(other.m_unitCell, nullptr);
+  m_unitCell = std::move(other.m_unitCell);
 
   takeArray(m_residues, other.m_residues);
   repointResidueAtoms(other);
@@ -381,7 +382,6 @@ Molecule::~Molecule()
 {
   // LayerManager::deleteMolecule(this);
   delete m_basisSet;
-  delete m_unitCell;
   clearMeshes();
   clearCubes();
 }
@@ -1728,10 +1728,8 @@ void Molecule::setBasisSet(BasisSet* basis)
 
 void Molecule::setUnitCell(UnitCell* uc)
 {
-  if (uc != m_unitCell) {
-    delete m_unitCell;
-    m_unitCell = uc;
-  }
+  if (uc != m_unitCell.get())
+    m_unitCell.reset(uc);
 }
 
 double Molecule::mass() const

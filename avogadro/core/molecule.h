@@ -653,8 +653,8 @@ public:
    * @{
    */
   void setUnitCell(UnitCell* uc);
-  UnitCell* unitCell() { return m_unitCell; }
-  const UnitCell* unitCell() const { return m_unitCell; }
+  UnitCell* unitCell() { return m_unitCell.get(); }
+  const UnitCell* unitCell() const { return m_unitCell.get(); }
   /** @} */
 
   /**
@@ -1315,7 +1315,7 @@ protected:
   Index m_activeCubeIndex = 0;
 
   BasisSet* m_basisSet;
-  UnitCell* m_unitCell;
+  std::unique_ptr<UnitCell> m_unitCell;
   Array<Residue> m_residues;
 
   // This will be stored from the last space group operation
