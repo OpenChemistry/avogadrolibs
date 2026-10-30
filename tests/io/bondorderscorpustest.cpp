@@ -244,39 +244,41 @@ Evaluation evaluate(const std::string& fullPath, bool stripCharges)
       eval.detail += (eval.detail.empty() ? "" : ",") + e;
     eval.detail += " x" + std::to_string(result.failedAtoms.size());
 
-    // A clean failure: failedAtoms is not empty, and the failed component --
-    // which failedAtoms lists in full, since an atom is only listed when it
-    // still wanted bond order -- kept every bond at order 1, while the atoms
-    // outside it have the valence they should have.
-    std::vector<bool> region(mol.atomCount(), false);
-    for (Index a : result.failedAtoms)
-      region[a] = true;
+    // A clean failure: failedAtoms is not empty and has a message, no bond
+    // order is above 3, and every connected piece of the molecule that has
+    // no failed atom has the valence it should. A failed group is completed
+    // as far as it can be (see solveBondOrders()), so its bonds are not left
+    // at order 1 any more, and the rest of its molecule can be short of the
+    // reference too: in a heavy-atom-only structure the missing hydrogens
+    // change every valence, and the atoms that did get satisfied are
+    // satisfied against the wrong target. Sulfonyl sulfur is another case:
+    // it stays at valence 4 while its oxygens are the failed atoms.
     eval.cleanFailure = !result.failedAtoms.empty() && !result.message.empty();
     if (!eval.cleanFailure)
       eval.cleanDetail = "no failed atoms or message";
     for (Index b = 0; b < mol.bondCount() && eval.cleanFailure; ++b) {
-      const auto pair = mol.bondPairs()[b];
-      if (region[pair.first] && region[pair.second] &&
-          mol.bondOrders()[b] != 1) {
+      if (mol.bondOrders()[b] > 3) {
         eval.cleanFailure = false;
-        eval.cleanDetail = "bond changed inside the failed component";
+        eval.cleanDetail = "bond order above 3";
       }
     }
-    // An atom outside the failed component can still be short of its
-    // reference valence when the atom causing the failure is its neighbour:
-    // sulfonyl sulfur, for instance, stays at valence 4 while its oxygens
-    // are the failed atoms. Anything further away must be right.
-    std::vector<bool> nearFailure = region;
+    std::vector<Index> piece(mol.atomCount());
+    std::iota(piece.begin(), piece.end(), 0);
+    auto findPiece = [&piece](Index a) {
+      while (piece[a] != a)
+        a = piece[a] = piece[piece[a]];
+      return a;
+    };
     for (Index b = 0; b < mol.bondCount(); ++b) {
       const auto pair = mol.bondPairs()[b];
-      if (region[pair.first])
-        nearFailure[pair.second] = true;
-      if (region[pair.second])
-        nearFailure[pair.first] = true;
+      piece[findPiece(pair.first)] = findPiece(pair.second);
     }
+    std::vector<bool> failedPiece(mol.atomCount(), false);
+    for (Index a : result.failedAtoms)
+      failedPiece[findPiece(a)] = true;
     const std::vector<unsigned int> got = orderSums(mol, true);
     for (Index a = 0; a < mol.atomCount() && eval.cleanFailure; ++a) {
-      if (!nearFailure[a] && got[a] != wanted[a]) {
+      if (!failedPiece[findPiece(a)] && got[a] != wanted[a]) {
         eval.cleanFailure = false;
         eval.cleanDetail =
           "atom " + std::to_string(a) + " outside the failure is wrong";

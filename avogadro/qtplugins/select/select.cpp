@@ -7,6 +7,7 @@
 
 #include <avogadro/core/residue.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/periodictableview.h>
 #include <avogadro/qtgui/rwlayermanager.h>
@@ -23,6 +24,7 @@
 #include <qcontainerfwd.h>
 
 #include <cmath>
+#include <utility>
 #include <vector>
 
 using Avogadro::QtGui::Molecule;
@@ -33,6 +35,8 @@ Select::Select(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
     m_elements(nullptr), m_layerManager("Select")
 {
+  registerSelectCommands();
+
   auto* action = new QAction(tr("Select All"), this);
   action->setShortcut(QKeySequence("Ctrl+A"));
   action->setProperty("menu priority", 990);
@@ -530,7 +534,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // check if name matches specified (e.g. HIS57 is really a HIS)
-      }   // index makes sense
+      } // index makes sense
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
@@ -542,7 +546,7 @@ void Select::selectResidue()
                                                         undoText);
           }
         } // residue matches label
-      }   // for(residues)
+      } // for(residues)
       continue;
     } // 3-character labels
   }
@@ -587,197 +591,106 @@ void Select::createLayerFromSelection()
   rwmol->emitChanged(changes);
 }
 
-void Select::registerCommands()
+void Select::emitSelection()
 {
-  emit registerCommand("selectAll", tr("Select all atoms."));
+  QVariantList indices;
 
-  emit registerCommand("selectNone", tr("Deselect all atoms"));
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (m_molecule->atomSelected(i)) {
+      indices.append(static_cast<int>(i));
+    }
+  }
 
-  emit registerCommand("invertSelection",
-                       tr("Select all atoms which are not currently selected, "
-                          "and deselect all currently selected atoms."));
+  QVariantMap result;
+  // "indices" is deprecated: it is kept so existing scripts keep working.
+  // New callers should read "atoms", which holds the same data.
+  result["indices"] = indices;
+  result["atoms"] = indices;
 
-  emit registerCommand("selectElement",
-                       tr("Select all atoms of a certain element type."));
+  emit commandFinished(QString(), result);
+}
 
-  emit registerCommand(
-    "selectBackbone",
-    tr("Select all atoms that belong to amino acid backbones"));
+void Select::addCommand(const QString& name, const QString& description,
+                        void (Select::*action)())
+{
+  QtGui::CommandSpec spec;
+  spec.name = name;
+  spec.description = description;
+  spec.handler = [this, action](const QtGui::CommandArguments&) {
+    (this->*action)();
+    emitSelection();
+  };
+  commandRegistry().add(std::move(spec));
+}
 
-  emit registerCommand(
-    "selectSidechains",
-    tr("Select all atoms that belong to amino acid sidechains"));
+void Select::registerSelectCommands()
+{
+  using QtGui::CommandArgumentSpec;
 
-  emit registerCommand("selectWater", tr("Select all water molecules"));
+  addCommand("selectAll", tr("Select all atoms."), &Select::selectAll);
+  addCommand("selectNone", tr("Deselect all atoms"), &Select::selectNone);
+  addCommand("invertSelection",
+             tr("Select all atoms which are not currently selected, "
+                "and deselect all currently selected atoms."),
+             &Select::invertSelection);
 
-  emit registerCommand(
+  QtGui::CommandSpec element;
+  element.name = "selectElement";
+  element.description = tr("Select all atoms of a certain element type.");
+  element.arguments = { CommandArgumentSpec::element(
+                          "element", tr("An element symbol or atomic number."))
+                          .withRequired() };
+  element.handler = [this](const QtGui::CommandArguments& args) {
+    selectElement(static_cast<int>(args.element("element")));
+    emitSelection();
+  };
+  commandRegistry().add(std::move(element));
+
+  addCommand("selectBackbone",
+             tr("Select all atoms that belong to amino acid backbones"),
+             &Select::selectBackboneAtoms);
+  addCommand("selectSidechains",
+             tr("Select all atoms that belong to amino acid sidechains"),
+             &Select::selectSidechainAtoms);
+  addCommand("selectWater", tr("Select all water molecules"),
+             &Select::selectWater);
+  addCommand(
     "enlargeSelection",
     tr("Select all atoms within 2 atoms of a selected atom. In other words, "
        "select all atoms next to a selected atom, and additionally all atoms "
-       "that are next to those atoms."));
-
-  emit registerCommand(
+       "that are next to those atoms."),
+    &Select::enlargeSelection);
+  addCommand(
     "shrinkSelection",
-    tr("Shrink selection. Note: One shrink is equivalent to two enlarges!"));
+    tr("Shrink selection. Note: One shrink is equivalent to two enlarges!"),
+    &Select::shrinkSelection);
+  addCommand("createLayerFromSelection",
+             tr("Separate the selected atoms into a new layer."),
+             &Select::createLayerFromSelection);
 
-  emit registerCommand("createLayerFromSelection",
-                       tr("Separate the selected atoms into a new layer."));
-
-  emit registerCommand(
-    "selectAtoms", tr("Select atoms by index. Options: \"indices\" (list of "
-                      "atom indices) and optional \"mode\": \"replace\" "
-                      "(default), \"add\" or \"remove\"."));
-}
-
-bool Select::handleCommand(const QString& command, const QVariantMap& options)
-{
-  static const QStringList knownCommands = {
-    "selectAll",       "selectNone",
-    "invertSelection", "selectElement",
-    "selectBackbone",  "selectSidechains",
-    "selectWater",     "enlargeSelection",
-    "shrinkSelection", "createLayerFromSelection",
-    "selectAtoms"
+  QtGui::CommandSpec atoms;
+  atoms.name = "selectAtoms";
+  atoms.description =
+    tr("Select atoms by index. Options: \"atoms\" (list of zero-based atom "
+       "indices; \"indices\" is a deprecated alias) and optional \"mode\": "
+       "\"replace\" (default), \"add\" or \"remove\".");
+  atoms.arguments = {
+    // An empty list is allowed, and repeats are harmless, as before.
+    CommandArgumentSpec::atomIndices(
+      "atoms", tr("Zero-based indices of the atoms to select."))
+      .withRequired()
+      .withUnique(false)
+      .withAliases({ "indices" }),
+    CommandArgumentSpec::enumeration(
+      "mode", tr("How to combine the atoms with the current selection."),
+      { "replace", "add", "remove" })
+      .withDefault("replace")
   };
-
-  if (!knownCommands.contains(command))
-    return false; // not one of our commands
-
-  if (m_molecule == nullptr) {
-    emit commandFailed(tr("No molecule"));
-    return true;
-  }
-
-  // Helper lambda to gather selected indices and emit them back via JSON-RPC
-  auto emitSelection = [this]() {
-    QVariantList indices;
-
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      if (m_molecule->atomSelected(i)) {
-        indices.append(static_cast<int>(i));
-      }
-    }
-
-    QVariantMap result;
-    result["indices"] = indices;
-
-    emit commandFinished(QString(), result);
-  };
-
-  if (command == "selectAll") {
-    selectAll();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "selectNone") {
-    selectNone();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "invertSelection") {
-    invertSelection();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "selectElement") {
-    if (!options.contains("element")) {
-      emit commandFailed(tr("selectElement requires an \"element\" option "
-                            "(an element symbol or atomic number)."));
-      return true;
-    }
-
-    QVariant elementData = options["element"];
-    int atomicNum = InvalidElement;
-
-    if (elementData.typeId() == QMetaType::QString) {
-      atomicNum = Core::Elements::atomicNumberFromSymbol(
-        elementData.toString().toStdString());
-    }
-
-    if (atomicNum == InvalidElement) {
-      bool ok = false;
-      atomicNum = elementData.toInt(&ok);
-      if (!ok) {
-        emit commandFailed(
-          tr("Unknown element \"%1\".").arg(elementData.toString()));
-        return true;
-      }
-      if (atomicNum < 1 || atomicNum >= Core::Elements::elementCount()) {
-        emit commandFailed(tr("Atomic number %1 is out of range (1 to %2).")
-                             .arg(atomicNum)
-                             .arg(Core::Elements::elementCount() - 1));
-        return true;
-      }
-    }
-
-    selectElement(atomicNum);
-    emitSelection();
-    return true;
-  }
-
-  if (command == "selectAtoms") {
-    const QVariant indicesValue = options.value(QStringLiteral("indices"));
-    if (indicesValue.typeId() != QMetaType::QVariantList) {
-      emit commandFailed(
-        tr("selectAtoms requires an \"indices\" option (a list of atom "
-           "indices)."));
-      return true;
-    }
-
-    QString mode = QStringLiteral("replace");
-    if (options.contains(QStringLiteral("mode"))) {
-      const QVariant modeValue = options.value(QStringLiteral("mode"));
-      mode = modeValue.typeId() == QMetaType::QString ? modeValue.toString()
-                                                      : QString();
-      if (mode != QLatin1String("replace") && mode != QLatin1String("add") &&
-          mode != QLatin1String("remove")) {
-        emit commandFailed(
-          tr("mode must be \"replace\", \"add\" or \"remove\"."));
-        return true;
-      }
-    }
-
-    const QVariantList list = indicesValue.toList();
+  atoms.handler = [this](const QtGui::CommandArguments& args) {
+    const QString mode = args.string("mode");
     std::vector<bool> listed(m_molecule->atomCount(), false);
-    for (int i = 0; i < list.size(); ++i) {
-      bool numeric = false;
-      switch (list[i].typeId()) {
-        case QMetaType::Double:
-        case QMetaType::Float:
-        case QMetaType::Int:
-        case QMetaType::UInt:
-        case QMetaType::LongLong:
-        case QMetaType::ULongLong:
-          numeric = true;
-          break;
-        default:
-          break;
-      }
-      const double raw = numeric ? list[i].toDouble() : 0.0;
-      if (!numeric || std::isnan(raw) || std::floor(raw) != raw) {
-        emit commandFailed(
-          tr("atom index #%1 in indices must be a whole number.").arg(i + 1));
-        return true;
-      }
-      if (raw < 0.0) {
-        emit commandFailed(
-          tr("atom index #%1 in indices is negative.").arg(i + 1));
-        return true;
-      }
-      // Compare as doubles so a huge value cannot overflow Index.
-      if (!(raw < static_cast<double>(m_molecule->atomCount()))) {
-        emit commandFailed(
-          tr("atom index %1 is out of range (the molecule has %2 "
-             "atoms).")
-            .arg(raw, 0, 'f', 0)
-            .arg(m_molecule->atomCount()));
-        return true;
-      }
-      listed[static_cast<Index>(raw)] = true;
-    }
+    for (Index index : args.atoms("atoms"))
+      listed[index] = true;
 
     // Same path as selectElement(): RWMolecule::setAtomSelected(), which
     // pushes nothing for atoms already in the requested state.
@@ -791,46 +704,13 @@ bool Select::handleCommand(const QString& command, const QVariantMap& options)
     }
     m_molecule->emitChanged(Molecule::Selection);
     emitSelection();
-    return true;
-  }
+  };
+  commandRegistry().add(std::move(atoms));
+}
 
-  if (command == "selectBackbone") {
-    selectBackboneAtoms();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "selectSidechains") {
-    selectSidechainAtoms();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "selectWater") {
-    selectWater();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "enlargeSelection") {
-    enlargeSelection();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "shrinkSelection") {
-    shrinkSelection();
-    emitSelection();
-    return true;
-  }
-
-  if (command == "createLayerFromSelection") {
-    createLayerFromSelection();
-    emitSelection();
-    return true;
-  }
-
-  return false;
+bool Select::handleCommand(const QString& command, const QVariantMap& options)
+{
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 } // namespace Avogadro::QtPlugins

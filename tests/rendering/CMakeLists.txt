@@ -8,6 +8,7 @@ set(tests
   CurveGeometry
   CurveTessellation
   CylinderGeometry
+  GLRenderer
   GeometryVisitor
   Node
   PLYVisitor

@@ -224,7 +224,7 @@ void Molecule::copyDisplayStateFrom(const Molecule& other)
     return;
 
   // Go through a copy so the settings are cloned rather than shared.
-  const MoleculeInfo source(other.ensureLayerInfo());
+  const MoleculeInfo& source(other.ensureLayerInfo());
   MoleculeInfo& info = ensureLayerInfo();
   info.enable = source.enable;
   info.settings = source.settings;
@@ -828,6 +828,23 @@ void Molecule::setCustomElementMap(const Molecule::CustomElementMap& map)
   m_customElementMap = map;
 }
 
+namespace {
+
+// Make room for the atom about to become @p newAtom in every frame that has an
+// entry for each of the atoms before it. Frames of any other length are left
+// alone, the rule removeAtomEntryFrames() applies in the other direction, so
+// that adding and then removing an atom restores every frame exactly.
+template <typename T, typename Fill>
+void addAtomEntryFrames(Array<Array<T>>& frames, Index newAtom, Fill fill)
+{
+  for (auto& frame : frames) {
+    if (frame.size() == newAtom)
+      frame.push_back(fill(newAtom));
+  }
+}
+
+} // namespace
+
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
   m_graph.addVertex();
@@ -837,6 +854,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
     m_elements.set(number);
   else
     m_elements.set(element_count - 1); // custom element
+
+  // The new atom's position, if addAtom(number, position) has just stored it.
+  addAtomEntryFrames(m_coordinates3d, atomCount() - 1, [this](Index i) {
+    return m_positions3d.size() == atomCount() ? m_positions3d[i]
+                                               : Vector3::Zero();
+  });
 
   ensureLayerInfo().layer.addAtomToActiveLayer(atomCount() - 1);
   // The calculated results are per-atom, so a new atom invalidates them just
@@ -2039,6 +2062,12 @@ GeometricPreference geometricPreference(Real distance,
   return { static_cast<unsigned char>(bestOrder - 1), costSingle - costDouble };
 }
 
+/**
+ * Neighbors of a two-coordinate atom that make a smaller angle than this are
+ * bent (sp2 or sp3), and cannot be linear (sp) as two double bonds require.
+ */
+constexpr Real MaxBentAngleDegrees = 150.0;
+
 /** Worded like kekulizeFailureMessage(). */
 std::string bondOrderFailureMessage(Index culprit, std::size_t failedAtoms,
                                     bool oddUnsaturation)
@@ -2136,8 +2165,51 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
 
     // If we have unsaturation, there's a demand (i.e., this atom needs more
     // bonds)
-    problem.demand[atom] = static_cast<unsigned char>(
-      std::min(unsaturation, static_cast<unsigned int>(MaxPerceivedOrder)));
+    unsigned int demand =
+      std::min(unsaturation, static_cast<unsigned int>(MaxPerceivedOrder));
+
+    // Hybridization from geometry. A period-2 atom with exactly two
+    // neighbors and a demand of two or more could be sp (two pi bonds,
+    // cumulene-like, linear) or sp2 (one pi bond and a lone pair or radical,
+    // bent). Connectivity cannot tell them apart, and without this a bare
+    // C6 ring (no hydrogens) is handed six double bonds, an all-cumulene
+    // ring. A bent atom has at most one pi bond, so its demand is capped at
+    // one; only a near-linear atom keeps its full demand. This is not applied
+    // beyond period 2, where S in SO2 is bent with two double bonds, and it
+    // needs coordinates, so it only applies when the geometry is in use.
+    //
+    // The exception is a bent atom with a bond that measures closer to a
+    // triple bond than to a double one (an aryne such as o-benzyne, or a
+    // reconstructed armchair edge): the length shows it is not a radical, so
+    // it keeps its full demand.
+    if (haveGeometry && demand >= 2) {
+      const unsigned char z = m_atomicNumbers[atom];
+      if (z >= 3 && z <= 10 && m_graph.degree(atom) == 2) {
+        const std::vector<size_t> neighbors = m_graph.neighbors(atom);
+        bool looksTriple = false;
+        for (size_t neighbor : neighbors) {
+          const unsigned char zn = m_atomicNumbers[neighbor];
+          if (Elements::isMetal(zn))
+            continue;
+          const Real length =
+            (m_positions3d[neighbor] - m_positions3d[atom]).norm();
+          const Real toDouble =
+            std::abs(length - AtomUtilities::idealBondLength(z, zn, 2));
+          const Real toTriple =
+            std::abs(length - AtomUtilities::idealBondLength(z, zn, 3));
+          looksTriple = looksTriple || toTriple < toDouble;
+        }
+        const Vector3 u = m_positions3d[neighbors[0]] - m_positions3d[atom];
+        const Vector3 w = m_positions3d[neighbors[1]] - m_positions3d[atom];
+        const Real lengths = u.norm() * w.norm();
+        if (!looksTriple && lengths > 0.0) {
+          const Real cosine = u.dot(w) / lengths;
+          if (cosine > std::cos(MaxBentAngleDegrees * DEG_TO_RAD))
+            demand = 1;
+        }
+      }
+    }
+    problem.demand[atom] = static_cast<unsigned char>(demand);
     anyDemand = anyDemand || problem.demand[atom] != 0;
   }
 
@@ -2185,10 +2257,11 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
 
   // Step 3: solve each connected component of candidates on its own.
   const BondOrderSolution solution =
-    solveBondOrders(problem, options.stepBudgetPerComponent);
+    solveBondOrders(problem, options.stepBudgetPerComponent, true);
 
-  // Step 4: commit what was solved. A component that failed keeps its bonds
-  // as they were, and its atoms are reported.
+  // Step 4: commit what was found. A component that failed still gets the
+  // best-effort partial assignment (see solveBondOrders()), and the atoms it
+  // could not satisfy are reported.
   for (std::size_t edge = 0; edge < bondOfEdge.size(); ++edge) {
     if (solution.extra[edge] > 0) {
       m_bondOrders[bondOfEdge[edge]] = static_cast<unsigned char>(

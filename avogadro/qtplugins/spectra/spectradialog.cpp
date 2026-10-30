@@ -1115,8 +1115,6 @@ void SpectraDialog::importData()
   // enable the imported data series
   m_ui->cb_import->setEnabled(true);
   m_ui->cb_import->setChecked(true);
-
-  return;
 }
 
 void SpectraDialog::toggleOptions()

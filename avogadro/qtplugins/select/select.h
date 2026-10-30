@@ -35,8 +35,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -68,6 +66,14 @@ private:
   QtGui::PluginLayerManager m_layerManager;
 
   bool evalSelect(bool input, Index index) const;
+
+  /// Add every scripting command to the command registry.
+  void registerSelectCommands();
+  /// Add a no-option command that runs @p action and reports the selection.
+  void addCommand(const QString& name, const QString& description,
+                  void (Select::*action)());
+  /// Send the selected atom indices back as a command result.
+  void emitSelection();
 };
 
 } // namespace QtPlugins

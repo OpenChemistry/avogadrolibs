@@ -1720,13 +1720,9 @@ void property_v_rtp(unsigned int /* ndim */, unsigned int npts,
   }
 }
 
-void property_r(unsigned int ndim, const double* xyz, void* param,
-                unsigned int fdim, double* fval)
+void property_r([[maybe_unused]] unsigned int ndim, const double* xyz,
+                void* param, [[maybe_unused]] unsigned int fdim, double* fval)
 {
-
-  ndim = ndim;
-  fdim = fdim;
-
   auto* paramVariantListPtr = (QVariantList*)param;
   QVariantList paramVariantList = *paramVariantListPtr;
 

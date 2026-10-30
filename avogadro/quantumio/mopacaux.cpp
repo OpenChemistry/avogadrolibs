@@ -343,23 +343,21 @@ bool MopacAux::processLine(std::istream& in)
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
   } else if (Core::contains(key, "OVERLAP_MATRIX")) {
-    int tmp = arrayCount(key).value_or(0);
-    cout << "Size of lower half triangle of overlap matrix = " << tmp << '\n';
-    if (!readOverlapMatrix(in, tmp))
+    cout << "Size of lower half triangle of overlap matrix = "
+         << m_zeta.size() * (m_zeta.size() + 1) / 2 << '\n';
+    if (!readOverlapMatrix(in))
       return false;
   } else if (Core::contains(key, "EIGENVECTORS")) {
     // For large molecules the Eigenvectors counter overflows to [*****]
-    // So just use the square of the m_atomIndex array
-    //      QString tmp = key.mid(key.indexOf('[')+1, 6);
-    cout << "Size of eigen vectors matrix = "
-         << m_atomIndex.size() * m_atomIndex.size() << '\n';
-    if (!readEigenVectors(
-          in, static_cast<int>(m_atomIndex.size() * m_atomIndex.size())))
+    // So just use the square of the basis size (the number of AO_ZETA values)
+    cout << "Size of eigen vectors matrix = " << m_zeta.size() * m_zeta.size()
+         << '\n';
+    if (!readEigenVectors(in))
       return false;
   } else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
-    int tmp = arrayCount(key).value_or(0);
-    cout << "Size of lower half triangle of density matrix = " << tmp << '\n';
-    if (!readDensityMatrix(in, tmp))
+    cout << "Size of lower half triangle of density matrix = "
+         << m_zeta.size() * (m_zeta.size() + 1) / 2 << '\n';
+    if (!readDensityMatrix(in))
       return false;
   } else if (Core::contains(key, "VIB._FREQ")) {
     int tmp = arrayCount(key).value_or(0);
@@ -547,98 +545,86 @@ bool MopacAux::readNormalModes(std::istream& in, unsigned int n)
   return true;
 }
 
-bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
+// Read whole lines of numbers until at least n values are held or the stream
+// ends. The result is bounded by the size of the input, not by n.
+static std::vector<double> readMatrixValues(std::istream& in, size_t n)
 {
-  m_overlap.resize(m_zeta.size(), m_zeta.size());
-  unsigned int cnt = 0;
-  unsigned int i = 0, j = 0;
-  unsigned int f = 1;
-  // Skip the first comment line...
+  vector<double> values;
   string line;
-  Core::getLine(in, line);
-  while (cnt < n) {
+  while (values.size() < n) {
     // Stop at end of file; see readArrayElements().
     if (!Core::getLine(in, line))
       break;
-    vector<string> list = Core::split(line, ' ');
-    for (auto& k : list) {
-      // The header's count is not checked against the basis size.
-      if (j >= static_cast<unsigned int>(m_overlap.rows()))
-        return false;
-      // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_overlap(i, j) = m_overlap(j, i) =
-        Core::lexicalCast<double>(k).value_or(0.0);
-      ++i;
-      ++cnt;
-      if (i == f) {
-        // We need to move down to the next row and increment f - lower tri
-        i = 0;
-        ++f;
-        ++j;
-      }
-    }
+    for (auto& k : Core::split(line, ' '))
+      values.push_back(Core::lexicalCast<double>(k).value_or(0.0));
+  }
+  return values;
+}
+
+// The matrices below are basis x basis (m_zeta.size()) no matter how much data
+// the block holds, and MOPAC's bracket counts overflow to asterisks for large
+// systems, so the expected number of values comes from the basis size. The
+// values are read first and the matrix is only allocated once the block is
+// known to be complete: a corrupt AO_ZETA count followed by a short block
+// used to reserve gigabytes for a file of a few hundred kilobytes.
+bool MopacAux::readOverlapMatrix(std::istream& in)
+{
+  const size_t dim = m_zeta.size();
+  const size_t expected = dim * (dim + 1) / 2;
+  // Skip the first comment line...
+  string line;
+  Core::getLine(in, line);
+  const vector<double> values = readMatrixValues(in, expected);
+  if (values.size() != expected) {
+    appendError("Overlap matrix size does not match the basis.");
+    return false;
+  }
+  m_overlap.resize(dim, dim);
+  size_t cnt = 0;
+  for (size_t j = 0; j < dim; ++j) {
+    // Lower triangle, row by row; mirror it into the upper triangle
+    for (size_t i = 0; i <= j; ++i)
+      m_overlap(i, j) = m_overlap(j, i) = values[cnt++];
   }
   return true;
 }
 
-bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
+bool MopacAux::readEigenVectors(std::istream& in)
 {
-  m_eigenVectors.resize(m_zeta.size(), m_zeta.size());
-  unsigned int cnt = 0;
-  unsigned int i = 0, j = 0;
-  while (cnt < n) {
-    string line;
-    // Stop at end of file; see readArrayElements().
-    if (!Core::getLine(in, line))
-      break;
-    vector<string> list = Core::split(line, ' ');
-    for (auto& k : list) {
-      // The header's count is not checked against the basis size.
-      if (j >= static_cast<unsigned int>(m_eigenVectors.cols()))
-        return false;
-      m_eigenVectors(i, j) = Core::lexicalCast<double>(k).value_or(0.0);
-      ++i;
-      ++cnt;
-      if (i == m_zeta.size()) {
-        // We need to move down to the next row and increment f - lower tri
-        i = 0;
-        ++j;
-      }
-    }
+  const size_t dim = m_zeta.size();
+  const size_t expected = dim * dim;
+  const vector<double> values = readMatrixValues(in, expected);
+  if (values.size() != expected) {
+    appendError("Eigenvector matrix size does not match the basis.");
+    return false;
+  }
+  m_eigenVectors.resize(dim, dim);
+  // Stored one eigenvector (column) after another
+  size_t cnt = 0;
+  for (size_t j = 0; j < dim; ++j) {
+    for (size_t i = 0; i < dim; ++i)
+      m_eigenVectors(i, j) = values[cnt++];
   }
   return true;
 }
 
-bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
+bool MopacAux::readDensityMatrix(std::istream& in)
 {
-  m_density.resize(m_zeta.size(), m_zeta.size());
-  unsigned int cnt = 0;
-  unsigned int i = 0, j = 0;
-  unsigned int f = 1;
+  const size_t dim = m_zeta.size();
+  const size_t expected = dim * (dim + 1) / 2;
   // Skip the first comment line...
   string line;
   Core::getLine(in, line);
-  while (cnt < n) {
-    // Stop at end of file; see readArrayElements().
-    if (!Core::getLine(in, line))
-      break;
-    vector<string> list = Core::split(line, ' ');
-    for (auto& k : list) {
-      // The header's count is not checked against the basis size.
-      if (j >= static_cast<unsigned int>(m_density.rows()))
-        return false;
-      // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_density(i, j) = m_density(j, i) =
-        Core::lexicalCast<double>(k).value_or(0.0);
-      ++i;
-      ++cnt;
-      if (i == f) {
-        // We need to move down to the next row and increment f - lower tri
-        i = 0;
-        ++f;
-        ++j;
-      }
-    }
+  const vector<double> values = readMatrixValues(in, expected);
+  if (values.size() != expected) {
+    appendError("Density matrix size does not match the basis.");
+    return false;
+  }
+  m_density.resize(dim, dim);
+  size_t cnt = 0;
+  for (size_t j = 0; j < dim; ++j) {
+    for (size_t i = 0; i <= j; ++i)
+      m_density(i, j) = m_density(j, i) = values[cnt++];
   }
   return true;
 }

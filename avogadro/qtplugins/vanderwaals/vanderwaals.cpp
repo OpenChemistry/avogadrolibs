@@ -12,6 +12,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QSlider>
@@ -41,7 +42,8 @@ std::string commaToDot(std::string token)
 
 struct LayerVdW : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   float opacity = 1.0f;
 
   LayerVdW()
@@ -57,7 +59,14 @@ struct LayerVdW : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerVdW(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerVdW(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerVdW() override
   {

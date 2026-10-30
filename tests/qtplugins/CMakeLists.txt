@@ -15,11 +15,13 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets Test REQUIRED)
 set(plugins
   AlignTool
   Bonding
+  ConstraintsExtension
   Crystal
   Editor
   Focus
   Forcefield
   MeasureTool
+  PlayerTool
   ScriptFileFormats
   Select
   SpaceGroup
@@ -158,6 +160,30 @@ if(haveScenePlugins)
     COMMAND AvogadroQtPluginsTests "--gtest_filter=LabelChargeTest.*")
   set_tests_properties("QtPlugins-LabelCharge" PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=${labelChargePlatform}"
+    TIMEOUT 120)
+endif()
+
+# Tests that find plugins through the PluginManager, as the application does,
+# instead of linking and constructing each one. A separate executable:
+# AvogadroQtPluginsTests links individual plugin libraries, while
+# Avogadro::QtPlugins already contains all of them, so the two must not mix.
+if(TARGET Avogadro::QtPlugins)
+  add_executable(AvogadroQtPluginSmokeTests
+    pluginsmoketestmain.cpp
+    pluginmanagertest.cpp
+    plugintestutils.cpp)
+  target_include_directories(AvogadroQtPluginSmokeTests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR})
+  target_link_libraries(AvogadroQtPluginSmokeTests
+    Avogadro::QtPlugins Avogadro::QtGui
+    ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB}
+    Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+
+  add_test(NAME "QtPlugins-PluginManager"
+    COMMAND AvogadroQtPluginSmokeTests
+      "--gtest_filter=PluginManagerTest.*")
+  set_tests_properties("QtPlugins-PluginManager" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
 endif()
 

@@ -57,6 +57,9 @@
          <property name="text">
           <string>Scale Factor:</string>
          </property>
+         <property name="buddy">
+          <cstring>scaleSpinBox</cstring>
+         </property>
         </widget>
        </item>
        <item row="3" column="3">
@@ -74,12 +77,18 @@
          <property name="text">
           <string>X-Axis Minimum:</string>
          </property>
+         <property name="buddy">
+          <cstring>xAxisMinimum</cstring>
+         </property>
         </widget>
        </item>
        <item row="3" column="2">
         <widget class="QLabel" name="label_9">
          <property name="text">
           <string>X-Axis Maximum:</string>
+         </property>
+         <property name="buddy">
+          <cstring>xAxisMaximum</cstring>
          </property>
         </widget>
        </item>
@@ -98,12 +107,18 @@
          <property name="text">
           <string>Offset:</string>
          </property>
+         <property name="buddy">
+          <cstring>offsetSpinBox</cstring>
+         </property>
         </widget>
        </item>
        <item row="4" column="2">
         <widget class="QLabel" name="label_10">
          <property name="text">
           <string>Y-Axis Maximum:</string>
+         </property>
+         <property name="buddy">
+          <cstring>yAxisMaximum</cstring>
          </property>
         </widget>
        </item>
@@ -121,6 +136,9 @@
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Y-Axis Minimum:</string>
+         </property>
+         <property name="buddy">
+          <cstring>yAxisMinimum</cstring>
          </property>
         </widget>
        </item>
@@ -155,6 +173,9 @@
          <property name="text">
           <string>Peak Width:</string>
          </property>
+         <property name="buddy">
+          <cstring>peakWidth</cstring>
+         </property>
         </widget>
        </item>
        <item row="2" column="1">
@@ -182,12 +203,18 @@
          <property name="text">
           <string>Peak Threshold:</string>
          </property>
+         <property name="buddy">
+          <cstring>peakThreshold</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="unitsLabel">
          <property name="text">
           <string>Units:</string>
+         </property>
+         <property name="buddy">
+          <cstring>unitsCombo</cstring>
          </property>
         </widget>
        </item>
@@ -228,6 +255,9 @@
          </property>
          <property name="text">
           <string>Axis:</string>
+         </property>
+         <property name="buddy">
+          <cstring>push_colorForeground</cstring>
          </property>
         </widget>
        </item>
@@ -275,6 +305,9 @@
          <property name="text">
           <string>Font Size:</string>
          </property>
+         <property name="buddy">
+          <cstring>fontSizeCombo</cstring>
+         </property>
         </widget>
        </item>
        <item row="6" column="0">
@@ -284,6 +317,9 @@
          </property>
          <property name="text">
           <string comment="Size in pixels of the line drawing the spectra">Line Width:</string>
+         </property>
+         <property name="buddy">
+          <cstring>lineWidthSpinBox</cstring>
          </property>
         </widget>
        </item>
@@ -326,6 +362,9 @@
          </property>
          <property name="text">
           <string>Background:</string>
+         </property>
+         <property name="buddy">
+          <cstring>push_colorBackground</cstring>
          </property>
         </widget>
        </item>

@@ -7,12 +7,16 @@
 #define AVOGADRO_QTOPENGL_GLWIDGET_H
 
 #include "avogadroqtopenglexport.h"
+#include "renderoptions.h"
 
 #include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
+#include <QImage>
 #include <QPointer>
+#include <QSize>
+#include <QString>
 
 #if QT_VERSION >= 0x060000
 #include <QtOpenGLWidgets/QOpenGLWidget>
@@ -113,6 +117,35 @@ public:
    */
   Qt::KeyboardModifiers navigationModifier() const;
   void setNavigationModifier(Qt::KeyboardModifiers modifier);
+
+  /**
+   * Render the current scene into an offscreen framebuffer and return it.
+   *
+   * The output is exactly options.size pixels (the view size times the device
+   * pixel ratio if that is invalid), framed for its own aspect ratio rather
+   * than cropped or letterboxed from the on-screen view. The widget needs a
+   * current GL context, so it must have been shown at least once.
+   *
+   * The widget's on-screen state (renderer size, pixel ratio, projection and
+   * background) is left exactly as it was, and the window is not resized.
+   *
+   * The render size (size times supersample) is limited to 8192 pixels per
+   * side and to the GL implementation's texture, renderbuffer and viewport
+   * limits; larger requests fail rather than being clamped. Memory use is
+   * roughly 24 bytes per render pixel (8192 x 8192 needs about 1.5 GiB).
+   *
+   * @param options The size, framing and background to render with.
+   * @param error If not null, receives a message when a null image is
+   * returned.
+   * @return The image, or a null image on failure.
+   */
+  QImage renderImage(const RenderOptions& options, QString* error = nullptr);
+
+  /**
+   * @return The widget size in device pixels (the logical size times the
+   * device pixel ratio), which is what renderImage() uses by default.
+   */
+  QSize pixelSize() const;
 
 signals:
   void rendererInvalid();

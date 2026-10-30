@@ -50,7 +50,7 @@ public:
     if (m_forceField != nullptr)
       return true;
 
-    auto* plugin = static_cast<OBForceField*>(
+    auto* plugin = dynamic_cast<OBForceField*>(
       OBPlugin::GetPlugin("forcefields", method.c_str()));
     if (plugin == nullptr)
       return false;

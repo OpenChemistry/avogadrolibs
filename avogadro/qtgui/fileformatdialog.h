@@ -30,6 +30,8 @@ class AVOGADROQTGUI_EXPORT FileFormatDialog : private QFileDialog
 {
   Q_OBJECT
 public:
+  ~FileFormatDialog() override;
+
   /**
    * Container for a filename and a compatible file format, used as return
    * values in static functions.
@@ -37,7 +39,7 @@ public:
    * @note The FileFormat points to the reference instance held by the
    * FileFormatManager. Use FileFormat::newInstance() to create a usable copy.
    */
-  typedef QPair<const Io::FileFormat*, QString> FormatFilePair;
+  using FormatFilePair = QPair<const Io::FileFormat*, QString>;
 
   /**
    * @brief Show a QFileDialog to prompt the user for a file to open and resolve
@@ -103,7 +105,6 @@ private:
    * complex use cases arise.
    */
   explicit FileFormatDialog(QWidget* parent = nullptr);
-  ~FileFormatDialog() override;
 
   /**
    * @return A filter string for use with a QFileDialog, containing entries

@@ -17,8 +17,10 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 set(tests
   BackgroundFileFormat
   CalcWorker
+  CommandRegistry
   ElementTranslator
   EnergyUnits
+  ExtensionPlugin
   FileFormatDialog
   FragmentTools
   GenericHighlighter
@@ -41,7 +43,7 @@ set(tests
 
 # GLWidget lives in QtOpenGL, which is only built with USE_OPENGL.
 if(TARGET Avogadro::QtOpenGL)
-  list(APPEND tests GLWidgetMolecule)
+  list(APPEND tests GLWidgetMolecule GLWidgetRenderImage ImageSizeDialog)
   set(QtOpenGLLink Avogadro::QtOpenGL)
 endif()
 

@@ -278,3 +278,24 @@ TEST(FileFormatManagerTest, unregister)
   format = manager.newFormatFromIdentifier("testingFormat");
   ASSERT_TRUE(format == nullptr);
 }
+
+// Uninstalling a script file-format plugin unregisters its format, and the
+// next .out/.log file read lists every format through fileFormats(). The
+// removed format's slot must be skipped, not dereferenced.
+TEST(FileFormatManagerTest, fileFormatsSkipsUnregistered)
+{
+  Format testFormat("removedFormat", FileFormat::All);
+  ASSERT_TRUE(FileFormatManager::registerFormat(testFormat.newInstance()));
+  ASSERT_TRUE(FileFormatManager::unregisterFormat("removedFormat"));
+
+  FileFormatManager& manager = FileFormatManager::instance();
+  const std::vector<const FileFormat*> all = manager.fileFormats();
+  EXPECT_FALSE(all.empty());
+  for (const FileFormat* f : all) {
+    ASSERT_NE(f, nullptr);
+    EXPECT_NE(f->identifier(), "removedFormat"s);
+  }
+  for (const FileFormat* f :
+       manager.fileFormats(FileFormat::File | FileFormat::Read))
+    ASSERT_NE(f, nullptr);
+}

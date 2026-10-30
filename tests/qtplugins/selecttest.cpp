@@ -11,10 +11,13 @@
 
 #include <gtest/gtest.h>
 
+#include <QtCore/QJsonObject>
+
 #include <vector>
 
 using Avogadro::Index;
 using Avogadro::QtPlugins::Select;
+using Avogadro::QtPluginsTests::atomList;
 using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
@@ -285,25 +288,15 @@ TEST_F(SelectCommandTest, createLayerOnInactiveMoleculeActivatesIt)
   m_harness.setActiveLayerMolecule(nullptr);
 }
 
-namespace {
-QVariantList list(std::initializer_list<qlonglong> ids)
-{
-  QVariantList result;
-  for (qlonglong id : ids)
-    result << id;
-  return result;
-}
-} // namespace
-
 TEST_F(SelectCommandTest, selectAtomsReplaceIsDefault)
 {
   ASSERT_EQ(m_harness.run("selectElement", { { "element", "O" } }).status,
             CommandStatus::Finished);
   const CommandOutcome out =
-    m_harness.run("selectAtoms", { { "indices", list({ 0, 3 }) } });
+    m_harness.run("selectAtoms", { { "indices", atomList({ 0, 3 }) } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);
-  EXPECT_EQ(out.result.value("indices").toList(), list({ 0, 3 }));
+  EXPECT_EQ(out.result.value("indices").toList(), atomList({ 0, 3 }));
   EXPECT_EQ(m_harness.snapshot().selectedIndices(),
             std::vector<Index>({ 0, 3 }));
 
@@ -318,11 +311,11 @@ TEST_F(SelectCommandTest, selectAtomsAddAndRemove)
 {
   ASSERT_EQ(
     m_harness
-      .run("selectAtoms", { { "indices", list({ 1 }) }, { "mode", "add" } })
+      .run("selectAtoms", { { "indices", atomList({ 1 }) }, { "mode", "add" } })
       .status,
     CommandStatus::Finished);
   // Adding a duplicate and a new atom; doubles are whole numbers too.
-  QVariantList indices = list({ 1, 2 });
+  QVariantList indices = atomList({ 1, 2 });
   indices << 4.0;
   CommandOutcome out =
     m_harness.run("selectAtoms", { { "indices", indices }, { "mode", "add" } });
@@ -330,10 +323,10 @@ TEST_F(SelectCommandTest, selectAtomsAddAndRemove)
   EXPECT_EQ(m_harness.snapshot().selectedIndices(),
             std::vector<Index>({ 1, 2, 4 }));
 
-  out = m_harness.run("selectAtoms",
-                      { { "indices", list({ 2, 5 }) }, { "mode", "remove" } });
+  out = m_harness.run(
+    "selectAtoms", { { "indices", atomList({ 2, 5 }) }, { "mode", "remove" } });
   EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  EXPECT_EQ(out.result.value("indices").toList(), list({ 1, 4 }));
+  EXPECT_EQ(out.result.value("indices").toList(), atomList({ 1, 4 }));
   EXPECT_EQ(m_harness.snapshot().selectedIndices(),
             std::vector<Index>({ 1, 4 }));
 }
@@ -342,7 +335,7 @@ TEST_F(SelectCommandTest, selectAtomsUndoRedo)
 {
   const MoleculeSnapshot before = m_harness.snapshot();
   ASSERT_EQ(
-    m_harness.run("selectAtoms", { { "indices", list({ 0, 1 }) } }).status,
+    m_harness.run("selectAtoms", { { "indices", atomList({ 0, 1 }) } }).status,
     CommandStatus::Finished);
   const MoleculeSnapshot after = m_harness.snapshot();
   EXPECT_EQ(before.differences(after, false), QStringList({ "selection" }));
@@ -368,17 +361,17 @@ TEST_F(SelectCommandTest, selectAtomsInvalidOptionsFail)
 {
   const MoleculeSnapshot before = m_harness.snapshot();
   const std::vector<QVariantMap> invalid = {
-    {},                                                 // missing
-    { { "indices", "0,1" } },                           // not a list
-    { { "indices", 3 } },                               // not a list
-    { { "indices", QVariantList{ "a" } } },             // non-numeric entry
-    { { "indices", QVariantList{ 1.5 } } },             // non-integer entry
-    { { "indices", QVariantList{ QVariant() } } },      // null entry
-    { { "indices", list({ -1 }) } },                    // negative
-    { { "indices", list({ 6 }) } },                     // out of range
-    { { "indices", list({ 0, 1000000000000LL }) } },    // far out of range
-    { { "indices", list({ 0, 1 }) }, { "mode", "x" } }, // bad mode
-    { { "indices", list({ 0, 1 }) }, { "mode", 1 } },   // bad mode type
+    {},                                                     // missing
+    { { "indices", "0,1" } },                               // not a list
+    { { "indices", 3 } },                                   // not a list
+    { { "indices", QVariantList{ "a" } } },                 // non-numeric entry
+    { { "indices", QVariantList{ 1.5 } } },                 // non-integer entry
+    { { "indices", QVariantList{ QVariant() } } },          // null entry
+    { { "indices", atomList({ -1 }) } },                    // negative
+    { { "indices", atomList({ 6 }) } },                     // out of range
+    { { "indices", atomList({ 0, 1000000000000LL }) } },    // far out of range
+    { { "indices", atomList({ 0, 1 }) }, { "mode", "x" } }, // bad mode
+    { { "indices", atomList({ 0, 1 }) }, { "mode", 1 } },   // bad mode type
   };
   for (const QVariantMap& options : invalid) {
     const CommandOutcome out = m_harness.run("selectAtoms", options);
@@ -389,7 +382,7 @@ TEST_F(SelectCommandTest, selectAtomsInvalidOptionsFail)
   }
   // A bad entry after good ones must not leave a partial selection.
   const CommandOutcome partial =
-    m_harness.run("selectAtoms", { { "indices", list({ 0, 1, 99 }) } });
+    m_harness.run("selectAtoms", { { "indices", atomList({ 0, 1, 99 }) } });
   EXPECT_EQ(partial.status, CommandStatus::Failed);
   EXPECT_EQ(m_harness.snapshot(), before);
 }
@@ -398,8 +391,121 @@ TEST_F(SelectCommandTest, selectAtomsNoMoleculeFails)
 {
   m_harness.setPluginMolecule(nullptr);
   const CommandOutcome out =
-    m_harness.run("selectAtoms", { { "indices", list({ 0 }) } });
+    m_harness.run("selectAtoms", { { "indices", atomList({ 0 }) } });
   EXPECT_TRUE(out.claimed);
   EXPECT_EQ(out.status, CommandStatus::Failed);
   EXPECT_EQ(out.message, QString(NoMoleculeMessage));
+}
+
+// ---- CommandRegistry integration -----------------------------------------
+
+TEST_F(SelectCommandTest, unknownOptionIsRejected)
+{
+  const MoleculeSnapshot before = m_harness.snapshot();
+  const CommandOutcome out = m_harness.run(
+    "selectAtoms", { { "atoms", atomList({ 0 }) }, { "mod", "add" } });
+  EXPECT_TRUE(out.claimed);
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(out.failedCount, 1);
+  EXPECT_NE(out.message.indexOf("mod"), -1) << out.message.toStdString();
+  EXPECT_TRUE(out.clean()) << describe(out);
+
+  const CommandOutcome all = m_harness.run("selectAll", { { "foo", 1 } });
+  EXPECT_EQ(all.status, CommandStatus::Failed) << describe(all);
+  EXPECT_EQ(m_harness.snapshot(), before);
+}
+
+TEST_F(SelectCommandTest, atomsAndIndicesAlias)
+{
+  CommandOutcome out =
+    m_harness.run("selectAtoms", { { "atoms", atomList({ 0, 3 }) } });
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(m_harness.snapshot().selectedIndices(),
+            std::vector<Index>({ 0, 3 }));
+  // The result carries the same data under both keys.
+  EXPECT_EQ(out.result.value("atoms").toList(), atomList({ 0, 3 }));
+  EXPECT_EQ(out.result.value("indices").toList(), atomList({ 0, 3 }));
+
+  out = m_harness.run("selectAtoms", { { "indices", atomList({ 2 }) } });
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(m_harness.snapshot().selectedIndices(), std::vector<Index>({ 2 }));
+
+  const MoleculeSnapshot before = m_harness.snapshot();
+  out = m_harness.run("selectAtoms", { { "atoms", atomList({ 0 }) },
+                                       { "indices", atomList({ 1 }) } });
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(m_harness.snapshot(), before);
+}
+
+TEST_F(SelectCommandTest, commandSchema)
+{
+  const QJsonObject schema = m_select.commandSchema("selectAtoms");
+  ASSERT_FALSE(schema.isEmpty());
+  const QJsonObject props = schema["properties"].toObject();
+  EXPECT_TRUE(props.contains("atoms"));
+  EXPECT_TRUE(props.contains("mode"));
+  EXPECT_TRUE(props["indices"].toObject()["deprecated"].toBool());
+  EXPECT_FALSE(schema["additionalProperties"].toBool(true));
+  EXPECT_FALSE(schema["x-avogadro-async"].toBool(true));
+  EXPECT_TRUE(schema["x-avogadro-needs-molecule"].toBool(false));
+
+  EXPECT_TRUE(m_select.commandSchema("notACommand").isEmpty());
+  EXPECT_TRUE(m_select.commandSchema("").isEmpty());
+}
+
+TEST_F(SelectCommandTest, defaultRegisterCommandsEmitsEveryCommand)
+{
+  QStringList seen;
+  QObject::connect(&m_select, &Select::registerCommand,
+                   [&seen](QString name, QString description) {
+                     EXPECT_FALSE(description.isEmpty());
+                     seen << name;
+                   });
+  m_select.registerCommands();
+  // In registration order.
+  EXPECT_EQ(seen,
+            QStringList({ "selectAll", "selectNone", "invertSelection",
+                          "selectElement", "selectBackbone", "selectSidechains",
+                          "selectWater", "enlargeSelection", "shrinkSelection",
+                          "createLayerFromSelection", "selectAtoms" }));
+}
+
+TEST_F(SelectCommandTest, noMoleculeFailsCleanlyForAtoms)
+{
+  m_harness.setPluginMolecule(nullptr);
+  for (const char* name : { "selectAtoms", "selectNone", "selectWater" }) {
+    const CommandOutcome out = m_harness.run(name, {});
+    EXPECT_TRUE(out.claimed) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.failedCount, 1) << name;
+    EXPECT_TRUE(out.clean()) << describe(out);
+  }
+}
+
+TEST_F(SelectCommandTest, selectElementAccepts)
+{
+  for (const QVariant& value :
+       { QVariant("C"), QVariant(6), QVariant("6"), QVariant(6.0) }) {
+    m_harness.buildMethanol();
+    const CommandOutcome out =
+      m_harness.run("selectElement", { { "element", value } });
+    EXPECT_EQ(out.status, CommandStatus::Finished)
+      << value.toString().toStdString() << ": " << describe(out);
+    EXPECT_EQ(m_harness.snapshot().selectedIndices(),
+              std::vector<Index>({ 0 }));
+  }
+}
+
+TEST_F(SelectCommandTest, selectElementRejects)
+{
+  const MoleculeSnapshot before = m_harness.snapshot();
+  for (const QVariant& value :
+       { QVariant("nan"), QVariant(0), QVariant(200), QVariant(true) }) {
+    const CommandOutcome out =
+      m_harness.run("selectElement", { { "element", value } });
+    EXPECT_EQ(out.status, CommandStatus::Failed)
+      << value.toString().toStdString() << ": " << describe(out);
+    EXPECT_EQ(out.failedCount, 1);
+  }
+  EXPECT_EQ(m_harness.snapshot(), before);
 }

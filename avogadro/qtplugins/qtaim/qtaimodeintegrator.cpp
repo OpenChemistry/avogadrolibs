@@ -187,11 +187,8 @@ QVector3D QTAIMODEIntegrator::integrate(QVector3D x0y0z0)
   return QVector3D(y[0], y[1], y[2]);
 }
 
-void QTAIMODEIntegrator::r8_f(qreal t, qreal y[], qreal yp[])
+void QTAIMODEIntegrator::r8_f([[maybe_unused]] qreal t, qreal y[], qreal yp[])
 {
-
-  t = t; // suppress warning
-
   Matrix<qreal, 3, 1> gradient;
 
   Matrix<qreal, 3, 4> gH;

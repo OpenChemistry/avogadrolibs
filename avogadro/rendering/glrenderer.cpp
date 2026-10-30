@@ -72,17 +72,24 @@ void GLRenderer::initialize()
 
 void GLRenderer::resize(int width, int height)
 {
+  resize(width, height, static_cast<int>(width * m_pixelRatio),
+         static_cast<int>(height * m_pixelRatio));
+}
+
+void GLRenderer::resize(int width, int height, int deviceWidth,
+                        int deviceHeight)
+{
   if (!m_valid)
     return;
 
   // m_volume.resize(width, height);
   // The viewport is in device pixels, while the cameras work in logical pixels
   // as they are used to project and unproject Qt mouse coordinates.
-  glViewport(0, 0, static_cast<GLsizei>(width * m_pixelRatio),
-             static_cast<GLsizei>(height * m_pixelRatio));
+  glViewport(0, 0, static_cast<GLsizei>(deviceWidth),
+             static_cast<GLsizei>(deviceHeight));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
-  m_solidPipeline.resize(width, height);
+  m_solidPipeline.resizeDevice(deviceWidth, deviceHeight);
 }
 
 void GLRenderer::setPixelRatio(float ratio)
@@ -124,7 +131,13 @@ void GLRenderer::render()
   glEnable(GL_BLEND);
   // Thanks to Giuseppe D'Angelo for a related comment:
   // https://bugreports.qt.io/browse/QTBUG-36739
-  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+  // The alpha channel uses "over" blending (GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+  // rather than adding, which saturated the alpha of any pixel a translucent
+  // surface touched. Over an opaque destination alpha stays 1, so the window
+  // is unaffected; over a transparent background (image export) the buffer
+  // holds a valid premultiplied image.
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
   m_scene.rootNode().accept(visitor);
 
   // Setup for 3d overlay rendering
@@ -191,18 +204,18 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
     class ResetTextLabelVisitor : public Visitor
     {
     public:
-      void visit(Node&) override { return; }
-      void visit(GroupNode&) override { return; }
-      void visit(GeometryNode&) override { return; }
-      void visit(Drawable&) override { return; }
-      void visit(SphereGeometry&) override { return; }
-      void visit(CurveGeometry&) override { return; }
-      void visit(CylinderGeometry&) override { return; }
-      void visit(MeshGeometry&) override { return; }
+      void visit(Node&) override {}
+      void visit(GroupNode&) override {}
+      void visit(GeometryNode&) override {}
+      void visit(Drawable&) override {}
+      void visit(SphereGeometry&) override {}
+      void visit(CurveGeometry&) override {}
+      void visit(CylinderGeometry&) override {}
+      void visit(MeshGeometry&) override {}
       // void visit(Texture2D&) { return; }
       void visit(TextLabel2D& l) override { l.resetTexture(); }
       void visit(TextLabel3D& l) override { l.resetTexture(); }
-      void visit(LineStripGeometry&) override { return; }
+      void visit(LineStripGeometry&) override {}
     } labelResetter;
 
     m_scene.rootNode().accept(labelResetter);
@@ -217,26 +230,29 @@ void GLRenderer::applyProjection()
   float distance = m_camera.distance(m_center);
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
+  // Applied to local copies only: the stored frustum is the base value that
+  // zooming edits, so scaling it in place would accumulate on every frame.
+  const float scale = m_projectionScale;
   if (m_camera.projectionType() == Perspective) {
     m_perspectiveFrustum[0] = m_perspectiveFrustum[2] * aspectRatio;
     m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
     m_perspectiveFrustum[5] = distance + m_radius;
     m_camera.calculatePerspective(
-      m_perspectiveFrustum[0], m_perspectiveFrustum[1], m_perspectiveFrustum[2],
-      m_perspectiveFrustum[3], m_perspectiveFrustum[4],
-      m_perspectiveFrustum[5]);
+      m_perspectiveFrustum[0] * scale, m_perspectiveFrustum[1] * scale,
+      m_perspectiveFrustum[2] * scale, m_perspectiveFrustum[3] * scale,
+      m_perspectiveFrustum[4], m_perspectiveFrustum[5]);
   } else {
     // Renders the orthographic projection of the molecule
     m_orthographicFrustum[0] = m_orthographicFrustum[2] * aspectRatio;
     m_orthographicFrustum[1] = m_orthographicFrustum[3] * aspectRatio;
     m_orthographicFrustum[5] = distance + m_radius;
     m_orthographicFrustum[4] = -m_orthographicFrustum[5];
-    m_camera.calculateOrthographic(m_orthographicFrustum[0],  // L
-                                   m_orthographicFrustum[1],  // R
-                                   m_orthographicFrustum[2],  // B
-                                   m_orthographicFrustum[3],  // T
-                                   m_orthographicFrustum[4],  // N
-                                   m_orthographicFrustum[5]); // F
+    m_camera.calculateOrthographic(m_orthographicFrustum[0] * scale, // L
+                                   m_orthographicFrustum[1] * scale, // R
+                                   m_orthographicFrustum[2] * scale, // B
+                                   m_orthographicFrustum[3] * scale, // T
+                                   m_orthographicFrustum[4],         // N
+                                   m_orthographicFrustum[5]);        // F
   }
   m_overlayCamera.calculateOrthographic(
     0.f, static_cast<float>(m_overlayCamera.width()), 0.f,

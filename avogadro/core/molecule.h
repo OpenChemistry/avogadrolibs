@@ -414,8 +414,24 @@ public:
   /** @return the elements currently in this molecule */
   const ElementMask elements() const;
 
-  /**  Adds an atom to the molecule. */
+  /**
+   * Adds an atom to the molecule.
+   *
+   * Every conformer / trajectory coordinate set that has an entry for each
+   * existing atom gets an entry for the new one: the atom's position in the
+   * active coordinates if it has one by now (see the overload below), else the
+   * origin, which is what atomPosition3d() reports for an atom without a
+   * position. Coordinate sets of any other length are left alone, as
+   * removeAtom() does.
+   */
   virtual AtomType addAtom(unsigned char atomicNumber);
+
+  /**
+   * Adds an atom at @p position3d. The position is stored in the active
+   * coordinates when they have an entry for every atom, and then, with the
+   * above, is also the atom's position in every coordinate set that was given
+   * an entry for it, so the atom stays put when the active set changes.
+   */
   AtomType addAtom(unsigned char atomicNumber, Vector3 position3d);
 
   /**
@@ -801,8 +817,13 @@ public:
    * atom add up to exactly its unsaturation. This is a degree-constrained
    * subgraph problem; it is solved exactly by constraint propagation with
    * bounded backtracking, separately for each connected group of candidate
-   * bonds. A group that can be solved is written back; a group that cannot is
-   * left exactly as it was, and its unsaturated atoms are reported.
+   * bonds. A group that can be solved is written back. For a group that cannot
+   * (an unpaired electron, missing hydrogens, a dangling edge atom) the
+   * demands are treated as upper bounds and a best-effort Kekule-like pattern
+   * is written back instead: a greedy assignment improved by augmenting
+   * paths, optimal for bipartite systems such as benzenoids and graphene and
+   * a heuristic otherwise. Only the atoms it still could not satisfy are
+   * reported, and success is false.
    *
    * Rules, all of them chemistry judgements for a reviewer to check:
    *  - No bond ends up above order 3, and a bond to hydrogen or a halogen
@@ -812,6 +833,15 @@ public:
    *  - Metal atoms (see Elements::isMetal()) are never given bond orders, and
    *    their bonds do not count toward their ligands' valence: a pyridine
    *    nitrogen bound to zinc is still a pyridine nitrogen.
+   *  - With 3D coordinates in use, a period-2 atom with exactly two neighbors
+   *    whose bond angle is below 150 degrees is sp2 and can carry at most one
+   *    pi bond, so it is not offered a second one (a bare C6 ring becomes
+   *    benzene, not a cumulene). A near-linear atom, and any atom of period 3
+   *    or later, is not limited. The cap is also waived if at least one of
+   *    the atom's bonds to a non-metal neighbor is closer to its ideal
+   *    triple-bond length than to its ideal double-bond length
+   *    (AtomUtilities::idealBondLength()), as in an aryne such as
+   *    o-benzyne.
    *  - If the molecule has 3D coordinates and @p options asks for it, bond
    *    lengths decide which of several valid assignments is tried first. For
    *    a bond of length d the order k nearest to d, among the
