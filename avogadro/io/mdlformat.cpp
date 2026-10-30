@@ -823,7 +823,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     if (atomData.size() > 8) {
       // loop through the key=value pairs
       for (size_t j = 8; j < atomData.size(); ++j) {
-        string key = atomData[j];
+        const string& key = atomData[j];
         if (startsWith(key, "CHG=")) {
           int charge = lexicalCast<int>(key.substr(4), ok);
           if (!ok) {

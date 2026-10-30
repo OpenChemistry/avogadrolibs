@@ -205,7 +205,7 @@ void CloseContacts::process(const Molecule& molecule,
       if (residues[n] == residues[i] && residues[i] != Index(0) - 1)
         continue; // ignore intra-residue interactions
 
-      Vector3 npos = positions[n];
+      const Vector3& npos = positions[n];
       double distance = (npos - pos).norm();
 
       if (charges[i] * charges[n] > 0.0 && distance < m_maximumDistances[2])

@@ -224,7 +224,7 @@ void Molecule::copyDisplayStateFrom(const Molecule& other)
     return;
 
   // Go through a copy so the settings are cloned rather than shared.
-  const MoleculeInfo source(other.ensureLayerInfo());
+  const MoleculeInfo& source(other.ensureLayerInfo());
   MoleculeInfo& info = ensureLayerInfo();
   info.enable = source.enable;
   info.settings = source.settings;
