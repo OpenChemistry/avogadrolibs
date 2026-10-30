@@ -135,7 +135,7 @@ void OrbitalWidget::clearTable()
     m_tableModel->clearOrbitals();
 }
 
-void OrbitalWidget::fillTable(Core::BasisSet* basis)
+void OrbitalWidget::fillTable(const Core::BasisSet* basis)
 {
   if (basis == nullptr || m_tableModel == nullptr) {
     return;
