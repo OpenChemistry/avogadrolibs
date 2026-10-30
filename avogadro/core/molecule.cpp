@@ -1603,14 +1603,30 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
 
 Mesh* Molecule::addMesh()
 {
-  m_meshes.push_back(new Mesh);
-  return m_meshes.back();
+  m_meshes.push_back(std::make_shared<Mesh>());
+  return m_meshes.back().get();
+}
+
+Mesh* Molecule::addMesh(std::unique_ptr<Mesh> mesh)
+{
+  if (!mesh)
+    return nullptr;
+  m_meshes.push_back(std::shared_ptr<Mesh>(std::move(mesh)));
+  return m_meshes.back().get();
+}
+
+bool Molecule::setMesh(Index index, std::unique_ptr<Mesh> mesh)
+{
+  if (!mesh || index >= static_cast<Index>(m_meshes.size()))
+    return false;
+  m_meshes[index] = std::shared_ptr<Mesh>(std::move(mesh));
+  return true;
 }
 
 Mesh* Molecule::mesh(Index index)
 {
   if (index < static_cast<Index>(m_meshes.size()))
-    return m_meshes[index];
+    return m_meshes[index].get();
   else
     return nullptr;
 }
@@ -1618,29 +1634,60 @@ Mesh* Molecule::mesh(Index index)
 const Mesh* Molecule::mesh(Index index) const
 {
   if (index < static_cast<Index>(m_meshes.size()))
-    return m_meshes[index];
+    return m_meshes[index].get();
   else
     return nullptr;
 }
 
 void Molecule::clearMeshes()
 {
-  while (!m_meshes.empty()) {
-    delete m_meshes.back();
-    m_meshes.pop_back();
-  }
+  m_meshes.clear();
 }
 
 Cube* Molecule::addCube()
 {
-  m_cubes.push_back(new Cube);
-  return m_cubes.back();
+  m_cubes.push_back(std::make_shared<Cube>());
+  return m_cubes.back().get();
+}
+
+Cube* Molecule::addCube(std::unique_ptr<Cube> cube)
+{
+  if (!cube)
+    return nullptr;
+  m_cubes.push_back(std::shared_ptr<Cube>(std::move(cube)));
+  return m_cubes.back().get();
+}
+
+bool Molecule::setCube(Index index, std::unique_ptr<Cube> cube)
+{
+  if (!cube || index >= static_cast<Index>(m_cubes.size()))
+    return false;
+  m_cubes[index] = std::shared_ptr<Cube>(std::move(cube));
+  return true;
+}
+
+std::vector<Cube*> Molecule::cubes()
+{
+  std::vector<Cube*> result;
+  result.reserve(m_cubes.size());
+  for (const auto& c : m_cubes)
+    result.push_back(c.get());
+  return result;
+}
+
+const std::vector<Cube*> Molecule::cubes() const
+{
+  std::vector<Cube*> result;
+  result.reserve(m_cubes.size());
+  for (const auto& c : m_cubes)
+    result.push_back(c.get());
+  return result;
 }
 
 Cube* Molecule::cube(Index index)
 {
   if (index < static_cast<Index>(m_cubes.size()))
-    return m_cubes[index];
+    return m_cubes[index].get();
   else
     return nullptr;
 }
@@ -1648,17 +1695,14 @@ Cube* Molecule::cube(Index index)
 const Cube* Molecule::cube(Index index) const
 {
   if (index < static_cast<Index>(m_cubes.size()))
-    return m_cubes[index];
+    return m_cubes[index].get();
   else
     return nullptr;
 }
 
 void Molecule::clearCubes()
 {
-  while (!m_cubes.empty()) {
-    delete m_cubes.back();
-    m_cubes.pop_back();
-  }
+  m_cubes.clear();
   m_activeCubeIndex = 0;
 }
 
@@ -1674,18 +1718,18 @@ bool Molecule::setActiveCubeIndex(Index index)
 Cube* Molecule::activeCube()
 {
   if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
-    return m_cubes[m_activeCubeIndex];
+    return m_cubes[m_activeCubeIndex].get();
   else if (!m_cubes.empty())
-    return m_cubes[0];
+    return m_cubes[0].get();
   return nullptr;
 }
 
 const Cube* Molecule::activeCube() const
 {
   if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
-    return m_cubes[m_activeCubeIndex];
+    return m_cubes[m_activeCubeIndex].get();
   else if (!m_cubes.empty())
-    return m_cubes[0];
+    return m_cubes[0].get();
   return nullptr;
 }
 

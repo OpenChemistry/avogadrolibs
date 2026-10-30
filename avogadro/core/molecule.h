@@ -552,6 +552,28 @@ public:
    */
   Mesh* addMesh();
 
+  /**
+   * @brief Add a mesh the caller already built to the molecule.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this overload when the job is done.
+   * @param mesh The mesh to add; the molecule takes ownership.
+   * @return The mesh added, or nullptr (molecule unchanged) if @p mesh is null.
+   */
+  Mesh* addMesh(std::unique_ptr<Mesh> mesh);
+
+  /**
+   * @brief Replace the mesh at @p index with one the caller already built.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this method when the job is done.
+   * @param index The index of the mesh to replace.
+   * @param mesh The new mesh; the molecule takes ownership.
+   * @return False, leaving the molecule unchanged, if @p index is out of range
+   * or @p mesh is null; true otherwise.
+   */
+  bool setMesh(Index index, std::unique_ptr<Mesh> mesh);
+
   Mesh* mesh(Index index);
   const Mesh* mesh(Index index) const;
 
@@ -564,6 +586,28 @@ public:
    * @return The cube object added to the molecule.
    */
   Cube* addCube();
+
+  /**
+   * @brief Add a cube the caller already built to the molecule.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this overload when the job is done.
+   * @param cube The cube to add; the molecule takes ownership.
+   * @return The cube added, or nullptr (molecule unchanged) if @p cube is null.
+   */
+  Cube* addCube(std::unique_ptr<Cube> cube);
+
+  /**
+   * @brief Replace the cube at @p index with one the caller already built.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this method when the job is done. The active cube index is not changed.
+   * @param index The index of the cube to replace.
+   * @param cube The new cube; the molecule takes ownership.
+   * @return False, leaving the molecule unchanged, if @p index is out of range
+   * or @p cube is null; true otherwise.
+   */
+  bool setCube(Index index, std::unique_ptr<Cube> cube);
 
   Cube* cube(Index index);
   const Cube* cube(Index index) const;
@@ -596,8 +640,8 @@ public:
    * @brief Get the cubes vector set (if present) for the molecule.
    * @return The cube vector for the molecule
    */
-  std::vector<Cube*> cubes() { return m_cubes; }
-  const std::vector<Cube*> cubes() const { return m_cubes; }
+  std::vector<Cube*> cubes();
+  const std::vector<Cube*> cubes() const;
 
   /**
    * @return the chemical formula of the molecule.
@@ -1326,8 +1370,8 @@ protected:
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
 
-  std::vector<Mesh*> m_meshes;
-  std::vector<Cube*> m_cubes;
+  std::vector<std::shared_ptr<Mesh>> m_meshes;
+  std::vector<std::shared_ptr<Cube>> m_cubes;
   Index m_activeCubeIndex = 0;
 
   BasisSet* m_basisSet;

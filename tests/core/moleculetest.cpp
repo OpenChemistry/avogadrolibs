@@ -19,6 +19,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
@@ -34,10 +35,12 @@ using Avogadro::MatrixX;
 using Avogadro::Vector2;
 using Avogadro::Vector3;
 using Avogadro::Vector3f;
+using Avogadro::Vector3i;
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
+using Avogadro::Core::Cube;
 using Avogadro::Core::Mesh;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::PropertyMap;
@@ -4547,4 +4550,174 @@ TEST(MoleculeCoordinateSetTest, addAtomLeavesAnOverlongCoordinateSetUntouched)
   EXPECT_EQ(3u, m.coordinate3dRef(0).size());
   EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(0)[2]);
   EXPECT_EQ(overlong, m.coordinate3dRef(1));
+}
+
+namespace {
+// A molecule with two cubes and two meshes, the second cube active.
+void fillCubesAndMeshes(Molecule& m)
+{
+  for (int i = 0; i < 2; ++i) {
+    Cube* c = m.addCube();
+    c->setLimits(Vector3(0.0, 0.0, 0.0), Vector3i(2 + i, 2, 2), 0.5f);
+    std::vector<float> values(c->data()->size(), 1.0f + static_cast<float>(i));
+    c->setData(values);
+    Mesh* mesh = m.addMesh();
+    Array<Vector3f> verts(3 + i, Vector3f::Zero());
+    mesh->setVertices(verts);
+  }
+  m.setActiveCubeIndex(1);
+}
+
+void expectDeepCubesAndMeshes(const Molecule& a, Molecule& b)
+{
+  ASSERT_EQ(b.cubeCount(), a.cubeCount());
+  ASSERT_EQ(b.meshCount(), a.meshCount());
+  for (Index i = 0; i < a.cubeCount(); ++i) {
+    EXPECT_NE(b.cube(i), a.cube(i));
+    EXPECT_EQ(b.cube(i)->dimensions(), a.cube(i)->dimensions());
+    EXPECT_EQ(*b.cube(i)->data(), *a.cube(i)->data());
+  }
+  for (Index i = 0; i < a.meshCount(); ++i) {
+    EXPECT_NE(b.mesh(i), a.mesh(i));
+    EXPECT_EQ(b.mesh(i)->numVertices(), a.mesh(i)->numVertices());
+  }
+  // Editing the copy leaves the original alone.
+  (*b.cube(0)->data())[0] = 42.0f;
+  EXPECT_FLOAT_EQ((*a.cube(0)->data())[0], 1.0f);
+  b.mesh(0)->setVertices(Array<Vector3f>(10, Vector3f::Zero()));
+  EXPECT_EQ(a.mesh(0)->numVertices(), 3u);
+}
+} // namespace
+
+TEST_F(MoleculeTest, copyConstructCubesMeshesAreDeep)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b(a);
+  EXPECT_EQ(b.activeCubeIndex(), 1u);
+  expectDeepCubesAndMeshes(a, b);
+}
+
+TEST_F(MoleculeTest, copyAssignCubesMeshesAreDeep)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b;
+  b.addCube();
+  b.addMesh();
+  b = a;
+  EXPECT_EQ(b.activeCubeIndex(), 1u);
+  expectDeepCubesAndMeshes(a, b);
+}
+
+TEST_F(MoleculeTest, readPropertiesCubesMeshesAreDeep)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b;
+  b.readProperties(a);
+  expectDeepCubesAndMeshes(a, b);
+}
+
+TEST_F(MoleculeTest, addCubeTakesOwnership)
+{
+  Molecule m;
+  EXPECT_EQ(m.addCube(std::unique_ptr<Cube>()), nullptr);
+  EXPECT_EQ(m.cubeCount(), 0u);
+
+  auto cube = std::make_unique<Cube>();
+  Cube* raw = cube.get();
+  EXPECT_EQ(m.addCube(std::move(cube)), raw);
+  EXPECT_EQ(m.cubeCount(), 1u);
+  EXPECT_EQ(m.cube(0), raw);
+}
+
+TEST_F(MoleculeTest, setCubeReplaces)
+{
+  Molecule m;
+  Cube* first = m.addCube();
+  m.addCube();
+  m.setActiveCubeIndex(1);
+
+  auto cube = std::make_unique<Cube>();
+  Cube* raw = cube.get();
+  EXPECT_TRUE(m.setCube(0, std::move(cube)));
+  EXPECT_EQ(m.cube(0), raw);
+  EXPECT_NE(m.cube(0), first);
+  EXPECT_EQ(m.cubeCount(), 2u);
+  EXPECT_EQ(m.activeCubeIndex(), 1u);
+
+  EXPECT_FALSE(m.setCube(2, std::make_unique<Cube>()));
+  EXPECT_FALSE(m.setCube(0, std::unique_ptr<Cube>()));
+  EXPECT_EQ(m.cube(0), raw);
+  EXPECT_EQ(m.cubeCount(), 2u);
+}
+
+TEST_F(MoleculeTest, addMeshTakesOwnership)
+{
+  Molecule m;
+  EXPECT_EQ(m.addMesh(std::unique_ptr<Mesh>()), nullptr);
+  EXPECT_EQ(m.meshCount(), 0u);
+
+  auto mesh = std::make_unique<Mesh>();
+  Mesh* raw = mesh.get();
+  EXPECT_EQ(m.addMesh(std::move(mesh)), raw);
+  EXPECT_EQ(m.meshCount(), 1u);
+  EXPECT_EQ(m.mesh(0), raw);
+}
+
+TEST_F(MoleculeTest, setMeshReplaces)
+{
+  Molecule m;
+  Mesh* first = m.addMesh();
+
+  auto mesh = std::make_unique<Mesh>();
+  Mesh* raw = mesh.get();
+  EXPECT_TRUE(m.setMesh(0, std::move(mesh)));
+  EXPECT_EQ(m.mesh(0), raw);
+  EXPECT_NE(m.mesh(0), first);
+  EXPECT_EQ(m.meshCount(), 1u);
+
+  EXPECT_FALSE(m.setMesh(1, std::make_unique<Mesh>()));
+  EXPECT_FALSE(m.setMesh(0, std::unique_ptr<Mesh>()));
+  EXPECT_EQ(m.mesh(0), raw);
+  EXPECT_EQ(m.meshCount(), 1u);
+}
+
+TEST_F(MoleculeTest, moveTransfersCubesAndMeshes)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  const Cube* c0 = a.cube(0);
+  const Cube* c1 = a.cube(1);
+  const Mesh* m0 = a.mesh(0);
+  const Mesh* m1 = a.mesh(1);
+
+  Molecule b(std::move(a));
+  EXPECT_EQ(b.cube(0), c0);
+  EXPECT_EQ(b.cube(1), c1);
+  EXPECT_EQ(b.mesh(0), m0);
+  EXPECT_EQ(b.mesh(1), m1);
+  EXPECT_EQ(a.cubeCount(), 0u);
+  EXPECT_EQ(a.meshCount(), 0u);
+
+  Molecule c;
+  c = std::move(b);
+  EXPECT_EQ(c.cube(0), c0);
+  EXPECT_EQ(c.cube(1), c1);
+  EXPECT_EQ(c.mesh(0), m0);
+  EXPECT_EQ(c.mesh(1), m1);
+  EXPECT_EQ(b.cubeCount(), 0u);
+  EXPECT_EQ(b.meshCount(), 0u);
+}
+
+TEST_F(MoleculeTest, clearCubesResetsActiveIndex)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  EXPECT_EQ(m.activeCubeIndex(), 1u);
+  m.clearCubes();
+  EXPECT_EQ(m.cubeCount(), 0u);
+  EXPECT_EQ(m.activeCubeIndex(), 0u);
+  EXPECT_EQ(m.activeCube(), nullptr);
 }
