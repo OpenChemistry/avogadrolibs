@@ -458,8 +458,8 @@ void Orbitals::calculatePosMesh()
   calcInfo* info = &m_queue[m_currentMeshCalculation];
 
   m_molecule->clearMeshes();
-  auto posMesh = m_molecule->addMesh();
-  auto cube = info->cube;
+  auto* posMesh = m_molecule->addMesh();
+  auto* cube = info->cube;
 
   if (!m_meshGenerator) {
     m_meshGenerator = new QtGui::MeshGenerator;
@@ -482,8 +482,8 @@ void Orbitals::calculateNegMesh()
 
   calcInfo* info = &m_queue[m_currentMeshCalculation];
 
-  auto negMesh = m_molecule->addMesh();
-  auto cube = info->cube;
+  auto* negMesh = m_molecule->addMesh();
+  auto* cube = info->cube;
 
   if (!m_meshGenerator) {
     // shouldn't happen, but better to be careful

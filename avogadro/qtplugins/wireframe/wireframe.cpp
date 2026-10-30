@@ -166,10 +166,10 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   // add tiny atom sites for selection
-  auto atoms = new SphereGeometry;
+  auto* atoms = new SphereGeometry;
   atoms->identifier().molecule = &molecule;
   atoms->identifier().type = Rendering::AtomType;
-  auto selectedAtoms = new SphereGeometry;
+  auto* selectedAtoms = new SphereGeometry;
   selectedAtoms->setOpacity(0.42);
   Vector3ub selectedColor(0, 0, 255);
 

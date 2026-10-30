@@ -82,7 +82,7 @@ void GroupNode::clear(NodeType ui)
   for (auto it = m_children.begin(); it != m_children.end();) {
     auto itNext = std::next(it);
     if (it->ui == ui || ui == ALL) {
-      auto groupNode = it->node->cast<GroupNode>();
+      auto* groupNode = it->node->cast<GroupNode>();
       if (groupNode != nullptr && ui != ALL) {
         switch (ui) {
           case UI:

@@ -116,7 +116,7 @@ void MultiViewWidget::createView()
     auto* container =
       qobject_cast<ContainerWidget*>(optionsWidget->parentWidget());
     if (container) {
-      auto widget = m_factory->createView(button->property("name").toString());
+      auto* widget = m_factory->createView(button->property("name").toString());
       if (widget) {
         widget->installEventFilter(m_activeFilter);
         container->layout()->removeWidget(optionsWidget);

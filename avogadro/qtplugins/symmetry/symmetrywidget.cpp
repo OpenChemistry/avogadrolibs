@@ -360,7 +360,7 @@ void SymmetryWidget::setSubgroups(int sgl, const msym::msym_subgroup_t* sg)
     parent->setText(pointGroupSymbol(sg[i].name));
     parent->setData(i, Qt::UserRole);
     m_subgroupsTreeModel->appendRow(parent);
-    for (auto generator : sg[i].generators) {
+    for (auto* generator : sg[i].generators) {
       if (generator == nullptr)
         continue;
       // qDebug() << "child " << sg[i].generators[j] - m_sg << " "
