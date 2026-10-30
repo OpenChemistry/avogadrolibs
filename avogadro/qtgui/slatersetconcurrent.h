@@ -12,9 +12,12 @@
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QObject>
 
+#include <memory>
+
 namespace Avogadro {
 
 namespace Core {
+class BasisSet;
 class Cube;
 class Molecule;
 class SlaterSet;
@@ -39,6 +42,15 @@ public:
   explicit SlaterSetConcurrent(QObject* p = nullptr);
   ~SlaterSetConcurrent() override;
 
+  /**
+   * Prepare a calculation on the basis set of @p mol. Call this before each
+   * calculation: the calculator holds the basis set only until that job
+   * finishes, and refuses to start another without a new setMolecule().
+   *
+   * This takes the molecule's mutable basis set, because setting up a
+   * calculation writes into it, so a basis set an undo snapshot shares is
+   * copied first.
+   */
   void setMolecule(Core::Molecule* mol);
 
   /**
@@ -91,6 +103,9 @@ private:
 
   Core::SlaterSet* m_set;
   Core::SlaterSetTools* m_tools;
+  // Keeps the basis set the workers read alive for the job, even if the
+  // molecule later detaches from it and hands it to an undo snapshot.
+  std::shared_ptr<const Core::BasisSet> m_basisHandle;
 
   bool setUpCalculation(Core::Cube* cube, unsigned int state,
                         void (*func)(SlaterShell&));

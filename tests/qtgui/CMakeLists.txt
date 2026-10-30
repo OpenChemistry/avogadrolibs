@@ -23,6 +23,7 @@ set(tests
   ExtensionPlugin
   FileFormatDialog
   FragmentTools
+  GaussianSetConcurrent
   GenericHighlighter
   HydrogenTools
   JsonWidget

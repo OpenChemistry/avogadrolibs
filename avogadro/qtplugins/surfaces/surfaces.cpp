@@ -979,6 +979,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     }
     m_slaterConcurrent->setMolecule(m_molecule);
   }
+  // setMolecule() may have given the molecule a private copy of the basis set
+  m_basis = std::as_const(*m_molecule).basisSet();
 
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {

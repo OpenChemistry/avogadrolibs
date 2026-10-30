@@ -70,10 +70,22 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
   // while a calculation is still in flight.
   cancelAndWait();
 
+  // Let go of the previous job's basis set first: still holding it would
+  // make the mutable access below copy it for nothing.
+  m_basisHandle.reset();
+
+  // Setting up a calculation writes into the basis set (initCalculation(),
+  // and generateDensityMatrix() for a Gaussian set), so take the mutable
+  // one. The molecule gets a private copy if an undo snapshot shares it.
   m_set = dynamic_cast<GaussianSet*>(mol->basisSet());
 
   delete m_tools;
   m_tools = new GaussianSetTools(mol);
+
+  // The workers read m_set through m_tools on other threads. Hold it for the
+  // job, so that if the molecule later detaches from it (a copy, then a
+  // write) and the snapshot that ends up with it is freed, it stays alive.
+  m_basisHandle = mol->sharedBasisSet();
 }
 
 bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
@@ -99,7 +111,8 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
 
 bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
-  if (!m_set)
+  // Without the handle m_set may have been freed since the last job.
+  if (!m_set || !m_basisHandle)
     return false;
 
   // generateDensityMatrix() mutates the set the running workers read through
@@ -126,6 +139,10 @@ void GaussianSetConcurrent::calculationComplete()
   // calculation has already been set up. Never free that one's work items.
   if (m_future.isRunning())
     return;
+
+  // The job is over. Holding the basis set any longer would make the next
+  // mutable access copy it; setMolecule() takes it again for the next job.
+  m_basisHandle.reset();
 
   delete m_gaussianShells;
   m_gaussianShells = nullptr;
@@ -157,8 +174,10 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
                                              unsigned int state,
                                              void (*func)(GaussianShell&))
 {
-  // A basis set rejected by GaussianSetTools must not start a calculation
-  if (!m_set || !m_tools || !m_tools->isValid())
+  // A basis set rejected by GaussianSetTools must not start a calculation.
+  // Without the handle (no setMolecule() since the last job) m_set and
+  // m_tools may refer to a basis set that has been freed.
+  if (!m_set || !m_tools || !m_basisHandle || !m_tools->isValid())
     return false;
 
   cancelAndWait();

@@ -478,6 +478,8 @@ void Orbitals::calculateCube()
     m_gaussianConcurrent = new QtGui::GaussianSetConcurrent(this);
   }
   m_gaussianConcurrent->setMolecule(m_molecule);
+  // setMolecule() may have given the molecule a private copy of the basis set
+  loadBasis();
 
   auto* watcher = &m_gaussianConcurrent->watcher();
   connect(watcher, SIGNAL(finished()), this, SLOT(calculateCubeDone()));
