@@ -119,19 +119,26 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
 Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
                                      Index uniqueId)
 {
-  if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
-    // Add atom using our own addAtom (which handles unique IDs)
-    // then set the position
-    auto atom = Molecule::addAtom(number);
-    if (atom.isValid())
-      atom.setPosition3d(position3d);
-    return atom;
-  } else {
-    auto atom = Molecule::addAtom(number, uniqueId);
-    if (atom.isValid())
-      atom.setPosition3d(position3d);
+  // Store the position first, as Core::Molecule::addAtom() does, so the atom
+  // is added to the coordinate sets with it.
+  const bool covered = m_positions3d.size() == atomCount();
+  if (covered)
+    m_positions3d.push_back(position3d);
+
+  // Add atom using our own addAtom (which handles unique IDs)
+  auto atom = uniqueId >= static_cast<Index>(m_atomUniqueIds.size())
+                ? Molecule::addAtom(number)
+                : Molecule::addAtom(number, uniqueId);
+  if (!atom.isValid()) {
+    // A refused add leaves the molecule as it was.
+    if (covered)
+      m_positions3d.pop_back();
     return atom;
   }
+
+  // Positions that did not cover the atoms yet are extended by this.
+  atom.setPosition3d(position3d);
+  return atom;
 }
 
 bool Molecule::removeAtom(Index index)

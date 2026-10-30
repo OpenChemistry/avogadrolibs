@@ -173,8 +173,13 @@ public:
   // @p covered says whether the molecule's 3D position array already has an
   // entry for every atom: only then does addAtom(number, position) store the
   // position (see Molecule::addAtom). Pass false for the plain overload.
+  // @p fullFrames says which coordinate sets had an entry for every atom
+  // before the call; only those are extended, the rest are left as they were,
+  // as Molecule::addAtom does. Empty means all of them. The entry is the
+  // position when it was stored (@p covered), else the origin.
   Index addAtom(unsigned char number, const Vector3* position = nullptr,
-                bool covered = false)
+                bool covered = false,
+                const std::vector<bool>& fullFrames = std::vector<bool>())
   {
     clearCalculated();
     Atom a;
@@ -183,6 +188,11 @@ public:
     if (position != nullptr && covered)
       a.position3d = *position;
     a.frames.assign(frameCount, Vector3::Zero());
+    for (size_t f = 0; f < frameCount; ++f) {
+      if (position != nullptr && covered &&
+          (fullFrames.empty() || fullFrames[f]))
+        a.frames[f] = *position;
+    }
     atoms.push_back(a);
     return a.id;
   }
