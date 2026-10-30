@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/cube.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -3039,4 +3040,63 @@ TEST(RWMoleculeTest, modifyMoleculeUndoRedoCubeData)
   // Undo restores the stored prior state, not the scribbled-on live one.
   EXPECT_FLOAT_EQ(1.0f, first());
   EXPECT_FLOAT_EQ(1.0f, last());
+}
+
+// Undo snapshots share the basis set with the live molecule. Stepping the MO
+// set after an undo must reach only the live molecule (its geometry and its
+// MO matrix), never the snapshot that redo restores.
+TEST(RWMoleculeTest, modifyMoleculeUndoRedoBasisSet)
+{
+  using Avogadro::Core::BasisSet;
+  using Avogadro::Core::GaussianSet;
+
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.setCoordinate3d(Array<Vector3>(2, Vector3::Zero()), 0);
+  m.setCoordinate3d(Array<Vector3>(2, Vector3(1.0, 2.0, 3.0)), 1);
+  m.setCoordinate3d(0);
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&m);
+  basis->addBasis(0, GaussianSet::S);
+  basis->addBasis(1, GaussianSet::S);
+  const std::vector<double> identity = { 1.0, 0.0, 0.0, 1.0 };
+  const std::vector<double> swapped = { 0.0, 1.0, 1.0, 0.0 };
+  basis->setMolecularOrbitals(identity);
+  for (auto type : { BasisSet::Alpha, BasisSet::Beta }) {
+    basis->setMolecularOrbitals(identity, type, 0);
+    basis->setMolecularOrbitals(swapped, type, 1);
+  }
+  m.setBasisSet(basis);
+  RWMolecule mol(m);
+
+  auto coefficient = [&m]() {
+    const auto* g =
+      dynamic_cast<const GaussianSet*>(std::as_const(m).basisSet());
+    return g != nullptr ? g->moMatrix()(0, 0) : -1.0;
+  };
+
+  Molecule edited(m);
+  // A pure move keeps derived data such as the basis set.
+  edited.atom(0).setPosition3d(Vector3(0.5, 0.0, 0.0));
+  mol.modifyMolecule(edited, Molecule::Atoms | Molecule::Moved);
+  ASSERT_NE(std::as_const(m).basisSet(), nullptr);
+
+  mol.undoStack().undo();
+  auto* live = dynamic_cast<GaussianSet*>(m.basisSet());
+  ASSERT_NE(live, nullptr);
+  EXPECT_EQ(live->molecule(), &m);
+  ASSERT_TRUE(live->setActiveSetStep(1));
+  EXPECT_DOUBLE_EQ(0.0, coefficient());
+  EXPECT_EQ(Vector3(1.0, 2.0, 3.0), m.atomPosition3d(0));
+
+  // Redo restores the snapshot taken before the step change.
+  mol.undoStack().redo();
+  EXPECT_DOUBLE_EQ(1.0, coefficient());
+  EXPECT_EQ(Vector3(0.5, 0.0, 0.0), m.atomPosition3d(0));
+
+  // And undo again brings back the unstepped prior state.
+  mol.undoStack().undo();
+  EXPECT_DOUBLE_EQ(1.0, coefficient());
+  EXPECT_EQ(Vector3::Zero(), m.atomPosition3d(0));
 }

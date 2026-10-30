@@ -1093,8 +1093,10 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 
 bool GaussianSetTools::isValid() const
 {
+  // Only look: the mutable basisSet() would detach a shared basis set.
   return m_valid && (m_molecule != nullptr) &&
-         (dynamic_cast<GaussianSet*>(m_molecule->basisSet()) != nullptr);
+         (dynamic_cast<const GaussianSet*>(
+            std::as_const(*m_molecule).basisSet()) != nullptr);
 }
 
 bool GaussianSetTools::moMatrixFits(const MatrixX& moMat) const

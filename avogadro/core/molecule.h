@@ -760,10 +760,35 @@ public:
   void setBasisSet(BasisSet* basis);
 
   /**
-   * @return the basis set (if present) for the molecule.
+   * @brief Get the mutable basis set (if present) for the molecule.
+   *
+   * Copies of a molecule share their basis set. This accessor first gives
+   * this molecule a private copy of a shared one (a sole owner is not
+   * copied), and then points the basis set's molecule() back at this
+   * molecule. A mutable pointer must therefore not be held across a copy of
+   * the molecule: take it again afterwards. Reading through a non-const
+   * molecule can cost a copy; prefer the const overload or sharedBasisSet()
+   * when only reading.
+   *
+   * The molecule() of a basis set reached through the const overload or
+   * sharedBasisSet() names some molecule that holds it, not necessarily this
+   * one, and must not be relied on.
+   * @return The basis set, or nullptr if there is none.
    */
-  BasisSet* basisSet() { return m_basisSet; }
-  const BasisSet* basisSet() const { return m_basisSet; }
+  BasisSet* basisSet();
+  const BasisSet* basisSet() const { return m_basisSet.get(); }
+
+  /**
+   * @brief A handle to the basis set that keeps it alive.
+   *
+   * For readers that outlive the call, e.g. a calculation on worker threads:
+   * the basis set stays valid for as long as the handle is held, even after
+   * setBasisSet() replaces it or a copy of the molecule detaches. While the
+   * handle is held, the next mutable basisSet() gives the molecule a private
+   * copy. Its molecule() must not be relied on (see basisSet()).
+   * @return The basis set, or nullptr if there is none.
+   */
+  std::shared_ptr<const BasisSet> sharedBasisSet() const;
 
   /**
    * The unit cell for this molecule. May be nullptr for non-periodic
@@ -1434,7 +1459,9 @@ protected:
   std::vector<std::shared_ptr<Cube>> m_cubes;
   Index m_activeCubeIndex = 0;
 
-  BasisSet* m_basisSet;
+  // Shared between copies of the molecule; the non-const basisSet() detaches
+  // a shared one before handing it out (copy on write).
+  std::shared_ptr<BasisSet> m_basisSet;
   std::unique_ptr<UnitCell> m_unitCell;
   Array<Residue> m_residues;
 
