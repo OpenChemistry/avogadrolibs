@@ -88,12 +88,14 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   Index m_atomUid;
   size_t m_layer;
   bool m_added = false;
+  Vector3 m_position3d;
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
-                 Index atomId, Index uid)
+                 Index atomId, Index uid,
+                 const Vector3& position3d = Vector3::Zero())
     : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
-      m_atomId(atomId), m_atomUid(uid)
+      m_atomId(atomId), m_atomUid(uid), m_position3d(position3d)
   {
     m_layer = m_molecule.layer().activeLayer();
   }
@@ -101,10 +103,9 @@ public:
   void redo() override
   {
     assert(m_molecule.atomCount() == m_atomId);
-    auto atom =
-      m_usingPositions
-        ? m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomUid)
-        : m_molecule.addAtom(m_atomicNumber, m_atomUid);
+    auto atom = m_usingPositions
+                  ? m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid)
+                  : m_molecule.addAtom(m_atomicNumber, m_atomUid);
     // An add that was refused leaves the molecule as it was, and undoing it
     // must do the same -- removing m_atomId then takes whichever atom has
     // since come to sit at that index.

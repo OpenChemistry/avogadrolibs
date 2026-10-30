@@ -224,7 +224,7 @@ void Molecule::copyDisplayStateFrom(const Molecule& other)
     return;
 
   // Go through a copy so the settings are cloned rather than shared.
-  const MoleculeInfo source(other.ensureLayerInfo());
+  const MoleculeInfo& source(other.ensureLayerInfo());
   MoleculeInfo& info = ensureLayerInfo();
   info.enable = source.enable;
   info.settings = source.settings;
@@ -828,6 +828,23 @@ void Molecule::setCustomElementMap(const Molecule::CustomElementMap& map)
   m_customElementMap = map;
 }
 
+namespace {
+
+// Make room for the atom about to become @p newAtom in every frame that has an
+// entry for each of the atoms before it. Frames of any other length are left
+// alone, the rule removeAtomEntryFrames() applies in the other direction, so
+// that adding and then removing an atom restores every frame exactly.
+template <typename T, typename Fill>
+void addAtomEntryFrames(Array<Array<T>>& frames, Index newAtom, Fill fill)
+{
+  for (auto& frame : frames) {
+    if (frame.size() == newAtom)
+      frame.push_back(fill(newAtom));
+  }
+}
+
+} // namespace
+
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
   m_graph.addVertex();
@@ -837,6 +854,12 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
     m_elements.set(number);
   else
     m_elements.set(element_count - 1); // custom element
+
+  // The new atom's position, if addAtom(number, position) has just stored it.
+  addAtomEntryFrames(m_coordinates3d, atomCount() - 1, [this](Index i) {
+    return m_positions3d.size() == atomCount() ? m_positions3d[i]
+                                               : Vector3::Zero();
+  });
 
   ensureLayerInfo().layer.addAtomToActiveLayer(atomCount() - 1);
   // The calculated results are per-atom, so a new atom invalidates them just

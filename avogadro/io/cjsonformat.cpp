@@ -651,7 +651,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       if (coordSets.is_array() && !coordSets.empty()) {
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
           Array<Vector3> setArray;
-          json set = coordSets[i];
+          const json& set = coordSets[i];
           if (isNumericArray(set)) {
             for (unsigned int j = 0; j < set.size() / 3; ++j) {
               setArray.push_back(
@@ -1699,7 +1699,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   properties["totalCharge"] = molecule.totalCharge();
   properties["totalSpinMultiplicity"] = molecule.totalSpinMultiplicity();
   // loop through all other properties
-  const auto map = molecule.dataMap();
+  const auto& map = molecule.dataMap();
   for (const auto& element : map) {
     if (element.first == "name" || element.first == "inchi" ||
         element.first == Core::SpaceGroups::internationalNumberKey())
@@ -2152,7 +2152,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     atoms["coords"] = coords;
 
     // forces if present
-    const auto forceVectors = molecule.forceVectors();
+    const auto& forceVectors = molecule.forceVectors();
     if (forceVectors.size() == molecule.atomCount()) {
       json forces;
       for (const auto& force : forceVectors) {
@@ -2186,7 +2186,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
     // isotopes (if present)
     json isotopes;
-    const auto isotopeList = molecule.isotopes();
+    const auto& isotopeList = molecule.isotopes();
     if (isotopeList.size() == molecule.atomCount()) {
       for (Index i = 0; i < molecule.atomCount(); ++i) {
         isotopes.push_back(isotopeList[i]);

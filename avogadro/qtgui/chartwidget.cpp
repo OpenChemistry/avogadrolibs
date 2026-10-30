@@ -205,13 +205,13 @@ bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
     return false;
 
   auto* ds = plot->getDatastore();
-  const QString xName = names[0];
+  const QString& xName = names[0];
   size_t columnX = ds->addCopiedColumn(plotData[0], xName);
   QColor c(color[0], color[1], color[2], color[3]);
 
   // loop through the columns
   for (size_t i = 1; i < plotData.size(); i++) {
-    const QString yName = names[i];
+    const QString& yName = names[i];
     size_t columnY = ds->addCopiedColumn(plotData[i], yName);
 
     JKQTPXYLineGraph* graph = new JKQTPXYLineGraph(plot);

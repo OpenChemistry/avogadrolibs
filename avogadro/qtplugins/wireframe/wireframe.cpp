@@ -13,6 +13,7 @@
 #include <avogadro/rendering/widelinegeometry.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -50,7 +51,8 @@ std::string commaToDot(std::string token)
 
 struct LayerWireframe : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   bool multiBonds = true;
   bool showHydrogens = true;
   float lineWidth = 1.0f;
