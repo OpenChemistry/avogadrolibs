@@ -25,4 +25,18 @@ QtPlugins::PluginManager& loadedPlugins()
   return *manager;
 }
 
+namespace {
+bool s_haveGLContext = false;
+}
+
+bool haveGLContext()
+{
+  return s_haveGLContext;
+}
+
+void setHaveGLContext(bool have)
+{
+  s_haveGLContext = have;
+}
+
 } // namespace Avogadro::QtPluginsTests

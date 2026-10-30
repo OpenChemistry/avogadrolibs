@@ -26,6 +26,16 @@ namespace Avogadro::QtPluginsTests {
  */
 QtPlugins::PluginManager& loadedPlugins();
 
+/**
+ * Whether main() could make an OpenGL context current. Rendering::TextLabel
+ * constructors call OpenGL, so a test that makes a plugin build a text label
+ * (drawing a tool's overlay, for instance) crashes without one: such tests
+ * skip themselves instead. Some platforms never have one (Qt's offscreen
+ * platform on macOS, and on Linux without a display server).
+ */
+bool haveGLContext();
+void setHaveGLContext(bool have);
+
 /** @return The identifiers of every factory of type @p Factory, sorted. */
 template <typename Factory>
 QStringList pluginIdentifiers()
