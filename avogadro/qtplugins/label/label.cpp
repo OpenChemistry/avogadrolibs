@@ -27,6 +27,7 @@
 #include <avogadro/rendering/scene.h>
 #include <avogadro/rendering/textlabel3d.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtWidgets/QCheckBox>
@@ -102,7 +103,8 @@ struct LayerLabel : Core::LayerData
   unsigned short residueOptions = LabelOptions::None;
   unsigned short bondOptions = LabelOptions::None;
 
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   float radiusScalar = 0.5f;
   float labelScale = 1.0f;
   Vector3ub color = Vector3ub(255, 255, 255);

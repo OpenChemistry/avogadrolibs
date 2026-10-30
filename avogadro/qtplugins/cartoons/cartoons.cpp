@@ -5,6 +5,7 @@
 
 #include "cartoons.h"
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QVBoxLayout>
@@ -91,7 +92,8 @@ size_t backboneSegmentGroup(
 
 struct LayerCartoon : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   // The defaults of the QSettings fallbacks in the constructor below, for the
   // constructor that is handed a saved string.
   bool showBackbone = false;

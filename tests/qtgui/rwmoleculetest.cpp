@@ -131,6 +131,91 @@ TEST(RWMoleculeTest, addAtom)
     EXPECT_EQ(i, mol.atomUniqueId(i));
 }
 
+// Adding an atom with a position puts it in every coordinate set, and one
+// undo takes it out of all of them again, leaving each exactly as it was.
+TEST(RWMoleculeTest, addAtomWithPositionUndoRestoresCoordinateSets)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  Array<Vector3> frame0 = m.atomPositions3d();
+  Array<Vector3> frame1(2), frame2(2);
+  frame1[0] = Vector3(0.0, 0.0, 0.1);
+  frame1[1] = Vector3(1.0, 0.0, 0.1);
+  frame2[0] = Vector3(0.0, 0.0, 0.2);
+  frame2[1] = Vector3(1.0, 0.0, 0.2);
+  m.setCoordinate3d(frame0, 0);
+  m.setCoordinate3d(frame1, 1);
+  m.setCoordinate3d(frame2, 2);
+  mol.undoStack().clear();
+
+  mol.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  ASSERT_EQ(3, mol.atomCount());
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i) {
+    ASSERT_EQ(3u, m.coordinate3dRef(i).size()) << "frame " << i;
+    EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(i)[2]) << "frame " << i;
+  }
+  EXPECT_EQ(Vector3(0.0, 1.0, 0.0), mol.atomPosition3d(2));
+  // A single step: not an add plus a move.
+  EXPECT_EQ(1, mol.undoStack().count());
+
+  mol.undoStack().undo();
+  EXPECT_EQ(2, mol.atomCount());
+  EXPECT_EQ(frame0, m.coordinate3dRef(0));
+  EXPECT_EQ(frame1, m.coordinate3dRef(1));
+  EXPECT_EQ(frame2, m.coordinate3dRef(2));
+
+  mol.undoStack().redo();
+  ASSERT_EQ(3, mol.atomCount());
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i) {
+    ASSERT_EQ(3u, m.coordinate3dRef(i).size()) << "frame " << i;
+    EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(i)[2]) << "frame " << i;
+  }
+}
+
+// Without a position there is nothing to put in the frames but the origin;
+// undo still restores them.
+TEST(RWMoleculeTest, addAtomWithoutPositionUndoRestoresCoordinateSets)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  Array<Vector3> frame0 = m.atomPositions3d();
+  Array<Vector3> frame1(1, Vector3(0.0, 0.0, 0.5));
+  m.setCoordinate3d(frame0, 0);
+  m.setCoordinate3d(frame1, 1);
+  mol.undoStack().clear();
+
+  mol.addAtom(1);
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i)
+    EXPECT_EQ(2u, m.coordinate3dRef(i).size()) << "frame " << i;
+  mol.undoStack().undo();
+  EXPECT_EQ(frame0, m.coordinate3dRef(0));
+  EXPECT_EQ(frame1, m.coordinate3dRef(1));
+}
+
+// An add that is refused (the unique id is taken) must leave no position
+// behind: not in the active coordinates, not in any coordinate set.
+TEST(RWMoleculeTest, refusedAddAtomLeavesPositionsAndCoordinateSets)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0), 0);
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0), 1);
+  Array<Vector3> frame0 = m.atomPositions3d();
+  Array<Vector3> frame1(2, Vector3(0.0, 0.0, 0.5));
+  m.setCoordinate3d(frame0, 0);
+  m.setCoordinate3d(frame1, 1);
+
+  // Unique id 0 belongs to the first atom.
+  auto refused = m.addAtom(6, Vector3(5.0, 5.0, 5.0), 0);
+  EXPECT_FALSE(refused.isValid());
+  EXPECT_EQ(2u, m.atomCount());
+  EXPECT_EQ(frame0, m.atomPositions3d());
+  EXPECT_EQ(frame0, m.coordinate3dRef(0));
+  EXPECT_EQ(frame1, m.coordinate3dRef(1));
+}
+
 TEST(RWMoleculeTest, removeAtom)
 {
   Molecule m;

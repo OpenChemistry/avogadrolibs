@@ -52,12 +52,17 @@ RWMolecule::AtomType RWMolecule::addAtom(unsigned char num, bool usingPositions)
 RWMolecule::AtomType RWMolecule::addAtom(unsigned char num,
                                          const Vector3& position3d)
 {
-  // We will combine the actions in this command.
-  m_undoStack.beginMacro(tr("Add Atom"));
-  AtomType atom = addAtom(num);
-  setAtomPosition3d(atomCount() - 1, position3d);
-  m_undoStack.endMacro();
-  return atom;
+  // One command that adds the atom already in place: its position goes into
+  // every coordinate set at the same time, and undoing it removes the atom
+  // from all of them.
+  auto atomId = static_cast<Index>(m_molecule.atomCount());
+  auto atomUid = static_cast<Index>(m_molecule.m_atomUniqueIds.size());
+
+  auto* comm =
+    new AddAtomCommand(*this, num, true, atomId, atomUid, position3d);
+  comm->setText(tr("Add Atom"));
+  m_undoStack.push(comm);
+  return AtomType(this, atomId);
 }
 
 Index RWMolecule::atomCount(unsigned char num) const
@@ -592,7 +597,7 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   }
   // now loop through and add the resiudes
   for (size_t i = 0; i < mol.residueCount(); ++i) {
-    const Core::Residue res = mol.residue(i);
+    const Core::Residue& res = mol.residue(i);
     addResidue(res, offset);
   }
   endMergeMode();

@@ -13,6 +13,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFormLayout>
@@ -49,7 +50,8 @@ std::string commaToDot(std::string token)
 
 struct LayerBallAndStick : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   bool multiBonds = true;
   bool showHydrogens = true;
   float atomScale = 0.3f;
