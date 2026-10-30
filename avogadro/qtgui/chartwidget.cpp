@@ -48,7 +48,7 @@ public:
 
 ChartWidget::ChartWidget(QWidget* p) : QWidget(p), m_impl(new ChartWidgetImpl)
 {
-  auto hLayout = new QHBoxLayout(this);
+  auto* hLayout = new QHBoxLayout(this);
   auto* plot = m_impl->plot;
 
   // connect the single-click and double-click signals

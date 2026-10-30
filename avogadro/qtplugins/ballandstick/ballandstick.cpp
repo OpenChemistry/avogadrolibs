@@ -194,7 +194,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
 
   // if we have to draw any translucent spheres, we need to add a separate
   // geometry node for them
-  auto translucentSpheres = new SphereGeometry;
+  auto* translucentSpheres = new SphereGeometry;
   translucentSpheres->setRenderPass(Rendering::TranslucentPass);
   translucentSpheres->identifier().molecule =
     reinterpret_cast<const void*>(&molecule);
@@ -202,7 +202,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(translucentSpheres);
 
   // for the selected atoms
-  auto selectedSpheres = new SphereGeometry;
+  auto* selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(selectedSpheres);
 

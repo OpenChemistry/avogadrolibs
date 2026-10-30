@@ -136,10 +136,10 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
 
-  auto selectedSpheres = new SphereGeometry;
+  auto* selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
 
-  auto translucentSpheres = new SphereGeometry;
+  auto* translucentSpheres = new SphereGeometry;
   translucentSpheres->setRenderPass(Rendering::TranslucentPass);
   translucentSpheres->identifier().molecule = &molecule;
   translucentSpheres->identifier().type = Rendering::AtomType;

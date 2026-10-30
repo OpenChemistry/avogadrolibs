@@ -329,7 +329,7 @@ std::vector<const FileFormat*> FileFormatManager::fileFormats(
 {
   std::vector<const FileFormat*> result;
 
-  for (auto m_format : m_formats) {
+  for (auto* m_format : m_formats) {
     // removeFormat() leaves a null entry so the other formats keep their ids.
     if (m_format == nullptr)
       continue;

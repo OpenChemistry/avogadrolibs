@@ -137,7 +137,7 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   translucentSpheres->identifier().molecule = &molecule;
   translucentSpheres->identifier().type = Rendering::AtomType;
 
-  auto selectedSpheres = new SphereGeometry;
+  auto* selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   selectedSpheres->setRenderPass(Rendering::TranslucentPass);
 
