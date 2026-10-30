@@ -14,6 +14,8 @@
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/molecule.h>
 
+#include <utility>
+
 using namespace Avogadro::Calc;
 using namespace Avogadro::Core;
 using Avogadro::MaxIndex;
@@ -23,10 +25,11 @@ using Avogadro::Real;
 class TestEnergyCalculator : public EnergyCalculator
 {
 public:
-  TestEnergyCalculator(const std::string& id = "test_calc",
-                       const std::string& modelName = "Test Calculator")
-    : m_identifier(id), m_name(modelName), m_acceptsUnitCell(false),
-      m_acceptsIons(false), m_acceptsRadicals(false), m_configCalled(false)
+  TestEnergyCalculator(std::string id = "test_calc",
+                       std::string modelName = "Test Calculator")
+    : m_identifier(std::move(id)), m_name(std::move(modelName)),
+      m_acceptsUnitCell(false), m_acceptsIons(false), m_acceptsRadicals(false),
+      m_configCalled(false)
   {
   }
 

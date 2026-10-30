@@ -9,6 +9,7 @@
 #include "avogadrocore.h"
 
 #include <typeinfo>
+#include <utility>
 #include <vector>
 
 namespace Avogadro::Core {
@@ -58,7 +59,7 @@ protected:
   class Holder : public PlaceHolder
   {
   public:
-    Holder(const ValueType& value) : m_content(value) {}
+    Holder(ValueType value) : m_content(std::move(value)) {}
 
     const std::type_info& type() const override { return typeid(ValueType); }
 

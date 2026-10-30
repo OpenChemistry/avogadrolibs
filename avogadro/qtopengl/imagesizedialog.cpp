@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <utility>
 
 namespace Avogadro::QtOpenGL {
 
@@ -27,11 +28,12 @@ namespace {
 constexpr int MaxDimension = RenderOptions::MaxDimension;
 }
 
-ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, const QString& settingsKey,
+ImageSizeDialog::ImageSizeDialog(GLWidget* glWidget, QString settingsKey,
                                  bool showTransparent, bool evenDimensions,
                                  QWidget* parent, bool defaultTransparent)
-  : QDialog(parent), m_glWidget(glWidget), m_settingsKey(settingsKey),
-    m_even(evenDimensions), m_transparent(nullptr)
+  : QDialog(parent), m_glWidget(glWidget),
+    m_settingsKey(std::move(settingsKey)), m_even(evenDimensions),
+    m_transparent(nullptr)
 {
   setWindowTitle(tr("Image Size"));
 
