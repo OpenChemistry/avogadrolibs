@@ -27,8 +27,11 @@
 #include <avogadro/rendering/groupnode.h>
 
 #include <QtGui/QColor>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryDir>
+#include <QtWidgets/QWidget>
 
 #include <gtest/gtest.h>
 
@@ -493,6 +496,44 @@ TEST_P(ScenePluginSerializeTest, nothingSavedForOtherPluginsIsTouched)
   Rendering::GroupNode node;
   plugin->process(molecule, node);
   EXPECT_EQ(info->settings["Some other plugin"][0]->getSave(), "untouched");
+}
+
+// Regression: the layer data kept a raw pointer to the settings widget and
+// called deleteLater() on it when destroyed. The widget belongs to whatever
+// dock it was put in, which deletes it first when the panel is torn down, so
+// the layer data (which lives as long as the molecule) then used freed memory.
+TEST_P(ScenePluginSerializeTest, layerOutlivesItsSetupWidget)
+{
+  QPointer<QWidget> widget;
+  {
+    QtGui::Molecule molecule;
+    auto plugin = spec().create();
+    ActiveMolecule::set(&molecule);
+    widget = plugin->setupWidget();
+    ASSERT_FALSE(widget.isNull());
+
+    // The panel goes away; the molecule and its layer data do not.
+    delete widget.data();
+    EXPECT_TRUE(widget.isNull());
+    ActiveMolecule::set(nullptr);
+  } // the molecule, and with it the layer data, is destroyed here
+  QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+}
+
+// The widget is still deleted with the layer data when nobody else did.
+TEST_P(ScenePluginSerializeTest, layerDeletesAnUnclaimedSetupWidget)
+{
+  QPointer<QWidget> widget;
+  {
+    QtGui::Molecule molecule;
+    auto plugin = spec().create();
+    ActiveMolecule::set(&molecule);
+    widget = plugin->setupWidget();
+    ASSERT_FALSE(widget.isNull());
+    ActiveMolecule::set(nullptr);
+  }
+  QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+  EXPECT_TRUE(widget.isNull());
 }
 
 INSTANTIATE_TEST_SUITE_P(ScenePlugins, ScenePluginSerializeTest,
