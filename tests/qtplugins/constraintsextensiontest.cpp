@@ -5,13 +5,22 @@
 
 #include "commandtestharness.h"
 
+#include "constraintsdialog.h"
 #include "constraintsextension.h"
+
+#include <avogadro/core/constraint.h>
+#include <avogadro/qtgui/molecule.h>
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
+#include <QtGui/QAction>
+#include <QtTest/QSignalSpy>
+#include <QtWidgets/QAbstractItemView>
+#include <QtWidgets/QApplication>
 
 #include <gtest/gtest.h>
 
+using Avogadro::QtPlugins::ConstraintsDialog;
 using Avogadro::QtPlugins::ConstraintsExtension;
 using Avogadro::QtPluginsTests::atomList;
 using Avogadro::QtPluginsTests::CommandOutcome;
@@ -219,4 +228,65 @@ TEST_F(ConstraintsCommandTest, commandSchema)
                 .toObject()
                 .isEmpty());
   EXPECT_TRUE(m_plugin.commandSchema("notACommand").isEmpty());
+}
+
+namespace {
+
+// The dialog the extension opened: it has no parent here, so find it among
+// the top-level widgets.
+ConstraintsDialog* openedDialog()
+{
+  for (QWidget* widget : QApplication::topLevelWidgets()) {
+    if (auto* dialog = qobject_cast<ConstraintsDialog*>(widget))
+      return dialog;
+  }
+  return nullptr;
+}
+
+} // namespace
+
+// Regression: ConstraintsDialog::setMolecule(nullptr) dereferenced the null
+// molecule, which the extension passes on whenever the molecule goes away
+// (and, once the dialog existed, crashed the application on closing a file).
+// It also connected to the molecule's changed() signal on every call, so a
+// molecule set N times updated the table N times for each change.
+TEST_F(ConstraintsCommandTest, dialogSurvivesLosingAndRegainingTheMolecule)
+{
+  ASSERT_FALSE(m_plugin.actions().isEmpty());
+  m_plugin.actions().first()->trigger(); // opens the dialog
+  ConstraintsDialog* dialog = openedDialog();
+  ASSERT_NE(dialog, nullptr);
+  auto* view = dialog->findChild<QAbstractItemView*>();
+  ASSERT_NE(view, nullptr);
+
+  ASSERT_EQ(m_harness
+              .run("addConstraint",
+                   { { "atoms", atomList({ 1, 2 }) }, { "value", 1.5 } })
+              .status,
+            CommandStatus::Finished);
+  EXPECT_EQ(view->model()->rowCount(), 1);
+
+  // The molecule goes away: the table empties and the dialog lets go of it.
+  m_harness.setPluginMolecule(nullptr);
+  EXPECT_EQ(view->model()->rowCount(), 0);
+
+  // A molecule comes back (the same one, as the harness only has one, so the
+  // dialog sees it set again): the table shows its constraints again.
+  m_harness.setPluginMolecule(m_harness.molecule());
+  EXPECT_EQ(view->model()->rowCount(), 1);
+
+  // ...and keeps tracking it, exactly once per change however many times it
+  // was set.
+  m_harness.setPluginMolecule(m_harness.molecule());
+  m_harness.setPluginMolecule(m_harness.molecule());
+  QSignalSpy resets(view->model(), &QAbstractItemModel::modelReset);
+  Avogadro::Core::Constraint added(0, 1, Avogadro::MaxIndex, Avogadro::MaxIndex,
+                                   1.0);
+  added.setType(Avogadro::Core::Constraint::DistanceConstraint);
+  m_harness.molecule()->addConstraint(added);
+  m_harness.molecule()->emitChanged(Avogadro::QtGui::Molecule::Constraints);
+  EXPECT_EQ(view->model()->rowCount(), 2);
+  EXPECT_EQ(resets.count(), 1);
+
+  dialog->hide();
 }
