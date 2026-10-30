@@ -43,9 +43,10 @@ public:
   ~SlaterSetConcurrent() override;
 
   /**
-   * Prepare a calculation on the basis set of @p mol. Call this before each
-   * calculation: the calculator holds the basis set only until that job
-   * finishes, and refuses to start another without a new setMolecule().
+   * Prepare calculations on the basis set of @p mol. The calculator holds
+   * the basis set only while a job runs; each later calculation sets itself
+   * up again from @p mol, which must outlive the calculator or be replaced
+   * with another setMolecule().
    *
    * This takes the molecule's mutable basis set, because setting up a
    * calculation writes into it, so a basis set an undo snapshot shares is
@@ -106,6 +107,12 @@ private:
   // Keeps the basis set the workers read alive for the job, even if the
   // molecule later detaches from it and hands it to an undo snapshot.
   std::shared_ptr<const Core::BasisSet> m_basisHandle;
+  // The molecule from setMolecule(), used to set up each later calculation.
+  Core::Molecule* m_molecule = nullptr;
+
+  /// Set up again from m_molecule if the last job released the basis set.
+  /// @return Whether a basis set is held for the next job.
+  bool ensureSetUp();
 
   bool setUpCalculation(Core::Cube* cube, unsigned int state,
                         void (*func)(SlaterShell&));

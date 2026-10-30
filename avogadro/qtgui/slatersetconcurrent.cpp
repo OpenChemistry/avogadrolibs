@@ -59,6 +59,7 @@ void SlaterSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
+  m_molecule = mol;
   // The worker items hold a raw pointer to m_tools, so nothing may replace it
   // while a calculation is still in flight.
   cancelAndWait();
@@ -79,6 +80,15 @@ void SlaterSetConcurrent::setMolecule(Core::Molecule* mol)
   // job, so that if the molecule later detaches from it (a copy, then a
   // write) and the snapshot that ends up with it is freed, it stays alive.
   m_basisHandle = mol->sharedBasisSet();
+}
+
+bool SlaterSetConcurrent::ensureSetUp()
+{
+  // The previous job released the basis set, so m_set and m_tools may refer
+  // to one that has since been freed: build them again from the molecule.
+  if (!m_basisHandle && m_molecule != nullptr)
+    setMolecule(m_molecule);
+  return m_basisHandle != nullptr;
 }
 
 bool SlaterSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
@@ -138,9 +148,9 @@ void SlaterSetConcurrent::cancelAndWait()
 bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
                                            void (*func)(SlaterShell&))
 {
-  // Without the handle (no setMolecule() since the last job) m_set and
-  // m_tools may refer to a basis set that has been freed.
-  if (!m_set || !m_tools || !m_basisHandle)
+  // Without the handle m_set and m_tools may refer to a basis set that has
+  // been freed since the last job, so set up again from the molecule.
+  if (!ensureSetUp() || !m_set || !m_tools)
     return false;
 
   cancelAndWait();

@@ -104,9 +104,11 @@ TEST(GaussianSetConcurrentTest, handleKeepsTheBasisSetAliveForTheJob)
   EXPECT_GT(centre(cube), 0.0f);
 }
 
-// The handle is released when the job finishes, so a further calculation
-// needs a new setMolecule() rather than reading a basis set that may be gone.
-TEST(GaussianSetConcurrentTest, eachCalculationNeedsSetMolecule)
+// The handle is released when the job finishes, so holding nothing between
+// jobs, a further calculation sets itself up again from the molecule. The
+// basis set the first job used may have been copied away and freed meanwhile
+// (ASan reports a use after free if the calculator reads it).
+TEST(GaussianSetConcurrentTest, laterCalculationsSetUpAgain)
 {
   ensureApp();
   Molecule live;
@@ -125,13 +127,21 @@ TEST(GaussianSetConcurrentTest, eachCalculationNeedsSetMolecule)
   const BasisSet* own = std::as_const(live).basisSet();
   EXPECT_EQ(live.basisSet(), own);
 
+  // Copy the molecule, detach the live one, and free the copy: the basis set
+  // the first job used is gone.
+  {
+    const Molecule snapshot(live);
+    ASSERT_NE(live.basisSet(), own);
+  }
+
   Cube second;
   setUpCube(second);
-  EXPECT_FALSE(calculator.calculateMolecularOrbital(&second, 0));
-  EXPECT_FALSE(calculator.calculateElectronDensity(&second));
-
-  calculator.setMolecule(&live);
   ASSERT_TRUE(calculator.calculateMolecularOrbital(&second, 0));
   ASSERT_TRUE(finished.wait(5000));
   EXPECT_FLOAT_EQ(centre(second), centre(first));
+
+  Cube density;
+  setUpCube(density);
+  EXPECT_TRUE(calculator.calculateElectronDensity(&density));
+  ASSERT_TRUE(finished.wait(5000));
 }

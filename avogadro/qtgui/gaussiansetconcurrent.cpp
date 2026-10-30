@@ -66,6 +66,7 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
+  m_molecule = mol;
   // The worker items hold a raw pointer to m_tools, so nothing may replace it
   // while a calculation is still in flight.
   cancelAndWait();
@@ -88,11 +89,20 @@ void GaussianSetConcurrent::setMolecule(Core::Molecule* mol)
   m_basisHandle = mol->sharedBasisSet();
 }
 
+bool GaussianSetConcurrent::ensureSetUp()
+{
+  // The previous job released the basis set, so m_set and m_tools may refer
+  // to one that has since been freed: build them again from the molecule.
+  if (!m_basisHandle && m_molecule != nullptr)
+    setMolecule(m_molecule);
+  return m_basisHandle != nullptr;
+}
+
 bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
                                                       unsigned int state,
                                                       bool beta)
 {
-  if (!m_tools)
+  if (!ensureSetUp() || !m_tools)
     return false;
 
   // setElectronType() mutates the tools the running workers hold a pointer to,
@@ -111,8 +121,7 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
 
 bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 {
-  // Without the handle m_set may have been freed since the last job.
-  if (!m_set || !m_basisHandle)
+  if (!ensureSetUp() || !m_set)
     return false;
 
   // generateDensityMatrix() mutates the set the running workers read through
@@ -130,6 +139,8 @@ bool GaussianSetConcurrent::calculateElectronDensity(Core::Cube* cube)
 
 bool GaussianSetConcurrent::calculateSpinDensity(Core::Cube* cube)
 {
+  if (!ensureSetUp())
+    return false;
   return setUpCalculation(cube, 0, GaussianSetConcurrent::processSpinDensity);
 }
 
@@ -175,8 +186,8 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
                                              void (*func)(GaussianShell&))
 {
   // A basis set rejected by GaussianSetTools must not start a calculation.
-  // Without the handle (no setMolecule() since the last job) m_set and
-  // m_tools may refer to a basis set that has been freed.
+  // The callers ran ensureSetUp(): without the handle m_set and m_tools may
+  // refer to a basis set that has been freed.
   if (!m_set || !m_tools || !m_basisHandle || !m_tools->isValid())
     return false;
 
