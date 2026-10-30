@@ -3,6 +3,8 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "shadowmolecule.h"
+
 #include <gtest/gtest.h>
 
 #include <avogadro/core/residue.h>
@@ -1954,6 +1956,364 @@ TEST(RWMoleculeTest, randomSequenceUndoRedoRoundTrip)
   while (mol.undoStack().canRedo())
     mol.undoStack().redo();
   EXPECT_SAME_STATE(checkpointSnapshot.back(), snapshot(mol));
+}
+
+// ---------------------------------------------------------------------------
+// Shadow-model test with undo and redo. randomSequenceUndoRedoRoundTrip above
+// compares a handful of properties at checkpoints; this keeps a plain shadow
+// of every atom and bond (tests/core/shadowmolecule.h), snapshots it after
+// each edit keyed by the undo stack's index, and after every undo, redo or
+// jump checks that the molecule matches the snapshot for the index it landed
+// on, property by property, atom by atom. Atoms and bonds are matched by the
+// unique ids RWMolecule hands out, so a value on the wrong atom and a unique
+// id on the wrong atom are both caught.
+//
+// Calculated results (forces, partial charges) are not compared: removing or
+// adding an atom discards them by design, and undo does not bring them back.
+// The order in which a removed atom's bonds are listed afterwards is
+// unspecified, so bonds are matched by their endpoints' unique ids.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+using ShadowModel::Model;
+
+std::string compareWithShadow(RWMolecule& mol, Model expected)
+{
+  std::string error = expected.syncBondOrder(mol.molecule());
+  if (!error.empty())
+    return error;
+
+  error = ShadowModel::verify(mol.molecule(), expected, false);
+  if (!error.empty())
+    return error;
+
+  std::ostringstream out;
+  for (Index i = 0; i < expected.atomCount(); ++i) {
+    const Index id = expected.atoms[i].id;
+    if (mol.atomUniqueId(i) != id) {
+      out << "atom index " << i << ": expected unique id " << id << " got "
+          << mol.atomUniqueId(i);
+      return out.str();
+    }
+    if (mol.atomByUniqueId(id).index() != i) {
+      out << "atom unique id " << id << " resolves to index "
+          << mol.atomByUniqueId(id).index() << ", expected " << i;
+      return out.str();
+    }
+  }
+  for (Index b = 0; b < expected.bondCount(); ++b) {
+    const Index id = expected.bonds[b].id;
+    if (mol.bondUniqueId(b) != id) {
+      out << "bond index " << b << ": expected unique id " << id << " got "
+          << mol.bondUniqueId(b);
+      return out.str();
+    }
+    if (mol.bondByUniqueId(id).index() != b) {
+      out << "bond unique id " << id << " resolves to index "
+          << mol.bondByUniqueId(id).index() << ", expected " << b;
+      return out.str();
+    }
+  }
+  return std::string();
+}
+
+} // namespace
+
+TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
+{
+  const unsigned seeds = ShadowModel::seedCount(8);
+  for (unsigned seed = 1; seed <= seeds; ++seed) {
+    Molecule m;
+    RWMolecule mol(m);
+    std::mt19937 rng(seed * 104729u);
+    auto pickInt = [&rng](int lo, int hi) {
+      return std::uniform_int_distribution<int>(lo, hi)(rng);
+    };
+    auto chance = [&pickInt](int percent) { return pickInt(0, 99) < percent; };
+    auto pickIndex = [&pickInt](Index count) {
+      return static_cast<Index>(pickInt(0, static_cast<int>(count) - 1));
+    };
+    auto pickVector = [&pickInt]() {
+      return Vector3(Real(pickInt(-50, 50)), Real(pickInt(-50, 50)),
+                     Real(pickInt(-50, 50)));
+    };
+
+    Model model;
+    // states[k] is the shadow after k commands have been applied.
+    std::vector<Model> states{ model };
+    const char* op = "start";
+    int step = 0;
+    std::string recent; // the last few operations, for a failure message
+
+    auto check = [&](const char* what, const Model& expected) {
+      const std::string entry = std::to_string(step) + ":" + op + ";";
+      if (recent.compare(std::max<size_t>(recent.size(), entry.size()) -
+                           entry.size(),
+                         std::string::npos, entry) != 0)
+        recent += " " + entry;
+      if (recent.size() > 500)
+        recent.erase(0, recent.size() - 500);
+      const std::string error = compareWithShadow(mol, expected);
+      if (error.empty())
+        return true;
+      ADD_FAILURE() << "seed " << seed << ", step " << step << ", op " << op
+                    << " [" << what << ", undo index "
+                    << mol.undoStack().index() << "]: " << error
+                    << "\n  recent operations:" << recent;
+      return false;
+    };
+    auto atIndex = [&]() {
+      return static_cast<size_t>(mol.undoStack().index());
+    };
+    // Every undo index, one command at a time, down and back up.
+    auto walkWholeStack = [&]() {
+      while (mol.undoStack().canUndo()) {
+        mol.undoStack().undo();
+        if (!check("undo", states[atIndex()]))
+          return false;
+      }
+      while (mol.undoStack().canRedo()) {
+        mol.undoStack().redo();
+        if (!check("redo", states[atIndex()]))
+          return false;
+      }
+      return true;
+    };
+
+    for (step = 0; step < 2000; ++step) {
+      const Index n = mol.atomCount();
+      const Index bonds = mol.bondCount();
+      int pick = pickInt(0, 99);
+      // Navigation, about a fifth of the steps.
+      if (pick < 20) {
+        if (pick < 6 && mol.undoStack().canUndo()) {
+          op = "undo";
+          mol.undoStack().undo();
+        } else if (pick < 12 && mol.undoStack().canRedo()) {
+          op = "redo";
+          mol.undoStack().redo();
+        } else if (pick < 19) {
+          op = "setIndex";
+          mol.undoStack().setIndex(pickInt(0, mol.undoStack().count()));
+        } else {
+          op = "undo all, redo all";
+          if (!walkWholeStack())
+            return;
+          model = states[atIndex()];
+          continue;
+        }
+        if (!check("after navigating", states[atIndex()]))
+          return;
+        // Edits carry on from wherever the stack now stands.
+        model = states[atIndex()];
+        continue;
+      }
+
+      // The edits. A new edit discards whatever could still be redone. After
+      // an undo or redo the bonds can be listed in a different order than the
+      // snapshot has them (see compareWithShadow()), so line the shadow up
+      // with the molecule before picking a bond by index.
+      model.syncBondOrder(mol.molecule());
+      pick = pickInt(0, 16);
+      // 13 would be setIsotope(), which is not left out by accident:
+      // RWMolecule::setIsotope() has no undo command (it says so in a TODO)
+      // and edits the molecule silently, so there is no undo state to
+      // compare it against. Bias towards label edits instead.
+      if (pick == 13)
+        pick = 9;
+      if (n == 0 && pick != 0 && pick != 1)
+        pick = 0;
+      if ((pick == 2 || pick == 3) && (n < 2 || (pick == 3 && bonds == 0)))
+        pick = 0;
+      if ((pick == 4 || pick == 5) && bonds == 0)
+        pick = 0;
+
+      switch (pick) {
+        case 0:
+        case 1: {
+          // Kept small, so that removals land on index 0, the last atom and
+          // an emptied molecule.
+          if (n >= 9) {
+            op = "removeAtom (instead of adding)";
+            mol.removeAtom(0);
+            model.removeAtom(0);
+            break;
+          }
+          const auto z = static_cast<unsigned char>(pickInt(1, 10));
+          if (pick == 0) {
+            op = "addAtom";
+            mol.addAtom(z);
+            model.addAtom(z);
+          } else {
+            op = "addAtom(position)";
+            const Vector3 p = pickVector();
+            mol.addAtom(z, p);
+            model.addAtom(z);
+            model.atoms.back().position3d = p;
+          }
+          model.atoms.back().id = mol.atomUniqueId(mol.atomCount() - 1);
+          break;
+        }
+        case 2: {
+          op = "addBond";
+          const Index a = pickIndex(n);
+          Index b = pickIndex(n);
+          if (a == b)
+            b = (a + 1) % n;
+          const auto order = static_cast<unsigned char>(pickInt(1, 3));
+          const Index count = mol.bondCount();
+          mol.addBond(a, b, order);
+          model.addBond(a, b, order);
+          if (mol.bondCount() != count)
+            model.bonds.back().id = mol.bondUniqueId(mol.bondCount() - 1);
+          break;
+        }
+        case 3: {
+          op = "removeAtom";
+          const Index i = chance(30) ? n - 1 : pickIndex(n);
+          mol.removeAtom(i);
+          model.removeAtom(i);
+          const std::string error = model.syncBondOrder(mol.molecule());
+          if (!error.empty()) {
+            ADD_FAILURE() << "seed " << seed << ", step " << step
+                          << ", op removeAtom(" << i << "): " << error;
+            return;
+          }
+          break;
+        }
+        case 4: {
+          op = "removeBond";
+          const Index i = pickIndex(bonds);
+          mol.removeBond(i);
+          model.removeBond(i);
+          break;
+        }
+        case 5: {
+          op = "setBondOrder";
+          const Index i = pickIndex(bonds);
+          const auto order = static_cast<unsigned char>(pickInt(1, 3));
+          mol.setBondOrder(i, order);
+          model.bonds[i].order = order;
+          break;
+        }
+        case 6: {
+          op = "setBondLabel";
+          const Index i = bonds == 0 ? 0 : pickIndex(bonds);
+          if (bonds == 0)
+            break;
+          const std::string label = "b" + std::to_string(step);
+          mol.setBondLabel(i, label);
+          model.bonds[i].label = label;
+          break;
+        }
+        case 7: {
+          op = "setAtomicNumber";
+          const Index i = pickIndex(n);
+          const auto z = static_cast<unsigned char>(pickInt(1, 10));
+          mol.setAtomicNumber(i, z);
+          model.atoms[i].atomicNumber = z;
+          model.atoms[i].color.reset(); // setAtomicNumber() resets the colour
+          break;
+        }
+        case 8: {
+          op = "setAtomPosition3d";
+          const Index i = pickIndex(n);
+          const Vector3 p = pickVector();
+          mol.setAtomPosition3d(i, p);
+          model.atoms[i].position3d = p;
+          break;
+        }
+        case 9: {
+          op = "setAtomLabel";
+          const Index i = pickIndex(n);
+          const std::string label = "a" + std::to_string(step);
+          mol.setAtomLabel(i, label);
+          model.atoms[i].label = label;
+          break;
+        }
+        case 10: {
+          op = "setAtomSelected";
+          const Index i = pickIndex(n);
+          const bool selected = chance(50);
+          mol.setAtomSelected(i, selected);
+          model.atoms[i].selected = selected;
+          break;
+        }
+        case 11: {
+          op = "setHybridization";
+          const Index i = pickIndex(n);
+          const auto hyb =
+            static_cast<Avogadro::Core::AtomHybridization>(pickInt(-6, 6));
+          mol.setHybridization(i, hyb);
+          model.atoms[i].hybridization = hyb;
+          break;
+        }
+        case 12: {
+          op = "setFormalCharge";
+          const Index i = pickIndex(n);
+          const auto charge = static_cast<signed char>(pickInt(-3, 3));
+          mol.setFormalCharge(i, charge);
+          model.atoms[i].formalCharge = charge;
+          break;
+        }
+        case 14: {
+          op = "setColor";
+          const Index i = pickIndex(n);
+          const Avogadro::Vector3ub c(pickInt(0, 255), pickInt(0, 255),
+                                      pickInt(0, 255));
+          mol.setColor(i, c);
+          model.atoms[i].color = c;
+          break;
+        }
+        case 15: {
+          op = "setLayer";
+          const Index i = pickIndex(n);
+          const auto layer = static_cast<size_t>(pickInt(0, 2));
+          mol.setLayer(i, layer);
+          model.atoms[i].layer = layer;
+          break;
+        }
+        default: {
+          op = "reorderAtoms";
+          Array<Index> order(n);
+          for (Index i = 0; i < n; ++i)
+            order[i] = i;
+          std::shuffle(order.begin(), order.end(), rng);
+          mol.reorderAtoms(order);
+          std::vector<ShadowModel::Atom> reordered;
+          for (Index i = 0; i < n; ++i)
+            reordered.push_back(model.atoms[order[i]]);
+          model.atoms = reordered;
+          break;
+        }
+      }
+
+      // Pushing a command discards whatever could still be redone, so the
+      // snapshots go with it; an edit that pushed nothing leaves them.
+      const auto after = static_cast<size_t>(mol.undoStack().index());
+      states.resize(static_cast<size_t>(mol.undoStack().count()) + 1);
+      states[after] = model;
+      if (!check("after the edit", model))
+        return;
+
+      // One step back and forth, so every edit's undo is checked against the
+      // state before it, not only the ones a navigation step happens to hit.
+      if (after > 0 && chance(35)) {
+        op = "edit, undo, redo";
+        mol.undoStack().undo();
+        if (!check("undo of the edit", states[atIndex()]))
+          return;
+        mol.undoStack().redo();
+        if (!check("redo of the edit", states[atIndex()]))
+          return;
+      }
+    }
+
+    op = "undo all, redo all";
+    if (!walkWholeStack())
+      return;
+  }
 }
 
 // ---------------------------------------------------------------------------
