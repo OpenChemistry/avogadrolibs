@@ -414,8 +414,24 @@ public:
   /** @return the elements currently in this molecule */
   const ElementMask elements() const;
 
-  /**  Adds an atom to the molecule. */
+  /**
+   * Adds an atom to the molecule.
+   *
+   * Every conformer / trajectory coordinate set that has an entry for each
+   * existing atom gets an entry for the new one: the atom's position in the
+   * active coordinates if it has one by now (see the overload below), else the
+   * origin, which is what atomPosition3d() reports for an atom without a
+   * position. Coordinate sets of any other length are left alone, as
+   * removeAtom() does.
+   */
   virtual AtomType addAtom(unsigned char atomicNumber);
+
+  /**
+   * Adds an atom at @p position3d. The position is stored in the active
+   * coordinates when they have an entry for every atom, and then, with the
+   * above, is also the atom's position in every coordinate set that was given
+   * an entry for it, so the atom stays put when the active set changes.
+   */
   AtomType addAtom(unsigned char atomicNumber, Vector3 position3d);
 
   /**

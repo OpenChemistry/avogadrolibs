@@ -3487,8 +3487,11 @@ bool ShadowRunner::step(int stepNumber)
       const unsigned char z = pickElement();
       const Vector3 p = pickVector();
       const bool covered = mol.atomPositions3d().size() == n;
+      std::vector<bool> fullFrames(model.frameCount);
+      for (size_t f = 0; f < model.frameCount; ++f)
+        fullFrames[f] = mol.coordinate3dRef(f).size() == n;
       mol.addAtom(z, p);
-      model.addAtom(z, &p, covered);
+      model.addAtom(z, &p, covered, fullFrames);
       break;
     }
     case RemoveAtom: {
@@ -4408,4 +4411,88 @@ TEST_F(MoleculeTest, removePartialCharges)
   // Removing a type that is not stored is harmless.
   molecule.removePartialCharges("missing");
   EXPECT_EQ(molecule.partialChargeTypes().size(), 1u);
+}
+
+// Every coordinate set (conformer, trajectory frame) holds one entry per atom,
+// so adding an atom has to extend them, as removing one shrinks them.
+TEST(MoleculeCoordinateSetTest, addAtomKeepsEveryCoordinateSetTheSize)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  Array<Vector3> frame0 = m.atomPositions3d();
+  Array<Vector3> frame1(2), frame2(2);
+  frame1[0] = Vector3(0.0, 0.0, 0.1);
+  frame1[1] = Vector3(1.0, 0.0, 0.1);
+  frame2[0] = Vector3(0.0, 0.0, 0.2);
+  frame2[1] = Vector3(1.0, 0.0, 0.2);
+  m.setCoordinate3d(frame0, 0);
+  m.setCoordinate3d(frame1, 1);
+  m.setCoordinate3d(frame2, 2);
+  ASSERT_EQ(3u, m.coordinate3dCount());
+
+  // With a position the atom stays put in every frame...
+  m.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  ASSERT_EQ(3u, m.atomCount());
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i) {
+    ASSERT_EQ(3u, m.coordinate3dRef(i).size()) << "frame " << i;
+    EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(i)[2]) << "frame " << i;
+  }
+  // ...and the frames still hold the other atoms where they were.
+  EXPECT_EQ(Vector3(1.0, 0.0, 0.2), m.coordinate3dRef(2)[1]);
+
+  // Without one it has no position yet: the origin, which is what
+  // atomPosition3d() says for an atom that has none.
+  m.addAtom(6);
+  ASSERT_EQ(4u, m.atomCount());
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i) {
+    ASSERT_EQ(4u, m.coordinate3dRef(i).size()) << "frame " << i;
+    EXPECT_EQ(Vector3::Zero(), m.coordinate3dRef(i)[3]) << "frame " << i;
+  }
+
+  // Removing them again gives back the frames exactly.
+  m.removeAtom(3);
+  m.removeAtom(2);
+  ASSERT_EQ(2u, m.atomCount());
+  EXPECT_EQ(frame0, m.coordinate3dRef(0));
+  EXPECT_EQ(frame1, m.coordinate3dRef(1));
+  EXPECT_EQ(frame2, m.coordinate3dRef(2));
+}
+
+// A frame that does not have an entry for each atom (not populated yet, say)
+// is not ours to extend: removeAtom() leaves such frames alone too.
+TEST(MoleculeCoordinateSetTest, addAtomLeavesOddlySizedCoordinateSetsAlone)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  m.setCoordinate3d(m.atomPositions3d(), 0);
+  m.setCoordinate3d(Array<Vector3>(), 1);
+  m.setCoordinate3d(Array<Vector3>(1, Vector3(5.0, 5.0, 5.0)), 2);
+
+  m.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  EXPECT_EQ(3u, m.coordinate3dRef(0).size());
+  EXPECT_EQ(0u, m.coordinate3dRef(1).size());
+  EXPECT_EQ(1u, m.coordinate3dRef(2).size());
+}
+
+// A set that is already one entry too long is not one addAtom() extended, and
+// the entry it has for the next atom is not ours to overwrite.
+TEST(MoleculeCoordinateSetTest, addAtomLeavesAnOverlongCoordinateSetUntouched)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  Array<Vector3> full = m.atomPositions3d();
+  Array<Vector3> overlong(3);
+  overlong[0] = Vector3(0.0, 0.0, 0.1);
+  overlong[1] = Vector3(1.0, 0.0, 0.1);
+  overlong[2] = Vector3(7.0, 7.0, 7.0);
+  m.setCoordinate3d(full, 0);
+  m.setCoordinate3d(overlong, 1);
+
+  m.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  EXPECT_EQ(3u, m.coordinate3dRef(0).size());
+  EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(0)[2]);
+  EXPECT_EQ(overlong, m.coordinate3dRef(1));
 }
