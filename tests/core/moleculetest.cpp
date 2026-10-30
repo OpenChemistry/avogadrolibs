@@ -4721,3 +4721,76 @@ TEST_F(MoleculeTest, clearCubesResetsActiveIndex)
   EXPECT_EQ(m.activeCubeIndex(), 0u);
   EXPECT_EQ(m.activeCube(), nullptr);
 }
+
+TEST_F(MoleculeTest, sharedCubeSurvivesClearAndReplace)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  const Cube* raw = m.cube(1);
+  std::shared_ptr<const Cube> handle = m.sharedCube(1);
+  ASSERT_EQ(handle.get(), raw);
+  EXPECT_EQ(m.sharedCube(2), nullptr);
+  EXPECT_EQ(m.sharedCube(Avogadro::MaxIndex), nullptr);
+
+  // Replaced in place: the handle still holds the old cube and its data.
+  EXPECT_TRUE(m.setCube(1, std::make_unique<Cube>()));
+  EXPECT_NE(m.cube(1), raw);
+  EXPECT_EQ(handle->dimensions(), Vector3i(3, 2, 2));
+  EXPECT_EQ(handle->data()->front(), 2.0f);
+
+  // Cleared: still alive, and a handle taken before the clear outlives it.
+  std::shared_ptr<const Cube> first = m.sharedCube(0);
+  m.clearCubes();
+  EXPECT_EQ(m.sharedCube(0), nullptr);
+  ASSERT_NE(first, nullptr);
+  EXPECT_EQ(first->dimensions(), Vector3i(2, 2, 2));
+  EXPECT_EQ(first->data()->front(), 1.0f);
+  EXPECT_EQ(handle->data()->size(), 12u);
+}
+
+TEST_F(MoleculeTest, sharedMeshSurvivesClearAndReplace)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  const Mesh* raw = m.mesh(1);
+  std::shared_ptr<const Mesh> handle = m.sharedMesh(1);
+  ASSERT_EQ(handle.get(), raw);
+  EXPECT_EQ(m.sharedMesh(2), nullptr);
+  EXPECT_EQ(m.sharedMesh(Avogadro::MaxIndex), nullptr);
+
+  EXPECT_TRUE(m.setMesh(1, std::make_unique<Mesh>()));
+  EXPECT_NE(m.mesh(1), raw);
+  EXPECT_EQ(handle->numVertices(), 4u);
+
+  std::shared_ptr<const Mesh> first = m.sharedMesh(0);
+  m.clearMeshes();
+  EXPECT_EQ(m.sharedMesh(0), nullptr);
+  ASSERT_NE(first, nullptr);
+  EXPECT_EQ(first->numVertices(), 3u);
+  EXPECT_EQ(handle->numVertices(), 4u);
+}
+
+TEST_F(MoleculeTest, sharedHandlesFromConstMolecule)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  const Molecule& cm = m;
+  std::shared_ptr<const Cube> cube = cm.sharedCube(0);
+  std::shared_ptr<const Mesh> mesh = cm.sharedMesh(1);
+  EXPECT_EQ(cube.get(), cm.cube(0));
+  EXPECT_EQ(mesh.get(), cm.mesh(1));
+
+  // The handles keep the objects alive past the molecule itself.
+  auto owner = std::make_unique<Molecule>(m);
+  cube = static_cast<const Molecule&>(*owner).sharedCube(1);
+  mesh = static_cast<const Molecule&>(*owner).sharedMesh(0);
+  owner.reset();
+  ASSERT_NE(cube, nullptr);
+  ASSERT_NE(mesh, nullptr);
+  EXPECT_EQ(cube->data()->front(), 2.0f);
+  EXPECT_EQ(mesh->numVertices(), 3u);
+
+  const Molecule empty;
+  EXPECT_EQ(empty.sharedCube(0), nullptr);
+  EXPECT_EQ(empty.sharedMesh(0), nullptr);
+}

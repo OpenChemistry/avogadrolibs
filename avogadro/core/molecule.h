@@ -577,6 +577,16 @@ public:
   Mesh* mesh(Index index);
   const Mesh* mesh(Index index) const;
 
+  /**
+   * @brief A handle to the mesh at @p index that keeps it alive.
+   *
+   * For readers that outlive the call, e.g. a mesh generator on another
+   * thread: the mesh stays valid for as long as the handle is held, even
+   * after clearMeshes() or setMesh() replaces it in the molecule.
+   * @return The mesh, or nullptr if @p index is out of range.
+   */
+  std::shared_ptr<const Mesh> sharedMesh(Index index) const;
+
   Index meshCount() const { return static_cast<Index>(m_meshes.size()); }
 
   void clearMeshes();
@@ -611,6 +621,16 @@ public:
 
   Cube* cube(Index index);
   const Cube* cube(Index index) const;
+
+  /**
+   * @brief A handle to the cube at @p index that keeps it alive.
+   *
+   * For readers that outlive the call, e.g. a mesh generator on another
+   * thread: the cube stays valid for as long as the handle is held, even
+   * after clearCubes() or setCube() replaces it in the molecule.
+   * @return The cube, or nullptr if @p index is out of range.
+   */
+  std::shared_ptr<const Cube> sharedCube(Index index) const;
 
   Index cubeCount() const { return static_cast<Index>(m_cubes.size()); }
 

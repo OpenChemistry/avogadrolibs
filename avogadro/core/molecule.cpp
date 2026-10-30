@@ -1639,6 +1639,13 @@ const Mesh* Molecule::mesh(Index index) const
     return nullptr;
 }
 
+std::shared_ptr<const Mesh> Molecule::sharedMesh(Index index) const
+{
+  if (index < static_cast<Index>(m_meshes.size()))
+    return m_meshes[index];
+  return nullptr;
+}
+
 void Molecule::clearMeshes()
 {
   m_meshes.clear();
@@ -1698,6 +1705,13 @@ const Cube* Molecule::cube(Index index) const
     return m_cubes[index].get();
   else
     return nullptr;
+}
+
+std::shared_ptr<const Cube> Molecule::sharedCube(Index index) const
+{
+  if (index < static_cast<Index>(m_cubes.size()))
+    return m_cubes[index];
+  return nullptr;
 }
 
 void Molecule::clearCubes()
