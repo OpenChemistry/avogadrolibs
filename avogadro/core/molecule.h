@@ -574,6 +574,17 @@ public:
    */
   bool setMesh(Index index, std::unique_ptr<Mesh> mesh);
 
+  /**
+   * @brief Get a mutable mesh of the molecule.
+   *
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedMesh()
+   * when only reading.
+   * @return The mesh, or nullptr if @p index is out of range.
+   */
   Mesh* mesh(Index index);
   const Mesh* mesh(Index index) const;
 
@@ -619,6 +630,17 @@ public:
    */
   bool setCube(Index index, std::unique_ptr<Cube> cube);
 
+  /**
+   * @brief Get a mutable cube of the molecule.
+   *
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedCube()
+   * when only reading.
+   * @return The cube, or nullptr if @p index is out of range.
+   */
   Cube* cube(Index index);
   const Cube* cube(Index index) const;
 
@@ -651,6 +673,13 @@ public:
 
   /**
    * @brief Get the active cube for volume rendering.
+   *
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedCube()
+   * when only reading.
    * @return A pointer to the active cube, or nullptr if no cubes exist.
    */
   Cube* activeCube();
@@ -658,6 +687,15 @@ public:
 
   /**
    * @brief Get the cubes vector set (if present) for the molecule.
+   *
+   * The non-const overload detaches every shared cube, which can copy all of
+   * them.
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedCube()
+   * when only reading.
    * @return The cube vector for the molecule
    */
   std::vector<Cube*> cubes();
@@ -1390,6 +1428,8 @@ protected:
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
 
+  // Shared between copies of the molecule; the non-const accessors detach a
+  // shared element before handing it out (copy on write).
   std::vector<std::shared_ptr<Mesh>> m_meshes;
   std::vector<std::shared_ptr<Cube>> m_cubes;
   Index m_activeCubeIndex = 0;
@@ -1436,6 +1476,13 @@ private:
    * allocate small empty containers; an allocation failure terminates.
    */
   void takeContentsFrom(Molecule& other) noexcept;
+
+  /**
+   * Replace the mesh / cube at @p index with a private copy if another
+   * molecule or handle shares it, then return it. nullptr if out of range.
+   */
+  Mesh* detachMesh(Index index);
+  Cube* detachCube(Index index);
 
   /**
    * Residues name their atoms through Atom proxies that carry a molecule

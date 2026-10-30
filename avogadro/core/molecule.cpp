@@ -63,17 +63,9 @@ Molecule::Molecule(const Molecule& other)
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::make_shared<MoleculeInfo>(other.ensureLayerInfo()))
 {
-  // Copy over any meshes
-  for (Index i = 0; i < other.meshCount(); ++i) {
-    Mesh* m = addMesh();
-    *m = *other.mesh(i);
-  }
-
-  // Copy over any cubes
-  for (Index i = 0; i < other.cubeCount(); ++i) {
-    Cube* c = addCube();
-    *c = *other.cube(i);
-  }
+  // Share the meshes and cubes; a mutable access detaches (see detachMesh)
+  m_meshes = other.m_meshes;
+  m_cubes = other.m_cubes;
   m_activeCubeIndex = other.m_activeCubeIndex;
 
   // The clone copied the basis set's back-pointer to the original.
@@ -125,17 +117,9 @@ void Molecule::readProperties(const Molecule& other)
   if (!other.m_vibrations.empty())
     m_vibrations = other.m_vibrations;
 
-  // Copy over any meshes
-  for (Index i = 0; i < other.meshCount(); ++i) {
-    Mesh* m = addMesh();
-    *m = *other.mesh(i);
-  }
-
-  // Copy over any cubes
-  for (Index i = 0; i < other.cubeCount(); ++i) {
-    Cube* c = addCube();
-    *c = *other.cube(i);
-  }
+  // Share the meshes and cubes; a mutable access detaches (see detachMesh)
+  m_meshes.insert(m_meshes.end(), other.m_meshes.begin(), other.m_meshes.end());
+  m_cubes.insert(m_cubes.end(), other.m_cubes.begin(), other.m_cubes.end());
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
@@ -189,19 +173,11 @@ Molecule& Molecule::operator=(const Molecule& other)
 
     clearMeshes();
 
-    // Copy over any meshes
-    for (Index i = 0; i < other.meshCount(); ++i) {
-      Mesh* m = addMesh();
-      *m = *other.mesh(i);
-    }
+    // Share the meshes and cubes; a mutable access detaches
+    m_meshes = other.m_meshes;
 
     clearCubes();
-
-    // Copy over any cubes
-    for (Index i = 0; i < other.cubeCount(); ++i) {
-      Cube* c = addCube();
-      *c = *other.cube(i);
-    }
+    m_cubes = other.m_cubes;
     m_activeCubeIndex = other.m_activeCubeIndex;
 
     delete m_basisSet;
@@ -1623,12 +1599,29 @@ bool Molecule::setMesh(Index index, std::unique_ptr<Mesh> mesh)
   return true;
 }
 
+Mesh* Molecule::detachMesh(Index index)
+{
+  if (index >= static_cast<Index>(m_meshes.size()))
+    return nullptr;
+  auto& slot = m_meshes[index];
+  if (slot.use_count() > 1)
+    slot = std::make_shared<Mesh>(*slot);
+  return slot.get();
+}
+
+Cube* Molecule::detachCube(Index index)
+{
+  if (index >= static_cast<Index>(m_cubes.size()))
+    return nullptr;
+  auto& slot = m_cubes[index];
+  if (slot.use_count() > 1)
+    slot = std::make_shared<Cube>(*slot);
+  return slot.get();
+}
+
 Mesh* Molecule::mesh(Index index)
 {
-  if (index < static_cast<Index>(m_meshes.size()))
-    return m_meshes[index].get();
-  else
-    return nullptr;
+  return detachMesh(index);
 }
 
 const Mesh* Molecule::mesh(Index index) const
@@ -1677,8 +1670,8 @@ std::vector<Cube*> Molecule::cubes()
 {
   std::vector<Cube*> result;
   result.reserve(m_cubes.size());
-  for (const auto& c : m_cubes)
-    result.push_back(c.get());
+  for (Index i = 0; i < static_cast<Index>(m_cubes.size()); ++i)
+    result.push_back(detachCube(i));
   return result;
 }
 
@@ -1693,10 +1686,7 @@ const std::vector<Cube*> Molecule::cubes() const
 
 Cube* Molecule::cube(Index index)
 {
-  if (index < static_cast<Index>(m_cubes.size()))
-    return m_cubes[index].get();
-  else
-    return nullptr;
+  return detachCube(index);
 }
 
 const Cube* Molecule::cube(Index index) const
@@ -1732,9 +1722,9 @@ bool Molecule::setActiveCubeIndex(Index index)
 Cube* Molecule::activeCube()
 {
   if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
-    return m_cubes[m_activeCubeIndex].get();
+    return detachCube(m_activeCubeIndex);
   else if (!m_cubes.empty())
-    return m_cubes[0].get();
+    return detachCube(0);
   return nullptr;
 }
 
