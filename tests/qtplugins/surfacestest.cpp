@@ -13,6 +13,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
 
+#include <QtCore/QEvent>
 #include <QtCore/QMetaObject>
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
@@ -530,6 +531,28 @@ TEST(SurfacesResolutionTest, degenerateExtent)
 
 namespace {
 
+// Calls back on every queued call delivered to the watched object, before
+// the slot runs.
+class QueuedCallFilter : public QObject
+{
+public:
+  explicit QueuedCallFilter(std::function<void()> callback)
+    : m_callback(std::move(callback))
+  {
+  }
+
+protected:
+  bool eventFilter(QObject* watched, QEvent* event) override
+  {
+    if (event->type() == QEvent::MetaCall)
+      m_callback();
+    return QObject::eventFilter(watched, event);
+  }
+
+private:
+  std::function<void()> m_callback;
+};
+
 // Watches what the renderer, or a copy of the molecule taken for undo, could
 // see while a surface command runs, and copies the molecule mid-calculation.
 class PublishProbe
@@ -560,13 +583,8 @@ public:
                          &m_context, [this]() { copyMidCalculation(); },
                          Qt::QueuedConnection);
                      });
-    QObject::connect(&m_timer, &QTimer::timeout, &m_context, [this]() {
-      check("event loop");
-      // A copy taken after the cube is published but before the meshes are.
-      if (!m_cubeCopy && m_molecule->cubeCount() == 1 &&
-          m_molecule->meshCount() == 0)
-        m_cubeCopy = std::make_unique<Avogadro::Core::Molecule>(*m_molecule);
-    });
+    QObject::connect(&m_timer, &QTimer::timeout, &m_context,
+                     [this]() { check("event loop"); });
     m_timer.start(0);
   }
 
@@ -575,7 +593,21 @@ public:
   const QStringList& problems() const { return m_problems; }
   /// Taken while the calculation was running; null if that never happened.
   const Avogadro::Core::Molecule* firstCopy() const { return m_first.get(); }
+  /// Taken just before the first queued call delivered to the plugin once the
+  /// cube is published: the cube is there, no mesh is yet.
   const Avogadro::Core::Molecule* cubeCopy() const { return m_cubeCopy.get(); }
+
+  /// Take cubeCopy() ahead of the plugin's queued calls (the mesh generators'
+  /// finished() reach it that way, after the cube and before any mesh).
+  void copyBeforeQueuedCalls(QObject* plugin)
+  {
+    m_filter = std::make_unique<QueuedCallFilter>([this]() {
+      if (!m_cubeCopy && m_molecule->cubeCount() == 1 &&
+          m_molecule->meshCount() == 0)
+        m_cubeCopy = std::make_unique<Avogadro::Core::Molecule>(*m_molecule);
+    });
+    plugin->installEventFilter(m_filter.get());
+  }
 
 private:
   void copyMidCalculation()
@@ -619,6 +651,7 @@ private:
   QStringList m_problems;
   std::unique_ptr<Avogadro::Core::Molecule> m_first;
   std::unique_ptr<Avogadro::Core::Molecule> m_cubeCopy;
+  std::unique_ptr<QueuedCallFilter> m_filter;
 };
 
 // Two s functions, on the two carbons, and a bonding/antibonding pair of
@@ -654,6 +687,7 @@ TEST_F(SurfacesCommandTest, copyMidCalculationSeesNoPartialSurface)
     SCOPED_TRACE(c.command);
     auto* mol = m_harness.molecule();
     PublishProbe probe(mol, 1);
+    probe.copyBeforeQueuedCalls(&m_surfaces);
     CommandOutcome out;
     const Cube* cube = runSurface(c.command, out);
     ASSERT_NE(cube, nullptr);
@@ -671,11 +705,11 @@ TEST_F(SurfacesCommandTest, copyMidCalculationSeesNoPartialSurface)
 
     // Copied between the cube's publication and the mesh's: the cube there
     // is already complete, and it stays without a mesh.
-    if (probe.cubeCopy() != nullptr) {
-      ASSERT_EQ(probe.cubeCopy()->cubeCount(), 1u);
-      EXPECT_EQ(*probe.cubeCopy()->cube(0)->data(), *cube->data());
-      EXPECT_EQ(probe.cubeCopy()->meshCount(), 0u);
-    }
+    ASSERT_NE(probe.cubeCopy(), nullptr)
+      << "never copied between the cube and its mesh";
+    ASSERT_EQ(probe.cubeCopy()->cubeCount(), 1u);
+    EXPECT_EQ(*probe.cubeCopy()->cube(0)->data(), *cube->data());
+    EXPECT_EQ(probe.cubeCopy()->meshCount(), 0u);
   }
 }
 
@@ -686,6 +720,7 @@ TEST_F(SurfacesCommandTest, copyMidOrbitalSeesNoPartialSurface)
   m_surfaces.setMolecule(mol); // pick up the basis set
 
   PublishProbe probe(mol, 2);
+  probe.copyBeforeQueuedCalls(&m_surfaces);
   QVariantMap options;
   options.insert(QStringLiteral("resolution"), 0.3);
   options.insert(QStringLiteral("orbital"), 2);
@@ -707,6 +742,13 @@ TEST_F(SurfacesCommandTest, copyMidOrbitalSeesNoPartialSurface)
     std::minmax_element(cube->data()->begin(), cube->data()->end());
   EXPECT_LT(*range.first, -0.03f);
   EXPECT_GT(*range.second, 0.03f);
+  // Copied between the cube's publication and the meshes': complete cube, no
+  // mesh yet.
+  ASSERT_NE(probe.cubeCopy(), nullptr)
+    << "never copied between the cube and its meshes";
+  ASSERT_EQ(probe.cubeCopy()->cubeCount(), 1u);
+  EXPECT_EQ(*probe.cubeCopy()->cube(0)->data(), *cube->data());
+  EXPECT_EQ(probe.cubeCopy()->meshCount(), 0u);
   // Both lobes are published together.
   ASSERT_EQ(mol->meshCount(), 2u);
   EXPECT_GT(std::as_const(*mol).mesh(0)->numVertices(), 0u);
