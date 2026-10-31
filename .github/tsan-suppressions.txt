@@ -40,3 +40,15 @@ called_from_lib:libglib-2.0.so
 race:Avogadro::QtPlugins::Surfaces::calculateEDT
 race:Avogadro::QtPlugins::Surfaces::performEDTStep
 race:~MapKernel
+
+# Qt from install-qt-action is not TSan-instrumented and ships without symbols.
+# libQt6Gui converts and scales large QImages on its own thread pool
+# (QThread::start from inside libQt6Gui): a buffer allocated on the main thread
+# is then copied and freed on those workers, and the hand-off synchronizes
+# inside uninstrumented Qt, so it looks like a race. Every racing frame sits in
+# libQt6Gui (seen when dialogs are shown by the smoke tests' actions). This
+# mirrors the called_from_lib:libQt6Core.so stance above and the
+# leak:libQt6Gui.so entry in lsan-suppressions.txt.
+# Trade-off: TSan no longer sees accesses made by libQt6Gui itself; accesses
+# made by our own instrumented code are still checked.
+called_from_lib:libQt6Gui.so
