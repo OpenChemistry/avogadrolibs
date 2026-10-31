@@ -1563,23 +1563,23 @@ Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
   return bonds(a.index());
 }
 
-Array<const Molecule::BondType*> Molecule::bonds(Index a) const
+Array<Molecule::BondType> Molecule::bonds(Index a) const
 {
-  Array<const BondType*> atomBonds;
+  Array<BondType> atomBonds;
   if (a < atomCount()) {
     const std::vector<Index>& edgeIndices = m_graph.edges(a);
     for (unsigned long index : edgeIndices) {
       if (m_graph.endpoints(index).first == a ||
           m_graph.endpoints(index).second == a) {
         // work around to consult bonds without breaking constantness
-        atomBonds.push_back(new BondType(const_cast<Molecule*>(this), index));
+        atomBonds.push_back(BondType(const_cast<Molecule*>(this), index));
       }
     }
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](const BondType*& ba, const BondType*& bb) {
-              return ba->index() < bb->index();
+            [](const BondType& ba, const BondType& bb) {
+              return ba.index() < bb.index();
             });
   return atomBonds;
 }
