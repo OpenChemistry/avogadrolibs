@@ -134,9 +134,6 @@
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label_4">
-     <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
-     </property>
      <property name="text">
       <string>Max 2θ:</string>
      </property>

@@ -14,7 +14,7 @@
    <string>Yaehmop Band</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="11" column="1" colspan="3">
+   <item row="11" column="0" colspan="4">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -24,7 +24,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="6" column="0" colspan="2">
     <widget class="QDoubleSpinBox" name="spin_minY">
      <property name="enabled">
       <bool>false</bool>
@@ -46,16 +46,42 @@
      </property>
     </widget>
    </item>
+   <item row="8" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+    <widget class="QLabel" name="label_plotFermi">
+     <property name="text">
+      <string>Plot Fermi?</string>
+     </property>
+     <property name="buddy">
+      <cstring>cb_plotFermi</cstring>
+     </property>
+    </widget>
+   </item>
    <item row="8" column="1">
     <widget class="QCheckBox" name="cb_plotFermi">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Fermi level should be known before checking this box. You can discover the Fermi level by performing a density of states calculation and displaying the data (it will be at the top of the data). In addition, if a density of states calculation is performed, the Fermi level here will automatically be set to what was detected during the density of states calculation.&lt;/p&gt;&lt;p&gt;If this box is checked, be sure the correct Fermi level is set in the spinbox on the right.&lt;/p&gt;&lt;p&gt;Default: off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+    <widget class="QLabel" name="label_zeroFermi">
+     <property name="enabled">
+      <bool>false</bool>
      </property>
      <property name="text">
-      <string>Plot Fermi?</string>
+      <string>Zero Fermi?</string>
+     </property>
+     <property name="buddy">
+      <cstring>cb_zeroFermi</cstring>
      </property>
     </widget>
    </item>
@@ -64,25 +90,28 @@
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the energies so that the zero is the Fermi? Only available if we are plotting the Fermi level.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Default: off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
      <property name="text">
-      <string>Zero Fermi?</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label">
      <property name="text">
       <string># of k-points connecting special k-points:</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="1" column="0" colspan="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Special k-points</string>
@@ -136,7 +165,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="3">
+   <item row="2" column="0" colspan="4">
     <widget class="QTextEdit" name="edit_specialKPoints">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter special k-points as such:&lt;/p&gt;&lt;p&gt;L 0.5 0.5 0.5&lt;/p&gt;&lt;p&gt;G 0.0 0.0 0.0&lt;/p&gt;&lt;p&gt;X 0.5 0.0 0.5&lt;/p&gt;&lt;p&gt;That is, &amp;lt;symbol&amp;gt; &amp;lt;x&amp;gt; &amp;lt;y&amp;gt; &amp;lt;z&amp;gt; where x, y, and z are fractional reciprocal space coordinates. Lines will be drawn connecting these k-points on the graph in the order you put them in. Please note that the orientation of your cell may have an effect on the locations of these reciprocal space points.&lt;/p&gt;&lt;p&gt;If the space group of the crystal has been perceived or set, the special k points will be automatically filled up with the primitive cell high symmetry points for that space group. There are a few space groups will different high symmetry points depending on the lattice (such as if a &amp;gt; b or a &amp;lt; b) - that is taken into account automatically.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -187,9 +216,6 @@ p, li { white-space: pre-wrap; }
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of periodic dimensions.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 1, the material will be periodic only along the A vector of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 2, the material will be periodic along both the A and B vectors of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If this is set to 3, the material will be periodic along the A, B, and C vectors of the crystal.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
      <property name="text">
       <string>Number of Dimensions:</string>
      </property>
@@ -237,6 +263,12 @@ p, li { white-space: pre-wrap; }
  </tabstops>
  <resources/>
  <connections>
+  <connection>
+   <sender>cb_plotFermi</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_zeroFermi</receiver>
+   <slot>setEnabled(bool)</slot>
+  </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
