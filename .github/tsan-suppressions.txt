@@ -40,3 +40,14 @@ called_from_lib:libglib-2.0.so
 race:Avogadro::QtPlugins::Surfaces::calculateEDT
 race:Avogadro::QtPlugins::Surfaces::performEDTStep
 race:~MapKernel
+
+# GaussianSetConcurrent has the same QtConcurrent::map + QFutureWatcher
+# hand-offs: the GUI thread builds the tools, work items and cube before the
+# map starts, and frees the cube after finished() arrives. Both orderings pass
+# through uninstrumented libQt6Core. The kernel is instantiated on our own
+# GaussianShell type, so these match only orbital/density workers and the
+# map's own start-up, not other pool work. Trade-off: TSan is also blind to a
+# real race with these workers (e.g. the basis set changing mid-calculation);
+# x-slab partitioning keeps the workers' own writes disjoint.
+race:QtConcurrent::IterateKernel<QList<Avogadro::QtGui::GaussianShell>
+race:QtConcurrent::map<QList<Avogadro::QtGui::GaussianShell>
