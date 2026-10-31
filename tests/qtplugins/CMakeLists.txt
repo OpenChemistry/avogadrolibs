@@ -189,12 +189,16 @@ if(TARGET Avogadro::QtPlugins)
   # Tool mouse and key handling, through a GLWidget that is never shown.
   if(TARGET Avogadro::QtOpenGL)
     target_sources(AvogadroQtPluginSmokeTests PRIVATE
+      pluginsmoketest.cpp
       toolinteractiontest.cpp
       toolinteractionharness.cpp
       commandtestharness.cpp
       commandtestharnessgtest.cpp)
     target_link_libraries(AvogadroQtPluginSmokeTests
       Avogadro::QtOpenGL Avogadro::Rendering)
+    # Fixtures are read from the test data.
+    target_compile_definitions(AvogadroQtPluginSmokeTests PRIVATE
+      AVOGADRO_DATA_ROOT="${AVOGADRO_DATA_ROOT}")
 
     # Text labels need an OpenGL context: macOS' offscreen platform has none,
     # so use the real (headless-capable) one there, as LabelCharge does.
@@ -204,6 +208,15 @@ if(TARGET Avogadro::QtPlugins)
     else()
       set(smokePlatform "offscreen")
     endif()
+    # One gtest test per plugin and kind of check; see pluginsmoketest.cpp.
+    foreach(suite Extension Actions Scene Tool)
+      add_test(NAME "QtPlugins-Smoke-${suite}"
+        COMMAND AvogadroQtPluginSmokeTests
+          "--gtest_filter=PluginSmoke/${suite}.*")
+      set_tests_properties("QtPlugins-Smoke-${suite}" PROPERTIES
+        ENVIRONMENT "QT_QPA_PLATFORM=${smokePlatform}"
+        TIMEOUT 600)
+    endforeach()
     add_test(NAME "QtPlugins-ToolInteraction"
       COMMAND AvogadroQtPluginSmokeTests
         "--gtest_filter=ToolInteractionTest.*")

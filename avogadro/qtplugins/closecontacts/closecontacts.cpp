@@ -72,15 +72,15 @@ static bool checkPairNot1213(const Molecule& molecule, Index i, Index n)
 
   if (!lastIndexValid || lastIndex != i) {
     bondedCache.clear();
-    for (const Bond* b : molecule.bonds(i))
-      bondedCache.push_back(b->atom1().index() == i ? b->atom2().index()
-                                                    : b->atom1().index());
+    for (const Bond& b : molecule.bonds(i))
+      bondedCache.push_back(b.atom1().index() == i ? b.atom2().index()
+                                                   : b.atom1().index());
     lastIndex = i;
     lastIndexValid = true;
   }
 
-  for (const Bond* b : molecule.bonds(n)) {
-    Index m = (b->atom1().index() == n ? b->atom2() : b->atom1()).index();
+  for (const Bond& b : molecule.bonds(n)) {
+    Index m = (b.atom1().index() == n ? b.atom2() : b.atom1()).index();
     if (m == i) // exclude 1-2 pairs
       return false;
     for (Index bn : bondedCache)
