@@ -4463,6 +4463,8 @@ TEST_F(MoleculeTest, setUnitCellSamePointerIsNoOp)
 
   m.setUnitCell(nullptr);
   EXPECT_EQ(m.unitCell(), nullptr);
+}
+
 // Every coordinate set (conformer, trajectory frame) holds one entry per atom,
 // so adding an atom has to extend them, as removing one shrinks them.
 TEST(MoleculeCoordinateSetTest, addAtomKeepsEveryCoordinateSetTheSize)
