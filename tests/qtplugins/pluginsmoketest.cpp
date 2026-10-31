@@ -460,6 +460,14 @@ void checkTool(const QString& id)
   if (kBuildsTextLabels.contains(id) && !QtPluginsTests::haveGLContext())
     GTEST_SKIP() << "draws text labels, which need an OpenGL context";
 
+  // The caller (a dock) owns the tool widget. Declared before the harness so
+  // it is deleted after the harness and its tools are gone, on every path.
+  struct WidgetDeleter
+  {
+    QPointer<QWidget> widget;
+    ~WidgetDeleter() { delete widget.data(); }
+  } toolWidget;
+
   ToolInteractionHarness h;
   auto ballStick = QtPluginsTests::createScenePlugin("BallStick");
   ASSERT_NE(ballStick, nullptr);
@@ -474,7 +482,7 @@ void checkTool(const QString& id)
   EXPECT_FALSE(tool->activateAction()->text().isEmpty());
   tool->setIcon(false);
   tool->setIcon(true);
-  tool->toolWidget();
+  toolWidget.widget = tool->toolWidget();
   tool->priority();
 
   h.setActiveTool(created.release());
