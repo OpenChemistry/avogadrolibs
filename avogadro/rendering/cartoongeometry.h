@@ -28,15 +28,14 @@ public:
   Cartoon();
   Cartoon(float minRadius, float maxRadius);
   static const float ELIPSE_RATIO;
+  static constexpr size_t kDefaultSides = 20;
 
   void addPoint(const Vector3f& pos, const Vector3ub& color, size_t group,
                 size_t id, Core::Residue::SecondaryStructure sec);
 
 protected:
-  // create an ellipsis and adapt it to the affine A
   size_t circleResolution(bool flat) const override;
-  void appendRingPoints(std::vector<ColorNormalVertex>& result,
-                        const Eigen::Affine3f& frame, bool flat) const override;
+  void fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const override;
 
   float computeScale(size_t index, float t, float scale) const override;
 

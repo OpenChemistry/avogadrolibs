@@ -5,6 +5,7 @@
 
 #include "cartoongeometry.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace Avogadro::Rendering {
@@ -13,6 +14,10 @@ using Core::Residue;
 using std::vector;
 
 const float Cartoon::ELIPSE_RATIO = 0.75f;
+
+// A run of equal secondary structure counts up its residues only once more than
+// this many are in; the first three each restart at 0.
+constexpr size_t kMinSizeToExtendRun = 2;
 
 Cartoon::Cartoon()
   : BSplineGeometry(false), m_minRadius(-1.0f), m_maxRadius(-1.0f)
@@ -26,12 +31,12 @@ Cartoon::Cartoon(float minRadius, float maxRadius)
 
 size_t Cartoon::circleResolution(bool flat) const
 {
-  return flat ? 2u : 20u;
+  return flat ? 2u : sidesOr(kDefaultSides);
 }
 
-void Cartoon::appendRingPoints(std::vector<ColorNormalVertex>& result,
-                               const Eigen::Affine3f& frame, bool flat) const
+void Cartoon::fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const
 {
+  ring.clear();
   const size_t resolution = circleResolution(flat);
   const float resolutionRadians =
     2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
@@ -42,13 +47,7 @@ void Cartoon::appendRingPoints(std::vector<ColorNormalVertex>& result,
   for (size_t i = 0; i < resolution; ++i) {
     float theta = resolutionRadians * i;
     float r = (elipseA * (1.0f - (e * e))) / (1.0f + e * std::cos(theta));
-    Vector3f elipse =
-      Vector3f(r * std::sin(theta), 0.0f, c + r * std::cos(theta));
-
-    ColorNormalVertex vert;
-    vert.normal = frame.linear() * elipse;
-    vert.vertex = frame * elipse;
-    result.push_back(vert);
+    ring.emplace_back(r * std::sin(theta), 0.0f, c + r * std::cos(theta));
   }
 }
 
@@ -83,6 +82,14 @@ float Cartoon::computeScale(size_t index, float p, float radius) const
       return m_minRadius;
     case Arrow:
       if (m_type[index].second == 0) {
+        // The first and last control points own only half a residue of curve,
+        // too short for the flare of an arrow head: it would be a wide block.
+        // A head that ends the chain continues the strand's width, and a lone
+        // sheet residue there is as thin as coil.
+        if (index == 0 || index + 1 == m_type.size()) {
+          const bool strand = index > 0 && m_type[index - 1].first == Arrow;
+          return strand ? 0.3f * m_maxRadius + m_minRadius : m_minRadius;
+        }
         return (arrowFunction(1.0f - t) * m_maxRadius) + m_minRadius;
       } else {
         return 0.3 * m_maxRadius + m_minRadius;
@@ -116,7 +123,7 @@ void Cartoon::addPoint(const Vector3f& pos, const Vector3ub& color,
   CartoonType ct = secondaryToCartoonType(sec);
   size_t idCartoon = 0;
   if (!m_type.empty()) {
-    idCartoon = ct == m_type.back().first && m_type.size() > (SKIPPED + 1)
+    idCartoon = ct == m_type.back().first && m_type.size() > kMinSizeToExtendRun
                   ? m_type.back().second + 1
                   : 0;
     if (Tail == m_type.back().first && ct == Body) {

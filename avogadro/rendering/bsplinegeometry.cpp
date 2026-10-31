@@ -9,46 +9,27 @@
 
 namespace Avogadro::Rendering {
 
-BSplineGeometry::BSplineGeometry() : CurveGeometry() {}
-BSplineGeometry::BSplineGeometry(bool flat) : CurveGeometry(flat) {}
-
-Vector3f BSplineGeometry::computeCurvePoint(
-  float t, const std::vector<Point>& points) const
+Vector3f BSplineGeometry::computeSegmentPoint(
+  size_t segment, float f, const std::vector<Point>& points) const
 {
-  // order (degree + 1): linear = 2, quadratic = 3, cubic = 4
-  // (this is a quadratic B-spline)
-  float k = 3.0f;
-  // how many points in either way for approximation
-  const int lookahead = 10;
-  // #knot segments = #control points + #degree + 1
-  float m = 2 * lookahead + k + 1.0f;
-  float knot = 1.0f / m;
-  Vector3f Q = Vector3f::Zero();
-  int size = static_cast<int>(points.size());
-  // start from a lookbehind distance rather than at the beginning
-  int maxStart = std::max(0, size - 2 * lookahead);
-  int startIndex =
-    std::clamp(static_cast<int>(size * t) - lookahead, 0, maxStart);
-  float t2 = (t - startIndex / (float)size) * size / (2 * lookahead);
-  const int endIndex = std::min(size, startIndex + 2 * lookahead);
-  const int count = endIndex - startIndex;
-  // Uniform knots at i * knot: for u = t2 / knot in [s, s + 1) only the basis
-  // functions s - 2, s - 1 and s (quadratic, order 3) are non-zero. Basis
-  // functions outside the [0, count) window of control points are dropped.
-  const float u = t2 / knot;
-  if (!(u >= 0.0f) || u >= static_cast<float>(count + 2))
-    return Q;
-  const int s = static_cast<int>(u);
-  const float f = u - static_cast<float>(s);
-  const float weights[3] = { (1.0f - f) * (1.0f - f) * 0.5f,
-                             (-2.0f * f * f + 2.0f * f + 1.0f) * 0.5f,
-                             f * f * 0.5f };
-  for (int n = 0; n < 3; ++n) {
-    const int i = s - 2 + n;
-    if (i >= 0 && i < count)
-      Q += points[startIndex + i].pos * weights[n];
-  }
-  return Q;
+  // Uniform quadratic B-spline (C1) with the end control points doubled,
+  // P' = P0 P0 P1 ... Pn-1 Pn-1, so that it starts at P0 and ends at Pn-1.
+  // Segment k blends P'k, P'k+1 and P'k+2, which are the control points
+  // k - 1, k and k + 1 clamped to the chain. f = 0 and f = 1 are the
+  // midpoints of the chords before and after control point k (the end points
+  // themselves for the first and last segment), and f = 0.5 is closest to k.
+  const size_t size = points.size();
+  if (size == 0)
+    return Vector3f::Zero();
+  const size_t last = size - 1;
+  const float w0 = (1.0f - f) * (1.0f - f) * 0.5f;
+  const float w1 = (-2.0f * f * f + 2.0f * f + 1.0f) * 0.5f;
+  const float w2 = f * f * 0.5f;
+  Vector3f q = Vector3f::Zero();
+  q += points[segment > 0 ? std::min(segment - 1, last) : 0].pos * w0;
+  q += points[std::min(segment, last)].pos * w1;
+  q += points[std::min(segment + 1, last)].pos * w2;
+  return q;
 }
 
 } // namespace Avogadro::Rendering
