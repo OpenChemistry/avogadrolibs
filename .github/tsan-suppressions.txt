@@ -5,6 +5,8 @@
 # arguments copied into our slot via the moc-generated dispatcher (caught by
 # the qt_static_metacall pattern, which only matches the moc shim).
 called_from_lib:libQt6Core.so
+# Qt Gui's internal threads hand allocations to each other the same way.
+called_from_lib:libQt6Gui.so
 race:qt_static_metacall
 race:QtPrivate::QMetaTypeForType
 
@@ -51,3 +53,12 @@ race:~MapKernel
 # x-slab partitioning keeps the workers' own writes disjoint.
 race:QtConcurrent::IterateKernel<QList<Avogadro::QtGui::GaussianShell>
 race:QtConcurrent::map<QList<Avogadro::QtGui::GaussianShell>
+
+# MeshGenerator is a QThread that fills a mesh the plugin owns; the plugin
+# publishes it once finished() arrives and isRunning() is false, which the
+# QThread's own (futex) mutex orders. The molecule frees it much later, and
+# TSan sees no edge back from the generator thread unless the GUI thread
+# happened to be woken through Qt's eventfd. Match only the free, so that the
+# generator's reads of the cube stay visible; a mesh freed while still in use
+# would be a use-after-free, which the ASan job covers.
+race:Avogadro::Core::Mesh::~Mesh
