@@ -68,6 +68,13 @@ public:
   /**
    * Initialization function, set up the MeshGenerator ready to find an
    * isosurface of the supplied Cube.
+   *
+   * The generator keeps both pointers and uses them on its own thread until
+   * run() returns, so the caller must keep @p cube and @p mesh alive, and
+   * leave them unmodified, for the whole job. Hold a molecule's cube through
+   * Molecule::sharedCube() rather than a raw pointer, and generate into a
+   * Mesh the caller owns, handing it to the molecule (Molecule::addMesh() or
+   * setMesh() with a std::unique_ptr) once finished() has been emitted.
    * @param cube The source Cube with the volumetric data.
    * @param mesh The Mesh that will hold the isosurface.
    * @param iso The iso value of the surface.

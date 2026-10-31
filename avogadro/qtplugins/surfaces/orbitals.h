@@ -11,6 +11,8 @@
 
 #include <QtCore/QFutureWatcher>
 
+#include <memory>
+
 class QAction;
 class QDialog;
 class QProgressDialog;
@@ -65,15 +67,15 @@ public:
 
   struct calcInfo
   {
-    Core::Mesh* posMesh;
-    Core::Mesh* negMesh;
-    Core::Cube* cube;
-    unsigned int orbital;
-    Core::BasisSet::ElectronType electronType;
-    double resolution;
-    double isovalue;
-    unsigned int priority;
-    CalcState state;
+    /// The published cube, once Completed. Weak, so the queue never keeps a
+    /// cube alive after the molecule has dropped it; cubeIndex() finds it.
+    std::weak_ptr<const Core::Cube> cube;
+    unsigned int orbital = 0;
+    Core::BasisSet::ElectronType electronType = Core::BasisSet::Paired;
+    double resolution = 0.0;
+    double isovalue = 0.0;
+    unsigned int priority = 0;
+    CalcState state = NotStarted;
   };
 
 public slots:
@@ -144,6 +146,35 @@ private slots:
                      Core::BasisSet::ElectronType electronType);
 
 private:
+  /// Which mesh of the pair the generator is working on.
+  enum class MeshPhase
+  {
+    Idle,
+    Positive,
+    Negative
+  };
+
+  /**
+   * @return The index of @p cube among the molecule's cubes, or -1 when the
+   * molecule no longer holds it.
+   */
+  int cubeIndex(const std::weak_ptr<const Core::Cube>& cube) const;
+
+  /**
+   * @return Whether @p info has a cube the molecule still holds. A Completed
+   * entry whose cube is gone is marked Canceled, to be calculated again.
+   */
+  bool hasLiveCube(calcInfo& info) const;
+
+  /**
+   * Stop the cube and mesh calculations this plugin started, wait for their
+   * workers, and drop their unpublished results.
+   */
+  void stopCalculations();
+
+  /// @return Whether the mesh generator is still writing a mesh.
+  bool meshGeneratorBusy() const;
+
   QAction* m_action;
 
   QtGui::Molecule* m_molecule = nullptr;
@@ -160,6 +191,17 @@ private:
 
   QFutureWatcher<void> m_displayMeshWatcher;
   QtGui::MeshGenerator* m_meshGenerator = nullptr;
+
+  // Results are built in objects owned here and handed to the molecule only
+  // when complete, so the renderer and any copy of the molecule never see a
+  // half-filled cube or one mesh of a pair.
+  /// The cube being calculated, until calculateCubeDone() publishes it.
+  std::unique_ptr<Core::Cube> m_pendingCube;
+  /// Keeps the mesh generator's input alive for the length of the job.
+  std::shared_ptr<const Core::Cube> m_meshCube;
+  std::unique_ptr<Core::Mesh> m_pendingPosMesh;
+  std::unique_ptr<Core::Mesh> m_pendingNegMesh;
+  MeshPhase m_meshPhase = MeshPhase::Idle;
 
   int m_smoothingPasses = 1;
   int m_meshesLeft = 0;

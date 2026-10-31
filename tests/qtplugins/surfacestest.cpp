@@ -11,11 +11,17 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
+#include <avogadro/core/mesh.h>
 
+#include <QtCore/QMetaObject>
+#include <QtCore/QStringList>
+#include <QtCore/QTimer>
 #include <QtCore/QVariantMap>
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -25,6 +31,7 @@ using Avogadro::Index;
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
 using Avogadro::Core::Cube;
+using Avogadro::Core::Mesh;
 using Avogadro::QtPlugins::automaticSurfaceResolution;
 using Avogadro::QtPlugins::Surfaces;
 using Avogadro::QtPlugins::SurfaceVoxelBudget;
@@ -519,4 +526,255 @@ TEST(SurfacesResolutionTest, degenerateExtent)
   EXPECT_FLOAT_EQ(formula, automaticSurfaceResolution(1000, Vector3::Zero()));
   EXPECT_FLOAT_EQ(formula, automaticSurfaceResolution(
                              1000, Vector3(1e308, 1e308, 1e308) * 10.0));
+}
+
+namespace {
+
+// Watches what the renderer, or a copy of the molecule taken for undo, could
+// see while a surface command runs, and copies the molecule mid-calculation.
+class PublishProbe
+{
+public:
+  using Hook = std::function<void()>;
+
+  /**
+   * @param expectedMeshes The meshes the finished surface has: once any is
+   * visible, all of them must be, and complete.
+   * @param midCalculation Run once, right after the first copy is taken.
+   */
+  PublishProbe(Avogadro::QtGui::Molecule* molecule, Index expectedMeshes,
+               Hook midCalculation = Hook())
+    : m_molecule(molecule), m_expectedMeshes(expectedMeshes),
+      m_hook(std::move(midCalculation))
+  {
+    // calculateEDT() and calculateQM() announce the cleared surfaces before
+    // they start any worker, so a call posted from here is queued ahead of
+    // every completion and runs while the calculation is still pending.
+    QObject::connect(molecule, &Avogadro::QtGui::Molecule::changed, &m_context,
+                     [this](unsigned int) {
+                       check("changed()");
+                       if (m_posted)
+                         return;
+                       m_posted = true;
+                       QMetaObject::invokeMethod(
+                         &m_context, [this]() { copyMidCalculation(); },
+                         Qt::QueuedConnection);
+                     });
+    QObject::connect(&m_timer, &QTimer::timeout, &m_context, [this]() {
+      check("event loop");
+      // A copy taken after the cube is published but before the meshes are.
+      if (!m_cubeCopy && m_molecule->cubeCount() == 1 &&
+          m_molecule->meshCount() == 0)
+        m_cubeCopy = std::make_unique<Avogadro::Core::Molecule>(*m_molecule);
+    });
+    m_timer.start(0);
+  }
+
+  ~PublishProbe() { m_timer.stop(); }
+
+  const QStringList& problems() const { return m_problems; }
+  /// Taken while the calculation was running; null if that never happened.
+  const Avogadro::Core::Molecule* firstCopy() const { return m_first.get(); }
+  const Avogadro::Core::Molecule* cubeCopy() const { return m_cubeCopy.get(); }
+
+private:
+  void copyMidCalculation()
+  {
+    m_first = std::make_unique<Avogadro::Core::Molecule>(*m_molecule);
+    if (m_first->cubeCount() != 0 || m_first->meshCount() != 0) {
+      m_problems << QStringLiteral("the copy taken mid-calculation already "
+                                   "has %1 cube(s) and %2 mesh(es)")
+                      .arg(m_first->cubeCount())
+                      .arg(m_first->meshCount());
+    }
+    if (m_hook)
+      m_hook();
+  }
+
+  void check(const char* where)
+  {
+    const Avogadro::QtGui::Molecule& mol = *m_molecule;
+    const Index meshes = mol.meshCount();
+    if (meshes != 0 && meshes != m_expectedMeshes) {
+      m_problems << QStringLiteral("%1: %2 of %3 meshes visible")
+                      .arg(QString::fromLatin1(where))
+                      .arg(meshes)
+                      .arg(m_expectedMeshes);
+    }
+    for (Index i = 0; i < meshes; ++i) {
+      if (mol.mesh(i)->numVertices() == 0) {
+        m_problems << QStringLiteral("%1: mesh %2 is visible but empty")
+                        .arg(QString::fromLatin1(where))
+                        .arg(i);
+      }
+    }
+  }
+
+  Avogadro::QtGui::Molecule* m_molecule;
+  Index m_expectedMeshes;
+  Hook m_hook;
+  QObject m_context;
+  QTimer m_timer;
+  bool m_posted = false;
+  QStringList m_problems;
+  std::unique_ptr<Avogadro::Core::Molecule> m_first;
+  std::unique_ptr<Avogadro::Core::Molecule> m_cubeCopy;
+};
+
+// Two s functions, on the two carbons, and a bonding/antibonding pair of
+// orbitals: the second has a positive and a negative lobe.
+void addTwoCentreBasis(Avogadro::QtGui::Molecule* mol)
+{
+  auto* basis = new Avogadro::Core::GaussianSet;
+  basis->setMolecule(mol);
+  unsigned int s = basis->addBasis(0, Avogadro::Core::GaussianSet::S);
+  basis->addGto(s, 1.0, 1.3);
+  s = basis->addBasis(1, Avogadro::Core::GaussianSet::S);
+  basis->addGto(s, 1.0, 1.3);
+  basis->setMolecularOrbitals({ 0.7, 0.7, 0.7, -0.7 },
+                              Avogadro::Core::BasisSet::Paired);
+  basis->setElectronCount(2);
+  mol->setBasisSet(basis);
+}
+
+} // namespace
+
+// The cube is filled off the molecule and published when complete: a copy
+// taken mid-calculation (as an undo snapshot would be) has no cube, and keeps
+// none, while the live molecule ends up with the full cube and mesh.
+TEST_F(SurfacesCommandTest, copyMidCalculationSeesNoPartialSurface)
+{
+  struct Case
+  {
+    const char* command;
+    double probe;
+  };
+  for (const Case& c :
+       { Case{ "renderVDW", 0.0 }, Case{ "renderSolventExcluded", -1.0 } }) {
+    SCOPED_TRACE(c.command);
+    auto* mol = m_harness.molecule();
+    PublishProbe probe(mol, 1);
+    CommandOutcome out;
+    const Cube* cube = runSurface(c.command, out);
+    ASSERT_NE(cube, nullptr);
+    EXPECT_TRUE(probe.problems().isEmpty())
+      << probe.problems().join("; ").toStdString();
+
+    ASSERT_NE(probe.firstCopy(), nullptr) << "never copied mid-calculation";
+    EXPECT_EQ(probe.firstCopy()->cubeCount(), 0u);
+    EXPECT_EQ(probe.firstCopy()->meshCount(), 0u);
+
+    ASSERT_EQ(mol->meshCount(), 1u);
+    EXPECT_GT(std::as_const(*mol).mesh(0)->numVertices(), 0u);
+    if (c.probe >= 0.0)
+      expectEqual(*cube, fillReference(*cube, c.probe), c.command);
+
+    // Copied between the cube's publication and the mesh's: the cube there
+    // is already complete, and it stays without a mesh.
+    if (probe.cubeCopy() != nullptr) {
+      ASSERT_EQ(probe.cubeCopy()->cubeCount(), 1u);
+      EXPECT_EQ(*probe.cubeCopy()->cube(0)->data(), *cube->data());
+      EXPECT_EQ(probe.cubeCopy()->meshCount(), 0u);
+    }
+  }
+}
+
+TEST_F(SurfacesCommandTest, copyMidOrbitalSeesNoPartialSurface)
+{
+  auto* mol = m_harness.molecule();
+  addTwoCentreBasis(mol);
+  m_surfaces.setMolecule(mol); // pick up the basis set
+
+  PublishProbe probe(mol, 2);
+  QVariantMap options;
+  options.insert(QStringLiteral("resolution"), 0.3);
+  options.insert(QStringLiteral("orbital"), 2);
+  const CommandOutcome out = m_harness.run(QStringLiteral("renderMO"), options);
+  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(out.result.value("cubeIndex").toInt(), 1);
+  EXPECT_TRUE(probe.problems().isEmpty())
+    << probe.problems().join("; ").toStdString();
+
+  ASSERT_NE(probe.firstCopy(), nullptr) << "never copied mid-calculation";
+  EXPECT_EQ(probe.firstCopy()->cubeCount(), 0u);
+  EXPECT_EQ(probe.firstCopy()->meshCount(), 0u);
+
+  ASSERT_EQ(mol->cubeCount(), 1u);
+  const Cube* cube = std::as_const(*mol).cube(0);
+  EXPECT_EQ(cube->cubeType(), Cube::Type::MO);
+  const auto range =
+    std::minmax_element(cube->data()->begin(), cube->data()->end());
+  EXPECT_LT(*range.first, -0.03f);
+  EXPECT_GT(*range.second, 0.03f);
+  // Both lobes are published together.
+  ASSERT_EQ(mol->meshCount(), 2u);
+  EXPECT_GT(std::as_const(*mol).mesh(0)->numVertices(), 0u);
+  EXPECT_GT(std::as_const(*mol).mesh(1)->numVertices(), 0u);
+}
+
+// An edit that invalidates derived data while the cube is being calculated
+// discards the result and fails the command, instead of publishing a surface
+// for a structure that no longer exists.
+TEST_F(SurfacesCommandTest, editMidCalculationInterruptsCommand)
+{
+  for (const char* command : { "renderVDW", "renderMO" }) {
+    SCOPED_TRACE(command);
+    m_harness.buildEmpty();
+    buildEthanol();
+    auto* mol = m_harness.molecule();
+    const bool orbital = QByteArray(command) == "renderMO";
+    if (orbital)
+      addTwoCentreBasis(mol);
+    m_surfaces.setMolecule(mol);
+
+    PublishProbe probe(mol, orbital ? 2 : 1, [mol]() {
+      mol->addAtom(1, Vector3(-1.0, -1.0, -1.0));
+      mol->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                       Avogadro::QtGui::Molecule::Added);
+    });
+    QVariantMap options;
+    options.insert(QStringLiteral("resolution"), Resolution);
+    options.insert(QStringLiteral("orbital"), 2);
+    const CommandOutcome out =
+      m_harness.run(QString::fromLatin1(command), options);
+    ASSERT_NE(probe.firstCopy(), nullptr) << "never copied mid-calculation";
+    // The test's own edit is what the harness reports as a violation here.
+    EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+    EXPECT_EQ(out.failedCount, 1) << describe(out);
+    EXPECT_EQ(out.finishedCount, 0) << describe(out);
+    EXPECT_EQ(mol->cubeCount(), 0u);
+    EXPECT_EQ(mol->meshCount(), 0u);
+    EXPECT_TRUE(probe.problems().isEmpty())
+      << probe.problems().join("; ").toStdString();
+  }
+
+  // And the plugin is ready for the next one.
+  CommandOutcome out;
+  const Cube* cube = runSurface("renderVDW", out);
+  ASSERT_NE(cube, nullptr);
+  EXPECT_EQ(m_harness.molecule()->meshCount(), 1u);
+  expectEqual(*cube, fillReference(*cube, 0.0), "VdW after an interruption");
+}
+
+// Switching to another molecule mid-calculation (as closing a window does)
+// publishes nothing to either molecule and fails the command.
+TEST_F(SurfacesCommandTest, switchMoleculeMidCalculationInterruptsCommand)
+{
+  Avogadro::QtGui::Molecule other;
+  auto* mol = m_harness.molecule();
+  PublishProbe probe(mol, 1,
+                     [this, &other]() { m_harness.setPluginMolecule(&other); });
+  QVariantMap options;
+  options.insert(QStringLiteral("resolution"), Resolution);
+  const CommandOutcome out =
+    m_harness.run(QStringLiteral("renderVDW"), options);
+  ASSERT_NE(probe.firstCopy(), nullptr) << "never copied mid-calculation";
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(mol->cubeCount(), 0u);
+  EXPECT_EQ(mol->meshCount(), 0u);
+  EXPECT_EQ(other.cubeCount(), 0u);
+  EXPECT_EQ(other.meshCount(), 0u);
+  m_harness.setPluginMolecule(mol);
 }
