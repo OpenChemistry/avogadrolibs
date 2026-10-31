@@ -20,6 +20,10 @@
 // One QApplication for the whole binary, created before any test runs. Unlike
 // AvogadroQtPluginsTests, which links individual plugins, this binary links
 // the shared plugin library and finds plugins through the PluginManager.
+namespace Avogadro::QtPluginsTests {
+void registerPluginSmokeTests();
+}
+
 int main(int argc, char** argv)
 {
   // macOS' offscreen platform has no OpenGL; its real one does, headless.
@@ -39,6 +43,10 @@ int main(int argc, char** argv)
   QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,
                      settingsDir.path());
 
+  // Widget-based dialogs (file, color and so on), which ModalDismisser can
+  // close. A native one, such as macOS' color panel, runs its own loop that
+  // only a user can end.
+  QApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
   QApplication app(argc, argv);
   QCoreApplication::setOrganizationName("OpenChemistry");
   QCoreApplication::setApplicationName("AvogadroQtPluginSmokeTests");
@@ -56,5 +64,9 @@ int main(int argc, char** argv)
     std::cerr << "No OpenGL context: tests that need one will be skipped.\n";
 
   ::testing::InitGoogleTest(&argc, argv);
+  // The smoke tests are registered per plugin found, so the plugins have to
+  // be loaded -- and for that a QApplication must exist -- before the tests
+  // are registered.
+  Avogadro::QtPluginsTests::registerPluginSmokeTests();
   return RUN_ALL_TESTS();
 }
