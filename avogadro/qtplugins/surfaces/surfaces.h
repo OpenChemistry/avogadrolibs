@@ -17,6 +17,7 @@
 #include <QtCore/QPointer>
 
 #include <memory>
+#include <vector>
 
 class QAction;
 class QDialog;
@@ -184,6 +185,7 @@ private:
   /// The number of cubes, read from the file, that renderCube and the dialog
   /// offer: the molecule's cubes when they were last refreshed.
   Index m_fileCubeCount = 0;
+  std::vector<int> m_fileCubeRows; // molecule cube index of each dialog row
 
   /// The cube being calculated, until publishCube() hands it over.
   std::unique_ptr<Core::Cube> m_pendingCube;

@@ -520,6 +520,7 @@ void Orbitals::calculateCubeDone()
 
   if (m_updateMesh) {
     if (m_currentMeshCalculation == -1 || !meshGeneratorBusy()) {
+      m_nextMeshCalculation = -1;
       m_currentMeshCalculation = m_currentRunningCalculation;
       calculatePosMesh();
     } else {
@@ -690,7 +691,9 @@ void Orbitals::renderOrbital(unsigned int orbital,
     m_queue[index].isovalue = m_dialog->isovalue();
     // A job whose generator has stopped may have lost its finished() to
     // MeshGenerator::cancelAllCalculations(); start this one in its place.
+    // A job queued behind the lost one is dropped too.
     if (m_currentMeshCalculation == -1 || !meshGeneratorBusy()) {
+      m_nextMeshCalculation = -1;
       m_currentMeshCalculation = index;
       calculatePosMesh(); // will eventually call negMesh too
     } else {

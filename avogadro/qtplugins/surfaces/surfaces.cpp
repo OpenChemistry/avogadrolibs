@@ -353,6 +353,7 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   m_mesh1Index = -1;
   m_mesh2Index = -1;
   m_fileCubeCount = 0;
+  m_fileCubeRows.clear();
   m_molecule = mol;
 
   if (mol == nullptr) {
@@ -431,6 +432,7 @@ bool Surfaces::clearSurfaceData()
   m_meshJobStale = false;
 
   m_fileCubeCount = 0;
+  m_fileCubeRows.clear();
   m_cubeIndex = -1;
   m_mesh1Index = -1;
   m_mesh2Index = -1;
@@ -528,6 +530,7 @@ void Surfaces::surfacesActivated()
   // only show cubes from files so we don't duplicate orbitals
   if (m_fileCubeCount > 0) {
     QStringList cubeNames;
+    m_fileCubeRows.clear();
     for (Index i = 0; i < m_fileCubeCount; ++i) {
       const Cube* cube = std::as_const(*m_molecule).cube(i);
       if (cube != nullptr && cube->cubeType() == Core::Cube::Type::FromFile) {
@@ -541,6 +544,7 @@ void Surfaces::surfacesActivated()
         } else {
           cubeNames << cube->name().c_str();
         }
+        m_fileCubeRows.push_back(static_cast<int>(i));
       }
     }
     m_dialog->setupCubes(cubeNames);
@@ -1105,8 +1109,12 @@ void Surfaces::calculateCube(int index, float isoValue)
   if (m_fileCubeCount == 0 || m_molecule == nullptr)
     return;
 
-  if (index == -1 && m_dialog != nullptr)
-    index = m_dialog->surfaceIndex();
+  if (index == -1 && m_dialog != nullptr) {
+    const int row = m_dialog->surfaceIndex();
+    if (row < 0 || row >= static_cast<int>(m_fileCubeRows.size()))
+      return;
+    index = m_fileCubeRows[row];
+  }
   if (index < 0 || index >= static_cast<int>(m_fileCubeCount))
     return;
 
@@ -1307,7 +1315,8 @@ void Surfaces::colorMesh(Core::Mesh& mesh)
 
 void Surfaces::publishMesh(int& index, std::unique_ptr<Core::Mesh> mesh)
 {
-  if (index >= 0 &&
+  // setMesh takes ownership even when it refuses, so only call it in range.
+  if (index >= 0 && static_cast<Index>(index) < m_molecule->meshCount() &&
       m_molecule->setMesh(static_cast<Index>(index), std::move(mesh))) {
     return;
   }
@@ -1431,7 +1440,14 @@ void Surfaces::recordMovie()
     d->gifWriter = nullptr;
   }
 
-  changeStep(m_currentFrame);
+  // A scripted calculation this displaces is never coming back. Tell its
+  // caller, but keep the movie writers opened above (reportInterrupted()
+  // would close them).
+  if (changeStep(m_currentFrame) && m_commandPending) {
+    m_commandPending = false;
+    m_commandResolution = 0.0f;
+    emit commandFailed(tr("The calculation was interrupted."));
+  }
   m_dialog->setStep(m_currentFrame);
   calculateSurface();
 }
