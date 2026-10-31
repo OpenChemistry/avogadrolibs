@@ -10,6 +10,7 @@
 #include <avogadro/core/basisset.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/gaussianset.h>
+#include <avogadro/core/mesh.h>
 #include <avogadro/core/variant.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/gaussiansetconcurrent.h>
@@ -21,6 +22,8 @@
 #include <QDebug>
 #include <QtCore/QTimer>
 #include <QtWidgets/QFileDialog>
+
+#include <utility>
 
 namespace Avogadro::QtPlugins {
 
@@ -38,17 +41,69 @@ Orbitals::Orbitals(QObject* p)
 
 Orbitals::~Orbitals()
 {
-  // cancel the current running calculation
-  if (m_gaussianConcurrent) {
-    qDebug() << "Cancelling current calculation";
-    auto* watcher = &m_gaussianConcurrent->watcher();
-    if (watcher != nullptr && watcher->isRunning())
-      watcher->cancel();
-  }
+  // The workers write into m_pendingCube and the pending meshes, which are
+  // members and go before the child calculator would stop them.
+  stopCalculations();
+  // Parentless QThread; ~MeshGenerator() waits for a running thread.
+  delete m_meshGenerator;
 
   if (m_dialog)
     m_dialog->deleteLater();
   // molecule and basis are freed elsewhere
+}
+
+int Orbitals::cubeIndex(const std::weak_ptr<const Core::Cube>& cube) const
+{
+  const std::shared_ptr<const Core::Cube> locked = cube.lock();
+  if (!locked || m_molecule == nullptr)
+    return -1;
+  for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
+    if (m_molecule->sharedCube(j) == locked)
+      return static_cast<int>(j);
+  }
+  return -1;
+}
+
+bool Orbitals::hasLiveCube(calcInfo& info) const
+{
+  if (cubeIndex(info.cube) >= 0)
+    return true;
+  // Something else (the Surfaces dialog, say) cleared the molecule's cubes.
+  info.cube.reset();
+  if (info.state == Completed)
+    info.state = Canceled;
+  return false;
+}
+
+bool Orbitals::meshGeneratorBusy() const
+{
+  return m_meshGenerator != nullptr && m_meshGenerator->isRunning();
+}
+
+void Orbitals::stopCalculations()
+{
+  if (m_gaussianConcurrent) {
+    auto& watcher = m_gaussianConcurrent->watcher();
+    watcher.disconnect(this);
+    watcher.cancel();
+    watcher.waitForFinished();
+  }
+  if (m_meshGenerator) {
+    disconnect(m_meshGenerator, nullptr, this, nullptr);
+    // There is no way to interrupt a mesh generator, only to join it.
+    m_meshGenerator->wait();
+  }
+
+  m_pendingCube.reset();
+  m_meshCube.reset();
+  m_pendingPosMesh.reset();
+  m_pendingNegMesh.reset();
+  m_meshPhase = MeshPhase::Idle;
+
+  m_currentRunningCalculation = -1;
+  m_currentMeshCalculation = -1;
+  m_nextMeshCalculation = -1;
+  m_runningCube = false;
 }
 
 QList<QAction*> Orbitals::actions() const
@@ -91,9 +146,8 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
           SLOT(moleculeChanged(unsigned int)));
 
   // Stuff we manage that will not be valid any longer
+  stopCalculations();
   m_queue.clear();
-  m_currentRunningCalculation = -1;
-  m_currentMeshCalculation = -1;
 
   loadBasis();
 
@@ -160,16 +214,14 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
     hasOrbitals = false;
 
   // Molecule::emitChanged() frees the basis set, cubes and meshes whenever
-  // this holds. Queued calculations cache raw Cube*/Mesh* pointers into that
-  // storage and the table rows describe the old basis, so both have to go -
-  // including when one valid basis set replaces another and the enabled state
-  // never changes.
+  // this holds. Queued calculations describe that structure and the table
+  // rows describe the old basis, so both have to go - including when one
+  // valid basis set replaces another and the enabled state never changes.
   const bool derivedDataDropped =
     QtGui::Molecule::invalidatesDerivedData(changes);
   if (derivedDataDropped) {
+    stopCalculations();
     m_queue.clear();
-    m_currentRunningCalculation = -1;
-    m_currentMeshCalculation = -1;
     if (m_dialog)
       m_dialog->clearTable();
   }
@@ -226,6 +278,12 @@ void Orbitals::calculateOrbitalFromWidget(
         m_queue[i].electronType == electronType) {
       // change the priority to the highest
       m_queue[i].priority = 0;
+      // A cancelled calculation, or a result the molecule has since dropped,
+      // has to be run (again).
+      if (m_queue[i].state == Completed)
+        hasLiveCube(m_queue[i]);
+      if (m_queue[i].state == Canceled)
+        m_queue[i].state = NotStarted;
       found = true;
       break;
     }
@@ -388,7 +446,7 @@ void Orbitals::calculateCube()
     calcInfo* cI = &m_queue[i];
     if (cI->state == Completed && cI->orbital == info->orbital &&
         cI->resolution == info->resolution &&
-        cI->electronType == info->electronType) {
+        cI->electronType == info->electronType && hasLiveCube(*cI)) {
       info->cube = cI->cube;
 #ifndef NDEBUG
       qDebug() << "Reusing cube from calculation " << i << ":\n"
@@ -396,12 +454,7 @@ void Orbitals::calculateCube()
                << "\tResolution " << cI->resolution;
 #endif
       // Set this cube as the active cube for volume rendering
-      for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
-        if (m_molecule->cube(j) == cI->cube) {
-          m_molecule->setActiveCubeIndex(j);
-          break;
-        }
-      }
+      m_molecule->setActiveCubeIndex(static_cast<Index>(cubeIndex(cI->cube)));
       m_currentMeshCalculation = m_currentRunningCalculation;
       calculatePosMesh();
       calculationComplete();
@@ -409,15 +462,12 @@ void Orbitals::calculateCube()
     }
   }
 
-  // Create new cube
-  Core::Cube* cube = m_molecule->addCube();
-  info->cube = cube;
+  // Create new cube, filled off the molecule and published when done.
+  m_pendingCube = std::make_unique<Core::Cube>();
+  Core::Cube* cube = m_pendingCube.get();
   cube->setLimits(*m_molecule, info->resolution, cubePadding);
   cube->setName("Molecular Orbital " + std::to_string(info->orbital + 1));
   cube->setCubeType(Core::Cube::Type::MO);
-
-  // Set this cube as the active cube for volume rendering
-  m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
 
   if (!m_gaussianConcurrent) {
     m_gaussianConcurrent = new QtGui::GaussianSetConcurrent(this);
@@ -431,7 +481,15 @@ void Orbitals::calculateCube()
   qDebug() << info->orbital << " Cube calculation started.";
 #endif
   bool beta = (info->electronType == Core::BasisSet::Beta);
-  m_gaussianConcurrent->calculateMolecularOrbital(cube, info->orbital, beta);
+  if (!m_gaussianConcurrent->calculateMolecularOrbital(cube, info->orbital,
+                                                       beta)) {
+    // The basis set was refused; there is nothing to wait for.
+    watcher->disconnect(this);
+    m_pendingCube.reset();
+    info->state = Canceled;
+    m_currentRunningCalculation = -1;
+    m_runningCube = false;
+  }
 }
 
 void Orbitals::calculateCubeDone()
@@ -439,8 +497,30 @@ void Orbitals::calculateCubeDone()
   auto* watcher = &m_gaussianConcurrent->watcher();
   watcher->disconnect(this);
 
+  std::unique_ptr<Core::Cube> cube = std::move(m_pendingCube);
+  if (m_currentRunningCalculation == -1 || !cube)
+    return;
+
+  if (watcher->isCanceled()) {
+    // Stopped by someone else, e.g. the Surfaces dialog starting its own
+    // calculation: the cube is only partly filled, so it is never shown.
+    // Asking for the orbital again calculates it again.
+    m_queue[m_currentRunningCalculation].state = Canceled;
+    m_currentRunningCalculation = -1;
+    m_runningCube = false;
+    checkQueue();
+    return;
+  }
+
+  const Index index = m_molecule->cubeCount();
+  m_molecule->addCube(std::move(cube));
+  // Set this cube as the active cube for volume rendering
+  m_molecule->setActiveCubeIndex(index);
+  m_queue[m_currentRunningCalculation].cube = m_molecule->sharedCube(index);
+
   if (m_updateMesh) {
-    if (m_currentMeshCalculation == -1) {
+    if (m_currentMeshCalculation == -1 || !meshGeneratorBusy()) {
+      m_nextMeshCalculation = -1;
       m_currentMeshCalculation = m_currentRunningCalculation;
       calculatePosMesh();
     } else {
@@ -457,33 +537,55 @@ void Orbitals::calculatePosMesh()
 
   calcInfo* info = &m_queue[m_currentMeshCalculation];
 
-  m_molecule->clearMeshes();
-  auto* posMesh = m_molecule->addMesh();
-  auto* cube = info->cube;
+  // A job this one supersedes may still be writing into the pending meshes.
+  if (m_meshGenerator) {
+    disconnect(m_meshGenerator, nullptr, this, nullptr);
+    m_meshGenerator->wait();
+  }
+  m_pendingPosMesh.reset();
+  m_pendingNegMesh.reset();
+  m_meshPhase = MeshPhase::Idle;
+
+  if (!hasLiveCube(*info)) {
+    // The molecule dropped the cube; there is nothing left to mesh.
+    m_meshCube.reset();
+    m_currentMeshCalculation = -1;
+    meshComplete();
+    return;
+  }
+  // The handle keeps the cube alive for the generator, whatever happens to
+  // the molecule's own list meanwhile.
+  m_meshCube =
+    m_molecule->sharedCube(static_cast<Index>(cubeIndex(info->cube)));
+  m_pendingPosMesh = std::make_unique<Core::Mesh>();
 
   if (!m_meshGenerator) {
     m_meshGenerator = new QtGui::MeshGenerator;
   }
   connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculatePosMeshDone()));
-  m_meshGenerator->initialize(cube, posMesh, info->isovalue, smoothingPasses);
+  m_meshGenerator->initialize(m_meshCube.get(), m_pendingPosMesh.get(),
+                              info->isovalue, smoothingPasses);
+  m_meshPhase = MeshPhase::Positive;
   m_meshGenerator->start();
 }
 
 void Orbitals::calculatePosMeshDone()
 {
+  // Ignore a finished() left over from a job that was superseded.
+  if (m_meshPhase != MeshPhase::Positive || meshGeneratorBusy())
+    return;
   disconnect(m_meshGenerator, nullptr, this, nullptr);
   calculateNegMesh();
 }
 
 void Orbitals::calculateNegMesh()
 {
-  if (m_currentMeshCalculation == -1)
+  if (m_currentMeshCalculation == -1 || !m_meshCube)
     return;
 
   calcInfo* info = &m_queue[m_currentMeshCalculation];
 
-  auto* negMesh = m_molecule->addMesh();
-  auto* cube = info->cube;
+  m_pendingNegMesh = std::make_unique<Core::Mesh>();
 
   if (!m_meshGenerator) {
     // shouldn't happen, but better to be careful
@@ -491,14 +593,28 @@ void Orbitals::calculateNegMesh()
   }
   connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculateNegMeshDone()));
   // true indicates that we want to reverse the surface
-  m_meshGenerator->initialize(cube, negMesh, -info->isovalue, smoothingPasses,
-                              true);
+  m_meshGenerator->initialize(m_meshCube.get(), m_pendingNegMesh.get(),
+                              -info->isovalue, smoothingPasses, true);
+  m_meshPhase = MeshPhase::Negative;
   m_meshGenerator->start();
 }
 
 void Orbitals::calculateNegMeshDone()
 {
+  // Ignore a finished() left over from a job that was superseded.
+  if (m_meshPhase != MeshPhase::Negative || meshGeneratorBusy())
+    return;
   disconnect(m_meshGenerator, nullptr, this, nullptr);
+  m_meshPhase = MeshPhase::Idle;
+
+  // Replace the previous orbital's pair with both new meshes at once, so the
+  // renderer never shows half of an orbital.
+  std::unique_ptr<Core::Mesh> posMesh = std::move(m_pendingPosMesh);
+  std::unique_ptr<Core::Mesh> negMesh = std::move(m_pendingNegMesh);
+  m_meshCube.reset();
+  m_molecule->clearMeshes();
+  m_molecule->addMesh(std::move(posMesh));
+  m_molecule->addMesh(std::move(negMesh));
 
   meshComplete();
   // make sure the display type is turned on
@@ -512,9 +628,6 @@ void Orbitals::calculateNegMeshDone()
 
 void Orbitals::meshComplete()
 {
-  if (m_currentMeshCalculation == -1)
-    return;
-
   if (m_nextMeshCalculation != -1) {
     // start the next mesh calculation
     m_currentMeshCalculation = m_nextMeshCalculation;
@@ -559,7 +672,8 @@ void Orbitals::renderOrbital(unsigned int orbital,
     const calcInfo& calc = m_queue[i];
     if (calc.orbital == orbital && calc.electronType == electronType &&
         calc.state == Completed && calc.resolution <= targetResolution + 1e-6 &&
-        (index == -1 || calc.resolution < m_queue[index].resolution)) {
+        (index == -1 || calc.resolution < m_queue[index].resolution) &&
+        hasLiveCube(m_queue[i])) {
       index = i;
     }
   }
@@ -570,17 +684,16 @@ void Orbitals::renderOrbital(unsigned int orbital,
     calculateOrbitalFromWidget(orbital, targetResolution, electronType);
   } else {
     // Set this cube as the active cube for volume rendering
-    Core::Cube* activeCube = m_queue[index].cube;
-    for (Index j = 0; j < m_molecule->cubeCount(); ++j) {
-      if (m_molecule->cube(j) == activeCube) {
-        m_molecule->setActiveCubeIndex(j);
-        break;
-      }
-    }
+    m_molecule->setActiveCubeIndex(
+      static_cast<Index>(cubeIndex(m_queue[index].cube)));
 
     // just need to update the meshes, using the current isovalue
     m_queue[index].isovalue = m_dialog->isovalue();
-    if (m_currentMeshCalculation == -1) {
+    // A job whose generator has stopped may have lost its finished() to
+    // MeshGenerator::cancelAllCalculations(); start this one in its place.
+    // A job queued behind the lost one is dropped too.
+    if (m_currentMeshCalculation == -1 || !meshGeneratorBusy()) {
+      m_nextMeshCalculation = -1;
       m_currentMeshCalculation = index;
       calculatePosMesh(); // will eventually call negMesh too
     } else {

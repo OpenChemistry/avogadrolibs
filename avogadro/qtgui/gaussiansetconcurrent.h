@@ -41,10 +41,24 @@ public:
 
   void setMolecule(Core::Molecule* mol);
 
+  /**
+   * @name Calculations
+   * Fill @p cube on worker threads; finished() is emitted when done.
+   *
+   * The workers write into @p cube until the calculation finishes or is
+   * cancelled, so the caller must own it and keep it alive for the whole
+   * job. Do not pass a cube the molecule holds: fill one of your own, then
+   * hand it over with Molecule::addCube() or setCube() taking a
+   * std::unique_ptr. A cancelled calculation leaves the cube partly filled
+   * (watcher().isCanceled() tells), so it should be discarded.
+   * @return False, with nothing started, if the basis set cannot be used.
+   * @{
+   */
   bool calculateMolecularOrbital(Core::Cube* cube, unsigned int state,
                                  bool beta = false);
   bool calculateElectronDensity(Core::Cube* cube);
   bool calculateSpinDensity(Core::Cube* cube);
+  /** @} */
 
   QFutureWatcher<void>& watcher() { return m_watcher; }
 
