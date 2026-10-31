@@ -185,6 +185,32 @@ if(TARGET Avogadro::QtPlugins)
   set_tests_properties("QtPlugins-PluginManager" PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
+
+  # Tool mouse and key handling, through a GLWidget that is never shown.
+  if(TARGET Avogadro::QtOpenGL)
+    target_sources(AvogadroQtPluginSmokeTests PRIVATE
+      toolinteractiontest.cpp
+      toolinteractionharness.cpp
+      commandtestharness.cpp
+      commandtestharnessgtest.cpp)
+    target_link_libraries(AvogadroQtPluginSmokeTests
+      Avogadro::QtOpenGL Avogadro::Rendering)
+
+    # Text labels need an OpenGL context: macOS' offscreen platform has none,
+    # so use the real (headless-capable) one there, as LabelCharge does.
+    # Elsewhere the tests that need a context skip themselves without one.
+    if(APPLE)
+      set(smokePlatform "cocoa")
+    else()
+      set(smokePlatform "offscreen")
+    endif()
+    add_test(NAME "QtPlugins-ToolInteraction"
+      COMMAND AvogadroQtPluginSmokeTests
+        "--gtest_filter=ToolInteractionTest.*")
+    set_tests_properties("QtPlugins-ToolInteraction" PROPERTIES
+      ENVIRONMENT "QT_QPA_PLATFORM=${smokePlatform}"
+      TIMEOUT 300)
+  endif()
 endif()
 
 # fuzz_qtplugin_commands: libFuzzer drives random command sequences through

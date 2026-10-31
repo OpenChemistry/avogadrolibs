@@ -203,6 +203,13 @@ public:
   void buildEmpty();
 
   /**
+   * Replace the molecule with the contents of @p fileName, read by the
+   * Io::FileFormatManager (format from the extension).
+   * @return Whether it was read; the molecule is empty if not.
+   */
+  bool loadFile(const std::string& fileName);
+
+  /**
    * Make @p molecule the active layer molecule, as MainWindow does when the
    * user switches windows; nullptr makes the harness molecule active again.
    * The plugin keeps whatever molecule it was given.
@@ -254,10 +261,8 @@ public:
   /** @return Structural problems with the molecule, empty if none. */
   QStringList checkInvariants() const;
 
-  // TODO: loadMolecule(path) for symmetry sequences, using
-  // AVOGADRO_DATA_ROOT (the plugins tested so far build in code).
-  // Tool plugins that need a GLWidget or renderer (navigator and similar)
-  // are tested through avogadroapp's RPC harness, not here.
+  // Tool plugins' mouse and key handling, which needs a GLWidget and a
+  // renderer, is tested through ToolInteractionHarness.
 
 private:
   void onRegistered(size_t handler, const QString& command,
