@@ -568,7 +568,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (startsWith(pka, "tensor("))
       pka = pka.substr(7, pka.size() - 8);
     // find the decimal to only keep 2 decimal places
-    size_t decimal = pka.find(".");
+    size_t decimal = pka.find('.');
     if (decimal != std::string::npos)
       pka = pka.substr(0, decimal + 3);
     mol.setData("pka", pka);

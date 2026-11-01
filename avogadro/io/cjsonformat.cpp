@@ -2353,7 +2353,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       vibrations["conformers"] = std::move(perConformer);
     }
 
-    root["vibrations"] = std::move(vibrations);
+    root["vibrations"] = vibrations;
   }
 
   auto names = LayerManager::getMoleculeInfo(&molecule);
