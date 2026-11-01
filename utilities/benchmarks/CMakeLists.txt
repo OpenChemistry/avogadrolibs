@@ -20,3 +20,8 @@ target_link_libraries(AvogadroGaussianBenchmark
   PRIVATE Avogadro::Core Avogadro::IO Avogadro::QuantumIO)
 target_compile_definitions(AvogadroGaussianBenchmark
   PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
+
+if(USE_QT)
+  add_executable(AvogadroUndoMemoryBenchmark undomemorybenchmark.cpp)
+  target_link_libraries(AvogadroUndoMemoryBenchmark PRIVATE Avogadro::QtGui)
+endif()

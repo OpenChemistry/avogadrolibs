@@ -4568,37 +4568,51 @@ void fillCubesAndMeshes(Molecule& m)
   m.setActiveCubeIndex(1);
 }
 
-void expectDeepCubesAndMeshes(const Molecule& a, Molecule& b)
+// b is a copy of a: both share every cube and mesh until one is written.
+void expectSharedThenDetach(const Molecule& a, Molecule& b)
 {
-  ASSERT_EQ(b.cubeCount(), a.cubeCount());
-  ASSERT_EQ(b.meshCount(), a.meshCount());
-  for (Index i = 0; i < a.cubeCount(); ++i) {
-    EXPECT_NE(b.cube(i), a.cube(i));
-    EXPECT_EQ(b.cube(i)->dimensions(), a.cube(i)->dimensions());
-    EXPECT_EQ(*b.cube(i)->data(), *a.cube(i)->data());
-  }
-  for (Index i = 0; i < a.meshCount(); ++i) {
-    EXPECT_NE(b.mesh(i), a.mesh(i));
-    EXPECT_EQ(b.mesh(i)->numVertices(), a.mesh(i)->numVertices());
-  }
-  // Editing the copy leaves the original alone.
-  (*b.cube(0)->data())[0] = 42.0f;
-  EXPECT_FLOAT_EQ((*a.cube(0)->data())[0], 1.0f);
-  b.mesh(0)->setVertices(Array<Vector3f>(10, Vector3f::Zero()));
-  EXPECT_EQ(a.mesh(0)->numVertices(), 3u);
+  const Molecule& ca = a;
+  const Molecule& cb = b;
+  ASSERT_EQ(cb.cubeCount(), ca.cubeCount());
+  ASSERT_EQ(cb.meshCount(), ca.meshCount());
+  for (Index i = 0; i < ca.cubeCount(); ++i)
+    EXPECT_EQ(cb.cube(i), ca.cube(i));
+  for (Index i = 0; i < ca.meshCount(); ++i)
+    EXPECT_EQ(cb.mesh(i), ca.mesh(i));
+
+  const Cube* aCube = ca.cube(0);
+  const Mesh* aMesh = ca.mesh(0);
+
+  // A mutable access detaches only the molecule that asked.
+  Cube* bCube = b.cube(0);
+  EXPECT_NE(bCube, aCube);
+  EXPECT_EQ(ca.cube(0), aCube);
+  EXPECT_EQ(bCube->dimensions(), aCube->dimensions());
+  EXPECT_EQ(*bCube->data(), *aCube->data());
+  (*bCube->data())[0] = 42.0f;
+  EXPECT_FLOAT_EQ((*aCube->data())[0], 1.0f);
+  EXPECT_EQ(cb.cube(1), ca.cube(1)); // the other cube is still shared
+
+  Mesh* bMesh = b.mesh(0);
+  EXPECT_NE(bMesh, aMesh);
+  EXPECT_EQ(ca.mesh(0), aMesh);
+  EXPECT_EQ(bMesh->numVertices(), aMesh->numVertices());
+  bMesh->setVertices(Array<Vector3f>(10, Vector3f::Zero()));
+  EXPECT_EQ(aMesh->numVertices(), 3u);
+  EXPECT_EQ(cb.mesh(1), ca.mesh(1));
 }
 } // namespace
 
-TEST_F(MoleculeTest, copyConstructCubesMeshesAreDeep)
+TEST_F(MoleculeTest, copyConstructSharesCubesMeshes)
 {
   Molecule a;
   fillCubesAndMeshes(a);
   Molecule b(a);
   EXPECT_EQ(b.activeCubeIndex(), 1u);
-  expectDeepCubesAndMeshes(a, b);
+  expectSharedThenDetach(a, b);
 }
 
-TEST_F(MoleculeTest, copyAssignCubesMeshesAreDeep)
+TEST_F(MoleculeTest, copyAssignSharesCubesMeshes)
 {
   Molecule a;
   fillCubesAndMeshes(a);
@@ -4607,16 +4621,96 @@ TEST_F(MoleculeTest, copyAssignCubesMeshesAreDeep)
   b.addMesh();
   b = a;
   EXPECT_EQ(b.activeCubeIndex(), 1u);
-  expectDeepCubesAndMeshes(a, b);
+  expectSharedThenDetach(a, b);
 }
 
-TEST_F(MoleculeTest, readPropertiesCubesMeshesAreDeep)
+TEST_F(MoleculeTest, readPropertiesSharesCubesMeshes)
 {
   Molecule a;
   fillCubesAndMeshes(a);
   Molecule b;
   b.readProperties(a);
-  expectDeepCubesAndMeshes(a, b);
+  expectSharedThenDetach(a, b);
+}
+
+TEST_F(MoleculeTest, activeCubeDetachesOnlyWhenShared)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b(a);
+  const Cube* shared = static_cast<const Molecule&>(a).activeCube();
+  ASSERT_EQ(static_cast<const Molecule&>(b).activeCube(), shared);
+
+  Cube* detached = b.activeCube();
+  EXPECT_NE(detached, shared);
+  EXPECT_EQ(static_cast<const Molecule&>(a).activeCube(), shared);
+  EXPECT_EQ(static_cast<const Molecule&>(b).cube(1), detached);
+  (*detached->data())[0] = 42.0f;
+  EXPECT_FLOAT_EQ((*shared->data())[0], 2.0f);
+
+  // Now b is the sole owner of that cube; a still owns its own copy.
+  EXPECT_EQ(b.activeCube(), detached);
+  EXPECT_EQ(a.activeCube(), shared);
+}
+
+TEST_F(MoleculeTest, cubesDetachesEveryCube)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b(a);
+  const Molecule& ca = a;
+  std::vector<Cube*> mine = b.cubes();
+  ASSERT_EQ(mine.size(), 2u);
+  for (Index i = 0; i < 2; ++i) {
+    EXPECT_NE(mine[i], ca.cube(i));
+    EXPECT_EQ(static_cast<const Molecule&>(b).cube(i), mine[i]);
+  }
+  // The const overload never detaches.
+  Molecule c(a);
+  std::vector<Cube*> peek = static_cast<const Molecule&>(c).cubes();
+  EXPECT_EQ(peek[0], ca.cube(0));
+  EXPECT_EQ(peek[1], ca.cube(1));
+}
+
+TEST_F(MoleculeTest, soleOwnerDoesNotDetach)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  const Cube* c0 = static_cast<const Molecule&>(a).cube(0);
+  const Mesh* m0 = static_cast<const Molecule&>(a).mesh(0);
+  EXPECT_EQ(a.cube(0), c0);
+  EXPECT_EQ(a.mesh(0), m0);
+  EXPECT_EQ(a.cube(0), c0);
+  EXPECT_EQ(a.cubes()[0], c0);
+
+  // Once the only other owner is gone, the survivor is sole again.
+  {
+    Molecule b(a);
+    EXPECT_NE(b.cube(0), c0);
+  }
+  EXPECT_EQ(a.cube(0), c0);
+  EXPECT_EQ(a.mesh(0), m0);
+}
+
+TEST_F(MoleculeTest, heldHandleMakesNextMutableAccessDetach)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  std::shared_ptr<const Cube> cubeHandle = a.sharedCube(0);
+  std::shared_ptr<const Mesh> meshHandle = a.sharedMesh(0);
+  // Taking a handle never detaches.
+  EXPECT_EQ(static_cast<const Molecule&>(a).cube(0), cubeHandle.get());
+
+  Cube* cube = a.cube(0);
+  Mesh* mesh = a.mesh(0);
+  EXPECT_NE(cube, cubeHandle.get());
+  EXPECT_NE(mesh, meshHandle.get());
+  (*cube->data())[0] = 42.0f;
+  mesh->setVertices(Array<Vector3f>(10, Vector3f::Zero()));
+  EXPECT_FLOAT_EQ(cubeHandle->data()->front(), 1.0f);
+  EXPECT_EQ(meshHandle->numVertices(), 3u);
+  EXPECT_FLOAT_EQ(a.sharedCube(0)->data()->front(), 42.0f);
+  EXPECT_EQ(a.sharedMesh(0)->numVertices(), 10u);
 }
 
 TEST_F(MoleculeTest, addCubeTakesOwnership)

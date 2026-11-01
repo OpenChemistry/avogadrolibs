@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/cube.h>
 #include <avogadro/core/residue.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -2992,4 +2993,50 @@ TEST(RWMoleculeTest, setAtomicNumberUndoWithoutColorDoesNotAddColors)
 
   EXPECT_EQ(6, mol.atomicNumber(0));
   EXPECT_TRUE(m.colors().empty());
+}
+
+// Undo snapshots share cubes with the live molecule; each side of an edit
+// must keep its own data, and editing after an undo must not reach the
+// snapshot that redo restores.
+TEST(RWMoleculeTest, modifyMoleculeUndoRedoCubeData)
+{
+  using Avogadro::Vector3i;
+  using Avogadro::Core::Cube;
+
+  Molecule m;
+  m.addAtom(8).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  Cube* cube = m.addCube();
+  cube->setLimits(Vector3(0.0, 0.0, 0.0), Vector3i(2, 2, 2), 0.5f);
+  cube->setData(std::vector<float>(cube->data()->size(), 1.0f));
+  RWMolecule mol(m);
+
+  auto first = [&m]() { return m.cube(0)->data()->front(); };
+  auto last = [&m]() { return m.cube(0)->data()->back(); };
+
+  Molecule edited(m);
+  edited.cube(0)->data()->front() = 2.0f;
+  // A pure move keeps derived data such as cubes (see invalidatesDerivedData)
+  edited.atom(0).setPosition3d(Vector3(0.5, 0.0, 0.0));
+  mol.modifyMolecule(edited, Molecule::Atoms | Molecule::Moved);
+  EXPECT_FLOAT_EQ(2.0f, first());
+  EXPECT_FLOAT_EQ(1.0f, last());
+  // The molecule we passed in is not changed by the edit.
+  EXPECT_FLOAT_EQ(2.0f, edited.cube(0)->data()->front());
+
+  mol.undoStack().undo();
+  ASSERT_EQ(1u, m.cubeCount());
+  EXPECT_FLOAT_EQ(1.0f, first());
+  EXPECT_FLOAT_EQ(1.0f, last());
+
+  // Writing to the restored cube must not leak into the redo state.
+  m.cube(0)->data()->back() = 7.0f;
+  mol.undoStack().redo();
+  ASSERT_EQ(1u, m.cubeCount());
+  EXPECT_FLOAT_EQ(2.0f, first());
+  EXPECT_FLOAT_EQ(1.0f, last());
+
+  mol.undoStack().undo();
+  // Undo restores the stored prior state, not the scribbled-on live one.
+  EXPECT_FLOAT_EQ(1.0f, first());
+  EXPECT_FLOAT_EQ(1.0f, last());
 }
