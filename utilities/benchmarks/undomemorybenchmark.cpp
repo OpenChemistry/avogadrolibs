@@ -26,6 +26,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <cctype>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
@@ -97,10 +98,17 @@ int main(int argc, char** argv)
   std::size_t basisBytes = 0;
   if (argc > 3) {
     const std::string path(argv[3]);
-    const bool molden =
-      path.size() > 7 && path.compare(path.size() - 7, 7, ".molden") == 0;
     QuantumIO::GaussianFchk fchk;
     QuantumIO::MoldenFile moldenFile;
+    std::string suffix;
+    const std::size_t dot = path.rfind('.');
+    if (dot != std::string::npos)
+      for (char c : path.substr(dot + 1))
+        suffix +=
+          static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    bool molden = false;
+    for (const std::string& extension : moldenFile.fileExtensions())
+      molden = molden || suffix == extension;
     Io::FileFormat& format =
       molden ? static_cast<Io::FileFormat&>(moldenFile) : fchk;
     if (!format.readFile(path, molecule)) {

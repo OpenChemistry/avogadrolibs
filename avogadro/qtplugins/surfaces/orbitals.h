@@ -179,8 +179,9 @@ private:
 
   QtGui::Molecule* m_molecule = nullptr;
   // Read-only: refreshed from const access, so that looking never detaches
-  // the molecule's shared basis set.
-  const Core::BasisSet* m_basis = nullptr;
+  // the molecule's shared basis set. Owning, so it outlives the molecule
+  // dropping or replacing it.
+  std::shared_ptr<const Core::BasisSet> m_basis;
 
   QList<calcInfo> m_queue;
   int m_currentRunningCalculation = -1;

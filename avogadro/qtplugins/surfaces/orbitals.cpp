@@ -167,7 +167,7 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
 void Orbitals::loadBasis()
 {
   if (m_molecule != nullptr) {
-    m_basis = std::as_const(*m_molecule).basisSet();
+    m_basis = std::as_const(*m_molecule).sharedBasisSet();
   }
 }
 
@@ -197,7 +197,7 @@ void Orbitals::loadOrbitals()
             SLOT(precalculateOrbitals()));
   }
 
-  m_dialog->fillTable(m_basis);
+  m_dialog->fillTable(m_basis.get());
   m_dialog->show();
   m_dialog->raise();
   m_dialog->activateWindow();
@@ -240,7 +240,7 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
       loadOrbitals(); // orbitals appeared: fill the table and show the dialog
     } else if (derivedDataDropped && m_dialog && m_dialog->isVisible()) {
       // Refill in place; the dialog was already open, so do not raise it.
-      m_dialog->fillTable(m_basis);
+      m_dialog->fillTable(m_basis.get());
     }
   } else if (m_dialog) {
     m_dialog->hide();
