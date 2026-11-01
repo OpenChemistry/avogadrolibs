@@ -699,7 +699,7 @@ public:
    * @return The cube vector for the molecule
    */
   std::vector<Cube*> cubes();
-  const std::vector<Cube*> cubes() const;
+  std::vector<const Cube*> cubes() const;
 
   /**
    * @return the chemical formula of the molecule.

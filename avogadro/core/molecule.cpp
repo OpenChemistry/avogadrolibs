@@ -1668,9 +1668,9 @@ std::vector<Cube*> Molecule::cubes()
   return result;
 }
 
-const std::vector<Cube*> Molecule::cubes() const
+std::vector<const Cube*> Molecule::cubes() const
 {
-  std::vector<Cube*> result;
+  std::vector<const Cube*> result;
   result.reserve(m_cubes.size());
   for (const auto& c : m_cubes)
     result.push_back(c.get());

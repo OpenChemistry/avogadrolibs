@@ -4676,7 +4676,7 @@ TEST_F(MoleculeTest, cubesDetachesEveryCube)
   }
   // The const overload never detaches.
   Molecule c(a);
-  std::vector<Cube*> peek = static_cast<const Molecule&>(c).cubes();
+  std::vector<const Cube*> peek = static_cast<const Molecule&>(c).cubes();
   EXPECT_EQ(peek[0], ca.cube(0));
   EXPECT_EQ(peek[1], ca.cube(1));
 }

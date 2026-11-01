@@ -124,8 +124,11 @@ int main(int argc, char** argv)
   }
 
   Core::Cube* cube = molecule.addCube();
-  cube->setLimits(Vector3(-5.0, -5.0, -5.0), Vector3i(edge, edge, edge),
-                  10.0 / edge);
+  if (!cube->setLimits(Vector3(-5.0, -5.0, -5.0), Vector3i(edge, edge, edge),
+                       10.0 / edge)) {
+    std::fprintf(stderr, "could not allocate a cube of edge %d\n", edge);
+    return 1;
+  }
   cube->fill(0.5);
   const std::size_t cubeBytes =
     static_cast<std::size_t>(edge) * edge * edge * sizeof(float);
@@ -142,21 +145,25 @@ int main(int argc, char** argv)
   }
   const std::size_t after = residentBytes();
 
-  const double perEdit = edits > 0 ? (mib(after) - mib(before)) / edits : 0.0;
   std::printf("cube edge %d (%.1f MiB), %d edits\n", edge, mib(cubeBytes),
               edits);
   if (basisBytes > 0)
     std::printf("basis set from %s: %zu atoms, MO coefficients %.1f MiB\n",
                 argv[3], static_cast<std::size_t>(molecule.atomCount()),
                 mib(basisBytes));
-  std::printf("RSS before %.1f MiB, after %.1f MiB, growth %.1f MiB\n",
-              mib(before), mib(after), mib(after) - mib(before));
-  if (basisBytes > 0)
-    std::printf("growth per edit %.1f MiB (%.2f MO coefficient sizes)\n",
-                perEdit, perEdit / mib(basisBytes));
-  else
-    std::printf("growth per edit %.1f MiB (%.2f cube sizes)\n", perEdit,
-                cubeBytes > 0 ? perEdit / mib(cubeBytes) : 0.0);
+  if (before == 0 || after == 0) {
+    std::printf("RSS unavailable\n");
+  } else {
+    const double perEdit = edits > 0 ? (mib(after) - mib(before)) / edits : 0.0;
+    std::printf("RSS before %.1f MiB, after %.1f MiB, growth %.1f MiB\n",
+                mib(before), mib(after), mib(after) - mib(before));
+    if (basisBytes > 0)
+      std::printf("growth per edit %.1f MiB (%.2f MO coefficient sizes)\n",
+                  perEdit, perEdit / mib(basisBytes));
+    else
+      std::printf("growth per edit %.1f MiB (%.2f cube sizes)\n", perEdit,
+                  cubeBytes > 0 ? perEdit / mib(cubeBytes) : 0.0);
+  }
   std::printf("undo stack count %d\n", editable.undoStack().count());
   return 0;
 }
