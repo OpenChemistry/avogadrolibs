@@ -127,11 +127,13 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
     m_molecule->disconnect(this);
 
   m_molecule = mol;
+  // Only look: a mutable basisSet() would detach a shared basis set.
+  const Core::BasisSet* current = std::as_const(*m_molecule).basisSet();
   // check if it has basis set data
-  bool hasOrbitals = (m_molecule->basisSet() != nullptr);
+  bool hasOrbitals = (current != nullptr);
   // sanity check if there are actually mo coefficients
-  auto* basis = dynamic_cast<Core::GaussianSet*>(m_molecule->basisSet());
-  if (basis == nullptr || basis->moMatrix().size() == 0)
+  auto* basis = dynamic_cast<const Core::GaussianSet*>(current);
+  if (basis == nullptr || basis->molecularOrbitalCount() == 0)
     hasOrbitals = false;
 
   if (hasOrbitals)
@@ -165,7 +167,7 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
 void Orbitals::loadBasis()
 {
   if (m_molecule != nullptr) {
-    m_basis = m_molecule->basisSet();
+    m_basis = std::as_const(*m_molecule).sharedBasisSet();
   }
 }
 
@@ -174,8 +176,9 @@ void Orbitals::loadOrbitals()
   if (m_basis == nullptr || m_molecule == nullptr)
     return;
 
-  auto* basis = dynamic_cast<Core::GaussianSet*>(m_molecule->basisSet());
-  if (basis == nullptr || basis->moMatrix().size() == 0)
+  auto* basis = dynamic_cast<const Core::GaussianSet*>(
+    std::as_const(*m_molecule).basisSet());
+  if (basis == nullptr || basis->molecularOrbitalCount() == 0)
     return;
 
   if (!m_dialog) {
@@ -194,7 +197,7 @@ void Orbitals::loadOrbitals()
             SLOT(precalculateOrbitals()));
   }
 
-  m_dialog->fillTable(m_basis);
+  m_dialog->fillTable(m_basis.get());
   m_dialog->show();
   m_dialog->raise();
   m_dialog->activateWindow();
@@ -206,11 +209,13 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
     return;
 
   bool isEnabled = m_action->isEnabled();
-  bool hasOrbitals = (m_molecule->basisSet() != nullptr);
+  // Only look: a mutable basisSet() would detach a shared basis set.
+  const Core::BasisSet* current = std::as_const(*m_molecule).basisSet();
+  bool hasOrbitals = (current != nullptr);
 
   // sanity check if there are actually mo coefficients
-  auto* basis = dynamic_cast<Core::GaussianSet*>(m_molecule->basisSet());
-  if (basis == nullptr || basis->moMatrix().size() == 0)
+  auto* basis = dynamic_cast<const Core::GaussianSet*>(current);
+  if (basis == nullptr || basis->molecularOrbitalCount() == 0)
     hasOrbitals = false;
 
   // Molecule::emitChanged() frees the basis set, cubes and meshes whenever
@@ -235,7 +240,7 @@ void Orbitals::moleculeChanged([[maybe_unused]] unsigned int changes)
       loadOrbitals(); // orbitals appeared: fill the table and show the dialog
     } else if (derivedDataDropped && m_dialog && m_dialog->isVisible()) {
       // Refill in place; the dialog was already open, so do not raise it.
-      m_dialog->fillTable(m_basis);
+      m_dialog->fillTable(m_basis.get());
     }
   } else if (m_dialog) {
     m_dialog->hide();
@@ -473,6 +478,8 @@ void Orbitals::calculateCube()
     m_gaussianConcurrent = new QtGui::GaussianSetConcurrent(this);
   }
   m_gaussianConcurrent->setMolecule(m_molecule);
+  // setMolecule() may have given the molecule a private copy of the basis set
+  loadBasis();
 
   auto* watcher = &m_gaussianConcurrent->watcher();
   connect(watcher, SIGNAL(finished()), this, SLOT(calculateCubeDone()));

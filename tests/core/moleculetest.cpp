@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 #include <limits>
 #include <random>
@@ -663,7 +664,8 @@ TEST_F(MoleculeTest, moveRepointsResidueAtoms)
 }
 
 // Copies must not point back at the original either: residue atoms and the
-// basis set both carry a molecule pointer.
+// basis set both carry a molecule pointer. A copy shares the basis set, so
+// its back-pointer is fixed up by the mutable basisSet().
 TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
 {
   Molecule original;
@@ -679,8 +681,8 @@ TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
   basis->addBasis(0, Avogadro::Core::GaussianSet::S);
   original.setBasisSet(basis);
 
-  auto expectOwnPointers = [](const Molecule& m) {
-    const auto ca = m.residue(0).atomByName("CA");
+  auto expectOwnPointers = [](Molecule& m) {
+    const auto ca = std::as_const(m).residue(0).atomByName("CA");
     EXPECT_EQ(ca.molecule(), &m);
     EXPECT_EQ(ca.index(), 2u);
     ASSERT_NE(m.basisSet(), nullptr);
@@ -758,10 +760,17 @@ TEST_F(MoleculeTest, readPropertiesFreesTheOldBasisSet)
 
     target.readProperties(source);
 
-    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+    // The old one is freed and the source's is shared, not copied.
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    EXPECT_EQ(std::as_const(target).basisSet(), b);
+
+    // Writing detaches the target's side only.
     ASSERT_NE(target.basisSet(), nullptr);
-    EXPECT_NE(target.basisSet(), source.basisSet());
+    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+    EXPECT_NE(target.basisSet(), b);
+    EXPECT_EQ(source.basisSet(), b);
     EXPECT_EQ(target.basisSet()->molecule(), &target);
+    EXPECT_EQ(b->molecule(), &source);
   }
   EXPECT_EQ(CountingBasisSet::liveCount, 0);
 }
@@ -4667,7 +4676,7 @@ TEST_F(MoleculeTest, cubesDetachesEveryCube)
   }
   // The const overload never detaches.
   Molecule c(a);
-  std::vector<Cube*> peek = static_cast<const Molecule&>(c).cubes();
+  std::vector<const Cube*> peek = static_cast<const Molecule&>(c).cubes();
   EXPECT_EQ(peek[0], ca.cube(0));
   EXPECT_EQ(peek[1], ca.cube(1));
 }
@@ -4887,4 +4896,197 @@ TEST_F(MoleculeTest, sharedHandlesFromConstMolecule)
   const Molecule empty;
   EXPECT_EQ(empty.sharedCube(0), nullptr);
   EXPECT_EQ(empty.sharedMesh(0), nullptr);
+}
+
+namespace {
+using Avogadro::Core::BasisSet;
+using Avogadro::Core::GaussianSet;
+
+// Three atoms with two coordinate sets, and a two-function Gaussian basis set
+// whose MO set has one matrix per coordinate set.
+void fillBasisSet(Molecule& m)
+{
+  for (int i = 0; i < 3; ++i)
+    m.addAtom(6);
+  Array<Vector3> first(3, Vector3::Zero());
+  Array<Vector3> second(3, Vector3(1.0, 2.0, 3.0));
+  m.setCoordinate3d(first, 0);
+  m.setCoordinate3d(second, 1);
+  m.setCoordinate3d(0);
+
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&m);
+  basis->addBasis(0, GaussianSet::S);
+  basis->addBasis(2, GaussianSet::S);
+  const std::vector<double> identity = { 1.0, 0.0, 0.0, 1.0 };
+  const std::vector<double> swapped = { 0.0, 1.0, 1.0, 0.0 };
+  basis->setMolecularOrbitals(identity);
+  for (auto type : { BasisSet::Alpha, BasisSet::Beta }) {
+    basis->setMolecularOrbitals(identity, type, 0);
+    basis->setMolecularOrbitals(swapped, type, 1);
+  }
+  m.setBasisSet(basis);
+}
+
+const GaussianSet* constGaussian(const Molecule& m)
+{
+  return dynamic_cast<const GaussianSet*>(m.basisSet());
+}
+
+GaussianSet* mutableGaussian(Molecule& m)
+{
+  return dynamic_cast<GaussianSet*>(m.basisSet());
+}
+} // namespace
+
+TEST_F(MoleculeTest, copySharesBasisSetAndMutableAccessDetaches)
+{
+  Molecule a;
+  fillBasisSet(a);
+  const GaussianSet* shared = constGaussian(a);
+  ASSERT_NE(shared, nullptr);
+
+  Molecule b(a);
+  EXPECT_EQ(constGaussian(b), shared);
+
+  GaussianSet* mine = mutableGaussian(b);
+  ASSERT_NE(mine, nullptr);
+  EXPECT_NE(mine, shared);
+  EXPECT_EQ(mine->molecule(), &b);
+  EXPECT_EQ(constGaussian(a), shared);
+  EXPECT_EQ(shared->molecule(), &a);
+
+  // Stepping b's MO set changes b's matrix and b's geometry, not a's.
+  ASSERT_TRUE(mine->setActiveSetStep(1));
+  EXPECT_DOUBLE_EQ(mine->moMatrix()(0, 0), 0.0);
+  EXPECT_DOUBLE_EQ(shared->moMatrix()(0, 0), 1.0);
+  EXPECT_EQ(b.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+  EXPECT_EQ(a.atomPosition3d(0), Vector3::Zero());
+
+  // b is now the sole owner of its copy, and a of the original.
+  EXPECT_EQ(mutableGaussian(b), mine);
+  EXPECT_EQ(mutableGaussian(a), shared);
+}
+
+TEST_F(MoleculeTest, copyAssignAndReadPropertiesShareBasisSet)
+{
+  Molecule a;
+  fillBasisSet(a);
+  const BasisSet* shared = std::as_const(a).basisSet();
+
+  Molecule assigned;
+  assigned.setBasisSet(new GaussianSet);
+  assigned = a;
+  EXPECT_EQ(std::as_const(assigned).basisSet(), shared);
+
+  Molecule read;
+  read.readProperties(a);
+  EXPECT_EQ(std::as_const(read).basisSet(), shared);
+
+  // Each writer detaches only its own side.
+  EXPECT_NE(assigned.basisSet(), shared);
+  EXPECT_NE(read.basisSet(), shared);
+  EXPECT_NE(std::as_const(read).basisSet(), std::as_const(assigned).basisSet());
+  EXPECT_EQ(std::as_const(a).basisSet(), shared);
+}
+
+// The source of a copy can go away while the copy still shares (and then
+// solely owns) the basis set. Its molecule() would dangle; the mutable
+// accessor has to repoint it before anything dereferences it.
+TEST_F(MoleculeTest, basisSetBackPointerSurvivesTheSourceGoingAway)
+{
+  Molecule assigned;
+  {
+    Molecule temporary;
+    fillBasisSet(temporary);
+    assigned = temporary;
+  }
+  GaussianSet* basis = mutableGaussian(assigned);
+  ASSERT_NE(basis, nullptr);
+  EXPECT_EQ(basis->molecule(), &assigned);
+  EXPECT_TRUE(basis->setActiveSetStep(1));
+  EXPECT_EQ(assigned.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+
+  auto source = std::make_unique<Molecule>();
+  fillBasisSet(*source);
+  Molecule copied(*source);
+  source.reset();
+  basis = mutableGaussian(copied);
+  ASSERT_NE(basis, nullptr);
+  EXPECT_EQ(basis->molecule(), &copied);
+  EXPECT_TRUE(basis->setActiveSetStep(1));
+  EXPECT_EQ(copied.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+}
+
+TEST_F(MoleculeTest, basisSetSoleOwnerDoesNotDetach)
+{
+  Molecule a;
+  fillBasisSet(a);
+  const BasisSet* own = std::as_const(a).basisSet();
+  EXPECT_EQ(a.basisSet(), own);
+  EXPECT_EQ(a.basisSet(), own);
+
+  {
+    Molecule b(a);
+    EXPECT_NE(b.basisSet(), own);
+  }
+  EXPECT_EQ(a.basisSet(), own);
+}
+
+TEST_F(MoleculeTest, sharedBasisSetHandleMakesNextMutableAccessDetach)
+{
+  Molecule a;
+  fillBasisSet(a);
+  std::shared_ptr<const BasisSet> handle = a.sharedBasisSet();
+  // Taking a handle never detaches.
+  EXPECT_EQ(std::as_const(a).basisSet(), handle.get());
+
+  GaussianSet* mine = mutableGaussian(a);
+  ASSERT_NE(mine, nullptr);
+  EXPECT_NE(mine, handle.get());
+  ASSERT_TRUE(mine->setActiveSetStep(1));
+  const auto* held = dynamic_cast<const GaussianSet*>(handle.get());
+  ASSERT_NE(held, nullptr);
+  EXPECT_DOUBLE_EQ(held->moMatrix()(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ(mine->moMatrix()(0, 0), 0.0);
+
+  // The handle keeps the old basis set alive past its molecule.
+  auto owner = std::make_unique<Molecule>(a);
+  handle = std::as_const(*owner).sharedBasisSet();
+  owner.reset();
+  ASSERT_NE(handle, nullptr);
+  EXPECT_EQ(handle->molecularOrbitalCount(), 2u);
+
+  const Molecule empty;
+  EXPECT_EQ(empty.sharedBasisSet(), nullptr);
+}
+
+TEST_F(MoleculeTest, swapAtomDetachesASharedBasisSet)
+{
+  Molecule a;
+  fillBasisSet(a);
+  Molecule b(a);
+  b.swapAtom(0, 2);
+
+  const std::vector<unsigned int> original = { 0, 2 };
+  const std::vector<unsigned int> swappedIndices = { 2, 0 };
+  EXPECT_EQ(constGaussian(a)->atomIndices(), original);
+  EXPECT_EQ(constGaussian(b)->atomIndices(), swappedIndices);
+  EXPECT_NE(constGaussian(a), constGaussian(b));
+}
+
+TEST_F(MoleculeTest, copiesShareBasisSetWithoutCloning)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule a;
+    a.setBasisSet(new CountingBasisSet);
+    Molecule b(a);
+    Molecule c;
+    c = b;
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    ASSERT_NE(c.basisSet(), nullptr);
+    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
 }

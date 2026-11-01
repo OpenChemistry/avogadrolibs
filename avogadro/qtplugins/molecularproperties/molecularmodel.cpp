@@ -14,6 +14,7 @@
 #include <QtCore/QDebug>
 
 #include <limits>
+#include <utility>
 
 namespace Avogadro::QtPlugins {
 
@@ -344,7 +345,8 @@ void MolecularModel::updateTable(unsigned int flags)
   }
 
   // TODO check for homo, lumo, or somo energies
-  const auto* basis = m_molecule->basisSet();
+  // Only look: a mutable basisSet() would detach a shared basis set.
+  const auto* basis = std::as_const(*m_molecule).basisSet();
   const GaussianSet* gaussianSet = dynamic_cast<const GaussianSet*>(basis);
   if (gaussianSet != nullptr && gaussianSet->scfType() == Core::Rhf) {
     unsigned int homo = gaussianSet->homo();

@@ -679,13 +679,15 @@ double GaussianSetTools::calculateShellCutoff(const ShellInfo& shell) const
 
 bool GaussianSetTools::calculateMolecularOrbital(Cube& cube, int moNumber) const
 {
-  return calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
+  return isValid() &&
+         calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
 }
 
 bool GaussianSetTools::calculateMolecularOrbitalGrid(Cube& cube,
                                                      int moNumber) const
 {
-  return calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
+  return isValid() &&
+         calculateMolecularOrbitalSlab(cube, moNumber, 0, cube.nx());
 }
 
 bool GaussianSetTools::evaluateMOGrid(int moIndex, const MatrixX& moMat,
@@ -801,7 +803,10 @@ bool GaussianSetTools::evaluateMOGrid(
 bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
                                                      int iStart, int iEnd) const
 {
-  if (!isValid() ||
+  // Worker threads call the slab functions, so they check the basis set the
+  // tools were built from rather than isValid(): the GUI thread may replace
+  // the molecule's basis set pointer (a copy-on-write detach) meanwhile.
+  if (!m_valid || m_basis == nullptr ||
       moNumber > static_cast<int>(m_basis->molecularOrbitalCount()))
     return false;
 
@@ -863,18 +868,19 @@ double GaussianSetTools::calculateMolecularOrbital(const Vector3& position,
 
 bool GaussianSetTools::calculateElectronDensity(Cube& cube) const
 {
-  return calculateElectronDensitySlab(cube, 0, cube.nx());
+  return isValid() && calculateElectronDensitySlab(cube, 0, cube.nx());
 }
 
 bool GaussianSetTools::calculateElectronDensityGrid(Cube& cube) const
 {
-  return calculateElectronDensitySlab(cube, 0, cube.nx());
+  return isValid() && calculateElectronDensitySlab(cube, 0, cube.nx());
 }
 
 bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
                                                     int iEnd) const
 {
-  if (!isValid())
+  // Not isValid(); see calculateMolecularOrbitalSlab().
+  if (!m_valid || m_basis == nullptr)
     return false;
 
   // Determine occupied MOs and their weights
@@ -1034,13 +1040,14 @@ double GaussianSetTools::calculateElectronDensity(const Vector3& position) const
 
 bool GaussianSetTools::calculateSpinDensity(Cube& cube) const
 {
-  return calculateSpinDensitySlab(cube, 0, cube.nx());
+  return isValid() && calculateSpinDensitySlab(cube, 0, cube.nx());
 }
 
 bool GaussianSetTools::calculateSpinDensitySlab(Cube& cube, int iStart,
                                                 int iEnd) const
 {
-  if (!isValid())
+  // Not isValid(); see calculateMolecularOrbitalSlab().
+  if (!m_valid || m_basis == nullptr)
     return false;
 
   const MatrixX& matrix = m_basis->spinDensityMatrix();
@@ -1093,8 +1100,10 @@ double GaussianSetTools::calculateSpinDensity(const Vector3& position) const
 
 bool GaussianSetTools::isValid() const
 {
+  // Only look: the mutable basisSet() would detach a shared basis set.
   return m_valid && (m_molecule != nullptr) &&
-         (dynamic_cast<GaussianSet*>(m_molecule->basisSet()) != nullptr);
+         (dynamic_cast<const GaussianSet*>(
+            std::as_const(*m_molecule).basisSet()) != nullptr);
 }
 
 bool GaussianSetTools::moMatrixFits(const MatrixX& moMat) const

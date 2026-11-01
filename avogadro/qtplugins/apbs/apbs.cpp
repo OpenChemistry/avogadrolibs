@@ -20,6 +20,9 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 
+#include <memory>
+#include <utility>
+
 namespace Avogadro::QtPlugins {
 
 using Core::Mesh;
@@ -153,13 +156,17 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       m_progressDialog->setValue(1);
       qApp->processEvents();
 
-      Mesh* mesh = molecule.addMesh();
-      auto* meshGenerator = new QtGui::MeshGenerator(cube, mesh, 0.1f);
+      // The progress slot spins the event loop while a mesh is generated, so
+      // a copy of the molecule (an undo snapshot) could be taken mid-way.
+      // Fill meshes we own and hand each over once it is complete.
+      auto mesh = std::make_unique<Mesh>();
+      auto* meshGenerator = new QtGui::MeshGenerator(cube, mesh.get(), 0.1f);
       connect(meshGenerator, SIGNAL(finished()), this,
               SLOT(meshGeneratorFinished()));
       connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
               SLOT(onMeshGeneratorProgress(int)));
       meshGenerator->run();
+      molecule.addMesh(std::move(mesh));
 
       // generate negative mesh
       m_progressDialog->setLabelText(tr("Generating Negative Potential Mesh"));
@@ -167,13 +174,14 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       m_progressDialog->setValue(1);
       qApp->processEvents();
 
-      mesh = molecule.addMesh();
-      meshGenerator = new QtGui::MeshGenerator(cube, mesh, -0.1f);
+      mesh = std::make_unique<Mesh>();
+      meshGenerator = new QtGui::MeshGenerator(cube, mesh.get(), -0.1f);
       connect(meshGenerator, SIGNAL(finished()), this,
               SLOT(meshGeneratorFinished()));
       connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,
               SLOT(onMeshGeneratorProgress(int)));
       meshGenerator->run();
+      molecule.addMesh(std::move(mesh));
 
       m_progressDialog->setValue(100);
       m_progressDialog->hide();

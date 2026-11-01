@@ -11,18 +11,27 @@
 // one atom. Before copy-on-write every edit deep-copies the cube twice (one
 // copy for undo, one for redo); after it, the copies share.
 //
-// Usage: AvogadroUndoMemoryBenchmark [cube-edge=200] [edits=10]
+// With a Gaussian fchk or Molden file (e.g. avogadrodata/data/fchk/c240.fchk)
+// the molecule is read from it instead, so its basis set is copied (or
+// shared) as well. Pass a cube edge of 1 to measure the basis set on its own.
+//
+// Usage: AvogadroUndoMemoryBenchmark [cube-edge=200] [edits=10] [orbitals]
 // Measure a Release build without sanitizers or libc++ hardening.
 
 #include <avogadro/core/cube.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/quantumio/gaussianfchk.h>
+#include <avogadro/quantumio/molden.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <cctype>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <utility>
 
 #if defined(__APPLE__)
 #include <mach/mach.h>
@@ -86,13 +95,48 @@ int main(int argc, char** argv)
   const int edits = parseArg(argc, argv, 2, 10);
 
   QtGui::Molecule molecule;
-  molecule.addAtom(8).setPosition3d(Vector3(0.0, 0.0, 0.0));
-  molecule.addAtom(1).setPosition3d(Vector3(0.96, 0.0, 0.0));
-  molecule.addAtom(1).setPosition3d(Vector3(-0.24, 0.93, 0.0));
+  std::size_t basisBytes = 0;
+  if (argc > 3) {
+    const std::string path(argv[3]);
+    QuantumIO::GaussianFchk fchk;
+    QuantumIO::MoldenFile moldenFile;
+    std::string suffix;
+    const std::size_t dot = path.rfind('.');
+    if (dot != std::string::npos)
+      for (char c : path.substr(dot + 1))
+        suffix +=
+          static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    bool molden = false;
+    for (const std::string& extension : moldenFile.fileExtensions())
+      molden = molden || suffix == extension;
+    Io::FileFormat& format =
+      molden ? static_cast<Io::FileFormat&>(moldenFile) : fchk;
+    if (!format.readFile(path, molecule)) {
+      std::fprintf(stderr, "could not read %s\n", argv[3]);
+      return 1;
+    }
+    const auto* basis = dynamic_cast<const Core::GaussianSet*>(
+      std::as_const(molecule).basisSet());
+    if (basis == nullptr) {
+      std::fprintf(stderr, "%s has no Gaussian basis set\n", argv[3]);
+      return 1;
+    }
+    // The MO coefficients dominate; the shell data is small.
+    for (auto type : { Core::BasisSet::Alpha, Core::BasisSet::Beta })
+      basisBytes +=
+        static_cast<std::size_t>(basis->moMatrix(type).size()) * sizeof(double);
+  } else {
+    molecule.addAtom(8).setPosition3d(Vector3(0.0, 0.0, 0.0));
+    molecule.addAtom(1).setPosition3d(Vector3(0.96, 0.0, 0.0));
+    molecule.addAtom(1).setPosition3d(Vector3(-0.24, 0.93, 0.0));
+  }
 
   Core::Cube* cube = molecule.addCube();
-  cube->setLimits(Vector3(-5.0, -5.0, -5.0), Vector3i(edge, edge, edge),
-                  10.0 / edge);
+  if (!cube->setLimits(Vector3(-5.0, -5.0, -5.0), Vector3i(edge, edge, edge),
+                       10.0 / edge)) {
+    std::fprintf(stderr, "could not allocate a cube of edge %d\n", edge);
+    return 1;
+  }
   cube->fill(0.5);
   const std::size_t cubeBytes =
     static_cast<std::size_t>(edge) * edge * edge * sizeof(float);
@@ -109,13 +153,25 @@ int main(int argc, char** argv)
   }
   const std::size_t after = residentBytes();
 
-  const double perEdit = edits > 0 ? (mib(after) - mib(before)) / edits : 0.0;
   std::printf("cube edge %d (%.1f MiB), %d edits\n", edge, mib(cubeBytes),
               edits);
-  std::printf("RSS before %.1f MiB, after %.1f MiB, growth %.1f MiB\n",
-              mib(before), mib(after), mib(after) - mib(before));
-  std::printf("growth per edit %.1f MiB (%.2f cube sizes)\n", perEdit,
-              cubeBytes > 0 ? perEdit / mib(cubeBytes) : 0.0);
+  if (basisBytes > 0)
+    std::printf("basis set from %s: %zu atoms, MO coefficients %.1f MiB\n",
+                argv[3], static_cast<std::size_t>(molecule.atomCount()),
+                mib(basisBytes));
+  if (before == 0 || after == 0) {
+    std::printf("RSS unavailable\n");
+  } else {
+    const double perEdit = edits > 0 ? (mib(after) - mib(before)) / edits : 0.0;
+    std::printf("RSS before %.1f MiB, after %.1f MiB, growth %.1f MiB\n",
+                mib(before), mib(after), mib(after) - mib(before));
+    if (basisBytes > 0)
+      std::printf("growth per edit %.1f MiB (%.2f MO coefficient sizes)\n",
+                  perEdit, perEdit / mib(basisBytes));
+    else
+      std::printf("growth per edit %.1f MiB (%.2f cube sizes)\n", perEdit,
+                  cubeBytes > 0 ? perEdit / mib(cubeBytes) : 0.0);
+  }
   std::printf("undo stack count %d\n", editable.undoStack().count());
   return 0;
 }

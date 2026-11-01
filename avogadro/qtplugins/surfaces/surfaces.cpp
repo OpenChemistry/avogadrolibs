@@ -361,7 +361,7 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
     return;
   }
 
-  m_basis = mol->basisSet();
+  m_basis = std::as_const(*mol).basisSet();
   if (m_basis == nullptr && mol->cubeCount() != 0) {
     m_fileCubeCount = mol->cubeCount();
     // calculate the mesh for the first cube
@@ -455,9 +455,10 @@ void Surfaces::moleculeChanged(unsigned int changes)
   auto currentCubes = m_fileCubeCount;
 
   // readProperties() can replace the basis set (freeing the old one)
-  // without a structural change, so refresh our cached pointer on every
-  // change, not just when derived data is invalidated.
-  m_basis = m_molecule->basisSet();
+  // without a structural change, and any mutable access may have detached
+  // it, so refresh our cached pointer on every change, not just when derived
+  // data is invalidated.
+  m_basis = std::as_const(*m_molecule).basisSet();
 
   // Molecule::emitChanged() discards the cubes and meshes on exactly these
   // changes (or a replacement brought its own), so our indices into them no
@@ -517,7 +518,7 @@ void Surfaces::surfacesActivated()
 
   if (m_basis) {
     // we have quantum data, set up the dialog accordingly
-    auto gaussian = dynamic_cast<Core::GaussianSet*>(m_basis);
+    auto gaussian = dynamic_cast<const Core::GaussianSet*>(m_basis);
     bool beta = false;
     if (gaussian) {
       auto b = gaussian->moMatrix(GaussianSet::Beta);
@@ -965,7 +966,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   bool connectSlots = false;
 
   // set up QtConcurrent calculators for Gaussian or Slater basis sets
-  if (dynamic_cast<GaussianSet*>(m_basis)) {
+  if (dynamic_cast<const GaussianSet*>(m_basis)) {
     if (!m_gaussianConcurrent) {
       m_gaussianConcurrent = new GaussianSetConcurrent(this);
       connectSlots = true;
@@ -978,6 +979,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     }
     m_slaterConcurrent->setMolecule(m_molecule);
   }
+  // setMolecule() may have given the molecule a private copy of the basis set
+  m_basis = std::as_const(*m_molecule).basisSet();
 
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {
@@ -991,7 +994,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   m_pendingCube = std::make_unique<Cube>();
   m_cubeJobStale = false;
   Cube* cube = m_pendingCube.get();
-  const bool gaussian = dynamic_cast<GaussianSet*>(m_basis) != nullptr;
+  const bool gaussian = dynamic_cast<const GaussianSet*>(m_basis) != nullptr;
   m_cubeProducer = gaussian ? CubeProducer::Gaussian : CubeProducer::Slater;
 
   if (type == Unknown)
@@ -1147,11 +1150,16 @@ bool Surfaces::changeStep(int n)
     return false;
 
   qDebug() << "\n\t==== Step changed to" << n << "====";
-  auto g = dynamic_cast<GaussianSet*>(m_basis);
-  if (g) {
+  if (dynamic_cast<const GaussianSet*>(m_basis) != nullptr) {
     // Stop the workers first: a QM calculation reads the set being stepped.
     const bool interrupted = clearSurfaceData();
-    g->setActiveSetStep(n - 1);
+    // Step the molecule's own basis set. The mutable accessor gives it a
+    // private copy if an undo snapshot shares it; writing through m_basis
+    // would change the snapshot's copy too.
+    auto* g = dynamic_cast<GaussianSet*>(m_molecule->basisSet());
+    m_basis = g;
+    if (g != nullptr)
+      g->setActiveSetStep(n - 1);
     // Switching the MO set step moves to that conformer's geometry. Emit a
     // moved-only change: Added would delete the basis set we are stepping
     // through (see Molecule::invalidatesDerivedData()).

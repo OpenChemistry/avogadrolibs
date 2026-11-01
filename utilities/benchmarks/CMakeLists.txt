@@ -23,5 +23,6 @@ target_compile_definitions(AvogadroGaussianBenchmark
 
 if(USE_QT)
   add_executable(AvogadroUndoMemoryBenchmark undomemorybenchmark.cpp)
-  target_link_libraries(AvogadroUndoMemoryBenchmark PRIVATE Avogadro::QtGui)
+  target_link_libraries(AvogadroUndoMemoryBenchmark
+    PRIVATE Avogadro::QtGui Avogadro::QuantumIO)
 endif()

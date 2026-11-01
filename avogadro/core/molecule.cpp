@@ -30,8 +30,7 @@
 namespace Avogadro::Core {
 
 Molecule::Molecule()
-  : m_basisSet(nullptr), m_unitCell(nullptr),
-    m_layerInfo(std::make_shared<MoleculeInfo>())
+  : m_unitCell(nullptr), m_layerInfo(std::make_shared<MoleculeInfo>())
 {
   m_elements.reset();
 }
@@ -53,8 +52,7 @@ Molecule::Molecule(const Molecule& other)
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
-    m_meshes(), m_cubes(),
-    m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
+    m_meshes(), m_cubes(), m_basisSet(other.m_basisSet),
     m_unitCell(other.m_unitCell ? std::make_unique<UnitCell>(*other.m_unitCell)
                                 : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
@@ -68,9 +66,8 @@ Molecule::Molecule(const Molecule& other)
   m_cubes = other.m_cubes;
   m_activeCubeIndex = other.m_activeCubeIndex;
 
-  // The clone copied the basis set's back-pointer to the original.
-  if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
-    m_basisSet->setMolecule(this);
+  // The basis set is shared too; its molecule() still names other, and the
+  // mutable basisSet() repoints it when this molecule first writes.
   repointResidueAtoms(other);
 
   // Make sure all the atoms are in the active layer
@@ -107,11 +104,10 @@ void Molecule::readProperties(const Molecule& other)
   m_residueProperties = other.m_residueProperties;
   m_conformerProperties = other.m_conformerProperties;
 
-  // copy orbital information, replacing (and freeing) any we already had
-  if (other.m_basisSet != nullptr) {
-    setBasisSet(other.m_basisSet->clone());
-    m_basisSet->setMolecule(this);
-  }
+  // share orbital information, replacing any we already had; the mutable
+  // basisSet() detaches and repoints it when this molecule first writes
+  if (other.m_basisSet != nullptr)
+    m_basisSet = other.m_basisSet;
 
   // copy over spectra information
   if (!other.m_vibrations.empty())
@@ -180,10 +176,8 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_cubes = other.m_cubes;
     m_activeCubeIndex = other.m_activeCubeIndex;
 
-    delete m_basisSet;
-    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
-    if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
-      m_basisSet->setMolecule(this);
+    // Shared; the mutable basisSet() detaches and repoints it
+    m_basisSet = other.m_basisSet;
     m_unitCell = other.m_unitCell
                    ? std::make_unique<UnitCell>(*other.m_unitCell)
                    : nullptr;
@@ -229,8 +223,7 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     // Free what this molecule owns; none of it goes to the source.
     clearMeshes();
     clearCubes();
-    delete m_basisSet;
-    m_basisSet = nullptr;
+    m_basisSet.reset();
     m_unitCell.reset();
 
     takeContentsFrom(other);
@@ -331,7 +324,8 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   other.m_cubes.clear();
   m_activeCubeIndex = std::exchange(other.m_activeCubeIndex, 0);
 
-  m_basisSet = std::exchange(other.m_basisSet, nullptr);
+  m_basisSet = std::move(other.m_basisSet);
+  other.m_basisSet.reset();
   // The basis set points back at its molecule, which is now this one.
   if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
     m_basisSet->setMolecule(this);
@@ -357,7 +351,6 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
 Molecule::~Molecule()
 {
   // LayerManager::deleteMolecule(this);
-  delete m_basisSet;
   clearMeshes();
   clearCubes();
 }
@@ -1241,7 +1234,7 @@ void Molecule::swapAtom(Index a, Index b)
   // molecular orbital coefficients, which are indexed by basis function,
   // remain valid.
   if (m_basisSet != nullptr)
-    m_basisSet->swapAtomIndices(a, b);
+    basisSet()->swapAtomIndices(a, b);
 }
 
 bool Molecule::removeAtom(Index index)
@@ -1675,9 +1668,9 @@ std::vector<Cube*> Molecule::cubes()
   return result;
 }
 
-const std::vector<Cube*> Molecule::cubes() const
+std::vector<const Cube*> Molecule::cubes() const
 {
-  std::vector<Cube*> result;
+  std::vector<const Cube*> result;
   result.reserve(m_cubes.size());
   for (const auto& c : m_cubes)
     result.push_back(c.get());
@@ -1791,10 +1784,26 @@ std::string Molecule::formula(const std::string& delimiter, int over) const
 
 void Molecule::setBasisSet(BasisSet* basis)
 {
-  if (basis == m_basisSet)
+  if (basis == m_basisSet.get())
     return;
-  delete m_basisSet;
-  m_basisSet = basis;
+  m_basisSet.reset(basis);
+}
+
+BasisSet* Molecule::basisSet()
+{
+  if (m_basisSet == nullptr)
+    return nullptr;
+  if (m_basisSet.use_count() > 1)
+    m_basisSet.reset(m_basisSet->clone());
+  // Even a sole owner may still point back at the molecule it was copied,
+  // assigned or moved from, which may be gone by now.
+  m_basisSet->setMolecule(this);
+  return m_basisSet.get();
+}
+
+std::shared_ptr<const BasisSet> Molecule::sharedBasisSet() const
+{
+  return m_basisSet;
 }
 
 void Molecule::setUnitCell(UnitCell* uc)

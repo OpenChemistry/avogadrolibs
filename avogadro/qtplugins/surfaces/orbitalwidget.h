@@ -57,7 +57,7 @@ public slots:
   void writeSettings();
   void reject();
 
-  void fillTable(Core::BasisSet* basis);
+  void fillTable(const Core::BasisSet* basis);
   /** Empty the table, for when the molecule no longer has any orbitals. */
   void clearTable();
   void setQuality(OrbitalQuality q);

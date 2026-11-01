@@ -170,7 +170,9 @@ private:
   QPointer<QtGui::TimedProgressDialog> m_progressDialog;
 
   QtGui::Molecule* m_molecule = nullptr;
-  Core::BasisSet* m_basis = nullptr;
+  // Read-only: refreshed from const access, so that looking never detaches
+  // the molecule's shared basis set. Writes fetch m_molecule->basisSet().
+  const Core::BasisSet* m_basis = nullptr;
 
   QtGui::GaussianSetConcurrent* m_gaussianConcurrent = nullptr;
   QtGui::SlaterSetConcurrent* m_slaterConcurrent = nullptr;
