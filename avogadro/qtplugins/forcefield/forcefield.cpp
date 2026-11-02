@@ -747,9 +747,8 @@ void Forcefield::setupMethod()
       Calc::EnergyManager::instance().recommendedModel(*m_molecule);
   }
 
-  if (m_method != nullptr) {
-    delete m_method; // delete the previous one
-  }
+  delete m_method; // delete the previous one
+
   m_method = Calc::EnergyManager::instance().model(m_methodName);
 
   if (m_method != nullptr) {

@@ -38,7 +38,6 @@
 #include <QtGui/QFont>
 #include <QtGui/QStandardItemModel>
 
-#include <cmath>
 #include <sstream>
 
 using Avogadro::Core::AvoSpglib;
