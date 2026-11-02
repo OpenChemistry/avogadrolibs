@@ -129,6 +129,15 @@ foreach(plugin ${testNames})
     set(filter "CommandTestHarnessTest.*")
   elseif(plugin STREQUAL "ScenePluginSerialize")
     set(filter "*ScenePluginSerializeTest.*")
+  elseif(plugin STREQUAL "ConstraintsExtension")
+    # The suite is named ConstraintsCommandTest, not ConstraintsExtension*.
+    set(filter "ConstraintsCommandTest.*")
+  elseif(plugin STREQUAL "MeasureTool")
+    # measuretooltest.cpp also defines MeasureWidgetTest.
+    set(filter "MeasureToolCommandTest.*:MeasureWidgetTest.*")
+  elseif(plugin STREQUAL "Surfaces")
+    # surfacestest.cpp also defines SurfacesResolutionTest.
+    set(filter "SurfacesCommandTest.*:SurfacesResolutionTest.*")
   else()
     set(filter "${plugin}CommandTest.*")
   endif()
