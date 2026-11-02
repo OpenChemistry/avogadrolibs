@@ -1,117 +1,172 @@
-# Avogadro Project
+# Avogadro Libraries: Guide for Contributors and Coding Agents
 
-For Avogadro, code needs to be **correct** particularly for science-related topics. The force fields, the molecular dynamics, molecular surfaces, orbitals, etc. needs substantial human intervention and review. We suggest that agents be used primarily for writing small snippets and boilerplate, with full, careful human analysis particularly for chemical and mathematical components.
+Avogadro is an open source, cross-platform C++ desktop application for
+building, editing and visualizing molecules and materials, running simple
+simulations and geometry optimizations, and analyzing results. This repository,
+avogadrolibs, holds the libraries and plugins; the application shell lives in
+`avogadroapp`.
 
-Avogadro is an open source C++ desktop chemistry app, focusing on building, editing and visualizing molecules and materials. This includes running simple simulations, geometry optimizations, analysis and OpenGL visualization. The avogadrolibs repository focuses on the key library components including `avogadro/calc` for calculating atomic charges and energies, `avogadro/core` for fundamental non-UI classes, `avogadro/io` for core file format IO, `avogadro/qtgui` for core Qt UI classes, `avogadro/qtplugins` for isolated plugin classes as menu actions, tools, and rendering display plugins, `avogadro/quantumio` for reading quantum chemical formats, and `avogadro/rendering` for OpenGL rendering code including GLSL shaders.
+This file explains how the code is organized and **why**, so that new code
+lands in the right place. Each library directory has its own `AGENTS.md` with
+the rules that apply there; read the one for the directory you are working in.
 
-## 🧠 Context
+## AI use policy
 
-- **Project Type**: Cross-Platform Desktop App
-- **Purpose**: Scientific Visualization / Molecular Modeling / Computational Chemistry
-- **Language**: C++ 17 and GLSL
-- **Framework / Libraries**: STL / Qt / CMake / GoogleTest / OpenGL / Eigen
-- **Architecture**: Modular / Layered / RAII / OOP / Component-Based
+Code needs to be **correct**, particularly for science: force fields, molecular
+dynamics, surfaces, orbitals, unit conversions and file parsing all need
+careful human review.
 
-## 🔧 General Guidelines
+Our policy (see [CONTRIBUTING.md](CONTRIBUTING.md#ai-usage)) is that only
+**levels 0 and 1** of AI assistance are accepted: autocomplete, and small
+snippets or boilerplate that a human reviews in full. Agents are welcome to
+explain code, suggest approaches, help debug and help review. A human must
+write, or fully understand and own, every line that is contributed, and all
+chemistry-specific and mathematical code gets close review. Contributions that
+appear to be mostly machine-generated may be rejected.
 
-- Use modern C++ (C++17 where supported).
-- Add unit tests to `tests/` for new features.
-- Add regression tests for bug fixes.
-- Favor smart pointers (`std::unique_ptr`, `std::shared_ptr`) over raw pointers.
-- Use `const`, `constexpr`, and `noexcept` to express intent.
-- Try to keep headers clean -- generally avoid logic in header files.
-- Use `clang-format` for consistent formatting (see `.clang-format` at the repo root).
-- Favor readability, modularity, and safety. Code should never crash or leak memory.
-- Give information about any CMake Policies that might affect CMake variables that are suggested or mentioned.
-- This project needs to be cross-platform for Windows, macOS, Linux, and BSD and cross-compiler for MSVC, Clang, and GCC.
-  - Minimum CMake version is 3.24, so policies in that range may apply.
+## Where does this code go?
 
+The libraries are layered so that the non-GUI parts can be used without Qt or
+OpenGL. That is not theoretical: the Python package (`pip install avogadro`,
+built from [python/](python/)) and the command-line tools in
+[avogadro/command/](avogadro/command/) link only `Core`, `Calc`, `IO` and
+`QuantumIO`, and the wheel build configures with `USE_QT=OFF` and
+`USE_OPENGL=OFF`. A Qt type in `core` breaks those builds.
 
-## 📁 File Structure
+Ask these questions in order:
 
-Use this structure as a guide when creating or updating files:
+1. **Is it a data structure or algorithm on molecules, with no UI?** It goes in
+   `core` (data model, perception, geometry, basis sets, cubes, meshes).
+2. **Does it compute energies, gradients or charges?** `calc`.
+3. **Does it read or write a file format?** `io` for structure and trajectory
+   formats; `quantumio` for quantum chemistry program output (orbitals,
+   basis sets, spectra).
+4. **Does it issue OpenGL calls or define geometry for drawing?** `rendering`.
+   It knows about spheres, cylinders and meshes, not molecules.
+5. **Does it need Qt, and is it shared by more than one plugin or by
+   avogadroapp?** `qtgui` (or `qtopengl` if it needs both Qt and OpenGL).
+6. **Is it a user-facing feature: a menu action, an interactive tool or a
+   display type?** A new directory under `qtplugins/`.
+7. **Does it mainly drive an external program, or is it best written in
+   Python?** Consider a Python plugin in its own repository instead of C++
+   here (see "A Quick Note About Plugins" in
+   [CONTRIBUTING.md](CONTRIBUTING.md)).
 
-```text
-avogadro/
-  calc/
-  command/
-  core/
-  io/
-  molequeue/
-  qtgui/
-  qtopengl/
-  qtplugins/
-  quantumio/
-  rendering/
-tests/
-  calc/
-  core/
-  io/
-  qtgui/
-  rendering/
-thirdparty/
+If a helper in one plugin is needed by a second plugin, move it into `qtgui`
+(or lower, if it has no Qt dependency). Plugins must not include each other's
+source files.
+
+## Modules
+
+| Directory | Library | Links against | Purpose |
+|-----------|---------|---------------|---------|
+| `core/` | `Core` | Eigen (public); spglib, threads (private) | Data model: `Molecule`, `Atom`/`Bond` proxies, `Graph`, `Elements`, `UnitCell`, `Residue`, `Layer`, `BasisSet`, `Cube`, `Mesh` |
+| `calc/` | `Calc` | `Core` | `EnergyCalculator` (UFF, Lennard-Jones), optimizers, charge models |
+| `io/` | `IO` | `Core` | `FileFormat` readers/writers and `FileFormatManager` |
+| `quantumio/` | `QuantumIO` | `IO` | Quantum chemistry outputs: GAMESS, Gaussian, Molden, MOPAC, NWChem, ORCA, QCSchema |
+| `rendering/` | `Rendering` | core headers only (no Qt) | OpenGL 4.0 Core scene graph, GLSL shaders, export visitors |
+| `qtgui/` | `QtGui` | `IO`, `Calc`, Qt Widgets | `QtGui::Molecule` (signals), `RWMolecule` (undo), plugin base classes, shared widgets |
+| `qtopengl/` | `QtOpenGL` | `Rendering`, `QtGui` | `GLWidget` and Qt text rendering |
+| `molequeue/` | `MoleQueue` | `QtGui`, Qt Network | Input generator dialogs and the MoleQueue job client |
+| `qtplugins/` | one target per plugin | `QtGui` plus whatever it needs | Extensions, tools and scene (display) plugins |
+| `command/` | executables | `IO` or `QuantumIO` | Small command-line converters (`avobabel`, `qube`, `avocjsontocml`) |
+
+Some consequences of this layering:
+
+- **`rendering` cannot see a `Molecule`.** Scene plugins in `qtplugins`
+  (ball-and-stick, cartoons, surfaces) translate the molecule into geometry
+  nodes in `ScenePlugin::process()`. The renderer just draws geometry.
+- **Changing an installed header in `qtgui` (or any library) is an API change**
+  for avogadroapp and for out-of-tree code. Plugins are leaf nodes and can be
+  changed freely.
+- **GPL-licensed code may only live in `qtplugins`**, behind the
+  `BUILD_GPL_PLUGINS` option (off by default; `qtaim` is the current example).
+  The libraries themselves are 3-clause BSD.
+- **Optional dependencies** (spglib, libarchive, HDF5, libmsym, MMTF, the
+  plotter) sit behind `USE_*` CMake options, and the Python wheel build turns
+  most of them off. Code must still compile when they are disabled.
+
+## Rules that apply everywhere
+
+- **Never crash.** No exceptions and no asserts in production code. Validate
+  input (especially from files and scripts), check indices and sizes, and
+  return an error instead.
+- C++17, portable across MSVC, Clang and GCC on Windows, macOS, Linux and BSD.
+  Be cautious with the newest library features.
+- Qt 6 only. Prefer Qt facilities over Boost or other new dependencies in
+  Qt-based code, and ask before adding a third-party library.
+- Use `override`, `nullptr`, `constexpr`, `noexcept` and `enum class`. Use C++
+  casts (`static_cast`, and `qobject_cast` for QObjects), never C-style casts.
+- Prefer smart pointers or Qt parent ownership over manual `new`/`delete`;
+  prefer composition over deep inheritance.
+- Headers: public includes use angle brackets
+  (`#include <avogadro/core/molecule.h>`), local ones use quotes. Order: local,
+  other Avogadro modules, Qt (specific classes, not whole modules), STL.
+  Forward-declare in headers. Private headers end in `_p.h`. Never put `using`
+  in a public header.
+- Use descriptive argument names in headers; they show up in IDE completion
+  and in the API docs.
+- Every user-visible string goes through `tr()` (or `QCoreApplication::translate`
+  outside QObjects). Avogadro ships in more than 60 languages.
+- In GUI code, prefer non-modal dialogs and dock widgets. A modal dialog
+  blocks the RPC interface used for scripting and automation.
+
+### Science and numerics
+
+- **State units in comments and doc strings.** Coordinates are in Ångström;
+  energies from energy models are in kJ/mol (users pick display units
+  separately).
+  Use the constants in [avogadrocore.h](avogadro/core/avogadrocore.h)
+  (`BOHR_TO_ANGSTROM`, `HARTREE_TO_EV`, `KCAL_TO_KJ`, `DEG_TO_RAD`, ...)
+  rather than literals.
+- Consider the degenerate cases: molecules with no atoms, a single atom,
+  collinear atoms in angles and dihedrals, coincident atoms, periodic versus
+  non-periodic structures, and atoms with no bonds.
+- When parsing numbers, use `Core::lexicalCast<double>`/`<float>` from
+  [utilities.h](avogadro/core/utilities.h). It is locale-independent, reads
+  Fortran `D` exponents and handles subnormals. Do not use `stream >> double`
+  or `strtod`, which depend on locale.
+- Use `Core::getLine` rather than `std::getline` in parsing loops that wait
+  for a blank or sentinel line; `std::getline` does not clear the string at end
+  of file, so the loop never ends.
+
+## Build, test and format
+
+Most developers build through the `openchemistry` superbuild; see the
+[build instructions](https://two.avogadro.cc/develop/build.html). For a
+standalone build:
+
+```sh
+cmake -S . -B build -DENABLE_TESTING=ON -DAVOGADRO_DATA_ROOT=/path/to/avogadrodata
+cmake --build build
+ctest --test-dir build                 # all tests
+ctest --test-dir build -R Core-Molecule  # one suite
 ```
 
-## 🧶 Patterns
+Testing needs a checkout of
+[avogadrodata](https://github.com/OpenChemistry/avogadrodata). CMake looks for
+it next to avogadrolibs (where the superbuild puts it), then in the
+`AVOGADRO_DATA_ROOT` environment variable, and stops with an error if
+`ENABLE_TESTING` is on and the data is not found. See
+[tests/AGENTS.md](tests/AGENTS.md) for how to add a test.
 
-### ✅ Patterns to Follow
+Before submitting:
 
-- Classes in `core` should have no external dependencies (Eigen is okay). Any classes requiring Qt should be in `qtgui` and any code using OpenGL should be in `rendering`.
-- File format classes are handled in `io` which only depends on `core`. Quantum chemical program formats are generally handled in `quantumio`
-- Calculations such as charge models and force fields (e.g., Lennard-Jones and UFF) are found in `calc`. These should leverage vector methods in Eigen where possible.
-- Encapsulate with classes and clean header/implementation separation.
-- Favor the Rule of 5 or Rule of 0 when managing custom types.
-- Use interfaces (`abstract class`) for testability and polymorphism.
-- Prefer `enum class` over unscoped enums.
-- Use CMake targets and `target_include_directories` for modular build config.
+- Format the changed lines with `clang-format` (Mozilla-based style in
+  [.clang-format](.clang-format)): `git clang-format origin/master`, or the
+  pre-commit hook in [.pre-commit-config.yaml](.pre-commit-config.yaml). CI
+  rejects formatting differences on changed lines.
+- Add a unit test for new behavior and a regression test for each bug fix.
+- Build and test with warnings visible, and ideally under a sanitizer: the
+  build types `ASAN`, `UBSAN`, `TSAN`, `LSAN` and `MSAN` are defined in
+  [cmake/BuildType.cmake](cmake/BuildType.cmake). CI also runs `clang-tidy`
+  with the checks in [.clang-tidy](.clang-tidy).
+- Commit messages: a short imperative sentence, optionally followed by a blank
+  line and details.
 
-### 🚫 Patterns to Avoid
+## References
 
-- Avoid macros for constants: prefer `constexpr` or `inline` `const`.
-- Avoid implementation logic in header files unless using templates.
-- Avoid global variables unless necessary and wrapped in a namespace or singleton.
-- Don’t overuse inheritance; prefer composition.
-- Avoid manual memory management unless absolutely required.
-
-## 🧪 Testing Guidelines
-
-- Use `GoogleTest` for unit testing.
-- Test constructors, copy/move semantics, and edge cases.
-- Write tests for all public APIs.
-- Isolate dependencies using mock interfaces or adapters.
-- Test core logic in isolation from I/O or rendering subsystems.
-- Use `CMake` to register and run tests via `ctest`.
-
-## 🛠️ Build & Tooling
-
-- In most cases, you wish to build through the `openchemistry` superbuild. For example, see our [build instructions](https://two.avogadro.cc/develop/build.html)
-- Use a separate directory for `build`
-- Configure: `cmake -S . -B build`
-- Build: `cmake --build build`
-- Test: `ctest --test-dir build`
-
-## 🧩 Example Prompts
-
-- `Create a C++ class for a thread-safe queue using std::mutex and std::condition_variable.`
-- `Implement an abstract class Drawable with a draw() method and two subclasses.`
-- `Write a GoogleTest unit test for the Molecule::centerOfGeometry method.`
-- `Implement a C++ string buffer for uncompressing streams using libarchive.`
-- `Please help modernize this OpenGL code to support the 4.0 core profile`
-
-## 🔁 Iteration & Review
-
-- Always review generated code for security, memory safety and correctness.
-- Consider edge cases, for example colinear angles, molecules with no atoms, etc.
-- Use comments to explain complex logic and guide suggestions.
-- Refactor output to match the project's code conventions.
-- Run `clang-tidy`, `cppcheck`, and sanitizers on generated code for static analysis.
-
-## 📚 References
-
-- [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
-- [Modern C++ Features (C++17/20)](https://github.com/AnthonyCalandra/modern-cpp-features)
-- [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
-- [CMake Documentation](https://cmake.org/documentation/)
-- [GoogleTest Documentation](https://github.com/google/googletest)
-- [Clang-Tidy Checks](https://clang.llvm.org/extra/clang-tidy/)
-- [CppReference STL Docs](https://en.cppreference.com/w/cpp)
+- API documentation: https://two.avogadro.cc/develop/classlist.html
+- Build guide: https://two.avogadro.cc/develop/build.html
+- Forum: https://discuss.avogadro.cc/
+- [CONTRIBUTING.md](CONTRIBUTING.md) and [STYLE.md](STYLE.md)
