@@ -236,9 +236,9 @@ Matrix<qreal, 3, 1> QTAIMWavefunctionEvaluator::gradientOfElectronDensity(
 
   value.setZero();
   for (qint64 m = 0; m < m_nmo; ++m) {
-    value(0) += m_occno(m) * m_cdg100(m) * m_cdg000(m);
-    value(1) += m_occno(m) * m_cdg010(m) * m_cdg000(m);
-    value(2) += m_occno(m) * m_cdg001(m) * m_cdg000(m);
+    value(0) += 2 * m_occno(m) * m_cdg100(m) * m_cdg000(m);
+    value(1) += 2 * m_occno(m) * m_cdg010(m) * m_cdg000(m);
+    value(2) += 2 * m_occno(m) * m_cdg001(m) * m_cdg000(m);
   }
 
   return value;
@@ -531,9 +531,9 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensity(
 
   gValue.setZero();
   for (qint64 m = 0; m < m_nmo; ++m) {
-    gValue(0) += m_occno(m) * m_cdg100(m) * m_cdg000(m);
-    gValue(1) += m_occno(m) * m_cdg010(m) * m_cdg000(m);
-    gValue(2) += m_occno(m) * m_cdg001(m) * m_cdg000(m);
+    gValue(0) += 2 * m_occno(m) * m_cdg100(m) * m_cdg000(m);
+    gValue(1) += 2 * m_occno(m) * m_cdg010(m) * m_cdg000(m);
+    gValue(2) += 2 * m_occno(m) * m_cdg001(m) * m_cdg000(m);
   }
 
   hValue.setZero();
