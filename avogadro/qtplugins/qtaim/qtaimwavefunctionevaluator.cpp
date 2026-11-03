@@ -318,7 +318,7 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::hessianOfElectronDensity(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -326,7 +326,7 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::hessianOfElectronDensity(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -334,7 +334,7 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::hessianOfElectronDensity(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -473,7 +473,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensity(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -481,7 +481,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensity(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -489,7 +489,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensity(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -642,7 +642,7 @@ qreal QTAIMWavefunctionEvaluator::laplacianOfElectronDensity(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -650,7 +650,7 @@ qreal QTAIMWavefunctionEvaluator::laplacianOfElectronDensity(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -658,7 +658,7 @@ qreal QTAIMWavefunctionEvaluator::laplacianOfElectronDensity(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -791,7 +791,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -799,7 +799,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -807,7 +807,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -818,7 +818,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
       if (m_xamom(p) < 3) {
         ax3 = zero;
       } else if (m_xamom(p) == 3) {
-        ax3 = one;
+        ax3 = aax3;
       } else {
         ax3 = aax3 * ipow(xx0, m_xamom(p) - 3);
       }
@@ -826,7 +826,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
       if (m_yamom(p) < 3) {
         ay3 = zero;
       } else if (m_yamom(p) == 3) {
-        ay3 = one;
+        ay3 = aay3;
       } else {
         ay3 = aay3 * ipow(yy0, m_yamom(p) - 3);
       }
@@ -834,7 +834,7 @@ QTAIMWavefunctionEvaluator::gradientOfElectronDensityLaplacian(
       if (m_zamom(p) < 3) {
         az3 = zero;
       } else if (m_zamom(p) == 3) {
-        az3 = one;
+        az3 = aaz3;
       } else {
         az3 = aaz3 * ipow(zz0, m_zamom(p) - 3);
       }
@@ -1025,9 +1025,9 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       qint64 aax4 =
         m_xamom(p) * (m_xamom(p) - 1) * (m_xamom(p) - 2) * (m_xamom(p) - 3);
       qint64 aay4 =
-        m_yamom(p) * (m_yamom(p) - 1) * (m_yamom(p) - 2) * (m_xamom(p) - 3);
+        m_yamom(p) * (m_yamom(p) - 1) * (m_yamom(p) - 2) * (m_yamom(p) - 3);
       qint64 aaz4 =
-        m_zamom(p) * (m_zamom(p) - 1) * (m_zamom(p) - 2) * (m_xamom(p) - 3);
+        m_zamom(p) * (m_zamom(p) - 1) * (m_zamom(p) - 2) * (m_zamom(p) - 3);
 
       qreal ax0 = aax0 * ipow(xx0, m_xamom(p));
       qreal ay0 = aay0 * ipow(yy0, m_yamom(p));
@@ -1066,7 +1066,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -1074,7 +1074,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -1082,7 +1082,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -1093,7 +1093,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_xamom(p) < 3) {
         ax3 = zero;
       } else if (m_xamom(p) == 3) {
-        ax3 = one;
+        ax3 = aax3;
       } else {
         ax3 = aax3 * ipow(xx0, m_xamom(p) - 3);
       }
@@ -1101,7 +1101,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_yamom(p) < 3) {
         ay3 = zero;
       } else if (m_yamom(p) == 3) {
-        ay3 = one;
+        ay3 = aay3;
       } else {
         ay3 = aay3 * ipow(yy0, m_yamom(p) - 3);
       }
@@ -1109,7 +1109,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_zamom(p) < 3) {
         az3 = zero;
       } else if (m_zamom(p) == 3) {
-        az3 = one;
+        az3 = aaz3;
       } else {
         az3 = aaz3 * ipow(zz0, m_zamom(p) - 3);
       }
@@ -1120,7 +1120,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_xamom(p) < 4) {
         ax4 = zero;
       } else if (m_xamom(p) == 4) {
-        ax4 = one;
+        ax4 = aax4;
       } else {
         ax4 = aax4 * ipow(xx0, m_xamom(p) - 4);
       }
@@ -1128,7 +1128,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_yamom(p) < 4) {
         ay4 = zero;
       } else if (m_yamom(p) == 4) {
-        ay4 = one;
+        ay4 = aay4;
       } else {
         ay4 = aay4 * ipow(yy0, m_yamom(p) - 4);
       }
@@ -1136,7 +1136,7 @@ QTAIMWavefunctionEvaluator::hessianOfElectronDensityLaplacian(
       if (m_zamom(p) < 4) {
         az4 = zero;
       } else if (m_zamom(p) == 4) {
-        az4 = one;
+        az4 = aaz4;
       } else {
         az4 = aaz4 * ipow(zz0, m_zamom(p) - 4);
       }
@@ -1437,9 +1437,9 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       qint64 aax4 =
         m_xamom(p) * (m_xamom(p) - 1) * (m_xamom(p) - 2) * (m_xamom(p) - 3);
       qint64 aay4 =
-        m_yamom(p) * (m_yamom(p) - 1) * (m_yamom(p) - 2) * (m_xamom(p) - 3);
+        m_yamom(p) * (m_yamom(p) - 1) * (m_yamom(p) - 2) * (m_yamom(p) - 3);
       qint64 aaz4 =
-        m_zamom(p) * (m_zamom(p) - 1) * (m_zamom(p) - 2) * (m_xamom(p) - 3);
+        m_zamom(p) * (m_zamom(p) - 1) * (m_zamom(p) - 2) * (m_zamom(p) - 3);
 
       qreal ax0 = aax0 * ipow(xx0, m_xamom(p));
       qreal ay0 = aay0 * ipow(yy0, m_yamom(p));
@@ -1478,7 +1478,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -1486,7 +1486,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -1494,7 +1494,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -1505,7 +1505,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_xamom(p) < 3) {
         ax3 = zero;
       } else if (m_xamom(p) == 3) {
-        ax3 = one;
+        ax3 = aax3;
       } else {
         ax3 = aax3 * ipow(xx0, m_xamom(p) - 3);
       }
@@ -1513,7 +1513,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_yamom(p) < 3) {
         ay3 = zero;
       } else if (m_yamom(p) == 3) {
-        ay3 = one;
+        ay3 = aay3;
       } else {
         ay3 = aay3 * ipow(yy0, m_yamom(p) - 3);
       }
@@ -1521,7 +1521,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_zamom(p) < 3) {
         az3 = zero;
       } else if (m_zamom(p) == 3) {
-        az3 = one;
+        az3 = aaz3;
       } else {
         az3 = aaz3 * ipow(zz0, m_zamom(p) - 3);
       }
@@ -1532,7 +1532,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_xamom(p) < 4) {
         ax4 = zero;
       } else if (m_xamom(p) == 4) {
-        ax4 = one;
+        ax4 = aax4;
       } else {
         ax4 = aax4 * ipow(xx0, m_xamom(p) - 4);
       }
@@ -1540,7 +1540,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_yamom(p) < 4) {
         ay4 = zero;
       } else if (m_yamom(p) == 4) {
-        ay4 = one;
+        ay4 = aay4;
       } else {
         ay4 = aay4 * ipow(yy0, m_yamom(p) - 4);
       }
@@ -1548,7 +1548,7 @@ QTAIMWavefunctionEvaluator::gradientAndHessianOfElectronDensityLaplacian(
       if (m_zamom(p) < 4) {
         az4 = zero;
       } else if (m_zamom(p) == 4) {
-        az4 = one;
+        az4 = aaz4;
       } else {
         az4 = aaz4 * ipow(zz0, m_zamom(p) - 4);
       }
@@ -1987,7 +1987,7 @@ qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -1995,7 +1995,7 @@ qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -2003,7 +2003,7 @@ qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
@@ -2115,7 +2115,7 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
       if (m_xamom(p) < 2) {
         ax2 = zero;
       } else if (m_xamom(p) == 2) {
-        ax2 = one;
+        ax2 = aax2;
       } else {
         ax2 = aax2 * ipow(xx0, m_xamom(p) - 2);
       }
@@ -2123,7 +2123,7 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
       if (m_yamom(p) < 2) {
         ay2 = zero;
       } else if (m_yamom(p) == 2) {
-        ay2 = one;
+        ay2 = aay2;
       } else {
         ay2 = aay2 * ipow(yy0, m_yamom(p) - 2);
       }
@@ -2131,7 +2131,7 @@ Matrix<qreal, 3, 3> QTAIMWavefunctionEvaluator::quantumStressTensor(
       if (m_zamom(p) < 2) {
         az2 = zero;
       } else if (m_zamom(p) == 2) {
-        az2 = one;
+        az2 = aaz2;
       } else {
         az2 = aaz2 * ipow(zz0, m_zamom(p) - 2);
       }
