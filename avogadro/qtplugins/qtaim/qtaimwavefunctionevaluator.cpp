@@ -2033,7 +2033,7 @@ qreal QTAIMWavefunctionEvaluator::kineticEnergyDensityK(
 
   value = 0.0;
   for (qint64 m = 0; m < m_nmo; ++m) {
-    value +=
+    value -=
       (0.25) * (m_occno(m) *
                 (2 * m_cdg000(m) * (m_cdg200(m) + m_cdg020(m) + m_cdg002(m))));
   }
