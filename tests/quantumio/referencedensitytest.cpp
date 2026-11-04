@@ -44,19 +44,6 @@ namespace {
 // The 20 points: 0-1 bond midpoints (N2: 0 only), then valence region points,
 // and 4 tail points 2.5 to 5 bohr from the nearest nucleus.
 
-enum class Check
-{
-  AllPoints,
-  // Only the bond midpoints. The f and g cases are checked there alone:
-  // away from the bond axes Avogadro's density differs from critic2's by
-  // up to 1.7e-3 (relative; Gaussian fchk, H2O cc-pVTZ) and 3.7e-4 (ORCA
-  // after the conversion in MoldenFile), while the midpoints agree to
-  // about 1e-8 (see the measured values at the cases). That is a separate,
-  // so far unexplained problem of the evaluator for f and g shells that
-  // the Molden reader does not touch.
-  BondMidpointsOnly
-};
-
 struct Case
 {
   std::string name;
@@ -64,7 +51,6 @@ struct Case
   std::string folder;    // may be empty
   std::string file;
   bool molden;
-  Check check = Check::AllPoints;
   std::string reference = "reference-points.json";
 };
 
@@ -176,16 +162,13 @@ const Case CASES[] = {
   // normalization in its coefficients (RadialIncluded).
   { "xtb_gfn2_molden", H2O, "xtb-gfn2", "h2o.molden", true },
   // xtb, SF4 with Cartesian d on sulfur; 12 points around S.
-  { "xtb_sf4_molden", "molden", "", "SF4.molden", true, Check::AllPoints,
+  { "xtb_sf4_molden", "molden", "", "SF4.molden", true,
     "SF4-reference-points.json" },
-  // ORCA f and g shells: the midpoints only, see Check. Measured against
-  // critic2: bond midpoints within 1.3e-8 (H2O cc-pVTZ) and 6.8e-10 (N2
-  // cc-pVQZ, one midpoint); the largest relative deviation at the other 19
-  // points is 3.8e-4 (H2O) and 3.7e-4 (N2).
+  // ORCA f and g shells (H2O cc-pVTZ, N2 cc-pVQZ).
   { "orca_ccpvtz_h2o_molden", "qtaim/h2o-hf-ccpvtz", "orca-hf-cc-pvtz",
-    "h2o.molden", true, Check::BondMidpointsOnly },
+    "h2o.molden", true },
   { "orca_ccpvqz_n2_molden", "qtaim/n2-b3lyp-ccpvqz", "orca-b3lyp-cc-pvqz",
-    "n2.molden", true, Check::BondMidpointsOnly },
+    "n2.molden", true },
 };
 
 } // namespace
@@ -224,17 +207,9 @@ TEST_P(ReferenceDensityTest, densityMatchesCritic2)
     const double expected = values.at("points")[i].at("rho").get<double>();
     const double got = tools.calculateElectronDensity(points[i]);
     const Category category = categoryOf(reference, i);
-    if (testCase.check == Check::BondMidpointsOnly) {
-      if (category != Category::BondMidpoint)
-        continue;
-      // no absolute floor here: the midpoints are well inside the density
-      EXPECT_NEAR(got, expected, relativeTolerance * std::abs(expected))
-        << "point " << i << " (" << categoryName(category) << ")";
-    } else {
-      EXPECT_NEAR(got, expected,
-                  relativeTolerance * std::abs(expected) + absoluteFloor)
-        << "point " << i << " (" << categoryName(category) << ")";
-    }
+    EXPECT_NEAR(got, expected,
+                relativeTolerance * std::abs(expected) + absoluteFloor)
+      << "point " << i << " (" << categoryName(category) << ")";
   }
 }
 
