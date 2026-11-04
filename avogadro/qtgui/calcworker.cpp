@@ -42,7 +42,7 @@ void CalcWorker::initCalculator(Calc::EnergyCalculator* calculator,
   // hand those shared containers to this long-lived snapshot; copy assignment
   // deep-copies the data, giving it its own containers.
   m_molSnapshot = molSnapshot;
-  m_optState = Calc::OptimizerState{};
+  m_optState.reset();
 
   // setMolecule on this thread so QProcess gets correct affinity
   m_calc->setMolecule(&m_molSnapshot);
@@ -63,7 +63,9 @@ void CalcWorker::runOptimizeChunk(Eigen::VectorXd positions,
   bool ok = Calc::optimizeSteps(*m_calc, positions, options, &m_optState);
 
   if (m_cancelled) {
-    emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true, 0, false);
+    // The iterations did run before the cancellation arrived.
+    const int ran = ok ? static_cast<int>(m_optState.iterationsRun) : 0;
+    emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true, ran, false);
     return;
   }
 

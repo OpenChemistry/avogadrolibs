@@ -788,6 +788,49 @@ TEST(EnergyOptimizerTest, FireHandlesDimensionNotMultipleOfThree)
   }
 }
 
+TEST(EnergyOptimizerTest, ResetMakesNextLbfgsCallBootstrap)
+{
+  CountingFunction f;
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(10);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 5;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  ASSERT_GT(state.lbfgsCount, 0u);
+  ASSERT_TRUE(std::isfinite(state.energy));
+
+  // Ordinary chunks reuse the cache: no bootstrap evaluation at the start.
+  // A fresh run from the same point pays one, and has no history.
+  const Eigen::VectorXd xHere = x;
+  options.chunkIterations = 1;
+  Eigen::VectorXd xCached = xHere;
+  const size_t before = f.evaluations;
+  OptimizerState cached = state;
+  ASSERT_TRUE(optimizeSteps(f, xCached, options, &cached));
+  const size_t cachedEvals = f.evaluations - before;
+
+  state.reset();
+  EXPECT_TRUE(std::isnan(state.energy));
+  EXPECT_EQ(state.gradient.size(), 0);
+  EXPECT_EQ(state.lbfgsCount, 0u);
+  Eigen::VectorXd xReset = xHere;
+  const size_t beforeReset = f.evaluations;
+  ASSERT_TRUE(optimizeSteps(f, xReset, options, &state));
+  const size_t resetEvals = f.evaluations - beforeReset;
+
+  CountingFunction g;
+  Eigen::VectorXd xFresh = xHere;
+  OptimizerState fresh;
+  ASSERT_TRUE(optimizeSteps(g, xFresh, options, &fresh));
+  EXPECT_EQ(resetEvals, g.evaluations);
+  EXPECT_EQ(xReset, xFresh);
+  // The history made the cached step a different one.
+  EXPECT_NE(xCached, xReset);
+  EXPECT_GT(resetEvals, 0u);
+  EXPECT_GT(cachedEvals, 0u);
+}
+
 TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsFields)
 {
   CountingFunction f;
@@ -955,6 +998,43 @@ TEST(EnergyOptimizerTest, LbfgsRestartIsIndependentOfChunkSize)
     EXPECT_EQ(chunked.reason, single.reason) << "chunk " << chunk;
     EXPECT_EQ(chunked.x, single.x) << "chunk " << chunk;
   }
+}
+
+TEST(EnergyOptimizerTest, LbfgsRestartIsRearmedByProgress)
+{
+  // Poison the history, let the restart recover, wait until real progress
+  // has re-armed the restart (lbfgsRestartSpent drops back to false), poison
+  // again, and check that this second stall is also restarted rather than
+  // reported. One iteration per call, so every transition is observable.
+  CountingFunction f;
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 6;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  state.lbfgsScaling = 1e30;
+  options.chunkIterations = 1;
+
+  bool sawSpent = false;
+  bool rearmed = false;
+  bool poisonedAgain = false;
+  for (int i = 0; i < 400 && state.stopReason != OptimizerStopReason::Stalled;
+       ++i) {
+    ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+    if (state.lbfgsRestartSpent)
+      sawSpent = true;
+    if (sawSpent && !state.lbfgsRestartSpent && !poisonedAgain &&
+        state.lbfgsCount > 0 && state.energy > 1e-3) {
+      // Progress after the first restart: the flag was cleared again.
+      rearmed = true;
+      poisonedAgain = true;
+      state.lbfgsScaling = 1e30;
+    }
+  }
+  ASSERT_TRUE(rearmed) << "the fixture never made progress after a restart";
+  EXPECT_GE(state.lbfgsRestarts, 2u);
+  EXPECT_LT(state.energy, 1e-8);
 }
 
 TEST(EnergyOptimizerTest, LbfgsStallAfterRestartIsReported)

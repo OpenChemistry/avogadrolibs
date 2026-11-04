@@ -90,7 +90,11 @@ enum class OptimizerStopReason
 /// with (energy, gradient) at the final positions; callers may use those in
 /// place of an extra evaluate() to check convergence.
 ///
-/// Set initialized=false (or default-construct) to restart cleanly. A size
+/// To restart cleanly (for example after the caller has moved the positions
+/// itself), call reset() or assign a default-constructed state: that drops
+/// the cached energy and gradient, the FIRE velocity and the L-BFGS history
+/// together. Do not use `initialized` for this; it is FIRE-internal and L-BFGS
+/// chunks clear it as a matter of course while keeping the cache. A size
 /// mismatch with positions also triggers an internal reset.
 struct OptimizerState
 {
@@ -131,10 +135,16 @@ struct OptimizerState
   /// than restarted again.
   bool lbfgsRestartSpent = false;
 
-  /// Filled by every optimizeSteps call: iterations actually performed
-  /// (may be fewer than requested) and why the call returned.
+  /// Set by every optimizeSteps call that returns true: iterations actually
+  /// performed (may be fewer than requested) and why the call returned. A
+  /// call that returns false (invalid options) leaves them unchanged.
   size_t iterationsRun = 0;
   OptimizerStopReason stopReason = OptimizerStopReason::IterationLimit;
+
+  /// Forget everything: cached energy and gradient, FIRE integrator state,
+  /// L-BFGS history and counters, and the last result. The next optimizeSteps
+  /// call re-evaluates the energy at the positions it is given.
+  void reset() { *this = OptimizerState{}; }
 
   void clearLbfgsHistory()
   {
