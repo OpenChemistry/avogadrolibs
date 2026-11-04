@@ -814,3 +814,46 @@ TEST(EnergyOptimizerTest, LbfgsStopsWhenEnergyNoiseStallsLineSearch)
   EXPECT_LT(state.iterationsRun, 500u);
   EXPECT_LT(f.evaluations, 2000u);
 }
+
+TEST(EnergyOptimizerTest, LbfgsStallIsIndependentOfChunkSize)
+{
+  // The stall test needs three consecutive bad iterations. Chunks of one
+  // iteration must reach the same verdict as one long chunk: same stopping
+  // iteration, same evaluation count, bitwise-equal positions.
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+
+  CountingFunction single(1e-6);
+  Eigen::VectorXd xSingle = rosenbrockStart(4);
+  options.chunkIterations = 500;
+  OptimizerState singleState;
+  ASSERT_TRUE(optimizeSteps(single, xSingle, options, &singleState));
+  ASSERT_EQ(singleState.stopReason, OptimizerStopReason::Stalled);
+  ASSERT_LT(singleState.iterationsRun, 500u);
+
+  CountingFunction chunked(1e-6);
+  Eigen::VectorXd xChunked = rosenbrockStart(4);
+  options.chunkIterations = 1;
+  OptimizerState chunkedState;
+  size_t total = 0;
+  while (total < 500) {
+    ASSERT_TRUE(optimizeSteps(chunked, xChunked, options, &chunkedState));
+    total += chunkedState.iterationsRun;
+    if (chunkedState.stopReason == OptimizerStopReason::Stalled)
+      break;
+  }
+  EXPECT_EQ(chunkedState.stopReason, OptimizerStopReason::Stalled);
+  EXPECT_EQ(total, singleState.iterationsRun);
+  EXPECT_EQ(chunked.evaluations, single.evaluations);
+  EXPECT_EQ(xChunked, xSingle);
+}
+
+TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsStallCounters)
+{
+  OptimizerState state;
+  state.stallXViolations = 2;
+  state.stallFViolations = 1;
+  state.clearLbfgsHistory();
+  EXPECT_EQ(state.stallXViolations, 0);
+  EXPECT_EQ(state.stallFViolations, 0);
+}

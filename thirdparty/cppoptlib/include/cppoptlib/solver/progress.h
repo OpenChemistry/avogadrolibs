@@ -209,6 +209,40 @@ struct Progress {
           current_hessian.norm() * current_hessian.inverse().norm();
     }
 
+    // Avogadro patch: the x/f-delta violation counters are updated before
+    // the iteration-limit test (unconstrained solvers only; the constrained
+    // branch below never reached them). Otherwise the iteration that hits
+    // the limit would not be counted, and a run split into chunks of
+    // different sizes could see a different number of violations, so
+    // stall detection would depend on the chunk size. A violation at the
+    // limit iteration now reports its own status instead of IterationLimit.
+    if constexpr (!StateType::IsConstrained) {
+      if ((stop_progress.x_delta > 0) && (x_delta < stop_progress.x_delta)) {
+        x_delta_violations++;
+        if (x_delta_violations >= stop_progress.x_delta_violations) {
+          status = Status::XDeltaViolation;
+          return;
+        }
+      } else {
+        x_delta_violations = 0;
+      }
+      if ((stop_progress.f_delta > 0) &&
+          (f_delta <
+           stop_progress.f_delta *
+               (stop_progress.f_delta_relative
+                    ? std::max({std::abs(current_value), std::abs(previous_value),
+                                ScalarType(1)})
+                    : ScalarType(1)))) {
+        f_delta_violations++;
+        if (f_delta_violations >= stop_progress.f_delta_violations) {
+          status = Status::FDeltaViolation;
+          return;
+        }
+      } else {
+        f_delta_violations = 0;
+      }
+    }
+
     // Avogadro patch: `>=`, so a limit of N runs N iterations. Upstream's `>`
     // ran N + 1, which made a chunk of 1 iteration take 2 steps.
     if ((stop_progress.num_iterations > 0) &&
@@ -252,30 +286,6 @@ struct Progress {
       }
       status = Status::Continue;
       return;
-    }
-    if ((stop_progress.x_delta > 0) && (x_delta < stop_progress.x_delta)) {
-      x_delta_violations++;
-      if (x_delta_violations >= stop_progress.x_delta_violations) {
-        status = Status::XDeltaViolation;
-        return;
-      }
-    } else {
-      x_delta_violations = 0;
-    }
-    if ((stop_progress.f_delta > 0) &&
-        (f_delta <
-         stop_progress.f_delta *
-             (stop_progress.f_delta_relative
-                  ? std::max({std::abs(current_value), std::abs(previous_value),
-                              ScalarType(1)})
-                  : ScalarType(1)))) {
-      f_delta_violations++;
-      if (f_delta_violations >= stop_progress.f_delta_violations) {
-        status = Status::FDeltaViolation;
-        return;
-      }
-    } else {
-      f_delta_violations = 0;
     }
     // Past-delta stopping: compare current f against f from `past`
     // iterations ago.  The ring buffer is lazily initialized on first use.

@@ -66,6 +66,14 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
     solver.SetWarmStartHistory(state->lbfgsS, state->lbfgsY, state->lbfgsCount,
                                state->lbfgsPos, state->lbfgsScaling);
   }
+  // The stall counters describe the same trajectory as the cached gradient.
+  if (haveCache) {
+    solver.SetInitialDeltaViolations(state->stallXViolations,
+                                     state->stallFViolations);
+  } else if (state) {
+    state->stallXViolations = 0;
+    state->stallFViolations = 0;
+  }
   auto stopProgress =
     cppoptlib::solver::DefaultStoppingSolverProgress<EnergyObjective,
                                                      StateType>();
@@ -83,7 +91,9 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   // a step moving no coordinate by more than 1e-10 Angstrom (|g|_inf ~ 1e-7
   // kJ/(mol*Angstrom) even for a stiff 1e3 kJ/(mol*Angstrom^2) mode), or
   // lowering the energy by under 1e-14 of max(|f|, 1). They also need three
-  // violations in a row, so one odd iteration cannot end a chunk. This is
+  // violations in a row, so one odd iteration cannot end a chunk. The
+  // counts are carried in OptimizerState, so GUI chunks of 1-2 iterations
+  // reach the same verdict as one long chunk. This is
   // not the earlier relative past-delta test (1e-6 over 3 iterations),
   // which fired while the optimizer was still converging.
   stopProgress.x_delta = 1e-10;
@@ -108,6 +118,8 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
     state->gradient = std::move(solution.gradient);
     solver.GetHistory(state->lbfgsS, state->lbfgsY, state->lbfgsCount,
                       state->lbfgsPos, state->lbfgsScaling);
+    state->stallXViolations = solverProgress.x_delta_violations;
+    state->stallFViolations = solverProgress.f_delta_violations;
     state->iterationsRun = solverProgress.num_iterations;
     state->stopReason =
       (solverProgress.status == cppoptlib::solver::Status::IterationLimit)

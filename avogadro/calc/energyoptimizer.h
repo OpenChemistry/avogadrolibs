@@ -117,6 +117,12 @@ struct OptimizerState
   size_t lbfgsCount = 0;
   size_t lbfgsPos = 0;
   double lbfgsScaling = 1.0;
+  /// Consecutive iterations so far that violated the L-BFGS stall test (no
+  /// real step / no energy change). Carried across chunks so the "three in a
+  /// row" test does not depend on how the run is cut into chunks. Cleared
+  /// together with the history.
+  int stallXViolations = 0;
+  int stallFViolations = 0;
 
   /// Filled by every optimizeSteps call: iterations actually performed
   /// (may be fewer than requested) and why the call returned.
@@ -130,6 +136,8 @@ struct OptimizerState
     lbfgsCount = 0;
     lbfgsPos = 0;
     lbfgsScaling = 1.0;
+    stallXViolations = 0;
+    stallFViolations = 0;
   }
 };
 

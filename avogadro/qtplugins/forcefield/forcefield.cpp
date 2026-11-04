@@ -973,8 +973,7 @@ void Forcefield::startOptimizeCalculation(const std::string& methodId,
   Core::Array<Vector3> pos = m_molecule->atomPositions3d();
   Eigen::Map<Eigen::VectorXd> map(pos[0].data(), 3 * n);
   m_lastPositions = map;
-  m_lastEnergy = 0.0;
-  m_hasPreviousEnergy = false;
+  m_energyWindow.reset();
 
   // Start the worker first (calls cleanupWorker() which resets m_optimizing)
   startWorker(methodId);
@@ -1128,16 +1127,15 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     if (gradient.cwiseAbs().maxCoeff() < m_runOptions.gradientTolerance) {
       done = true;
       reason = ConvergenceReason::Gradient;
-    } else if (m_hasPreviousEnergy && chunkRan > 0 &&
-               // Compare the per-iteration energy change within this chunk,
-               // not the raw chunk-to-chunk change: chunk size adapts from 1
-               // to 200 iterations to hold ~30 fps, so comparing whole chunks
-               // made the stopping point depend on how fast the machine
-               // renders. m_hasPreviousEnergy (rather than testing
-               // m_lastEnergy != 0.0) also stops skipping the test for a
-               // molecule whose energy happens to be exactly zero.
-               fabs(energy - m_lastEnergy) / chunkRan <
-                 m_runOptions.tolerance) {
+    } else if (m_energyWindow.update(m_iterationsDone, energy,
+                                     m_runOptions.tolerance)) {
+      // Mean per-iteration energy change over a window of at least
+      // EnergyWindow::window real iterations, not over one chunk: chunk
+      // size adapts from 1 to 200 iterations to hold ~30 fps, so a
+      // per-chunk test made the stopping point depend on how fast the
+      // machine renders, and with 1-iteration chunks one small step ended
+      // the run. The window also keeps the test from being skipped for a
+      // molecule whose energy happens to be exactly zero.
       done = true;
       reason = ConvergenceReason::Energy;
     } else if (stalled) {
@@ -1152,9 +1150,6 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     done = true;
     reason = ConvergenceReason::MaxSteps;
   }
-
-  m_lastEnergy = energy;
-  m_hasPreviousEnergy = true;
 
   const bool canceled = m_progressDialog && m_progressDialog->wasCanceled();
 
