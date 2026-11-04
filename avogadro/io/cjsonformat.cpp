@@ -1156,6 +1156,27 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           }
         }
 
+        // How the primitive coefficients are normalized. A missing key is
+        // the default (Normalize); anything unusable keeps the default and is
+        // reported without failing the read.
+        const json& normalization = member(basisSet, "primitiveNormalization");
+        if (normalization.is_string()) {
+          const auto mode = normalization.get<std::string>();
+          if (mode == "asIs") {
+            if (!basis->setPrimitiveNormalization(
+                  GaussianSet::PrimitiveNormalization::AsIs))
+              appendError(
+                "Warning: primitiveNormalization \"asIs\" needs "
+                "Cartesian shells only; the basis set is normalized.");
+          } else if (mode != "normalize") {
+            appendError("Warning: unknown primitiveNormalization \"" + mode +
+                        "\"; the basis set is normalized.");
+          }
+        } else if (!normalization.is_null()) {
+          appendError("Warning: primitiveNormalization is not a string; the "
+                      "basis set is normalized.");
+        }
+
         const json& orbitals = member(jsonRoot, "orbitals");
         if (orbitals.is_object() && basis->isValid()) {
           // A missing or wrong-typed electronCount used to throw via the
@@ -1873,6 +1894,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
         primitivesPerShell.push_back(end - gtoIndices[i]);
       }
       basis["primitivesPerShell"] = primitivesPerShell;
+
+      // Only written when it differs from the default, so files from bases
+      // that need no flag stay unchanged.
+      if (gaussian->primitiveNormalization() ==
+          GaussianSet::PrimitiveNormalization::AsIs)
+        basis["primitiveNormalization"] = "asIs";
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;

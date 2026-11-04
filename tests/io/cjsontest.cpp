@@ -1326,3 +1326,131 @@ TEST(CjsonTest, basisSetRoundTripAfterInitialization)
   EXPECT_EQ(copy->gtoIndices(), basis->gtoIndices());
   EXPECT_EQ(copy->gtoCN(), basis->gtoCN());
 }
+
+namespace {
+
+// Cartesian d shell (two primitives) plus an s shell on one atom.
+GaussianSet* attachCartesianBasis(Molecule& molecule)
+{
+  molecule.addAtom(8, Avogadro::Vector3(0.0, 0.0, 0.0));
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  unsigned int s = basis->addBasis(0, GaussianSet::S);
+  basis->addGto(s, 0.7, 1.4);
+  unsigned int d = basis->addBasis(0, GaussianSet::D);
+  basis->addGto(d, 0.6, 1.3);
+  basis->addGto(d, 0.4, 0.35);
+  std::vector<double> mos(49, 0.0);
+  for (size_t i = 0; i < 7; ++i)
+    mos[i * 7 + i] = 1.0;
+  basis->setMolecularOrbitals(mos);
+  basis->setElectronCount(2);
+  molecule.setBasisSet(basis);
+  return basis;
+}
+
+const char* const NORMALIZATION_INPUT_TEMPLATE = R"({
+  "chemicalJson": 1,
+  "atoms": { "elements": { "number": [8] }, "coords": { "3d": [0.0, 0.0, 0.0] } },
+  "basisSet": {
+    "shellTypes": [SHELLTYPE],
+    "primitivesPerShell": [1],
+    "shellToAtomMap": [0],
+    "exponents": [1.0],
+    "coefficients": [1.0]PRIMNORM
+  }
+})";
+
+std::string normalizationInput(const std::string& shellType,
+                               const std::string& key)
+{
+  std::string text = NORMALIZATION_INPUT_TEMPLATE;
+  text.replace(text.find("SHELLTYPE"), 9, shellType);
+  text.replace(text.find("PRIMNORM"), 8, key);
+  return text;
+}
+
+} // namespace
+
+TEST(CjsonTest, asIsBasisRoundTrip)
+{
+  using Normalization = GaussianSet::PrimitiveNormalization;
+  Molecule molecule;
+  GaussianSet* basis = attachCartesianBasis(molecule);
+  ASSERT_TRUE(basis->setPrimitiveNormalization(Normalization::AsIs));
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule)) << cjson.error();
+  const auto root = nlohmann::json::parse(output);
+  EXPECT_EQ(root.at("basisSet").at("primitiveNormalization"), "asIs");
+
+  Molecule reread;
+  ASSERT_TRUE(cjson.readString(output, reread)) << cjson.error();
+  EXPECT_EQ(cjson.error(), "");
+  auto* copy = dynamic_cast<GaussianSet*>(reread.basisSet());
+  ASSERT_NE(copy, nullptr);
+  EXPECT_EQ(copy->primitiveNormalization(), Normalization::AsIs);
+  EXPECT_EQ(copy->gtoC(), basis->gtoC());
+  EXPECT_EQ(copy->gtoA(), basis->gtoA());
+
+  // The prepared coefficients are the raw ones, once per component.
+  copy->initCalculation();
+  basis->initCalculation();
+  EXPECT_EQ(copy->gtoCN(), basis->gtoCN());
+  EXPECT_EQ(copy->gtoCN().size(), static_cast<size_t>(1 + 2 * 6));
+  EXPECT_EQ(copy->gtoCN()[1], 0.6);
+}
+
+TEST(CjsonTest, normalizedBasisWritesNoPrimitiveNormalizationKey)
+{
+  Molecule molecule;
+  attachCartesianBasis(molecule);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule)) << cjson.error();
+  const auto root = nlohmann::json::parse(output);
+  ASSERT_TRUE(root.contains("basisSet"));
+  EXPECT_FALSE(root.at("basisSet").contains("primitiveNormalization"));
+  EXPECT_EQ(output.find("primitiveNormalization"), std::string::npos);
+}
+
+TEST(CjsonTest, primitiveNormalizationReading)
+{
+  using Normalization = GaussianSet::PrimitiveNormalization;
+  struct Case
+  {
+    std::string shellType;
+    std::string key;
+    Normalization expected;
+    bool warns;
+  };
+  const Case cases[] = {
+    { "2", "", Normalization::Normalize, false },
+    { "2", ", \"primitiveNormalization\": \"normalize\"",
+      Normalization::Normalize, false },
+    { "2", ", \"primitiveNormalization\": \"asIs\"", Normalization::AsIs,
+      false },
+    // unknown value and a wrong type keep the default and warn
+    { "2", ", \"primitiveNormalization\": \"unnormalized\"",
+      Normalization::Normalize, true },
+    { "2", ", \"primitiveNormalization\": 3", Normalization::Normalize, true },
+    // spherical d with asIs: the setter refuses
+    { "-2", ", \"primitiveNormalization\": \"asIs\"", Normalization::Normalize,
+      true },
+  };
+  for (const Case& c : cases) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    const std::string input = normalizationInput(c.shellType, c.key);
+    ASSERT_TRUE(cjson.readString(input, molecule)) << input;
+    auto* basis = dynamic_cast<GaussianSet*>(molecule.basisSet());
+    ASSERT_NE(basis, nullptr) << input;
+    EXPECT_EQ(basis->primitiveNormalization(), c.expected) << input;
+    if (c.warns)
+      EXPECT_NE(cjson.error().find("Warning"), std::string::npos) << input;
+    else
+      EXPECT_EQ(cjson.error(), "") << input;
+  }
+}
