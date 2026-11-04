@@ -62,7 +62,8 @@ struct NormalizationName
 };
 constexpr NormalizationName normalizationNames[] = {
   { "normalize", GaussianSet::PrimitiveNormalization::Normalize },
-  { "asIs", GaussianSet::PrimitiveNormalization::AsIs }
+  { "asIs", GaussianSet::PrimitiveNormalization::AsIs },
+  { "radialIncluded", GaussianSet::PrimitiveNormalization::RadialIncluded }
 };
 
 } // namespace
@@ -1191,6 +1192,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
               appendError(
                 "Warning: primitiveNormalization \"asIs\" needs "
                 "Cartesian shells only; the basis set is normalized.");
+          } else if (found->value !=
+                     GaussianSet::PrimitiveNormalization::Normalize) {
+            basis->setPrimitiveNormalization(found->value);
           }
         } else if (!normalization.is_null()) {
           appendError("Warning: primitiveNormalization is not a string; the "

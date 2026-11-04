@@ -623,25 +623,56 @@ void GaussianSet::initCalculation()
       skip = 0;
     }
 
-    // AsIs: replace the normalized values written above by the raw
-    // coefficient, once for every component of the shell. The layout is the
-    // one every case above uses and GaussianSetTools reads: the components
-    // of one primitive are adjacent, primitives follow each other. Only the
-    // evaluated Cartesian shells are affected (spherical shells cannot be
-    // AsIs, see setPrimitiveNormalization()).
-    if (m_primitiveNormalization == PrimitiveNormalization::AsIs) {
-      const auto type = static_cast<orbital>(m_symmetry[i]);
+    // Post-pass on the normalized values written above, for the shells that
+    // are evaluated (S, P, D, F, G and their spherical forms). The layout is
+    // the one every case above uses and GaussianSetTools reads: the
+    // components of one primitive are adjacent, primitives follow each other.
+    //  - AsIs: use the raw coefficient (Cartesian shells only).
+    //  - RadialIncluded: the coefficients already contain N_axis(alpha, l),
+    //    so take it out of the normalization constants.
+    if (m_primitiveNormalization != PrimitiveNormalization::Normalize) {
+      const bool asIs =
+        m_primitiveNormalization == PrimitiveNormalization::AsIs;
+      int l = -1;
+      switch (m_symmetry[i]) {
+        case S:
+          l = 0;
+          break;
+        case P:
+          l = 1;
+          break;
+        case D:
+        case D5:
+          l = 2;
+          break;
+        case F:
+        case F7:
+          l = 3;
+          break;
+        case G:
+        case G9:
+          l = 4;
+          break;
+        default: // not evaluated, so no coefficients were written
+          break;
+      }
+      // A spherical shell cannot be AsIs, see setPrimitiveNormalization()
+      const bool spherical =
+        m_symmetry[i] == D5 || m_symmetry[i] == F7 || m_symmetry[i] == G9;
       const unsigned int components =
-        (type == S || type == P || type == D || type == F || type == G)
-          ? componentCount(type)
-          : 0;
-      if (components > 0) {
+        componentCount(static_cast<orbital>(m_symmetry[i]));
+      if (l >= 0 && !(asIs && spherical)) {
         const size_t first = m_cIndices.back();
         for (unsigned int j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          const double nAxis = asIs ? 1.0 : axisNormalization(m_gtoA[j], l);
           for (unsigned int k = 0; k < components; ++k) {
             const size_t index = first + (j - m_gtoIndices[i]) * components + k;
-            if (index < m_gtoCN.size())
-              m_gtoCN[index] = m_gtoC[j];
+            if (index < m_gtoCN.size()) {
+              if (asIs)
+                m_gtoCN[index] = m_gtoC[j];
+              else
+                m_gtoCN[index] /= nAxis;
+            }
           }
         }
       }
@@ -682,6 +713,15 @@ unsigned int GaussianSet::componentCount(orbital type)
     default:
       return 0;
   }
+}
+
+double GaussianSet::axisNormalization(double alpha, int l)
+{
+  double doubleFactorial = 1.0;
+  for (int k = 2 * l - 1; k > 1; k -= 2)
+    doubleFactorial *= k;
+  return std::pow(2.0 * alpha / M_PI, 0.75) * std::pow(4.0 * alpha, 0.5 * l) /
+         std::sqrt(doubleFactorial);
 }
 
 bool GaussianSet::generateDensityMatrix()
