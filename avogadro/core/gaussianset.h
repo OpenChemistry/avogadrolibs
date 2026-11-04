@@ -105,7 +105,17 @@ public:
      * shell, as WFN and WFX files define them. Only possible when all
      * shells are Cartesian, see setPrimitiveNormalization().
      */
-    AsIs
+    AsIs,
+    /**
+     * Each coefficient already includes the normalization of the radial
+     * part x^l exp(-alpha r^2) along one axis,
+     * N_axis(alpha, l) = (2 alpha / pi)^(3/4) (4 alpha)^(l/2) / sqrt((2l-1)!!),
+     * as xtb and ORCA (orca_2mkl) write their Molden files. initCalculation()
+     * divides the usual normalization constant of each primitive by
+     * N_axis(alpha, l), so that the coefficient is multiplied by the angular
+     * factor only. Valid for Cartesian and spherical shells.
+     */
+    RadialIncluded
   };
 
   /**
@@ -261,6 +271,12 @@ public:
    * for an unknown type.
    */
   static unsigned int componentCount(orbital type);
+
+  /**
+   * @return The normalization of x^l exp(-alpha r^2), that is
+   * (2 alpha / pi)^(3/4) (4 alpha)^(l/2) / sqrt((2l-1)!!).
+   */
+  static double axisNormalization(double alpha, int l);
 
   /**
    * Initialize the calculation, this must normally be done before anything.

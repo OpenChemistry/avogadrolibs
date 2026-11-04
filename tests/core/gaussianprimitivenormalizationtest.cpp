@@ -497,3 +497,142 @@ TEST(GaussianPrimitiveNormalizationTest, copiedMoleculeKeepsTheFlag)
   EXPECT_NE(copied, basis); // detached by the copy-on-write
   EXPECT_EQ(copied->primitiveNormalization(), Normalization::AsIs);
 }
+
+namespace {
+
+struct RadialCase
+{
+  GaussianSet::orbital type;
+  std::string name;
+  unsigned int functions;
+  int l;
+};
+
+std::ostream& operator<<(std::ostream& out, const RadialCase& shell)
+{
+  return out << shell.name;
+}
+
+// An s shell, the shell under test on each centre, and a closing s shell,
+// all with two or more primitives where possible. Coefficients are the
+// ones a Normalize basis takes; a RadialIncluded basis gets them multiplied
+// by N_axis(alpha, l).
+GaussianSet* buildRadial(Molecule& molecule, const RadialCase& shell,
+                         bool included)
+{
+  molecule.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(1, Vector3(0.0, 0.0, 0.9));
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  struct Spec
+  {
+    unsigned int atom;
+    GaussianSet::orbital type;
+    int l;
+    std::vector<Primitive> primitives;
+  };
+  const std::vector<Spec> specs = {
+    { 0, GaussianSet::S, 0, { { 0.4, 5.0 }, { 0.7, 1.2 } } },
+    { 0, shell.type, shell.l, { { 0.6, 1.3 }, { 0.4, 0.35 } } },
+    { 1, shell.type, shell.l, { { 1.0, 0.8 } } },
+    { 1, GaussianSet::S, 0, { { 0.5, 3.0 }, { 0.6, 0.5 } } },
+  };
+  unsigned int n = 0;
+  for (const Spec& spec : specs) {
+    unsigned int index = basis->addBasis(spec.atom, spec.type);
+    for (const Primitive& primitive : spec.primitives) {
+      double c = primitive.c;
+      if (included)
+        c *= primitiveNormalization(primitive.a, Powers{ spec.l, 0, 0 });
+      basis->addGto(index, c, primitive.a);
+    }
+    n += spec.type == shell.type ? shell.functions : 1;
+  }
+  basis->setMolecularOrbitals(moCoefficients(n), BasisSet::Paired);
+  basis->setElectronCount(6);
+  EXPECT_TRUE(basis->generateDensityMatrix());
+  molecule.setBasisSet(basis);
+  return basis;
+}
+
+} // namespace
+
+class GaussianRadialIncludedTest : public ::testing::TestWithParam<RadialCase>
+{};
+
+// c * N_axis under RadialIncluded is the same function as c under Normalize.
+TEST_P(GaussianRadialIncludedTest, matchesNormalize)
+{
+  const RadialCase& shell = GetParam();
+  Molecule reference;
+  buildRadial(reference, shell, false);
+  Molecule molecule;
+  GaussianSet* basis = buildRadial(molecule, shell, true);
+  ASSERT_TRUE(basis->setPrimitiveNormalization(Normalization::RadialIncluded));
+  EXPECT_EQ(basis->primitiveNormalization(), Normalization::RadialIncluded);
+  expectSameValues(molecule, reference, shell.name);
+}
+
+TEST_P(GaussianRadialIncludedTest, togglingReevaluatesCorrectly)
+{
+  const RadialCase& shell = GetParam();
+  Molecule reference;
+  buildRadial(reference, shell, false);
+  Molecule plain; // the numbers of the included basis, normalized
+  buildRadial(plain, shell, true);
+  Molecule molecule;
+  GaussianSet* basis = buildRadial(molecule, shell, true);
+  for (int pass = 0; pass < 2; ++pass) {
+    ASSERT_TRUE(
+      basis->setPrimitiveNormalization(Normalization::RadialIncluded));
+    expectSameValues(molecule, reference, shell.name + " (included)");
+    ASSERT_TRUE(basis->setPrimitiveNormalization(Normalization::Normalize));
+    expectSameValues(molecule, plain, shell.name + " (Normalize)");
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(
+  AllShells, GaussianRadialIncludedTest,
+  ::testing::Values(RadialCase{ GaussianSet::S, "S", 1, 0 },
+                    RadialCase{ GaussianSet::P, "P", 3, 1 },
+                    RadialCase{ GaussianSet::D, "D", 6, 2 },
+                    RadialCase{ GaussianSet::D5, "D5", 5, 2 },
+                    RadialCase{ GaussianSet::F, "F", 10, 3 },
+                    RadialCase{ GaussianSet::F7, "F7", 7, 3 },
+                    RadialCase{ GaussianSet::G, "G", 15, 4 },
+                    RadialCase{ GaussianSet::G9, "G9", 9, 4 }),
+  [](const ::testing::TestParamInfo<RadialCase>& info) {
+    return info.param.name;
+  });
+
+TEST(GaussianPrimitiveNormalizationTest, sphericalShellsAcceptRadialIncluded)
+{
+  for (GaussianSet::orbital type :
+       { GaussianSet::D5, GaussianSet::F7, GaussianSet::G9 }) {
+    GaussianSet basis;
+    basis.addBasis(0, GaussianSet::S);
+    basis.addBasis(0, type);
+    EXPECT_TRUE(basis.setPrimitiveNormalization(Normalization::RadialIncluded))
+      << "shell type " << type;
+    EXPECT_EQ(basis.primitiveNormalization(), Normalization::RadialIncluded);
+  }
+}
+
+// A zero exponent has N_axis = 0, which must not turn the coefficient into
+// NaN when RadialIncluded divides it out.
+TEST(GaussianPrimitiveNormalizationTest, radialIncludedZeroExponentIsFinite)
+{
+  Molecule molecule;
+  molecule.addAtom(1, Vector3(0.0, 0.0, 0.0));
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  unsigned int index = basis->addBasis(0, GaussianSet::S);
+  basis->addGto(index, 1.0, 0.0);
+  basis->addGto(index, 0.5, 1.0);
+  molecule.setBasisSet(basis);
+  ASSERT_TRUE(basis->setPrimitiveNormalization(Normalization::RadialIncluded));
+  basis->initCalculation();
+  ASSERT_EQ(basis->gtoCN().size(), 2u);
+  for (double value : basis->gtoCN())
+    EXPECT_TRUE(std::isfinite(value));
+}

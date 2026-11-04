@@ -1402,6 +1402,28 @@ TEST(CjsonTest, asIsBasisRoundTrip)
   EXPECT_EQ(copy->gtoCN()[1], 0.6);
 }
 
+TEST(CjsonTest, radialIncludedBasisRoundTrip)
+{
+  using Normalization = GaussianSet::PrimitiveNormalization;
+  Molecule molecule;
+  GaussianSet* basis = attachCartesianBasis(molecule);
+  ASSERT_TRUE(basis->setPrimitiveNormalization(Normalization::RadialIncluded));
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule)) << cjson.error();
+  const auto root = nlohmann::json::parse(output);
+  EXPECT_EQ(root.at("basisSet").at("primitiveNormalization"), "radialIncluded");
+
+  Molecule reread;
+  ASSERT_TRUE(cjson.readString(output, reread)) << cjson.error();
+  EXPECT_EQ(cjson.error(), "");
+  auto* copy = dynamic_cast<GaussianSet*>(reread.basisSet());
+  ASSERT_NE(copy, nullptr);
+  EXPECT_EQ(copy->primitiveNormalization(), Normalization::RadialIncluded);
+  EXPECT_EQ(copy->gtoC(), basis->gtoC());
+}
+
 TEST(CjsonTest, normalizedBasisWritesNoPrimitiveNormalizationKey)
 {
   Molecule molecule;
@@ -1432,6 +1454,11 @@ TEST(CjsonTest, primitiveNormalizationReading)
       Normalization::Normalize, false },
     { "2", ", \"primitiveNormalization\": \"asIs\"", Normalization::AsIs,
       false },
+    { "2", ", \"primitiveNormalization\": \"radialIncluded\"",
+      Normalization::RadialIncluded, false },
+    // radialIncluded is fine for spherical shells too
+    { "-2", ", \"primitiveNormalization\": \"radialIncluded\"",
+      Normalization::RadialIncluded, false },
     // unknown value and a wrong type keep the default and warn
     { "2", ", \"primitiveNormalization\": \"unnormalized\"",
       Normalization::Normalize, true },
