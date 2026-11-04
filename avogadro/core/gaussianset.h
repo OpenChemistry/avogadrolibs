@@ -257,6 +257,12 @@ public:
   bool setPrimitiveNormalization(PrimitiveNormalization normalization);
 
   /**
+   * @return The number of basis functions of a shell of the given type, or 0
+   * for an unknown type.
+   */
+  static unsigned int componentCount(orbital type);
+
+  /**
    * Initialize the calculation, this must normally be done before anything.
    *
    * This prepares the normalized coefficients and rebuilds moIndices(),

@@ -613,28 +613,15 @@ void GaussianSet::initCalculation()
     // AsIs: replace the normalized values written above by the raw
     // coefficient, once for every component of the shell. The layout is the
     // one every case above uses and GaussianSetTools reads: the components
-    // of one primitive are adjacent, primitives follow each other.
+    // of one primitive are adjacent, primitives follow each other. Only the
+    // evaluated Cartesian shells are affected (spherical shells cannot be
+    // AsIs, see setPrimitiveNormalization()).
     if (m_primitiveNormalization == PrimitiveNormalization::AsIs) {
-      unsigned int components = 0;
-      switch (m_symmetry[i]) {
-        case S:
-          components = 1;
-          break;
-        case P:
-          components = 3;
-          break;
-        case D:
-          components = 6;
-          break;
-        case F:
-          components = 10;
-          break;
-        case G:
-          components = 15;
-          break;
-        default: // not evaluated, so no coefficients were written
-          break;
-      }
+      const auto type = static_cast<orbital>(m_symmetry[i]);
+      const unsigned int components =
+        (type == S || type == P || type == D || type == F || type == G)
+          ? componentCount(type)
+          : 0;
       if (components > 0) {
         const size_t first = m_cIndices.back();
         for (unsigned int j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
@@ -648,6 +635,40 @@ void GaussianSet::initCalculation()
     }
   }
   m_init = true;
+}
+
+unsigned int GaussianSet::componentCount(orbital type)
+{
+  switch (type) {
+    case S:
+      return 1;
+    case P:
+      return 3;
+    case SP:
+      return 4;
+    case D:
+      return 6;
+    case D5:
+      return 5;
+    case F:
+      return 10;
+    case F7:
+      return 7;
+    case G:
+      return 15;
+    case G9:
+      return 9;
+    case H:
+      return 21;
+    case H11:
+      return 11;
+    case I:
+      return 28;
+    case I13:
+      return 13;
+    default:
+      return 0;
+  }
 }
 
 bool GaussianSet::generateDensityMatrix()

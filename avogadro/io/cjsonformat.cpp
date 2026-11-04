@@ -51,6 +51,22 @@ using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
 
+namespace {
+
+// Names of GaussianSet::PrimitiveNormalization in the "primitiveNormalization"
+// key. Normalize is the default, so it is accepted on read but never written.
+struct NormalizationName
+{
+  const char* name;
+  GaussianSet::PrimitiveNormalization value;
+};
+constexpr NormalizationName normalizationNames[] = {
+  { "normalize", GaussianSet::PrimitiveNormalization::Normalize },
+  { "asIs", GaussianSet::PrimitiveNormalization::AsIs }
+};
+
+} // namespace
+
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
   if (j.count(key) && j.find(key)->is_string()) {
@@ -1162,15 +1178,19 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         const json& normalization = member(basisSet, "primitiveNormalization");
         if (normalization.is_string()) {
           const auto mode = normalization.get<std::string>();
-          if (mode == "asIs") {
-            if (!basis->setPrimitiveNormalization(
-                  GaussianSet::PrimitiveNormalization::AsIs))
+          const NormalizationName* found = nullptr;
+          for (const auto& entry : normalizationNames)
+            if (mode == entry.name)
+              found = &entry;
+          if (found == nullptr) {
+            appendError("Warning: unknown primitiveNormalization \"" + mode +
+                        "\"; the basis set is normalized.");
+          } else if (found->value ==
+                     GaussianSet::PrimitiveNormalization::AsIs) {
+            if (!basis->setPrimitiveNormalization(found->value))
               appendError(
                 "Warning: primitiveNormalization \"asIs\" needs "
                 "Cartesian shells only; the basis set is normalized.");
-          } else if (mode != "normalize") {
-            appendError("Warning: unknown primitiveNormalization \"" + mode +
-                        "\"; the basis set is normalized.");
           }
         } else if (!normalization.is_null()) {
           appendError("Warning: primitiveNormalization is not a string; the "
@@ -1897,9 +1917,12 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
       // Only written when it differs from the default, so files from bases
       // that need no flag stay unchanged.
-      if (gaussian->primitiveNormalization() ==
-          GaussianSet::PrimitiveNormalization::AsIs)
-        basis["primitiveNormalization"] = "asIs";
+      if (gaussian->primitiveNormalization() !=
+          GaussianSet::PrimitiveNormalization::Normalize) {
+        for (const auto& entry : normalizationNames)
+          if (entry.value == gaussian->primitiveNormalization())
+            basis["primitiveNormalization"] = entry.name;
+      }
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
