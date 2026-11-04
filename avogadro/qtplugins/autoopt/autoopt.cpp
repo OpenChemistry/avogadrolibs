@@ -278,7 +278,7 @@ QWidget* AutoOpt::toolWidget() const
     // check the methods for this molecule
     auto mol = m_molecule->molecule();
     auto list = Calc::EnergyManager::instance().identifiersForMolecule(mol);
-    for (auto option : list) {
+    for (const auto& option : list) {
       methodComboBox->addItem(option.c_str());
     }
 

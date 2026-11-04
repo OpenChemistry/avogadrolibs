@@ -327,6 +327,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
       if (sequence.find("energies") != sequence.end() &&
           isNumericArray(sequence["energies"])) {
         std::vector<double> energies;
+        energies.reserve(sequence["energies"].size());
         for (unsigned int i = 0; i < sequence["energies"].size(); ++i) {
           energies.push_back(sequence["energies"][i].get<float>());
         }

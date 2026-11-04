@@ -615,7 +615,7 @@ void Forcefield::showDialog()
   QVariantMap modelUserOptionSchemas;
   auto list =
     Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
-  for (auto option : list) {
+  for (const auto& option : list) {
     const QString optionName = option.c_str();
     forceFields << optionName;
 
@@ -734,7 +734,7 @@ void Forcefield::setupMethod()
   auto list =
     Calc::EnergyManager::instance().identifiersForMolecule(*m_molecule);
   bool found = false;
-  for (auto option : list) {
+  for (const auto& option : list) {
     if (option == m_methodName) {
       found = true;
       break;

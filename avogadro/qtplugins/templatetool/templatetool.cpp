@@ -834,11 +834,13 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     if (m_molecule->bonds(selectedIndex).size() != 0) {
       // Create arrays with the points to align and apply Kabsch algorithm
       std::vector<Vector3> templateLigandPositions;
+      templateLigandPositions.reserve(templateLigandIndices.size());
       for (size_t index : templateLigandIndices)
         templateLigandPositions.emplace_back(
           templateMolecule.atomPosition3d(index) -
           m_molecule->atomPosition3d(moleculeCenterIndex));
       std::vector<Vector3> moleculeLigandPositions;
+      moleculeLigandPositions.reserve(selectedUIDs.size());
       for (size_t UID : selectedUIDs)
         moleculeLigandPositions.emplace_back(
           m_molecule->atomPosition3d(m_molecule->atomByUniqueId(UID).index()) -
