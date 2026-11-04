@@ -11,9 +11,6 @@ on:
     branches-ignore:
       - 'dependabot/**'
       - 'update-i18n-templates'
-      # CI-only branch for the rendering benchmark; render_benchmark.yml
-      # is the only workflow it should run.
-      - 'render-benchmark-instrumentation'
     tags:
       - '**'
   release:

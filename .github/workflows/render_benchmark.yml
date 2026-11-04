@@ -1,10 +1,9 @@
 name: Rendering Benchmark (CI only)
-# CI-only workflow for the unmerged `render-benchmark-instrumentation` branch.
-# It builds AvogadroRenderBenchmark on Linux and Windows and runs it in several
-# OpenGL configurations, to answer the "phase 2 spike" in the offscreen render
-# plan: which platform/driver combinations give a usable offscreen GL context
-# with no window and (on Linux) no X server. Every other workflow ignores this
-# branch, so a push runs only the two jobs below.
+# Runs on pushes to the `render-benchmark-instrumentation` branch and on manual
+# dispatch. It builds AvogadroRenderBenchmark on Linux and Windows and runs it
+# in several OpenGL configurations, to answer the "phase 2 spike" in the
+# offscreen render plan: which platform/driver combinations give a usable
+# offscreen GL context with no window and (on Linux) no X server.
 #
 # Each GL configuration is its own step with continue-on-error, so one failing
 # configuration (several are expected to fail, and that is a result) neither
