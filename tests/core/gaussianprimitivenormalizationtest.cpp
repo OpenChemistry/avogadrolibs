@@ -617,3 +617,22 @@ TEST(GaussianPrimitiveNormalizationTest, sphericalShellsAcceptRadialIncluded)
     EXPECT_EQ(basis.primitiveNormalization(), Normalization::RadialIncluded);
   }
 }
+
+// A zero exponent has N_axis = 0, which must not turn the coefficient into
+// NaN when RadialIncluded divides it out.
+TEST(GaussianPrimitiveNormalizationTest, radialIncludedZeroExponentIsFinite)
+{
+  Molecule molecule;
+  molecule.addAtom(1, Vector3(0.0, 0.0, 0.0));
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  unsigned int index = basis->addBasis(0, GaussianSet::S);
+  basis->addGto(index, 1.0, 0.0);
+  basis->addGto(index, 0.5, 1.0);
+  molecule.setBasisSet(basis);
+  ASSERT_TRUE(basis->setPrimitiveNormalization(Normalization::RadialIncluded));
+  basis->initCalculation();
+  ASSERT_EQ(basis->gtoCN().size(), 2u);
+  for (double value : basis->gtoCN())
+    EXPECT_TRUE(std::isfinite(value));
+}

@@ -670,7 +670,7 @@ void GaussianSet::initCalculation()
             if (index < m_gtoCN.size()) {
               if (asIs)
                 m_gtoCN[index] = m_gtoC[j];
-              else
+              else if (nAxis > 0.0) // zero exponent: N_axis is 0, keep 0
                 m_gtoCN[index] /= nAxis;
             }
           }
