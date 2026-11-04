@@ -426,3 +426,46 @@ TEST(GaussianSetTest, addingShellsOneByOneAfterEvaluation)
     expectConsistentIndices(*basis, shells.size(), primitiveCount(shells));
   }
 }
+
+// A primitive for a shell other than the last (or a new) one would land in
+// the wrong shell; it is refused and the basis is left as it was.
+TEST(GaussianSetTest, addGtoToAnEarlierShellIsRefused)
+{
+  GaussianSet basis;
+  unsigned int s = basis.addBasis(0, GaussianSet::S);
+  basis.addGto(s, 0.5, 2.0);
+  unsigned int p = basis.addBasis(0, GaussianSet::P);
+  basis.addGto(p, 0.7, 1.0);
+  basis.initCalculation();
+  const std::vector<double> gtoA = basis.gtoA();
+  const std::vector<unsigned int> gtoIndices = basis.gtoIndices();
+
+  EXPECT_EQ(basis.addGto(s, 0.3, 0.5), 69696969u);
+  EXPECT_EQ(basis.gtoA(), gtoA);
+  EXPECT_EQ(basis.gtoIndices(), gtoIndices);
+
+  // The last shell and a new one still take primitives.
+  EXPECT_EQ(basis.addGto(p, 0.2, 0.3), 2u);
+  unsigned int d = basis.addBasis(0, GaussianSet::D);
+  EXPECT_EQ(basis.addGto(d, 1.0, 0.8), 3u);
+}
+
+// Trailing shells without primitives still get a start index, so every shell
+// has a [start, end) range of primitives.
+TEST(GaussianSetTest, trailingShellsWithoutPrimitives)
+{
+  GaussianSet basis;
+  unsigned int s = basis.addBasis(0, GaussianSet::S);
+  basis.addGto(s, 0.5, 2.0);
+  basis.addBasis(0, GaussianSet::P);
+  basis.addBasis(0, GaussianSet::D);
+  basis.initCalculation();
+
+  const std::vector<unsigned int> gtoIndices = basis.gtoIndices();
+  ASSERT_EQ(gtoIndices.size(), 4u);
+  EXPECT_EQ(gtoIndices[0], 0u);
+  EXPECT_EQ(gtoIndices[1], 1u);
+  EXPECT_EQ(gtoIndices[2], 1u);
+  EXPECT_EQ(gtoIndices[3], 1u);
+  EXPECT_EQ(basis.cIndices().size(), 3u);
+}

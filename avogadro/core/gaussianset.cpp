@@ -76,22 +76,30 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 
 unsigned int GaussianSet::addGto(unsigned int basis, double c, double a)
 {
-  // initCalculation() leaves the total primitive count as a last entry of
-  // m_gtoIndices. It is stale once a primitive is added, and it would make a
-  // new shell look as if it already had its start index.
+  // Shells that already have a start index. initCalculation() also leaves the
+  // total primitive count as a last entry of m_gtoIndices, which is not one.
+  const size_t starts = m_gtoIndices.size() - (m_hasGtoEndIndex ? 1 : 0);
+  if (basis > starts) {
+    cout << "Error, attempted to add a GTO for a basis too early. GTOs must be "
+         << "added in order to ensure correct indexing.\n";
+    return 69696969;
+  }
+  if (basis + 1 < starts) {
+    cout << "Error, attempted to add a GTO to an earlier basis. GTOs can only "
+         << "be added to the last basis or a new one.\n";
+    return 69696969;
+  }
+
+  // The end entry is stale once a primitive is added, and it would make a new
+  // shell look as if it already had its start index.
   if (m_hasGtoEndIndex) {
     m_gtoIndices.pop_back();
     m_hasGtoEndIndex = false;
   }
   m_init = false;
 
-  if (m_gtoIndices.size() == basis) {
+  if (basis == starts)
     m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
-  } else if (m_gtoIndices.size() < basis) {
-    cout << "Error, attempted to add a GTO for a basis too early. GTOs must be "
-         << "added in order to ensure correct indexing.\n";
-    return 69696969;
-  }
   m_gtoA.push_back(a);
   m_gtoC.push_back(c);
 
@@ -376,9 +384,14 @@ void GaussianSet::initCalculation()
   unsigned int skip = 0; // for unimplemented shells
 
   m_moIndices.assign(m_symmetry.size(), 0);
-  // Add a final entry to the gtoIndices, replacing any left by a previous call
+  // Every shell needs a start index, and the loop below reads
+  // m_gtoIndices[i + 1]: give shells without primitives (at the end) a start
+  // where the next primitive would go, then add the total primitive count as
+  // a final entry, replacing any left by a previous call.
   if (m_hasGtoEndIndex && !m_gtoIndices.empty())
     m_gtoIndices.pop_back();
+  while (m_gtoIndices.size() < m_symmetry.size())
+    m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
   m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
   m_hasGtoEndIndex = true;
   for (unsigned int i = 0; i < m_symmetry.size(); ++i) {
