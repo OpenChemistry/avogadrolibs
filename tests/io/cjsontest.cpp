@@ -9,6 +9,7 @@
 
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/cube.h>
+#include <avogadro/core/gaussianset.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/layermanager.h>
 #include <avogadro/core/molecule.h>
@@ -18,6 +19,8 @@
 
 #include <avogadro/io/cjsonformat.h>
 
+#include <nlohmann/json.hpp>
+
 using Avogadro::Index;
 using Avogadro::MatrixX;
 using Avogadro::PI_F;
@@ -25,6 +28,7 @@ using Avogadro::Real;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Constraint;
+using Avogadro::Core::GaussianSet;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 using Avogadro::Core::SpaceGroups;
@@ -1233,4 +1237,92 @@ TEST(CjsonTest, spaceGroupFromOpenBabel)
   ASSERT_TRUE(cjson.readString(output, roundTrip));
   EXPECT_FALSE(roundTrip.hasData(SpaceGroups::internationalNumberKey()));
   EXPECT_EQ(roundTrip.hallNumber(), 0);
+}
+
+namespace {
+
+// A small basis: s (2 primitives), p (1), s (3) on two atoms.
+GaussianSet* attachSmallBasis(Molecule& molecule)
+{
+  molecule.addAtom(8, Avogadro::Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(1, Avogadro::Vector3(0.0, 0.0, 0.74));
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  unsigned int s0 = basis->addBasis(0, GaussianSet::S);
+  basis->addGto(s0, 0.4, 5.0);
+  basis->addGto(s0, 0.7, 1.2);
+  unsigned int p0 = basis->addBasis(0, GaussianSet::P);
+  basis->addGto(p0, 1.0, 0.9);
+  unsigned int s1 = basis->addBasis(1, GaussianSet::S);
+  basis->addGto(s1, 0.5, 3.0);
+  basis->addGto(s1, 0.6, 0.5);
+  basis->addGto(s1, 0.2, 0.1);
+  // five basis functions, five MOs
+  std::vector<double> mos(25, 0.0);
+  for (size_t i = 0; i < 5; ++i)
+    mos[i * 5 + i] = 1.0;
+  basis->setMolecularOrbitals(mos);
+  basis->setElectronCount(2);
+  molecule.setBasisSet(basis);
+  return basis;
+}
+
+} // namespace
+
+// Writing a molecule whose basis has been initialized (for example after an
+// orbital was rendered) used to add a trailing zero to primitivesPerShell,
+// one more for every further initialization, so the array no longer had one
+// entry per shell.
+TEST(CjsonTest, basisSetWrittenAfterInitialization)
+{
+  Molecule molecule;
+  GaussianSet* basis = attachSmallBasis(molecule);
+
+  for (int init = 0; init < 3; ++init) {
+    // Evaluating an orbital initializes the basis; setting the MOs again
+    // makes the next evaluation initialize it once more.
+    basis->initCalculation();
+    basis->setMolecularOrbitals(std::vector<double>(25, 0.5));
+
+    CjsonFormat cjson;
+    std::string output;
+    ASSERT_TRUE(cjson.writeString(output, molecule)) << cjson.error();
+    const auto root = nlohmann::json::parse(output);
+    const auto& written = root.at("basisSet");
+    EXPECT_EQ(written.at("shellTypes"), nlohmann::json::parse("[0, 1, 0]"));
+    EXPECT_EQ(written.at("primitivesPerShell"),
+              nlohmann::json::parse("[2, 1, 3]"))
+      << "after " << (init + 1) << " initializations";
+    EXPECT_EQ(written.at("shellToAtomMap"), nlohmann::json::parse("[0, 0, 1]"));
+    EXPECT_EQ(written.at("exponents").size(), static_cast<size_t>(6));
+    EXPECT_EQ(written.at("coefficients").size(), static_cast<size_t>(6));
+  }
+}
+
+TEST(CjsonTest, basisSetRoundTripAfterInitialization)
+{
+  Molecule molecule;
+  GaussianSet* basis = attachSmallBasis(molecule);
+  basis->initCalculation();
+  basis->setMolecularOrbitals(std::vector<double>(25, 0.5));
+  basis->initCalculation();
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule)) << cjson.error();
+
+  Molecule reread;
+  ASSERT_TRUE(cjson.readString(output, reread)) << cjson.error();
+  auto* copy = dynamic_cast<GaussianSet*>(reread.basisSet());
+  ASSERT_NE(copy, nullptr);
+  EXPECT_EQ(copy->symmetry(), basis->symmetry());
+  EXPECT_EQ(copy->atomIndices(), basis->atomIndices());
+  EXPECT_EQ(copy->gtoA(), basis->gtoA());
+  EXPECT_EQ(copy->gtoC(), basis->gtoC());
+
+  // The shell boundaries survive too: a freshly read basis and the original
+  // describe the same primitive ranges per shell.
+  copy->initCalculation();
+  EXPECT_EQ(copy->gtoIndices(), basis->gtoIndices());
+  EXPECT_EQ(copy->gtoCN(), basis->gtoCN());
 }

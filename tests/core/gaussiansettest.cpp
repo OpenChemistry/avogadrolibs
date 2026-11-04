@@ -6,11 +6,18 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/gaussianset.h>
+#include <avogadro/core/gaussiansettools.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/vector.h>
 
+#include <cmath>
 #include <vector>
 
+using Avogadro::Vector3;
 using Avogadro::Core::BasisSet;
 using Avogadro::Core::GaussianSet;
+using Avogadro::Core::GaussianSetTools;
+using Avogadro::Core::Molecule;
 using Avogadro::Core::Rhf;
 using Avogadro::Core::Rohf;
 using Avogadro::Core::Uhf;
@@ -158,4 +165,264 @@ TEST(GaussianSetTest, clone)
   EXPECT_EQ(cloned->functionalName(), "PBE");
 
   delete cloned;
+}
+
+// ---------------------------------------------------------------------------
+// initCalculation() must be safe to run more than once. It runs again
+// whenever shells or MOs are added after a first evaluation, and it used to
+// append to cIndices and push another end-of-shells entry onto gtoIndices
+// each time.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+struct PrimitiveSpec
+{
+  double c;
+  double a;
+};
+
+struct ShellSpec
+{
+  unsigned int atom;
+  GaussianSet::orbital type;
+  std::vector<PrimitiveSpec> primitives;
+};
+
+// Two atoms 0.74 Angstrom apart: an s and p shell on the first, two s shells
+// on the second. Five basis functions in all.
+std::vector<ShellSpec> baseShells()
+{
+  return { { 0, GaussianSet::S, { { 0.4, 5.0 }, { 0.7, 1.2 } } },
+           { 0, GaussianSet::P, { { 1.0, 0.9 } } },
+           { 1, GaussianSet::S, { { 0.5, 3.0 }, { 0.6, 0.5 } } } };
+}
+
+// One more shell (a p shell, three functions) on the second atom.
+ShellSpec extraShell()
+{
+  return { 1, GaussianSet::P, { { 0.8, 1.1 }, { 0.3, 0.4 } } };
+}
+
+unsigned int functionCount(const std::vector<ShellSpec>& shells)
+{
+  unsigned int count = 0;
+  for (const auto& shell : shells)
+    count += shell.type == GaussianSet::S ? 1 : 3;
+  return count;
+}
+
+void addShell(GaussianSet& basis, const ShellSpec& shell)
+{
+  unsigned int index = basis.addBasis(shell.atom, shell.type);
+  for (const auto& primitive : shell.primitives)
+    basis.addGto(index, primitive.c, primitive.a);
+}
+
+// A deterministic, non-trivial MO matrix: nBasis rows, nBasis columns, with
+// no symmetry that could hide an indexing slip.
+std::vector<double> moCoefficients(unsigned int nBasis, double seed)
+{
+  std::vector<double> mos(static_cast<size_t>(nBasis) * nBasis);
+  for (size_t i = 0; i < mos.size(); ++i)
+    mos[i] = std::sin(seed + 0.37 * static_cast<double>(i)) /
+             (1.0 + 0.1 * static_cast<double>(i % nBasis));
+  return mos;
+}
+
+void setUpMolecule(Molecule& molecule)
+{
+  molecule.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(1, Vector3(0.0, 0.0, 0.74));
+}
+
+// Sets the MOs and rebuilds the density matrix from them. The point-wise
+// GaussianSetTools::calculateElectronDensity() reads the stored density
+// matrix, which setMolecularOrbitals() does not refresh.
+void setOrbitals(GaussianSet& basis, unsigned int nBasis, double seed)
+{
+  basis.setMolecularOrbitals(moCoefficients(nBasis, seed), BasisSet::Paired);
+  ASSERT_TRUE(basis.generateDensityMatrix());
+}
+
+// The molecule owns the basis set (setBasisSet takes ownership); the
+// returned pointer stays valid for the molecule's lifetime and is the very
+// object GaussianSetTools evaluates, since nothing else shares it.
+GaussianSet* attachBasis(Molecule& molecule,
+                         const std::vector<ShellSpec>& shells, double seed,
+                         unsigned int electrons = 4)
+{
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  for (const auto& shell : shells)
+    addShell(*basis, shell);
+  basis->setElectronCount(electrons);
+  setOrbitals(*basis, functionCount(shells), seed);
+  molecule.setBasisSet(basis);
+  return basis;
+}
+
+const Vector3 POINTS[] = { Vector3(0.0, 0.0, 0.0),  Vector3(0.1, -0.2, 0.3),
+                           Vector3(0.0, 0.0, 0.74), Vector3(-0.4, 0.3, 0.5),
+                           Vector3(0.5, 0.5, 1.2),  Vector3(-0.8, 0.1, -0.3) };
+
+// Tools take a snapshot of the normalized coefficients when they are
+// constructed, so a fresh GaussianSetTools is built for every comparison.
+void expectSameValues(Molecule& actual, Molecule& expected)
+{
+  GaussianSetTools actualTools(&actual);
+  GaussianSetTools expectedTools(&expected);
+  const int nMOs = static_cast<int>(actual.basisSet()->molecularOrbitalCount());
+  ASSERT_EQ(nMOs,
+            static_cast<int>(expected.basisSet()->molecularOrbitalCount()));
+  for (const Vector3& point : POINTS) {
+    EXPECT_DOUBLE_EQ(actualTools.calculateElectronDensity(point),
+                     expectedTools.calculateElectronDensity(point));
+    for (int mo = 0; mo < nMOs; ++mo)
+      EXPECT_DOUBLE_EQ(actualTools.calculateMolecularOrbital(point, mo),
+                       expectedTools.calculateMolecularOrbital(point, mo));
+  }
+}
+
+// After initialization the index arrays must describe every shell exactly
+// once, and gtoIndices must end with the total number of primitives.
+void expectConsistentIndices(const GaussianSet& basis, size_t nShells,
+                             size_t nPrimitives)
+{
+  EXPECT_EQ(basis.moIndices().size(), nShells);
+  EXPECT_EQ(basis.cIndices().size(), nShells);
+  ASSERT_EQ(basis.gtoIndices().size(), nShells + 1);
+  EXPECT_EQ(basis.gtoIndices().back(), nPrimitives);
+}
+
+size_t primitiveCount(const std::vector<ShellSpec>& shells)
+{
+  size_t count = 0;
+  for (const auto& shell : shells)
+    count += shell.primitives.size();
+  return count;
+}
+
+} // namespace
+
+TEST(GaussianSetTest, initCalculationIsIdempotent)
+{
+  Molecule molecule;
+  setUpMolecule(molecule);
+  const auto shells = baseShells();
+  GaussianSet* basis = attachBasis(molecule, shells, 0.3);
+
+  basis->initCalculation();
+  const auto cIndices = basis->cIndices();
+  const auto moIndices = basis->moIndices();
+  const auto gtoIndices = basis->gtoIndices();
+  const auto gtoCN = basis->gtoCN();
+  expectConsistentIndices(*basis, shells.size(), primitiveCount(shells));
+
+  // Re-setting the MOs clears the initialized flag, so this runs a second
+  // and third initialization over the same shells.
+  for (int pass = 0; pass < 2; ++pass) {
+    setOrbitals(*basis, functionCount(shells), 0.3);
+    basis->initCalculation();
+    EXPECT_EQ(basis->cIndices(), cIndices);
+    EXPECT_EQ(basis->moIndices(), moIndices);
+    EXPECT_EQ(basis->gtoIndices(), gtoIndices);
+    EXPECT_EQ(basis->gtoCN(), gtoCN);
+  }
+}
+
+TEST(GaussianSetTest, settingMOsAfterEvaluationMatchesFreshBasis)
+{
+  Molecule molecule;
+  setUpMolecule(molecule);
+  const auto shells = baseShells();
+  GaussianSet* basis = attachBasis(molecule, shells, 0.3);
+
+  {
+    // Evaluating initializes the basis.
+    GaussianSetTools tools(&molecule);
+    ASSERT_NE(tools.calculateElectronDensity(POINTS[1]), 0.0);
+  }
+
+  setOrbitals(*basis, functionCount(shells), 1.7);
+
+  Molecule fresh;
+  setUpMolecule(fresh);
+  attachBasis(fresh, shells, 1.7);
+  expectSameValues(molecule, fresh);
+  expectConsistentIndices(*basis, shells.size(), primitiveCount(shells));
+}
+
+TEST(GaussianSetTest, addingAShellAfterEvaluationMatchesFreshBasis)
+{
+  Molecule molecule;
+  setUpMolecule(molecule);
+  auto shells = baseShells();
+  GaussianSet* basis = attachBasis(molecule, shells, 0.3);
+
+  {
+    GaussianSetTools tools(&molecule);
+    ASSERT_NE(tools.calculateElectronDensity(POINTS[1]), 0.0);
+  }
+
+  shells.push_back(extraShell());
+  addShell(*basis, shells.back());
+  setOrbitals(*basis, functionCount(shells), 2.9);
+
+  Molecule fresh;
+  setUpMolecule(fresh);
+  attachBasis(fresh, shells, 2.9);
+  expectSameValues(molecule, fresh);
+  expectConsistentIndices(*basis, shells.size(), primitiveCount(shells));
+}
+
+TEST(GaussianSetTest, addingAPrimitiveAfterEvaluationMatchesFreshBasis)
+{
+  Molecule molecule;
+  setUpMolecule(molecule);
+  auto shells = baseShells();
+  GaussianSet* basis = attachBasis(molecule, shells, 0.3);
+
+  {
+    GaussianSetTools tools(&molecule);
+    ASSERT_NE(tools.calculateElectronDensity(POINTS[1]), 0.0);
+  }
+
+  // A primitive appended to the last shell, with no addBasis() or MO change
+  // to reset the initialized flag for it.
+  shells.back().primitives.push_back({ 0.2, 0.15 });
+  basis->addGto(static_cast<unsigned int>(shells.size() - 1), 0.2, 0.15);
+
+  Molecule fresh;
+  setUpMolecule(fresh);
+  attachBasis(fresh, shells, 0.3);
+  expectSameValues(molecule, fresh);
+  expectConsistentIndices(*basis, shells.size(), primitiveCount(shells));
+}
+
+TEST(GaussianSetTest, addingShellsOneByOneAfterEvaluation)
+{
+  // Grow a basis shell by shell, evaluating between each addition.
+  Molecule molecule;
+  setUpMolecule(molecule);
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  molecule.setBasisSet(basis);
+  // One occupied MO, so the density is defined from the first shell on.
+  basis->setElectronCount(2);
+
+  std::vector<ShellSpec> shells;
+  auto all = baseShells();
+  all.push_back(extraShell());
+  for (const auto& shell : all) {
+    shells.push_back(shell);
+    addShell(*basis, shell);
+    setOrbitals(*basis, functionCount(shells), 0.8);
+
+    Molecule fresh;
+    setUpMolecule(fresh);
+    attachBasis(fresh, shells, 0.8, 2);
+    expectSameValues(molecule, fresh);
+    expectConsistentIndices(*basis, shells.size(), primitiveCount(shells));
+  }
 }

@@ -76,6 +76,15 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 
 unsigned int GaussianSet::addGto(unsigned int basis, double c, double a)
 {
+  // initCalculation() leaves the total primitive count as a last entry of
+  // m_gtoIndices. It is stale once a primitive is added, and it would make a
+  // new shell look as if it already had its start index.
+  if (m_hasGtoEndIndex) {
+    m_gtoIndices.pop_back();
+    m_hasGtoEndIndex = false;
+  }
+  m_init = false;
+
   if (m_gtoIndices.size() == basis) {
     m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
   } else if (m_gtoIndices.size() < basis) {
@@ -316,16 +325,23 @@ void GaussianSet::initCalculation()
   if (m_init)
     return;
 
-  // This currently just involves normalising all contraction coefficients
+  // This currently just involves normalising all contraction coefficients.
+  // Everything derived below is rebuilt from the shells each time, since this
+  // runs again whenever shells, primitives or MOs are added after an earlier
+  // call.
   m_gtoCN.clear();
+  m_cIndices.clear();
 
   // Initialise the new data structures that are hopefully more efficient
   unsigned int indexMO = 0;
   unsigned int skip = 0; // for unimplemented shells
 
-  m_moIndices.resize(m_symmetry.size());
-  // Add a final entry to the gtoIndices
+  m_moIndices.assign(m_symmetry.size(), 0);
+  // Add a final entry to the gtoIndices, replacing any left by a previous call
+  if (m_hasGtoEndIndex && !m_gtoIndices.empty())
+    m_gtoIndices.pop_back();
   m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
+  m_hasGtoEndIndex = true;
   for (unsigned int i = 0; i < m_symmetry.size(); ++i) {
     switch (m_symmetry[i]) {
       case S:

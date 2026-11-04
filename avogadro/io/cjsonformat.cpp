@@ -19,6 +19,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -1860,10 +1861,17 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     if (!gaussian->gtoIndices().empty() && !gaussian->atomIndices().empty()) {
       auto gtoIndices = gaussian->gtoIndices();
       auto gtoA = gaussian->gtoA();
+      // One entry per shell that has primitives. Once the basis has been
+      // initialized, gtoIndices has an extra last entry (the total number of
+      // primitives) that is not the start of a shell, so stop at the number
+      // of shells; the last shell always ends at the total.
+      const size_t nShells = std::min(gtoIndices.size(), symmetry.size());
       json primitivesPerShell;
-      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      for (size_t i = 0; i < nShells; ++i) {
+        const size_t end =
+          (i + 1 < gtoIndices.size()) ? gtoIndices[i + 1] : gtoA.size();
+        primitivesPerShell.push_back(end - gtoIndices[i]);
+      }
       basis["primitivesPerShell"] = primitivesPerShell;
 
       auto atomIndices = gaussian->atomIndices();

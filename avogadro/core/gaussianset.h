@@ -208,6 +208,11 @@ public:
 
   /**
    * Initialize the calculation, this must normally be done before anything.
+   *
+   * This prepares the normalized coefficients and rebuilds moIndices(),
+   * cIndices() and the final entry of gtoIndices() from the shells added so
+   * far. It can be run any number of times: shells, primitives or MOs added
+   * afterwards cause the next call to start from scratch.
    */
   void initCalculation();
 
@@ -220,6 +225,12 @@ public:
   std::vector<unsigned int> atomIndices() const { return m_atomIndices; }
   std::vector<unsigned int>& moIndices() { return m_moIndices; }
   std::vector<unsigned int> moIndices() const { return m_moIndices; }
+  /**
+   * The index of the first primitive of each shell. After initCalculation()
+   * there is one more entry, the total number of primitives, so that shell i
+   * owns the primitives [gtoIndices()[i], gtoIndices()[i + 1]). The extra
+   * entry is removed again when another primitive is added.
+   */
   std::vector<unsigned int>& gtoIndices() { return m_gtoIndices; }
   std::vector<unsigned int> gtoIndices() const { return m_gtoIndices; }
   std::vector<unsigned int>& cIndices() { return m_cIndices; }
@@ -306,6 +317,12 @@ private:
 
   unsigned int m_numMOs; //! The number of GTOs (not always!)
   bool m_init;           //! Has the calculation been initialised?
+
+  /**
+   * Is the last entry of m_gtoIndices the end-of-primitives entry added by
+   * initCalculation(), rather than the start of a shell?
+   */
+  bool m_hasGtoEndIndex = false;
 
   ScfType m_scfType;
 
