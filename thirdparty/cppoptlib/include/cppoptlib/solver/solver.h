@@ -180,8 +180,8 @@ class Solver {
   // carry them over (they otherwise restart at zero each call and a
   // "3 in a row" test can never fire in chunks shorter than 3). The final
   // counts are in the returned Progress. Single use; defaults to zero.
-  void SetInitialDeltaViolations(int x_delta_violations,
-                                 int f_delta_violations) {
+  void SetInitialDeltaViolations(int x_delta_violations, int f_delta_violations)
+  {
     initial_x_delta_violations_ = x_delta_violations;
     initial_f_delta_violations_ = f_delta_violations;
   }

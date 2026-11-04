@@ -229,10 +229,10 @@ struct Progress {
       if ((stop_progress.f_delta > 0) &&
           (f_delta <
            stop_progress.f_delta *
-               (stop_progress.f_delta_relative
-                    ? std::max({std::abs(current_value), std::abs(previous_value),
-                                ScalarType(1)})
-                    : ScalarType(1)))) {
+             (stop_progress.f_delta_relative
+                ? std::max({ std::abs(current_value), std::abs(previous_value),
+                             ScalarType(1) })
+                : ScalarType(1)))) {
         f_delta_violations++;
         if (f_delta_violations >= stop_progress.f_delta_violations) {
           status = Status::FDeltaViolation;

@@ -90,11 +90,12 @@ class Lbfgs
   // caller's state struct. InitializeSolver consumes it instead of zeroing
   // if the shapes match; otherwise it is ignored and the solver starts cold.
   using HistoryMatrixType =
-      Eigen::Matrix<ScalarType, Eigen::Dynamic, Eigen::Dynamic>;
+    Eigen::Matrix<ScalarType, Eigen::Dynamic, Eigen::Dynamic>;
 
   void SetWarmStartHistory(const HistoryMatrixType& x_diffs,
                            const HistoryMatrixType& grad_diffs, size_t count,
-                           size_t pos, ScalarType scaling) {
+                           size_t pos, ScalarType scaling)
+  {
     warm_x_diff_ = x_diffs;
     warm_grad_diff_ = grad_diffs;
     warm_count_ = count;
@@ -106,7 +107,8 @@ class Lbfgs
   // Export the history as it stands now (after Minimize()), including any
   // reset done by the steepest-descent fallback in OptimizationStep.
   void GetHistory(HistoryMatrixType& x_diffs, HistoryMatrixType& grad_diffs,
-                  size_t& count, size_t& pos, ScalarType& scaling) const {
+                  size_t& count, size_t& pos, ScalarType& scaling) const
+  {
     x_diffs = x_diff_memory_;
     grad_diffs = grad_diff_memory_;
     count = mem_count_;
