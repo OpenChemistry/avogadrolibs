@@ -192,6 +192,7 @@ GaussianSet* buildNormalized(Molecule& molecule,
   basis->setMolecularOrbitals(moCoefficients(functionCount(shells)),
                               BasisSet::Paired);
   basis->setElectronCount(6);
+  EXPECT_TRUE(basis->generateDensityMatrix());
   molecule.setBasisSet(basis);
   return basis;
 }
@@ -231,6 +232,7 @@ GaussianSet* buildPreMultiplied(Molecule& molecule,
   }
   basis->setMolecularOrbitals(mos, BasisSet::Paired);
   basis->setElectronCount(6);
+  EXPECT_TRUE(basis->generateDensityMatrix());
   molecule.setBasisSet(basis);
   return basis;
 }
@@ -256,6 +258,9 @@ void expectSameValues(Molecule& actual, Molecule& expected,
   const int nMOs =
     static_cast<int>(expected.basisSet()->molecularOrbitalCount());
   ASSERT_EQ(nMOs, static_cast<int>(actual.basisSet()->molecularOrbitalCount()));
+  // Without a density matrix both densities are 0 and would compare equal.
+  ASSERT_NE(expectedTools.calculateElectronDensity(POINTS[0]), 0.0) << label;
+  ASSERT_NE(actualTools.calculateElectronDensity(POINTS[0]), 0.0) << label;
   int p = 0;
   for (const Vector3& point : POINTS) {
     expectClose(actualTools.calculateElectronDensity(point),
