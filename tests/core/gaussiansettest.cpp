@@ -469,3 +469,35 @@ TEST(GaussianSetTest, trailingShellsWithoutPrimitives)
   EXPECT_EQ(gtoIndices[3], 1u);
   EXPECT_EQ(basis.cIndices().size(), 3u);
 }
+
+// Each primitive's reach is set by its own coefficient. Here the first
+// primitive is tight with a tiny coefficient and the second diffuse with a
+// large one; taking the first coefficient for both cut the diffuse primitive
+// off long before 8 bohr, where it still dominates the density.
+TEST(GaussianSetTest, shellCutoffUsesEachPrimitive)
+{
+  Molecule molecule;
+  molecule.addAtom(1, Vector3(0.0, 0.0, 0.0));
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  unsigned int s = basis->addBasis(0, GaussianSet::S);
+  basis->addGto(s, 1e-4, 10.0);
+  basis->addGto(s, 1.0, 0.1);
+  basis->setMolecularOrbitals({ 1.0 }, BasisSet::Paired);
+  basis->setElectronCount(2);
+  ASSERT_TRUE(basis->generateDensityMatrix());
+  molecule.setBasisSet(basis);
+
+  const double r = 8.0; // bohr
+  auto primitive = [r](double c, double a) {
+    return c * std::pow(2.0 * a / M_PI, 0.75) * std::exp(-a * r * r);
+  };
+  const double psi = primitive(1e-4, 10.0) + primitive(1.0, 0.1);
+  const double expected = 2.0 * psi * psi;
+
+  GaussianSetTools tools(&molecule);
+  const double got = tools.calculateElectronDensity(
+    Vector3(0.0, 0.0, r * Avogadro::BOHR_TO_ANGSTROM_D));
+  ASSERT_GT(expected, 0.0);
+  EXPECT_NEAR(got, expected, 1e-6 * expected);
+}
