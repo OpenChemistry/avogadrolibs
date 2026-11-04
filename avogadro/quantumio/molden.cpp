@@ -26,6 +26,82 @@ using Core::Atom;
 using Core::BasisSet;
 using Core::GaussianSet;
 
+namespace {
+
+// Number of components of a shell, 0 for types that are not handled.
+unsigned int componentCount(GaussianSet::orbital type)
+{
+  switch (type) {
+    case GaussianSet::S:
+      return 1;
+    case GaussianSet::P:
+      return 3;
+    case GaussianSet::SP:
+      return 4;
+    case GaussianSet::D:
+      return 6;
+    case GaussianSet::D5:
+      return 5;
+    case GaussianSet::F:
+      return 10;
+    case GaussianSet::F7:
+      return 7;
+    case GaussianSet::G:
+      return 15;
+    case GaussianSet::G9:
+      return 9;
+    case GaussianSet::H:
+      return 21;
+    case GaussianSet::H11:
+      return 11;
+    case GaussianSet::I:
+      return 28;
+    case GaussianSet::I13:
+      return 13;
+    default:
+      return 0;
+  }
+}
+
+// N_axis(alpha, l) = (2 alpha / pi)^(3/4) (4 alpha)^(l/2) / sqrt((2l-1)!!),
+// the normalization of x^l exp(-alpha r^2).
+double axisNormalization(double alpha, int l)
+{
+  double doubleFactorial = 1.0;
+  for (int k = 2 * l - 1; k > 1; k -= 2)
+    doubleFactorial *= k;
+  return std::pow(2.0 * alpha / M_PI, 0.75) * std::pow(4.0 * alpha, 0.5 * l) /
+         std::sqrt(doubleFactorial);
+}
+
+// Self-overlap of a contracted shell of angular momentum l. The coefficients
+// belong to normalized primitives, or, when radialIncluded is set, include
+// N_axis(alpha, l) (and are divided by it to get back to normalized ones).
+// The overlap of two normalized primitives is
+// (2 sqrt(a b) / (a + b))^(l + 3/2).
+double shellSelfOverlap(const double* exponents, const double* coefficients,
+                        size_t count, int l, bool radialIncluded)
+{
+  double overlap = 0.0;
+  for (size_t i = 0; i < count; ++i) {
+    const double ci = radialIncluded
+                        ? coefficients[i] / axisNormalization(exponents[i], l)
+                        : coefficients[i];
+    for (size_t j = 0; j < count; ++j) {
+      const double cj = radialIncluded
+                          ? coefficients[j] / axisNormalization(exponents[j], l)
+                          : coefficients[j];
+      overlap += ci * cj *
+                 std::pow(2.0 * std::sqrt(exponents[i] * exponents[j]) /
+                            (exponents[i] + exponents[j]),
+                          l + 1.5);
+    }
+  }
+  return overlap;
+}
+
+} // namespace
+
 MoldenFile::MoldenFile()
   : m_coordFactor(1.0), m_electrons(0), m_mode(Unrecognized)
 {
@@ -112,6 +188,13 @@ void MoldenFile::processLine(std::istream& in)
   if (!Core::getLine(in, line) || Core::trimmed(line).empty())
     return;
 
+  // The text of a [Title] section is free-form, so keep it away from the
+  // section tests below.
+  if (m_mode == Title && Core::trimmed(line)[0] != '[') {
+    m_title += Core::trimmed(line) + '\n';
+    return;
+  }
+
   vector<string> list = Core::split(line, ' ');
 
   // Big switch statement checking for various things we are interested in. The
@@ -122,6 +205,9 @@ void MoldenFile::processLine(std::istream& in)
     if (list.size() > 1 && Core::contains(list[1], "AU"))
       m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
+  } else if (Core::contains(line, "[Title]") ||
+             Core::contains(line, "[TITLE]")) {
+    m_mode = Title;
   } else if (Core::contains(line, "[GTO]")) {
     m_mode = GTO;
   } else if (Core::contains(line, "[MO]")) {
@@ -536,6 +622,62 @@ unsigned int MoldenFile::basisFunctionCount() const
   return count;
 }
 
+bool MoldenFile::coefficientsIncludeRadialNormalization()
+{
+  // Only s and p shells can tell the conventions apart: xtb and ORCA agree
+  // there, but not for d, f and g. A contracted shell of normalized
+  // primitives has a self-overlap of 1 only under the matching convention;
+  // under the other it is off by far more than the tolerance (measured
+  // 0.35 to 82 for the wrong one on ORCA and xtb files). A shell of one
+  // primitive cannot discriminate, so it is skipped.
+  constexpr double tolerance = 1e-3;
+  size_t nGTO = 0;
+  size_t nSP = 0;
+  size_t tested = 0;
+  for (size_t i = 0; i < m_shellTypes.size(); ++i) {
+    const GaussianSet::orbital type = m_shellTypes[i];
+    const int count = m_shellNums[i];
+    if (count < 0 || nGTO + static_cast<size_t>(count) > m_a.size() ||
+        nGTO + static_cast<size_t>(count) > m_c.size())
+      return false;
+    const size_t n = static_cast<size_t>(count);
+    for (size_t j = nGTO; j < nGTO + n; ++j)
+      if (!(m_a[j] > 0.0) || !std::isfinite(m_c[j]))
+        return false;
+
+    // An SP shell is an s and a p shell sharing the exponents
+    for (int pass = 0; pass < 2; ++pass) {
+      const bool isS =
+        type == GaussianSet::S || (type == GaussianSet::SP && pass == 0);
+      const bool isP =
+        type == GaussianSet::P || (type == GaussianSet::SP && pass == 1);
+      if ((!isS && !isP) || n < 2)
+        continue;
+      const vector<double>* coefficients = &m_c;
+      size_t first = nGTO;
+      if (type == GaussianSet::SP && pass == 1) {
+        if (nSP + n > m_csp.size())
+          return false;
+        coefficients = &m_csp;
+        first = nSP;
+      }
+      const int l = isP ? 1 : 0;
+      const double* a = m_a.data() + nGTO;
+      const double* c = coefficients->data() + first;
+      const double standard = shellSelfOverlap(a, c, n, l, false);
+      const double radial = shellSelfOverlap(a, c, n, l, true);
+      if (!(std::abs(radial - 1.0) < tolerance) ||
+          std::abs(standard - 1.0) < tolerance)
+        return false;
+      ++tested;
+    }
+    if (type == GaussianSet::SP)
+      nSP += n;
+    nGTO += n;
+  }
+  return tested > 0;
+}
+
 bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
 {
   // Now load up our basis set
@@ -546,6 +688,25 @@ bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
     appendError("Invalid basis set data in Molden file.");
     return false;
   }
+
+  // xtb and ORCA put the radial normalization into the coefficients.
+  const bool radialIncluded = coefficientsIncludeRadialNormalization();
+  const bool orca = radialIncluded && Core::contains(m_title, "orca_2mkl");
+  if (radialIncluded) {
+    // (always accepted: unlike AsIs it works for spherical shells too)
+    basis->setPrimitiveNormalization(
+      GaussianSet::PrimitiveNormalization::RadialIncluded);
+    // Informational only, so not an error() entry, which callers read as a
+    // sign of trouble.
+    cout << "Molden: the contraction coefficients include the radial "
+            "normalization ("
+         << (orca ? "ORCA" : "xtb") << " convention).\n";
+  }
+  // Position (in the list of basis functions) of the MO coefficients whose
+  // sign ORCA flips, see below.
+  vector<size_t> orcaSignFlips;
+  size_t functionOffset = 0;
+  bool orcaCartesian = false;
 
   // Set up the GTO primitive counter, go through the shells and add them
   int nGTO = 0;
@@ -577,6 +738,7 @@ bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
         ++nSP;
         ++nGTO;
       }
+      functionOffset += 4;
     } else {
       // adjust the shell types if needed
       if (!m_cartesianD && m_shellTypes[i] == GaussianSet::D)
@@ -594,6 +756,42 @@ bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
       else if (m_cartesianG && m_shellTypes[i] == GaussianSet::G9)
         m_shellTypes[i] = GaussianSet::G;
 
+      // ORCA writes the d, f and g coefficients for a different angular
+      // normalization than xtb: it divides by sqrt(D_l) with D_l = 1 for d
+      // and f, 3 for g, where RadialIncluded expects sqrt((2l-1)!!) = sqrt(3),
+      // sqrt(15), sqrt(35). Rescale by sqrt(D_l / (2l-1)!!). It also negates
+      // the m = +3 and -3 functions of f and the m = +-3 and +-4 functions of
+      // g. Only the spherical shells were checked against reference data.
+      double scale = 1.0;
+      if (orca) {
+        switch (m_shellTypes[i]) {
+          case GaussianSet::D5:
+            scale = 1.0 / std::sqrt(3.0);
+            break;
+          case GaussianSet::F7:
+            scale = 1.0 / std::sqrt(15.0);
+            // Molden order m = 0, +1, -1, +2, -2, +3, -3, which is also the
+            // order of GaussianSetTools::pointF7
+            orcaSignFlips.push_back(functionOffset + 5);
+            orcaSignFlips.push_back(functionOffset + 6);
+            break;
+          case GaussianSet::G9:
+            scale = 1.0 / std::sqrt(35.0);
+            // m = 0, +1, -1, +2, -2, +3, -3, +4, -4 (pointG9)
+            for (size_t k = 5; k < 9; ++k)
+              orcaSignFlips.push_back(functionOffset + k);
+            break;
+          case GaussianSet::D:
+          case GaussianSet::F:
+          case GaussianSet::G:
+            orcaCartesian = true;
+            break;
+          default:
+            break;
+        }
+      }
+      functionOffset += componentCount(m_shellTypes[i]);
+
       int b = basis->addBasis(m_shelltoAtom[i] - 1, m_shellTypes[i]);
       for (int j = 0; j < m_shellNums[i]; ++j) {
         if (static_cast<size_t>(nGTO) >= m_c.size() ||
@@ -601,11 +799,25 @@ bool MoldenFile::load(GaussianSet* basis, size_t atomCount)
           appendError("Invalid basis set coefficients in Molden file.");
           return false;
         }
-        basis->addGto(b, m_c[nGTO], m_a[nGTO]);
+        basis->addGto(b, m_c[nGTO] * scale, m_a[nGTO]);
         ++nGTO;
       }
     }
   }
+  if (orcaCartesian)
+    appendError("Warning: Cartesian d, f or g shells in an ORCA Molden file "
+                "have not been checked; the orbitals may be wrong.");
+
+  // The ORCA sign flips act on whole basis functions, in every orbital.
+  if (!orcaSignFlips.empty() && functionOffset > 0) {
+    for (vector<double>* mos : { &m_MOcoeffs, &m_betaMOcoeffs }) {
+      for (size_t start = 0; start + functionOffset <= mos->size();
+           start += functionOffset)
+        for (size_t flip : orcaSignFlips)
+          (*mos)[start + flip] = -(*mos)[start + flip];
+    }
+  }
+
   // Now to load in the MO coefficients
   if (m_openShell) {
     // Set SCF type to UHF for open-shell calculations

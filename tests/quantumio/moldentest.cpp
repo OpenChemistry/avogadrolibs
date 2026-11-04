@@ -724,3 +724,145 @@ TEST(MoldenTest, invalidGtoDoesNotCrash)
   EXPECT_FALSE(format.readString(input, molecule));
   EXPECT_NE(format.error(), std::string());
 }
+
+namespace {
+
+using Normalization = GaussianSet::PrimitiveNormalization;
+
+// Reads a Molden file and returns how its coefficients were interpreted.
+// A missing file is a test failure, not a skip.
+Normalization normalizationOf(const std::string& path)
+{
+  MoldenFile format;
+  Molecule molecule;
+  EXPECT_TRUE(format.readFile(path, molecule)) << path << format.error();
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  EXPECT_NE(basis, nullptr) << path;
+  return basis != nullptr ? basis->primitiveNormalization()
+                          : Normalization::Normalize;
+}
+
+} // namespace
+
+// xtb and ORCA include the radial normalization in the coefficients, the
+// other programs do not. Found from the self-overlap of the s and p shells.
+TEST(MoldenTest, detectsPrimitiveNormalizationConvention)
+{
+  const std::string qtaim = AVOGADRO_DATA "/data/qtaim/h2o-hf-631gd/";
+  // xtb (Cartesian d)
+  EXPECT_EQ(normalizationOf(AVOGADRO_DATA "/data/molden/H2O.molden"),
+            Normalization::RadialIncluded);
+  EXPECT_EQ(normalizationOf(AVOGADRO_DATA "/data/molden/SF4.molden"),
+            Normalization::RadialIncluded);
+  EXPECT_EQ(normalizationOf(qtaim + "xtb-gfn2/h2o.molden"),
+            Normalization::RadialIncluded);
+  // ORCA (orca_2mkl)
+  EXPECT_EQ(normalizationOf(AVOGADRO_DATA "/data/molden/no2.molden"),
+            Normalization::RadialIncluded);
+  EXPECT_EQ(normalizationOf(qtaim + "orca-hf-6-31gd-5d/h2o.molden"),
+            Normalization::RadialIncluded);
+  // Psi4 and PySCF, with Cartesian and spherical d
+  for (const char* folder : { "psi4-hf-6-31gd-6d", "psi4-hf-6-31gd-5d",
+                              "pyscf-hf-6-31gd-6d", "pyscf-hf-6-31gd-5d" })
+    EXPECT_EQ(normalizationOf(qtaim + folder + "/h2o.molden"),
+              Normalization::Normalize)
+      << folder;
+}
+
+// STO-3G coefficients are those of normalized primitives (Gaussian style).
+TEST(MoldenTest, standardCoefficientsStayNormalized)
+{
+  static const char sto3g[] = R"([Molden Format]
+[Atoms] Angs
+H     1     1   0.0   0.0   0.0
+[GTO]
+    1 0
+ s   3 1.00
+       3.42525091    0.15432897
+       0.62391373    0.53532814
+       0.16885540    0.44463454
+
+[MO]
+ Sym= a
+ Ene= -0.5
+ Spin= Alpha
+ Occup= 1.0
+    1   1.0
+)";
+  MoldenFile format;
+  Molecule molecule;
+  ASSERT_TRUE(format.readString(sto3g, molecule)) << format.error();
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  EXPECT_EQ(basis->primitiveNormalization(), Normalization::Normalize);
+  EXPECT_EQ(format.error(), std::string());
+}
+
+namespace {
+
+// An s shell of two primitives and an f shell of one, on one atom. The
+// s coefficients include N_axis, as xtb and ORCA write them; the f shell
+// coefficient is arbitrary. One MO whose coefficients are 1..8.
+std::string radialIncludedMolden(const std::string& title)
+{
+  const double a1 = 1.0, a2 = 0.3;
+  const auto axis = [](double a) { return std::pow(2.0 * a / M_PI, 0.75); };
+  // contraction of normalized primitives with unit self-overlap
+  double d1 = 0.6, d2 = 0.5;
+  const double overlap =
+    d1 * d1 + d2 * d2 +
+    2.0 * d1 * d2 * std::pow(2.0 * std::sqrt(a1 * a2) / (a1 + a2), 1.5);
+  d1 /= std::sqrt(overlap);
+  d2 /= std::sqrt(overlap);
+  std::ostringstream out;
+  out.precision(15);
+  out << "[Molden Format]\n[Title]\n"
+      << title << "\n[Atoms] AU\n"
+      << "H     1     1   0.0   0.0   0.0\n[7F]\n[GTO]\n    1 0\n"
+      << " s   2 1.00\n  " << a1 << " " << d1 * axis(a1) << "\n  " << a2 << " "
+      << d2 * axis(a2) << "\n f   1 1.00\n  " << 0.8 << " " << 0.25
+      << "\n\n[MO]\n Sym= a\n Ene= -0.5\n Spin= Alpha\n Occup= 2.0\n";
+  for (int i = 1; i <= 8; ++i)
+    out << "    " << i << "   " << i << ".0\n";
+  return out.str();
+}
+
+} // namespace
+
+// ORCA's f coefficients are scaled by 1/sqrt(15) and its m = +3 and -3
+// functions (positions 5 and 6 of the seven, after the s function) negated.
+TEST(MoldenTest, orcaSphericalFConversion)
+{
+  MoldenFile orca;
+  Molecule orcaMolecule;
+  ASSERT_TRUE(orca.readString(
+    radialIncludedMolden("Molden file created by orca_2mkl for BaseName=x"),
+    orcaMolecule))
+    << orca.error();
+  const auto* orcaBasis =
+    dynamic_cast<const GaussianSet*>(orcaMolecule.basisSet());
+  ASSERT_NE(orcaBasis, nullptr);
+  EXPECT_EQ(orcaBasis->primitiveNormalization(), Normalization::RadialIncluded);
+  ASSERT_EQ(orcaBasis->gtoC().size(), 3u);
+  EXPECT_NEAR(orcaBasis->gtoC()[2], 0.25 / std::sqrt(15.0), 1e-15);
+  const auto orcaMos = orcaBasis->moMatrix();
+  ASSERT_EQ(orcaMos.rows(), 8);
+  // MO coefficients 1..8: s, then f m = 0, +1, -1, +2, -2, +3, -3
+  const double flipped[8] = { 1, 2, 3, 4, 5, 6, -7, -8 };
+  for (int i = 0; i < 8; ++i)
+    EXPECT_EQ(orcaMos(i, 0), flipped[i]) << i;
+
+  // Without the ORCA title it is the xtb convention: nothing is changed.
+  MoldenFile xtb;
+  Molecule xtbMolecule;
+  ASSERT_TRUE(xtb.readString(radialIncludedMolden(""), xtbMolecule))
+    << xtb.error();
+  const auto* xtbBasis =
+    dynamic_cast<const GaussianSet*>(xtbMolecule.basisSet());
+  ASSERT_NE(xtbBasis, nullptr);
+  EXPECT_EQ(xtbBasis->primitiveNormalization(), Normalization::RadialIncluded);
+  EXPECT_EQ(xtbBasis->gtoC()[2], 0.25);
+  const auto xtbMos = xtbBasis->moMatrix();
+  for (int i = 0; i < 8; ++i)
+    EXPECT_EQ(xtbMos(i, 0), i + 1.0) << i;
+}
