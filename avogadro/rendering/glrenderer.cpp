@@ -28,11 +28,22 @@ namespace Avogadro::Rendering {
 using Core::Array;
 
 namespace {
-constexpr int TimedSections = 6;
+// The timed parts of render(), in order; TimedSections is their count.
+enum Section : int
+{
+  SolidSection,
+  PostSection,
+  OpaqueSection,
+  TranslucentSection,
+  Overlay3DSection,
+  Overlay2DSection,
+  TimedSections
+};
 constexpr int TimedSlots = 4;
-const char* const SectionNames[TimedSections] = { "solid",     "post",
-                                                  "opaque",    "translucent",
-                                                  "overlay3d", "overlay2d" };
+const char* const SectionNames[] = { "solid",       "post",      "opaque",
+                                     "translucent", "overlay3d", "overlay2d" };
+static_assert(sizeof(SectionNames) / sizeof(SectionNames[0]) == TimedSections,
+              "SectionNames must name every timed section");
 
 // Bookkeeping for GLRenderer::setTimingEnabled(). One slot holds the CPU
 // timings and the six GL_TIME_ELAPSED queries of a single frame; a ring of
@@ -50,7 +61,6 @@ struct TimingState
   };
 
   std::array<Slot, TimedSlots> slots;
-  bool queriesCreated = false;
   bool gpuAvailable = false;
   int next = 0;    // slot the next frame is recorded in
   int pending = 0; // frames issued but not yet published
@@ -63,7 +73,7 @@ struct TimingState
 
   ~TimingState()
   {
-    if (!queriesCreated)
+    if (!gpuAvailable)
       return;
     for (Slot& slot : slots)
       glDeleteQueries(TimedSections, slot.queries.data());
@@ -76,23 +86,22 @@ struct TimingState
       for (Slot& slot : slots)
         glGenQueries(TimedSections, slot.queries.data());
     }
-    queriesCreated = gpuAvailable;
   }
 
   Slot& oldest() { return slots[(next + TimedSlots - pending) % TimedSlots]; }
 
-  void publish(const Slot& slot, bool withGpu, RenderTimings& out) const
+  void publish(const Slot& slot, RenderTimings& out) const
   {
     out.frame = slot.frame;
     out.bufferBytesUploaded = slot.bytes;
-    out.gpuTimingAvailable = withGpu;
+    out.gpuTimingAvailable = gpuAvailable;
     out.passes.resize(TimedSections);
     for (int i = 0; i < TimedSections; ++i) {
       PassTiming& pass = out.passes[i];
       pass.name = SectionNames[i];
       pass.cpuMs = slot.cpuMs[i];
       pass.gpuMs = -1.0;
-      if (withGpu) {
+      if (gpuAvailable) {
         GLuint64 ns = 0;
         glGetQueryObjectui64v(slot.queries[i], GL_QUERY_RESULT, &ns);
         pass.gpuMs = static_cast<double>(ns) * 1.0e-6;
@@ -110,14 +119,14 @@ struct TimingState
                           GL_QUERY_RESULT_AVAILABLE, &ready);
       if (!ready)
         break;
-      publish(slot, true, out);
+      publish(slot, out);
       --pending;
     }
   }
 
   void beginFrame(RenderTimings& out, bool synchronous)
   {
-    if (!queriesCreated && frameCounter == 0)
+    if (frameCounter == 0)
       createQueries();
     if (gpuAvailable && !synchronous)
       collectFinished(out);
@@ -130,8 +139,10 @@ struct TimingState
     section = -1;
   }
 
+  // Ends the open section, if any, and starts timing `index`.
   void beginSection(int index)
   {
+    endSection();
     section = index;
     if (gpuAvailable)
       glBeginQuery(GL_TIME_ELAPSED, current->queries[index]);
@@ -152,13 +163,14 @@ struct TimingState
 
   void endFrame(RenderTimings& out, bool synchronous)
   {
+    endSection();
     current->bytes = BufferObject::totalBytesUploaded() - bytesAtStart;
     if (!gpuAvailable) {
-      publish(*current, false, out);
+      publish(*current, out);
     } else if (synchronous) {
       // Anything still in flight is older than this frame; discard it.
       pending = 0;
-      publish(*current, true, out);
+      publish(*current, out);
     } else {
       ++pending;
     }
@@ -287,7 +299,7 @@ void GLRenderer::render()
   TimingState* timing = d->timingEnabled ? &d->timing : nullptr;
   if (timing) {
     timing->beginFrame(d->timings, d->timingSync);
-    timing->beginSection(0);
+    timing->beginSection(SolidSection);
   }
 
   Vector4ub c = m_scene.backgroundColor();
@@ -304,26 +316,20 @@ void GLRenderer::render()
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   m_scene.rootNode().accept(visitor);
-  if (timing) {
-    timing->endSection();
-    timing->beginSection(1);
-  }
+  if (timing)
+    timing->beginSection(PostSection);
   // Before end(), so the offset the fog and depth-of-field are sized by
   // belongs to the camera this frame is drawn with rather than the last one.
   m_solidPipeline.adjustOffset(m_camera);
   m_solidPipeline.end(m_camera);
-  if (timing) {
-    timing->endSection();
-    timing->beginSection(2);
-  }
+  if (timing)
+    timing->beginSection(OpaqueSection);
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
   m_scene.rootNode().accept(visitor);
-  if (timing) {
-    timing->endSection();
-    timing->beginSection(3);
-  }
+  if (timing)
+    timing->beginSection(TranslucentSection);
 
   // Setup for transparent geometry
   visitor.setRenderPass(TranslucentPass);
@@ -338,29 +344,23 @@ void GLRenderer::render()
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
                       GL_ONE_MINUS_SRC_ALPHA);
   m_scene.rootNode().accept(visitor);
-  if (timing) {
-    timing->endSection();
-    timing->beginSection(4);
-  }
+  if (timing)
+    timing->beginSection(Overlay3DSection);
 
   // Setup for 3d overlay rendering
   visitor.setRenderPass(Overlay3DPass);
   glClear(GL_DEPTH_BUFFER_BIT);
   m_scene.rootNode().accept(visitor);
-  if (timing) {
-    timing->endSection();
-    timing->beginSection(5);
-  }
+  if (timing)
+    timing->beginSection(Overlay2DSection);
 
   // Setup for 2d overlay rendering
   visitor.setRenderPass(Overlay2DPass);
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
   m_scene.rootNode().accept(visitor);
-  if (timing) {
-    timing->endSection();
+  if (timing)
     timing->endFrame(d->timings, d->timingSync);
-  }
 
 #ifdef _3DCONNEXION
   if (m_drawIcon && (m_iconData != nullptr)) {

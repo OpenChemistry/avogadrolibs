@@ -17,6 +17,7 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/extensionplugin.h>
@@ -33,6 +34,7 @@
 #include <avogadro/rendering/spheregeometry.h>
 
 #include "benchmark_common.h"
+#include "surfaceresolution.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QEventLoop>
@@ -73,6 +75,7 @@ using Avogadro::Vector3;
 using Avogadro::Benchmarks::parseDouble;
 using Avogadro::Benchmarks::parseUnsigned;
 using Avogadro::Core::Array;
+using Avogadro::Core::toLower;
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::ScenePlugin;
 using Avogadro::Rendering::BufferObject;
@@ -165,19 +168,18 @@ public:
     return m_values[i].empty() ? 0.0 : m_values[i].back();
   }
 
+  // The last value of the series called `name`, or 0 if there is none.
+  double lastOf(const std::string& name) const
+  {
+    const auto it = m_index.find(name);
+    return it == m_index.end() ? 0.0 : last(it->second);
+  }
+
 private:
   std::map<std::string, std::size_t> m_index;
   std::vector<std::string> m_names;
   std::vector<std::vector<double>> m_values;
 };
-
-std::string lower(std::string text)
-{
-  std::transform(text.begin(), text.end(), text.begin(), [](unsigned char c) {
-    return static_cast<char>(std::tolower(c));
-  });
-  return text;
-}
 
 void printUsage(const char* argv0)
 {
@@ -262,7 +264,7 @@ bool parseArguments(int argc, char** argv, Options& options)
     } else if (arg == "--surface") {
       if (!next(value))
         return false;
-      value = lower(value);
+      value = toLower(value);
       if (value != "vdw" && value != "sas" && value != "ses") {
         std::cerr << "--surface expects vdw, sas or ses\n";
         return false;
@@ -476,13 +478,20 @@ double peakRssMB()
 // Solvent probe radius of Surfaces (SolventProbeRadius in surfaces.cpp).
 constexpr double surfaceProbeRadius = 1.4;
 
-// What Surfaces::resolution() picks when the caller gives none and there is
-// no dialog: 0.02 * N^(1/3) A, clamped to [0.05, 0.5]. The real value is read
-// back from the command result; this only feeds the memory guard.
-double automaticResolution(std::size_t atomCount)
+// The atoms' bounding box. Returns false, leaving lo and hi alone, when the
+// molecule has no positions.
+bool atomBounds(const Molecule& mol, Vector3& lo, Vector3& hi)
 {
-  const double r = 0.02 * std::cbrt(static_cast<double>(atomCount));
-  return std::clamp(r, 0.05, 0.5);
+  const Array<Vector3>& positions = mol.atomPositions3d();
+  if (positions.empty())
+    return false;
+  lo = positions[0];
+  hi = positions[0];
+  for (const Vector3& p : positions) {
+    lo = lo.cwiseMin(p);
+    hi = hi.cwiseMax(p);
+  }
+  return true;
 }
 
 struct SurfaceEstimate
@@ -496,32 +505,36 @@ struct SurfaceEstimate
 // Estimate the grid and peak memory of a surface calculation the way
 // Surfaces::calculateEDT() sizes it: the atoms' bounding box padded by
 // (largest radius + probe + 0.2) on every side, divided into cells of
-// `resolution`. The float cube costs 4 B/voxel; the solvent-excluded pass
-// also reserves a 12 B Vector3i per voxel, so 16 B/voxel. The mesh is the
-// dominant term for van der Waals surfaces, and was calibrated on measured
-// runs (2MS2 and 1AON, peak RSS): mesh generation peaks at about 130 B per
-// triangle (flying edges output, normals, smoothing adjacency), and a
-// protein's triangle count is about 2 * f * (summed atomic sphere areas) /
-// res^2, with f = 0.5 for van der Waals and solvent-accessible and 0.2 for
-// solvent-excluded (smoother). Both are rough, but they track the
-// measurements within about 1.5x, where a naive 4 B/voxel was 4x low.
+// `resolution`. With none given, that is the plugin's
+// automaticSurfaceResolution() (as Surfaces::resolution() picks with no
+// dialog), including its voxel budget. The real value is read back from the
+// command result; this only feeds the memory guard. The float cube costs
+// 4 B/voxel; the solvent-excluded pass also reserves a 12 B Vector3i per
+// voxel, so 16 B/voxel. The mesh is the dominant term for van der Waals
+// surfaces, and was calibrated on measured runs (2MS2 and 1AON, peak RSS): mesh
+// generation peaks at about 130 B per triangle (flying edges output, normals,
+// smoothing adjacency), and a protein's triangle count is about 2 * f * (summed
+// atomic sphere areas) / res^2, with f = 0.5 for van der Waals and
+// solvent-accessible and 0.2 for solvent-excluded (smoother). Both are rough,
+// but they track the measurements within about 1.5x, where a naive 4 B/voxel
+// was 4x low.
 SurfaceEstimate estimateSurface(const Molecule& mol, const std::string& type,
                                 double resolution)
 {
   SurfaceEstimate e;
-  e.resolution =
-    resolution > 0.0 ? resolution : automaticResolution(mol.atomCount());
   const double probe = (type == "vdw") ? 0.0 : surfaceProbeRadius;
-  const Array<Vector3>& positions = mol.atomPositions3d();
-  if (positions.empty())
+  Vector3 lo, hi;
+  if (!atomBounds(mol, lo, hi)) {
+    e.resolution = resolution > 0.0
+                     ? resolution
+                     : Avogadro::QtPlugins::automaticSurfaceResolution(
+                         mol.atomCount(), Vector3::Zero());
     return e;
-  Vector3 lo = positions[0];
-  Vector3 hi = positions[0];
+  }
   double maxRadius = probe;
   double sphereArea = 0.0;
-  for (std::size_t i = 0; i < positions.size(); ++i) {
-    lo = lo.cwiseMin(positions[i]);
-    hi = hi.cwiseMax(positions[i]);
+  const std::size_t atomCount = mol.atomPositions3d().size();
+  for (std::size_t i = 0; i < atomCount; ++i) {
     const double radius =
       Avogadro::Core::Elements::radiusVDW(mol.atomicNumber(i)) + probe;
     maxRadius = std::max(maxRadius, radius);
@@ -529,6 +542,10 @@ SurfaceEstimate estimateSurface(const Molecule& mol, const std::string& type,
   }
   const double padding = maxRadius + probe + 0.2;
   const Vector3 extent = (hi - lo).array() + 2.0 * padding;
+  e.resolution = resolution > 0.0
+                   ? resolution
+                   : Avogadro::QtPlugins::automaticSurfaceResolution(
+                       mol.atomCount(), extent);
   e.voxels = 1.0;
   for (int k = 0; k < 3; ++k)
     e.voxels *= std::floor(extent[k] / e.resolution);
@@ -646,10 +663,7 @@ void printTable(const Report& r)
   for (std::size_t i = 0; i < r.timed.names().size(); ++i) {
     const std::string& name = r.timed.names()[i];
     const Stats s = r.timed.stats(i);
-    double cold = 0.0;
-    for (std::size_t j = 0; j < r.cold.names().size(); ++j)
-      if (r.cold.names()[j] == name)
-        cold = r.cold.last(j);
+    const double cold = r.cold.lastOf(name);
     std::cout << std::left << std::setw(34) << name << std::right
               << std::setw(10) << cold << std::setw(10) << s.median
               << std::setw(10) << s.p95 << std::setw(10) << s.max << "\n";
@@ -714,10 +728,7 @@ void writeJson(const Report& r, const std::string& path)
   for (std::size_t i = 0; i < r.timed.names().size(); ++i) {
     const std::string& name = r.timed.names()[i];
     const Stats s = r.timed.stats(i);
-    double cold = 0.0;
-    for (std::size_t j = 0; j < r.cold.names().size(); ++j)
-      if (r.cold.names()[j] == name)
-        cold = r.cold.last(j);
+    const double cold = r.cold.lastOf(name);
     out << "    \"" << jsonEscape(name) << "\": {\"cold\": " << cold
         << ", \"median\": " << s.median << ", \"p95\": " << s.p95
         << ", \"max\": " << s.max << "}"
@@ -783,16 +794,17 @@ int main(int argc, char** argv)
     options.styles.push_back("Ball and Stick");
   // The mesh is drawn by the "Surfaces" display type; add it to any other
   // styles asked for, or use it alone.
-  if (wantSurface &&
-      std::none_of(options.styles.begin(), options.styles.end(),
-                   [](const std::string& n) { return lower(n) == "surfaces"; }))
+  if (wantSurface && std::none_of(options.styles.begin(), options.styles.end(),
+                                  [](const std::string& n) {
+                                    return toLower(n) == "surfaces";
+                                  }))
     options.styles.push_back("Surfaces");
 
   std::vector<ScenePlugin*> plugins;
   for (const std::string& wanted : options.styles) {
     ScenePlugin* match = nullptr;
     for (ScenePlugin* plugin : available)
-      if (lower(plugin->name().toStdString()) == lower(wanted))
+      if (toLower(plugin->name().toStdString()) == toLower(wanted))
         match = plugin;
     if (!match) {
       std::cerr << "Unknown style \"" << wanted << "\"; see --list-styles.\n";
@@ -808,13 +820,10 @@ int main(int argc, char** argv)
     for (auto* factory :
          pluginManager
            ->pluginFactories<Avogadro::QtGui::ExtensionPluginFactory>()) {
-      Avogadro::QtGui::ExtensionPlugin* plugin = factory->createInstance(&app);
-      if (plugin && QString::fromLatin1(plugin->metaObject()->className())
-                      .endsWith(QLatin1String("::Surfaces"))) {
-        surfacePlugin = plugin;
+      if (factory->identifier() == QLatin1String("Surfaces")) {
+        surfacePlugin = factory->createInstance(&app);
         break;
       }
-      delete plugin;
     }
     if (!surfacePlugin) {
       std::cerr << "The Surfaces extension plugin was not found.\n";
@@ -1036,13 +1045,8 @@ int main(int argc, char** argv)
   Avogadro::Vector3f proxyCenter = Avogadro::Vector3f::Zero();
   float proxyRadius = 1.0f;
   if (wantSurface && mol.atomCount() > 0) {
-    const Array<Vector3>& positions = mol.atomPositions3d();
-    Vector3 lo = positions[0];
-    Vector3 hi = positions[0];
-    for (const Vector3& p : positions) {
-      lo = lo.cwiseMin(p);
-      hi = hi.cwiseMax(p);
-    }
+    Vector3 lo, hi;
+    atomBounds(mol, lo, hi);
     proxyCenter = (0.5 * (lo + hi)).cast<float>();
     proxyRadius = static_cast<float>(0.5 * (hi - lo).norm() + 3.0);
   }
@@ -1057,13 +1061,14 @@ int main(int argc, char** argv)
     Clock::time_point t = Clock::now();
     node.clear();
     auto* moleculeNode = new GroupNode(&node);
-    series.add("scene clear", elapsedMs(t, Clock::now()));
+    const double clearMs = elapsedMs(t, Clock::now());
+    series.add("scene clear", clearMs);
     for (ScenePlugin* plugin : plugins) {
       auto* engineNode = new GroupNode(moleculeNode);
       t = Clock::now();
       plugin->process(mol, *engineNode);
-      series.add("process: " + plugin->name().toStdString(),
-                 elapsedMs(t, Clock::now()));
+      const double processMs = elapsedMs(t, Clock::now());
+      series.add("process: " + plugin->name().toStdString(), processMs);
     }
     // Scene::center() and radius() (GeometryVisitor) look only at spheres,
     // curves and lines, never at meshes, so a scene of surfaces alone is
@@ -1084,7 +1089,8 @@ int main(int argc, char** argv)
     }
     t = Clock::now();
     renderer.resetGeometry();
-    series.add("resetGeometry", elapsedMs(t, Clock::now()));
+    const double resetMs = elapsedMs(t, Clock::now());
+    series.add("resetGeometry", resetMs);
   };
 
   auto renderFrame = [&](Series& series) {

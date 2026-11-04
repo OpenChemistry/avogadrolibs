@@ -38,7 +38,11 @@ struct AVOGADRORENDERING_EXPORT RenderTimings
   /** Counter of timed render() calls, starting at 1 (0 means no data yet). */
   std::uint64_t frame = 0;
   std::vector<PassTiming> passes;
-  /** Bytes handed to glBufferData while the frame was rendered. */
+  /**
+   * Growth of the process-wide BufferObject::totalBytesUploaded() counter
+   * across the frame. It is exact only when no other renderer uploads at the
+   * same time.
+   */
   std::uint64_t bufferBytesUploaded = 0;
   /** True if the passes carry GPU times. */
   bool gpuTimingAvailable = false;

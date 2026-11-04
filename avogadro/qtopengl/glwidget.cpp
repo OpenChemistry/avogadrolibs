@@ -59,22 +59,20 @@ QString gpuText(double ms)
   return ms < 0.0 ? QStringLiteral("n/a") : QString::number(ms, 'f', 1);
 }
 
-// Sum the CPU and GPU times of the passes named in `names`.
-void sectionTimes(const Rendering::RenderTimings& timings,
-                  std::initializer_list<const char*> names, double& cpuMs,
-                  double& gpuMs)
+// The CPU and GPU times of the pass called `name`. If there is no such pass
+// the CPU time is 0, and the GPU time is 0 (or -1, "n/a", when the driver
+// gives none).
+Rendering::PassTiming passTiming(const Rendering::RenderTimings& timings,
+                                 const char* name)
 {
-  cpuMs = 0.0;
-  gpuMs = timings.gpuTimingAvailable ? 0.0 : -1.0;
   for (const Rendering::PassTiming& pass : timings.passes) {
-    for (const char* name : names) {
-      if (pass.name == name) {
-        cpuMs += pass.cpuMs;
-        if (gpuMs >= 0.0)
-          gpuMs += pass.gpuMs;
-      }
-    }
+    if (pass.name == name)
+      return pass;
   }
+  Rendering::PassTiming none;
+  none.cpuMs = 0.0;
+  none.gpuMs = timings.gpuTimingAvailable ? 0.0 : -1.0;
+  return none;
 }
 
 } // namespace
@@ -186,9 +184,16 @@ void GLWidget::updateScene()
   // Each pass counts as a rebuild; the overlay shows the last pass's
   // breakdown and the total for the whole call.
   const bool stats = d->statsVisible;
-  Clock::time_point tStart, t0, t1;
+  Clock::time_point tStart, mark;
   if (stats)
     tStart = Clock::now();
+  // Milliseconds since the last mark, which it then resets to now.
+  auto lap = [&mark]() {
+    const Clock::time_point now = Clock::now();
+    const double ms = elapsedMs(mark, now);
+    mark = now;
+    return ms;
+  };
 
   m_updatingScene = true;
   do {
@@ -196,7 +201,7 @@ void GLWidget::updateScene()
     if (stats) {
       ++d->rebuildsSincePaint;
       d->rebuildPlugins.clear();
-      t0 = Clock::now();
+      mark = Clock::now();
     }
 
     // Build up the scene with the scene plugins, creating the appropriate
@@ -208,33 +213,28 @@ void GLWidget::updateScene()
       Rendering::GroupNode& node = m_renderer.scene().rootNode();
       node.clear();
       auto* moleculeNode = new Rendering::GroupNode(&node);
-      if (stats) {
-        t1 = Clock::now();
-        d->rebuildClearMs = elapsedMs(t0, t1);
-      }
+      if (stats)
+        d->rebuildClearMs = lap();
 
       foreach (QtGui::ScenePlugin* scenePlugin,
                m_scenePlugins.activeScenePlugins()) {
         auto* engineNode = new Rendering::GroupNode(moleculeNode);
         if (stats)
-          t0 = Clock::now();
+          mark = Clock::now();
         scenePlugin->process(*mol, *engineNode);
-        if (stats) {
-          t1 = Clock::now();
-          d->rebuildPlugins.emplace_back(scenePlugin->name(),
-                                         elapsedMs(t0, t1));
-        }
+        if (stats)
+          d->rebuildPlugins.emplace_back(scenePlugin->name(), lap());
       }
 
       // Let the tools perform any drawing they need to do.
       if (stats)
-        t0 = Clock::now();
+        mark = Clock::now();
       foreach (QtGui::ToolPlugin* tool, m_tools) {
         auto* toolNode = new Rendering::GroupNode(moleculeNode);
         tool->draw(*toolNode);
       }
       if (stats)
-        d->rebuildToolsMs = elapsedMs(t0, Clock::now());
+        d->rebuildToolsMs = lap();
     }
     if (mol != m_molecule)
       delete mol;
@@ -242,12 +242,11 @@ void GLWidget::updateScene()
   m_updatingScene = false;
 
   if (stats)
-    t0 = Clock::now();
+    mark = Clock::now();
   m_renderer.resetGeometry();
   if (stats) {
-    t1 = Clock::now();
-    d->rebuildResetMs = elapsedMs(t0, t1);
-    d->rebuildTotalMs = elapsedMs(tStart, t1);
+    d->rebuildResetMs = lap();
+    d->rebuildTotalMs = elapsedMs(tStart, mark);
   }
   update();
 }
@@ -436,9 +435,8 @@ void GLWidget::drawFrameStats()
   }
 
   const Rendering::RenderTimings& timings = m_renderer.timings();
-  double solidCpu, solidGpu, postCpu, postGpu;
-  sectionTimes(timings, { "solid" }, solidCpu, solidGpu);
-  sectionTimes(timings, { "post" }, postCpu, postGpu);
+  const Rendering::PassTiming solid = passTiming(timings, "solid");
+  const Rendering::PassTiming post = passTiming(timings, "post");
 
   // The three slowest scene plugins of the last rebuild.
   std::vector<std::pair<QString, double>> top = d->rebuildPlugins;
@@ -472,10 +470,10 @@ void GLWidget::drawFrameStats()
              .arg(timings.totalCpuMs(), 0, 'f', 1)
              .arg(gpuText(timings.totalGpuMs()));
   lines << QStringLiteral("  solid %1/%2  post %3/%4 (cpu/gpu)")
-             .arg(solidCpu, 0, 'f', 1)
-             .arg(gpuText(solidGpu))
-             .arg(postCpu, 0, 'f', 1)
-             .arg(gpuText(postGpu));
+             .arg(solid.cpuMs, 0, 'f', 1)
+             .arg(gpuText(solid.gpuMs))
+             .arg(post.cpuMs, 0, 'f', 1)
+             .arg(gpuText(post.gpuMs));
   lines << QString::asprintf("uploaded %.2f MB",
                              static_cast<double>(timings.bufferBytesUploaded) /
                                1.0e6);

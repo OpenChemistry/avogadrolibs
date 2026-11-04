@@ -35,4 +35,6 @@ if(ENABLE_RENDERING_BENCHMARKS)
   target_link_libraries(AvogadroRenderBenchmark
     PRIVATE Avogadro::QtGui Avogadro::QtPlugins Avogadro::Rendering
             Avogadro::IO Avogadro::Core Qt6::Widgets Qt6::Gui Qt6::OpenGL)
+  target_include_directories(AvogadroRenderBenchmark PRIVATE
+    "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/surfaces")
 endif()
