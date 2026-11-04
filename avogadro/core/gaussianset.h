@@ -86,6 +86,29 @@ public:
   };
 
   /**
+   * How initCalculation() treats the contraction coefficients of the
+   * primitives. It decides what the numbers passed to addGto() mean.
+   */
+  enum class PrimitiveNormalization
+  {
+    /**
+     * The coefficients are for normalized primitives, as most programs write
+     * them (fchk, Molden, ...). Each raw coefficient is multiplied by the
+     * normalization constant of its primitive, which depends on the exponent,
+     * the shell type and the Cartesian or spherical component. This is the
+     * default.
+     */
+    Normalize,
+    /**
+     * The coefficients are used exactly as given: each one multiplies the
+     * bare x^a y^b z^c exp(-alpha r^2) of every Cartesian component of the
+     * shell, as WFN and WFX files define them. Only possible when all
+     * shells are Cartesian, see setPrimitiveNormalization().
+     */
+    AsIs
+  };
+
+  /**
    * Add a basis to the basis set.
    * @param atom Index of the atom to add the Basis to.
    * @param type The type of the Basis being added.
@@ -207,6 +230,33 @@ public:
   std::string functionalName() const { return m_functionalName; }
 
   /**
+   * @return How the primitive coefficients are normalized.
+   */
+  PrimitiveNormalization primitiveNormalization() const
+  {
+    return m_primitiveNormalization;
+  }
+
+  /**
+   * Choose how the primitive coefficients are normalized. Call this after all
+   * shells have been added. A change makes the next initCalculation()
+   * prepare the coefficients again.
+   *
+   * PrimitiveNormalization::AsIs only makes sense for Cartesian shells (S, P,
+   * D, F, G, H and I), because a spherical shell has no single "bare"
+   * function for a coefficient to multiply. If any shell is spherical (D5,
+   * F7, G9, H11, I13) AsIs is refused: the function returns false and the
+   * current setting is kept. Should a spherical shell be added while AsIs is
+   * set, initCalculation() prints a warning, normalizes the whole basis and
+   * resets the setting to Normalize.
+   *
+   * @param normalization The new setting.
+   * @return True if the setting is now @p normalization, false if it was
+   * refused.
+   */
+  bool setPrimitiveNormalization(PrimitiveNormalization normalization);
+
+  /**
    * Initialize the calculation, this must normally be done before anything.
    *
    * This prepares the normalized coefficients and rebuilds moIndices(),
@@ -323,6 +373,12 @@ private:
    * initCalculation(), rather than the start of a shell?
    */
   bool m_hasGtoEndIndex = false;
+
+  PrimitiveNormalization m_primitiveNormalization =
+    PrimitiveNormalization::Normalize;
+
+  /** @return True if any shell is spherical (D5, F7, G9, H11, I13). */
+  bool hasSphericalShell() const;
 
   ScfType m_scfType;
 

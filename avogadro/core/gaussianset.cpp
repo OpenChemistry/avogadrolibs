@@ -320,6 +320,36 @@ void GaussianSet::swapAtomIndices(Index a, Index b)
   }
 }
 
+bool GaussianSet::hasSphericalShell() const
+{
+  for (int type : m_symmetry) {
+    switch (type) {
+      case D5:
+      case F7:
+      case G9:
+      case H11:
+      case I13:
+        return true;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
+bool GaussianSet::setPrimitiveNormalization(
+  PrimitiveNormalization normalization)
+{
+  if (normalization == m_primitiveNormalization)
+    return true;
+  if (normalization == PrimitiveNormalization::AsIs && hasSphericalShell())
+    return false;
+
+  m_primitiveNormalization = normalization;
+  m_init = false;
+  return true;
+}
+
 void GaussianSet::initCalculation()
 {
   if (m_init)
@@ -331,6 +361,15 @@ void GaussianSet::initCalculation()
   // call.
   m_gtoCN.clear();
   m_cIndices.clear();
+
+  // A spherical shell added after AsIs was chosen would leave a basis that
+  // is half normalized, so normalize all of it.
+  if (m_primitiveNormalization == PrimitiveNormalization::AsIs &&
+      hasSphericalShell()) {
+    cout << "Warning: spherical shells cannot use unnormalized primitives; "
+         << "normalizing the whole basis set.\n";
+    m_primitiveNormalization = PrimitiveNormalization::Normalize;
+  }
 
   // Initialise the new data structures that are hopefully more efficient
   unsigned int indexMO = 0;
@@ -569,6 +608,43 @@ void GaussianSet::initCalculation()
       indexMO += skip;
       m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
       skip = 0;
+    }
+
+    // AsIs: replace the normalized values written above by the raw
+    // coefficient, once for every component of the shell. The layout is the
+    // one every case above uses and GaussianSetTools reads: the components
+    // of one primitive are adjacent, primitives follow each other.
+    if (m_primitiveNormalization == PrimitiveNormalization::AsIs) {
+      unsigned int components = 0;
+      switch (m_symmetry[i]) {
+        case S:
+          components = 1;
+          break;
+        case P:
+          components = 3;
+          break;
+        case D:
+          components = 6;
+          break;
+        case F:
+          components = 10;
+          break;
+        case G:
+          components = 15;
+          break;
+        default: // not evaluated, so no coefficients were written
+          break;
+      }
+      if (components > 0) {
+        const size_t first = m_cIndices.back();
+        for (unsigned int j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          for (unsigned int k = 0; k < components; ++k) {
+            const size_t index = first + (j - m_gtoIndices[i]) * components + k;
+            if (index < m_gtoCN.size())
+              m_gtoCN[index] = m_gtoC[j];
+          }
+        }
+      }
     }
   }
   m_init = true;
