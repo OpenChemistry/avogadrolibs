@@ -20,12 +20,14 @@
 #include <avogadro/core/array.h>
 
 #include <map>
+#include <memory>
 #include <string> // For member variables.
 #include <vector>
 
 namespace Avogadro {
 namespace Rendering {
 class GeometryNode;
+struct RenderTimings;
 class TextRenderStrategy;
 
 /**
@@ -75,6 +77,30 @@ public:
 
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
+
+  /**
+   * Enable or disable per-pass timing of render(). Disabled by default, in
+   * which case render() issues no extra GL calls. When enabled each section
+   * of render() ("solid", "post", "opaque", "translucent", "overlay3d",
+   * "overlay2d") is timed on the CPU, and on the GPU with GL_TIME_ELAPSED
+   * queries when the driver supports them. Needs a current context. Changing
+   * the state discards the timings collected so far, and once timing has
+   * rendered the renderer's context must be current to release its queries.
+   */
+  void setTimingEnabled(bool enable);
+  bool timingEnabled() const;
+
+  /**
+   * In synchronous mode render() blocks until the GPU results for the frame
+   * are in, and timings() describes that frame. Otherwise (the default) the
+   * results are collected a few frames later without stalling, and timings()
+   * lags the latest render() call.
+   */
+  void setTimingSynchronous(bool synchronous);
+  bool timingSynchronous() const;
+
+  /** The most recently published frame timings; always one whole frame. */
+  const RenderTimings& timings() const;
 
   /** Reset the view to fit the entire scene. */
   void resetCamera();
@@ -186,6 +212,10 @@ private:
 
   Vector3f m_center;
   float m_radius;
+
+  // Render timing state; kept out of the header.
+  class Private;
+  std::unique_ptr<Private> d;
 };
 
 inline const Camera& GLRenderer::camera() const
