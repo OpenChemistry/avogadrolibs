@@ -15,16 +15,12 @@
 
 namespace Avogadro::QtPlugins {
 
+// Order matches the items in the "algorithm" combo box
 enum OptimizationAlgorithm
 {
-  SteepestDescent = 0,
-  ConjugateGradient
-};
-
-enum LineSearchMethod
-{
-  Simple = 0,
-  Newton
+  LBFGS = 0,
+  ConjugateGradient,
+  SteepestDescent
 };
 
 OBForceFieldDialog::OBForceFieldDialog(const QStringList& forceFields,
@@ -74,24 +70,22 @@ QStringList OBForceFieldDialog::options() const
        << "--ff" << ui->forceField->currentText() << "--steps"
        << QString::number(ui->stepLimit->value()) << "--rvdw"
        << QString::number(ui->vdwCutoff->value()) << "--rele"
-       << QString::number(ui->eleCutoff->value()) << "--freq"
+       << QString::number(ui->eleCutoff->value()) << "--pf"
        << QString::number(ui->pairFreq->value());
 
   switch (static_cast<OptimizationAlgorithm>(ui->algorithm->currentIndex())) {
     case SteepestDescent:
       opts << "--sd";
       break;
-    default:
     case ConjugateGradient:
-      break;
-  }
-
-  switch (static_cast<LineSearchMethod>(ui->lineSearch->currentIndex())) {
-    case Newton:
-      opts << "--newton";
+      opts << "--cg"; // Open Babel 3.2+; older versions ignore it (CG default)
       break;
     default:
-    case Simple:
+    case LBFGS:
+      // Open Babel >= 3.2 uses L-BFGS when neither --sd nor --cg is given.
+      // Open Babel 3.1 has no L-BFGS and falls back to conjugate gradients.
+      // The line search (--newton) is already the default and is not used
+      // by L-BFGS, so it is never passed.
       break;
   }
 
@@ -105,13 +99,18 @@ void OBForceFieldDialog::setOptions(const QStringList& opts)
 {
   // Set some defaults. These match the defaults in obabel -L minimize
   ui->energyConv->setValue(-6);
-  ui->algorithm->setCurrentIndex(static_cast<int>(ConjugateGradient));
-  ui->lineSearch->setCurrentIndex(static_cast<int>(Simple));
+  ui->algorithm->setCurrentIndex(static_cast<int>(LBFGS));
   ui->stepLimit->setValue(2500);
   ui->enableCutoffs->setChecked(false);
   ui->vdwCutoff->setValue(10.0);
   ui->eleCutoff->setValue(10.0);
   ui->pairFreq->setValue(10);
+
+  // Open Babel precedence: --sd > --cg > L-BFGS (the default), regardless
+  // of order. Old saved option lists (no --cg) therefore load as L-BFGS,
+  // which is what they actually ran with Open Babel 3.2.
+  bool sd = false;
+  bool cg = false;
 
   for (QStringList::const_iterator it = opts.constBegin(),
                                    itEnd = opts.constEnd();
@@ -148,13 +147,19 @@ void OBForceFieldDialog::setOptions(const QStringList& opts)
 
     // Use steepest descent?
     else if (*it == "--sd") {
-      ui->algorithm->setCurrentIndex(SteepestDescent);
+      sd = true;
       continue;
     }
 
-    // Use newton linesearch?
-    else if (*it == "--newton") {
-      ui->lineSearch->setCurrentIndex(Newton);
+    // Conjugate gradients?
+    else if (*it == "--cg") {
+      cg = true;
+      continue;
+    }
+
+    // Explicit L-BFGS (the default), or the legacy line-search flag, which
+    // is the Open Babel default and no longer user-selectable.
+    else if (*it == "--lbfgs" || *it == "--newton") {
       continue;
     }
 
@@ -251,12 +256,13 @@ void OBForceFieldDialog::setOptions(const QStringList& opts)
       continue;
     }
 
-    // Pair update frequency:
-    else if (*it == "--freq") {
+    // Pair update frequency (--freq is the legacy spelling, ignored by
+    // Open Babel but present in old saved settings):
+    else if (*it == "--pf" || *it == "--freq") {
       ++it;
       if (it == itEnd) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--freq missing argument.";
+                      "--pf missing argument.";
         continue;
       }
 
@@ -264,7 +270,7 @@ void OBForceFieldDialog::setOptions(const QStringList& opts)
       int numSteps = it->toInt(&ok);
       if (!ok) {
         qWarning() << "OBForceFieldDialog::setOptions: "
-                      "--freq is not numeric: "
+                      "--pf is not numeric: "
                    << *it;
         continue;
       }
@@ -280,6 +286,11 @@ void OBForceFieldDialog::setOptions(const QStringList& opts)
                  << *it;
     }
   }
+
+  if (sd)
+    ui->algorithm->setCurrentIndex(static_cast<int>(SteepestDescent));
+  else if (cg)
+    ui->algorithm->setCurrentIndex(static_cast<int>(ConjugateGradient));
 }
 
 void OBForceFieldDialog::setRecommendedForceField(const QString& rff)
