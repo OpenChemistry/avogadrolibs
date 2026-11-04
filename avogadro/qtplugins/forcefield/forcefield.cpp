@@ -37,6 +37,7 @@
 
 #include <avogadro/core/conformerquantity.h>
 
+#include <algorithm>
 #include <cmath>
 
 namespace Avogadro {
@@ -338,6 +339,8 @@ QString Forcefield::convergenceReasonName(ConvergenceReason reason)
       return QStringLiteral("maxSteps");
     case ConvergenceReason::NonFinite:
       return QStringLiteral("nonFinite");
+    case ConvergenceReason::Stalled:
+      return QStringLiteral("stalled");
     default:
       return QString();
   }
@@ -1034,7 +1037,8 @@ void Forcefield::onWorkerReady()
 
 void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
                                      Eigen::VectorXd gradient, double energy,
-                                     bool converged)
+                                     bool converged, int iterationsRun,
+                                     bool stalled)
 {
   if (sender() != m_worker || !m_optimizing || m_molecule == nullptr)
     return;
@@ -1051,7 +1055,11 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
     cleanupWorker();
     return;
   }
-  const unsigned int chunkRan = m_optOptions.chunkIterations;
+  // Iterations the optimizer really performed: L-BFGS can end a chunk early
+  // when it stalls, so the requested chunk size would over-count both the
+  // step budget and the per-iteration energy change below.
+  const unsigned int chunkRan =
+    static_cast<unsigned int>(std::max(iterationsRun, 0));
   m_iterationsDone += chunkRan;
 
   if (m_progressDialog) {
@@ -1132,6 +1140,11 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
                  m_runOptions.tolerance) {
       done = true;
       reason = ConvergenceReason::Energy;
+    } else if (stalled) {
+      // Neither tolerance is met but the line search can no longer lower the
+      // energy; further chunks would just repeat the failed search.
+      done = true;
+      reason = ConvergenceReason::Stalled;
     }
   }
 
@@ -1166,7 +1179,7 @@ void Forcefield::onOptimizeChunkDone(Eigen::VectorXd positions,
         emit commandFailed(
           tr("The optimizer stopped without producing a result."));
       } else {
-        // "maxSteps", "nonFinite" and "optimizerStopped" are not
+        // "maxSteps", "nonFinite", "stalled" and "optimizerStopped" are not
         // convergence: the run stopped because it ran out of budget, the
         // model broke down, or the optimizer itself could not continue --
         // not because it found a minimum.

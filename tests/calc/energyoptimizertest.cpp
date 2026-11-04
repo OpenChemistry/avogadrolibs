@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/calc/energycalculator.h>
 #include <avogadro/calc/energyoptimizer.h>
 #include <avogadro/calc/lennardjones.h>
 #include <avogadro/calc/uff.h>
@@ -129,6 +130,73 @@ Molecule perturbedAlkane(size_t nCarbons, Eigen::VectorXd& positions)
     molecule.setAtomPosition3d(i, positions.segment<3>(3 * i));
   }
   return molecule;
+}
+
+// Analytic objective that counts evaluations. Rosenbrock in n dimensions is
+// non-quadratic and curved, so L-BFGS builds up genuine history on it.
+// `quantum` > 0 rounds the energy to a multiple of `quantum` (the gradient
+// stays exact), which imitates an energy model whose noise floor sits above
+// what the line search is trying to resolve.
+class CountingFunction : public EnergyCalculator
+{
+public:
+  explicit CountingFunction(Real quantum = 0.0) : m_quantum(quantum) {}
+
+  EnergyCalculator* newInstance() const override
+  {
+    return new CountingFunction(m_quantum);
+  }
+  std::string identifier() const override { return "CountingFunction"; }
+  std::string name() const override { return "CountingFunction"; }
+  std::string description() const override { return "Test objective"; }
+  Molecule::ElementMask elements() const override
+  {
+    return Molecule::ElementMask();
+  }
+
+  void setMolecule(Molecule*) override {}
+
+  Real value(const Eigen::VectorXd& x) override
+  {
+    Real f = 0.0;
+    for (Eigen::Index i = 0; i + 1 < x.size(); ++i) {
+      const Real a = x[i + 1] - x[i] * x[i];
+      const Real b = 1.0 - x[i];
+      f += 100.0 * a * a + b * b;
+    }
+    if (m_quantum > 0.0)
+      f = m_quantum * std::round(f / m_quantum);
+    return f;
+  }
+
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override
+  {
+    grad.setZero(x.size());
+    for (Eigen::Index i = 0; i + 1 < x.size(); ++i) {
+      const Real a = x[i + 1] - x[i] * x[i];
+      grad[i] += -400.0 * a * x[i] - 2.0 * (1.0 - x[i]);
+      grad[i + 1] += 200.0 * a;
+    }
+  }
+
+  Real evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad) override
+  {
+    ++evaluations;
+    return EnergyCalculator::evaluate(x, grad);
+  }
+
+  size_t evaluations = 0;
+
+private:
+  Real m_quantum;
+};
+
+Eigen::VectorXd rosenbrockStart(Eigen::Index n)
+{
+  Eigen::VectorXd x(n);
+  for (Eigen::Index i = 0; i < n; ++i)
+    x[i] = (i % 2) ? 1.2 : -1.2;
+  return x;
 }
 
 } // namespace
@@ -584,4 +652,165 @@ TEST(EnergyOptimizerTest, LbfgsChunkRunsRequestedIterationsNearMinimum)
   ASSERT_TRUE(optimizeSteps(uff, x, options, &state));
   uff.gradient(x, grad);
   EXPECT_LT(grad.cwiseAbs().maxCoeff(), 1e-4);
+}
+
+// --- L-BFGS history persists across chunks ---------------------------------
+//
+// Running K chunks of one iteration with a persistent OptimizerState must be
+// the same computation as one chunk of K iterations: same iterates, same
+// number of energy/gradient evaluations. Before the correction pairs were
+// kept in OptimizerState every chunk restarted from steepest descent.
+
+TEST(EnergyOptimizerTest, LbfgsOneIterationChunksMatchOneLongChunk)
+{
+  const int iterations = 25;
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+
+  CountingFunction single;
+  Eigen::VectorXd xSingle = rosenbrockStart(10);
+  options.chunkIterations = iterations;
+  OptimizerState singleState;
+  ASSERT_TRUE(optimizeSteps(single, xSingle, options, &singleState));
+  EXPECT_EQ(singleState.iterationsRun, static_cast<size_t>(iterations));
+
+  CountingFunction chunked;
+  Eigen::VectorXd xChunked = rosenbrockStart(10);
+  options.chunkIterations = 1;
+  OptimizerState chunkedState;
+  for (int i = 0; i < iterations; ++i) {
+    ASSERT_TRUE(optimizeSteps(chunked, xChunked, options, &chunkedState));
+    EXPECT_EQ(chunkedState.iterationsRun, 1u);
+  }
+
+  EXPECT_EQ(chunked.evaluations, single.evaluations);
+  EXPECT_EQ(xChunked, xSingle);
+  EXPECT_EQ(chunkedState.energy, singleState.energy);
+  EXPECT_EQ(chunkedState.lbfgsCount, singleState.lbfgsCount);
+  EXPECT_EQ(chunkedState.lbfgsPos, singleState.lbfgsPos);
+  EXPECT_GT(chunkedState.lbfgsCount, 1u);
+  // The run must have used history (and wrapped the ring buffer), or the
+  // comparison above proves nothing.
+  EXPECT_EQ(chunkedState.lbfgsCount, 10u);
+}
+
+TEST(EnergyOptimizerTest, LbfgsWithoutStateRestartsEveryChunk)
+{
+  // Control for the test above: stateless chunks lose the history, so they do
+  // not reproduce the long chunk. (Guards against the equivalence test
+  // passing only because the problem never needs history.)
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+
+  CountingFunction single;
+  Eigen::VectorXd xSingle = rosenbrockStart(10);
+  options.chunkIterations = 25;
+  ASSERT_TRUE(optimizeSteps(single, xSingle, options));
+
+  CountingFunction stateless;
+  Eigen::VectorXd xStateless = rosenbrockStart(10);
+  options.chunkIterations = 1;
+  for (int i = 0; i < 25; ++i)
+    ASSERT_TRUE(optimizeSteps(stateless, xStateless, options));
+  EXPECT_NE(xStateless, xSingle);
+}
+
+TEST(EnergyOptimizerTest, LbfgsHistoryDroppedOnSizeChange)
+{
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 5;
+
+  CountingFunction f;
+  OptimizerState state;
+  Eigen::VectorXd x10 = rosenbrockStart(10);
+  ASSERT_TRUE(optimizeSteps(f, x10, options, &state));
+  ASSERT_GT(state.lbfgsCount, 0u);
+  ASSERT_EQ(state.lbfgsS.rows(), 10);
+
+  // A different problem size through the same state: the old pairs must not
+  // be fed to the solver. The result has to equal a fresh run on x6.
+  Eigen::VectorXd x6 = rosenbrockStart(6);
+  Eigen::VectorXd x6Fresh = x6;
+  ASSERT_TRUE(optimizeSteps(f, x6, options, &state));
+  EXPECT_EQ(state.lbfgsS.rows(), 6);
+  CountingFunction g;
+  ASSERT_TRUE(optimizeSteps(g, x6Fresh, options));
+  EXPECT_EQ(x6, x6Fresh);
+}
+
+TEST(EnergyOptimizerTest, FireChunkClearsLbfgsHistory)
+{
+  CountingFunction f;
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(10);
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 5;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  ASSERT_GT(state.lbfgsCount, 0u);
+
+  options.algorithm = OptimizationAlgorithm::AbcFire;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  EXPECT_EQ(state.lbfgsCount, 0u);
+  EXPECT_EQ(state.lbfgsS.size(), 0);
+  EXPECT_EQ(state.lbfgsY.size(), 0);
+  EXPECT_EQ(state.iterationsRun, 5u);
+  EXPECT_EQ(state.stopReason, OptimizerStopReason::IterationLimit);
+
+  // Back to L-BFGS: starts a new history rather than reusing a stale one.
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 1;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  EXPECT_EQ(state.lbfgsCount, 1u);
+}
+
+TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsFields)
+{
+  CountingFunction f;
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(10);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 4;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  ASSERT_GT(state.lbfgsCount, 0u);
+  state.clearLbfgsHistory();
+  EXPECT_EQ(state.lbfgsCount, 0u);
+  EXPECT_EQ(state.lbfgsS.size(), 0);
+  EXPECT_EQ(state.lbfgsScaling, 1.0);
+}
+
+// --- L-BFGS reports iterations run and stalls --------------------------------
+
+TEST(EnergyOptimizerTest, LbfgsReportsIterationLimit)
+{
+  CountingFunction f;
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(10);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 7;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  EXPECT_EQ(state.iterationsRun, 7u);
+  EXPECT_EQ(state.stopReason, OptimizerStopReason::IterationLimit);
+}
+
+TEST(EnergyOptimizerTest, LbfgsStopsWhenEnergyNoiseStallsLineSearch)
+{
+  // Energy quantized to 1e-6: once the true energy is within a few quanta of
+  // the minimum the line search cannot find a decrease and every iteration
+  // burns its full evaluation budget. The chunk has to end as stalled after
+  // a few such iterations instead of running all 500.
+  CountingFunction f(1e-6);
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 500;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  EXPECT_EQ(state.stopReason, OptimizerStopReason::Stalled);
+  EXPECT_LT(state.iterationsRun, 500u);
+  EXPECT_LT(f.evaluations, 2000u);
 }

@@ -82,6 +82,38 @@ class Lbfgs
   void SetWolfeGtol(ScalarType gtol) { wolfe_gtol_ = gtol; }
   ScalarType WolfeGtol() const { return wolfe_gtol_; }
 
+  // Avogadro patch: carry the correction history across separate Minimize()
+  // calls. A caller that runs L-BFGS in short chunks would otherwise restart
+  // from steepest descent every chunk. The history is plain Eigen data
+  // (dim x m columns of s and y, the number of stored pairs, the ring
+  // position of the oldest pair, and the H_0 scaling) so it can live in a
+  // caller's state struct. InitializeSolver consumes it instead of zeroing
+  // if the shapes match; otherwise it is ignored and the solver starts cold.
+  using HistoryMatrixType =
+      Eigen::Matrix<ScalarType, Eigen::Dynamic, Eigen::Dynamic>;
+
+  void SetWarmStartHistory(const HistoryMatrixType& x_diffs,
+                           const HistoryMatrixType& grad_diffs, size_t count,
+                           size_t pos, ScalarType scaling) {
+    warm_x_diff_ = x_diffs;
+    warm_grad_diff_ = grad_diffs;
+    warm_count_ = count;
+    warm_pos_ = pos;
+    warm_scaling_ = scaling;
+    has_warm_start_ = true;
+  }
+
+  // Export the history as it stands now (after Minimize()), including any
+  // reset done by the steepest-descent fallback in OptimizationStep.
+  void GetHistory(HistoryMatrixType& x_diffs, HistoryMatrixType& grad_diffs,
+                  size_t& count, size_t& pos, ScalarType& scaling) const {
+    x_diffs = x_diff_memory_;
+    grad_diffs = grad_diff_memory_;
+    count = mem_count_;
+    pos = mem_pos_;
+    scaling = scaling_factor_;
+  }
+
   void InitializeSolver(const FunctionType& /*function*/,
                         const StateType& initial_state) override {
     const size_t dim = initial_state.x.rows();
@@ -97,6 +129,28 @@ class Lbfgs
     mem_count_ = 0;
     mem_pos_ = 0;
     scaling_factor_ = 1;
+
+    // Avogadro patch: restore a caller-supplied history (single use).
+    if (has_warm_start_) {
+      has_warm_start_ = false;
+      const Eigen::Index d = static_cast<Eigen::Index>(dim);
+      if (warm_x_diff_.rows() == d && warm_x_diff_.cols() == m &&
+          warm_grad_diff_.rows() == d && warm_grad_diff_.cols() == m &&
+          warm_count_ <= static_cast<size_t>(m) &&
+          warm_pos_ < static_cast<size_t>(m) &&
+          // A ring position only exists once the buffer is full.
+          (warm_count_ == static_cast<size_t>(m) || warm_pos_ == 0) &&
+          std::isfinite(warm_scaling_) && warm_scaling_ > ScalarType(0) &&
+          warm_x_diff_.allFinite() && warm_grad_diff_.allFinite()) {
+        x_diff_memory_ = warm_x_diff_;
+        grad_diff_memory_ = warm_grad_diff_;
+        mem_count_ = warm_count_;
+        mem_pos_ = warm_pos_;
+        scaling_factor_ = warm_scaling_;
+      }
+      warm_x_diff_.resize(0, 0);
+      warm_grad_diff_.resize(0, 0);
+    }
   }
 
   StateType OptimizationStep(const FunctionType& function,
@@ -355,6 +409,14 @@ class Lbfgs
   // tolerance for the line search.
   ScalarType max_step_ = ScalarType(0);
   ScalarType wolfe_gtol_ = ScalarType(0.9);
+
+  // Avogadro patch: pending warm-start history (see SetWarmStartHistory).
+  HistoryMatrixType warm_x_diff_;
+  HistoryMatrixType warm_grad_diff_;
+  size_t warm_count_ = 0;
+  size_t warm_pos_ = 0;
+  ScalarType warm_scaling_ = ScalarType(1);
+  bool has_warm_start_ = false;
 };
 
 }  // namespace cppoptlib::solver

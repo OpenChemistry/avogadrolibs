@@ -38,7 +38,8 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
                    OptimizerState* state)
 {
   EnergyObjective objective(method);
-  cppoptlib::solver::Lbfgs<EnergyObjective> solver;
+  using Solver = cppoptlib::solver::Lbfgs<EnergyObjective>;
+  Solver solver;
 
   if (params.maxStep > 0.0)
     solver.SetMaxStep(params.maxStep);
@@ -50,34 +51,68 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
   // bootstrap evaluation cppoptlib would otherwise do at the start of
   // Minimize. Valid when the gradient size matches positions and the
   // cached energy is finite.
+  const bool haveCache = state && state->gradient.size() == positions.size() &&
+                         std::isfinite(state->energy);
   StateType initialState =
-    (state && state->gradient.size() == positions.size() &&
-     std::isfinite(state->energy))
-      ? StateType(positions, state->energy, state->gradient)
-      : StateType(positions);
+    haveCache ? StateType(positions, state->energy, state->gradient)
+              : StateType(positions);
+  // Resume the correction history from the previous chunk; without it every
+  // short chunk restarts as steepest descent. Only trusted together with the
+  // cached (energy, gradient), which marks the state as describing these
+  // positions. The solver also ignores history whose shape does not match.
+  if (haveCache && state->lbfgsCount > 0 &&
+      state->lbfgsS.rows() == positions.size() &&
+      state->lbfgsY.rows() == positions.size()) {
+    solver.SetWarmStartHistory(state->lbfgsS, state->lbfgsY, state->lbfgsCount,
+                               state->lbfgsPos, state->lbfgsScaling);
+  }
   auto stopProgress =
     cppoptlib::solver::DefaultStoppingSolverProgress<EnergyObjective,
                                                      StateType>();
 
   stopProgress.num_iterations = chunkIterations;
-  stopProgress.x_delta = 0.0;
-  stopProgress.f_delta = 0.0;
+  // Stall detection. When the energy model's noise floor is reached the
+  // More-Thuente search can no longer find a decrease: it burns its full
+  // evaluation budget (maxfev = 20) each iteration and returns a step of
+  // ~1e-12 Angstrom or less (typically exactly 0) with |f| unchanged to
+  // within a few ulp, while |g| stays well above zero. Several consecutive
+  // iterations like that mean more iterations from here are wasted, so end
+  // the chunk and let the caller see StopReason::Stalled.
+  //
+  // The thresholds sit orders of magnitude below any step of real progress:
+  // a step moving no coordinate by more than 1e-10 Angstrom (|g|_inf ~ 1e-7
+  // kJ/(mol*Angstrom) even for a stiff 1e3 kJ/(mol*Angstrom^2) mode), or
+  // lowering the energy by under 1e-14 of max(|f|, 1). They also need three
+  // violations in a row, so one odd iteration cannot end a chunk. This is
+  // not the earlier relative past-delta test (1e-6 over 3 iterations),
+  // which fired while the optimizer was still converging.
+  stopProgress.x_delta = 1e-10;
+  stopProgress.x_delta_violations = 3;
+  stopProgress.f_delta = 1e-14;
+  stopProgress.f_delta_relative = true;
+  stopProgress.f_delta_violations = 3;
   stopProgress.gradient_norm = 0.0;
   stopProgress.condition_hessian = 0.0;
   // DefaultStoppingSolverProgress also enables a relative past-delta test
   // (since cppoptlib 2.0). Near a minimum it would end every chunk after a
   // few iterations and discard the L-BFGS memory; the caller decides when
-  // to stop.
+  // to stop (other than the stall test above).
   stopProgress.past = 0;
   solver.stopping_progress = stopProgress;
 
   auto [solution, solverProgress] = solver.Minimize(objective, initialState);
-  (void)solverProgress;
   positions = solution.x;
 
   if (state) {
     state->energy = solution.value;
     state->gradient = std::move(solution.gradient);
+    solver.GetHistory(state->lbfgsS, state->lbfgsY, state->lbfgsCount,
+                      state->lbfgsPos, state->lbfgsScaling);
+    state->iterationsRun = solverProgress.num_iterations;
+    state->stopReason =
+      (solverProgress.status == cppoptlib::solver::Status::IterationLimit)
+        ? OptimizerStopReason::IterationLimit
+        : OptimizerStopReason::Stalled;
     // L-BFGS moved positions; any cached FIRE velocity is stale.
     state->velocity.resize(0);
     state->dt = 0.0;
@@ -185,6 +220,10 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
   }
 
   if (state) {
+    // FIRE moved the positions, so the L-BFGS pairs no longer describe them.
+    state->clearLbfgsHistory();
+    state->iterationsRun = chunkIterations;
+    state->stopReason = OptimizerStopReason::IterationLimit;
     state->velocity = std::move(v);
     state->gradient = std::move(grad);
     state->energy = lastEnergy;

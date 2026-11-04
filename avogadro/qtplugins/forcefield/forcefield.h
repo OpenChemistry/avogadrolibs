@@ -124,7 +124,8 @@ private slots:
 
   // worker thread callbacks
   void onOptimizeChunkDone(Eigen::VectorXd positions, Eigen::VectorXd gradient,
-                           double energy, bool converged);
+                           double energy, bool converged, int iterationsRun,
+                           bool stalled);
   void onEnergyDone(Eigen::VectorXd gradient, double energy);
   void onForcesDone(Eigen::VectorXd gradient, double energy);
   void onBatchDone(std::vector<double> energies,
@@ -193,8 +194,11 @@ private:
   // own converged flag was set -- not a discovered minimum: CalcWorker only
   // sets it when it could not run the chunk at all (no calculator, or
   // cancelled), or (defensively) for a malformed chunk size, never on
-  // finding one. "gradient" and "energy" are converged: true; "maxSteps",
-  // "nonFinite" and "optimizerStopped" are converged: false.
+  // finding one. "stalled" means L-BFGS could no longer lower the energy
+  // (line search failing at the model's numerical noise floor) before either
+  // tolerance was met. "gradient" and "energy" are converged: true;
+  // "maxSteps", "nonFinite", "stalled" and "optimizerStopped" are
+  // converged: false.
   enum class ConvergenceReason
   {
     None,
@@ -202,7 +206,8 @@ private:
     Energy,
     OptimizerStopped,
     MaxSteps,
-    NonFinite
+    NonFinite,
+    Stalled
   };
   static QString convergenceReasonName(ConvergenceReason reason);
 

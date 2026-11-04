@@ -73,10 +73,21 @@ struct AVOGADROCALC_EXPORT OptimizationOptions
   HybridParameters hybrid;
 };
 
+/// Why the last optimizeSteps call returned before using its full budget.
+enum class OptimizerStopReason
+{
+  /// Ran every requested iteration.
+  IterationLimit,
+  /// L-BFGS stopped making progress (the line search can no longer lower
+  /// the energy, typically at the numerical noise floor of the energy
+  /// model). More iterations from the same point will not help.
+  Stalled
+};
+
 /// Optional persistent state for optimizeSteps. Carries FIRE's integrator
-/// state (velocity, dt, alpha, nPos) across chunks so the adaptive timestep
-/// is not reset each call. Always populated on successful return with
-/// (energy, gradient) at the final positions; callers may use those in
+/// state (velocity, dt, alpha, nPos) and the L-BFGS correction history across
+/// chunks so neither is reset each call. Always populated on successful return
+/// with (energy, gradient) at the final positions; callers may use those in
 /// place of an extra evaluate() to check convergence.
 ///
 /// Set initialized=false (or default-construct) to restart cleanly. A size
@@ -95,6 +106,31 @@ struct OptimizerState
 
   double energy = std::numeric_limits<double>::quiet_NaN();
   Eigen::VectorXd gradient;
+
+  /// L-BFGS correction pairs (s = dx, y = dg) as columns, oldest/newest
+  /// order given by lbfgsPos and lbfgsCount (a ring buffer once full), and
+  /// the H_0 scaling. Empty when there is no history. Only valid for the
+  /// positions the last L-BFGS chunk ended at; any other algorithm moving
+  /// the positions clears it.
+  Eigen::MatrixXd lbfgsS;
+  Eigen::MatrixXd lbfgsY;
+  size_t lbfgsCount = 0;
+  size_t lbfgsPos = 0;
+  double lbfgsScaling = 1.0;
+
+  /// Filled by every optimizeSteps call: iterations actually performed
+  /// (may be fewer than requested) and why the call returned.
+  size_t iterationsRun = 0;
+  OptimizerStopReason stopReason = OptimizerStopReason::IterationLimit;
+
+  void clearLbfgsHistory()
+  {
+    lbfgsS.resize(0, 0);
+    lbfgsY.resize(0, 0);
+    lbfgsCount = 0;
+    lbfgsPos = 0;
+    lbfgsScaling = 1.0;
+  }
 };
 
 /**

@@ -204,6 +204,12 @@ TEST(CalcWorkerTest, optimizeChunk)
   auto newPositions = args.at(0).value<Eigen::VectorXd>();
   auto gradient = args.at(1).value<Eigen::VectorXd>();
   double energy = args.at(2).toDouble();
+  // The chunk reports the iterations it really ran and whether it stalled.
+  const int iterationsRun = args.at(4).toInt();
+  const bool stalled = args.at(5).toBool();
+  EXPECT_GT(iterationsRun, 0);
+  EXPECT_LE(iterationsRun, 5);
+  EXPECT_FALSE(stalled);
 
   EXPECT_TRUE(std::isfinite(energy));
   EXPECT_EQ(newPositions.size(), 6);
@@ -263,6 +269,8 @@ TEST(CalcWorkerTest, cancel)
   QList<QVariant> args = optSpy.takeFirst();
   bool converged = args.at(3).toBool();
   EXPECT_TRUE(converged);
+  EXPECT_EQ(args.at(4).toInt(), 0);
+  EXPECT_FALSE(args.at(5).toBool());
 
   thread->quit();
   thread->wait(2000);

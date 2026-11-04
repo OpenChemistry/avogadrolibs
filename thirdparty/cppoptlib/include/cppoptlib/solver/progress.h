@@ -209,8 +209,10 @@ struct Progress {
           current_hessian.norm() * current_hessian.inverse().norm();
     }
 
+    // Avogadro patch: `>=`, so a limit of N runs N iterations. Upstream's `>`
+    // ran N + 1, which made a chunk of 1 iteration take 2 steps.
     if ((stop_progress.num_iterations > 0) &&
-        (num_iterations > stop_progress.num_iterations)) {
+        (num_iterations >= stop_progress.num_iterations)) {
       status = Status::IterationLimit;
       return;
     }
