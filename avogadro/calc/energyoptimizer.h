@@ -123,6 +123,13 @@ struct OptimizerState
   /// together with the history.
   int stallXViolations = 0;
   int stallFViolations = 0;
+  /// L-BFGS restarts from steepest descent so far (after a stall with a
+  /// non-empty history). Informational; not reset by clearLbfgsHistory().
+  size_t lbfgsRestarts = 0;
+  /// True after such a restart until an iteration of real progress is seen.
+  /// A stall while this is set is reported as StopReason::Stalled rather
+  /// than restarted again.
+  bool lbfgsRestartSpent = false;
 
   /// Filled by every optimizeSteps call: iterations actually performed
   /// (may be fewer than requested) and why the call returned.
@@ -138,6 +145,7 @@ struct OptimizerState
     lbfgsScaling = 1.0;
     stallXViolations = 0;
     stallFViolations = 0;
+    lbfgsRestartSpent = false;
   }
 };
 

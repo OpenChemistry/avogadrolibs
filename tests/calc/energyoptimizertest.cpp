@@ -831,21 +831,26 @@ TEST(EnergyOptimizerTest, LbfgsStallIsIndependentOfChunkSize)
   ASSERT_EQ(singleState.stopReason, OptimizerStopReason::Stalled);
   ASSERT_LT(singleState.iterationsRun, 500u);
 
-  CountingFunction chunked(1e-6);
-  Eigen::VectorXd xChunked = rosenbrockStart(4);
-  options.chunkIterations = 1;
-  OptimizerState chunkedState;
-  size_t total = 0;
-  while (total < 500) {
-    ASSERT_TRUE(optimizeSteps(chunked, xChunked, options, &chunkedState));
-    total += chunkedState.iterationsRun;
-    if (chunkedState.stopReason == OptimizerStopReason::Stalled)
-      break;
+  for (size_t chunk : { size_t(1), size_t(2), size_t(7) }) {
+    CountingFunction chunked(1e-6);
+    Eigen::VectorXd xChunked = rosenbrockStart(4);
+    options.chunkIterations = chunk;
+    OptimizerState chunkedState;
+    size_t total = 0;
+    while (total < 500) {
+      ASSERT_TRUE(optimizeSteps(chunked, xChunked, options, &chunkedState));
+      total += chunkedState.iterationsRun;
+      if (chunkedState.stopReason == OptimizerStopReason::Stalled)
+        break;
+    }
+    EXPECT_EQ(chunkedState.stopReason, OptimizerStopReason::Stalled)
+      << "chunk " << chunk;
+    EXPECT_EQ(total, singleState.iterationsRun) << "chunk " << chunk;
+    EXPECT_EQ(chunked.evaluations, single.evaluations) << "chunk " << chunk;
+    EXPECT_EQ(chunkedState.lbfgsRestarts, singleState.lbfgsRestarts)
+      << "chunk " << chunk;
+    EXPECT_EQ(xChunked, xSingle) << "chunk " << chunk;
   }
-  EXPECT_EQ(chunkedState.stopReason, OptimizerStopReason::Stalled);
-  EXPECT_EQ(total, singleState.iterationsRun);
-  EXPECT_EQ(chunked.evaluations, single.evaluations);
-  EXPECT_EQ(xChunked, xSingle);
 }
 
 TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsStallCounters)
@@ -856,4 +861,118 @@ TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsStallCounters)
   state.clearLbfgsHistory();
   EXPECT_EQ(state.stallXViolations, 0);
   EXPECT_EQ(state.stallFViolations, 0);
+}
+
+// --- L-BFGS restarts from steepest descent once on a stall -----------------
+//
+// A history whose H_0 scaling is absurdly large (1e30) stands in for stale
+// correction pairs: the first direction is huge, the line search cannot find
+// an acceptable step in its evaluation budget and the iteration makes no
+// progress. Started from steepest descent the same problem converges.
+
+namespace {
+struct RestartRun
+{
+  size_t iterations = 0;
+  size_t evaluations = 0;
+  size_t restarts = 0;
+  OptimizerStopReason reason = OptimizerStopReason::IterationLimit;
+  double energy = 0.0;
+  Eigen::VectorXd x;
+};
+
+// Build some history, poison its scaling, then run up to `budget` iterations
+// in chunks of `chunk` (stopping at the first Stalled report).
+RestartRun runPoisoned(size_t chunk, size_t budget, Real quantum = 0.0)
+{
+  CountingFunction f(quantum);
+  OptimizerState state;
+  RestartRun run;
+  run.x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 6;
+  optimizeSteps(f, run.x, options, &state);
+  state.lbfgsScaling = 1e30;
+  const size_t evalsBefore = f.evaluations;
+  options.chunkIterations = chunk;
+  while (run.iterations < budget) {
+    options.chunkIterations = std::min(chunk, budget - run.iterations);
+    if (!optimizeSteps(f, run.x, options, &state))
+      break;
+    run.iterations += state.iterationsRun;
+    run.reason = state.stopReason;
+    if (state.stopReason == OptimizerStopReason::Stalled)
+      break;
+  }
+  run.evaluations = f.evaluations - evalsBefore;
+  run.restarts = state.lbfgsRestarts;
+  run.energy = state.energy;
+  return run;
+}
+} // namespace
+
+TEST(EnergyOptimizerTest, LbfgsRestartRecoversFromStaleHistory)
+{
+  // Stops at the minimum's noise floor, far below the E = 3.16 where the
+  // poisoned history stalls the line search.
+  const RestartRun run = runPoisoned(200, 200);
+  EXPECT_GE(run.restarts, 1u);
+  EXPECT_LT(run.energy, 1e-8);
+}
+
+TEST(EnergyOptimizerTest, LbfgsRestartIsIndependentOfChunkSize)
+{
+  const RestartRun single = runPoisoned(200, 200);
+  ASSERT_GE(single.restarts, 1u);
+  for (size_t chunk : { size_t(1), size_t(2), size_t(3), size_t(7) }) {
+    const RestartRun chunked = runPoisoned(chunk, 200);
+    EXPECT_EQ(chunked.iterations, single.iterations) << "chunk " << chunk;
+    EXPECT_EQ(chunked.evaluations, single.evaluations) << "chunk " << chunk;
+    EXPECT_EQ(chunked.restarts, single.restarts) << "chunk " << chunk;
+    EXPECT_EQ(chunked.reason, single.reason) << "chunk " << chunk;
+    EXPECT_EQ(chunked.x, single.x) << "chunk " << chunk;
+  }
+}
+
+TEST(EnergyOptimizerTest, LbfgsStallAfterRestartIsReported)
+{
+  // On the quantized problem steepest descent has no more luck than L-BFGS
+  // did: one restart is spent, the second stall is reported.
+  CountingFunction f(1e-6);
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 500;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  EXPECT_EQ(state.stopReason, OptimizerStopReason::Stalled);
+  EXPECT_GE(state.lbfgsRestarts, 1u);
+  EXPECT_TRUE(state.lbfgsRestartSpent);
+}
+
+TEST(EnergyOptimizerTest, LbfgsStallWithoutHistoryIsNotRestarted)
+{
+  // A flat energy (quantum far above the values) with a non-zero gradient:
+  // no curvature pair is ever accepted, so there is no history to discard.
+  CountingFunction f(1e9);
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 50;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  EXPECT_EQ(state.stopReason, OptimizerStopReason::Stalled);
+  EXPECT_EQ(state.lbfgsRestarts, 0u);
+  EXPECT_LT(state.iterationsRun, 50u);
+}
+
+TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsRestartFlag)
+{
+  OptimizerState state;
+  state.lbfgsRestartSpent = true;
+  state.lbfgsRestarts = 3;
+  state.clearLbfgsHistory();
+  EXPECT_FALSE(state.lbfgsRestartSpent);
+  EXPECT_EQ(state.lbfgsRestarts, 3u); // cumulative count is kept
 }
