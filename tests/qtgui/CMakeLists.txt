@@ -94,8 +94,15 @@ target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui ${QtOpenGLLink}
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
-  add_test(NAME "QtGui-${TestName}"
-    COMMAND AvogadroQtGuiTests "--gtest_filter=${TestName}Test.*")
+  if(TestName STREQUAL "PackageManager")
+    # packagemanagertest.cpp also defines the TomlParsing suite.
+    add_test(NAME "QtGui-PackageManager"
+      COMMAND AvogadroQtGuiTests
+      "--gtest_filter=PackageManagerTest.*:TomlParsing.*")
+  else()
+    add_test(NAME "QtGui-${TestName}"
+      COMMAND AvogadroQtGuiTests "--gtest_filter=${TestName}Test.*")
+  endif()
 endforeach()
 
 if (DEFINED ENV{LIB_FUZZING_ENGINE})

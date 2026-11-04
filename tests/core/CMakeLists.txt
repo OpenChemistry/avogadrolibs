@@ -73,6 +73,9 @@ set(parameterizedTests
 foreach(TestName ${tests})
   if(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
+  elseif(TestName STREQUAL "Molecule")
+    # moleculetest.cpp also defines MoleculeCoordinateSetTest.
+    set(testFilter "MoleculeTest.*:MoleculeCoordinateSetTest.*")
   else()
     set(testFilter "${TestName}Test.*")
   endif()
