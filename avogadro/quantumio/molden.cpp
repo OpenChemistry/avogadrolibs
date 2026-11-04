@@ -564,12 +564,19 @@ bool MoldenFile::coefficientsIncludeRadialNormalization() const
   // there, but not for d, f and g. A contracted shell of normalized
   // primitives has a self-overlap of 1 only under the matching convention;
   // under the other it is off by far more than the tolerance (measured
-  // 0.35 to 82 for the wrong one on ORCA and xtb files). A shell of one
-  // primitive cannot discriminate, so it is skipped.
+  // 0.35 to 82 for the wrong one on ORCA and xtb files). A shell for which
+  // both conventions give 1 (N_axis close to 1) is ambiguous and skipped, as
+  // is a shell of more than maxDetectionPrimitives primitives (the overlap
+  // is O(n^2); real contractions are far smaller). Shells of one primitive
+  // use the same test (the self-overlap is c^2) but only count when no
+  // contracted s or p shell was tested.
   constexpr double tolerance = 1e-3;
+  constexpr size_t maxDetectionPrimitives = 100;
   size_t nGTO = 0;
   size_t nSP = 0;
-  size_t tested = 0;
+  size_t tested = 0;       // contracted shells that fit the radial convention
+  size_t testedSingle = 0; // one-primitive shells that do
+  bool singleDisagrees = false;
   for (size_t i = 0; i < m_shellTypes.size(); ++i) {
     const GaussianSet::orbital type = m_shellTypes[i];
     const int count = m_shellNums[i];
@@ -587,7 +594,7 @@ bool MoldenFile::coefficientsIncludeRadialNormalization() const
         type == GaussianSet::S || (type == GaussianSet::SP && pass == 0);
       const bool isP =
         type == GaussianSet::P || (type == GaussianSet::SP && pass == 1);
-      if ((!isS && !isP) || n < 2)
+      if ((!isS && !isP) || n == 0 || n > maxDetectionPrimitives)
         continue;
       const vector<double>* coefficients = &m_c;
       size_t first = nGTO;
@@ -605,18 +612,28 @@ bool MoldenFile::coefficientsIncludeRadialNormalization() const
       for (size_t k = 0; k < n; ++k)
         divided[k] = c[k] / GaussianSet::axisNormalization(a[k], l);
       const double radial = shellSelfOverlap(a, divided.data(), n, l);
-      if (!(std::abs(radial - 1.0) < tolerance))
-        return false;
       const double standard = shellSelfOverlap(a, c, n, l);
-      if (std::abs(standard - 1.0) < tolerance)
-        return false;
-      ++tested;
+      const bool radialFits = std::abs(radial - 1.0) < tolerance;
+      const bool standardFits = std::abs(standard - 1.0) < tolerance;
+      if (radialFits && standardFits)
+        continue; // ambiguous
+      if (n >= 2) {
+        if (!radialFits)
+          return false;
+        ++tested;
+      } else if (radialFits) {
+        ++testedSingle;
+      } else {
+        singleDisagrees = true;
+      }
     }
     if (type == GaussianSet::SP)
       nSP += n;
     nGTO += n;
   }
-  return tested > 0;
+  if (tested > 0)
+    return true;
+  return testedSingle > 0 && !singleDisagrees;
 }
 
 bool MoldenFile::load(GaussianSet* basis, size_t atomCount)

@@ -802,8 +802,9 @@ namespace {
 
 // An s shell of two primitives and an f shell of one, on one atom. The
 // s coefficients include N_axis, as xtb and ORCA write them; the f shell
-// coefficient is arbitrary. One MO whose coefficients are 1..8.
-std::string radialIncludedMolden(const std::string& title)
+// coefficient is arbitrary. With withSP, a one-primitive sp shell (also
+// including N_axis) sits between them. One MO whose coefficients are 1..n.
+std::string radialIncludedMolden(const std::string& title, bool withSP = false)
 {
   const double a1 = 1.0, a2 = 0.3;
   const auto axis = [](double a) { return std::pow(2.0 * a / M_PI, 0.75); };
@@ -820,9 +821,15 @@ std::string radialIncludedMolden(const std::string& title)
       << title << "\n[Atoms] AU\n"
       << "H     1     1   0.0   0.0   0.0\n[7F]\n[GTO]\n    1 0\n"
       << " s   2 1.00\n  " << a1 << " " << d1 * axis(a1) << "\n  " << a2 << " "
-      << d2 * axis(a2) << "\n f   1 1.00\n  " << 0.8 << " " << 0.25
+      << d2 * axis(a2) << "\n";
+  if (withSP) {
+    const double a = 0.5;
+    out << " sp   1 1.00\n  " << a << " " << axis(a) << " "
+        << axis(a) * std::sqrt(4.0 * a) << "\n";
+  }
+  out << " f   1 1.00\n  " << 0.8 << " " << 0.25
       << "\n\n[MO]\n Sym= a\n Ene= -0.5\n Spin= Alpha\n Occup= 2.0\n";
-  for (int i = 1; i <= 8; ++i)
+  for (int i = 1; i <= (withSP ? 12 : 8); ++i)
     out << "    " << i << "   " << i << ".0\n";
   return out.str();
 }
@@ -865,4 +872,126 @@ TEST(MoldenTest, orcaSphericalFConversion)
   const auto xtbMos = xtbBasis->moMatrix();
   for (int i = 0; i < 8; ++i)
     EXPECT_EQ(xtbMos(i, 0), i + 1.0) << i;
+}
+
+// The ORCA f conversion with a one-primitive sp shell before the f shell:
+// it shifts the f functions by the four sp functions.
+TEST(MoldenTest, orcaSphericalFConversionAfterSP)
+{
+  MoldenFile orca;
+  Molecule molecule;
+  ASSERT_TRUE(
+    orca.readString(radialIncludedMolden(
+                      "Molden file created by orca_2mkl for BaseName=x", true),
+                    molecule))
+    << orca.error();
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  EXPECT_EQ(basis->primitiveNormalization(), Normalization::RadialIncluded);
+  // primitives in order: s (2), sp's s, sp's p, f
+  ASSERT_EQ(basis->gtoC().size(), 5u);
+  EXPECT_NEAR(basis->gtoC()[4], 0.25 / std::sqrt(15.0), 1e-15);
+  const auto mos = basis->moMatrix();
+  ASSERT_EQ(mos.rows(), 12);
+  // s (1), sp (4), then f m = 0, +1, -1, +2, -2, +3, -3
+  const double expected[12] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -11, -12 };
+  for (int i = 0; i < 12; ++i)
+    EXPECT_EQ(mos(i, 0), expected[i]) << i;
+}
+
+namespace {
+
+// A one-atom Molden file with the given [GTO] shells (the text after the
+// "1 0" line) and nBasis spherical basis functions, in one MO.
+std::string moldenWithShells(const std::string& shells, int nBasis)
+{
+  std::ostringstream out;
+  out << "[Molden Format]\n[Atoms] AU\nH     1     1   0.0   0.0   0.0\n"
+      << "[5D]\n[GTO]\n    1 0\n"
+      << shells << "\n[MO]\n Sym= a\n Ene= -0.5\n Spin= Alpha\n"
+      << " Occup= 2.0\n";
+  for (int i = 1; i <= nBasis; ++i)
+    out << "    " << i << "   " << i << ".0\n";
+  return out.str();
+}
+
+Normalization normalizationOfString(const std::string& text)
+{
+  MoldenFile format;
+  Molecule molecule;
+  EXPECT_TRUE(format.readString(text, molecule)) << format.error();
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  EXPECT_NE(basis, nullptr);
+  return basis != nullptr ? basis->primitiveNormalization()
+                          : Normalization::Normalize;
+}
+
+// A contracted s shell whose coefficients include N_axis (as in
+// radialIncludedMolden()), so that only the radial convention fits.
+std::string radialContractedS()
+{
+  const double a1 = 1.0, a2 = 0.3;
+  const auto axis = [](double a) { return std::pow(2.0 * a / M_PI, 0.75); };
+  double d1 = 0.6, d2 = 0.5;
+  const double overlap =
+    d1 * d1 + d2 * d2 +
+    2.0 * d1 * d2 * std::pow(2.0 * std::sqrt(a1 * a2) / (a1 + a2), 1.5);
+  d1 /= std::sqrt(overlap);
+  d2 /= std::sqrt(overlap);
+  std::ostringstream out;
+  out.precision(15);
+  out << " s   2 1.00\n  " << a1 << " " << d1 * axis(a1) << "\n  " << a2 << " "
+      << d2 * axis(a2) << "\n";
+  return out.str();
+}
+
+} // namespace
+
+// With only one-primitive s and p shells, the single coefficient still shows
+// the convention: N_axis(a, l) when radial normalization is included, 1 when
+// the primitive is normalized.
+TEST(MoldenTest, singlePrimitiveShellsDetectConvention)
+{
+  const double a = 0.9;
+  const double axis = std::pow(2.0 * a / M_PI, 0.75);
+  for (bool radial : { true, false }) {
+    std::ostringstream shells;
+    shells.precision(15);
+    const double s = radial ? axis : 1.0;
+    const double p = radial ? axis * std::sqrt(4.0 * a) : 1.0;
+    shells << " s   1 1.00\n  " << a << " " << s << "\n p   1 1.00\n  " << a
+           << " " << p << "\n d   1 1.00\n  0.8 0.25\n";
+    EXPECT_EQ(normalizationOfString(moldenWithShells(shells.str(), 9)),
+              radial ? Normalization::RadialIncluded : Normalization::Normalize)
+      << (radial ? "radial" : "standard");
+  }
+}
+
+// Exponent pi/2 has N_axis = 1 for s, so both conventions give a self-overlap
+// of 1: the shell says nothing and must not veto the next one.
+TEST(MoldenTest, ambiguousShellIsSkipped)
+{
+  std::ostringstream shells;
+  shells.precision(15);
+  shells << " s   2 1.00\n  " << M_PI / 2.0 << " 0.5\n  " << M_PI / 2.0
+         << " 0.5\n"
+         << radialContractedS();
+  EXPECT_EQ(normalizationOfString(moldenWithShells(shells.str(), 2)),
+            Normalization::RadialIncluded);
+}
+
+// A shell with more primitives than any real contraction is skipped (it
+// neither confirms nor vetoes), here a standard-convention one before a
+// radial-included one.
+TEST(MoldenTest, oversizedShellIsSkipped)
+{
+  std::ostringstream shells;
+  shells.precision(15);
+  shells << " s   101 1.00\n";
+  double a = 0.1;
+  for (int k = 0; k < 101; ++k, a *= 1.1)
+    shells << "  " << a << " 0.1\n";
+  shells << radialContractedS();
+  EXPECT_EQ(normalizationOfString(moldenWithShells(shells.str(), 2)),
+            Normalization::RadialIncluded);
 }

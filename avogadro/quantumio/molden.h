@@ -57,6 +57,8 @@ private:
    * coefficients include the normalization of x^l exp(-alpha r^2), as xtb
    * and ORCA write them (GaussianSet::PrimitiveNormalization::RadialIncluded)
    * rather than being the coefficients of normalized primitives.
+   * One-primitive shells are used only if no contracted s or p shell could
+   * be tested.
    */
   bool coefficientsIncludeRadialNormalization() const;
 
