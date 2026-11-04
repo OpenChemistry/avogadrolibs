@@ -124,7 +124,15 @@ GLWidget::GLWidget(QWidget* p)
   }
 }
 
-GLWidget::~GLWidget() {}
+GLWidget::~GLWidget()
+{
+  // Release the timing queries while this widget's context is current.
+  if (m_renderer.timingEnabled()) {
+    makeCurrent();
+    m_renderer.setTimingEnabled(false);
+    doneCurrent();
+  }
+}
 
 void GLWidget::setMolecule(QtGui::Molecule* mol)
 {
@@ -432,6 +440,9 @@ void GLWidget::drawFrameStats()
     std::nth_element(sorted.begin(), middle,
                      sorted.begin() + d->frameIntervalCount);
     interval = *middle;
+    // A true median averages the two middle values of an even count.
+    if (d->frameIntervalCount % 2 == 0)
+      interval = 0.5 * (interval + *std::max_element(sorted.begin(), middle));
   }
 
   const Rendering::RenderTimings& timings = m_renderer.timings();
@@ -466,17 +477,20 @@ void GLWidget::drawFrameStats()
                              d->rebuildResetMs);
   if (!plugins.isEmpty())
     lines << QStringLiteral("  ") + plugins;
-  lines << QStringLiteral("render CPU %1 ms  GPU %2 ms")
-             .arg(timings.totalCpuMs(), 0, 'f', 1)
-             .arg(gpuText(timings.totalGpuMs()));
-  lines << QStringLiteral("  solid %1/%2  post %3/%4 (cpu/gpu)")
-             .arg(solid.cpuMs, 0, 'f', 1)
-             .arg(gpuText(solid.gpuMs))
-             .arg(post.cpuMs, 0, 'f', 1)
-             .arg(gpuText(post.gpuMs));
-  lines << QString::asprintf("uploaded %.2f MB",
-                             static_cast<double>(timings.bufferBytesUploaded) /
-                               1.0e6);
+  // Nothing is published until the first timed frame has completed.
+  if (timings.frame != 0) {
+    lines << QStringLiteral("render CPU %1 ms  GPU %2 ms")
+               .arg(timings.totalCpuMs(), 0, 'f', 1)
+               .arg(gpuText(timings.totalGpuMs()));
+    lines << QStringLiteral("  solid %1/%2  post %3/%4 (cpu/gpu)")
+               .arg(solid.cpuMs, 0, 'f', 1)
+               .arg(gpuText(solid.gpuMs))
+               .arg(post.cpuMs, 0, 'f', 1)
+               .arg(gpuText(post.gpuMs));
+    lines << QString::asprintf(
+      "uploaded %.2f MB",
+      static_cast<double>(timings.bufferBytesUploaded) / 1.0e6);
+  }
   lines << QString::asprintf("%lld atoms  %lld bonds",
                              static_cast<long long>(atoms),
                              static_cast<long long>(bonds));
@@ -552,7 +566,9 @@ void GLWidget::setFrameStatsVisible(bool visible)
   d->frameIntervalNext = 0;
   d->rebuildsSincePaint = 0;
   d->rebuildsAtLastPaint = 0;
+  makeCurrent();
   m_renderer.setTimingEnabled(visible);
+  doneCurrent();
   update();
 }
 

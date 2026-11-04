@@ -189,13 +189,15 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       cubeResolution = res;
   }
   // Smoothing passes for the mesh; the dialog, when there is one, decides
-  // for itself. Callers that do not ask get none, as before.
-  m_commandSmoothing = 0;
+  // for itself. Callers that do not ask get none, as before. Stored in
+  // m_commandSmoothing only once a calculation starts, so a rejected or
+  // unknown command cannot change what one in flight will use.
+  int smoothing = 0;
   if (options.contains("smoothing") && options["smoothing"].canConvert<int>()) {
     bool ok;
     int passes = options["smoothing"].toInt(&ok);
     if (ok)
-      m_commandSmoothing = std::clamp(passes, 0, 19);
+      smoothing = std::clamp(passes, 0, 19);
   }
   if (options.contains("isovalue") && options["isovalue"].canConvert<float>()) {
     bool ok;
@@ -257,18 +259,21 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       (command.compare("renderVDW", Qt::CaseInsensitive) == 0)) {
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateEDT(VanDerWaals, cubeResolution);
     return true;
   } else if (command.compare("renderSolventAccessible", Qt::CaseInsensitive) ==
              0) {
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateEDT(SolventAccessible, cubeResolution);
     return true;
   } else if (command.compare("renderSolventExcluded", Qt::CaseInsensitive) ==
              0) {
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateEDT(SolventExcluded, cubeResolution);
     return true;
   } else if ((command.compare("renderOrbital", Qt::CaseInsensitive) == 0) ||
@@ -285,6 +290,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateQM(MolecularOrbital, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderElectronDensity", Qt::CaseInsensitive) ==
@@ -296,6 +302,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateQM(ElectronDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderSpinDensity", Qt::CaseInsensitive) == 0) {
@@ -306,6 +313,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateQM(SpinDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderCube", Qt::CaseInsensitive) == 0) {
@@ -331,6 +339,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateCube(cubeIndex, isoValue);
     return true;
   }

@@ -178,7 +178,9 @@ if "%FETCH_OK%"=="1" exit /b 0
 echo Downloading %~1.pdb ...
 set "URL=https://files.rcsb.org/download/%~1.pdb"
 where curl.exe >nul 2>&1
-if not errorlevel 1 curl.exe -fsSL -o "%~1.pdb" "%URL%" >nul 2>&1
+if not errorlevel 1 (
+  curl.exe -fsSL -o "%~1.pdb" "%URL%" >nul 2>&1 || del "%~1.pdb" >nul 2>&1
+)
 if exist "%~1.pdb" call :checksize "%~1.pdb"
 if "%FETCH_OK%"=="1" exit /b 0
 rem Fallback for systems without curl.exe: PowerShell 5.1 needs TLS 1.2.

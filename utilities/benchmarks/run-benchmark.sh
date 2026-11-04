@@ -134,14 +134,17 @@ fetch_pdb() {
   local id="$1" url="https://files.rcsb.org/download/$1.pdb"
   [ -s "$SCRIPT_DIR/$id.pdb" ] && return 0
   echo "Downloading $id.pdb ..."
+  local rc=0
   if command -v curl >/dev/null 2>&1; then
     curl -fsSL -o "$SCRIPT_DIR/$id.pdb" "$url" 2>/dev/null
+    rc=$?
   elif command -v wget >/dev/null 2>&1; then
     wget -q -O "$SCRIPT_DIR/$id.pdb" "$url" 2>/dev/null
+    rc=$?
   else
     return 1
   fi
-  if [ ! -s "$SCRIPT_DIR/$id.pdb" ]; then
+  if [ "$rc" -ne 0 ] || [ ! -s "$SCRIPT_DIR/$id.pdb" ]; then
     /bin/rm -f "$SCRIPT_DIR/$id.pdb"
     return 1
   fi

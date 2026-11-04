@@ -299,7 +299,8 @@ jobs:
                         data = json.loads(js.read_text())
                     except ValueError:
                         data = None
-                if data is not None:
+                rc = log_field(text, "exit status") if text else None
+                if data is not None and rc in (None, "0"):
                     status = "ok"
                 elif log.exists():
                     status = "failed"
@@ -634,7 +635,8 @@ jobs:
                         data = json.loads(js.read_text())
                     except ValueError:
                         data = None
-                if data is not None:
+                rc = log_field(text, "exit status") if text else None
+                if data is not None and rc in (None, "0"):
                     status = "ok"
                 elif log.exists():
                     status = "failed"

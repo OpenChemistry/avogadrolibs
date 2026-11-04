@@ -83,7 +83,9 @@ public:
    * which case render() issues no extra GL calls. When enabled each section
    * of render() ("solid", "post", "opaque", "translucent", "overlay3d",
    * "overlay2d") is timed on the CPU, and on the GPU with GL_TIME_ELAPSED
-   * queries when the driver supports them. Needs a current context.
+   * queries when the driver supports them. Needs a current context. Changing
+   * the state discards the timings collected so far, and once timing has
+   * rendered the renderer's context must be current to release its queries.
    */
   void setTimingEnabled(bool enable);
   bool timingEnabled() const;

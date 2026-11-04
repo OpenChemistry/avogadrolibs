@@ -58,6 +58,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <memory>
 #include <random>
@@ -228,7 +229,9 @@ bool parseSize(const std::string& text, std::size_t& w, std::size_t& h)
   if (x == std::string::npos)
     return false;
   return parseUnsigned(text.substr(0, x), w) &&
-         parseUnsigned(text.substr(x + 1), h) && w > 0 && h > 0;
+         parseUnsigned(text.substr(x + 1), h) && w > 0 && h > 0 &&
+         w <= static_cast<std::size_t>(std::numeric_limits<int>::max()) &&
+         h <= static_cast<std::size_t>(std::numeric_limits<int>::max());
 }
 
 bool parseArguments(int argc, char** argv, Options& options)
@@ -293,8 +296,8 @@ bool parseArguments(int argc, char** argv, Options& options)
       options.smoothing = static_cast<int>(n);
     } else if (arg == "--surface-timeout") {
       std::size_t n = 0;
-      if (!next(value) || !parseUnsigned(value, n) || n == 0) {
-        std::cerr << "--surface-timeout expects seconds\n";
+      if (!next(value) || !parseUnsigned(value, n) || n == 0 || n > 2000000) {
+        std::cerr << "--surface-timeout expects 1 to 2000000 seconds\n";
         return false;
       }
       options.surfaceTimeout = n;
@@ -670,12 +673,12 @@ void printTable(const Report& r)
   }
 }
 
-void writeJson(const Report& r, const std::string& path)
+bool writeJson(const Report& r, const std::string& path)
 {
   std::ofstream out(path);
   if (!out) {
     std::cerr << "Cannot write " << path << "\n";
-    return;
+    return false;
   }
   out << std::setprecision(6);
   out << "{\n  \"gl_vendor\": \"" << jsonEscape(r.vendor) << "\",\n"
@@ -735,6 +738,7 @@ void writeJson(const Report& r, const std::string& path)
         << (i + 1 < r.timed.names().size() ? "," : "") << "\n";
   }
   out << "  }\n}\n";
+  return static_cast<bool>(out);
 }
 
 } // namespace
@@ -1208,17 +1212,21 @@ int main(int argc, char** argv)
               << " px at the framed focus plane (" << sr.edgeMeanPxNear
               << " px at the nearest surface), " << sr.pxPerAngstrom
               << " px/A\n";
+  int status = 0;
   if (!options.saveImage.empty()) {
     gl->glFinish();
-    if (fbo.toImage().save(QString::fromStdString(options.saveImage)))
+    if (fbo.toImage().save(QString::fromStdString(options.saveImage))) {
       std::cout << "Saved " << options.saveImage << "\n";
-    else
+    } else {
       std::cerr << "Could not save " << options.saveImage << "\n";
+      status = 1;
+    }
   }
-  if (!options.jsonPath.empty())
-    writeJson(report, options.jsonPath);
+  if (!options.jsonPath.empty() && !writeJson(report, options.jsonPath))
+    status = 1;
 
   // Tear down with the context current so GL objects are released properly.
   renderer.scene().rootNode().clear();
-  return 0;
+  renderer.setTimingEnabled(false);
+  return status;
 }

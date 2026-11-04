@@ -71,7 +71,10 @@ struct TimingState
   Clock::time_point sectionStart;
   std::uint64_t bytesAtStart = 0;
 
-  ~TimingState()
+  // Only call with the owning context current. A TimingState destroyed
+  // without releaseQueries() leaves its names to be reclaimed with their
+  // context.
+  void releaseQueries()
   {
     if (!gpuAvailable)
       return;
@@ -222,6 +225,11 @@ GLRenderer::~GLRenderer()
 
 void GLRenderer::setTimingEnabled(bool enable)
 {
+  if (enable == d->timingEnabled)
+    return;
+  d->timing.releaseQueries();
+  d->timing = TimingState();
+  d->timings = RenderTimings();
   d->timingEnabled = enable;
 }
 
@@ -247,6 +255,10 @@ const RenderTimings& GLRenderer::timings() const
 
 void GLRenderer::initialize()
 {
+  // A new context: the old query names went with the old one.
+  d->timing = TimingState();
+  d->timings = RenderTimings();
+
   GLenum result = glewInit();
   m_valid = (result == GLEW_OK || result == GLEW_ERROR_NO_GLX_DISPLAY);
   if (!m_valid) {
