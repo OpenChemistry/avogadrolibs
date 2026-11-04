@@ -58,7 +58,7 @@ private:
    * and ORCA write them (GaussianSet::PrimitiveNormalization::RadialIncluded)
    * rather than being the coefficients of normalized primitives.
    */
-  bool coefficientsIncludeRadialNormalization();
+  bool coefficientsIncludeRadialNormalization() const;
 
   // Write helper methods
   void writeAtoms(std::ostream& out, const Core::Molecule& molecule);
@@ -107,7 +107,8 @@ private:
   };
   Mode m_mode;
 
-  std::string m_title;
+  // True if a [Title] line says the file was written by ORCA (orca_2mkl)
+  bool m_orcaTitle = false;
 
   bool m_openShell = false;
   bool m_currentSpinBeta = false; // Track current spin during MO parsing
