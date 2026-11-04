@@ -283,7 +283,9 @@ bool optimizeFire(EnergyCalculator& method, Eigen::VectorXd& positions,
     dr.noalias() = dt * v;
     if (p.maxMove > 0.0 && n >= 3) {
       double scale = 1.0;
-      for (Eigen::Index i = 0; i < n; i += 3) {
+      // Whole xyz triplets only: a trailing partial one (n not a multiple of
+      // 3, e.g. an analytic test function) would read past the end of dr.
+      for (Eigen::Index i = 0; i + 3 <= n; i += 3) {
         const double atomNorm = dr.segment<3>(i).norm();
         if (atomNorm > p.maxMove)
           scale = std::min(scale, p.maxMove / atomNorm);

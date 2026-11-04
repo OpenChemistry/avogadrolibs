@@ -771,6 +771,23 @@ TEST(EnergyOptimizerTest, FireChunkClearsLbfgsHistory)
   EXPECT_EQ(state.lbfgsCount, 1u);
 }
 
+TEST(EnergyOptimizerTest, FireHandlesDimensionNotMultipleOfThree)
+{
+  // The per-atom move cap walks xyz triplets; a trailing partial triplet
+  // must be skipped, not read past the end of the step vector (caught by
+  // the sanitizer jobs, and by Eigen's bounds assert in a debug build).
+  for (Eigen::Index n : { 4, 10 }) {
+    CountingFunction f;
+    Eigen::VectorXd x = rosenbrockStart(n);
+    OptimizationOptions options;
+    options.algorithm = OptimizationAlgorithm::AbcFire;
+    options.chunkIterations = 5;
+    ASSERT_GT(options.fire.maxMove, 0.0);
+    ASSERT_TRUE(optimizeSteps(f, x, options));
+    EXPECT_TRUE(x.allFinite());
+  }
+}
+
 TEST(EnergyOptimizerTest, ClearLbfgsHistoryResetsFields)
 {
   CountingFunction f;
