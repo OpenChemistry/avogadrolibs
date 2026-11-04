@@ -180,6 +180,13 @@ bool optimizeLbfgs(EnergyCalculator& method, Eigen::VectorXd& positions,
     break;
   }
 
+  // A caller that is told about a stall may still call again. Make that a
+  // fresh attempt from steepest descent: the history and counters that
+  // produced the stall would otherwise end every later chunk on its first
+  // iteration, however much progress a restart could make.
+  if (reason == OptimizerStopReason::Stalled)
+    st.clearLbfgsHistory();
+
   positions = x;
 
   if (state) {

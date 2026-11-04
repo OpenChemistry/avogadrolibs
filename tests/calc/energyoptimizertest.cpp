@@ -95,7 +95,8 @@ Eigen::VectorXd anotherDistortedWaterPositions()
 // displaced by a fixed pseudo-random offset (no RNG state: the offsets are a
 // pure function of the coordinate index). Big enough that L-BFGS needs
 // hundreds of iterations, so a chunked run exercises the stopping criteria.
-Molecule perturbedAlkane(size_t nCarbons, Eigen::VectorXd& positions)
+Molecule perturbedAlkane(size_t nCarbons, Eigen::VectorXd& positions,
+                         Real extraOffset = 0.0)
 {
   Molecule molecule;
   std::vector<Vector3> pos;
@@ -124,8 +125,12 @@ Molecule perturbedAlkane(size_t nCarbons, Eigen::VectorXd& positions)
     for (size_t k = 0; k < 3; ++k) {
       const Real offset =
         std::sin(12.9898 * static_cast<Real>(3 * i + k) + 1.0);
+      // extraOffset moves the start by a tiny, fixed pattern, to reach other
+      // trajectories from the same geometry.
+      const Real tweak =
+        extraOffset * std::sin(7.1 * static_cast<Real>(3 * i + k) + 0.3);
       positions[3 * static_cast<Eigen::Index>(i) + k] =
-        pos[i][k] + 0.1 * offset;
+        pos[i][k] + 0.1 * offset + tweak;
     }
     molecule.setAtomPosition3d(i, positions.segment<3>(3 * i));
   }
@@ -948,7 +953,74 @@ TEST(EnergyOptimizerTest, LbfgsStallAfterRestartIsReported)
   ASSERT_TRUE(optimizeSteps(f, x, options, &state));
   EXPECT_EQ(state.stopReason, OptimizerStopReason::Stalled);
   EXPECT_GE(state.lbfgsRestarts, 1u);
-  EXPECT_TRUE(state.lbfgsRestartSpent);
+  // Reporting the stall also clears the restart flag (see
+  // LbfgsStalledStateStartsFresh).
+  EXPECT_FALSE(state.lbfgsRestartSpent);
+}
+
+TEST(EnergyOptimizerTest, LbfgsStalledStateStartsFresh)
+{
+  // A stall leaves nothing behind that could end the next call on its first
+  // iteration: no history, no violation counters, no spent restart. Without
+  // this, a caller that keeps calling after a stall (the Python loops do)
+  // was stuck for good once the counters had reached three.
+  CountingFunction f(1e-6);
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 500;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  ASSERT_EQ(state.stopReason, OptimizerStopReason::Stalled);
+  EXPECT_EQ(state.lbfgsCount, 0u);
+  EXPECT_EQ(state.stallXViolations, 0);
+  EXPECT_EQ(state.stallFViolations, 0);
+  EXPECT_FALSE(state.lbfgsRestartSpent);
+  // The cached energy / gradient stay valid for the positions returned.
+  EXPECT_EQ(state.gradient.size(), x.size());
+  EXPECT_TRUE(std::isfinite(state.energy));
+}
+
+TEST(EnergyOptimizerTest, LbfgsStallWithoutHistoryLeavesNoCounters)
+{
+  CountingFunction f(1e9);
+  OptimizerState state;
+  Eigen::VectorXd x = rosenbrockStart(4);
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 50;
+  ASSERT_TRUE(optimizeSteps(f, x, options, &state));
+  ASSERT_EQ(state.stopReason, OptimizerStopReason::Stalled);
+  EXPECT_EQ(state.stallXViolations, 0);
+  EXPECT_EQ(state.stallFViolations, 0);
+}
+
+TEST(EnergyOptimizerTest, ChunkedLbfgsRecoversAfterStallOnStiffStart)
+{
+  // Regression: from this start (a 1e-9 tweak of the usual one) the line
+  // search crawls in steps below 1e-10 Angstrom at E ~ 264, |g| ~ 170 and
+  // the run is reported as stalled. The loop keeps calling, as the GUI and
+  // the Python bindings do, and has to get out again.
+  Eigen::VectorXd x;
+  Molecule molecule = perturbedAlkane(4, x, 1e-9);
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  OptimizationOptions options;
+  options.algorithm = OptimizationAlgorithm::Lbfgs;
+  options.chunkIterations = 50;
+
+  OptimizerState state;
+  Eigen::VectorXd grad(x.size());
+  Real gInf = std::numeric_limits<Real>::infinity();
+  for (int chunk = 0; chunk < 400; ++chunk) {
+    ASSERT_TRUE(optimizeSteps(uff, x, options, &state));
+    uff.gradient(x, grad);
+    gInf = grad.cwiseAbs().maxCoeff();
+    if (gInf < 1e-4)
+      break;
+  }
+  EXPECT_LT(gInf, 1e-4);
 }
 
 TEST(EnergyOptimizerTest, LbfgsStallWithoutHistoryIsNotRestarted)
