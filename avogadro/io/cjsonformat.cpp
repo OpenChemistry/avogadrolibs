@@ -19,6 +19,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -49,6 +50,22 @@ using Core::LayerManager;
 using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
+
+namespace {
+
+// Names of GaussianSet::PrimitiveNormalization in the "primitiveNormalization"
+// key. Normalize is the default, so it is accepted on read but never written.
+struct NormalizationName
+{
+  const char* name;
+  GaussianSet::PrimitiveNormalization value;
+};
+constexpr NormalizationName normalizationNames[] = {
+  { "normalize", GaussianSet::PrimitiveNormalization::Normalize },
+  { "asIs", GaussianSet::PrimitiveNormalization::AsIs }
+};
+
+} // namespace
 
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
@@ -1155,6 +1172,31 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           }
         }
 
+        // How the primitive coefficients are normalized. A missing key is
+        // the default (Normalize); anything unusable keeps the default and is
+        // reported without failing the read.
+        const json& normalization = member(basisSet, "primitiveNormalization");
+        if (normalization.is_string()) {
+          const auto mode = normalization.get<std::string>();
+          const NormalizationName* found = nullptr;
+          for (const auto& entry : normalizationNames)
+            if (mode == entry.name)
+              found = &entry;
+          if (found == nullptr) {
+            appendError("Warning: unknown primitiveNormalization \"" + mode +
+                        "\"; the basis set is normalized.");
+          } else if (found->value ==
+                     GaussianSet::PrimitiveNormalization::AsIs) {
+            if (!basis->setPrimitiveNormalization(found->value))
+              appendError(
+                "Warning: primitiveNormalization \"asIs\" needs "
+                "Cartesian shells only; the basis set is normalized.");
+          }
+        } else if (!normalization.is_null()) {
+          appendError("Warning: primitiveNormalization is not a string; the "
+                      "basis set is normalized.");
+        }
+
         const json& orbitals = member(jsonRoot, "orbitals");
         if (orbitals.is_object() && basis->isValid()) {
           // A missing or wrong-typed electronCount used to throw via the
@@ -1860,11 +1902,27 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     if (!gaussian->gtoIndices().empty() && !gaussian->atomIndices().empty()) {
       auto gtoIndices = gaussian->gtoIndices();
       auto gtoA = gaussian->gtoA();
+      // One entry per shell that has primitives. Once the basis has been
+      // initialized, gtoIndices has an extra last entry (the total number of
+      // primitives) that is not the start of a shell, so stop at the number
+      // of shells; the last shell always ends at the total.
+      const size_t nShells = std::min(gtoIndices.size(), symmetry.size());
       json primitivesPerShell;
-      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      for (size_t i = 0; i < nShells; ++i) {
+        const size_t end =
+          (i + 1 < gtoIndices.size()) ? gtoIndices[i + 1] : gtoA.size();
+        primitivesPerShell.push_back(end - gtoIndices[i]);
+      }
       basis["primitivesPerShell"] = primitivesPerShell;
+
+      // Only written when it differs from the default, so files from bases
+      // that need no flag stay unchanged.
+      if (gaussian->primitiveNormalization() !=
+          GaussianSet::PrimitiveNormalization::Normalize) {
+        for (const auto& entry : normalizationNames)
+          if (entry.value == gaussian->primitiveNormalization())
+            basis["primitiveNormalization"] = entry.name;
+      }
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;

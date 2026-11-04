@@ -658,9 +658,19 @@ double GaussianSetTools::calculateShellCutoff(const ShellInfo& shell) const
     return 0.0;
 
   double maxR2 = 0.0;
-  const double coeff = std::abs(m_gtoCN[shell.cStart]);
+  const size_t nComponents =
+    shell.nComponents > 0 ? static_cast<size_t>(shell.nComponents) : 1;
 
   for (unsigned int j = shell.gtoStart; j < shell.gtoEnd; ++j) {
+    // Each primitive's own normalized coefficients: m_gtoCN holds
+    // nComponents of them per primitive, primitive after primitive. The
+    // largest one decides how far the primitive reaches.
+    const size_t first =
+      shell.cStart + static_cast<size_t>(j - shell.gtoStart) * nComponents;
+    double coeff = 0.0;
+    for (size_t k = first; k < first + nComponents && k < m_gtoCN.size(); ++k)
+      coeff = std::max(coeff, std::abs(m_gtoCN[k]));
+
     double alpha = m_gtoA[j];
     // Start at the peak of r^L * exp(-alpha * r^2) for L > 0
     double r = std::min(maxDistance, std::sqrt(shell.L / (2.0 * alpha)));

@@ -76,13 +76,30 @@ unsigned int GaussianSet::addBasis(unsigned int atom, orbital type)
 
 unsigned int GaussianSet::addGto(unsigned int basis, double c, double a)
 {
-  if (m_gtoIndices.size() == basis) {
-    m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
-  } else if (m_gtoIndices.size() < basis) {
+  // Shells that already have a start index. initCalculation() also leaves the
+  // total primitive count as a last entry of m_gtoIndices, which is not one.
+  const size_t starts = m_gtoIndices.size() - (m_hasGtoEndIndex ? 1 : 0);
+  if (basis > starts) {
     cout << "Error, attempted to add a GTO for a basis too early. GTOs must be "
          << "added in order to ensure correct indexing.\n";
     return 69696969;
   }
+  if (basis + 1 < starts) {
+    cout << "Error, attempted to add a GTO to an earlier basis. GTOs can only "
+         << "be added to the last basis or a new one.\n";
+    return 69696969;
+  }
+
+  // The end entry is stale once a primitive is added, and it would make a new
+  // shell look as if it already had its start index.
+  if (m_hasGtoEndIndex) {
+    m_gtoIndices.pop_back();
+    m_hasGtoEndIndex = false;
+  }
+  m_init = false;
+
+  if (basis == starts)
+    m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
   m_gtoA.push_back(a);
   m_gtoC.push_back(c);
 
@@ -311,21 +328,72 @@ void GaussianSet::swapAtomIndices(Index a, Index b)
   }
 }
 
+bool GaussianSet::hasSphericalShell() const
+{
+  for (int type : m_symmetry) {
+    switch (type) {
+      case D5:
+      case F7:
+      case G9:
+      case H11:
+      case I13:
+        return true;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
+bool GaussianSet::setPrimitiveNormalization(
+  PrimitiveNormalization normalization)
+{
+  if (normalization == m_primitiveNormalization)
+    return true;
+  if (normalization == PrimitiveNormalization::AsIs && hasSphericalShell())
+    return false;
+
+  m_primitiveNormalization = normalization;
+  m_init = false;
+  return true;
+}
+
 void GaussianSet::initCalculation()
 {
   if (m_init)
     return;
 
-  // This currently just involves normalising all contraction coefficients
+  // This currently just involves normalising all contraction coefficients.
+  // Everything derived below is rebuilt from the shells each time, since this
+  // runs again whenever shells, primitives or MOs are added after an earlier
+  // call.
   m_gtoCN.clear();
+  m_cIndices.clear();
+
+  // A spherical shell added after AsIs was chosen would leave a basis that
+  // is half normalized, so normalize all of it.
+  if (m_primitiveNormalization == PrimitiveNormalization::AsIs &&
+      hasSphericalShell()) {
+    cout << "Warning: spherical shells cannot use unnormalized primitives; "
+         << "normalizing the whole basis set.\n";
+    m_primitiveNormalization = PrimitiveNormalization::Normalize;
+  }
 
   // Initialise the new data structures that are hopefully more efficient
   unsigned int indexMO = 0;
   unsigned int skip = 0; // for unimplemented shells
 
-  m_moIndices.resize(m_symmetry.size());
-  // Add a final entry to the gtoIndices
+  m_moIndices.assign(m_symmetry.size(), 0);
+  // Every shell needs a start index, and the loop below reads
+  // m_gtoIndices[i + 1]: give shells without primitives (at the end) a start
+  // where the next primitive would go, then add the total primitive count as
+  // a final entry, replacing any left by a previous call.
+  if (m_hasGtoEndIndex && !m_gtoIndices.empty())
+    m_gtoIndices.pop_back();
+  while (m_gtoIndices.size() < m_symmetry.size())
+    m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
   m_gtoIndices.push_back(static_cast<unsigned int>(m_gtoA.size()));
+  m_hasGtoEndIndex = true;
   for (unsigned int i = 0; i < m_symmetry.size(); ++i) {
     switch (m_symmetry[i]) {
       case S:
@@ -554,8 +622,66 @@ void GaussianSet::initCalculation()
       m_cIndices.push_back(static_cast<unsigned int>(m_gtoCN.size()));
       skip = 0;
     }
+
+    // AsIs: replace the normalized values written above by the raw
+    // coefficient, once for every component of the shell. The layout is the
+    // one every case above uses and GaussianSetTools reads: the components
+    // of one primitive are adjacent, primitives follow each other. Only the
+    // evaluated Cartesian shells are affected (spherical shells cannot be
+    // AsIs, see setPrimitiveNormalization()).
+    if (m_primitiveNormalization == PrimitiveNormalization::AsIs) {
+      const auto type = static_cast<orbital>(m_symmetry[i]);
+      const unsigned int components =
+        (type == S || type == P || type == D || type == F || type == G)
+          ? componentCount(type)
+          : 0;
+      if (components > 0) {
+        const size_t first = m_cIndices.back();
+        for (unsigned int j = m_gtoIndices[i]; j < m_gtoIndices[i + 1]; ++j) {
+          for (unsigned int k = 0; k < components; ++k) {
+            const size_t index = first + (j - m_gtoIndices[i]) * components + k;
+            if (index < m_gtoCN.size())
+              m_gtoCN[index] = m_gtoC[j];
+          }
+        }
+      }
+    }
   }
   m_init = true;
+}
+
+unsigned int GaussianSet::componentCount(orbital type)
+{
+  switch (type) {
+    case S:
+      return 1;
+    case P:
+      return 3;
+    case SP:
+      return 4;
+    case D:
+      return 6;
+    case D5:
+      return 5;
+    case F:
+      return 10;
+    case F7:
+      return 7;
+    case G:
+      return 15;
+    case G9:
+      return 9;
+    case H:
+      return 21;
+    case H11:
+      return 11;
+    case I:
+      return 28;
+    case I13:
+      return 13;
+    default:
+      return 0;
+  }
 }
 
 bool GaussianSet::generateDensityMatrix()
