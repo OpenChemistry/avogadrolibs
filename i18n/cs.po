@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-10-14 17:56+0000\n"
+"PO-Revision-Date: 2026-11-05 23:52+0000\n"
 "Last-Translator: Michal Várady <majkl82@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.11.dev0\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -585,62 +585,64 @@ msgstr "Žádná molekula"
 #: qtgui/commandregistry.cpp:77
 #, qt-format
 msgid "atom index #%1 in %2 must be a whole number."
-msgstr ""
+msgstr "Index atomu #%1 v %2 musí být celé číslo."
 
 #: qtgui/commandregistry.cpp:80
 #, qt-format
 msgid "%1 must be a whole number (an atom index)."
-msgstr ""
+msgstr "%1 musí být celé číslo (index atomu)."
 
 #: qtgui/commandregistry.cpp:92
 #, qt-format
 msgid "atom index #%1 in %2 is negative; atom indices must be zero or greater."
 msgstr ""
+"Index atomu #%1 v %2 je záporný; indexy atomů musí mít hodnotu nula nebo "
+"vyšší."
 
 #: qtgui/commandregistry.cpp:96
 #, qt-format
 msgid "%1 is negative; atom indices must be zero or greater."
-msgstr ""
+msgstr "%1 má zápornou hodnotu; indexy atomů musí mít hodnotu nula nebo vyšší."
 
 #: qtgui/commandregistry.cpp:152
 #, qt-format
 msgid "%1 must list between %2 and %3 atom indices."
-msgstr ""
+msgstr "%1 musí obsahovat seznam indexů atomů v počtu od %2 do %3."
 
 #: qtgui/commandregistry.cpp:173
 #, qt-format
 msgid "%1 must be at least %2."
-msgstr ""
+msgstr "%1 musí být alespoň %2."
 
 #: qtgui/commandregistry.cpp:179
 #, qt-format
 msgid "%1 must be at most %2."
-msgstr ""
+msgstr "%1 musí být nejvýše %2."
 
 #: qtgui/commandregistry.cpp:191
 #, qt-format
 msgid "%1 must be a whole number."
-msgstr ""
+msgstr "%1 musí být celé číslo."
 
 #: qtgui/commandregistry.cpp:207 qtgui/commandregistry.cpp:218
 #, qt-format
 msgid "%1 is too large."
-msgstr ""
+msgstr "%1 má příliš velkou hodnotu."
 
 #: qtgui/commandregistry.cpp:239
 #, qt-format
 msgid "%1 must be a finite number."
-msgstr ""
+msgstr "%1 musí být konečné číslo."
 
 #: qtgui/commandregistry.cpp:266
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "%1 musí být seznam 3 konečných čísel [x, y, z]."
 
 #: qtgui/commandregistry.cpp:269
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z] in %2."
-msgstr ""
+msgstr "%1 musí být seznam 3 konečných čísel [x, y, z] v %2."
 
 #: qtgui/commandregistry.cpp:284
 #, qt-format
@@ -648,6 +650,8 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b, a] with values "
 "0-255."
 msgstr ""
+"%1 musí být barva: \"#RRGGBB\", název barvy nebo [r, g, b, a] s hodnotami 0-"
+"255."
 
 #: qtgui/commandregistry.cpp:287
 #, qt-format
@@ -655,51 +659,52 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b] with values "
 "0-255."
 msgstr ""
+"%1 musí být barva: \"#RRGGBB\", název barvy nebo [r, g, b] s hodnotami 0-255."
 
 #: qtgui/commandregistry.cpp:313
 #, qt-format
 msgid "%1 does not take an alpha channel; give \"#RRGGBB\" or [r, g, b]."
-msgstr ""
+msgstr "%1 nepřijímá alfa kanál; zadejte \"#RRGGBB\" nebo [r, g, b]."
 
 #: qtgui/commandregistry.cpp:435
 #, qt-format
 msgid "%1 must be a string."
-msgstr ""
+msgstr "%1 musí být řetězec."
 
 #: qtgui/commandregistry.cpp:444
 #, qt-format
 msgid "%1 must be one of: %2."
-msgstr ""
+msgstr "%1 musí být jedna z hodnot: %2."
 
 #: qtgui/commandregistry.cpp:454
 #, qt-format
 msgid "%1 must be true or false."
-msgstr ""
+msgstr "%1 musí být true nebo false."
 
 #: qtgui/commandregistry.cpp:915
 #, qt-format
 msgid "unknown option \"%1\" for command \"%2\"."
-msgstr ""
+msgstr "Neznámá volba \"%1\" pro příkaz \"%2\"."
 
 #: qtgui/commandregistry.cpp:940
 #, qt-format
 msgid "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
-msgstr ""
+msgstr "Volby \"%1\" a \"%2\" jsou totožné; zadejte pouze \"%1\"."
 
 #: qtgui/commandregistry.cpp:971
 #, qt-format
 msgid "missing required option \"%1\"."
-msgstr ""
+msgstr "Chybí povinná volba \"%1\"."
 
 #: qtgui/commandregistry.cpp:997
 #, qt-format
 msgid "%1 must be a list of zero-based atom indices."
-msgstr ""
+msgstr "%1 musí být seznam indexů atomů číslovaných od nuly."
 
 #: qtgui/commandregistry.cpp:1022
 #, qt-format
 msgid "atom index %1 is repeated in %2; each atom must be different."
-msgstr ""
+msgstr "Index atomu %1 se v %2 opakuje; každý atom musí být jiný."
 
 #: qtgui/commandregistry.cpp:1049 qtplugins/editor/editor.cpp:1106
 #, qt-format
@@ -2043,20 +2048,20 @@ msgstr[2] "Zbývá %n hodin"
 
 #: qtopengl/glwidget.cpp:310
 msgid "The image size must be positive."
-msgstr ""
+msgstr "Velikost obrázku musí být kladná."
 
 #: qtopengl/glwidget.cpp:313
 msgid "Supersampling must be between 1 and 4."
-msgstr ""
+msgstr "Supersampling musí být v rozmezí 1 až 4."
 
 #: qtopengl/glwidget.cpp:315
 msgid "The scene is being rebuilt; try again in a moment."
-msgstr ""
+msgstr "Scéna se znovu sestavuje; zkuste to za chvíli znovu."
 
 #: qtopengl/glwidget.cpp:317
 #, qt-format
 msgid "The renderer is not valid: %1"
-msgstr ""
+msgstr "Vykreslovač není platný: %1"
 
 #: qtopengl/glwidget.cpp:325
 #, qt-format
@@ -2064,11 +2069,15 @@ msgid ""
 "The image is too large: %1 x %2 pixels (including supersampling) exceeds the "
 "maximum of %3."
 msgstr ""
+"Obrázek je příliš velký: %1 x %2 pixelů (včetně supersamplingu) překračuje "
+"maximum %3."
 
 #: qtopengl/glwidget.cpp:335
 msgid ""
 "There is no OpenGL context. The view must have been shown at least once."
 msgstr ""
+"Není k dispozici kontext OpenGL. Pohled musí být předtím alespoň jednou "
+"zobrazen."
 
 #: qtopengl/glwidget.cpp:384
 #, qt-format
@@ -2076,36 +2085,40 @@ msgid ""
 "The image is too large for this graphics driver: %1 x %2 pixels exceeds its "
 "limit of %3."
 msgstr ""
+"Obrázek je pro tento grafický ovladač příliš velký: %1 x %2 pixelů "
+"překračuje jeho limit %3."
 
 #: qtopengl/glwidget.cpp:425
 msgid ""
 "The offscreen framebuffer could not be created. The image may be too large "
 "for the available memory."
 msgstr ""
+"Nepodařilo se vytvořit framebuffer pro vykreslování mimo obrazovku. Obrázek "
+"může být příliš velký pro dostupnou paměť."
 
 #: qtopengl/glwidget.cpp:447
 msgid "The offscreen framebuffer could not be bound."
-msgstr ""
+msgstr "Framebuffer pro vykreslování mimo obrazovku se nepodařilo navázat."
 
 #: qtopengl/glwidget.cpp:453
 msgid "Reading back the rendered image failed."
-msgstr ""
+msgstr "Zpětné načtení vykresleného obrázku se nezdařilo."
 
 #: qtopengl/imagesizedialog.cpp:36
 msgid "Image Size"
-msgstr ""
+msgstr "Velikost obrázku"
 
 #: qtopengl/imagesizedialog.cpp:40 qtopengl/imagesizedialog.cpp:43
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #: qtopengl/imagesizedialog.cpp:49
 msgid "&Lock aspect ratio"
-msgstr ""
+msgstr "&Uzamknout poměr stran"
 
 #: qtopengl/imagesizedialog.cpp:51
 msgid "&Transparent background"
-msgstr ""
+msgstr "&Průhledné pozadí"
 
 #: qtopengl/imagesizedialog.cpp:53
 msgid "&Width:"
@@ -2113,21 +2126,21 @@ msgstr "&Šířka:"
 
 #: qtopengl/imagesizedialog.cpp:55
 msgid "&Height:"
-msgstr ""
+msgstr "&Výška:"
 
 #: qtopengl/imagesizedialog.cpp:61
 #, qt-format
 msgid "%1×"
-msgstr ""
+msgstr "%1×"
 
 #: qtopengl/imagesizedialog.cpp:63
 #, qt-format
 msgid "Set the size to %1× the size of the view"
-msgstr ""
+msgstr "Nastavit velikost na %1× velikosti pohledu"
 
 #: qtopengl/imagesizedialog.cpp:75
 msgid "Size of view:"
-msgstr ""
+msgstr "Velikost pohledu:"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
@@ -2675,18 +2688,22 @@ msgid ""
 "colorAtomsCustom requires a \"color\" option (a color name or \"#rrggbb\" "
 "value)."
 msgstr ""
+"colorAtomsCustom vyžaduje volbu \"color\" (název barvy nebo hodnotu "
+"\"#rrggbb\")."
 
 #: qtplugins/applycolors/applycolors.cpp:656
 #: qtplugins/applycolors/applycolors.cpp:677
 #, qt-format
 msgid "Unknown color \"%1\"."
-msgstr ""
+msgstr "Neznámá barva \"%1\"."
 
 #: qtplugins/applycolors/applycolors.cpp:670
 msgid ""
 "colorResiduesCustom requires a \"color\" option (a color name or \"#rrggbb\" "
 "value)."
 msgstr ""
+"colorResiduesCustom vyžaduje volbu \"color\" (název barvy nebo hodnotu "
+"\"#rrggbb\")."
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -3182,6 +3199,8 @@ msgstr ""
 msgid ""
 "Zero-based atom indices: 2 for a distance, 3 for an angle or 4 for a torsion."
 msgstr ""
+"Indexy atomů číslované od nuly: 2 pro vzdálenost, 3 pro úhel nebo 4 pro "
+"torzní úhel."
 
 #: qtplugins/constraints/constraintsextension.cpp:174
 msgid ""
@@ -3208,6 +3227,8 @@ msgid ""
 "Target in Å for a distance or degrees for an angle or torsion. Defaults to "
 "the current geometry."
 msgstr ""
+"Cílová hodnota v Å pro vzdálenost nebo ve stupních pro úhel či torzní úhel. "
+"Výchozí hodnota odpovídá aktuální geometrii."
 
 #: qtplugins/constraints/constraintsextension.cpp:198
 msgid ""
@@ -5097,11 +5118,11 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid "The new distance in Å."
-msgstr ""
+msgstr "Nová vzdálenost v Å."
 
 #: qtplugins/measuretool/measuretool.cpp:705
 msgid "The new angle in degrees."
-msgstr ""
+msgstr "Nový úhel ve stupních."
 
 #: qtplugins/measuretool/measuretool.cpp:733
 msgid ""
@@ -5168,7 +5189,7 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:772
 msgid "Zero-based atom indices, in chain order."
-msgstr ""
+msgstr "Indexy atomů číslované od nuly, v pořadí v řetězci."
 
 #: qtplugins/measuretool/measuretool.cpp:912
 msgid "That's not a value this distance can be set to."
@@ -6260,12 +6281,12 @@ msgstr "Video (*.mp4);;Video (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:455 qtplugins/surfaces/surfaces.cpp:1420
 msgid "Movie Size"
-msgstr ""
+msgstr "Velikost videa"
 
 #: qtplugins/playertool/playertool.cpp:481
 #, qt-format
 msgid "Cannot render frame %1: %2"
-msgstr ""
+msgstr "Nelze vykreslit snímek %1: %2"
 
 #: qtplugins/playertool/playertool.cpp:487 qtplugins/surfaces/surfaces.cpp:1436
 msgid "GIF (*.gif)"
@@ -6285,7 +6306,7 @@ msgstr "Video (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:519
 msgid "Cannot create the video file."
-msgstr ""
+msgstr "Soubor videa nelze vytvořit."
 
 #: qtplugins/playertool/playertool.cpp:536 qtplugins/surfaces/surfaces.cpp:1515
 msgid "Error: cannot add frame to video."
@@ -6296,6 +6317,8 @@ msgid ""
 "Cannot run ffmpeg or avconv to encode the movie. The frames were saved as "
 "PNG files."
 msgstr ""
+"Nelze spustit ffmpeg ani avconv pro zakódování videa. Snímky byly uloženy "
+"jako soubory PNG."
 
 #: qtplugins/playertool/playertool.cpp:668
 msgid ""
@@ -7067,7 +7090,7 @@ msgstr "Vybrat všechny atomy určitého prvku."
 
 #: qtplugins/select/select.cpp:641
 msgid "An element symbol or atomic number."
-msgstr ""
+msgstr "Značka prvku nebo protonové číslo."
 
 #: qtplugins/select/select.cpp:650
 msgid "Select all atoms that belong to amino acid backbones"
@@ -7105,14 +7128,17 @@ msgid ""
 "\"indices\" is a deprecated alias) and optional \"mode\": \"replace\" "
 "(default), \"add\" or \"remove\"."
 msgstr ""
+"Vybrat atomy podle indexu. Možnosti: \"atoms\" (seznam indexů atomů "
+"číslovaných od nuly; \"indices\" je zastaralý alias) a volitelná \"mode\": "
+"\"replace\" (výchozí), \"add\" nebo \"remove\"."
 
 #: qtplugins/select/select.cpp:680
 msgid "Zero-based indices of the atoms to select."
-msgstr ""
+msgstr "Indexy vybíraných atomů číslované od nuly."
 
 #: qtplugins/select/select.cpp:685
 msgid "How to combine the atoms with the current selection."
-msgstr ""
+msgstr "Jak zkombinovat atomy s aktuálním výběrem."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -7442,7 +7468,7 @@ msgstr "Otevřít dialog spekter."
 
 #: qtplugins/spectra/spectra.cpp:183
 msgid "The molecule has no spectra data."
-msgstr ""
+msgstr "Molekula nemá spektrální data."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -7832,7 +7858,7 @@ msgstr "Nepodařilo se najít aktivní vykreslovací prvek, operace se nezdařil
 #: qtplugins/surfaces/surfaces.cpp:1486
 #, qt-format
 msgid "Cannot render the movie frame: %1"
-msgstr ""
+msgstr "Nelze vykreslit snímek videa: %1"
 
 #: qtplugins/surfaces/surfaces.h:79
 msgid "Read and render surfaces."
@@ -7849,7 +7875,7 @@ msgstr "SVG (*.svg)"
 #: qtplugins/svg/svg.cpp:284
 #, qt-format
 msgid "Ball-and-stick view of %1, %2 atoms"
-msgstr ""
+msgstr "Kuličkové a tyčinkové zobrazení %1, počet atomů: %2"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
