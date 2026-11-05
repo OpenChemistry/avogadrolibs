@@ -71,6 +71,10 @@ public:
    * Threads can call this concurrently with non-overlapping i ranges; each
    * slab maps to a contiguous region of the cube buffer so writes never
    * conflict. Out-of-range bounds are clamped to [0, nx).
+   *
+   * The slab functions read only the basis set the tools were built from,
+   * not the molecule's current one, so the caller must keep that basis set
+   * alive (e.g. with Molecule::sharedBasisSet()) and check isValid() first.
    * @return True on success, false on failure.
    */
   bool calculateMolecularOrbitalSlab(Cube& cube, int molecularOrbitalNumber,

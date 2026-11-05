@@ -123,7 +123,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
   // needs more complex logic to step through the file and do it properly.
   json atoms;
   if (!moleculeArray.empty()) {
-    json finalMol = moleculeArray.back();
+    const json& finalMol = moleculeArray.back();
     atoms = finalMol.value("atoms", json());
   }
   if (atoms.is_array()) {
@@ -173,7 +173,7 @@ bool NWChemJson::read(std::istream& file, Molecule& molecule)
     basis->setMolecule(&molecule);
     string basisSetName;
     for (size_t i = 0; i < atomSymbol.size(); ++i) {
-      string symbol = atomSymbol[i];
+      const string& symbol = atomSymbol[i];
       json basisFunctions = basisSet.value("basisFunctions", json());
       json currentFunction;
       for (auto& basisFunction : basisFunctions) {

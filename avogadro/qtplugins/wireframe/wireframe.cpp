@@ -13,6 +13,7 @@
 #include <avogadro/rendering/widelinegeometry.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDoubleSpinBox>
@@ -50,7 +51,8 @@ std::string commaToDot(std::string token)
 
 struct LayerWireframe : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   bool multiBonds = true;
   bool showHydrogens = true;
   float lineWidth = 1.0f;
@@ -70,7 +72,14 @@ struct LayerWireframe : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerWireframe(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerWireframe(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerWireframe() override
   {
@@ -159,10 +168,10 @@ void Wireframe::process(const QtGui::Molecule& molecule,
   lines->identifier().molecule = &molecule;
   lines->identifier().type = Rendering::BondType;
   // add tiny atom sites for selection
-  auto atoms = new SphereGeometry;
+  auto* atoms = new SphereGeometry;
   atoms->identifier().molecule = &molecule;
   atoms->identifier().type = Rendering::AtomType;
-  auto selectedAtoms = new SphereGeometry;
+  auto* selectedAtoms = new SphereGeometry;
   selectedAtoms->setOpacity(0.42);
   Vector3ub selectedColor(0, 0, 255);
 

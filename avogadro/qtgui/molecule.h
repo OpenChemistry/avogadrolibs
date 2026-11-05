@@ -35,16 +35,16 @@ class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 
 public:
   /** Typedef for Atom class. */
-  typedef Core::Molecule::AtomType AtomType;
+  using AtomType = Core::Molecule::AtomType;
 
   /** Typedef for PersistentAtom class. */
-  typedef PersistentAtom<Molecule> PersistentAtomType;
+  using PersistentAtomType = PersistentAtom<Molecule>;
 
   /** Typedef for Bond class. */
-  typedef Core::Molecule::BondType BondType;
+  using BondType = Core::Molecule::BondType;
 
   /** Typedef for PersistentBond class. */
-  typedef PersistentBond<Molecule> PersistentBondType;
+  using PersistentBondType = PersistentBond<Molecule>;
 
   Molecule(QObject* parent_ = nullptr);
   ~Molecule() override;

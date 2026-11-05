@@ -92,6 +92,7 @@ float closestTo(float x, float peak, float intensity, float scale = 1.0,
 std::vector<double> fromMatrix(const MatrixX& matrix)
 {
   std::vector<double> result;
+  result.reserve(matrix.rows());
   for (auto i = 0; i < matrix.rows(); ++i)
     result.push_back(matrix(i, 0));
   return result;
@@ -1115,8 +1116,6 @@ void SpectraDialog::importData()
   // enable the imported data series
   m_ui->cb_import->setEnabled(true);
   m_ui->cb_import->setChecked(true);
-
-  return;
 }
 
 void SpectraDialog::toggleOptions()

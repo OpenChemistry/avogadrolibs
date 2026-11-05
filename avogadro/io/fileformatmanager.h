@@ -63,6 +63,10 @@ struct CaseInsensitiveComparator
 class AVOGADROIO_EXPORT FileFormatManager
 {
 public:
+  FileFormatManager(const FileFormatManager&) = delete; // Not implemented.
+  FileFormatManager& operator=(const FileFormatManager&) =
+    delete; // Not implemented.
+
   /**
    * Get the singleton instance of the file format manager. This instance should
    * not be deleted.
@@ -279,9 +283,6 @@ private:
 
   FileFormatManager();
   ~FileFormatManager();
-
-  FileFormatManager(const FileFormatManager&);            // Not implemented.
-  FileFormatManager& operator=(const FileFormatManager&); // Not implemented.
 
   /**
    * @brief Return keys from a map that have formats matching the supplied

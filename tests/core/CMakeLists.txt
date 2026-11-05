@@ -20,6 +20,7 @@ set(tests
   DihedralIterator
   Eigen
   Element
+  GaussianPrimitiveNormalization
   GaussianSet
   GaussianShellNormalization
   Graph
@@ -67,12 +68,16 @@ target_include_directories(AvogadroTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..
 # filter below would not match -- ctest would then run zero cases and still
 # report success.
 set(parameterizedTests
+  GaussianPrimitiveNormalization
   GaussianShellNormalization
   )
 
 foreach(TestName ${tests})
   if(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
+  elseif(TestName STREQUAL "Molecule")
+    # moleculetest.cpp also defines MoleculeCoordinateSetTest.
+    set(testFilter "MoleculeTest.*:MoleculeCoordinateSetTest.*")
   else()
     set(testFilter "${TestName}Test.*")
   endif()

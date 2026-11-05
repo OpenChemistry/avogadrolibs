@@ -43,10 +43,13 @@ import os
 import socket
 import struct
 import sys
-import tempfile
 import threading
 import uuid
 import zlib
+
+from _load_avogadro import load_connect_module
+
+socket_path = load_connect_module().socket_path
 
 
 def _png_chunk(tag, data):
@@ -211,9 +214,10 @@ class FakeRPCServer:
     was sent, not just what came back.
 
     :param name: The socket name, i.e. the file is
-        ``$TMPDIR/<name>``, matching what ``avogadro.connect.connect``
-        expects for its ``name`` argument. Defaults to a random name so
-        parallel test runs, and a real running Avogadro, never collide.
+        ``avogadro.connect.socket_path(name)``, which is what
+        ``avogadro.connect.connect`` expects for its ``name`` argument.
+        Defaults to a random name so parallel test runs, and a real running
+        Avogadro, never collide.
     :param responses: Extra or overriding canned responses, merged over
         DEFAULT_RESPONSES. Same shape: method name -> value or
         callable(params) -> value.
@@ -221,7 +225,7 @@ class FakeRPCServer:
 
     def __init__(self, name=None, responses=None):
         self.name = name or ("avogadro-test-%s" % uuid.uuid4().hex[:8])
-        self.path = os.path.join(tempfile.gettempdir(), self.name)
+        self.path = socket_path(self.name)
         self._responses = dict(DEFAULT_RESPONSES)
         if responses:
             self._responses.update(responses)
@@ -258,6 +262,8 @@ class FakeRPCServer:
             )
         if os.path.exists(self.path):
             os.unlink(self.path)
+        # The private per-user directory (Linux/BSD) is created by the server.
+        os.makedirs(os.path.dirname(self.path), mode=0o700, exist_ok=True)
         self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self._socket.bind(self.path)
         self._socket.listen(1)

@@ -43,7 +43,7 @@ const std::map<char, std::string> threeLetterCodes = {
 class InsertPeptideDialog : public QDialog, public Ui::InsertPeptideDialog
 {
 public:
-  InsertPeptideDialog(QWidget* parent = 0) : QDialog(parent)
+  InsertPeptideDialog(QWidget* parent = nullptr) : QDialog(parent)
   {
     setWindowFlags(Qt::Dialog | Qt::Tool);
     setupUi(this);
@@ -227,8 +227,8 @@ AminoAcid InsertPeptide::readAminoAcid(const QString& threeLetterCode)
     if (parts.size() < 8)
       continue;
 
-    QString element = parts[0];
-    QString atomName = parts[1];
+    const QString& element = parts[0];
+    const QString& atomName = parts[1];
     double distance = parts[2].toDouble();
     double angle = parts[3].toDouble();
     double dihedral = parts[4].toDouble();
@@ -358,7 +358,7 @@ void InsertPeptide::performInsert()
   Index currentO = MaxIndex;
 
   for (int i = 0; i < sequenceList.size(); i++) {
-    QString aaString = sequenceList[i];
+    const QString& aaString = sequenceList[i];
     std::string aaStdString = aaString.toUpper().toStdString();
 
     // Read amino acid if not already cached

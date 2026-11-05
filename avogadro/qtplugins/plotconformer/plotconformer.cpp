@@ -353,7 +353,7 @@ bool PlotConformer::eventFilter(QObject* object, QEvent* event)
   if (count < 2)
     return QtGui::ExtensionPlugin::eventFilter(object, event);
 
-  auto* keyEvent = static_cast<QKeyEvent*>(event);
+  auto* keyEvent = dynamic_cast<QKeyEvent*>(event);
   // Shift takes bigger strides through long trajectories.
   const int step = (keyEvent->modifiers() & Qt::ShiftModifier) ? 10 : 1;
 

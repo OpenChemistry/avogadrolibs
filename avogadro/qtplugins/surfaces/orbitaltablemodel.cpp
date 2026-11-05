@@ -218,7 +218,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
 {
   clearOrbitals();
 
-  auto* gaussianBasis = dynamic_cast<const Core::GaussianSet*>(basis);
+  const auto* gaussianBasis = dynamic_cast<const Core::GaussianSet*>(basis);
 
   // Check if this is an open-shell calculation (UHF or ROHF)
   bool isOpenShell = false;

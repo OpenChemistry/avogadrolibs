@@ -54,8 +54,8 @@ std::vector<Index> templateAttachmentPoints(
   if (dummyIndex == MaxIndex || dummyIndex >= templateMolecule.atomCount())
     return attachmentPoints;
 
-  for (const Core::Bond* bond : templateMolecule.bonds(dummyIndex))
-    attachmentPoints.push_back(bond->getOtherAtom(dummyIndex).index());
+  for (const Core::Bond& bond : templateMolecule.bonds(dummyIndex))
+    attachmentPoints.push_back(bond.getOtherAtom(dummyIndex).index());
 
   return attachmentPoints;
 }

@@ -37,6 +37,7 @@ avogadro_headers(QtGui
   backgroundfileformat.h
   calcworker.h
   colorbutton.h
+  commandregistry.h
   containerwidget.h
   customelementdialog.h
   conformerquantitytranslator.h
@@ -84,6 +85,7 @@ target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
   calcworker.cpp
   colorbutton.cpp
+  commandregistry.cpp
   containerwidget.cpp
   customelementdialog.cpp
   elementdetail_p.cpp

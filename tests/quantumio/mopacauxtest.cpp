@@ -367,3 +367,68 @@ TEST(MopacAuxTest, hugeCoordinateCountReadsOnlyWhatIsPresent)
   ASSERT_EQ(molecule.atomCount(), 2);
   EXPECT_DOUBLE_EQ(molecule.atomPosition3d(1).z(), 0.74);
 }
+
+namespace {
+
+// An AO_ZETA block of n identical values, optionally followed by more blocks.
+std::string zetaAux(size_t n, const std::string& extra)
+{
+  std::ostringstream aux;
+  aux << " ATOM_EL[1]=\n H\n"
+      << " ATOM_X:ANGSTROMS[3]=\n 0.0 0.0 0.0\n"
+      << " AO_ZETA[" << n << "]=\n";
+  for (size_t i = 0; i < n; ++i)
+    aux << " 1.0" << ((i % 10 == 9) ? "\n" : "");
+  aux << "\n" << extra;
+  return aux.str();
+}
+
+} // namespace
+
+// Regression test: the matrices are allocated basis x basis whatever the
+// block holds, so a corrupt AO_ZETA count followed by a one-value eigenvector
+// block let a small file reserve gigabytes (the fuzz job ran out of memory on
+// an 847 KB input with 20105 "zetas"). 5000 zetas would be 200 MB.
+TEST(MopacAuxTest, eigenvectorsMustMatchTheBasisSize)
+{
+  MopacAux reader;
+  Molecule molecule;
+  EXPECT_FALSE(
+    reader.readString(zetaAux(5000, " EIGENVECTORS[1]=\n 1.0\n"), molecule));
+  EXPECT_NE(reader.error().find("Eigenvector matrix size does not match"),
+            std::string::npos)
+    << reader.error();
+}
+
+// A block that ends early must not leave uninitialised entries behind.
+TEST(MopacAuxTest, truncatedOverlapMatrixIsRejected)
+{
+  MopacAux reader;
+  Molecule molecule;
+  // 3 zetas need 6 lower-triangle values after the comment line; give 4.
+  EXPECT_FALSE(reader.readString(
+    zetaAux(3, " OVERLAP_MATRIX[6]=\n comment\n 1.0 0.1 1.0 0.1\n"), molecule));
+  EXPECT_NE(reader.error().find("Overlap matrix size does not match"),
+            std::string::npos)
+    << reader.error();
+}
+
+TEST(MopacAuxTest, truncatedDensityMatrixIsRejected)
+{
+  MopacAux reader;
+  Molecule molecule;
+  EXPECT_FALSE(reader.readString(
+    zetaAux(3, " TOTAL_DENSITY_MATRIX[6]=\n comment\n 1.0 0.1 1.0\n"),
+    molecule));
+  EXPECT_NE(reader.error().find("Density matrix size does not match"),
+            std::string::npos)
+    << reader.error();
+}
+
+// With no basis there is nothing to read and nothing to allocate.
+TEST(MopacAuxTest, emptyBasisLeavesMatricesEmpty)
+{
+  MopacAux reader;
+  Molecule molecule;
+  EXPECT_TRUE(reader.readString(zetaAux(0, " EIGENVECTORS[0]=\n"), molecule));
+}

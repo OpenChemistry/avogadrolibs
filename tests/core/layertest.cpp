@@ -315,9 +315,9 @@ TEST_F(LayerTest, CopyClonesLayerSettings)
   Molecule copy(original);
 
   ASSERT_EQ(copy.layerInfo()->settings["TestPlugin"].size(), 1u);
-  auto* originalData = static_cast<CountedLayerData*>(
+  auto* originalData = dynamic_cast<CountedLayerData*>(
     original.layerInfo()->settings["TestPlugin"][0].get());
-  auto* copyData = static_cast<CountedLayerData*>(
+  auto* copyData = dynamic_cast<CountedLayerData*>(
     copy.layerInfo()->settings["TestPlugin"][0].get());
 
   EXPECT_NE(originalData, copyData)

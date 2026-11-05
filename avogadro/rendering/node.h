@@ -33,7 +33,7 @@ public:
   /**
    * Accept a visit from our friendly visitor.
    */
-  virtual void accept(Visitor&) { return; }
+  virtual void accept(Visitor&) {}
 
   /**
    * @brief Get a pointer to the node's parent.

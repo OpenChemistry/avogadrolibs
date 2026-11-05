@@ -281,7 +281,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
         properties["partial_charges"].is_object()) {
       // keys are types, values are arrays of charges
       json partialCharges = properties["partial_charges"];
-      for (auto& kv : partialCharges.items()) {
+      for (const auto& kv : partialCharges.items()) {
         MatrixX charges(atomCount, 1);
         if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
           for (size_t i = 0; i < kv.value().size(); ++i) {
@@ -327,6 +327,7 @@ bool QCSchema::read(std::istream& in, Core::Molecule& molecule)
       if (sequence.find("energies") != sequence.end() &&
           isNumericArray(sequence["energies"])) {
         std::vector<double> energies;
+        energies.reserve(sequence["energies"].size());
         for (unsigned int i = 0; i < sequence["energies"].size(); ++i) {
           energies.push_back(sequence["energies"][i].get<float>());
         }

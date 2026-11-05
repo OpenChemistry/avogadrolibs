@@ -72,8 +72,8 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   Vector3 grad_cross_b = -(grad_cross_a + grad_cross_c);
 
   // Gradients of the dot product
-  Vector3 grad_dot_a = cb;
-  Vector3 grad_dot_c = ab;
+  const Vector3& grad_dot_a = cb;
+  const Vector3& grad_dot_c = ab;
   Vector3 grad_dot_b = -(cb + ab);
 
   // Final gradient using atan2 derivative: d/dx(atan2(y,x)) = (x*dy/dx -

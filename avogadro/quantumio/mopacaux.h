@@ -56,9 +56,9 @@ private:
   std::vector<double> readArrayD(std::istream& in, unsigned int n);
   std::vector<int> readArraySym(std::istream& in, unsigned int n);
   std::vector<Vector3> readArrayVec(std::istream& in, unsigned int n);
-  bool readOverlapMatrix(std::istream& in, unsigned int n);
-  bool readEigenVectors(std::istream& in, unsigned int n);
-  bool readDensityMatrix(std::istream& in, unsigned int n);
+  bool readOverlapMatrix(std::istream& in);
+  bool readEigenVectors(std::istream& in);
+  bool readDensityMatrix(std::istream& in);
   bool readVibrationFrequencies(std::istream& in, unsigned int n);
   bool readVibrationIntensities(std::istream& in, unsigned int n);
   bool readNormalModes(std::istream& in, unsigned int n);

@@ -68,6 +68,7 @@ void exportMolecule(py::module_& m)
   // Function pointer overloads
   Index (Molecule::*atomCount0)() const = &Molecule::atomCount;
   Index (Molecule::*atomCount1)(unsigned char) const = &Molecule::atomCount;
+  Cube* (Molecule::*addCube0)() = &Molecule::addCube;
   Cube* (Molecule::*cube0)(Index) = &Molecule::cube;
   UnitCell* (Molecule::*unitCell0)() = &Molecule::unitCell;
 
@@ -131,8 +132,8 @@ void exportMolecule(py::module_& m)
       },
       "The bond between the atoms at the specified indices (invalid if "
       "there is none)")
-    .def("add_cube", &Molecule::addCube,
-         py::return_value_policy::reference_internal, "Add a new cube")
+    .def("add_cube", addCube0, py::return_value_policy::reference_internal,
+         "Add a new cube")
     .def("cube_count", &Molecule::cubeCount, "The number of cubes")
     .def("cube", cube0, py::return_value_policy::reference_internal,
          "The cube at the specified index")

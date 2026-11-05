@@ -1,0 +1,4 @@
+# Windows batch files need CRLF line endings in the file itself, even
+# when downloaded raw; -text stops git from normalizing them to LF.
+*.bat -text
+*.sh text eol=lf

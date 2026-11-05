@@ -627,22 +627,37 @@ void ApplyColors::registerCommands()
 }
 
 bool ApplyColors::handleCommand(const QString& command,
-                                [[maybe_unused]] const QVariantMap& options)
+                                const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command
+  static const QStringList knownCommands = {
+    "colorAtomsCustom",     "resetAtomColors",
+    "colorResiduesCustom",  "colorResiduesByAminoAcid",
+    "colorResiduesShapely", "colorResiduesBySecondaryStructure",
+    "resetResidueColors"
+  };
+
+  if (!knownCommands.contains(command))
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "colorAtomsCustom") {
-    if (options.contains("color")) {
-      QString colorString = options["color"].toString();
-
-      QColor color(colorString);
-
-      if (color.isValid()) {
-        applyCustomColor(color);
-        return true;
-      }
+    if (!options.contains("color")) {
+      emit commandFailed(tr("colorAtomsCustom requires a \"color\" option "
+                            "(a color name or \"#rrggbb\" value)."));
+      return true;
     }
+    const QColor color(options["color"].toString());
+    if (!color.isValid()) {
+      emit commandFailed(
+        tr("Unknown color \"%1\".").arg(options["color"].toString()));
+      return true;
+    }
+    applyCustomColor(color);
+    return true;
   }
 
   if (command == "resetAtomColors") {
@@ -651,16 +666,19 @@ bool ApplyColors::handleCommand(const QString& command,
   }
 
   if (command == "colorResiduesCustom") {
-    if (options.contains("color")) {
-      QString colorString = options["color"].toString();
-
-      QColor color(colorString);
-
-      if (color.isValid()) {
-        applyCustomColorResidue(color);
-        return true;
-      }
+    if (!options.contains("color")) {
+      emit commandFailed(tr("colorResiduesCustom requires a \"color\" option "
+                            "(a color name or \"#rrggbb\" value)."));
+      return true;
     }
+    const QColor color(options["color"].toString());
+    if (!color.isValid()) {
+      emit commandFailed(
+        tr("Unknown color \"%1\".").arg(options["color"].toString()));
+      return true;
+    }
+    applyCustomColorResidue(color);
+    return true;
   }
 
   if (command == "colorResiduesByAminoAcid") {

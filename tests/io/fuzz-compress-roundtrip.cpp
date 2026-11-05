@@ -77,7 +77,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   std::string encoded;
   {
     auto sink = std::unique_ptr<std::ostream>(new std::ostringstream());
-    auto* raw = static_cast<std::ostringstream*>(sink.get());
+    auto* raw = dynamic_cast<std::ostringstream*>(sink.get());
     CompressingOStream out(std::move(sink), type);
     for (std::size_t pos = 0; pos < payload.size(); pos += slice) {
       const std::size_t n = std::min(slice, payload.size() - pos);

@@ -8,6 +8,7 @@
 #include "constraintsmodel.h"
 
 #include <avogadro/core/constraint.h>
+#include <avogadro/qtgui/commandregistry.h>
 
 #include <QAction>
 #include <QDebug>
@@ -15,6 +16,7 @@
 #include <QtCore/QVariant>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <string>
 #include <iostream>
@@ -23,25 +25,6 @@ namespace Avogadro {
 namespace QtPlugins {
 
 namespace {
-
-/// Whether @p value holds an actual JSON number, as opposed to some other
-/// JSON type that QVariant would still convert on request -- a QString "3"
-/// or a JSON boolean, say. Atom indices and values must be rejected rather
-/// than silently coerced.
-bool isNumericVariant(const QVariant& value)
-{
-  switch (value.typeId()) {
-    case QMetaType::Double:
-    case QMetaType::Float:
-    case QMetaType::Int:
-    case QMetaType::UInt:
-    case QMetaType::LongLong:
-    case QMetaType::ULongLong:
-      return true;
-    default:
-      return false;
-  }
-}
 
 QString constraintTypeName(Core::Constraint::Type type)
 {
@@ -103,6 +86,8 @@ ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
   action->setText(tr("Constraints…"));
   connect(action, SIGNAL(triggered()), SLOT(openDialog()));
   m_actions.push_back(action);
+
+  registerConstraintCommands();
 }
 
 ConstraintsExtension::~ConstraintsExtension()
@@ -148,17 +133,44 @@ void ConstraintsExtension::setMolecule(QtGui::Molecule* mol)
     m_dialog->setMolecule(mol);
 }
 
-void ConstraintsExtension::registerCommands()
+void ConstraintsExtension::registerConstraintCommands()
 {
-  emit registerCommand(
-    "listConstraints",
+  using QtGui::CommandArgumentSpec;
+
+  QtGui::CommandSpec list;
+  list.name = "listConstraints";
+  list.description =
     tr("List the geometry constraints on the current molecule. No options. "
        "Returns {\"constraints\": [{\"type\": \"distance\"|\"angle\"|"
        "\"torsion\", \"atoms\": [i, j, (k, (l))], \"value\": v}, …]}, "
        "with zero-based atom indices and value in Å for a distance or "
-       "degrees for an angle or torsion."));
-  emit registerCommand(
-    "addConstraint",
+       "degrees for an angle or torsion.");
+  list.handler = [this](const QtGui::CommandArguments&) {
+    QVariantList entries;
+    for (const auto& constraint : m_molecule->constraints()) {
+      QVariantMap entry;
+      entry[QStringLiteral("type")] = constraintTypeName(constraint.type());
+      entry[QStringLiteral("atoms")] = constraintAtomsList(constraint);
+      entry[QStringLiteral("value")] = constraint.value();
+      entries << entry;
+    }
+    QVariantMap result;
+    result[QStringLiteral("constraints")] = entries;
+    emit commandFinished(QString(), result);
+  };
+  commandRegistry().add(std::move(list));
+
+  // The atom count (2, 3 or 4) decides the constraint type.
+  const CommandArgumentSpec atoms =
+    CommandArgumentSpec::atomIndices(
+      "atoms", tr("Zero-based atom indices: 2 for a distance, 3 for an angle "
+                  "or 4 for a torsion."))
+      .withRequired()
+      .withCount(2, 4);
+
+  QtGui::CommandSpec add;
+  add.name = "addConstraint";
+  add.description =
     tr("Add or update a geometry constraint, given as zero-based atom "
        "indices: {\"atoms\": [i, j]} for a distance, {\"atoms\": [i, j, "
        "k]} for an angle, or {\"atoms\": [i, j, k, l]} for a torsion, plus "
@@ -167,50 +179,37 @@ void ConstraintsExtension::registerCommands()
        "geometry of those atoms is measured and used. If a constraint "
        "already exists on the same atoms (in either order), its value is "
        "updated instead of adding a duplicate. Returns {\"type\": …, "
-       "\"atoms\": […], \"value\": …, \"updated\": bool}."));
-  emit registerCommand(
-    "removeConstraint",
+       "\"atoms\": […], \"value\": …, \"updated\": bool}.");
+  // The valid range depends on the constraint type, and on a measured
+  // default, so it is checked in addConstraint().
+  add.arguments = { atoms,
+                    CommandArgumentSpec::real(
+                      "value", tr("Target in Å for a distance or degrees for "
+                                  "an angle or torsion. Defaults to the "
+                                  "current geometry.")) };
+  add.handler = [this](const QtGui::CommandArguments& args) {
+    addConstraint(args);
+  };
+  commandRegistry().add(std::move(add));
+
+  QtGui::CommandSpec remove;
+  remove.name = "removeConstraint";
+  remove.description =
     tr("Remove the constraint on the given zero-based atom indices (in "
        "either order): {\"atoms\": [i, j, (k, (l))]}. Returns "
-       "{\"removed\": count}."));
-  emit registerCommand(
-    "clearConstraints",
+       "{\"removed\": count}.");
+  remove.arguments = { atoms };
+  remove.handler = [this](const QtGui::CommandArguments& args) {
+    removeConstraint(args);
+  };
+  commandRegistry().add(std::move(remove));
+
+  QtGui::CommandSpec clear;
+  clear.name = "clearConstraints";
+  clear.description =
     tr("Remove all geometry constraints from the current molecule. No "
-       "options. Returns {\"removed\": count}."));
-}
-
-bool ConstraintsExtension::handleCommand(const QString& command,
-                                         const QVariantMap& options)
-{
-  if (command != QLatin1String("listConstraints") &&
-      command != QLatin1String("addConstraint") &&
-      command != QLatin1String("removeConstraint") &&
-      command != QLatin1String("clearConstraints")) {
-    // Not one of ours.
-    return false;
-  }
-
-  if (!m_molecule) {
-    emit commandFailed(tr("There is no molecule to constrain."));
-    return true;
-  }
-
-  if (command == QLatin1String("listConstraints")) {
-    QVariantList list;
-    for (const auto& constraint : m_molecule->constraints()) {
-      QVariantMap entry;
-      entry[QStringLiteral("type")] = constraintTypeName(constraint.type());
-      entry[QStringLiteral("atoms")] = constraintAtomsList(constraint);
-      entry[QStringLiteral("value")] = constraint.value();
-      list << entry;
-    }
-    QVariantMap result;
-    result[QStringLiteral("constraints")] = list;
-    emit commandFinished(QString(), result);
-    return true;
-  }
-
-  if (command == QLatin1String("clearConstraints")) {
+       "options. Returns {\"removed\": count}.");
+  clear.handler = [this](const QtGui::CommandArguments&) {
     const auto removed = static_cast<qint64>(m_molecule->constraints().size());
     m_molecule->clearConstraints();
     m_molecule->emitChanged(QtGui::Molecule::Constraints);
@@ -220,51 +219,71 @@ bool ConstraintsExtension::handleCommand(const QString& command,
     QVariantMap result;
     result[QStringLiteral("removed")] = removed;
     emit commandFinished(QString(), result);
-    return true;
+  };
+  commandRegistry().add(std::move(clear));
+}
+
+bool ConstraintsExtension::handleCommand(const QString& command,
+                                         const QVariantMap& options)
+{
+  return commandRegistry().handle(command, options, m_molecule);
+}
+
+namespace {
+/// The atoms of a validated 2 to 4 index list, padded with MaxIndex.
+std::array<Index, 4> paddedAtoms(const std::vector<Index>& atoms)
+{
+  std::array<Index, 4> result = { MaxIndex, MaxIndex, MaxIndex, MaxIndex };
+  for (size_t i = 0; i < atoms.size() && i < 4; ++i)
+    result[i] = atoms[i];
+  return result;
+}
+} // namespace
+
+void ConstraintsExtension::removeConstraint(const QtGui::CommandArguments& args)
+{
+  const std::vector<Index> atomIndices = args.atoms(QStringLiteral("atoms"));
+  const auto padded = paddedAtoms(atomIndices);
+  const Index a = padded[0];
+  const Index b = padded[1];
+  const Index c = padded[2];
+  const Index d = padded[3];
+
+  auto& constraints = m_molecule->constraints();
+  const auto before = constraints.size();
+  constraints.erase(
+    std::remove_if(constraints.begin(), constraints.end(),
+                   [a, b, c, d](const Core::Constraint& constraint) {
+                     return constraint.matches(a, b, c, d);
+                   }),
+    constraints.end());
+  const auto removed = before - constraints.size();
+
+  if (removed == 0) {
+    emit commandFailed(tr("No constraint matches these atoms."));
+    return;
   }
 
-  // addConstraint and removeConstraint both take an "atoms" list.
-  QVector<Index> atomIndices;
-  QString error;
-  if (!parseAtomIndices(options, atomIndices, error)) {
-    emit commandFailed(error);
-    return true;
-  }
+  m_molecule->emitChanged(QtGui::Molecule::Constraints);
+  if (m_dialog)
+    m_dialog->updateConstraints();
 
-  const Index a = atomIndices[0];
-  const Index b = atomIndices[1];
-  const Index c = atomIndices.size() > 2 ? atomIndices[2] : MaxIndex;
-  const Index d = atomIndices.size() > 3 ? atomIndices[3] : MaxIndex;
+  QVariantMap result;
+  result[QStringLiteral("removed")] = static_cast<qint64>(removed);
+  emit commandFinished(QString(), result);
+}
 
-  if (command == QLatin1String("removeConstraint")) {
-    auto& constraints = m_molecule->constraints();
-    const auto before = constraints.size();
-    constraints.erase(
-      std::remove_if(constraints.begin(), constraints.end(),
-                     [a, b, c, d](const Core::Constraint& constraint) {
-                       return constraint.matches(a, b, c, d);
-                     }),
-      constraints.end());
-    const auto removed = before - constraints.size();
+void ConstraintsExtension::addConstraint(const QtGui::CommandArguments& args)
+{
+  const std::vector<Index> atomIndices = args.atoms(QStringLiteral("atoms"));
+  const auto padded = paddedAtoms(atomIndices);
+  const Index a = padded[0];
+  const Index b = padded[1];
+  const Index c = padded[2];
+  const Index d = padded[3];
 
-    if (removed == 0) {
-      emit commandFailed(tr("No constraint matches these atoms."));
-      return true;
-    }
-
-    m_molecule->emitChanged(QtGui::Molecule::Constraints);
-    if (m_dialog)
-      m_dialog->updateConstraints();
-
-    QVariantMap result;
-    result[QStringLiteral("removed")] = static_cast<qint64>(removed);
-    emit commandFinished(QString(), result);
-    return true;
-  }
-
-  // addConstraint: the atom count decides the type (2 = distance, 3 =
-  // angle, 4 = torsion) -- parseAtomIndices() already restricted it to one
-  // of those three.
+  // The atom count decides the type (2 = distance, 3 = angle, 4 = torsion);
+  // the atoms spec already restricted it to one of those three.
   Core::Constraint::Type type;
   switch (atomIndices.size()) {
     case 2:
@@ -279,25 +298,8 @@ bool ConstraintsExtension::handleCommand(const QString& command,
   }
 
   double value = 0.0;
-  if (options.contains(QStringLiteral("value"))) {
-    const QVariant valueVariant = options.value(QStringLiteral("value"));
-    if (!isNumericVariant(valueVariant)) {
-      switch (type) {
-        case Core::Constraint::DistanceConstraint:
-          emit commandFailed(tr("value must be a number: a distance in Å."));
-          break;
-        case Core::Constraint::AngleConstraint:
-          emit commandFailed(
-            tr("value must be a number: an angle in degrees."));
-          break;
-        default:
-          emit commandFailed(
-            tr("value must be a number: a dihedral angle in degrees."));
-          break;
-      }
-      return true;
-    }
-    value = valueVariant.toDouble();
+  if (args.has(QStringLiteral("value"))) {
+    value = args.real(QStringLiteral("value"));
   } else {
     // Measure the current geometry with the constraint's own evaluate(),
     // the same code an optimizer or the measure tool would use, so the
@@ -307,7 +309,7 @@ bool ConstraintsExtension::handleCommand(const QString& command,
     if (!temp.evaluate(m_molecule->atomPositions3d(), value)) {
       emit commandFailed(
         tr("Could not measure the current geometry for these atoms."));
-      return true;
+      return;
     }
   }
 
@@ -317,12 +319,12 @@ bool ConstraintsExtension::handleCommand(const QString& command,
   // for. Torsions wrap, so any value is meaningful.
   if (type == Core::Constraint::DistanceConstraint && !(value > 0.0)) {
     emit commandFailed(tr("value must be a distance greater than 0 Å."));
-    return true;
+    return;
   }
   if (type == Core::Constraint::AngleConstraint &&
       !(value >= 0.0 && value <= 180.0)) {
     emit commandFailed(tr("value must be an angle from 0 to 180 degrees."));
-    return true;
+    return;
   }
 
   // If an existing constraint of the same type already matches these atoms
@@ -356,74 +358,6 @@ bool ConstraintsExtension::handleCommand(const QString& command,
   result[QStringLiteral("value")] = value;
   result[QStringLiteral("updated")] = updated;
   emit commandFinished(QString(), result);
-  return true;
-}
-
-bool ConstraintsExtension::parseAtomIndices(const QVariantMap& options,
-                                            QVector<Index>& indices,
-                                            QString& error) const
-{
-  indices.clear();
-
-  const QVariant atomsValue = options.value(QStringLiteral("atoms"));
-  if (atomsValue.typeId() != QMetaType::QVariantList) {
-    error = tr("atoms must be a list of 2 (distance), 3 (angle) or 4 "
-               "(torsion) zero-based atom indices.");
-    return false;
-  }
-
-  const QVariantList atomsList = atomsValue.toList();
-  if (atomsList.size() < 2 || atomsList.size() > 4) {
-    error = tr("atoms must list 2 (distance), 3 (angle) or 4 (torsion) atom "
-               "indices.");
-    return false;
-  }
-
-  const Index atomCount = m_molecule->atomCount();
-  QVector<Index> parsed;
-  parsed.reserve(atomsList.size());
-
-  for (int i = 0; i < atomsList.size(); ++i) {
-    if (!isNumericVariant(atomsList[i])) {
-      error = tr("atom index #%1 in atoms must be a whole number.").arg(i + 1);
-      return false;
-    }
-
-    const double raw = atomsList[i].toDouble();
-    if (std::isnan(raw) || std::floor(raw) != raw) {
-      error = tr("atom index #%1 in atoms must be a whole number.").arg(i + 1);
-      return false;
-    }
-    if (raw < 0.0) {
-      error = tr("atom index #%1 in atoms is negative; atom indices must "
-                 "be zero or greater.")
-                .arg(i + 1);
-      return false;
-    }
-    // Comparing as doubles, before casting, keeps an absurdly large index
-    // from overflowing Index rather than simply failing this check.
-    if (!(raw < static_cast<double>(atomCount))) {
-      // %n lets each language supply its own plural forms for "atoms".
-      error = tr("atom index %1 is out of range (the molecule has %n "
-                 "atom(s)).",
-                 nullptr, static_cast<int>(atomCount))
-                .arg(raw, 0, 'f', 0);
-      return false;
-    }
-
-    const auto index = static_cast<Index>(raw);
-    if (parsed.contains(index)) {
-      error = tr("atom index %1 is repeated in atoms; each atom must be "
-                 "different.")
-                .arg(index);
-      return false;
-    }
-
-    parsed.push_back(index);
-  }
-
-  indices = parsed;
-  return true;
 }
 
 } // namespace QtPlugins

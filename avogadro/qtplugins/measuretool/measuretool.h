@@ -21,6 +21,9 @@
 #include <QtCore/QVector>
 
 namespace Avogadro {
+namespace QtGui {
+class CommandArguments;
+}
 namespace QtPlugins {
 
 /**
@@ -55,10 +58,10 @@ public:
 
   void draw(Rendering::GroupNode& node) override;
 
-  /// Registers measureDistance/measureAngle/measureDihedral (read the
-  /// current geometry) and editDistance/editAngle/editDihedral (change it),
-  /// the scripting/RPC equivalents of the panel.
-  void registerCommands() override;
+  /// measureDistance/measureAngle/measureDihedral (read the current
+  /// geometry) and editDistance/editAngle/editDihedral (change it), the
+  /// scripting/RPC equivalents of the panel, are described by the command
+  /// registry (see registerMeasureCommands()).
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
@@ -124,20 +127,13 @@ private:
     MeasureField field,
     QtGui::FragmentTools::CoordinateEditResult result) const;
 
-  /**
-   * Parse the "atoms" option shared by all six measure/edit commands: a
-   * JSON array of exactly @p requiredCount zero-based atom indices. On
-   * success, fills @p indices (in the given, chain, order) and returns
-   * true; otherwise fills @p error with a message identifying what was
-   * wrong and returns false.
-   */
-  bool parseAtomIndices(const QVariantMap& options, int requiredCount,
-                        QVector<Index>& indices, QString& error) const;
+  /// Add the six measure/edit commands to the command registry.
+  void registerMeasureCommands();
 
-  /// Parse the "value" option the three edit commands take: a plain number,
-  /// in Å for a distance (@p requiredCount 2) or degrees otherwise.
-  bool parseValue(const QVariantMap& options, int requiredCount, double& value,
-                  QString& error) const;
+  /// Run one validated command. @p requiredCount (2, 3 or 4) is the number
+  /// of atoms and also selects distance, angle or dihedral.
+  void runCommand(int requiredCount, const QString& resultKey, bool isEdit,
+                  const QtGui::CommandArguments& args);
 
   /// The persistent unique ids for a chain of atom indices, in the same
   /// order, via the same undo-molecule the panel edits through.

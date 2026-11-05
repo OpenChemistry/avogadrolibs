@@ -31,7 +31,7 @@ using Avogadro::QtGui::RWMolecule;
 
 namespace {
 
-typedef Avogadro::Core::Array<RWBond> NeighborListType;
+using NeighborListType = Avogadro::Core::Array<RWBond>;
 
 inline unsigned int countExistingBonds(const NeighborListType& bonds)
 {

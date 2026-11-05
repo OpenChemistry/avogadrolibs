@@ -16,6 +16,9 @@
 class QAction;
 
 namespace Avogadro {
+namespace QtGui {
+class CommandArguments;
+}
 namespace QtPlugins {
 class ConstraintsDialog;
 
@@ -40,9 +43,9 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override;
 
-  /// Registers listConstraints/addConstraint/removeConstraint/
-  /// clearConstraints, the scripting/RPC equivalents of the dialog.
-  void registerCommands() override;
+  /// listConstraints/addConstraint/removeConstraint/clearConstraints, the
+  /// scripting/RPC equivalents of the dialog, are described by the command
+  /// registry (see registerConstraintCommands()).
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
@@ -50,15 +53,13 @@ private slots:
   void openDialog();
 
 private:
-  /**
-   * Parse the "atoms" option shared by the add/removeConstraint commands: a
-   * JSON array of 2 (distance), 3 (angle) or 4 (torsion) zero-based atom
-   * indices. On success, fills @p indices (in the given order) and returns
-   * true; otherwise fills @p error with a message identifying what was
-   * wrong and returns false.
-   */
-  bool parseAtomIndices(const QVariantMap& options, QVector<Index>& indices,
-                        QString& error) const;
+  /// Add the four constraint commands to the command registry.
+  void registerConstraintCommands();
+
+  /// Run addConstraint: add a constraint, or update one on the same atoms.
+  void addConstraint(const QtGui::CommandArguments& args);
+  /// Run removeConstraint: remove the constraint on the given atoms.
+  void removeConstraint(const QtGui::CommandArguments& args);
 
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule = nullptr;
