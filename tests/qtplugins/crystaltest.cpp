@@ -28,6 +28,7 @@ using Avogadro::QtPluginsTests::CommandTestHarness;
 using Avogadro::QtPluginsTests::describe;
 using Avogadro::QtPluginsTests::expectNear;
 using Avogadro::QtPluginsTests::MoleculeSnapshot;
+using Avogadro::QtPluginsTests::NoMoleculeMessage;
 using Avogadro::QtPluginsTests::recordKnownDeviation;
 using Avogadro::QtPluginsTests::recordUndecided;
 
@@ -215,15 +216,14 @@ TEST_F(CrystalCommandTest, wrapUnitCellUndoRestoresBonds)
 }
 
 // Contract (decision 1): no molecule -> true + commandFailed("No molecule").
-TEST_F(CrystalCommandTest, knownDeviationNoMoleculeIsNotClaimed)
+TEST_F(CrystalCommandTest, noMoleculeFails)
 {
-  recordKnownDeviation("with no molecule every command returns false");
-
   m_harness.setPluginMolecule(nullptr);
   for (const char* name : { "wrapUnitCell", "standardCrystalOrientation" }) {
     const CommandOutcome out = m_harness.run(name);
-    // When this fails, expect claimed, Failed, NoMoleculeMessage.
-    EXPECT_FALSE(out.claimed) << name;
+    EXPECT_TRUE(out.claimed) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.message, QString(NoMoleculeMessage)) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
 }

@@ -150,9 +150,9 @@ bool Vibrations::handleCommand(const QString& command,
                                const QVariantMap& options)
 {
   static const QStringList knownCommands = {
-    "showVibrations", "setVibrationalMode",
+    "showVibrations",          "setVibrationalMode",
     "setVibrationalAmplitude", "startVibrationAnimation",
-    "stopVibrationAnimation", "generateDisplacedCoordinates"
+    "stopVibrationAnimation",  "generateDisplacedCoordinates"
   };
 
   if (!knownCommands.contains(command))
