@@ -273,14 +273,14 @@ jobs:
         done
         ls -l "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
 
-    # The archive is cached on the Mesa version, so a new release (a new
-    # MESA_VERSION and MESA_SHA256) is downloaded once. The checksum is
+    # The archive is cached on the Mesa version and checksum, so a new release
+    # (or a replaced archive) is downloaded once. The checksum is
     # verified on every run, cached or not.
     - name: Cache Mesa
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.temp }}/mesa-download
-        key: mesa-${{ runner.os }}-${{ env.MESA_VERSION }}
+        key: mesa-${{ runner.os }}-${{ env.MESA_VERSION }}-${{ env.MESA_SHA256 }}
 
     # Mesa llvmpipe. opengl32.dll is not a KnownDLL, so a copy in the
     # application directory is found before System32's GDI one, for Qt and for

@@ -33,6 +33,12 @@ TIMEOUT=/usr/bin/timeout
   env | grep -E '^(QT_|EGL_|LIBGL_|GALLIUM_|MESA_|LP_|DISPLAY=|WAYLAND_DISPLAY=|AVOGADRO_|LD_LIBRARY_PATH=)' | sort
 } > "$out/env.txt"
 
+workloads="$here/workloads.txt"
+if [ ! -r "$workloads" ]; then
+  echo "::error::cannot read $workloads"
+  exit 1
+fi
+
 failed=0
 while read -r name args; do
   case "$name" in '' | '#'*) continue ;; esac
@@ -59,5 +65,5 @@ while read -r name args; do
     echo "::warning::$config / $name failed with exit status $rc"
     failed=1
   fi
-done < "$here/workloads.txt"
+done < "$workloads"
 exit $failed

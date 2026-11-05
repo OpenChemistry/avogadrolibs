@@ -111,8 +111,14 @@ def main():
     )
     args = ap.parse_args()
 
-    workloads = read_workloads(args.workloads)
-    exact_base = load_json(args.baselines / "exact.json")
+    try:
+        workloads = read_workloads(args.workloads)
+    except OSError as e:
+        ap.error(f"cannot read {args.workloads}: {e}")
+    if not workloads:
+        ap.error(f"no workloads in {args.workloads}")
+    exact_path = args.baselines / "exact.json"
+    exact_base = load_json(exact_path)
     errors = []
     warnings = []
     rows = []
@@ -121,11 +127,9 @@ def main():
     candidate_exact = {}
     candidates = {}
 
-    if exact_base is None:
-        notes.append(
-            f"No exact baseline ({args.baselines / 'exact.json'}): counts were "
-            "not checked."
-        )
+    if not isinstance(exact_base, dict):
+        exact_base = None
+        errors.append(f"{exact_path} is missing or not valid: counts were not checked")
 
     for cfg in args.configs:
         timing_base = load_json(args.baselines / f"{cfg}.json")
@@ -137,10 +141,10 @@ def main():
                 f"utilities/benchmarks/ci/baselines/{cfg}.json."
             )
         for wl in workloads:
-            base = args.results / cfg / wl
-            log = base.with_suffix(".log")
+            # Not with_suffix(): a dotted workload name would lose its tail.
+            log = args.results / cfg / f"{wl}.log"
             text = log.read_text(errors="replace") if log.exists() else ""
-            data = load_json(base.with_suffix(".json"))
+            data = load_json(args.results / cfg / f"{wl}.json")
             rc = log_field(text, "exit status") if text else None
             if data is not None and rc in (None, "0"):
                 status = "ok"
