@@ -19,7 +19,7 @@ namespace QtPlugins {
 class PdfOptionsDialog;
 
 // First item in the pair is radius. Second is the pdf value.
-typedef std::vector<std::pair<double, double>> PdfData;
+using PdfData = std::vector<std::pair<double, double>>;
 
 /**
  * @brief Generate and plot a PDF curve

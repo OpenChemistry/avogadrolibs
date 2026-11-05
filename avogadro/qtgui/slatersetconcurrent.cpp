@@ -59,14 +59,36 @@ void SlaterSetConcurrent::setMolecule(Core::Molecule* mol)
 {
   if (!mol)
     return;
+  m_molecule = mol;
   // The worker items hold a raw pointer to m_tools, so nothing may replace it
   // while a calculation is still in flight.
   cancelAndWait();
 
+  // Let go of the previous job's basis set first: still holding it would
+  // make the mutable access below copy it for nothing.
+  m_basisHandle.reset();
+
+  // Setting up a calculation writes into the basis set (initCalculation(),
+  // and generateDensityMatrix() for a Gaussian set), so take the mutable
+  // one. The molecule gets a private copy if an undo snapshot shares it.
   m_set = dynamic_cast<SlaterSet*>(mol->basisSet());
 
   delete m_tools;
   m_tools = new SlaterSetTools(mol);
+
+  // The workers read m_set through m_tools on other threads. Hold it for the
+  // job, so that if the molecule later detaches from it (a copy, then a
+  // write) and the snapshot that ends up with it is freed, it stays alive.
+  m_basisHandle = mol->sharedBasisSet();
+}
+
+bool SlaterSetConcurrent::ensureSetUp()
+{
+  // The previous job released the basis set, so m_set and m_tools may refer
+  // to one that has since been freed: build them again from the molecule.
+  if (!m_basisHandle && m_molecule != nullptr)
+    setMolecule(m_molecule);
+  return m_basisHandle != nullptr;
 }
 
 bool SlaterSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
@@ -91,6 +113,10 @@ void SlaterSetConcurrent::calculationComplete()
   // calculation has already been set up. Never free that one's work items.
   if (m_future.isRunning())
     return;
+
+  // The job is over. Holding the basis set any longer would make the next
+  // mutable access copy it; setMolecule() takes it again for the next job.
+  m_basisHandle.reset();
 
   // (*m_shells)[0].tCube->lock()->unlock();
   delete m_shells;
@@ -122,7 +148,9 @@ void SlaterSetConcurrent::cancelAndWait()
 bool SlaterSetConcurrent::setUpCalculation(Core::Cube* cube, unsigned int state,
                                            void (*func)(SlaterShell&))
 {
-  if (!m_set || !m_tools)
+  // Without the handle m_set and m_tools may refer to a basis set that has
+  // been freed since the last job, so set up again from the molecule.
+  if (!ensureSetUp() || !m_set || !m_tools)
     return false;
 
   cancelAndWait();

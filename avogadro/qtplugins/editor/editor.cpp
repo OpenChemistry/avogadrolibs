@@ -1031,7 +1031,6 @@ void Editor::atomLeftDrag(QMouseEvent* e)
   }
 
   m_molecule->emitChanged(changes);
-  return;
 }
 
 void Editor::registerCommands()

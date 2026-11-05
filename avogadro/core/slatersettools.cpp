@@ -8,6 +8,8 @@
 #include "molecule.h"
 #include "slaterset.h"
 
+#include <utility>
+
 namespace Avogadro::Core {
 
 SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
@@ -65,8 +67,10 @@ double SlaterSetTools::calculateSpinDensity(const Vector3&) const
 
 bool SlaterSetTools::isValid() const
 {
+  // Only look: the mutable basisSet() would detach a shared basis set.
   return (m_molecule != nullptr) &&
-         (dynamic_cast<SlaterSet*>(m_molecule->basisSet()) != nullptr);
+         (dynamic_cast<const SlaterSet*>(
+            std::as_const(*m_molecule).basisSet()) != nullptr);
 }
 
 inline bool SlaterSetTools::isSmall(double val) const

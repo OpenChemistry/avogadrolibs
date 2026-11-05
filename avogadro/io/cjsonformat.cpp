@@ -19,6 +19,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -49,6 +50,23 @@ using Core::LayerManager;
 using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
+
+namespace {
+
+// Names of GaussianSet::PrimitiveNormalization in the "primitiveNormalization"
+// key. Normalize is the default, so it is accepted on read but never written.
+struct NormalizationName
+{
+  const char* name;
+  GaussianSet::PrimitiveNormalization value;
+};
+constexpr NormalizationName normalizationNames[] = {
+  { "normalize", GaussianSet::PrimitiveNormalization::Normalize },
+  { "asIs", GaussianSet::PrimitiveNormalization::AsIs },
+  { "radialIncluded", GaussianSet::PrimitiveNormalization::RadialIncluded }
+};
+
+} // namespace
 
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
@@ -292,7 +310,7 @@ void deserializeProperties(const json& obj, PropertyMap& props,
 {
   if (!obj.is_object())
     return;
-  for (auto& property : obj.items()) {
+  for (const auto& property : obj.items()) {
     const auto& value = property.value();
     const auto& key = property.key();
 
@@ -301,7 +319,7 @@ void deserializeProperties(const json& obj, PropertyMap& props,
     // throws if "_type" is present but not a string.
     if (value.is_object() && member(value, "_type") == "matrix" &&
         value.contains("entries") && value["entries"].is_object()) {
-      for (auto& entry : value["entries"].items()) {
+      for (const auto& entry : value["entries"].items()) {
         const auto& m = entry.value();
         if (!m.is_object())
           continue;
@@ -651,7 +669,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
       if (coordSets.is_array() && !coordSets.empty()) {
         for (unsigned int i = 0; i < coordSets.size(); ++i) {
           Array<Vector3> setArray;
-          json set = coordSets[i];
+          const json& set = coordSets[i];
           if (isNumericArray(set)) {
             for (unsigned int j = 0; j < set.size() / 3; ++j) {
               setArray.push_back(
@@ -926,7 +944,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 
         if (residue.contains("atoms") && residue["atoms"].is_object()) {
           json atomsResidue = residue["atoms"];
-          for (auto& item : atomsResidue.items()) {
+          for (const auto& item : atomsResidue.items()) {
             if (item.value().is_number_integer() &&
                 static_cast<Index>(item.value()) < molecule.atomCount()) {
               const Atom& atom =
@@ -1155,6 +1173,34 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           }
         }
 
+        // How the primitive coefficients are normalized. A missing key is
+        // the default (Normalize); anything unusable keeps the default and is
+        // reported without failing the read.
+        const json& normalization = member(basisSet, "primitiveNormalization");
+        if (normalization.is_string()) {
+          const auto mode = normalization.get<std::string>();
+          const NormalizationName* found = nullptr;
+          for (const auto& entry : normalizationNames)
+            if (mode == entry.name)
+              found = &entry;
+          if (found == nullptr) {
+            appendError("Warning: unknown primitiveNormalization \"" + mode +
+                        "\"; the basis set is normalized.");
+          } else if (found->value ==
+                     GaussianSet::PrimitiveNormalization::AsIs) {
+            if (!basis->setPrimitiveNormalization(found->value))
+              appendError(
+                "Warning: primitiveNormalization \"asIs\" needs "
+                "Cartesian shells only; the basis set is normalized.");
+          } else if (found->value !=
+                     GaussianSet::PrimitiveNormalization::Normalize) {
+            basis->setPrimitiveNormalization(found->value);
+          }
+        } else if (!normalization.is_null()) {
+          appendError("Warning: primitiveNormalization is not a string; the "
+                      "basis set is normalized.");
+        }
+
         const json& orbitals = member(jsonRoot, "orbitals");
         if (orbitals.is_object() && basis->isValid()) {
           // A missing or wrong-typed electronCount used to throw via the
@@ -1256,10 +1302,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
             // check if they are numeric arrays
             if (isNumericArray(energiesA) && isNumericArray(energiesB)) {
               std::vector<double> moEnergiesA;
-              for (auto& i : energiesA)
+              for (const auto& i : energiesA)
                 moEnergiesA.push_back(static_cast<double>(i));
               std::vector<double> moEnergiesB;
-              for (auto& i : energiesB)
+              for (const auto& i : energiesB)
                 moEnergiesB.push_back(static_cast<double>(i));
               basis->setMolecularOrbitalEnergy(moEnergiesA, BasisSet::Alpha);
               basis->setMolecularOrbitalEnergy(moEnergiesB, BasisSet::Beta);
@@ -1414,7 +1460,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         }
       }
       // iterate through everything else
-      for (auto& element : properties.items()) {
+      for (const auto& element : properties.items()) {
         if (element.key() == "totalCharge" ||
             element.key() == "totalSpinMultiplicity" ||
             element.key() == "dipoleMoment") {
@@ -1501,7 +1547,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
   }
   if (partialCharges.is_object()) {
     // keys are types, values are arrays of charges
-    for (auto& kv : partialCharges.items()) {
+    for (const auto& kv : partialCharges.items()) {
       MatrixX charges(atomCount, 1);
       if (isNumericArray(kv.value()) && kv.value().size() == atomCount) {
         for (size_t i = 0; i < kv.value().size(); ++i) {
@@ -1699,7 +1745,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   properties["totalCharge"] = molecule.totalCharge();
   properties["totalSpinMultiplicity"] = molecule.totalSpinMultiplicity();
   // loop through all other properties
-  const auto map = molecule.dataMap();
+  const auto& map = molecule.dataMap();
   for (const auto& element : map) {
     if (element.first == "name" || element.first == "inchi" ||
         element.first == Core::SpaceGroups::internationalNumberKey())
@@ -1816,7 +1862,8 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   if (molecule.basisSet() &&
       dynamic_cast<const GaussianSet*>(molecule.basisSet())) {
     json basis;
-    auto gaussian = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+    const auto* gaussian =
+      dynamic_cast<const GaussianSet*>(molecule.basisSet());
 
     // Map the shell types from enumeration to integer values.
     auto symmetry = gaussian->symmetry();
@@ -1859,11 +1906,27 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     if (!gaussian->gtoIndices().empty() && !gaussian->atomIndices().empty()) {
       auto gtoIndices = gaussian->gtoIndices();
       auto gtoA = gaussian->gtoA();
+      // One entry per shell that has primitives. Once the basis has been
+      // initialized, gtoIndices has an extra last entry (the total number of
+      // primitives) that is not the start of a shell, so stop at the number
+      // of shells; the last shell always ends at the total.
+      const size_t nShells = std::min(gtoIndices.size(), symmetry.size());
       json primitivesPerShell;
-      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      for (size_t i = 0; i < nShells; ++i) {
+        const size_t end =
+          (i + 1 < gtoIndices.size()) ? gtoIndices[i + 1] : gtoA.size();
+        primitivesPerShell.push_back(end - gtoIndices[i]);
+      }
       basis["primitivesPerShell"] = primitivesPerShell;
+
+      // Only written when it differs from the default, so files from bases
+      // that need no flag stay unchanged.
+      if (gaussian->primitiveNormalization() !=
+          GaussianSet::PrimitiveNormalization::Normalize) {
+        for (const auto& entry : normalizationNames)
+          if (entry.value == gaussian->primitiveNormalization())
+            basis["primitiveNormalization"] = entry.name;
+      }
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
@@ -2151,7 +2214,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     atoms["coords"] = coords;
 
     // forces if present
-    const auto forceVectors = molecule.forceVectors();
+    const auto& forceVectors = molecule.forceVectors();
     if (forceVectors.size() == molecule.atomCount()) {
       json forces;
       for (const auto& force : forceVectors) {
@@ -2185,7 +2248,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
     // isotopes (if present)
     json isotopes;
-    const auto isotopeList = molecule.isotopes();
+    const auto& isotopeList = molecule.isotopes();
     if (isotopeList.size() == molecule.atomCount()) {
       for (Index i = 0; i < molecule.atomCount(); ++i) {
         isotopes.push_back(isotopeList[i]);
@@ -2352,7 +2415,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       vibrations["conformers"] = std::move(perConformer);
     }
 
-    root["vibrations"] = std::move(vibrations);
+    root["vibrations"] = vibrations;
   }
 
   auto names = LayerManager::getMoleculeInfo(&molecule);

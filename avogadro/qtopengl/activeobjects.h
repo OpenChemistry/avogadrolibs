@@ -36,6 +36,8 @@ class AVOGADROQTOPENGL_EXPORT ActiveObjects : public QObject
   Q_OBJECT
 
 public:
+  ~ActiveObjects() override;
+
   /** Return a reference to the singleton instance that can be queried. */
   static ActiveObjects& instance();
 
@@ -74,7 +76,6 @@ signals:
 
 private:
   ActiveObjects();
-  ~ActiveObjects() override;
   Q_DISABLE_COPY(ActiveObjects)
 
   GLWidget* m_glWidget = nullptr;

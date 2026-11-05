@@ -168,7 +168,7 @@ QWidget* PlayerTool::toolWidget() const
     frames->addWidget(label);
     m_animationFPS = new QSpinBox;
     m_animationFPS->setValue(5);
-    m_animationFPS->setMinimum(0);
+    m_animationFPS->setMinimum(1);
     m_animationFPS->setMaximum(1000);
     m_animationFPS->setSuffix(tr(" FPS", "frames per second"));
     frames->addWidget(m_animationFPS);

@@ -103,10 +103,7 @@ string POVRayVisitor::end()
   return m_sceneData;
 }
 
-void POVRayVisitor::visit(Drawable&)
-{
-  return;
-}
+void POVRayVisitor::visit(Drawable&) {}
 
 void POVRayVisitor::visit(SphereGeometry& geometry)
 {

@@ -297,7 +297,7 @@ bool ORCAOutput::read(std::istream& in, Core::Molecule& molecule)
 
   molecule.setBasisSet(basis.release());
   molecule.basisSet()->setMolecule(&molecule);
-  load(static_cast<GaussianSet*>(molecule.basisSet()), molecule.atomCount());
+  load(dynamic_cast<GaussianSet*>(molecule.basisSet()), molecule.atomCount());
 
   // we have to do a few things *after* any modifications to bonds / atoms
   // because those automatically clear partial charges and data

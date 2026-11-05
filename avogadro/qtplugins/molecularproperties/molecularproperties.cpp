@@ -229,8 +229,13 @@ void MolecularProperties::registerCommands()
 bool MolecularProperties::handleCommand(
   const QString& command, [[maybe_unused]] const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command
+  if (command != "showMolecularProperties")
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "showMolecularProperties") {
     showDialog();

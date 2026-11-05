@@ -43,7 +43,7 @@ void CustomElementDialog::resolve(QWidget* p, Molecule& mol)
 namespace {
 struct RemapAtomicNumbers
 {
-  typedef std::map<unsigned char, unsigned char> MapType;
+  using MapType = std::map<unsigned char, unsigned char>;
   const MapType& map;
 
   RemapAtomicNumbers(const MapType& m) : map(m) {}

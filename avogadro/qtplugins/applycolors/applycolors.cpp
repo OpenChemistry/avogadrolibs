@@ -789,7 +789,7 @@ void ApplyColors::registerCommands()
 }
 
 bool ApplyColors::handleCommand(const QString& command,
-                                [[maybe_unused]] const QVariantMap& options)
+                                const QVariantMap& options)
 {
   static const QStringList knownCommands = {
     "colorAtomsCustom",     "resetAtomColors",

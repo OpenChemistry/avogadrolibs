@@ -66,11 +66,19 @@ ConstraintsDialog::~ConstraintsDialog()
 
 void ConstraintsDialog::setMolecule(QtGui::Molecule* molecule)
 {
+  // Setting the molecule again (the extension does, each time the dialog is
+  // opened) must not add another connection to it.
+  QObject::disconnect(m_changedConnection);
   m_molecule = molecule;
-  m_model->setConstraints(molecule->constraints());
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-          SLOT(updateConstraints()));
+  if (m_molecule == nullptr) {
+    m_model->setConstraints(std::vector<Constraint>());
+    return;
+  }
+
+  m_model->setConstraints(m_molecule->constraints());
+  m_changedConnection = connect(m_molecule, &Molecule::changed, this,
+                                [this](unsigned int) { updateConstraints(); });
 }
 
 void ConstraintsDialog::highlightSelected(const QModelIndex& /*newIndex*/,
@@ -79,6 +87,8 @@ void ConstraintsDialog::highlightSelected(const QModelIndex& /*newIndex*/,
   // get the selected row in the table
   auto row = ui->constraintsTableView->currentIndex().row();
   m_model->currentRow = row;
+  if (m_molecule == nullptr)
+    return;
   if (row < 0 || row >= m_model->rowCount())
     return;
   // get the constraint
@@ -298,7 +308,7 @@ void ConstraintsDialog::acceptConstraints()
 
 void ConstraintsDialog::getConstraint()
 {
-  if (m_molecule == nullptr || m_molecule == nullptr)
+  if (m_molecule == nullptr)
     return;
 
   // get the new constraints
@@ -308,7 +318,7 @@ void ConstraintsDialog::getConstraint()
 
 void ConstraintsDialog::deleteConstraint()
 {
-  if (m_molecule == nullptr || m_molecule == nullptr)
+  if (m_molecule == nullptr)
     return;
 
   auto row = ui->constraintsTableView->currentIndex().row();

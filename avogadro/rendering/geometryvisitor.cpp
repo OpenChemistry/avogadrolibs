@@ -100,7 +100,7 @@ void GeometryVisitor::visit(CurveGeometry& cg)
 
 void GeometryVisitor::visit(LineStripGeometry& lsg)
 {
-  typedef Core::Array<LineStripGeometry::PackedVertex> VertexArray;
+  using VertexArray = Core::Array<LineStripGeometry::PackedVertex>;
   const VertexArray verts(lsg.vertices());
   if (verts.empty())
     return;

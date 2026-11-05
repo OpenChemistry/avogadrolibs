@@ -9,9 +9,26 @@ namespace Avogadro::Rendering {
 
 BezierGeometry::BezierGeometry() : CurveGeometry() {}
 
+Vector3f BezierGeometry::computeSegmentPoint(
+  size_t segment, float f, const std::vector<Point>& points) const
+{
+  if (points.size() < 2)
+    return points.empty() ? Vector3f::Zero() : points.front().pos;
+  const float last = static_cast<float>(points.size() - 1);
+  return computeCurvePoint(residueCoordinate(segment, f, points.size()) / last,
+                           points);
+}
+
 Vector3f BezierGeometry::computeCurvePoint(
   float t, const std::vector<Point>& points) const
 {
+  if (points.empty())
+    return Vector3f::Zero();
+  // the end points; the iteration below divides 0 by 0 at t = 0
+  if (!(t > 0.0f))
+    return points.front().pos;
+  if (t >= 1.0f)
+    return points.back().pos;
   Vector3f h = Vector3f::Ones();
   float u = 1.0f - t;
   float n1 = points.size();

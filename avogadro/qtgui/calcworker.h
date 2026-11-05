@@ -78,9 +78,14 @@ signals:
    * @param gradient The gradient at the new positions.
    * @param energy The energy at the new positions.
    * @param converged True if optimization could not continue.
+   * @param iterationsRun Iterations the optimizer actually performed in this
+   * chunk (may be fewer than requested; 0 if the chunk did not run).
+   * @param stalled True if the optimizer ended the chunk early because it
+   * could no longer make progress (see Calc::OptimizerStopReason::Stalled).
    */
   void optimizeFinished(Eigen::VectorXd positions, Eigen::VectorXd gradient,
-                        double energy, bool converged);
+                        double energy, bool converged, int iterationsRun,
+                        bool stalled);
 
   /**
    * Emitted after a one-shot energy/gradient evaluation.
@@ -166,9 +171,9 @@ private:
   Core::Molecule m_molSnapshot;
   std::atomic<bool> m_cancelled{ false };
   // Persistent across optimizeSteps chunks within one optimization run.
-  // Reset by initCalculator. Carries FIRE integrator state, the Hybrid
-  // sticky-switch flag, and the (energy, gradient) cache that lets us skip
-  // the per-chunk convergence-probe evaluate.
+  // Reset by initCalculator. Carries FIRE integrator state, the L-BFGS
+  // correction history, the Hybrid sticky-switch flag, and the (energy,
+  // gradient) cache that lets us skip the per-chunk convergence-probe evaluate.
   Calc::OptimizerState m_optState;
 };
 

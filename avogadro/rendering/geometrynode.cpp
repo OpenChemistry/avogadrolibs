@@ -83,7 +83,7 @@ std::multimap<float, Identifier> GeometryNode::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  for (auto m_drawable : m_drawables) {
+  for (auto* m_drawable : m_drawables) {
     std::multimap<float, Identifier> drawableHits;
     if (m_drawable->isVisible())
       drawableHits = m_drawable->hits(rayOrigin, rayEnd, rayDirection);
@@ -96,7 +96,7 @@ std::multimap<float, Identifier> GeometryNode::hits(
 Array<Identifier> GeometryNode::areaHits(const Frustrum& f) const
 {
   Array<Identifier> result;
-  for (auto m_drawable : m_drawables) {
+  for (auto* m_drawable : m_drawables) {
     Array<Identifier> drawableHits;
     if (m_drawable->isVisible())
       drawableHits = m_drawable->areaHits(f);

@@ -69,9 +69,11 @@ foreach(TestName ${tests})
     add_test(NAME "Calc-Gradient-Stress"
       COMMAND AvogadroCalcTests "--gtest_filter=GradientStressTest.*")
   elseif(TestName STREQUAL "UFF")
-    # Parameterized test suite name is UffGradientTest.
+    # Parameterized test suite name is UffGradientTest; ufftest.cpp also
+    # defines UffConstraintTest and UffMaskTest.
     add_test(NAME "Calc-UFF"
-      COMMAND AvogadroCalcTests "--gtest_filter=UffTest/UffGradientTest.*")
+      COMMAND AvogadroCalcTests
+      "--gtest_filter=UffTest/UffGradientTest.*:UffConstraintTest.*:UffMaskTest.*")
   elseif(TestName STREQUAL "ForceFieldEdgeCase")
     # Parameterized test suite name is ForceFieldEdgeCaseTest.
     add_test(NAME "Calc-ForceFieldEdgeCase"
@@ -82,6 +84,11 @@ foreach(TestName ${tests})
     add_test(NAME "Calc-EnergyCalculator"
       COMMAND AvogadroCalcTests
       "--gtest_filter=EnergyCalculatorTest.*:CustomCalculatorTest.*:EnergyCalculatorBatchTest.*:EnergyCalculatorEvaluateTest.*:EnergyCalculatorFusedTest.*:RestraintTest.*")
+  elseif(TestName STREQUAL "EnergyManager")
+    # energymanagertest.cpp also defines EnergyManagerRecommendationTest.
+    add_test(NAME "Calc-EnergyManager"
+      COMMAND AvogadroCalcTests
+      "--gtest_filter=EnergyManagerTest.*:EnergyManagerRecommendationTest.*")
   elseif(TestName STREQUAL "EnergyOptimizer")
     # split across energycalculatortest.cpp and energyoptimizertest.cpp
     add_test(NAME "Calc-EnergyOptimizer"

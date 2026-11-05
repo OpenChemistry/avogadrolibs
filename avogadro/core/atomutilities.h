@@ -19,6 +19,9 @@ class Molecule;
 class AVOGADROCORE_EXPORT AtomUtilities
 {
 public:
+  AtomUtilities() = delete;  // Not implemented
+  ~AtomUtilities() = delete; // Not implemented
+
   /**
    * Perceive the geometry / hybridization bonded to @a atom.
    * Ideally, the client should cache the hybridization number
@@ -50,10 +53,6 @@ public:
   static Real idealBondLength(unsigned char atomicNumber1,
                               unsigned char atomicNumber2,
                               unsigned char bondOrder = 1);
-
-private:
-  AtomUtilities();  // Not implemented
-  ~AtomUtilities(); // Not implemented
 };
 
 } // namespace Avogadro::Core

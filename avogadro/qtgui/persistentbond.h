@@ -21,8 +21,8 @@ template <typename Molecule_T>
 class PersistentBond
 {
 public:
-  typedef Molecule_T MoleculeType;
-  typedef typename Molecule_T::BondType BondType;
+  using MoleculeType = Molecule_T;
+  using BondType = typename Molecule_T::BondType;
 
   /**
    * @brief Create a persistent bond, with the specified unique id.

@@ -8,8 +8,11 @@
 
 #include "avogadroqtguiexport.h"
 
+#include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
+
+#include <memory>
 
 class QAction;
 class QKeyEvent;
@@ -29,6 +32,7 @@ class GLWidget;
 }
 
 namespace QtGui {
+class CommandRegistry;
 class Molecule;
 class RWMolecule;
 
@@ -36,6 +40,10 @@ class RWMolecule;
  * @class ToolPlugin toolplugin.h <avogadro/qtgui/toolplugin.h>
  * @brief The base class for plugins that interact with QtOpenGL::GLWidget.
  * @author Allison Vacanti
+ *
+ * Tool commands can be described with a CommandRegistry, in the same way as
+ * for ExtensionPlugin.
+ * @sa ExtensionPlugin
  */
 class AVOGADROQTGUI_EXPORT ToolPlugin : public QObject
 {
@@ -111,9 +119,22 @@ public:
 
   /**
    * Called by the app to tell the tool to register commands.
-   * If the tool has commands, it should emit the registerCommand signals.
+   * The default emits registerCommand() for every command in the
+   * commandRegistry(), in registration order. Override it only for commands
+   * that are not in the registry (and call the base to keep both).
    */
-  virtual void registerCommands() {}
+  virtual void registerCommands();
+
+  /**
+   * @return A JSON Schema (draft 2020-12) describing the options accepted by
+   * @p command, or an empty object if the plugin does not describe it.
+   *
+   * The default implementation exports the command registry (see
+   * commandRegistry()), including the "x-avogadro-async" and
+   * "x-avogadro-needs-molecule" keys. Plugins that override handleCommand()
+   * without using the registry need not change anything.
+   */
+  virtual QJsonObject commandSchema(const QString& command) const;
 
 signals:
   /**
@@ -170,7 +191,9 @@ signals:
                        const QVariantMap& result = QVariantMap());
 
   /**
-   * Indicate that a command that was started cannot be completed.
+   * Indicate that a command failed. This covers a synchronous refusal
+   * (bad options, no molecule, an unknown option) as well as a started
+   * command that cannot be completed.
    * @param message A message to the script or user explaining the failure
    * @sa commandStarted
    */
@@ -198,6 +221,18 @@ public slots:
    * Set the GLRenderer used by the tool.
    */
   virtual void setGLRenderer(Rendering::GLRenderer*) {}
+
+protected:
+  /**
+   * @return The registry of validated commands for this plugin, created on
+   * first use. Failures it finds are reported through commandFailed().
+   * See the ExtensionPlugin class documentation for an example.
+   */
+  CommandRegistry& commandRegistry();
+
+private:
+  /** Created on first use by commandRegistry(); null if never used. */
+  std::unique_ptr<CommandRegistry> m_commandRegistry;
 };
 
 /**

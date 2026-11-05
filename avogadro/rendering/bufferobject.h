@@ -11,6 +11,7 @@
 
 #include "scene.h"
 
+#include <cstdint>
 #include <string> // For member variables.
 #include <vector> // For API.
 
@@ -66,6 +67,12 @@ public:
 
   /** Release the buffer. This should be done after rendering is complete. */
   bool release();
+
+  /**
+   * @return the number of bytes passed to glBufferData by every BufferObject
+   * in the process so far. Monotonic; take differences to measure a span.
+   */
+  static std::uint64_t totalBytesUploaded();
 
   /** Return a string describing errors. */
   std::string error() const { return m_error; }

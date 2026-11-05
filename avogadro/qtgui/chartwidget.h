@@ -18,7 +18,7 @@ namespace Avogadro::QtGui {
 /**
  * @brief A color with 4 unsigned bytes (RGBA)
  */
-typedef std::array<unsigned char, 4> color4ub;
+using color4ub = std::array<unsigned char, 4>;
 
 /**
  * @class ChartWidget chartwidget.h <avogadro/qtgui/chartwidget.h>

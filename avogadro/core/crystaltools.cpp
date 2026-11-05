@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <set>
 #include <tuple>
@@ -778,12 +779,12 @@ public:
   // Returns true and sets @a index if an atom already sits at @a pos.
   bool find(const Vector3& pos, Index& index) const
   {
-    const std::array<long, 3> k = key(pos);
-    for (long i = -1; i <= 1; ++i) {
-      for (long j = -1; j <= 1; ++j) {
-        for (long l = -1; l <= 1; ++l) {
-          auto bin =
-            m_bins.find(std::array<long, 3>{ k[0] + i, k[1] + j, k[2] + l });
+    const std::array<std::int64_t, 3> k = key(pos);
+    for (std::int64_t i = -1; i <= 1; ++i) {
+      for (std::int64_t j = -1; j <= 1; ++j) {
+        for (std::int64_t l = -1; l <= 1; ++l) {
+          auto bin = m_bins.find(
+            std::array<std::int64_t, 3>{ k[0] + i, k[1] + j, k[2] + l });
           if (bin == m_bins.end())
             continue;
           for (const auto& entry : bin->second) {
@@ -801,37 +802,43 @@ public:
 private:
   struct KeyHash
   {
-    std::size_t operator()(const std::array<long, 3>& k) const
+    std::size_t operator()(const std::array<std::int64_t, 3>& k) const
     {
       // Mix the three bin coordinates; the constants are the usual odd
       // multipliers used to spread integer triples over the hash space.
-      return static_cast<std::size_t>(k[0] * 73856093L ^ k[1] * 19349663L ^
-                                      k[2] * 83492791L);
+      // Multiply as unsigned: binIndex() clamps to +/-1e15, and that times
+      // these constants overflows a signed 64-bit integer (undefined
+      // behavior). Unsigned arithmetic wraps, which is all a hash needs.
+      return (static_cast<std::size_t>(k[0]) * 73856093u) ^
+             (static_cast<std::size_t>(k[1]) * 19349663u) ^
+             (static_cast<std::size_t>(k[2]) * 83492791u);
     }
   };
 
   // Bin index along one axis. Casting a NaN, or a double beyond the range of
-  // long, is undefined behavior, so map NaN to bin 0 and clamp the rest. This
-  // only merges absurdly distant coordinates into the outermost bins; find()
-  // still compares the real distances, so the results stay correct.
-  long binIndex(double x) const
+  // the bin type, is undefined behavior, so map NaN to bin 0 and clamp the
+  // rest. The bins are 64-bit because long is only 32 bits on Windows, where
+  // the clamp would not keep the cast in range. This only merges absurdly
+  // distant coordinates into the outermost bins; find() still compares the
+  // real distances, so the results stay correct.
+  std::int64_t binIndex(double x) const
   {
     double v = std::floor(x * m_invBin);
     if (!std::isfinite(v))
       v = 0.0;
     v = std::clamp(v, -1e15, 1e15);
-    return static_cast<long>(v);
+    return static_cast<std::int64_t>(v);
   }
 
-  std::array<long, 3> key(const Vector3& pos) const
+  std::array<std::int64_t, 3> key(const Vector3& pos) const
   {
-    return std::array<long, 3>{ binIndex(pos.x()), binIndex(pos.y()),
-                                binIndex(pos.z()) };
+    return std::array<std::int64_t, 3>{ binIndex(pos.x()), binIndex(pos.y()),
+                                        binIndex(pos.z()) };
   }
 
   double m_tol;
   double m_invBin;
-  std::unordered_map<std::array<long, 3>,
+  std::unordered_map<std::array<std::int64_t, 3>,
                      std::vector<std::pair<Vector3, Index>>, KeyHash>
     m_bins;
 };

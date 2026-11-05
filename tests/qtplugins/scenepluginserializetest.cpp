@@ -27,8 +27,11 @@
 #include <avogadro/rendering/groupnode.h>
 
 #include <QtGui/QColor>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryDir>
+#include <QtWidgets/QWidget>
 
 #include <gtest/gtest.h>
 
@@ -134,7 +137,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "BallAndStick", "Ball and Stick",
                     [] { return std::make_unique<BallAndStick>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<BallAndStick&>(plugin);
+                      auto& p = dynamic_cast<BallAndStick&>(plugin);
                       p.atomRadiusChanged(5);
                       p.bondRadiusChanged(2);
                       p.opacityChanged(40);
@@ -154,7 +157,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "Cartoons", "Cartoons",
                     [] { return std::make_unique<Cartoons>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<Cartoons&>(plugin);
+                      auto& p = dynamic_cast<Cartoons&>(plugin);
                       p.showBackbone(true);
                       p.showCartoon(false);
                       p.showRope(true);
@@ -176,7 +179,7 @@ std::vector<Spec> buildSpecs()
   // spin box is 0-1.5 and the scale spin box 0.25-3.
   specs.push_back({ "Label", "Labels", [] { return std::make_unique<Label>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<Label&>(plugin);
+                      auto& p = dynamic_cast<Label&>(plugin);
                       p.atomLabelType(2);
                       p.residueLabelType(3);
                       p.bondLabelType(1);
@@ -199,7 +202,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "Licorice", "Licorice",
                     [] { return std::make_unique<Licorice>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      static_cast<Licorice&>(plugin).setOpacity(40);
+                      dynamic_cast<Licorice&>(plugin).setOpacity(40);
                     },
                     "1", "0.4",
                     [](const Tokens& t) {
@@ -209,7 +212,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "VanDerWaals", "Van der Waals",
                     [] { return std::make_unique<VanDerWaals>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      static_cast<VanDerWaals&>(plugin).setOpacity(40);
+                      dynamic_cast<VanDerWaals&>(plugin).setOpacity(40);
                     },
                     "1", "0.4",
                     [](const Tokens& t) {
@@ -220,7 +223,7 @@ std::vector<Spec> buildSpecs()
   specs.push_back({ "Wireframe", "Wireframe",
                     [] { return std::make_unique<Wireframe>(); },
                     [](QtGui::ScenePlugin& plugin) {
-                      auto& p = static_cast<Wireframe&>(plugin);
+                      auto& p = dynamic_cast<Wireframe&>(plugin);
                       p.multiBonds(false);
                       p.showHydrogens(false);
                       p.setWidth(2.5);
@@ -493,6 +496,44 @@ TEST_P(ScenePluginSerializeTest, nothingSavedForOtherPluginsIsTouched)
   Rendering::GroupNode node;
   plugin->process(molecule, node);
   EXPECT_EQ(info->settings["Some other plugin"][0]->getSave(), "untouched");
+}
+
+// Regression: the layer data kept a raw pointer to the settings widget and
+// called deleteLater() on it when destroyed. The widget belongs to whatever
+// dock it was put in, which deletes it first when the panel is torn down, so
+// the layer data (which lives as long as the molecule) then used freed memory.
+TEST_P(ScenePluginSerializeTest, layerOutlivesItsSetupWidget)
+{
+  QPointer<QWidget> widget;
+  {
+    QtGui::Molecule molecule;
+    auto plugin = spec().create();
+    ActiveMolecule::set(&molecule);
+    widget = plugin->setupWidget();
+    ASSERT_FALSE(widget.isNull());
+
+    // The panel goes away; the molecule and its layer data do not.
+    delete widget.data();
+    EXPECT_TRUE(widget.isNull());
+    ActiveMolecule::set(nullptr);
+  } // the molecule, and with it the layer data, is destroyed here
+  QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+}
+
+// The widget is still deleted with the layer data when nobody else did.
+TEST_P(ScenePluginSerializeTest, layerDeletesAnUnclaimedSetupWidget)
+{
+  QPointer<QWidget> widget;
+  {
+    QtGui::Molecule molecule;
+    auto plugin = spec().create();
+    ActiveMolecule::set(&molecule);
+    widget = plugin->setupWidget();
+    ASSERT_FALSE(widget.isNull());
+    ActiveMolecule::set(nullptr);
+  }
+  QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+  EXPECT_TRUE(widget.isNull());
 }
 
 INSTANTIATE_TEST_SUITE_P(ScenePlugins, ScenePluginSerializeTest,

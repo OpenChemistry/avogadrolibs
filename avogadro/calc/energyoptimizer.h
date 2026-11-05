@@ -73,13 +73,28 @@ struct AVOGADROCALC_EXPORT OptimizationOptions
   HybridParameters hybrid;
 };
 
+/// Why the last optimizeSteps call returned before using its full budget.
+enum class OptimizerStopReason
+{
+  /// Ran every requested iteration.
+  IterationLimit,
+  /// L-BFGS stopped making progress (the line search can no longer lower
+  /// the energy, typically at the numerical noise floor of the energy
+  /// model). More iterations from the same point will not help.
+  Stalled
+};
+
 /// Optional persistent state for optimizeSteps. Carries FIRE's integrator
-/// state (velocity, dt, alpha, nPos) across chunks so the adaptive timestep
-/// is not reset each call. Always populated on successful return with
-/// (energy, gradient) at the final positions; callers may use those in
+/// state (velocity, dt, alpha, nPos) and the L-BFGS correction history across
+/// chunks so neither is reset each call. Always populated on successful return
+/// with (energy, gradient) at the final positions; callers may use those in
 /// place of an extra evaluate() to check convergence.
 ///
-/// Set initialized=false (or default-construct) to restart cleanly. A size
+/// To restart cleanly (for example after the caller has moved the positions
+/// itself), call reset() or assign a default-constructed state: that drops
+/// the cached energy and gradient, the FIRE velocity and the L-BFGS history
+/// together. Do not use `initialized` for this; it is FIRE-internal and L-BFGS
+/// chunks clear it as a matter of course while keeping the cache. A size
 /// mismatch with positions also triggers an internal reset.
 struct OptimizerState
 {
@@ -95,6 +110,53 @@ struct OptimizerState
 
   double energy = std::numeric_limits<double>::quiet_NaN();
   Eigen::VectorXd gradient;
+
+  /// L-BFGS correction pairs (s = dx, y = dg) as columns, oldest/newest
+  /// order given by lbfgsPos and lbfgsCount (a ring buffer once full), and
+  /// the H_0 scaling. Empty when there is no history. Only valid for the
+  /// positions the last L-BFGS chunk ended at; any other algorithm moving
+  /// the positions clears it.
+  Eigen::MatrixXd lbfgsS;
+  Eigen::MatrixXd lbfgsY;
+  size_t lbfgsCount = 0;
+  size_t lbfgsPos = 0;
+  double lbfgsScaling = 1.0;
+  /// Consecutive iterations so far that violated the L-BFGS stall test (no
+  /// real step / no energy change). Carried across chunks so the "three in a
+  /// row" test does not depend on how the run is cut into chunks. Cleared
+  /// together with the history.
+  int stallXViolations = 0;
+  int stallFViolations = 0;
+  /// L-BFGS restarts from steepest descent so far (after a stall with a
+  /// non-empty history). Informational; not reset by clearLbfgsHistory().
+  size_t lbfgsRestarts = 0;
+  /// True after such a restart until an iteration of real progress is seen.
+  /// A stall while this is set is reported as StopReason::Stalled rather
+  /// than restarted again.
+  bool lbfgsRestartSpent = false;
+
+  /// Set by every optimizeSteps call that returns true: iterations actually
+  /// performed (may be fewer than requested) and why the call returned. A
+  /// call that returns false (invalid options) leaves them unchanged.
+  size_t iterationsRun = 0;
+  OptimizerStopReason stopReason = OptimizerStopReason::IterationLimit;
+
+  /// Forget everything: cached energy and gradient, FIRE integrator state,
+  /// L-BFGS history and counters, and the last result. The next optimizeSteps
+  /// call re-evaluates the energy at the positions it is given.
+  void reset() { *this = OptimizerState{}; }
+
+  void clearLbfgsHistory()
+  {
+    lbfgsS.resize(0, 0);
+    lbfgsY.resize(0, 0);
+    lbfgsCount = 0;
+    lbfgsPos = 0;
+    lbfgsScaling = 1.0;
+    stallXViolations = 0;
+    stallFViolations = 0;
+    lbfgsRestartSpent = false;
+  }
 };
 
 /**

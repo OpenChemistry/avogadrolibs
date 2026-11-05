@@ -71,6 +71,7 @@ option(USE_EXTERNAL_PUGIXML "Use an externally-provided version of pugixml" OFF)
 option(USE_EXTERNAL_STRUCT "Use an externally-provided version of the struct binary data formatting library" OFF)
 option(USE_EXTERNAL_TOMLPLUSPLUS "Use an externally-provided version of tomlplusplus" OFF)
 option(ENABLE_CALC_BENCHMARKS "Build optional calc benchmark executables" OFF)
+option(ENABLE_RENDERING_BENCHMARKS "Build optional rendering benchmark executables" OFF)
 
 # Declared here, not only in tests/, because the libraries are configured
 # before tests/ is and they need the definition below. The tests/*/CMakeLists

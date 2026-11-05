@@ -54,7 +54,7 @@ public:
   };
 
   /** Used for bitwise combinations of FontStyle values. */
-  typedef int FontStyles;
+  using FontStyles = int;
 
   TextProperties();
   TextProperties(const TextProperties& other);

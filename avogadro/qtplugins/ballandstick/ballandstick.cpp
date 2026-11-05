@@ -13,6 +13,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFormLayout>
@@ -49,7 +50,8 @@ std::string commaToDot(std::string token)
 
 struct LayerBallAndStick : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   bool multiBonds = true;
   bool showHydrogens = true;
   float atomScale = 0.3f;
@@ -192,7 +194,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
 
   // if we have to draw any translucent spheres, we need to add a separate
   // geometry node for them
-  auto translucentSpheres = new SphereGeometry;
+  auto* translucentSpheres = new SphereGeometry;
   translucentSpheres->setRenderPass(Rendering::TranslucentPass);
   translucentSpheres->identifier().molecule =
     reinterpret_cast<const void*>(&molecule);
@@ -200,7 +202,7 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(translucentSpheres);
 
   // for the selected atoms
-  auto selectedSpheres = new SphereGeometry;
+  auto* selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   geometry->addDrawable(selectedSpheres);
 

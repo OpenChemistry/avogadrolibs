@@ -42,7 +42,7 @@ void CalcWorker::initCalculator(Calc::EnergyCalculator* calculator,
   // hand those shared containers to this long-lived snapshot; copy assignment
   // deep-copies the data, giving it its own containers.
   m_molSnapshot = molSnapshot;
-  m_optState = Calc::OptimizerState{};
+  m_optState.reset();
 
   // setMolecule on this thread so QProcess gets correct affinity
   m_calc->setMolecule(&m_molSnapshot);
@@ -56,14 +56,16 @@ void CalcWorker::runOptimizeChunk(Eigen::VectorXd positions,
                                   Calc::OptimizationOptions options)
 {
   if (!m_calc || m_cancelled) {
-    emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true);
+    emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true, 0, false);
     return;
   }
 
   bool ok = Calc::optimizeSteps(*m_calc, positions, options, &m_optState);
 
   if (m_cancelled) {
-    emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true);
+    // The iterations did run before the cancellation arrived.
+    const int ran = ok ? static_cast<int>(m_optState.iterationsRun) : 0;
+    emit optimizeFinished(positions, Eigen::VectorXd(), 0.0, true, ran, false);
     return;
   }
 
@@ -79,7 +81,11 @@ void CalcWorker::runOptimizeChunk(Eigen::VectorXd positions,
     energy = m_calc->evaluate(positions, &gradient);
   }
 
-  emit optimizeFinished(positions, gradient, energy, !ok);
+  const int iterationsRun = ok ? static_cast<int>(m_optState.iterationsRun) : 0;
+  const bool stalled =
+    ok && m_optState.stopReason == Calc::OptimizerStopReason::Stalled;
+  emit optimizeFinished(positions, gradient, energy, !ok, iterationsRun,
+                        stalled);
 }
 
 void CalcWorker::runEvaluate(Eigen::VectorXd positions, bool computeGradient)

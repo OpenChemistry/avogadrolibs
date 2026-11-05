@@ -9,13 +9,90 @@ import base64
 import json
 import os
 import socket
+import stat
 import struct
+import sys
 import tempfile
 
 DEFAULT_SERVER = "avogadro"
 
 #: Seconds Avogadro waits for a command before giving up on it.
 DEFAULT_COMMAND_TIMEOUT = 60
+
+
+def _is_private_dir(path):
+    """True for a real directory (not a symlink) owned by the current user
+    with no group or other permissions."""
+    try:
+        info = os.lstat(path)
+    except OSError:
+        return False
+    return (
+        stat.S_ISDIR(info.st_mode)
+        and info.st_uid == os.getuid()
+        and not info.st_mode & 0o077
+    )
+
+
+def socket_path(name=DEFAULT_SERVER):
+    """
+    Return the filesystem path (or pipe path on Windows) of Avogadro's server.
+
+    This mirrors the resolution Avogadro itself does when it starts listening,
+    so the socket cannot be pre-created by another local user:
+
+    * an absolute ``name`` is used unchanged;
+    * on Windows the name is a named pipe (``//./pipe/<name>``);
+    * on macOS the socket is ``<temp dir>/<name>``; the temp dir is already
+      private to the user;
+    * on Linux and BSD it is ``$XDG_RUNTIME_DIR/<name>`` when that directory
+      is private to the user, otherwise ``<temp dir>/avogadro-<uid>/<name>``.
+
+    Avogadro 2.1 and earlier listened on ``<temp dir>/<name>`` on Linux. If
+    nothing exists at the new location, that legacy socket is accepted, but
+    only if it is a socket owned by the current user. Another user cannot
+    create a file owned by us, so this ownership check is what stops a
+    squatter in a shared /tmp from impersonating Avogadro.
+
+    The directory is never created here; only the server does that.
+
+    :raises ConnectionError: if the per-user directory, or a legacy socket,
+        is owned by someone else or accessible to other users.
+    """
+    if os.name == "nt":
+        return "//./pipe/" + name
+    if os.path.isabs(name):
+        return name
+    legacy = os.path.join(tempfile.gettempdir(), name)
+    if sys.platform == "darwin":
+        return legacy
+
+    runtime = os.environ.get("XDG_RUNTIME_DIR")
+    if runtime and os.path.isabs(runtime) and _is_private_dir(runtime):
+        path = os.path.join(runtime, name)
+    else:
+        directory = os.path.join(tempfile.gettempdir(), "avogadro-%d" % os.getuid())
+        if os.path.lexists(directory) and not _is_private_dir(directory):
+            raise ConnectionError(
+                "Refusing to use RPC socket directory %s: not owned by this "
+                "user or accessible by others" % directory
+            )
+        path = os.path.join(directory, name)
+
+    if os.path.lexists(path):
+        return path
+    try:
+        info = os.lstat(legacy)
+    except OSError:
+        return path
+    if stat.S_ISSOCK(info.st_mode):
+        if info.st_uid != os.getuid():
+            raise ConnectionError(
+                "Refusing to connect to %s: the socket is owned by another "
+                "user" % legacy
+            )
+        return legacy
+    return path
 
 
 class RPCError(RuntimeError):
@@ -60,8 +137,9 @@ class connect:
     This class is intended to be used by external scripts that are
     run on the same machine as Avogadro.
 
-    The named pipe is created by Avogadro and is named "avogadro".
-    If it does not exist, Avogadro is not running.
+    The socket is created by Avogadro and is named "avogadro"; see
+    :func:`socket_path` for where it lives. If it does not exist, Avogadro
+    is not running.
 
     Example::
 
@@ -93,12 +171,13 @@ class connect:
         self.sock = None
 
         try:
+            path = socket_path(name)
             if self._windows:
-                self.sock = open("//./pipe/" + name, "w+b", 0)
+                self.sock = open(path, "w+b", 0)
             else:
                 self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 self.sock.settimeout(timeout)
-                self.sock.connect(os.path.join(tempfile.gettempdir(), name))
+                self.sock.connect(path)
         except Exception as exception:
             self.sock = None
             raise ConnectionError(
