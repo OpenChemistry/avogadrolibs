@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-11-05 17:40+0000\n"
+"PO-Revision-Date: 2026-11-05 23:52+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fito@libreoffice.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/es/>\n"
@@ -1395,7 +1395,7 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
-"Salida de error estándar del script:\n"
+"Salida de error estándar de la secuencia de órdenes:\n"
 "%1"
 
 #: qtgui/interfacescript.cpp:360
@@ -1789,7 +1789,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Salida de error estándar del script:\n"
+"Salida de error estándar de la secuencia de órdenes:\n"
 "%1"
 
 #: qtgui/pythonscript.cpp:575
@@ -4895,7 +4895,7 @@ msgstr "Carga parcial"
 
 #: qtplugins/label/label.cpp:287
 msgid "Atom Label:"
-msgstr "Etiqueta Atómica:"
+msgstr "Etiqueta atómica:"
 
 #: qtplugins/label/label.cpp:295
 msgid "Length"
@@ -4907,11 +4907,11 @@ msgstr "Etiqueta de enlace:"
 
 #: qtplugins/label/label.cpp:308 qtplugins/propertytables/propertymodel.cpp:836
 msgid "ID"
-msgstr "ID"
+msgstr "Id."
 
 #: qtplugins/label/label.cpp:310
 msgid "Name & ID"
-msgstr "Nombre e ID"
+msgstr "Nombre e id."
 
 #: qtplugins/label/label.cpp:317
 msgid "Residue Label:"
@@ -4923,7 +4923,7 @@ msgstr "Mostrar etiquetas en el estilo «bolas y palos»."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
-msgstr "Editar Etiquetas"
+msgstr "Editar etiquetas"
 
 #: qtplugins/label/labeleditor.cpp:33
 msgid ""
@@ -4938,7 +4938,7 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:90
 msgid "Create Label"
-msgstr "Crear Etiqueta"
+msgstr "Crear etiqueta"
 
 #: qtplugins/label/labeleditor.h:23 qtplugins/label/labeleditor.h:24
 msgid "Label editor tool"
@@ -5358,7 +5358,7 @@ msgstr "Propiedad"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:176
 msgid "Molecule Name"
-msgstr "Nombre de Molécula"
+msgstr "Nombre de molécula"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:178
 msgid "Molecular Mass (g/mol)"
