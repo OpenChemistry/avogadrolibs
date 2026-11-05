@@ -35,9 +35,9 @@ built from [python/](python/)) and the command-line tools in
 
 Ask these questions in order:
 
-1. **Is it a data structure or algorithm on molecules, with no UI?** It goes in
+1. **Does it compute energies, gradients or charges?** `calc`.
+2. **Is it a data structure or algorithm on molecules, with no UI?** It goes in
    `core` (data model, perception, geometry, basis sets, cubes, meshes).
-2. **Does it compute energies, gradients or charges?** `calc`.
 3. **Does it read or write a file format?** `io` for structure and trajectory
    formats; `quantumio` for quantum chemistry program output (orbitals,
    basis sets, spectra).

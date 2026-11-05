@@ -1,9 +1,10 @@
 # tests
 
 GoogleTest unit tests, one directory per library: `core`, `calc`, `io`,
-`quantumio`, `rendering`, `qtgui`, `qtopengl`, `qtplugins`. Each directory
-builds a single test executable, and `ctest` runs it once per test name with a
-`--gtest_filter`.
+`quantumio`, `rendering`, `qtgui`, `qtplugins`. Each directory builds a test
+executable, and `ctest` runs it once per test name with a `--gtest_filter`.
+(`tests/qtopengl/` exists but is not added in `tests/CMakeLists.txt`, so ctest
+does not run it.)
 
 See the top-level [AGENTS.md](../AGENTS.md) for build commands.
 
@@ -24,6 +25,12 @@ See the top-level [AGENTS.md](../AGENTS.md) for build commands.
 
 ctest names are `<Module>-<Name>`, for example `Core-Molecule`,
 `Io-Xyz`, `QtGui-RWMolecule`, `QtPlugins-Select`.
+
+`tests/qtplugins` registers its command tests differently: add the plugin
+target, for example `Select`, to the `plugins` list (not `tests`), write
+`selecttest.cpp`, name the suite **`SelectCommandTest`** (ctest filters on
+`<Plugin>CommandTest.*`), and check it with
+`ctest --test-dir build -R QtPlugins-Select -V`.
 
 ## Test data
 

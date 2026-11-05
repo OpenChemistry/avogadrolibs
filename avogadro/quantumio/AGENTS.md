@@ -20,8 +20,10 @@ package and the `qube` command-line tool.
 
 They are **not** registered by `FileFormatManager`. The GUI registers them in
 the `Surfaces` plugin (`qtplugins/surfaces/surfaces.cpp`), and the Python
-bindings register most of them in `python/io.cpp`. Add a new reader to both
-lists, and to `GenericOutput` if it should handle `.out` and `.log` files.
+bindings register most of them in `python/io.cpp`. The `qube` tool has its own
+list in `main()` in `avogadro/command/qube.cpp`. Add a new reader to the GUI
+and Python lists, to `qube` if it should be readable with `qube -i`, and to
+`GenericOutput` if it should handle `.out` and `.log` files.
 
 ## This code needs human review
 
