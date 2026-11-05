@@ -540,3 +540,77 @@ TEST(MdlTest, upperCaseSymbolsConformerMatch)
   EXPECT_EQ(molecule.atomCount(), 5);
   EXPECT_EQ(molecule.coordinate3dCount(), 2);
 }
+
+namespace {
+// Ethylene as written by GaussView: no version tag on the counts line.
+std::string gaussViewEthylene(const std::string& eol, double dz = 0.0)
+{
+  const std::string z = (dz == 0.0) ? "0.0000" : "0.1000";
+  return "Title: ethylene" + eol + eol + "Created by GaussView 6.1.1" + eol +
+         "  6  5  0  0  0  0  0  0  0  0  0    0" + eol +
+         "    0.0000    0.0000    " + z +
+         " C   0  0  0  0  0  0  0  0  0  0  0  0" + eol +
+         "    1.3300    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  "
+         "0" +
+         eol +
+         "   -0.5600    0.9200    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  "
+         "0" +
+         eol +
+         "   -0.5600   -0.9200    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  "
+         "0" +
+         eol +
+         "    1.8900    0.9200    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  "
+         "0" +
+         eol +
+         "    1.8900   -0.9200    0.0000 H   0  0  0  0  0  0  0  0  0  0  0  "
+         "0" +
+         eol + "  1  2  2  0  0  0" + eol + "  1  3  1  0  0  0" + eol +
+         "  1  4  1  0  0  0" + eol + "  2  5  1  0  0  0" + eol +
+         "  2  6  1  0  0  0" + eol + "M  END" + eol;
+}
+} // namespace
+
+TEST(MdlTest, readWithoutVersionTag)
+{
+  // A missing version field means V2000, with either line ending.
+  for (const std::string eol : { "\n", "\r\n" }) {
+    MdlFormat mdl;
+    Molecule molecule;
+    ASSERT_TRUE(mdl.readString(gaussViewEthylene(eol), molecule))
+      << mdl.error();
+    EXPECT_EQ(molecule.atomCount(), 6);
+    EXPECT_EQ(molecule.bondCount(), 5);
+    EXPECT_EQ(molecule.atom(0).atomicNumber(), 6);
+    EXPECT_EQ(molecule.atom(1).atomicNumber(), 6);
+    EXPECT_EQ(molecule.atom(2).atomicNumber(), 1);
+    EXPECT_EQ(molecule.bond(0).order(), 2);
+  }
+}
+
+TEST(MdlTest, readShortCountsLine)
+{
+  // Only the atom and bond counts are required.
+  const std::string mol =
+    "Short\n\n\n  1  0\n"
+    "    0.0000    0.0000    0.0000 He  0  0  0  0  0\nM  END\n";
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(mol, molecule)) << mdl.error();
+  EXPECT_EQ(molecule.atomCount(), 1);
+  EXPECT_EQ(molecule.atom(0).atomicNumber(), 2);
+
+  Molecule bad;
+  EXPECT_FALSE(mdl.readString("Bad\n\n\n  1\n", bad));
+}
+
+TEST(MdlTest, readMultiWithoutVersionTag)
+{
+  // The second record is folded in as a conformer via the same path.
+  const std::string sdf = gaussViewEthylene("\n") + "$$$$\n" +
+                          gaussViewEthylene("\n", 0.1) + "$$$$\n";
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readString(sdf, molecule)) << mdl.error();
+  EXPECT_EQ(molecule.atomCount(), 6);
+  EXPECT_EQ(molecule.coordinate3dCount(), 2);
+}

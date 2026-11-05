@@ -194,9 +194,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
   // The counts line, and version identifier.
   Core::getLine(in, buffer);
-  // should be long enough, e.g.
+  // The atom and bond counts are required, e.g.
   //   5  4  0  0  0  0  0  0  0  0999 V2000
-  if (!in.good() || buffer.size() < 39) {
+  if (!in.good() || buffer.size() < 6) {
     appendError("Error reading counts line.");
     return false;
   }
@@ -218,13 +218,10 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     appendError("Negative atom or bond count in the counts line.");
     return false;
   }
-  string mdlVersion(trimmed(buffer.substr(33)));
+  // A missing version field means V2000 (e.g., GaussView writes none)
+  string mdlVersion(buffer.size() > 33 ? trimmed(buffer.substr(33)) : string());
   if (mdlVersion == "V3000")
     return readV3000(in, mol);
-  else if (mdlVersion != "V2000") {
-    appendError("Unsupported MDL version: " + mdlVersion);
-    return false;
-  }
 
   // Parse the atom block.
   std::vector<chargePair> chargeList;
@@ -615,12 +612,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       break;
 
     // Read counts line
-    if (!Core::getLine(in, buffer) || buffer.size() < 39)
+    if (!Core::getLine(in, buffer) || buffer.size() < 6)
       break;
 
     // Check if this is V3000 - skip if so
     // (that would be weird mixing V2000 and V3000)
-    string version(trimmed(buffer.substr(33)));
+    string version(buffer.size() > 33 ? trimmed(buffer.substr(33)) : string());
     if (version == "V3000") {
       // Restore stream position for potential future reading
       if (molPos != std::streampos(-1))
