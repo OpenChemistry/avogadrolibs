@@ -456,6 +456,12 @@ struct Report
   bool gpuTiming = false;
   SurfaceReport surface;
   double zoomApplied = 1.0;
+  // Exact byte counts from BufferObject::totalBytesUploaded(): the cold first
+  // frame, and the smallest and largest per-frame upload over the timed
+  // frames (equal when every frame uploads the same amount).
+  std::uint64_t uploadedBytesFirstFrame = 0;
+  std::uint64_t uploadedBytesFrameMin = 0;
+  std::uint64_t uploadedBytesFrameMax = 0;
   Series cold;
   Series timed;
 };
@@ -695,7 +701,13 @@ bool writeJson(const Report& r, const std::string& path)
       << "  \"warmup\": " << r.options.warmup << ",\n"
       << "  \"frames\": " << r.options.frames << ",\n"
       << "  \"gpu_timing\": " << (r.gpuTiming ? "true" : "false") << ",\n"
-      << "  \"zoom\": " << r.zoomApplied << ",\n";
+      << "  \"zoom\": " << r.zoomApplied << ",\n"
+      << "  \"uploaded_bytes_first_frame\": " << r.uploadedBytesFirstFrame
+      << ",\n"
+      << "  \"uploaded_bytes_per_frame_min\": " << r.uploadedBytesFrameMin
+      << ",\n"
+      << "  \"uploaded_bytes_per_frame_max\": " << r.uploadedBytesFrameMax
+      << ",\n";
   if (r.surface.requested) {
     const SurfaceReport& s = r.surface;
     out << "  \"surface\": {\n"
@@ -1186,6 +1198,8 @@ int main(int argc, char** argv)
       report.zoomApplied = options.zoom;
     }
     ++frameNumber;
+    report.uploadedBytesFirstFrame =
+      BufferObject::totalBytesUploaded() - before;
     if (BufferObject::totalBytesUploaded() == before) {
       std::cerr << "ERROR: the first frame uploaded 0 bytes; the chosen "
                    "styles produced no geometry.\n";
@@ -1197,8 +1211,15 @@ int main(int argc, char** argv)
     Series discard;
     runFrame(discard);
   }
-  for (std::size_t i = 0; i < options.frames; ++i)
+  for (std::size_t i = 0; i < options.frames; ++i) {
+    const std::uint64_t before = BufferObject::totalBytesUploaded();
     runFrame(report.timed);
+    const std::uint64_t bytes = BufferObject::totalBytesUploaded() - before;
+    if (i == 0 || bytes < report.uploadedBytesFrameMin)
+      report.uploadedBytesFrameMin = bytes;
+    if (i == 0 || bytes > report.uploadedBytesFrameMax)
+      report.uploadedBytesFrameMax = bytes;
+  }
 
   if (!report.timed.names().empty() && !report.gpuTiming)
     std::cout << "NOTE: GPU timer queries unavailable; GPU columns omitted.\n";

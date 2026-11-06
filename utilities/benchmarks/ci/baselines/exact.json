@@ -1,0 +1,34 @@
+{
+  "crambin-render": {
+    "atoms": 327,
+    "bonds": 337,
+    "coordinate_sets": 4,
+    "uploaded_bytes_first_frame": 330600,
+    "uploaded_bytes_per_frame_max": 0,
+    "uploaded_bytes_per_frame_min": 0
+  },
+  "water3000-rebuild": {
+    "atoms": 3000,
+    "bonds": 2000,
+    "coordinate_sets": 4,
+    "uploaded_bytes_first_frame": 1864000,
+    "uploaded_bytes_per_frame_max": 1864000,
+    "uploaded_bytes_per_frame_min": 1864000
+  },
+  "water3000-render": {
+    "atoms": 3000,
+    "bonds": 2000,
+    "coordinate_sets": 4,
+    "uploaded_bytes_first_frame": 1864000,
+    "uploaded_bytes_per_frame_max": 0,
+    "uploaded_bytes_per_frame_min": 0
+  },
+  "water30000-rebuild": {
+    "atoms": 30000,
+    "bonds": 20000,
+    "coordinate_sets": 4,
+    "uploaded_bytes_first_frame": 18640000,
+    "uploaded_bytes_per_frame_max": 18640000,
+    "uploaded_bytes_per_frame_min": 18640000
+  }
+}
