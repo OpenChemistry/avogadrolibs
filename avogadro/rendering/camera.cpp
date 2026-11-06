@@ -183,6 +183,70 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
   m_data->modelView = transform;
 }
 
+bool Camera::isOrthographic() const
+{
+  return std::abs(m_data->projection(3, 3)) >= 0.5f;
+}
+
+float Camera::verticalFieldOfView() const
+{
+  if (isOrthographic())
+    return 0.0f;
+  const double p11 = m_data->projection(1, 1);
+  return static_cast<float>(360.0 / M_PI * std::atan(1.0 / std::abs(p11)));
+}
+
+float Camera::aspectRatio() const
+{
+  const Eigen::Matrix4f& p = m_data->projection.matrix();
+  return std::abs(p(1, 1) / p(0, 0));
+}
+
+float Camera::nearPlane() const
+{
+  const double p22 = m_data->projection(2, 2);
+  const double p23 = m_data->projection(2, 3);
+  return static_cast<float>(isOrthographic() ? (p23 + 1.0) / p22
+                                             : p23 / (p22 - 1.0));
+}
+
+float Camera::farPlane() const
+{
+  const double p22 = m_data->projection(2, 2);
+  const double p23 = m_data->projection(2, 3);
+  return static_cast<float>(isOrthographic() ? (p23 - 1.0) / p22
+                                             : p23 / (p22 + 1.0));
+}
+
+Vector2f Camera::orthographicHalfExtents() const
+{
+  if (!isOrthographic())
+    return Vector2f::Zero();
+  return Vector2f(1.0f / std::abs(m_data->projection(0, 0)),
+                  1.0f / std::abs(m_data->projection(1, 1)));
+}
+
+float Camera::viewScale() const
+{
+  return m_data->modelView.matrix().topLeftCorner<3, 1>().norm();
+}
+
+Eigen::Matrix3f Camera::viewRotation() const
+{
+  const Eigen::Matrix3f linear =
+    m_data->modelView.matrix().topLeftCorner<3, 3>();
+  return (linear / viewScale()).transpose();
+}
+
+Vector3f Camera::eyePosition() const
+{
+  const Eigen::Matrix4f& m = m_data->modelView.matrix();
+  const Eigen::Matrix3d linear = m.topLeftCorner<3, 3>().cast<double>();
+  const Eigen::Vector3d translation = m.topRightCorner<3, 1>().cast<double>();
+  const double s = linear.col(0).norm();
+  return (-(linear.transpose() * translation) / (s * s)).cast<float>();
+}
+
 void Camera::calculatePerspective(float left, float right, float bottom,
                                   float top, float zNear, float zFar)
 {
