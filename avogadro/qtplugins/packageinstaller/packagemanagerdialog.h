@@ -19,8 +19,7 @@ namespace Ui {
 class PackageManagerDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class PackageModel;
 
@@ -89,7 +88,6 @@ private:
   QList<DownloadEntry> m_downloadQueue;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_PACKAGEMANAGERDIALOG_H

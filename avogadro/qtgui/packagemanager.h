@@ -17,8 +17,7 @@
 
 class QProcessEnvironment;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @brief Singleton that manages pyproject.toml-based plugin packages.
@@ -378,7 +377,6 @@ private:
                      QList<FeatureEntry>& features);
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_PACKAGEMANAGER_H

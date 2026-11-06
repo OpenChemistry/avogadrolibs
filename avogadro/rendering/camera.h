@@ -13,8 +13,7 @@
 #include <Eigen/Geometry> // For member variables.
 #include <memory>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 enum Projection
 {
@@ -240,7 +239,6 @@ inline const Eigen::Affine3f& Camera::modelView() const
   return m_data->modelView;
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_CAMERA_H

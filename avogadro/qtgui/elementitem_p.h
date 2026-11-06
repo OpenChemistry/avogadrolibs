@@ -8,8 +8,7 @@
 
 #include <QtWidgets/QGraphicsItem>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class ElementItem
@@ -73,7 +72,7 @@ private:
   int m_element;
 };
 
-} // End namespace QtGui
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui
+// End namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_ELEMENTITEM_P_H

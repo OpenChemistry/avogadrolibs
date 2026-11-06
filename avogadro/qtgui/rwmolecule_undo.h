@@ -10,8 +10,7 @@
 #include <QUndoCommand>
 #include <cassert>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
 using Core::AtomHybridization;
@@ -1096,6 +1095,6 @@ public:
 } // namespace
 */
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
+
 #endif

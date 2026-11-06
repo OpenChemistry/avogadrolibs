@@ -12,8 +12,7 @@
 
 #include <map>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render reference axes in the corner of the display.
@@ -41,7 +40,7 @@ private:
   RenderImpl* const m_render;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_OVERLAYAXES_H

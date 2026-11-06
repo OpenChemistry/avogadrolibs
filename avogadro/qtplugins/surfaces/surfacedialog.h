@@ -18,8 +18,7 @@ namespace Ui {
 class SurfaceDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The SurfaceDialog presents various properties that have been read in
@@ -91,7 +90,7 @@ private:
   std::set<std::pair<std::string, std::string>> m_chargeModels;
 };
 
-} // End namespace QtPlugins
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// End namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_SURFACEDIALOG_H

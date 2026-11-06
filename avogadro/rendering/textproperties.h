@@ -10,8 +10,7 @@
 
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class TextProperties textproperties.h <avogadro/rendering/textproperties.h>
@@ -290,7 +289,6 @@ inline void swap(TextProperties& lhs, TextProperties& rhs)
   lhs.swap(rhs);
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_TEXTPROPERTIES_H

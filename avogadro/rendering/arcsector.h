@@ -10,8 +10,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class ArcSector arcsector.h
@@ -45,7 +44,7 @@ public:
                     float resolutionDeg);
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_ARCSECTOR_H

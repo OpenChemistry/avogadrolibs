@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT MoldenFile : public Io::FileFormat
 {
@@ -116,7 +115,6 @@ private:
   bool m_currentSpinBeta = false; // Track current spin during MO parsing
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

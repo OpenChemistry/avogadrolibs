@@ -14,8 +14,7 @@
 #include <map>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 using NeighborListType = Avogadro::Core::Array<Avogadro::Core::Bond>;
 
 class SVG : public Avogadro::QtGui::ExtensionPlugin
@@ -86,6 +85,6 @@ private:
   bool frustrumCulling(const SVGAtom& atom);
   Eigen::Vector3f posToSVGImage(const SVGAtom& atom);
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_SVG_H

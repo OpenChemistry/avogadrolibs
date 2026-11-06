@@ -11,8 +11,7 @@
 
 #include <string> // For member variables.
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class Shader shader.h <avogadro/rendering/shader.h>
@@ -75,7 +74,6 @@ protected:
   std::string m_error;
 };
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_SHADER_H

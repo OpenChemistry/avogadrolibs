@@ -18,8 +18,7 @@
 
 #include <array>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class RWAtom;
 class RWBond;
@@ -254,7 +253,6 @@ public:
   /** @} */
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_FRAGMENTTOOLS_H

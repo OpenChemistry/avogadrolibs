@@ -8,8 +8,7 @@
 #include <QObject>
 #include <QUndoStack>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 UndoMergeTracker::UndoMergeTracker(QUndoStack* stack)
   : m_stack(nullptr), m_fieldId(-1), m_command(nullptr), m_index(-1),
@@ -124,5 +123,4 @@ void UndoMergeTracker::cancelEdit()
   endRun();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

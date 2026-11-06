@@ -40,8 +40,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using Avogadro::Calc::EnergyCalculator;
 using Avogadro::QtGui::Molecule;
@@ -1819,5 +1818,4 @@ void Forcefield::unregisterFeature(const QString& type,
   }
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

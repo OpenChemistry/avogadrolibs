@@ -15,8 +15,7 @@ namespace Ui {
 class BondingDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The Bonding class performs bonding operations on demand.
@@ -51,7 +50,6 @@ private:
   QAction* m_action;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_ALCHEMY_H

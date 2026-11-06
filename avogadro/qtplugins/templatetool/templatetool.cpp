@@ -57,8 +57,7 @@ const unsigned char INVALID_ATOMIC_NUMBER =
   std::numeric_limits<unsigned char>::max();
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
@@ -1046,5 +1045,4 @@ void TemplateTool::atomLeftDrag(QMouseEvent*)
   // by default, don't allow drags for bonds
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

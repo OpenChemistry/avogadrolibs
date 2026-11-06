@@ -13,8 +13,7 @@
 class QDoubleSpinBox;
 class QLabel;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * One editable internal coordinate the panel can show. There are at most
@@ -104,7 +103,6 @@ private:
   std::array<Row, MeasureFieldCount> m_rows;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_MEASUREWIDGET_H

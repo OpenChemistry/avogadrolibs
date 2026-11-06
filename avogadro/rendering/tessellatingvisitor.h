@@ -13,8 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @struct TessellatedMesh tessellatingvisitor.h
@@ -170,7 +169,7 @@ private:
   std::vector<Icosphere> m_icospheres;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_TESSELLATINGVISITOR_H

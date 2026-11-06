@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The Hydrogens class is an extension to modify hydrogens.
@@ -45,7 +44,6 @@ private:
   QtGui::Molecule* m_molecule;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_HYDROGENS_H

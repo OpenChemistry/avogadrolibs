@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render a molecule in the wireframe style.
@@ -42,7 +41,7 @@ private:
   std::string m_name = "Force";
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_FORCE_H

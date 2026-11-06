@@ -14,8 +14,7 @@ class QDockWidget;
 class QLabel;
 class QPushButton;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class ZMatrixModel;
 class ZMatrixView;
@@ -67,7 +66,6 @@ private:
   QAction* m_action = nullptr;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_ZMATRIXEDITOR_H

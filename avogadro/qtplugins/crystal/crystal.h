@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 class UnitCellDialog;
 
 /**
@@ -69,7 +68,6 @@ inline QString Crystal::description() const
   return tr("Tools for crystal-specific editing/analysis.");
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CRYSTAL_H

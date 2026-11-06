@@ -15,8 +15,7 @@
 using Avogadro::Core::Constraint;
 using Avogadro::QtGui::Molecule;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), ui(new Ui::ConstraintsDialog),
@@ -418,5 +417,4 @@ void ConstraintsDialog::deleteAllConstraints()
   m_model->clear();
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

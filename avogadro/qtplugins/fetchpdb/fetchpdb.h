@@ -16,8 +16,7 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class QProgressDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Queries online databases (currently the NIH structure resolver) and
@@ -101,7 +100,6 @@ private:
   /// moleculeReady() without passing its result back to us.
   bool m_lastReadOk = false;
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_FETCHPDB_H

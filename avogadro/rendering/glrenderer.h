@@ -24,8 +24,7 @@
 #include <string> // For member variables.
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 class GeometryNode;
 struct RenderTimings;
 class TextRenderStrategy;
@@ -256,7 +255,6 @@ inline Identifier GLRenderer::hit(int x, int y) const
   return Identifier();
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_GLRENDERER_H

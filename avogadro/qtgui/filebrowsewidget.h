@@ -14,8 +14,7 @@ class QFileSystemModel;
 class QLineEdit;
 class QPushButton;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class AVOGADROQTGUI_EXPORT FileBrowseWidget : public QWidget
 {
@@ -79,7 +78,6 @@ private:
   QLineEdit* m_edit;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_FILEBROWSEWIDGET_H

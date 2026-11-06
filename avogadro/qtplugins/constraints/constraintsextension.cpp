@@ -21,8 +21,7 @@
 #include <string>
 #include <iostream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace {
 
@@ -360,5 +359,4 @@ void ConstraintsExtension::addConstraint(const QtGui::CommandArguments& args)
   emit commandFinished(QString(), result);
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

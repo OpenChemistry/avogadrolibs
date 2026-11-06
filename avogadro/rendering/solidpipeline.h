@@ -8,8 +8,7 @@
 
 #include "camera.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class SolidPipeline
 {
@@ -151,7 +150,7 @@ private:
   Private* d;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

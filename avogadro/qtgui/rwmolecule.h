@@ -24,8 +24,7 @@
 
 #include <QUndoStack>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
@@ -1054,7 +1053,6 @@ inline const Core::Array<Vector3>& RWMolecule::forceVectors() const
   return m_molecule.forceVectors();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_RWMOLECULE_H

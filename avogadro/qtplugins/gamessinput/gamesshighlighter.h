@@ -14,8 +14,7 @@
 
 class QTextDocument;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class GamessHighlighter : public QSyntaxHighlighter
 {
@@ -47,7 +46,7 @@ private:
   QTextCharFormat m_errorFormat;
 };
 
-} // End namespace QtPlugins
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// End namespace Avogadro
 
 #endif // GAMESSHIGHLIGHTER_H

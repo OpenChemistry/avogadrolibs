@@ -15,8 +15,7 @@
 class QProcess;
 class QTemporaryFile;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The OBProcess class provides an interface to the `obabel` executable,
@@ -448,7 +447,6 @@ executeObabel(options, this, SLOT(mySlot()));
   QTemporaryFile* m_conformerOutputFile;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_OBPROCESS_H
