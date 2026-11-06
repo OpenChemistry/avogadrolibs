@@ -120,9 +120,11 @@ static long double unpack_ieee754(unsigned long long int i, unsigned int bits,
   return result;
 }
 
+// The byte layout follows the requested order, not the host's (comparing
+// against myendian broke big-endian hosts).
 static void pack_int16_t(unsigned char** bp, uint16_t val, int endian)
 {
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     *((*bp)++) = val;
     *((*bp)++) = val >> 8;
   } else {
@@ -133,7 +135,7 @@ static void pack_int16_t(unsigned char** bp, uint16_t val, int endian)
 
 static void pack_int32_t(unsigned char** bp, uint32_t val, int endian)
 {
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     *((*bp)++) = val;
     *((*bp)++) = val >> 8;
     *((*bp)++) = val >> 16;
@@ -148,7 +150,7 @@ static void pack_int32_t(unsigned char** bp, uint32_t val, int endian)
 
 static void pack_int64_t(unsigned char** bp, uint64_t val, int endian)
 {
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     *((*bp)++) = val;
     *((*bp)++) = val >> 8;
     *((*bp)++) = val >> 16;
@@ -184,7 +186,7 @@ static void pack_double(unsigned char** bp, double val, int endian)
 static void unpack_int16_t(const unsigned char** bp, int16_t* dst, int endian)
 {
   uint16_t val;
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     val = *((*bp)++);
     val |= (uint16_t)(*((*bp)++)) << 8;
   } else {
@@ -200,7 +202,7 @@ static void unpack_int16_t(const unsigned char** bp, int16_t* dst, int endian)
 
 static void unpack_uint16_t(const unsigned char** bp, uint16_t* dst, int endian)
 {
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     *dst = *((*bp)++);
     *dst |= (uint16_t)(*((*bp)++)) << 8;
   } else {
@@ -212,7 +214,7 @@ static void unpack_uint16_t(const unsigned char** bp, uint16_t* dst, int endian)
 static void unpack_int32_t(const unsigned char** bp, int32_t* dst, int endian)
 {
   uint32_t val;
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     val = *((*bp)++);
     val |= (uint32_t)(*((*bp)++)) << 8;
     val |= (uint32_t)(*((*bp)++)) << 16;
@@ -232,7 +234,7 @@ static void unpack_int32_t(const unsigned char** bp, int32_t* dst, int endian)
 
 static void unpack_uint32_t(const unsigned char** bp, uint32_t* dst, int endian)
 {
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     *dst = *((*bp)++);
     *dst |= (uint32_t)(*((*bp)++)) << 8;
     *dst |= (uint32_t)(*((*bp)++)) << 16;
@@ -248,7 +250,7 @@ static void unpack_uint32_t(const unsigned char** bp, uint32_t* dst, int endian)
 static void unpack_int64_t(const unsigned char** bp, int64_t* dst, int endian)
 {
   uint64_t val;
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     val = *((*bp)++);
     val |= (uint64_t)(*((*bp)++)) << 8;
     val |= (uint64_t)(*((*bp)++)) << 16;
@@ -276,7 +278,7 @@ static void unpack_int64_t(const unsigned char** bp, int64_t* dst, int endian)
 
 static void unpack_uint64_t(const unsigned char** bp, uint64_t* dst, int endian)
 {
-  if (endian == myendian) {
+  if (endian == STRUCT_ENDIAN_LITTLE) {
     *dst = *((*bp)++);
     *dst |= (uint64_t)(*((*bp)++)) << 8;
     *dst |= (uint64_t)(*((*bp)++)) << 16;
