@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/cartoongeometry.h>
@@ -264,6 +265,101 @@ TEST(TessellatingVisitorTest, meshOutOfRangeTrianglesDropped)
   mesh.accept(visitor);
   ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
   EXPECT_EQ(visitor.meshes()[0].indices.size(), static_cast<size_t>(3));
+}
+
+TEST(TessellatingVisitorTest, meshDataIsSanitised)
+{
+  const float nan = std::nanf("");
+  Array<Vector3f> vertices, normals;
+  vertices.push_back(Vector3f(0, 0, 0));
+  vertices.push_back(Vector3f(1, 0, 0));
+  vertices.push_back(Vector3f(0, 1, 0));
+  vertices.push_back(Vector3f(nan, 1, 1)); // not finite
+  normals.push_back(Vector3f(0, 0, 3));    // not unit length
+  normals.push_back(Vector3f(0, 0, 0));    // degenerate
+  normals.push_back(Vector3f(nan, 0, 1));  // not finite
+  normals.push_back(Vector3f(0, 0, 1));
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 1, 2);
+  mesh.addTriangle(0, 2, 3); // uses the vertex with a NaN position
+  mesh.addTriangle(0, 1, 9); // out of range
+
+  TessellatingVisitor visitor;
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  const TessellatedMesh& result = visitor.meshes()[0];
+  expectWellFormed(result);
+  EXPECT_EQ(result.indices.size(), static_cast<size_t>(3));
+  for (const auto& n : result.normals)
+    EXPECT_NEAR(n.norm(), 1.0f, 1e-6f);
+  EXPECT_TRUE(result.normals[0].isApprox(Vector3f(0, 0, 1)));
+  EXPECT_TRUE(result.normals[1].isApprox(Vector3f(0, 0, 1)));
+  EXPECT_TRUE(result.normals[2].isApprox(Vector3f(0, 0, 1)));
+  EXPECT_EQ(result.positions[3], Vector3f::Zero());
+}
+
+TEST(TessellatingVisitorTest, closedMeshes)
+{
+  SphereGeometry spheres;
+  spheres.addSphere(Vector3f(0, 0, 0), Vector3ub(1, 2, 3), 1.0f);
+  CylinderGeometry cylinders;
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(2, 0, 0), 0.2f,
+                        Vector3ub(1, 2, 3), Vector3ub(1, 2, 3));
+  Array<Vector3f> vertices, normals;
+  for (int i = 0; i < 3; ++i) {
+    vertices.push_back(Vector3f(i, 0, 0));
+    normals.push_back(Vector3f(0, 0, 1));
+  }
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 1, 2);
+
+  TessellatingVisitor visitor;
+  spheres.accept(visitor);
+  cylinders.accept(visitor);
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(3));
+  EXPECT_TRUE(visitor.meshes()[0].closed);
+  EXPECT_TRUE(visitor.meshes()[1].closed);
+  EXPECT_FALSE(visitor.meshes()[2].closed);
+}
+
+TEST(TessellatingVisitorTest, exportTransform)
+{
+  TessellatingVisitor visitor;
+  EXPECT_EQ(visitor.offset(), Vector3f::Zero());
+  EXPECT_EQ(visitor.scale(), 1.0f);
+  visitor.setOffset(Vector3f(1, std::nanf(""), 3));
+  EXPECT_EQ(visitor.offset(), Vector3f(1, 0, 3));
+  visitor.setScale(TessellatingVisitor::MolecularNodesScale);
+  EXPECT_EQ(visitor.scale(), 0.1f);
+  for (float bad : { 0.0f, -1.0f, std::nanf(""), INFINITY }) {
+    visitor.setScale(bad);
+    EXPECT_EQ(visitor.scale(), 0.1f);
+  }
+}
+
+TEST(TessellatingVisitorTest, centerOnMolecule)
+{
+  SphereGeometry spheres;
+  spheres.addSphere(Vector3f(10, 0, 0), Vector3ub(1, 2, 3), 1.0f);
+  TessellatingVisitor visitor;
+  spheres.accept(visitor);
+
+  // Without atoms: the middle of the bounding box.
+  Avogadro::Core::Molecule empty;
+  visitor.centerOn(&empty);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(10, 0, 0), 1e-5f));
+  visitor.centerOn(nullptr);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(10, 0, 0), 1e-5f));
+
+  // With atoms: their center of geometry, wherever the geometry is.
+  Avogadro::Core::Molecule molecule;
+  molecule.addAtom(1).setPosition3d(Avogadro::Vector3(0, 0, 0));
+  molecule.addAtom(1).setPosition3d(Avogadro::Vector3(2, 4, 6));
+  visitor.centerOn(&molecule);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(1, 2, 3), 1e-6f));
 }
 
 TEST(TessellatingVisitorTest, dashedLinesOneTubePerDash)

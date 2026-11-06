@@ -13,6 +13,12 @@
 #include <string>
 #include <vector>
 
+namespace Avogadro {
+namespace Core {
+class Molecule;
+}
+} // namespace Avogadro
+
 namespace Avogadro::Rendering {
 
 /**
@@ -21,6 +27,13 @@ namespace Avogadro::Rendering {
  * @brief A triangle mesh produced from one drawable of the scene.
  *
  * All arrays except @p indices are parallel (one entry per vertex).
+ *
+ * TessellatingVisitor guarantees, for every mesh it records, that consumers
+ * need not check any of the following: the arrays are parallel and not empty;
+ * positions are finite; normals are finite and of unit length (a missing or
+ * degenerate normal is replaced by +Z); indices come in whole triangles
+ * and refer to existing vertices. Triangles that use a vertex with a
+ * non-finite position are dropped.
  */
 struct TessellatedMesh
 {
@@ -33,6 +46,13 @@ struct TessellatedMesh
   std::vector<Vector4ub> colors;
   /** Triangle list (three indices per triangle) into the vertex arrays. */
   std::vector<unsigned int> indices;
+  /**
+   * True if the triangles form closed, outward-facing (counter-clockwise seen
+   * from outside) surfaces, so that back faces are never visible from
+   * outside: spheres, and cylinders with end caps. Open surfaces (curves,
+   * ribbons, isosurfaces, ...) may be seen from both sides.
+   */
+  bool closed = false;
 };
 
 /**
@@ -59,6 +79,35 @@ public:
   void clear();
 
   const std::vector<TessellatedMesh>& meshes() const { return m_meshes; }
+
+  /**
+   * The default export scale: Molecular Nodes (Blender) uses a world_scale of
+   * 0.1, i.e. 1 Angstrom = 0.1 Blender units.
+   */
+  static constexpr float MolecularNodesScale = 0.1f;
+
+  /**
+   * Output transform for the exporters, applied to positions when writing
+   * only: p_out = (p - offset) * scale. Normals are unchanged. The tessellated
+   * meshes (and the tessellation tolerance) stay in Angstrom. The defaults
+   * (origin, 1) leave positions as they are. Non-finite offset components are
+   * zeroed; a non-finite or non-positive scale is ignored (so the scale is
+   * always positive).
+   * @{
+   */
+  void setOffset(const Vector3f& offset);
+  Vector3f offset() const { return m_offset; }
+  void setScale(float scale);
+  float scale() const { return m_scale; }
+  /** @} */
+
+  /**
+   * Set the offset to the center of geometry of the atoms of @p molecule, so
+   * that several exports of one molecule line up whatever is drawn. Without
+   * atoms (or without a molecule) the center of the bounding box of meshes()
+   * is used, so call this after visiting the scene.
+   */
+  void centerOn(const Core::Molecule* molecule);
 
   /**
    * Axis-aligned bounding box of all vertices in meshes().
@@ -164,6 +213,8 @@ private:
   int m_fixedSphereLevel = -1;           // -1: adaptive
   unsigned int m_fixedCylinderSides = 0; // 0: adaptive
   float m_lineRadius = 0.02f;
+  Vector3f m_offset = Vector3f::Zero();
+  float m_scale = 1.0f;
 
   // Unit icospheres with shared vertices, built lazily per level.
   std::vector<Icosphere> m_icospheres;

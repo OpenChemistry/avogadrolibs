@@ -112,6 +112,7 @@ struct Glb
     const size_t count = a["count"].get<size_t>();
     size_t pos = accessorOffset(accessor);
     std::vector<double> result;
+    result.reserve(count * n);
     for (size_t i = 0; i < count * n; ++i, pos += size) {
       if (type == 5126)
         result.push_back(readF32(bin, pos));
@@ -235,6 +236,25 @@ MeshGeometry makeQuad(unsigned char alpha)
   return mesh;
 }
 
+// Visit a quad (see makeQuad()) and export it.
+Glb exportQuad(GltfVisitor& visitor, unsigned char alpha = 255)
+{
+  MeshGeometry quad = makeQuad(alpha);
+  visitor.begin();
+  quad.accept(visitor);
+  return exportAndParse(visitor);
+}
+
+// The 4x4 matrix of a glTF node (stored column-major).
+Matrix4f nodeMatrix(const Json& node)
+{
+  Matrix4f matrix;
+  for (int c = 0; c < 4; ++c)
+    for (int r = 0; r < 4; ++r)
+      matrix(r, c) = node["matrix"][c * 4 + r].get<float>();
+  return matrix;
+}
+
 void buildScene(SphereGeometry& spheres, CylinderGeometry& cylinders,
                 BezierGeometry& curve)
 {
@@ -335,11 +355,8 @@ TEST(GltfVisitorTest, containerAndAccessors)
 
 TEST(GltfVisitorTest, normalsAreRenormalised)
 {
-  MeshGeometry quad = makeQuad(255);
   GltfVisitor visitor;
-  visitor.begin();
-  quad.accept(visitor);
-  Glb glb = exportAndParse(visitor);
+  Glb glb = exportQuad(visitor);
   const Json* primitive = findPrimitive(glb, "mesh");
   ASSERT_NE(primitive, nullptr);
   const std::vector<double> n =
@@ -398,6 +415,27 @@ TEST(GltfVisitorTest, translucentGetsBlendMaterial)
   EXPECT_NEAR(c[3] / 65535.0, 128.0 / 255.0, 1e-4);
 }
 
+TEST(GltfVisitorTest, closedMeshesAreSingleSided)
+{
+  SphereGeometry spheres;
+  CylinderGeometry cylinders;
+  BezierGeometry curve;
+  buildScene(spheres, cylinders, curve);
+  GltfVisitor visitor;
+  visitor.setSphereSubdivisions(1);
+  visitor.begin();
+  spheres.accept(visitor);
+  cylinders.accept(visitor);
+  curve.accept(visitor);
+  Glb glb = exportAndParse(visitor);
+  for (const auto& mesh : glb.json["meshes"]) {
+    const Json& material =
+      glb.json["materials"][mesh["primitives"][0]["material"].get<int>()];
+    EXPECT_EQ(material["doubleSided"].get<bool>(), mesh["name"] == "curves")
+      << mesh["name"];
+  }
+}
+
 TEST(GltfVisitorTest, wideIndicesForLargeMeshes)
 {
   const unsigned int side = 260; // 67600 vertices
@@ -441,13 +479,10 @@ TEST(GltfVisitorTest, emptySceneIsValid)
 
 TEST(GltfVisitorTest, scaleAndOffsetAreAppliedAndRecorded)
 {
-  MeshGeometry quad = makeQuad(255); // x in [-1, 5], y in [0, 3]
-  GltfVisitor visitor;
+  GltfVisitor visitor; // the quad has x in [-1, 5], y in [0, 3]
   visitor.setOffset(Vector3f(2, 1, 0));
   visitor.setScale(0.1f);
-  visitor.begin();
-  quad.accept(visitor);
-  Glb glb = exportAndParse(visitor);
+  Glb glb = exportQuad(visitor);
 
   const Json& extras = glb.json["asset"]["extras"];
   EXPECT_EQ(extras["units"], "angstrom");
@@ -476,12 +511,9 @@ TEST(GltfVisitorTest, perspectiveCameraRoundTrips)
   camera.calculatePerspective(40.0f, 1.5f, 0.5f, 100.0f);
   camera.lookAt(Vector3f(1, 2, 10), Vector3f(0, 0, 0), Vector3f(0, 1, 0));
 
-  MeshGeometry quad = makeQuad(255);
   GltfVisitor visitor;
   visitor.setCamera(camera);
-  visitor.begin();
-  quad.accept(visitor);
-  Glb glb = exportAndParse(visitor);
+  Glb glb = exportQuad(visitor);
 
   ASSERT_EQ(glb.json["cameras"].size(), static_cast<size_t>(1));
   const Json& cam = glb.json["cameras"][0];
@@ -495,10 +527,7 @@ TEST(GltfVisitorTest, perspectiveCameraRoundTrips)
   const Json& node = glb.json["nodes"].back();
   EXPECT_EQ(node["camera"], 0);
   ASSERT_EQ(node["matrix"].size(), static_cast<size_t>(16));
-  Matrix4f world;
-  for (int c = 0; c < 4; ++c)
-    for (int r = 0; r < 4; ++r)
-      world(r, c) = node["matrix"][c * 4 + r].get<float>();
+  const Matrix4f world = nodeMatrix(node);
   const Matrix4f expected = camera.modelView().matrix().inverse();
   EXPECT_TRUE(world.isApprox(expected, 1e-5f)) << world << "\n" << expected;
 }
@@ -510,14 +539,11 @@ TEST(GltfVisitorTest, orthographicCameraRoundTrips)
   camera.setProjectionType(Avogadro::Rendering::Orthographic);
   camera.lookAt(Vector3f(0, 0, 8), Vector3f(1, 1, 0), Vector3f(0, 1, 0));
 
-  MeshGeometry quad = makeQuad(255);
   GltfVisitor visitor;
   visitor.setOffset(Vector3f(1, 1, 0));
   visitor.setScale(0.1f);
   visitor.setCamera(camera);
-  visitor.begin();
-  quad.accept(visitor);
-  Glb glb = exportAndParse(visitor);
+  Glb glb = exportQuad(visitor);
 
   const Json& cam = glb.json["cameras"][0];
   EXPECT_EQ(cam["type"], "orthographic");
@@ -536,11 +562,8 @@ TEST(GltfVisitorTest, orthographicCameraRoundTrips)
 
 TEST(GltfVisitorTest, noCameraByDefault)
 {
-  MeshGeometry quad = makeQuad(255);
   GltfVisitor visitor;
-  visitor.begin();
-  quad.accept(visitor);
-  Glb glb = exportAndParse(visitor);
+  Glb glb = exportQuad(visitor);
   EXPECT_FALSE(glb.json.contains("cameras"));
 }
 
@@ -554,14 +577,11 @@ TEST(GltfVisitorTest, orthographicNegativeNearKeepsViewVolume)
 
   const float scale = 0.1f;
   const Vector3f offset(5, 6, 0);
-  MeshGeometry quad = makeQuad(255);
   GltfVisitor visitor;
   visitor.setOffset(offset);
   visitor.setScale(scale);
   visitor.setCamera(camera);
-  visitor.begin();
-  quad.accept(visitor);
-  Glb glb = exportAndParse(visitor);
+  Glb glb = exportQuad(visitor);
 
   const Json& o = glb.json["cameras"][0]["orthographic"];
   const double znear = o["znear"].get<double>();
@@ -569,11 +589,7 @@ TEST(GltfVisitorTest, orthographicNegativeNearKeepsViewVolume)
   EXPECT_NEAR(znear, 0.0, 1e-9);
   EXPECT_GT(zfar, znear);
 
-  const Json& matrix = glb.json["nodes"].back()["matrix"];
-  Matrix4f world;
-  for (int c = 0; c < 4; ++c)
-    for (int r = 0; r < 4; ++r)
-      world(r, c) = matrix[c * 4 + r].get<float>();
+  const Matrix4f world = nodeMatrix(glb.json["nodes"].back());
   const Eigen::Vector3f position = world.block<3, 1>(0, 3);
   const Eigen::Vector3f back = world.block<3, 1>(0, 2);
 

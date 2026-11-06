@@ -16,6 +16,7 @@
 #include "widelinegeometry.h"
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/molecule.h>
 
 #include <algorithm>
 #include <cmath>
@@ -249,9 +250,56 @@ void appendCone(TessellatedMesh& mesh, const Vector3f& base,
   }
 }
 
+// Establish the guarantees documented on TessellatedMesh. The meshes made
+// here are well formed by construction, but vertex and index data of a
+// MeshGeometry come from outside. Well-formed data is left bit for bit as it
+// is (normals within a tolerance of unit length are not touched).
+void sanitize(TessellatedMesh& mesh)
+{
+  const size_t count = mesh.positions.size();
+  if (mesh.normals.size() != count || mesh.colors.size() != count) {
+    mesh.positions.clear();
+    mesh.indices.clear();
+    return;
+  }
+
+  std::vector<bool> bad(count, false);
+  bool anyBad = false;
+  for (size_t i = 0; i < count; ++i) {
+    if (!isFinite(mesh.positions[i])) {
+      mesh.positions[i].setZero();
+      bad[i] = anyBad = true;
+    }
+    Vector3f& n = mesh.normals[i];
+    const float lengthSquared = isFinite(n) ? n.squaredNorm() : 0.0f;
+    if (std::abs(lengthSquared - 1.0f) <= 1e-5f)
+      continue;
+    if (lengthSquared > 1e-24f && std::isfinite(lengthSquared))
+      n /= std::sqrt(lengthSquared);
+    else
+      n = Vector3f::UnitZ();
+  }
+
+  // Keep the triangles that are whole and use existing, usable vertices.
+  size_t kept = 0;
+  for (size_t i = 0; i + 2 < mesh.indices.size(); i += 3) {
+    const unsigned int a = mesh.indices[i], b = mesh.indices[i + 1],
+                       c = mesh.indices[i + 2];
+    if (a >= count || b >= count || c >= count)
+      continue;
+    if (anyBad && (bad[a] || bad[b] || bad[c]))
+      continue;
+    mesh.indices[kept++] = a;
+    mesh.indices[kept++] = b;
+    mesh.indices[kept++] = c;
+  }
+  mesh.indices.resize(kept);
+}
+
 void keepIfNotEmpty(std::vector<TessellatedMesh>& meshes,
                     TessellatedMesh&& mesh)
 {
+  sanitize(mesh);
   if (!mesh.positions.empty() && !mesh.indices.empty())
     meshes.push_back(std::move(mesh));
 }
@@ -292,6 +340,31 @@ bool TessellatingVisitor::bounds(Vector3f& minimum, Vector3f& maximum) const
     maximum = hi;
   }
   return any;
+}
+
+void TessellatingVisitor::setOffset(const Vector3f& offset)
+{
+  m_offset = offset;
+  for (int k = 0; k < 3; ++k)
+    if (!std::isfinite(m_offset[k]))
+      m_offset[k] = 0.0f;
+}
+
+void TessellatingVisitor::setScale(float scale)
+{
+  if (std::isfinite(scale) && scale > 0.0f)
+    m_scale = scale;
+}
+
+void TessellatingVisitor::centerOn(const Core::Molecule* molecule)
+{
+  Vector3f center = Vector3f::Zero();
+  Vector3f minimum, maximum;
+  if (molecule != nullptr && molecule->atomCount() > 0)
+    center = molecule->centerOfGeometry().cast<float>();
+  else if (bounds(minimum, maximum))
+    center = 0.5f * (minimum + maximum);
+  setOffset(center);
 }
 
 void TessellatingVisitor::setTessellationTolerance(float angstrom)
@@ -447,6 +520,7 @@ void TessellatingVisitor::visit(SphereGeometry& geometry)
   const unsigned char alpha = alphaFromOpacity(geometry.opacity());
   TessellatedMesh mesh;
   mesh.name = "spheres";
+  mesh.closed = true;
 
   for (const auto& sphere : spheres) {
     if (!isFinite(sphere.center) || !(sphere.radius > 0.0f) ||
@@ -469,6 +543,7 @@ void TessellatingVisitor::visit(CylinderGeometry& geometry)
   const unsigned char alpha = alphaFromOpacity(geometry.opacity());
   TessellatedMesh mesh;
   mesh.name = "cylinders";
+  mesh.closed = true; // appendTube() caps both ends
   // On screen the end1 ring has `color`, the end2 ring `color2`, and the GPU
   // interpolates between them: the same is done here by vertex colour.
   for (const auto& cylinder : geometry.cylinders())
@@ -498,14 +573,9 @@ void TessellatingVisitor::visit(MeshGeometry& geometry)
     addVertex(result, vertices[i].vertex, vertices[i].normal,
               vertices[i].color);
 
-  result.indices.reserve(triangles.size());
-  for (size_t i = 0; i + 2 < triangles.size(); i += 3) {
-    if (triangles[i] >= vertices.size() ||
-        triangles[i + 1] >= vertices.size() ||
-        triangles[i + 2] >= vertices.size())
-      continue;
-    addTriangle(result, triangles[i], triangles[i + 1], triangles[i + 2]);
-  }
+  // Out-of-range indices and non-finite data are dealt with by
+  // keepIfNotEmpty().
+  result.indices.assign(triangles.begin(), triangles.end());
   keepIfNotEmpty(m_meshes, std::move(result));
 }
 
@@ -538,15 +608,11 @@ void TessellatingVisitor::visit(CurveGeometry& geometry)
     }
 
     // The curve normals carry the local tube scale (the shaders normalize
-    // them); consumers expect unit normals.
+    // them); keepIfNotEmpty() makes them unit length.
     const unsigned int base = vertexCount(mesh);
-    for (const auto& vertex : vertices) {
-      const float norm = vertex.normal.norm();
-      const Vector3f normal = norm > 1e-8f && std::isfinite(norm)
-                                ? Vector3f(vertex.normal / norm)
-                                : Vector3f::UnitY();
-      addVertex(mesh, vertex.vertex, normal, withAlpha(vertex.color, 255));
-    }
+    for (const auto& vertex : vertices)
+      addVertex(mesh, vertex.vertex, vertex.normal,
+                withAlpha(vertex.color, 255));
     for (unsigned int index : indices)
       mesh.indices.push_back(base + index);
   }

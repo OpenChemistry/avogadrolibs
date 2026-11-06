@@ -11,6 +11,7 @@
 #include "camera.h"
 
 #include <iosfwd>
+#include <optional>
 #include <string>
 
 namespace Avogadro::Rendering {
@@ -26,15 +27,16 @@ namespace Avogadro::Rendering {
  * COLOR_0 attributes. Vertex colours are converted from sRGB to linear, as
  * glTF requires, and stored as normalized unsigned shorts. Primitives with any
  * translucent vertex use an alphaMode BLEND material, the others OPAQUE;
- * everything but spheres is double sided. All numbers are written
- * little-endian regardless of the host byte order.
+ * everything but closed meshes (TessellatedMesh::closed) is double sided. All
+ * numbers are written little-endian regardless of the host byte order.
  *
  * Optionally (setCamera()) a camera node is added, positioned like the view
  * the camera was taken from.
  *
- * Positions are written as p_out = (p - offset) * scale, and the transform is
- * recorded in asset.extras so that a consumer can recover Angstrom
- * coordinates. The defaults (offset 0, scale 1) leave positions as they are.
+ * Positions are written as p_out = (p - offset()) * scale() (see
+ * TessellatingVisitor), and the transform is recorded in asset.extras so that
+ * a consumer can recover Angstrom coordinates. The defaults (offset 0, scale 1)
+ * leave positions as they are.
  */
 class AVOGADRORENDERING_EXPORT GltfVisitor : public TessellatingVisitor
 {
@@ -43,26 +45,12 @@ public:
   ~GltfVisitor() override;
 
   /**
-   * Output transform, applied to positions (and the camera) when writing
-   * only: p_out = (p - offset) * scale. Normals are unchanged. The tessellated
-   * meshes (and the tessellation tolerance) stay in Angstrom. A non-finite or
-   * non-positive scale is ignored; non-finite offset components are zeroed.
-   * @{
-   */
-  void setOffset(const Vector3f& offset);
-  Vector3f offset() const { return m_offset; }
-  void setScale(float scale);
-  float scale() const { return m_scale; }
-  /** @} */
-
-  /**
    * Add a camera node looking at the scene the way @p camera does. Only the
    * model view and projection matrices are used.
    * @{
    */
-  void setCamera(const Camera& camera);
-  void clearCamera() { m_hasCamera = false; }
-  bool hasCamera() const { return m_hasCamera; }
+  void setCamera(const Camera& camera) { m_camera = camera; }
+  void clearCamera() { m_camera.reset(); }
   /** @} */
 
   /**
@@ -80,10 +68,7 @@ public:
   std::string error() const { return m_error; }
 
 private:
-  Camera m_camera;
-  bool m_hasCamera = false;
-  Vector3f m_offset = Vector3f::Zero();
-  float m_scale = 1.0f;
+  std::optional<Camera> m_camera;
   mutable std::string m_error;
 };
 
