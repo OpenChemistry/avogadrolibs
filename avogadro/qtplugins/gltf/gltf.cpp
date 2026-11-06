@@ -12,8 +12,10 @@
 #include <avogadro/rendering/scene.h>
 
 #include <QtCore/QFile>
+#include <QtCore/QSettings>
 #include <QAction>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 
 #include <ostream>
@@ -68,6 +70,23 @@ void GLTF::exportScene()
     return;
 
   QWidget* widget = qobject_cast<QWidget*>(parent());
+
+  // How to colour bonds between different elements: the remembered choice is
+  // the default.
+  QSettings settings;
+  const QString split = tr("Split at midpoint");
+  const QString gradient = tr("Gradient");
+  const bool wasSplit =
+    settings.value("gltf/cylinderColoring", "split").toString() != "gradient";
+  bool accepted = false;
+  const QString choice = QInputDialog::getItem(
+    widget, tr("glTF Export"), tr("Bond colors:"), { split, gradient },
+    wasSplit ? 0 : 1, false, &accepted);
+  if (!accepted)
+    return;
+  const bool useSplit = (choice == split);
+  settings.setValue("gltf/cylinderColoring", useSplit ? "split" : "gradient");
+
   QFile file(filename);
   // Binary mode: the file is binary glTF.
   if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -79,6 +98,9 @@ void GLTF::exportScene()
 
   Rendering::GltfVisitor visitor;
   visitor.setCamera(*m_camera);
+  visitor.setCylinderColoring(
+    useSplit ? Rendering::TessellatingVisitor::CylinderColoring::Split
+             : Rendering::TessellatingVisitor::CylinderColoring::Gradient);
   visitor.begin();
   m_scene->rootNode().accept(visitor);
 

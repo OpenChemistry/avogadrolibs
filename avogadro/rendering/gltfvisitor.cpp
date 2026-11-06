@@ -14,6 +14,9 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
+#include <map>
+#include <utility>
 #include <string>
 #include <ostream>
 #include <streambuf>
@@ -73,6 +76,14 @@ std::uint16_t alphaToU16(int value)
 void padToAlignment(ChunkWriter& writer, std::uint64_t bytes)
 {
   writer.pad(align4(bytes) - bytes);
+}
+
+std::uint32_t packColor(const Vector4ub& c)
+{
+  return (static_cast<std::uint32_t>(c[0]) << 24) |
+         (static_cast<std::uint32_t>(c[1]) << 16) |
+         (static_cast<std::uint32_t>(c[2]) << 8) |
+         static_cast<std::uint32_t>(c[3]);
 }
 
 Json vec3Json(const Vector3f& v)
@@ -205,8 +216,59 @@ bool GltfVisitor::write(std::ostream& out) const
   Json accessors = Json::array();
   Json bufferViews = Json::array();
   Json materials = Json::array();
-  // Materials, created on first use: index by [blend][doubleSided].
-  int materialIndex[2][2] = { { -1, -1 }, { -1, -1 } };
+  // Materials are created on first use. Flat-colour materials are keyed by
+  // (rgba, doubleSided); vertex-colour materials (white base colour, COLOR_0
+  // supplies the colour) by (blend, doubleSided).
+  std::map<std::pair<std::uint32_t, bool>, int> flatMaterials;
+  int vertexMaterials[2][2] = { { -1, -1 }, { -1, -1 } };
+  auto flatMaterial = [&](const Vector4ub& rgba, bool doubleSided) {
+    const auto key = std::make_pair(packColor(rgba), doubleSided);
+    const auto found = flatMaterials.find(key);
+    if (found != flatMaterials.end())
+      return found->second;
+    const int index = static_cast<int>(materials.size());
+    flatMaterials[key] = index;
+    const bool blend = rgba[3] < 255;
+    char name[16];
+    std::snprintf(name, sizeof(name), "#%02X%02X%02X", rgba[0], rgba[1],
+                  rgba[2]);
+    std::string label = name;
+    if (blend) {
+      std::snprintf(name, sizeof(name), "%02X", rgba[3]);
+      label += name;
+    }
+    if (doubleSided)
+      label += "-doublesided";
+    materials.push_back(
+      { { "name", label },
+        { "alphaMode", blend ? "BLEND" : "OPAQUE" },
+        { "doubleSided", doubleSided },
+        { "pbrMetallicRoughness",
+          { { "baseColorFactor",
+              Json::array({ srgbToLinear(rgba[0]), srgbToLinear(rgba[1]),
+                            srgbToLinear(rgba[2]), rgba[3] / 255.0 }) },
+            { "metallicFactor", 0.0 },
+            { "roughnessFactor", 0.5 } } } });
+    return index;
+  };
+  auto vertexMaterial = [&](bool blend, bool doubleSided) {
+    int& index = vertexMaterials[blend ? 1 : 0][doubleSided ? 1 : 0];
+    if (index < 0) {
+      index = static_cast<int>(materials.size());
+      std::string name = blend ? "translucent" : "opaque";
+      if (doubleSided)
+        name += "-doublesided";
+      materials.push_back(
+        { { "name", name },
+          { "alphaMode", blend ? "BLEND" : "OPAQUE" },
+          { "doubleSided", doubleSided },
+          { "pbrMetallicRoughness",
+            { { "baseColorFactor", Json::array({ 1.0, 1.0, 1.0, 1.0 }) },
+              { "metallicFactor", 0.0 },
+              { "roughnessFactor", 0.5 } } } });
+    }
+    return index;
+  };
 
   // The BIN chunk is laid out here, in one place; the data is written in the
   // same order below.
@@ -230,47 +292,74 @@ bool GltfVisitor::write(std::ostream& out) const
     return index;
   };
 
+  // The triangles of one mesh that share a primitive: those of one flat
+  // colour, or (mixed) those whose vertices differ in colour.
+  struct Group
+  {
+    bool mixed = false;
+    Vector4ub color = Vector4ub::Zero();
+    std::vector<unsigned int> indices;
+  };
   struct Written
   {
     const TessellatedMesh* mesh;
     bool wideIndices; // UNSIGNED_INT rather than UNSIGNED_SHORT
+    bool hasColors;   // some primitive uses COLOR_0
+    std::vector<Group> groups;
   };
   std::vector<Written> written;
 
   for (const auto& mesh : meshes()) {
     const size_t vertices = mesh.positions.size();
 
-    // The extents and translucency, in one pass. The scale is positive, so the
-    // extents of the output positions are those of the input, transformed.
+    // The extents. The scale is positive, so the extents of the output
+    // positions are those of the input, transformed.
     Vector3f lo = mesh.positions[0], hi = lo;
-    bool blend = false;
     for (size_t i = 0; i < vertices; ++i) {
       lo = lo.cwiseMin(mesh.positions[i]);
       hi = hi.cwiseMax(mesh.positions[i]);
-      blend = blend || mesh.colors[i][3] < 255;
     }
     lo = (lo - offset) * scale;
     hi = (hi - offset) * scale;
 
+    // Sort the triangles into groups, in order of first appearance.
+    Written item{ &mesh, vertices >= 65536, false, {} };
+    std::map<std::uint32_t, size_t> flatGroups;
+    int mixedGroup = -1;
+    bool mixedBlend = false;
+    for (size_t i = 0; i + 2 < mesh.indices.size(); i += 3) {
+      const unsigned int a = mesh.indices[i], b = mesh.indices[i + 1],
+                         c = mesh.indices[i + 2];
+      const Vector4ub& ca = mesh.colors[a];
+      Group* group = nullptr;
+      if (ca == mesh.colors[b] && ca == mesh.colors[c]) {
+        auto found = flatGroups.find(packColor(ca));
+        if (found == flatGroups.end()) {
+          found = flatGroups.emplace(packColor(ca), item.groups.size()).first;
+          item.groups.emplace_back();
+          item.groups.back().color = ca;
+        }
+        group = &item.groups[found->second];
+      } else {
+        if (mixedGroup < 0) {
+          mixedGroup = static_cast<int>(item.groups.size());
+          item.groups.emplace_back();
+          item.groups.back().mixed = true;
+        }
+        group = &item.groups[mixedGroup];
+        mixedBlend = mixedBlend || ca[3] < 255 || mesh.colors[b][3] < 255 ||
+                     mesh.colors[c][3] < 255;
+      }
+      group->indices.push_back(a);
+      group->indices.push_back(b);
+      group->indices.push_back(c);
+    }
+    item.hasColors = mixedGroup >= 0;
+
     // Tubes, surfaces and ribbons may be seen from inside or from behind.
     const bool doubleSided = !mesh.closed;
-    int& material = materialIndex[blend ? 1 : 0][doubleSided ? 1 : 0];
-    if (material < 0) {
-      material = static_cast<int>(materials.size());
-      std::string name = blend ? "translucent" : "opaque";
-      if (doubleSided)
-        name += "-doublesided";
-      materials.push_back(
-        { { "name", name },
-          { "alphaMode", blend ? "BLEND" : "OPAQUE" },
-          { "doubleSided", doubleSided },
-          { "pbrMetallicRoughness",
-            { { "baseColorFactor", Json::array({ 1.0, 1.0, 1.0, 1.0 }) },
-              { "metallicFactor", 0.0 },
-              { "roughnessFactor", 0.5 } } } });
-    }
 
-    const bool wide = vertices >= 65536;
+    // The vertex data is shared by all primitives of the mesh.
     const int position = addAccessor(vertices * 12, kArrayBuffer,
                                      { { "componentType", kFloat },
                                        { "count", vertices },
@@ -281,32 +370,44 @@ bool GltfVisitor::write(std::ostream& out) const
                                    { { "componentType", kFloat },
                                      { "count", vertices },
                                      { "type", "VEC3" } });
-    const int color = addAccessor(vertices * 8, kArrayBuffer,
-                                  { { "componentType", kUnsignedShort },
-                                    { "normalized", true },
-                                    { "count", vertices },
-                                    { "type", "VEC4" } });
-    const int indices = addAccessor(
-      static_cast<std::uint64_t>(mesh.indices.size()) * (wide ? 4 : 2),
-      kElementArrayBuffer,
-      { { "componentType", wide ? kUnsignedInt : kUnsignedShort },
-        { "count", mesh.indices.size() },
-        { "type", "SCALAR" } });
+    int color = -1;
+    if (item.hasColors)
+      color = addAccessor(vertices * 8, kArrayBuffer,
+                          { { "componentType", kUnsignedShort },
+                            { "normalized", true },
+                            { "count", vertices },
+                            { "type", "VEC4" } });
+
+    Json primitives = Json::array();
+    for (const Group& group : item.groups) {
+      const int indices = addAccessor(
+        static_cast<std::uint64_t>(group.indices.size()) *
+          (item.wideIndices ? 4 : 2),
+        kElementArrayBuffer,
+        { { "componentType", item.wideIndices ? kUnsignedInt : kUnsignedShort },
+          { "count", group.indices.size() },
+          { "type", "SCALAR" } });
+      Json attributes = { { "POSITION", position }, { "NORMAL", normal } };
+      int material;
+      if (group.mixed) {
+        attributes["COLOR_0"] = color;
+        material = vertexMaterial(mixedBlend, doubleSided);
+      } else {
+        material = flatMaterial(group.color, doubleSided);
+      }
+      primitives.push_back({ { "attributes", std::move(attributes) },
+                             { "indices", indices },
+                             { "material", material },
+                             { "mode", 4 } });
+    }
     if (binBytes > kMaxGlbBytes) {
       m_error = kTooLarge;
       return false;
     }
-    written.push_back({ &mesh, wide });
+    written.push_back(std::move(item));
 
-    Json primitive = { { "attributes",
-                         { { "POSITION", position },
-                           { "NORMAL", normal },
-                           { "COLOR_0", color } } },
-                       { "indices", indices },
-                       { "material", material },
-                       { "mode", 4 } };
     meshesJson.push_back(
-      { { "name", mesh.name }, { "primitives", Json::array({ primitive }) } });
+      { { "name", mesh.name }, { "primitives", std::move(primitives) } });
     nodes.push_back({ { "name", mesh.name },
                       { "mesh", static_cast<int>(meshesJson.size()) - 1 } });
   }
@@ -389,21 +490,26 @@ bool GltfVisitor::write(std::ostream& out) const
       for (const auto& n : mesh.normals)
         writer.floats(n.data(), 3);
       padToAlignment(writer, vertices * 12);
-      for (const auto& c : mesh.colors) {
-        writer.u16(linear[c[0]]);
-        writer.u16(linear[c[1]]);
-        writer.u16(linear[c[2]]);
-        writer.u16(alphaToU16(c[3]));
+      if (item.hasColors) {
+        for (const auto& c : mesh.colors) {
+          writer.u16(linear[c[0]]);
+          writer.u16(linear[c[1]]);
+          writer.u16(linear[c[2]]);
+          writer.u16(alphaToU16(c[3]));
+        }
+        padToAlignment(writer, vertices * 8);
       }
-      padToAlignment(writer, vertices * 8);
-      for (unsigned int index : mesh.indices) {
-        if (item.wideIndices)
-          writer.u32(static_cast<std::uint32_t>(index));
-        else
-          writer.u16(static_cast<std::uint16_t>(index));
+      for (const Group& group : item.groups) {
+        for (unsigned int index : group.indices) {
+          if (item.wideIndices)
+            writer.u32(static_cast<std::uint32_t>(index));
+          else
+            writer.u16(static_cast<std::uint16_t>(index));
+        }
+        padToAlignment(writer,
+                       static_cast<std::uint64_t>(group.indices.size()) *
+                         (item.wideIndices ? 4 : 2));
       }
-      padToAlignment(writer, static_cast<std::uint64_t>(mesh.indices.size()) *
-                               (item.wideIndices ? 4 : 2));
     }
   }
 

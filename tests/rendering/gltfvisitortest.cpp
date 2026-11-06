@@ -335,17 +335,26 @@ TEST(GltfVisitorTest, containerAndAccessors)
         1e-5);
 
     // Indices are in range; small meshes use 16-bit indices.
-    const Json& ia = glb.json["accessors"][primitive["indices"].get<int>()];
-    EXPECT_EQ(ia["componentType"].get<int>(), 5123);
-    EXPECT_EQ(ia["count"].get<size_t>(), source.indices.size());
-    for (double index : glb.values(primitive["indices"].get<int>()))
-      EXPECT_LT(index, static_cast<double>(source.positions.size()));
+    // The primitives share the vertex data and together hold every triangle.
+    size_t indexCount = 0;
+    for (const Json& each : glb.json["meshes"][m]["primitives"]) {
+      EXPECT_EQ(each["attributes"]["POSITION"].get<int>(), positionAccessor);
+      const Json& ia = glb.json["accessors"][each["indices"].get<int>()];
+      EXPECT_EQ(ia["componentType"].get<int>(), 5123);
+      indexCount += ia["count"].get<size_t>();
+      for (double index : glb.values(each["indices"].get<int>()))
+        EXPECT_LT(index, static_cast<double>(source.positions.size()));
+    }
+    EXPECT_EQ(indexCount, source.indices.size());
 
-    const Json& ca =
-      glb.json["accessors"][primitive["attributes"]["COLOR_0"].get<int>()];
-    EXPECT_EQ(ca["componentType"].get<int>(), 5123);
-    EXPECT_TRUE(ca["normalized"].get<bool>());
-    EXPECT_EQ(ca["type"], "VEC4");
+    // The gradient cylinder is not flat coloured.
+    if (source.name == "cylinders") {
+      const Json& ca =
+        glb.json["accessors"][primitive["attributes"]["COLOR_0"].get<int>()];
+      EXPECT_EQ(ca["componentType"].get<int>(), 5123);
+      EXPECT_TRUE(ca["normalized"].get<bool>());
+      EXPECT_EQ(ca["type"], "VEC4");
+    }
   }
 
   EXPECT_NE(findPrimitive(glb, "spheres"), nullptr);
@@ -365,7 +374,28 @@ TEST(GltfVisitorTest, normalsAreRenormalised)
   EXPECT_NEAR(n[2], 1.0, 1e-6);
 }
 
-TEST(GltfVisitorTest, colorsAreLinear)
+TEST(GltfVisitorTest, mixedColorsAreLinear)
+{
+  CylinderGeometry cylinders;
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 2), 0.2f,
+                        Vector3ub(128, 255, 0), Vector3ub(0, 0, 0));
+  GltfVisitor visitor;
+  visitor.setCylinderSides(8);
+  visitor.begin();
+  cylinders.accept(visitor);
+  Glb glb = exportAndParse(visitor);
+  const Json* primitive = findPrimitive(glb, "cylinders");
+  ASSERT_NE(primitive, nullptr);
+  const std::vector<double> c =
+    glb.values((*primitive)["attributes"]["COLOR_0"].get<int>());
+  ASSERT_GE(c.size(), static_cast<size_t>(4));
+  EXPECT_NEAR(c[0] / 65535.0, 0.2158605, 1e-4); // sRGB 128
+  EXPECT_NEAR(c[1] / 65535.0, 1.0, 1e-6);
+  EXPECT_NEAR(c[2] / 65535.0, 0.0, 1e-6);
+  EXPECT_NEAR(c[3] / 65535.0, 1.0, 1e-6); // alpha is not gamma encoded
+}
+
+TEST(GltfVisitorTest, uniformColorBecomesBaseColorFactor)
 {
   SphereGeometry spheres;
   spheres.addSphere(Vector3f(0, 0, 0), Vector3ub(128, 255, 0), 1.0f);
@@ -376,13 +406,20 @@ TEST(GltfVisitorTest, colorsAreLinear)
   Glb glb = exportAndParse(visitor);
   const Json* primitive = findPrimitive(glb, "spheres");
   ASSERT_NE(primitive, nullptr);
-  const std::vector<double> c =
-    glb.values((*primitive)["attributes"]["COLOR_0"].get<int>());
-  ASSERT_GE(c.size(), static_cast<size_t>(4));
-  EXPECT_NEAR(c[0] / 65535.0, 0.2158605, 1e-4); // sRGB 128
-  EXPECT_NEAR(c[1] / 65535.0, 1.0, 1e-6);
-  EXPECT_NEAR(c[2] / 65535.0, 0.0, 1e-6);
-  EXPECT_NEAR(c[3] / 65535.0, 1.0, 1e-6); // alpha is not gamma encoded
+  EXPECT_FALSE((*primitive)["attributes"].contains("COLOR_0"));
+  // No colour data is written at all.
+  EXPECT_EQ(glb.json["accessors"].size(), static_cast<size_t>(3));
+
+  const Json& material =
+    glb.json["materials"][(*primitive)["material"].get<int>()];
+  EXPECT_EQ(material["name"], "#80FF00");
+  EXPECT_EQ(material["alphaMode"], "OPAQUE");
+  EXPECT_FALSE(material["doubleSided"].get<bool>());
+  const Json& factor = material["pbrMetallicRoughness"]["baseColorFactor"];
+  EXPECT_NEAR(factor[0].get<double>(), 0.2158605, 1e-4); // sRGB 128
+  EXPECT_NEAR(factor[1].get<double>(), 1.0, 1e-6);
+  EXPECT_NEAR(factor[2].get<double>(), 0.0, 1e-6);
+  EXPECT_NEAR(factor[3].get<double>(), 1.0, 1e-6);
 }
 
 TEST(GltfVisitorTest, translucentGetsBlendMaterial)
@@ -409,10 +446,87 @@ TEST(GltfVisitorTest, translucentGetsBlendMaterial)
   EXPECT_FALSE(sphereMaterial["doubleSided"].get<bool>());
   EXPECT_EQ(meshMaterial["alphaMode"], "BLEND");
   EXPECT_TRUE(meshMaterial["doubleSided"].get<bool>());
+  EXPECT_EQ(meshMaterial["name"], "#0AC81E80-doublesided");
+  EXPECT_FALSE((*mesh)["attributes"].contains("COLOR_0"));
+  EXPECT_NEAR(
+    meshMaterial["pbrMetallicRoughness"]["baseColorFactor"][3].get<double>(),
+    128.0 / 255.0, 1e-6);
+}
 
-  const std::vector<double> c =
-    glb.values((*mesh)["attributes"]["COLOR_0"].get<int>());
-  EXPECT_NEAR(c[3] / 65535.0, 128.0 / 255.0, 1e-4);
+TEST(GltfVisitorTest, mixedTrianglesKeepVertexColors)
+{
+  // Two triangles: one flat green, one with a gradient.
+  Array<Vector3f> vertices, normals;
+  Array<Vector4ub> colors;
+  const Vector4ub green(0, 255, 0, 255);
+  const Vector3f points[5] = { Vector3f(0, 0, 0), Vector3f(1, 0, 0),
+                               Vector3f(0, 1, 0), Vector3f(1, 1, 0),
+                               Vector3f(2, 1, 0) };
+  for (int i = 0; i < 5; ++i) {
+    vertices.push_back(points[i]);
+    normals.push_back(Vector3f(0, 0, 1));
+  }
+  colors.push_back(green);
+  colors.push_back(green);
+  colors.push_back(green);
+  colors.push_back(Vector4ub(255, 0, 0, 255));
+  colors.push_back(Vector4ub(0, 0, 255, 255));
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals, colors);
+  mesh.addTriangle(0, 1, 2);
+  mesh.addTriangle(1, 3, 4);
+
+  GltfVisitor visitor;
+  visitor.begin();
+  mesh.accept(visitor);
+  Glb glb = exportAndParse(visitor);
+  const Json& primitives = glb.json["meshes"][0]["primitives"];
+  ASSERT_EQ(primitives.size(), static_cast<size_t>(2));
+  EXPECT_FALSE(primitives[0]["attributes"].contains("COLOR_0"));
+  EXPECT_TRUE(primitives[1]["attributes"].contains("COLOR_0"));
+  EXPECT_EQ(primitives[0]["attributes"]["POSITION"],
+            primitives[1]["attributes"]["POSITION"]);
+  EXPECT_EQ(primitives[0]["attributes"]["NORMAL"],
+            primitives[1]["attributes"]["NORMAL"]);
+  EXPECT_EQ(glb.json["accessors"][primitives[0]["indices"].get<int>()]["count"],
+            3);
+  EXPECT_EQ(glb.json["accessors"][primitives[1]["indices"].get<int>()]["count"],
+            3);
+  EXPECT_EQ(glb.json["materials"][primitives[0]["material"].get<int>()]["name"],
+            "#00FF00-doublesided");
+  EXPECT_EQ(glb.json["materials"][primitives[1]["material"].get<int>()]["name"],
+            "opaque-doublesided");
+  // The vertex data is stored once.
+  EXPECT_EQ(glb.json["accessors"].size(), static_cast<size_t>(5));
+}
+
+TEST(GltfVisitorTest, materialsAreSharedAcrossMeshes)
+{
+  SphereGeometry a, b;
+  a.addSphere(Vector3f(0, 0, 0), Vector3ub(48, 80, 248), 1.0f);
+  b.addSphere(Vector3f(4, 0, 0), Vector3ub(48, 80, 248), 1.0f);
+  b.addSphere(Vector3f(8, 0, 0), Vector3ub(255, 13, 13), 1.0f);
+
+  auto names = [&] {
+    GltfVisitor visitor;
+    visitor.setSphereSubdivisions(1);
+    visitor.begin();
+    a.accept(visitor);
+    b.accept(visitor);
+    Glb glb = exportAndParse(visitor);
+    std::vector<std::string> result;
+    for (const auto& material : glb.json["materials"])
+      result.push_back(material["name"]);
+    EXPECT_EQ(glb.json["meshes"].size(), static_cast<size_t>(2));
+    EXPECT_EQ(glb.json["meshes"][0]["primitives"][0]["material"],
+              glb.json["meshes"][1]["primitives"][0]["material"]);
+    EXPECT_EQ(glb.json["meshes"][1]["primitives"].size(),
+              static_cast<size_t>(2));
+    return result;
+  };
+  const std::vector<std::string> first = names();
+  EXPECT_EQ(first, (std::vector<std::string>{ "#3050F8", "#FF0D0D" }));
+  EXPECT_EQ(first, names()); // deterministic
 }
 
 TEST(GltfVisitorTest, closedMeshesAreSingleSided)

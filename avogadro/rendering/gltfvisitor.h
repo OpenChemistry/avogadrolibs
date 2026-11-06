@@ -22,13 +22,19 @@ namespace Avogadro::Rendering {
  * (.glb) file.
  *
  * The scene is tessellated by TessellatingVisitor; write() outputs one glTF
- * node, mesh and primitive per drawable (named after the kind of drawable:
- * "spheres", "cylinders", "mesh", "cartoon", ...) with POSITION, NORMAL and
- * COLOR_0 attributes. Vertex colours are converted from sRGB to linear, as
- * glTF requires, and stored as normalized unsigned shorts. Primitives with any
- * translucent vertex use an alphaMode BLEND material, the others OPAQUE;
- * everything but closed meshes (TessellatedMesh::closed) is double sided. All
- * numbers are written little-endian regardless of the host byte order.
+ * node and mesh per drawable (named after the kind of drawable: "spheres",
+ * "cylinders", "mesh", "cartoon", ...). Triangles whose three vertices share
+ * one colour are grouped by colour into primitives without COLOR_0, whose
+ * material carries the colour as baseColorFactor (linear, as glTF requires;
+ * BLEND if translucent, else OPAQUE), so that viewers that ignore vertex
+ * colours still show it. Materials are shared across the file and named after
+ * their sRGB colour ("#3050F8", plus the alpha "80" if translucent). Triangles
+ * with differing vertex colours (gradients, coloured surfaces) share one more
+ * primitive per mesh with a COLOR_0 attribute (normalized unsigned shorts,
+ * linear) and a white "opaque" or "translucent" material. The primitives of a
+ * mesh share its POSITION and NORMAL accessors. Everything but closed meshes
+ * (TessellatedMesh::closed) is double sided. All numbers are written
+ * little-endian regardless of the host byte order.
  *
  * Optionally (setCamera()) a camera node is added, positioned like the view
  * the camera was taken from.
