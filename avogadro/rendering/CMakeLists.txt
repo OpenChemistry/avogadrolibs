@@ -37,6 +37,7 @@ avogadro_headers(Rendering
   drawable.h
   geometrynode.h
   geometryvisitor.h
+  gltfvisitor.h
   groupnode.h
   glrenderer.h
   glrendervisitor.h
@@ -85,6 +86,7 @@ target_sources(Rendering PRIVATE
   drawable.cpp
   geometrynode.cpp
   geometryvisitor.cpp
+  gltfvisitor.cpp
   groupnode.cpp
   glrenderer.cpp
   glrendervisitor.cpp
@@ -162,6 +164,7 @@ target_link_libraries(Rendering
   PUBLIC
     Avogadro::Headers
   PRIVATE
+    nlohmann_json::nlohmann_json
     Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
     GLEW::GLEW
     OpenGL::GL)
