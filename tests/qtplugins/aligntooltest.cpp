@@ -9,6 +9,8 @@
 
 #include <gtest/gtest.h>
 
+#include <QtTest/QSignalSpy>
+
 #include <functional>
 #include <vector>
 
@@ -21,6 +23,7 @@ using Avogadro::QtPluginsTests::CommandTestHarness;
 using Avogadro::QtPluginsTests::describe;
 using Avogadro::QtPluginsTests::expectNear;
 using Avogadro::QtPluginsTests::MoleculeSnapshot;
+using Avogadro::QtPluginsTests::NoMoleculeMessage;
 using Avogadro::QtPluginsTests::recordKnownDeviation;
 using Avogadro::QtPluginsTests::recordUndecided;
 
@@ -130,18 +133,13 @@ TEST_F(AlignToolCommandTest, alignAtomToNumericAxis)
     });
 }
 
-// Contract: unknown -> false. AlignTool claims anything it does not
-// recognize ("return true; // nothing to handle").
-TEST_F(AlignToolCommandTest, knownDeviationUnknownCommandIsClaimed)
+// Contract: unknown -> false.
+TEST_F(AlignToolCommandTest, unknownCommandIsNotClaimed)
 {
-  recordKnownDeviation("unknown commands return true");
-
   const MoleculeSnapshot before = m_harness.snapshot();
   for (const char* name : { "notACommand", "CenterAtom", "selectAll" }) {
     const CommandOutcome out = m_harness.run(name);
-    // When this fails, expect claimed == false.
-    EXPECT_TRUE(out.claimed) << name;
-    EXPECT_EQ(out.status, CommandStatus::Finished) << name;
+    EXPECT_FALSE(out.claimed) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
   EXPECT_EQ(m_harness.snapshot(), before);
@@ -240,23 +238,25 @@ TEST_F(AlignToolCommandTest, knownDeviationNoOpMovePushesUndoEntry)
 }
 
 // Contract (decision 1): no molecule -> true + commandFailed("No molecule").
-// AlignTool returns false for a tool with no molecule, whether it never had
-// one or was detached with setMolecule(nullptr).
-TEST_F(AlignToolCommandTest, knownDeviationNoMolecule)
+// Holds for a tool that never had a molecule and for one detached with
+// setMolecule(nullptr).
+TEST_F(AlignToolCommandTest, noMoleculeFails)
 {
-  recordKnownDeviation("with no molecule commands return false");
-
   AlignTool fresh;
-  // When these fail, expect true and commandFailed("No molecule").
-  EXPECT_FALSE(fresh.handleCommand("centerAtom", { { "id", qlonglong(0) } }));
+  QSignalSpy failed(&fresh, &AlignTool::commandFailed);
+  EXPECT_TRUE(fresh.handleCommand("centerAtom", { { "id", qlonglong(0) } }));
+  ASSERT_EQ(failed.count(), 1);
+  EXPECT_EQ(failed.at(0).at(0).toString(), QString(NoMoleculeMessage));
   EXPECT_FALSE(fresh.handleCommand("notACommand", {}));
+  EXPECT_EQ(failed.count(), 1);
 
   const MoleculeSnapshot before = m_harness.snapshot();
   m_harness.setPluginMolecule(nullptr);
   const CommandOutcome out =
     m_harness.run("centerAtom", { { "id", qlonglong(2) } });
-  // When this fails, expect claimed and commandFailed("No molecule").
-  EXPECT_FALSE(out.claimed);
+  EXPECT_TRUE(out.claimed);
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(out.message, QString(NoMoleculeMessage));
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
