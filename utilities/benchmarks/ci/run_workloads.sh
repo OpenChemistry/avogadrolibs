@@ -41,6 +41,10 @@ fi
 
 failed=0
 while read -r name args; do
+  # A Windows checkout may have CRLF line endings; the CR would otherwise
+  # stick to the last argument ("--warmup 3\r").
+  name="${name%$'\r'}"
+  args="${args%$'\r'}"
   case "$name" in '' | '#'*) continue ;; esac
   # Word-splitting of $args is intended; the data file is substituted after
   # splitting so a path with spaces survives.
