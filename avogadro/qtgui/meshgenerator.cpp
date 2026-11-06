@@ -740,6 +740,8 @@ const unsigned char MeshGenerator::m_numTris[256] = {
   // clang-format on
 };
 
+// 0/1 keeps the 256x12 table readable.
+// NOLINTBEGIN(modernize-use-bool-literals)
 const bool MeshGenerator::m_isCut[256][12] = {
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0 },
@@ -998,6 +1000,7 @@ const bool MeshGenerator::m_isCut[256][12] = {
   { 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0 },
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
+// NOLINTEND(modernize-use-bool-literals)
 
 const signed char MeshGenerator::m_caseTriangles[256][16]{
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },

@@ -64,6 +64,8 @@ public:
   }
 };
 
+// Residue templates, included only by residue.cpp.
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 ResidueData ALAData("ALA",
                     // Atoms
                     { { "N", 7 },
@@ -2579,6 +2581,7 @@ std::map<std::string, ResidueData> residueDict = {
   { "NME", NMEData },
 
 };
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 } // namespace Avogadro::Core
 
 #endif
