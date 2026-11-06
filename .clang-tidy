@@ -103,4 +103,9 @@ CheckOptions:
   modernize-use-equals-delete.IgnoreMacros: true
   # GCC's -Wextra warns when a copy constructor omits the base initializer.
   readability-redundant-member-init.IgnoreBaseInCopyConstructors: true
+  # Only add std::move to parameters already passed by value; never flip
+  # const& to by-value (changes exported signatures / ABI).
+  modernize-pass-by-value.ValuesOnly: true
+  # Implicitly shared / copy-on-write types are cheap to copy.
+  performance-unnecessary-value-param.AllowedTypes: 'QString;QByteArray;QStringList;QList;QVariant;QJsonObject;QJsonArray;Avogadro::Core::Array'
 FormatStyle: file
