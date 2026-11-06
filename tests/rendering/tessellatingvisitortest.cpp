@@ -167,6 +167,83 @@ TEST(TessellatingVisitorTest, twoColourCylinder)
   EXPECT_GT(atEnd1, static_cast<size_t>(0));
 }
 
+namespace {
+
+size_t countMixedTriangles(const TessellatedMesh& mesh)
+{
+  size_t mixed = 0;
+  for (size_t i = 0; i + 2 < mesh.indices.size(); i += 3) {
+    const Vector4ub& c = mesh.colors[mesh.indices[i]];
+    if (c != mesh.colors[mesh.indices[i + 1]] ||
+        c != mesh.colors[mesh.indices[i + 2]])
+      ++mixed;
+  }
+  return mixed;
+}
+
+} // namespace
+
+TEST(TessellatingVisitorTest, splitCylinderHasUniformTriangles)
+{
+  CylinderGeometry cylinders;
+  const Vector3ub red(255, 0, 0), blue(0, 0, 255);
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 2), 0.5f, red, blue);
+
+  TessellatingVisitor gradient;
+  gradient.setCylinderSides(12);
+  EXPECT_EQ(gradient.cylinderColoring(),
+            TessellatingVisitor::CylinderColoring::Gradient);
+  cylinders.accept(gradient);
+  ASSERT_EQ(gradient.meshes().size(), static_cast<size_t>(1));
+  const auto& g = gradient.meshes()[0];
+  EXPECT_GT(countMixedTriangles(g), static_cast<size_t>(0));
+
+  TessellatingVisitor split;
+  split.setCylinderSides(12);
+  split.setCylinderColoring(TessellatingVisitor::CylinderColoring::Split);
+  cylinders.accept(split);
+  ASSERT_EQ(split.meshes().size(), static_cast<size_t>(1));
+  const auto& mesh = split.meshes()[0];
+  expectWellFormed(mesh);
+  expectOutwardWinding(mesh);
+  EXPECT_TRUE(mesh.closed);
+  EXPECT_EQ(countMixedTriangles(mesh), static_cast<size_t>(0));
+
+  // Same extent along the axis; the colour changes at the midpoint.
+  Vector3f lo, hi, glo, ghi;
+  ASSERT_TRUE(split.bounds(lo, hi));
+  ASSERT_TRUE(gradient.bounds(glo, ghi));
+  EXPECT_EQ(lo, glo);
+  EXPECT_EQ(hi, ghi);
+  size_t atMiddle = 0;
+  for (size_t i = 0; i < mesh.positions.size(); ++i) {
+    const float z = mesh.positions[i][2];
+    if (std::abs(z - 1.0f) < 1e-6f)
+      ++atMiddle;
+    else
+      EXPECT_EQ(mesh.colors[i], z < 1.0f ? Vector4ub(255, 0, 0, 255)
+                                         : Vector4ub(0, 0, 255, 255));
+  }
+  // Two rings at the midpoint (one per half), and no cap there.
+  EXPECT_EQ(atMiddle, static_cast<size_t>(24));
+  // The gradient version has the same triangle count minus nothing but the
+  // second half's rings: 2 * 12 side triangles per half.
+  EXPECT_EQ(mesh.indices.size(), g.indices.size() + 12 * 2 * 3);
+
+  // A single-colour cylinder is unaffected by the setting.
+  CylinderGeometry same;
+  same.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 2), 0.5f, red, red);
+  TessellatingVisitor a, b;
+  a.setCylinderSides(12);
+  b.setCylinderSides(12);
+  b.setCylinderColoring(TessellatingVisitor::CylinderColoring::Split);
+  same.accept(a);
+  same.accept(b);
+  ASSERT_EQ(a.meshes().size(), static_cast<size_t>(1));
+  EXPECT_EQ(a.meshes()[0].positions, b.meshes()[0].positions);
+  EXPECT_EQ(a.meshes()[0].indices, b.meshes()[0].indices);
+}
+
 TEST(TessellatingVisitorTest, cylinderAnyAxis)
 {
   // Axes along and against each coordinate axis, and diagonal.

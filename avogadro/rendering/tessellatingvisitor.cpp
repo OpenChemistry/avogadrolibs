@@ -545,12 +545,24 @@ void TessellatingVisitor::visit(CylinderGeometry& geometry)
   mesh.name = "cylinders";
   mesh.closed = true; // appendTube() caps both ends
   // On screen the end1 ring has `color`, the end2 ring `color2`, and the GPU
-  // interpolates between them: the same is done here by vertex colour.
-  for (const auto& cylinder : geometry.cylinders())
-    appendTube(mesh, cylinder.end1, cylinder.end2,
-               withAlpha(cylinder.color, alpha),
-               withAlpha(cylinder.color2, alpha), cylinder.radius,
-               cylinderSidesForRadius(cylinder.radius));
+  // interpolates between them. By default the same is done here by vertex
+  // colour; with CylinderColoring::Split a two-colour cylinder becomes two
+  // single-colour tubes that meet at the midpoint (which is not capped).
+  for (const auto& cylinder : geometry.cylinders()) {
+    const Vector4ub c1 = withAlpha(cylinder.color, alpha);
+    const Vector4ub c2 = withAlpha(cylinder.color2, alpha);
+    const unsigned int sides = cylinderSidesForRadius(cylinder.radius);
+    if (m_cylinderColoring == CylinderColoring::Split && c1 != c2) {
+      const Vector3f mid = 0.5f * (cylinder.end1 + cylinder.end2);
+      appendTube(mesh, cylinder.end1, mid, c1, c1, cylinder.radius, sides, true,
+                 false);
+      appendTube(mesh, mid, cylinder.end2, c2, c2, cylinder.radius, sides,
+                 false, true);
+    } else {
+      appendTube(mesh, cylinder.end1, cylinder.end2, c1, c2, cylinder.radius,
+                 sides);
+    }
+  }
   keepIfNotEmpty(m_meshes, std::move(mesh));
 }
 

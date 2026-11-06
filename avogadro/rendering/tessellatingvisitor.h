@@ -168,6 +168,25 @@ public:
   /** @} */
 
   /**
+   * How a cylinder with two different end colours is coloured. Gradient (the
+   * default) interpolates the colour along the cylinder, as on screen. Split
+   * makes two single-colour tubes, each covering half of the cylinder, so
+   * that every triangle has a uniform colour.
+   * @{
+   */
+  enum class CylinderColoring
+  {
+    Gradient,
+    Split
+  };
+  void setCylinderColoring(CylinderColoring coloring)
+  {
+    m_cylinderColoring = coloring;
+  }
+  CylinderColoring cylinderColoring() const { return m_cylinderColoring; }
+  /** @} */
+
+  /**
    * Tube radius (in scene units, Angstrom) of one pixel of GL line width.
    * Dashed lines, line strips and flat curves have no world-space width, only
    * a width in pixels, so their tubes get radius lineRadius * width (width is
@@ -212,6 +231,7 @@ private:
   unsigned int m_maxLevel = 5;
   int m_fixedSphereLevel = -1;           // -1: adaptive
   unsigned int m_fixedCylinderSides = 0; // 0: adaptive
+  CylinderColoring m_cylinderColoring = CylinderColoring::Gradient;
   float m_lineRadius = 0.02f;
   Vector3f m_offset = Vector3f::Zero();
   float m_scale = 1.0f;
