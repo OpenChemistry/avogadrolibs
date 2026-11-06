@@ -12,8 +12,7 @@
 #include <avogadro/core/types.h>
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class Texture2D texture2d.h <avogadro/rendering/texture2d.h>
@@ -215,7 +214,6 @@ inline bool Texture2D::upload(const ContainerT& buffer, const Vector2i& dims,
                         internalFormat);
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_TEXTURE2D_H

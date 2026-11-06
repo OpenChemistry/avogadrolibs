@@ -8,8 +8,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class PersistentAtom persistentatom.h <avogadro/qtcore/persistentatom.h>
@@ -124,7 +123,6 @@ typename Molecule_T::AtomType PersistentAtom<Molecule_T>::atom() const
   return m_molecule ? m_molecule->atomByUniqueId(m_uniqueId) : AtomType();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_PERSISTENTATOM_H

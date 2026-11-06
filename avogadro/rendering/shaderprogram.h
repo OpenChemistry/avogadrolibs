@@ -15,8 +15,7 @@
 #include <string> // For member variables.
 #include <vector> // For member variables.
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class Shader;
 class Texture2D;
@@ -197,7 +196,6 @@ inline bool ShaderProgram::setAttributeArray(const std::string& name,
   return setAttributeArrayInternal(name, &array[0], type, tupleSize, normalize);
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_SHADERPROGRAM_H

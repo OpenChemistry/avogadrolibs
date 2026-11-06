@@ -9,8 +9,7 @@
 #include "fileformat.h"
 #include "mdlformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class SdfFormat sdfformat.h <avogadro/io/sdfformat.h>
@@ -59,7 +58,6 @@ public:
                            const Core::Molecule& molecule) override;
 };
 
-} // namespace Io
-} // namespace Avogadro
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_MDLFORMAT_H

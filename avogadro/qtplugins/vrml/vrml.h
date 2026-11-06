@@ -9,8 +9,7 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The VRML class performs VRML operations
@@ -49,7 +48,6 @@ private:
   QAction* m_action;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_VRML_H

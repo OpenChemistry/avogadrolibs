@@ -23,8 +23,8 @@
  * @brief The PQRRequest class sends and receives network requests to PQR and
  * updates ui elements from the widget.
  */
-namespace Avogadro {
-namespace QtPlugins {
+
+namespace Avogadro::QtPlugins {
 class PQRWidget;
 
 class PQRRequest : public QObject
@@ -145,6 +145,6 @@ private:
    */
   float getMolMass(QString);
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // PQRRequest_H

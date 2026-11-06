@@ -13,8 +13,7 @@
 #include <iosfwd>
 #include <string>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class PLYVisitor plyvisitor.h <avogadro/rendering/plyvisitor.h>
@@ -81,7 +80,7 @@ private:
   float m_scale = 1.0f;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_PLYVISITOR_H

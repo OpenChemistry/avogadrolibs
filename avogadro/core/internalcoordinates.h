@@ -12,8 +12,7 @@
 #include "molecule.h"
 #include "vector.h"
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * A single row of a z-matrix: the distance to atom @a a, the angle at @a a
@@ -208,7 +207,6 @@ AVOGADROCORE_EXPORT Array<InternalCoordinate> cartesianToInternal(
 AVOGADROCORE_EXPORT Array<InternalCoordinate> cartesianToInternal(
   const Molecule& molecule, Array<Index>& rowToAtom, ZMatrixOrder order);
 
-} // namespace Core
-} // namespace Avogadro
+} // namespace Avogadro::Core
 
 #endif // AVOGADRO_CORE_INTERNALCOORDINATES_H

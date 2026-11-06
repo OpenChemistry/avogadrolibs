@@ -11,9 +11,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtGui {
-namespace Utilities {
+namespace Avogadro::QtGui::Utilities {
 
 AVOGADROQTGUI_EXPORT QString libraryDirectory();
 AVOGADROQTGUI_EXPORT QString dataDirectory();
@@ -47,8 +45,6 @@ AVOGADROQTGUI_EXPORT void setDialogsSkipped(bool skipped);
 //! exit status is not checked.
 AVOGADROQTGUI_EXPORT bool runVideoEncoder(const QStringList& arguments);
 
-} // namespace Utilities
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui::Utilities
 
 #endif // AVOGADRO_QTGUI_UTILITIES_H

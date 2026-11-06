@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Manipulate custom element types in the current molecule.
@@ -40,7 +39,6 @@ private:
   void updateReassignAction();
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CUSTOMELEMENTS_H

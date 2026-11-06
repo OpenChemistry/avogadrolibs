@@ -10,8 +10,7 @@
 
 #include <list>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class GroupNode groupnode.h <avogadro/rendering/groupnode.h>
@@ -110,7 +109,7 @@ protected:
   std::list<NodeInfo> m_children;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_GROUPNODE_H

@@ -12,8 +12,7 @@
 
 class QHelpEvent;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The CoordinateTextEdit class extends QTextEdit to provide context
@@ -54,7 +53,6 @@ private:
   QTextCharFormat m_validFormat;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H

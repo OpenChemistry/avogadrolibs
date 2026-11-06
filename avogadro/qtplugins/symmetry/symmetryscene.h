@@ -10,8 +10,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render the symmetry elements
@@ -47,7 +46,7 @@ private:
   bool m_enabled;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_SYMMETRYSCENE_H

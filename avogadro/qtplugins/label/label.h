@@ -15,8 +15,8 @@
 #include <QtCore/QTimer>
 
 #include <string>
-namespace Avogadro {
-namespace QtPlugins {
+
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render labels to each atom.
@@ -113,7 +113,7 @@ private:
   MatrixX m_displayedCharges;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_LABEL_H

@@ -6,8 +6,7 @@
 #ifndef AVOGADRORENDERING_H
 #define AVOGADRORENDERING_H
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @brief The RenderPass enum is used to identify different stages in
@@ -52,7 +51,7 @@ enum RenderPass
   Overlay2DPass
 };
 
-} // end namespace Rendering
-} // end namespace Avogadro
+} // namespace Avogadro::Rendering
+// end namespace Avogadro
 
 #endif // AVOGADRORENDERING_H

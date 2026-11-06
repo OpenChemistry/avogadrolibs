@@ -9,8 +9,7 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Predict some non-covalent interactions, like hydrogen bonds.
@@ -56,7 +55,7 @@ private:
   std::array<float, 3> m_lineWidths;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_NONCOVALENT_H

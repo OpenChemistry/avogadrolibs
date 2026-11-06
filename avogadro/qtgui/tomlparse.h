@@ -16,8 +16,7 @@
 class QByteArray;
 class QString;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @brief Parse a TOML document and return the top-level table as a
@@ -61,7 +60,6 @@ AVOGADROQTGUI_EXPORT QVariantMap parseTomlString(const QString& content,
 AVOGADROQTGUI_EXPORT QJsonObject parseTomlToJson(const QByteArray& content,
                                                  bool* ok = nullptr);
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_TOMLPARSE_H

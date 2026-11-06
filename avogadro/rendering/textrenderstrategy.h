@@ -12,8 +12,7 @@
 
 #include <string>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 class TextProperties;
 
 /**
@@ -55,7 +54,6 @@ public:
                       unsigned char* buffer, const Vector2i& dims) const = 0;
 };
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_TEXTRENDERSTRATEGY_H

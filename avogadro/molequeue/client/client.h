@@ -14,8 +14,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 class JsonRpcClient;
 class JobObject;
@@ -245,7 +244,7 @@ private:
     const QJsonObject& handlerMethod);
 };
 
-} // End namespace MoleQueue
-} // End namespace Avogadro
+} // namespace Avogadro::MoleQueue
+// End namespace Avogadro
 
 #endif // AVOGADRO_MOLEQUEUE_CLIENT_H

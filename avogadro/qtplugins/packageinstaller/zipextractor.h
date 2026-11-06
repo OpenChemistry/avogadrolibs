@@ -12,9 +12,7 @@
 #include <QtCore/QList>
 #include <string>
 
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class ZipExtractor : public QObject
 {
@@ -29,7 +27,6 @@ public:
   QList<QString> listFiles(const std::string& absolutepath);
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif

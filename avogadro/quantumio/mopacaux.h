@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT MopacAux : public Io::FileFormat
 {
@@ -119,7 +118,7 @@ private:
   Eigen::MatrixXd m_density; /// Total density matrix
 };
 
-} // End namespace QuantumIO
-} // End namespace Avogadro
+} // namespace Avogadro::QuantumIO
+// End namespace Avogadro
 
 #endif

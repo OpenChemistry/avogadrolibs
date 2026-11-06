@@ -10,8 +10,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class ScenePlugin;
 
@@ -63,7 +62,6 @@ private:
   QList<ScenePlugin*> m_scenePlugins;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_SCENEPLUGINMODEL_H

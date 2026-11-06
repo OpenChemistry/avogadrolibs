@@ -15,8 +15,7 @@
 
 #include <QRegularExpression>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @brief The GenericHighlighter class provides a regexp-based programmable
@@ -94,7 +93,6 @@ private:
   QList<Rule> m_rules;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTPLUGINS_GENERICHIGHLIGHTER_H

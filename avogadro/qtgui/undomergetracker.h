@@ -14,8 +14,7 @@
 class QUndoCommand;
 class QUndoStack;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class UndoMergeTracker undomergetracker.h
@@ -136,7 +135,6 @@ private:
   bool m_undone;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_UNDOMERGETRACKER_H

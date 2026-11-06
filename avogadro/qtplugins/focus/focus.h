@@ -10,8 +10,7 @@
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/rendering/scene.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The Focus class is an extension to center the camera in the best
@@ -61,7 +60,6 @@ private:
   void newFocus(Eigen::Vector3f point, float distance);
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif

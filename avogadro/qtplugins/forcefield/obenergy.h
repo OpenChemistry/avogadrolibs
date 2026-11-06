@@ -14,9 +14,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class OBEnergy : public Avogadro::Calc::EnergyCalculator
 {
@@ -65,7 +63,6 @@ private:
   QString m_description;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_OBENERGY_H

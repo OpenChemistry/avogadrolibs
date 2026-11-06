@@ -19,8 +19,7 @@
 #include <limits>
 #include <utility>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 namespace {
 
@@ -1155,5 +1154,4 @@ QJsonObject CommandRegistry::schema(const QString& name) const
   return result;
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui

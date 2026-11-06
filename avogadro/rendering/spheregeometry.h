@@ -11,8 +11,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 struct SphereColor
 {
@@ -144,7 +143,7 @@ inline void swap(SphereGeometry& lhs, SphereGeometry& rhs)
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_SPHEREGEOMETRY_H

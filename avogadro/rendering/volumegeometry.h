@@ -9,12 +9,12 @@
 #include "drawable.h"
 #include <avogadro/core/cube.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class VolumeGeometry
- * @brief Demonstrates volume rendering with an offscreen pass and a fullscreen quad.
+ * @brief Demonstrates volume rendering with an offscreen pass and a fullscreen
+ * quad.
  */
 class AVOGADRORENDERING_EXPORT VolumeGeometry : public Drawable
 {
@@ -35,7 +35,6 @@ public:
    * Render the volume.
    */
   void render(const Camera& camera) override;
-
 
   /**
    * Destroy all GL resources (FBO, textures, etc.).
@@ -84,7 +83,7 @@ protected:
   int m_height;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_VOLUMEGEOMETRY_H

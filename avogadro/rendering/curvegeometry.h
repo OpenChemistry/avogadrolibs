@@ -16,8 +16,7 @@
 #include <map>
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 struct ShaderInfo
 {
@@ -194,7 +193,7 @@ protected:
   Core::Array<Identifier> areaHits(const Frustrum& f) const override;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

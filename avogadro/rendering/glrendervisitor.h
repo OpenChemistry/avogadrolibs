@@ -11,8 +11,7 @@
 #include "avogadrorendering.h"
 #include "camera.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 class TextRenderStrategy;
 
 /**
@@ -93,7 +92,7 @@ private:
   float m_pixelRatio = 1.0f;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_GLRENDERVISITOR_H

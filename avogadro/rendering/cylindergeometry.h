@@ -10,8 +10,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 struct ColorNormalVertex;
 
@@ -193,7 +192,7 @@ inline void swap(CylinderGeometry& lhs, CylinderGeometry& rhs)
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_CYLINDERGEOMETRY_H

@@ -12,8 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @struct PassTiming rendertimings.h <avogadro/rendering/rendertimings.h>
@@ -67,7 +66,6 @@ struct AVOGADRORENDERING_EXPORT RenderTimings
   }
 };
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_RENDERTIMINGS_H

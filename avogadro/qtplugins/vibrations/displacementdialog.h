@@ -12,8 +12,7 @@ namespace Ui {
 class DisplacementDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Asks how far to displace a geometry along one or more normal modes,
@@ -52,7 +51,7 @@ private:
   Ui::DisplacementDialog* m_ui;
 };
 
-} // End namespace QtPlugins
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// End namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_DISPLACEMENTDIALOG_H

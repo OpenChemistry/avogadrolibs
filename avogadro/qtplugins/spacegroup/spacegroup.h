@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Space group features for crystals.
@@ -111,7 +110,6 @@ inline QString SpaceGroup::description() const
   return tr("Space group features for crystals.");
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_SPACEGROUP_H
