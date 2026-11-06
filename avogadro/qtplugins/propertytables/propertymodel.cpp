@@ -256,13 +256,13 @@ QString partialChargeType(Molecule* molecule)
 
   std::set<std::string> types = molecule->partialChargeTypes();
 
-  if (types.size() > 0) {
+  if (!types.empty()) {
     type = QString(types.cbegin()->c_str());
   } else {
     // find something
     const auto options =
       Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
-    if (options.size() > 0) {
+    if (!options.empty()) {
       // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
       if (options.find("GFN2") != options.end())
         type = "GFN2";

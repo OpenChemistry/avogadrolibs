@@ -84,7 +84,7 @@ bool RWMolecule::removeAtom(Index atomId)
 
   // Remove any bonds containing this atom first.
   Array<BondType> atomBonds = bonds(atomId);
-  while (atomBonds.size()) {
+  while (!atomBonds.empty()) {
     // Ensure that indices aren't invalidated as we remove them:
     assert("atomBonds have ascending indices" &&
            (atomBonds.size() == 1 ||
