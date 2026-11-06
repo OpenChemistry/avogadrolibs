@@ -14,6 +14,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <memory>
@@ -49,12 +50,14 @@ void expectAllFinite(const Eigen::VectorXd& v, const char* what)
       << what << " component " << i << " is not finite: " << v[i];
 }
 
+constexpr Real finiteDifferenceStep = 1e-6;
+
 // Central finite-difference gradient, independent of
 // EnergyCalculator::finiteGradient(), for cross-checking analytic gradients
 // on smooth geometries.
 Eigen::VectorXd centralDifferenceGradient(EnergyCalculator& calc,
                                           const Eigen::VectorXd& x,
-                                          Real h = 1e-6)
+                                          Real h = finiteDifferenceStep)
 {
   Eigen::VectorXd grad = Eigen::VectorXd::Zero(x.size());
   for (Eigen::Index i = 0; i < x.size(); ++i) {
@@ -65,6 +68,16 @@ Eigen::VectorXd centralDifferenceGradient(EnergyCalculator& calc,
     grad[i] = (calc.value(xp) - calc.value(xm)) / (2.0 * h);
   }
   return grad;
+}
+
+// Tolerance for comparing an analytic gradient component against
+// centralDifferenceGradient(). Besides the relative error, allow for
+// roundoff in E(x+h) - E(x-h): a few ULPs of a large energy, divided by 2h.
+Real gradientTolerance(Real analytic, Real energy)
+{
+  const Real roundoff = 8.0 * std::numeric_limits<Real>::epsilon() *
+                        std::fabs(energy) / (2.0 * finiteDifferenceStep);
+  return std::max(1e-3, 0.05 * std::fabs(analytic)) + roundoff;
 }
 
 } // namespace
@@ -255,7 +268,7 @@ TEST_P(ForceFieldEdgeCaseTest, PlanarFormaldehydeZeroOutOfPlane)
   const Eigen::VectorXd numeric = centralDifferenceGradient(*calc, x);
   for (Eigen::Index i = 0; i < x.size(); ++i) {
     EXPECT_NEAR(analytic[i], numeric[i],
-                std::max(1e-3, 0.05 * std::fabs(analytic[i])));
+                gradientTolerance(analytic[i], energy));
   }
 }
 
@@ -300,7 +313,7 @@ TEST_P(ForceFieldEdgeCaseTest, PlanarEthyleneZeroOutOfPlane)
   const Eigen::VectorXd numeric = centralDifferenceGradient(*calc, x);
   for (Eigen::Index i = 0; i < x.size(); ++i) {
     EXPECT_NEAR(analytic[i], numeric[i],
-                std::max(1e-3, 0.05 * std::fabs(analytic[i])));
+                gradientTolerance(analytic[i], energy));
   }
 }
 
