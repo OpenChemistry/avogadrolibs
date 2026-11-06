@@ -915,6 +915,71 @@ void PackageManager::installPackages(const QStringList& packageDirs)
   installThread->start();
 }
 
+namespace {
+// Absolute, symlink-resolved form of an existing directory; otherwise just
+// the cleaned absolute path.
+QString resolvedDir(const QString& path)
+{
+  const QFileInfo info(path);
+  const QString canonical = info.canonicalFilePath();
+  return canonical.isEmpty() ? QDir::cleanPath(info.absoluteFilePath())
+                             : canonical;
+}
+
+bool isUsableName(const QString& name)
+{
+  return !name.isEmpty() && name != QLatin1String(".") &&
+         name != QLatin1String("..");
+}
+} // namespace
+
+QString PackageManager::localInstallDestination(const QString& pluginsDir,
+                                                const QString& sourceDir)
+{
+  if (pluginsDir.isEmpty() || sourceDir.isEmpty())
+    return QString();
+
+  const QFileInfo sourceInfo(sourceDir);
+  if (!sourceInfo.isDir())
+    return QString();
+
+  // Clean first: QFileInfo::fileName() is empty for a trailing '/'.
+  const QString cleanSource = QDir::cleanPath(sourceInfo.absoluteFilePath());
+  const QString name = QFileInfo(cleanSource).fileName();
+  if (!isUsableName(name))
+    return QString();
+
+  const QString source = resolvedDir(sourceDir);
+  const QString plugins = resolvedDir(pluginsDir);
+  if (source == plugins)
+    return QString();
+  if (source.startsWith(plugins + '/')) // already inside the plugins dir
+    return QString();
+  if (plugins.startsWith(source + '/') || source == QLatin1String("/"))
+    return QString(); // would copy a directory into itself
+
+  const QString destination =
+    QDir::cleanPath(QFileInfo(pluginsDir).absoluteFilePath() + '/' + name);
+  if (!isManagedPackagePath(pluginsDir, destination))
+    return QString();
+  return destination;
+}
+
+bool PackageManager::isManagedPackagePath(const QString& pluginsDir,
+                                          const QString& path)
+{
+  if (pluginsDir.isEmpty() || path.isEmpty())
+    return false;
+
+  const QString cleanPath = QDir::cleanPath(QFileInfo(path).absoluteFilePath());
+  const QFileInfo leaf(cleanPath);
+  if (!isUsableName(leaf.fileName()))
+    return false;
+
+  // Resolve only the parent so that a symlinked package itself is accepted.
+  return resolvedDir(leaf.absolutePath()) == resolvedDir(pluginsDir);
+}
+
 void PackageManager::clearInstallFailure(const QString& packageDir)
 {
   if (packageDir.isEmpty())

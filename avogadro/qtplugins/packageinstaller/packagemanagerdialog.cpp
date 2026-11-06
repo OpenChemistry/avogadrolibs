@@ -707,17 +707,32 @@ void PackageManagerDialog::removeSelected()
 
   bool deleteFiles = (msgBox.clickedButton() == deleteBtn);
 
+  QStringList unsafePaths;
   for (int row : toRemove) {
     PackageModel::PackageEntry& e = m_model->entry(row);
     const QString packageKey = e.packageKey.isEmpty() ? e.name : e.packageKey;
     QtGui::PackageManager::instance()->unregisterPackage(packageKey);
     QtGui::PackageManager::instance()->clearInstallFailure(e.installedDir);
     if (deleteFiles && !e.installedDir.isEmpty()) {
-      if (QFileInfo{ e.installedDir }.isSymLink())
+      // Never delete anything that is not a direct child of the plugins
+      // directory (older versions could register the directory itself).
+      if (!QtGui::PackageManager::isManagedPackagePath(m_filePath,
+                                                       e.installedDir)) {
+        unsafePaths << e.installedDir;
+      } else if (QFileInfo{ e.installedDir }.isSymLink()) {
         QFile(e.installedDir).remove();
-      else
+      } else {
         QDir(e.installedDir).removeRecursively();
+      }
     }
+  }
+
+  if (!unsafePaths.isEmpty()) {
+    QMessageBox::warning(
+      this, tr("Files Not Deleted"),
+      tr("The plugin was unregistered, but its files were kept because "
+         "they are not inside the plugins directory:\n%1")
+        .arg(unsafePaths.join('\n')));
   }
 
   // Refresh table state
@@ -744,8 +759,19 @@ void PackageManagerDialog::installFromDirectory()
 
   QDir().mkpath(m_filePath);
 
-  const QString baseName = QFileInfo(dir).fileName();
-  const QString linkPath = m_filePath + '/' + baseName;
+  // Refuses the plugins directory itself, anything inside or containing it,
+  // and paths with no usable name (e.g. a trailing '/').
+  const QString linkPath =
+    QtGui::PackageManager::localInstallDestination(m_filePath, dir);
+  if (linkPath.isEmpty()) {
+    QMessageBox::warning(
+      this, tr("Invalid Directory"),
+      tr("This directory cannot be installed as a plugin. Choose a plugin "
+         "directory outside of the plugins folder (%1).")
+        .arg(m_filePath));
+    return;
+  }
+  dir = QDir::cleanPath(QFileInfo(dir).absoluteFilePath());
 
   QFileInfo existing(linkPath);
   if (existing.isSymLink()) {
