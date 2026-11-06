@@ -379,7 +379,7 @@ bool GltfVisitor::write(std::ostream& out) const
       // Camera-to-world rotation (R^T) and position, in output units.
       const Eigen::Matrix3d rotation = (A / s).transpose();
       const Eigen::Vector3d eye = -(rotation * t) / s;
-      const Eigen::Vector3d position =
+      Eigen::Vector3d position =
         (eye - offset.cast<double>()) * static_cast<double>(scale);
       const double k = static_cast<double>(scale) / s; // eye units -> output
 
@@ -402,16 +402,26 @@ bool GltfVisitor::write(std::ostream& out) const
           ok = true;
         }
       } else if (p22 != 0.0) {
-        const double n = std::max(0.0, (p23 + 1.0) / p22);
+        const double n = (p23 + 1.0) / p22;
         const double f = (p23 - 1.0) / p22;
-        if (std::isfinite(f) && f > n) {
+        if (std::isfinite(n) && std::isfinite(f) && f > n) {
+          // Avogadro's orthographic near plane is often behind the eye, but
+          // glTF needs znear >= 0: move the camera back (along +Z, towards
+          // the viewer) so that the visible volume stays the same.
+          double znear = n * k;
+          double zfar = f * k;
+          if (n < 0.0) {
+            position += rotation.col(2) * (-n * k);
+            znear = 0.0;
+            zfar = (f - n) * k;
+          }
           camera = { { "name", "camera" },
                      { "type", "orthographic" },
                      { "orthographic",
                        { { "xmag", std::abs(k / p00) },
                          { "ymag", std::abs(k / p11) },
-                         { "znear", n * k },
-                         { "zfar", f * k } } } };
+                         { "znear", znear },
+                         { "zfar", zfar } } } };
           ok = true;
         }
       }

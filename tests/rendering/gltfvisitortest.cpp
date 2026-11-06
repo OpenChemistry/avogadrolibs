@@ -543,3 +543,62 @@ TEST(GltfVisitorTest, noCameraByDefault)
   Glb glb = exportAndParse(visitor);
   EXPECT_FALSE(glb.json.contains("cameras"));
 }
+
+TEST(GltfVisitorTest, orthographicNegativeNearKeepsViewVolume)
+{
+  // Like Avogadro's views: the near plane is behind the eye.
+  Camera camera;
+  camera.calculateOrthographic(-40.0f, 40.0f, -30.0f, 30.0f, -100.0f, 100.0f);
+  camera.setProjectionType(Avogadro::Rendering::Orthographic);
+  camera.lookAt(Vector3f(5, 6, 60), Vector3f(5, 6, 0), Vector3f(0, 1, 0));
+
+  const float scale = 0.1f;
+  const Vector3f offset(5, 6, 0);
+  MeshGeometry quad = makeQuad(255);
+  GltfVisitor visitor;
+  visitor.setOffset(offset);
+  visitor.setScale(scale);
+  visitor.setCamera(camera);
+  visitor.begin();
+  quad.accept(visitor);
+  Glb glb = exportAndParse(visitor);
+
+  const Json& o = glb.json["cameras"][0]["orthographic"];
+  const double znear = o["znear"].get<double>();
+  const double zfar = o["zfar"].get<double>();
+  EXPECT_NEAR(znear, 0.0, 1e-9);
+  EXPECT_GT(zfar, znear);
+
+  const Json& matrix = glb.json["nodes"].back()["matrix"];
+  Matrix4f world;
+  for (int c = 0; c < 4; ++c)
+    for (int r = 0; r < 4; ++r)
+      world(r, c) = matrix[c * 4 + r].get<float>();
+  const Eigen::Vector3f position = world.block<3, 1>(0, 3);
+  const Eigen::Vector3f back = world.block<3, 1>(0, 2);
+
+  // Points at GL clip-space z = -1 (near) and +1 (far), at some x/y.
+  const Matrix4f P = camera.projection().matrix();
+  const Matrix4f M = camera.modelView().matrix();
+  for (float ndcZ : { -1.0f, 1.0f }) {
+    // Invert the projection for the clip point (0.25, -0.5, ndcZ).
+    const Eigen::Vector4f eye4 =
+      P.inverse() * Eigen::Vector4f(0.25f, -0.5f, ndcZ, 1.0f);
+    const Eigen::Vector4f w4 = M.inverse() * (eye4 / eye4[3]);
+    const Vector3f p = w4.head<3>();
+    const Vector3f out = (p - offset) * scale;
+    const double depth = -(out - position).dot(back); // along -Z
+    EXPECT_GE(depth, znear - 1e-5);
+    EXPECT_LE(depth, zfar + 1e-5);
+    // The screen position is unchanged: x/y in the camera's frame.
+    const Eigen::Vector3f rel = out - position;
+    const double xs =
+      rel.dot(world.block<3, 1>(0, 0)) / o["xmag"].get<double>();
+    const double ys =
+      rel.dot(world.block<3, 1>(0, 1)) / o["ymag"].get<double>();
+    EXPECT_NEAR(xs, 0.25, 1e-4);
+    EXPECT_NEAR(ys, -0.5, 1e-4);
+    // And the near/far points land on the exported near/far planes.
+    EXPECT_NEAR(depth, ndcZ < 0 ? znear : zfar, 1e-4);
+  }
+}
