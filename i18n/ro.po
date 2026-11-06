@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-10-18 09:51+0000\n"
+"PO-Revision-Date: 2026-11-06 14:28+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remus-"
 "gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.11.dev0\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -585,62 +585,65 @@ msgstr "Nicio moleculă"
 #: qtgui/commandregistry.cpp:77
 #, qt-format
 msgid "atom index #%1 in %2 must be a whole number."
-msgstr ""
+msgstr "indicele atomului nr.%1 din %2 trebuie să fie un număr întreg."
 
 #: qtgui/commandregistry.cpp:80
 #, qt-format
 msgid "%1 must be a whole number (an atom index)."
-msgstr ""
+msgstr "%1 trebuie să fie un număr întreg (un indice atomic)."
 
 #: qtgui/commandregistry.cpp:92
 #, qt-format
 msgid "atom index #%1 in %2 is negative; atom indices must be zero or greater."
 msgstr ""
+"indicele atomului nr.%1 din %2 este negativ; indicii atomilor trebuie să fie "
+"egali cu zero sau mai mari."
 
 #: qtgui/commandregistry.cpp:96
 #, qt-format
 msgid "%1 is negative; atom indices must be zero or greater."
 msgstr ""
+"%1 este negativ; indicii atomici trebuie să fie egali cu zero sau mai mari."
 
 #: qtgui/commandregistry.cpp:152
 #, qt-format
 msgid "%1 must list between %2 and %3 atom indices."
-msgstr ""
+msgstr "%1 trebuie să conțină între %2 și %3 indici atomici."
 
 #: qtgui/commandregistry.cpp:173
 #, qt-format
 msgid "%1 must be at least %2."
-msgstr ""
+msgstr "%1 trebuie să fie cel puțin %2."
 
 #: qtgui/commandregistry.cpp:179
 #, qt-format
 msgid "%1 must be at most %2."
-msgstr ""
+msgstr "%1 trebuie să fie cel mult %2."
 
 #: qtgui/commandregistry.cpp:191
 #, qt-format
 msgid "%1 must be a whole number."
-msgstr ""
+msgstr "%1 trebuie să fie un număr întreg."
 
 #: qtgui/commandregistry.cpp:207 qtgui/commandregistry.cpp:218
 #, qt-format
 msgid "%1 is too large."
-msgstr ""
+msgstr "%1 este prea mare."
 
 #: qtgui/commandregistry.cpp:239
 #, qt-format
 msgid "%1 must be a finite number."
-msgstr ""
+msgstr "%1 trebuie să fie un număr finit."
 
 #: qtgui/commandregistry.cpp:266
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "%1 trebuie să fie o listă formată din 3 numere finite [x, y, z]."
 
 #: qtgui/commandregistry.cpp:269
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z] in %2."
-msgstr ""
+msgstr "%1 trebuie să fie o listă formată din 3 numere finite [x, y, z] în %2."
 
 #: qtgui/commandregistry.cpp:284
 #, qt-format
@@ -648,6 +651,8 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b, a] with values "
 "0-255."
 msgstr ""
+"%1 trebuie să fie o culoare: „#RRGGBB”, un nume de culoare sau [r, g, b, a] "
+"cu valori cuprinse între 0 și 255."
 
 #: qtgui/commandregistry.cpp:287
 #, qt-format
@@ -655,51 +660,55 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b] with values "
 "0-255."
 msgstr ""
+"%1 trebuie să fie o culoare: „#RRGGBB”, un nume de culoare sau [r, g, b] cu "
+"valori cuprinse între 0 și 255."
 
 #: qtgui/commandregistry.cpp:313
 #, qt-format
 msgid "%1 does not take an alpha channel; give \"#RRGGBB\" or [r, g, b]."
-msgstr ""
+msgstr "%1 nu acceptă un canal alfa; introduceți „#RRGGBB” sau [r, g, b]."
 
 #: qtgui/commandregistry.cpp:435
 #, qt-format
 msgid "%1 must be a string."
-msgstr ""
+msgstr "%1 trebuie să fie un șir de caractere."
 
 #: qtgui/commandregistry.cpp:444
 #, qt-format
 msgid "%1 must be one of: %2."
-msgstr ""
+msgstr "%1 trebuie să fie una dintre următoarele: %2."
 
 #: qtgui/commandregistry.cpp:454
 #, qt-format
 msgid "%1 must be true or false."
-msgstr ""
+msgstr "%1 trebuie să fie true sau false."
 
 #: qtgui/commandregistry.cpp:915
 #, qt-format
 msgid "unknown option \"%1\" for command \"%2\"."
-msgstr ""
+msgstr "opțiune necunoscută „%1” pentru comanda „%2”."
 
 #: qtgui/commandregistry.cpp:940
 #, qt-format
 msgid "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
-msgstr ""
+msgstr "opțiunile „%1” și „%2” sunt aceeași opțiune; introduceți doar „%1”."
 
 #: qtgui/commandregistry.cpp:971
 #, qt-format
 msgid "missing required option \"%1\"."
-msgstr ""
+msgstr "lipsește opțiunea necesară „%1”."
 
 #: qtgui/commandregistry.cpp:997
 #, qt-format
 msgid "%1 must be a list of zero-based atom indices."
 msgstr ""
+"%1 trebuie să fie o listă de indici atomici cu indexul începând de la zero."
 
 #: qtgui/commandregistry.cpp:1022
 #, qt-format
 msgid "atom index %1 is repeated in %2; each atom must be different."
 msgstr ""
+"indicele atomului %1 se repetă în %2; fiecare atom trebuie să fie diferit."
 
 #: qtgui/commandregistry.cpp:1049 qtplugins/editor/editor.cpp:1106
 #, qt-format
@@ -2050,20 +2059,21 @@ msgstr[2] "%n de ore rămase"
 
 #: qtopengl/glwidget.cpp:310
 msgid "The image size must be positive."
-msgstr ""
+msgstr "Dimensiunea imaginii trebuie să fie un număr pozitiv."
 
 #: qtopengl/glwidget.cpp:313
 msgid "Supersampling must be between 1 and 4."
-msgstr ""
+msgstr "Supra-eșantionarea trebuie să fie între 1 și 4."
 
 #: qtopengl/glwidget.cpp:315
 msgid "The scene is being rebuilt; try again in a moment."
 msgstr ""
+"Scena este în curs de reconstrucție; încercați din nou peste câteva secunde."
 
 #: qtopengl/glwidget.cpp:317
 #, qt-format
 msgid "The renderer is not valid: %1"
-msgstr ""
+msgstr "Motorul de redare nu este valid: %1"
 
 #: qtopengl/glwidget.cpp:325
 #, qt-format
@@ -2071,11 +2081,15 @@ msgid ""
 "The image is too large: %1 x %2 pixels (including supersampling) exceeds the "
 "maximum of %3."
 msgstr ""
+"Imaginea este prea mare: %1 x %2 pixeli (inclusiv supra-eșantionarea) "
+"depășește valoarea maximă de %3."
 
 #: qtopengl/glwidget.cpp:335
 msgid ""
 "There is no OpenGL context. The view must have been shown at least once."
 msgstr ""
+"Nu există un context OpenGL. Vizualizarea trebuie să fi fost afișată cel "
+"puțin o dată."
 
 #: qtopengl/glwidget.cpp:384
 #, qt-format
@@ -2083,58 +2097,62 @@ msgid ""
 "The image is too large for this graphics driver: %1 x %2 pixels exceeds its "
 "limit of %3."
 msgstr ""
+"Imaginea este prea mare pentru acest controlor grafic: %1 x %2 pixeli "
+"depășesc limita de %3."
 
 #: qtopengl/glwidget.cpp:425
 msgid ""
 "The offscreen framebuffer could not be created. The image may be too large "
 "for the available memory."
 msgstr ""
+"Nu s-a putut crea memoria tampon de cadre din afara ecranului. Este posibil "
+"ca imaginea să fie prea mare pentru memoria disponibilă."
 
 #: qtopengl/glwidget.cpp:447
 msgid "The offscreen framebuffer could not be bound."
-msgstr ""
+msgstr "Nu s-a putut asocia memoria tampon de cadre din afara ecranului."
 
 #: qtopengl/glwidget.cpp:453
 msgid "Reading back the rendered image failed."
-msgstr ""
+msgstr "Preluarea imaginii redate a eșuat."
 
 #: qtopengl/imagesizedialog.cpp:36
 msgid "Image Size"
-msgstr ""
+msgstr "Dimensiunea imaginii"
 
 #: qtopengl/imagesizedialog.cpp:40 qtopengl/imagesizedialog.cpp:43
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #: qtopengl/imagesizedialog.cpp:49
 msgid "&Lock aspect ratio"
-msgstr ""
+msgstr "B&locare raport de aspect"
 
 #: qtopengl/imagesizedialog.cpp:51
 msgid "&Transparent background"
-msgstr ""
+msgstr "Fundal &transparent"
 
 #: qtopengl/imagesizedialog.cpp:53
 msgid "&Width:"
-msgstr ""
+msgstr "&Lățime:"
 
 #: qtopengl/imagesizedialog.cpp:55
 msgid "&Height:"
-msgstr ""
+msgstr "Î&nălțime:"
 
 #: qtopengl/imagesizedialog.cpp:61
 #, qt-format
 msgid "%1×"
-msgstr ""
+msgstr "%1×"
 
 #: qtopengl/imagesizedialog.cpp:63
 #, qt-format
 msgid "Set the size to %1× the size of the view"
-msgstr ""
+msgstr "Stabilește dimensiunea la %1× dimensiunea ferestrei de vizualizare"
 
 #: qtopengl/imagesizedialog.cpp:75
 msgid "Size of view:"
-msgstr ""
+msgstr "Dimensiunea vizualizării:"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
