@@ -7,7 +7,7 @@
 
 namespace Avogadro::Rendering {
 
-BezierGeometry::BezierGeometry() : CurveGeometry() {}
+BezierGeometry::BezierGeometry() {}
 
 Vector3f BezierGeometry::computeSegmentPoint(
   size_t segment, float f, const std::vector<Point>& points) const

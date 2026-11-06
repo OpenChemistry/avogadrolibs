@@ -157,10 +157,10 @@ static void fillQuantityCombo(
 }
 
 PlotConformer::PlotConformer(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_displayDialogAction(new QAction(this)),
-    m_chartWidget(nullptr), m_yAxisCombo(nullptr), m_xAxisCombo(nullptr),
-    m_unitsCombo(nullptr), m_timeStepSpin(nullptr), m_targetUnitsCombo(nullptr),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_displayDialogAction(new QAction(this)), m_chartWidget(nullptr),
+    m_yAxisCombo(nullptr), m_xAxisCombo(nullptr), m_unitsCombo(nullptr),
+    m_timeStepSpin(nullptr), m_targetUnitsCombo(nullptr),
     m_unwrapDihedralsCheck(nullptr), m_timeStepLabel(nullptr),
     m_addSelectionButton(nullptr), m_frameLabel(nullptr)
 {
