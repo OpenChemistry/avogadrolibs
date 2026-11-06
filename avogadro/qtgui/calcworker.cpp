@@ -41,6 +41,7 @@ void CalcWorker::initCalculator(Calc::EnergyCalculator* calculator,
   // sharing containers with a molecule on the sending thread. A move would
   // hand those shared containers to this long-lived snapshot; copy assignment
   // deep-copies the data, giving it its own containers.
+  // NOLINTNEXTLINE(performance-unnecessary-value-param)
   m_molSnapshot = molSnapshot;
   m_optState.reset();
 
