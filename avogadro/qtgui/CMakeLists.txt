@@ -52,6 +52,7 @@ avogadro_headers(QtGui
   fragmenttools.h
   hydrogentools.h
   insertfragmentdialog.h
+  iodevicestreambuf.h
   interfacescript.h
   interfacewidget.h
   jsonwidget.h

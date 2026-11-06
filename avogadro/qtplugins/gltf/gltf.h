@@ -12,7 +12,7 @@
 namespace Avogadro::QtPlugins {
 
 /**
- * @brief The GLTF class performs GLTF operations on demand.
+ * @brief The GLTF class exports the scene as a glTF binary (.glb) file.
  */
 class GLTF : public QtGui::ExtensionPlugin
 {
@@ -25,7 +25,7 @@ public:
 
   QString description() const override
   {
-    return tr("Render the scene using GLTF.");
+    return tr("Export the scene as a glTF binary (.glb) file.");
   }
 
   QList<QAction*> actions() const override;
@@ -38,7 +38,7 @@ public slots:
   void setCamera(Rendering::Camera* camera) override;
 
 private slots:
-  void render();
+  void exportScene();
 
 private:
   QtGui::Molecule* m_molecule;
