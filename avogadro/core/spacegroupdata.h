@@ -12,6 +12,8 @@
 
 namespace Avogadro::Core {
 
+// Space group tables, included only by spacegroups.cpp.
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 const unsigned short space_group_international_number[] = {
   0,   1,   2,   3,   3,   3,   4,   4,   4,   5,   5,   5,   5,   5,   5,
   5,   5,   5,   6,   6,   6,   7,   7,   7,   7,   7,   7,   7,   7,   7,
@@ -3451,6 +3453,7 @@ const char* space_group_transforms[] = {
   "-z,-x,-y 1/2-z,1/2-x,1/2-y y,z,x 1/2+y,1/2+z,1/2+x -x,-y,-z "
   "1/2-x,1/2-y,1/2-z z,x,y 1/2+z,1/2+x,1/2+y -y,-z,-x 1/2-y,1/2-z,1/2-x"
 };
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 
 } // namespace Avogadro::Core
 

@@ -29,6 +29,8 @@ struct parameter
   float Radius;
 };
 
+// UFF parameters, included only by uff.cpp.
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 parameter uffparams[] = {
   { 0, "Du", 0.01, 180, 0.4, 5000, 12, 10, 0, 0, 9.66, 14.92, 0.7 },
   { 1, "H_", 0.354, 180, 2.886, 0.044, 12, 0.712, 0, 0, 4.528, 6.9452, 0.371 },
@@ -237,5 +239,6 @@ parameter uffparams[] = {
   { 101, "No6+3", 1.679, 90, 3.248, 0.011, 12, 3.9, 0, 0, 3.475, 3.175, 1.9 },
   { 102, "Lw6+3", 1.698, 90, 3.236, 0.011, 12, 3.9, 0, 0, 3.5, 3.2, 1.9 }
 };
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 
 #endif // AVOGADRO_CALC_UFF_DATA_H

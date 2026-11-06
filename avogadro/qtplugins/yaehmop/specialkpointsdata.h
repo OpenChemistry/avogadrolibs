@@ -13,6 +13,8 @@ namespace Avogadro::QtPlugins {
 // If there are multiple ways to express a space group's special k points
 // depending on some conditions like if a > b or a < b, there is a #
 // separating the different conditions
+// Special k-point table, included only by specialkpoints.cpp.
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 const char* special_k_points[] = {
   "",
   "GM 0 0 0", // 1
@@ -390,6 +392,7 @@ const char* special_k_points[] = {
   "GM 0 0 0,H 0.5 -0.5 0.5,P 0.25 0.25 0.25,N 0 0 0.5", // 229
   "GM 0 0 0,H 0.5 -0.5 0.5,P 0.25 0.25 0.25,N 0 0 0.5"  // 230
 };
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables,misc-definitions-in-headers)
 
 } // namespace Avogadro::QtPlugins
 
