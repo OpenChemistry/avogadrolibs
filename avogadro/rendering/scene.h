@@ -16,6 +16,7 @@
 
 #include <map>    // For member variables.
 #include <string> // For member variables.
+#include <utility>
 #include <vector> // For member variables.
 
 namespace Avogadro {
@@ -45,9 +46,10 @@ struct ColorTextureVertex
   Vector2f textureCoord;     //  8 bytes
   Vector2f textureCoord2;    //  8 bytes
 
-  ColorTextureVertex(const Vector3f& p, const Vector3ub& c, const Vector2f& t,
-                     const Vector2f& t2 = Vector2f::Zero())
-    : vertex(p), color(c), textureCoord(t), textureCoord2(t2)
+  ColorTextureVertex(Vector3f p, Vector3ub c, Vector2f t,
+                     Vector2f t2 = Vector2f::Zero())
+    : vertex(std::move(p)), color(std::move(c)), textureCoord(std::move(t)),
+      textureCoord2(std::move(t2))
   {
   }
 
@@ -73,8 +75,8 @@ struct ColorNormalVertex
   Vector3f vertex;           // 12 bytes
   unsigned char padding[4];  //  4 bytes
   ColorNormalVertex() {}
-  ColorNormalVertex(const Vector3ub& c, const Vector3f& n, const Vector3f& v)
-    : color(c), normal(n), vertex(v)
+  ColorNormalVertex(Vector3ub c, Vector3f n, Vector3f v)
+    : color(std::move(c)), normal(std::move(n)), vertex(std::move(v))
   {
   }
 

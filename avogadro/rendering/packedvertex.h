@@ -7,6 +7,7 @@
 #define AVOGADRO_RENDERING_PACKEDVERTEX_H
 
 #include <avogadro/core/vector.h>
+#include <utility>
 
 namespace Avogadro {
 namespace Rendering {
@@ -27,8 +28,8 @@ struct PackedVertex
 
   PackedVertex() : color(0, 0, 0, 255), normal(0, 0, 1), vertex(0, 0, 0) {}
 
-  PackedVertex(const Vector4ub& c, const Vector3f& n, const Vector3f& v)
-    : color(c), normal(n), vertex(v)
+  PackedVertex(Vector4ub c, Vector3f n, Vector3f v)
+    : color(std::move(c)), normal(std::move(n)), vertex(std::move(v))
   {
   }
 

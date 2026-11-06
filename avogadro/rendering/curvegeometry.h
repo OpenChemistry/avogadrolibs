@@ -14,6 +14,7 @@
 #include <avogadro/core/vector.h>
 #include <algorithm>
 #include <map>
+#include <utility>
 #include <vector>
 
 namespace Avogadro {
@@ -28,8 +29,8 @@ struct ShaderInfo
 
 struct Point
 {
-  Point(const Vector3f& p, const Vector3ub& c, size_t i)
-    : pos(p), color(c), id(i)
+  Point(Vector3f p, Vector3ub c, size_t i)
+    : pos(std::move(p)), color(std::move(c)), id(i)
   {
   }
   Vector3f pos;

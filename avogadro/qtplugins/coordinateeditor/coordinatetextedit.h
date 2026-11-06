@@ -9,6 +9,7 @@
 #include <QtWidgets/QTextEdit>
 
 #include <QtGui/QTextCharFormat>
+#include <utility>
 
 class QHelpEvent;
 
@@ -43,7 +44,7 @@ private:
     int start;
     int end;
     QString tooltip;
-    Mark(int s, int e, const QString& t) : start(s), end(e), tooltip(t) {}
+    Mark(int s, int e, QString t) : start(s), end(e), tooltip(std::move(t)) {}
     bool contains(int i) const { return i >= start && i <= end; }
   };
   QList<Mark> m_marks;
