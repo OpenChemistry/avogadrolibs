@@ -76,12 +76,29 @@ QString moleculeFilenameBase(const QtGui::Molecule* molecule)
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
-    m_updatePending(false), m_inputGenerator(QString())
+    m_updatePending(false), m_resizeOnShow(false), m_previewWidth(0),
+    m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
+
+  // Options on one side, file preview on the other. The splitter and boxes
+  // mirror automatically for right-to-left layouts.
+  m_ui->splitter->setCollapsible(0, false);
+  m_ui->splitter->setCollapsible(1, true);
+  m_ui->splitter->setStretchFactor(0, 0);
+  m_ui->splitter->setStretchFactor(1, 1);
   m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
 
   connectButtons();
+
+  // Applied directly: setChecked() emits nothing if the state is unchanged.
+  QSettings settings;
+  const bool showPreview =
+    settings.value("quantumInput/showPreview", true).toBool();
+  m_ui->previewButton->setChecked(showPreview);
+  setPreviewVisible(showPreview);
+  // The dialog opens at the size from the .ui file, so shrink it when shown.
+  m_resizeOnShow = !showPreview;
 }
 
 InputGeneratorWidget::~InputGeneratorWidget()
@@ -170,6 +187,15 @@ void InputGeneratorWidget::setBatchMode(bool m)
 void InputGeneratorWidget::showEvent(QShowEvent* e)
 {
   QWidget::showEvent(e);
+
+  if (m_resizeOnShow) {
+    m_resizeOnShow = false;
+    QWidget* topLevel = window();
+    if (topLevel != nullptr && topLevel != this) {
+      layout()->activate();
+      topLevel->resize(topLevel->minimumSizeHint().width(), topLevel->height());
+    }
+  }
 
   if (m_molecule != nullptr) {
     int charge = static_cast<int>(m_molecule->totalCharge());
@@ -688,6 +714,8 @@ void InputGeneratorWidget::connectButtons()
   connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
   connect(m_ui->warningTextButton, SIGNAL(clicked()),
           SLOT(toggleWarningText()));
+  connect(m_ui->previewButton, SIGNAL(toggled(bool)),
+          SLOT(setPreviewVisible(bool)));
 
   // disable the compute button if Molequeue is not running
   MoleQueueManager& mqManager = MoleQueueManager::instance();
@@ -695,6 +723,36 @@ void InputGeneratorWidget::connectButtons()
     m_ui->computeButton->setEnabled(false);
   } else {
     connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
+  }
+}
+
+void InputGeneratorWidget::setPreviewVisible(bool visible)
+{
+  QWidget* topLevel = window();
+  const bool resizeWindow = topLevel != nullptr && topLevel != this &&
+                            topLevel->isVisible() &&
+                            m_ui->previewPane->isVisibleTo(this) != visible;
+
+  if (resizeWindow && !visible)
+    m_previewWidth = m_ui->previewPane->width() + m_ui->splitter->handleWidth();
+
+  m_ui->previewPane->setVisible(visible);
+  m_ui->previewButton->setText(visible ? tr("Hide &Preview")
+                                       : tr("Show &Preview"));
+
+  QSettings settings;
+  settings.setValue("quantumInput/showPreview", visible);
+
+  if (resizeWindow) {
+    layout()->activate();
+    int width = 0;
+    if (visible) {
+      const int shownWidth = m_previewWidth > 0 ? m_previewWidth : 500;
+      width = topLevel->width() + shownWidth;
+    } else {
+      width = topLevel->minimumSizeHint().width();
+    }
+    topLevel->resize(width, topLevel->height());
   }
 }
 

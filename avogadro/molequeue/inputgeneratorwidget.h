@@ -175,6 +175,11 @@ private slots:
   void resetWarningDisplay();
 
   /**
+   * Show or hide the input file preview, and remember the choice.
+   */
+  void setPreviewVisible(bool visible);
+
+  /**
    * Show the user an error message. These are errors that have occurred
    * in this extension, not necessarily in the input generator script.
    */
@@ -219,6 +224,8 @@ private:
 
   Ui::InputGeneratorWidget* m_ui;
   bool m_updatePending;
+  bool m_resizeOnShow;
+  int m_previewWidth;
   QList<QTextEdit*> m_dirtyTextEdits;
   InputGenerator m_inputGenerator;
 };
