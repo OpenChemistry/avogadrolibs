@@ -154,6 +154,13 @@ bool cameraJson(const Camera& camera, const Vector3f& offset, float scale,
       znear = 0.0;
       zfar = (f - n) * k;
     }
+    // glTF's orthographic volume is centred on the view axis: move the camera
+    // sideways to the centre of an off-axis (asymmetric) volume.
+    const Vector2f center = camera.orthographicCenter();
+    if (!center.allFinite())
+      return false;
+    position += rotation.col(0).cast<double>() * (center[0] * k) +
+                rotation.col(1).cast<double>() * (center[1] * k);
     cameraOut = { { "name", "camera" },
                   { "type", "orthographic" },
                   { "orthographic",
@@ -162,6 +169,7 @@ bool cameraJson(const Camera& camera, const Vector3f& offset, float scale,
                       { "znear", znear },
                       { "zfar", zfar } } } };
   } else {
+    // glTF cannot express an off-axis perspective frustum: it is centred.
     const double fov = camera.verticalFieldOfView();
     const double aspect = camera.aspectRatio();
     double nearDistance = n;
@@ -321,6 +329,13 @@ bool GltfVisitor::write(std::ostream& out) const
     }
     lo = (lo - offset) * scale;
     hi = (hi - offset) * scale;
+    // Huge coordinates can overflow single precision once transformed. Every
+    // vertex lies between the extremes, so checking them is enough.
+    if (!lo.allFinite() || !hi.allFinite()) {
+      m_error = "The scene has coordinates too large to export as glTF "
+                "(they overflow when offset and scaled).";
+      return false;
+    }
 
     // Sort the triangles into groups, in order of first appearance.
     Written item{ &mesh, vertices >= 65536, false, {} };

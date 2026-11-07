@@ -185,35 +185,50 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
 
 bool Camera::isOrthographic() const
 {
-  return std::abs(m_data->projection(3, 3)) >= 0.5f;
+  // A projection is only defined up to a homogeneous scale: k * P is the same
+  // projection. Orthographic has w = 1 (P(3, 3) != 0, P(3, 2) == 0),
+  // perspective has w = -z (P(3, 3) == 0, P(3, 2) != 0).
+  const Eigen::Matrix4f& p = m_data->projection.matrix();
+  return p(3, 3) != 0.0f && p(3, 2) == 0.0f;
+}
+
+Eigen::Matrix4f Camera::normalizedProjection() const
+{
+  const Eigen::Matrix4f& p = m_data->projection.matrix();
+  const float scale = isOrthographic() ? p(3, 3) : -p(3, 2);
+  if (scale == 0.0f)
+    return p;
+  return p / scale;
 }
 
 float Camera::verticalFieldOfView() const
 {
   if (isOrthographic())
     return 0.0f;
-  const double p11 = m_data->projection(1, 1);
+  const double p11 = normalizedProjection()(1, 1);
   return static_cast<float>(360.0 / M_PI * std::atan(1.0 / std::abs(p11)));
 }
 
 float Camera::aspectRatio() const
 {
-  const Eigen::Matrix4f& p = m_data->projection.matrix();
+  const Eigen::Matrix4f p = normalizedProjection();
   return std::abs(p(1, 1) / p(0, 0));
 }
 
 float Camera::nearPlane() const
 {
-  const double p22 = m_data->projection(2, 2);
-  const double p23 = m_data->projection(2, 3);
+  const Eigen::Matrix4f p = normalizedProjection();
+  const double p22 = p(2, 2);
+  const double p23 = p(2, 3);
   return static_cast<float>(isOrthographic() ? (p23 + 1.0) / p22
                                              : p23 / (p22 - 1.0));
 }
 
 float Camera::farPlane() const
 {
-  const double p22 = m_data->projection(2, 2);
-  const double p23 = m_data->projection(2, 3);
+  const Eigen::Matrix4f p = normalizedProjection();
+  const double p22 = p(2, 2);
+  const double p23 = p(2, 3);
   return static_cast<float>(isOrthographic() ? (p23 - 1.0) / p22
                                              : p23 / (p22 + 1.0));
 }
@@ -222,8 +237,16 @@ Vector2f Camera::orthographicHalfExtents() const
 {
   if (!isOrthographic())
     return Vector2f::Zero();
-  return Vector2f(1.0f / std::abs(m_data->projection(0, 0)),
-                  1.0f / std::abs(m_data->projection(1, 1)));
+  const Eigen::Matrix4f p = normalizedProjection();
+  return Vector2f(1.0f / std::abs(p(0, 0)), 1.0f / std::abs(p(1, 1)));
+}
+
+Vector2f Camera::orthographicCenter() const
+{
+  if (!isOrthographic())
+    return Vector2f::Zero();
+  const Eigen::Matrix4f p = normalizedProjection();
+  return Vector2f(-p(0, 3) / p(0, 0), -p(1, 3) / p(1, 1));
 }
 
 float Camera::viewScale() const

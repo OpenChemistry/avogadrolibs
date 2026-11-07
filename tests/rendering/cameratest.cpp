@@ -149,6 +149,55 @@ TEST(CameraTest, orthographicParametersRoundTrip)
   EXPECT_NEAR(camera.orthographicHalfExtents()[0], 80.0f, 1e-3f);
 }
 
+TEST(CameraTest, scaledProjectionsAreEquivalent)
+{
+  for (float k : { 0.25f, 3.0f }) {
+    Camera ortho;
+    ortho.calculateOrthographic(-2.0f, 2.0f, -1.5f, 1.5f, -3.0f, 50.0f);
+    Camera perspective;
+    perspective.calculatePerspective(40.0f, 1.5f, 0.5f, 100.0f);
+    for (Camera* reference : { &ortho, &perspective }) {
+      Camera scaled;
+      Eigen::Affine3f matrix;
+      matrix.matrix() = k * reference->projection().matrix();
+      scaled.setProjection(matrix);
+      EXPECT_EQ(scaled.isOrthographic(), reference->isOrthographic());
+      EXPECT_NEAR(scaled.verticalFieldOfView(),
+                  reference->verticalFieldOfView(), 1e-3f);
+      EXPECT_NEAR(scaled.aspectRatio(), reference->aspectRatio(), 1e-4f);
+      EXPECT_NEAR(scaled.nearPlane(), reference->nearPlane(), 1e-3f);
+      EXPECT_NEAR(scaled.farPlane(), reference->farPlane(), 1e-1f);
+      EXPECT_TRUE(scaled.orthographicHalfExtents().isApprox(
+        reference->orthographicHalfExtents(), 1e-4f));
+    }
+  }
+}
+
+TEST(CameraTest, orthographicCenter)
+{
+  Camera camera;
+  camera.calculateOrthographic(-2.0f, 2.0f, -1.5f, 1.5f, 0.1f, 50.0f);
+  EXPECT_NEAR(camera.orthographicCenter()[0], 0.0f, 1e-6f);
+  EXPECT_NEAR(camera.orthographicCenter()[1], 0.0f, 1e-6f);
+
+  // Asymmetric: x in [1, 5], y in [-4, 2]; the half extents are 2 and 3.
+  camera.calculateOrthographic(1.0f, 5.0f, -4.0f, 2.0f, 0.1f, 50.0f);
+  EXPECT_NEAR(camera.orthographicCenter()[0], 3.0f, 1e-5f);
+  EXPECT_NEAR(camera.orthographicCenter()[1], -1.0f, 1e-5f);
+  EXPECT_NEAR(camera.orthographicHalfExtents()[0], 2.0f, 1e-5f);
+  EXPECT_NEAR(camera.orthographicHalfExtents()[1], 3.0f, 1e-5f);
+
+  // Also for a scaled matrix, and zero for a perspective projection.
+  Eigen::Affine3f scaled;
+  scaled.matrix() = 3.0f * camera.projection().matrix();
+  Camera other;
+  other.setProjection(scaled);
+  EXPECT_NEAR(other.orthographicCenter()[0], 3.0f, 1e-5f);
+  EXPECT_NEAR(other.orthographicCenter()[1], -1.0f, 1e-5f);
+  camera.calculatePerspective(40.0f, 1.5f, 0.5f, 100.0f);
+  EXPECT_EQ(camera.orthographicCenter(), Vector2f::Zero());
+}
+
 TEST(CameraTest, projectionTypeComesFromTheMatrix)
 {
   // Raw matrices do not touch projectionType().

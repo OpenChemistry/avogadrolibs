@@ -24,13 +24,14 @@ namespace Avogadro::Rendering {
  * by explicit shifts, so the output is little-endian whatever the host byte
  * order (compilers turn this into a plain store on little-endian hosts).
  * Each call checks for room once, not per byte. The stream state is not
- * examined: check the stream after flush().
+ * examined: check the stream after flush(). Call flush() explicitly; the
+ * destructor does not write, so an early return never emits partial output.
  */
 class ChunkWriter
 {
 public:
   explicit ChunkWriter(std::ostream& out) : m_out(out), m_buffer(kSize) {}
-  ~ChunkWriter() { flush(); }
+  ~ChunkWriter() = default;
 
   ChunkWriter(const ChunkWriter&) = delete;
   ChunkWriter& operator=(const ChunkWriter&) = delete;

@@ -17,6 +17,8 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <array>
+#include <limits>
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -255,6 +257,15 @@ Matrix4f nodeMatrix(const Json& node)
   return matrix;
 }
 
+using Triple = std::array<unsigned int, 3>;
+
+// The lexicographically smallest rotation of a triangle: rotations keep the
+// winding, a reversal does not.
+Triple canonicalTriple(unsigned int a, unsigned int b, unsigned int c)
+{
+  return std::min({ Triple{ a, b, c }, Triple{ b, c, a }, Triple{ c, a, b } });
+}
+
 void buildScene(SphereGeometry& spheres, CylinderGeometry& cylinders,
                 BezierGeometry& curve)
 {
@@ -337,15 +348,31 @@ TEST(GltfVisitorTest, containerAndAccessors)
     // Indices are in range; small meshes use 16-bit indices.
     // The primitives share the vertex data and together hold every triangle.
     size_t indexCount = 0;
+    std::vector<Triple> decoded;
     for (const Json& each : glb.json["meshes"][m]["primitives"]) {
       EXPECT_EQ(each["attributes"]["POSITION"].get<int>(), positionAccessor);
       const Json& ia = glb.json["accessors"][each["indices"].get<int>()];
       EXPECT_EQ(ia["componentType"].get<int>(), 5123);
       indexCount += ia["count"].get<size_t>();
-      for (double index : glb.values(each["indices"].get<int>()))
+      const std::vector<double> values = glb.values(each["indices"].get<int>());
+      for (double index : values)
         EXPECT_LT(index, static_cast<double>(source.positions.size()));
+      for (size_t i = 0; i + 2 < values.size(); i += 3)
+        decoded.push_back(
+          canonicalTriple(static_cast<unsigned int>(values[i]),
+                          static_cast<unsigned int>(values[i + 1]),
+                          static_cast<unsigned int>(values[i + 2])));
     }
     EXPECT_EQ(indexCount, source.indices.size());
+
+    // The same triangles, with the same winding, wherever they were grouped.
+    std::vector<Triple> expectedTriples;
+    for (size_t i = 0; i + 2 < source.indices.size(); i += 3)
+      expectedTriples.push_back(canonicalTriple(
+        source.indices[i], source.indices[i + 1], source.indices[i + 2]));
+    std::sort(decoded.begin(), decoded.end());
+    std::sort(expectedTriples.begin(), expectedTriples.end());
+    EXPECT_EQ(decoded, expectedTriples);
 
     // The gradient cylinder is not flat coloured.
     if (source.name == "cylinders") {
@@ -614,6 +641,18 @@ TEST(GltfVisitorTest, scaleAndOffsetAreAppliedAndRecorded)
   EXPECT_NEAR(pa["min"][1].get<double>(), -0.1, 1e-6);
   EXPECT_NEAR(pa["max"][1].get<double>(), 0.2, 1e-6);
 
+  // Every coordinate, not just the extents.
+  const std::vector<double> positions =
+    glb.values((*primitive)["attributes"]["POSITION"].get<int>());
+  const Vector3f quad[4] = { Vector3f(-1, 0, 0), Vector3f(5, 0, 0),
+                             Vector3f(5, 3, 0), Vector3f(-1, 3, 0) };
+  ASSERT_EQ(positions.size(), static_cast<size_t>(12));
+  for (int i = 0; i < 4; ++i) {
+    const Vector3f expected = (quad[i] - Vector3f(2, 1, 0)) * 0.1f;
+    for (int k = 0; k < 3; ++k)
+      EXPECT_NEAR(positions[3 * i + k], expected[k], 1e-6);
+  }
+
   // Invalid scales are ignored.
   visitor.setScale(-1.0f);
   EXPECT_FLOAT_EQ(visitor.scale(), 0.1f);
@@ -731,4 +770,64 @@ TEST(GltfVisitorTest, orthographicNegativeNearKeepsViewVolume)
     // And the near/far points land on the exported near/far planes.
     EXPECT_NEAR(depth, ndcZ < 0 ? znear : zfar, 1e-4);
   }
+}
+
+TEST(GltfVisitorTest, orthographicOffCenterKeepsViewVolume)
+{
+  // An asymmetric volume: x in [1, 5], y in [-4, 2] in eye space.
+  Camera camera;
+  camera.calculateOrthographic(1.0f, 5.0f, -4.0f, 2.0f, -10.0f, 20.0f);
+  camera.setProjectionType(Avogadro::Rendering::Orthographic);
+  camera.lookAt(Vector3f(3, 1, 30), Vector3f(3, 1, 0), Vector3f(0, 1, 0));
+
+  const float scale = 0.1f;
+  const Vector3f offset(3, 1, 0);
+  GltfVisitor visitor;
+  visitor.setOffset(offset);
+  visitor.setScale(scale);
+  visitor.setCamera(camera);
+  Glb glb = exportQuad(visitor);
+
+  const Json& o = glb.json["cameras"][0]["orthographic"];
+  const Matrix4f world = nodeMatrix(glb.json["nodes"].back());
+  const Eigen::Vector3f position = world.block<3, 1>(0, 3);
+  const Matrix4f P = camera.projection().matrix();
+  const Matrix4f M = camera.modelView().matrix();
+  for (float x : { -1.0f, 0.3f, 1.0f }) {
+    for (float y : { -1.0f, -0.2f, 1.0f }) {
+      const Eigen::Vector4f eye4 = P.inverse() * Eigen::Vector4f(x, y, 0, 1);
+      const Eigen::Vector4f w4 = M.inverse() * (eye4 / eye4[3]);
+      const Vector3f out = (Vector3f(w4.head<3>()) - offset) * scale;
+      const Eigen::Vector3f rel = out - position;
+      EXPECT_NEAR(rel.dot(world.block<3, 1>(0, 0)) / o["xmag"].get<double>(), x,
+                  1e-4);
+      EXPECT_NEAR(rel.dot(world.block<3, 1>(0, 1)) / o["ymag"].get<double>(), y,
+                  1e-4);
+    }
+  }
+}
+
+TEST(GltfVisitorTest, overflowingCoordinatesAreRejected)
+{
+  // Finite coordinates that overflow single precision once scaled.
+  const float big = 0.9f * std::numeric_limits<float>::max();
+  Array<Vector3f> vertices, normals;
+  vertices.push_back(Vector3f(0, 0, 0));
+  vertices.push_back(Vector3f(big, 0, 0));
+  vertices.push_back(Vector3f(0, big, 0));
+  for (int i = 0; i < 3; ++i)
+    normals.push_back(Vector3f(0, 0, 1));
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 1, 2);
+
+  GltfVisitor visitor;
+  visitor.setScale(10.0f);
+  visitor.begin();
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  std::ostringstream out;
+  EXPECT_FALSE(visitor.write(out));
+  EXPECT_FALSE(visitor.error().empty());
+  EXPECT_TRUE(out.str().empty());
 }

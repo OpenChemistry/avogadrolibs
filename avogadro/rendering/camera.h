@@ -203,8 +203,10 @@ public:
    * calculateOrthographic(), lookAt(), scale(), setProjection() and
    * setModelView() alike. Matrices that are not those of a (possibly zoomed)
    * perspective or orthographic camera give meaningless, possibly non-finite
-   * values: check with std::isfinite(). Off-centre (asymmetric) frusta are
-   * treated as centred.
+   * values: check with std::isfinite(). A projection matrix is equivalent to
+   * any uniform multiple of it, and the values do not depend on that scale.
+   * Off-centre (asymmetric) perspective frusta are treated as centred; see
+   * orthographicCenter() for the orthographic case.
    * @{
    */
 
@@ -237,6 +239,14 @@ public:
    * a perspective projection.
    */
   Vector2f orthographicHalfExtents() const;
+
+  /**
+   * The eye-space (x, y) centre of the visible volume of an orthographic
+   * projection: (0, 0) when it is symmetric about the view axis, as for
+   * calculateOrthographic(-w, w, -h, h, ...). (0, 0) for a perspective
+   * projection.
+   */
+  Vector2f orthographicCenter() const;
 
   /**
    * The uniform zoom contained in the model view matrix (1 unless scale() was
@@ -284,6 +294,9 @@ public:
   Vector3f focus() const { return m_focus; }
 
 private:
+  /** The projection divided by its homogeneous scale (see isOrthographic()). */
+  Eigen::Matrix4f normalizedProjection() const;
+
   int m_width;
   int m_height;
   Projection m_projectionType;
