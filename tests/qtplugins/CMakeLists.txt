@@ -21,6 +21,7 @@ set(plugins
   Editor
   Focus
   Forcefield
+  GLTF
   MeasureTool
   PlayerTool
   ScriptFileFormats
