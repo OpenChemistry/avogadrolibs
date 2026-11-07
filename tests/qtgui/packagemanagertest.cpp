@@ -1725,14 +1725,22 @@ TEST_F(LocalInstallTest, uninstallGuardAllowsSymlinkedPackage)
 
 TEST_F(LocalInstallTest, symlinkThenDotDotUsesResolvedSource)
 {
-  // "<plugins>/link/.." cleans lexically to the plugins directory, but the
-  // OS resolves it to the link target's parent; name it after that.
+  // "<plugins>/link/.." cleans lexically to the plugins directory, but a
+  // POSIX OS resolves it to the link target's parent; name it after that.
+  // Windows resolves ".." lexically (and QFile::link makes a .lnk shortcut),
+  // so there it is the plugins directory itself and must be refused.
   ASSERT_TRUE(QDir().mkpath(m_root.path() + "/outer/inner"));
   if (!QFile::link(m_root.path() + "/outer/inner", m_plugins + "/link"))
     GTEST_SKIP() << "symlinks unavailable";
+#ifdef Q_OS_WIN
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/link/..")
+      .isEmpty());
+#else
   EXPECT_EQ(
     PackageManager::localInstallDestination(m_plugins, m_plugins + "/link/.."),
     QDir::cleanPath(m_plugins + "/outer"));
+#endif
 }
 
 #ifdef Q_OS_WIN
