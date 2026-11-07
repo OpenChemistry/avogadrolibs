@@ -197,6 +197,79 @@ public:
   Projection projectionType() const { return m_projectionType; }
 
   /**
+   * @name Derived values
+   * Read-only values decoded from the current projection and model view
+   * matrices (not cached), so they follow calculatePerspective(),
+   * calculateOrthographic(), lookAt(), scale(), setProjection() and
+   * setModelView() alike. Matrices that are not those of a (possibly zoomed)
+   * perspective or orthographic camera give meaningless, possibly non-finite
+   * values: check with std::isfinite(). A projection matrix is equivalent to
+   * any uniform multiple of it, and the values do not depend on that scale.
+   * Off-centre (asymmetric) perspective frusta are treated as centred; see
+   * orthographicCenter() for the orthographic case.
+   * @{
+   */
+
+  /**
+   * True if the projection matrix is orthographic, i.e. its (3, 3) entry is
+   * not zero. Unlike projectionType() this holds for raw matrices set with
+   * setProjection().
+   */
+  bool isOrthographic() const;
+
+  /** The vertical field of view in degrees (perspective only, else 0). */
+  float verticalFieldOfView() const;
+
+  /** The ratio of width to height of the view, perspective or orthographic. */
+  float aspectRatio() const;
+
+  /**
+   * Distances from the eye to the near and far clipping planes, in eye space
+   * (that is, including the uniform zoom of viewScale()). For an orthographic
+   * projection the near distance can be negative (a plane behind the eye).
+   * @{
+   */
+  float nearPlane() const;
+  float farPlane() const;
+  /** @} */
+
+  /**
+   * Half the width and height of the visible volume of an orthographic
+   * projection, in eye space (including the orthographicScale()); (0, 0) for
+   * a perspective projection.
+   */
+  Vector2f orthographicHalfExtents() const;
+
+  /**
+   * The eye-space (x, y) centre of the visible volume of an orthographic
+   * projection: (0, 0) when it is symmetric about the view axis, as for
+   * calculateOrthographic(-w, w, -h, h, ...). (0, 0) for a perspective
+   * projection.
+   */
+  Vector2f orthographicCenter() const;
+
+  /**
+   * The uniform zoom contained in the model view matrix (1 unless scale() was
+   * applied to a perspective camera): eye-space distances are viewScale()
+   * times world distances.
+   */
+  float viewScale() const;
+
+  /**
+   * The rotation from camera to world space (a view-to-world transform
+   * without the zoom): its columns are the camera's right, up and backward
+   * (+Z, away from the scene) directions in world coordinates.
+   */
+  Eigen::Matrix3f viewRotation() const;
+
+  /**
+   * The position of the eye in scene coordinates: the point the model view
+   * maps to the origin of eye space.
+   */
+  Vector3f eyePosition() const;
+  /** @} */
+
+  /**
    * Set the orthographic scale, this defaults to 1.0. Affects calculation of
    * the orthographic projection matrix.
    * @param newScale The factor to scale orthographic projection by.
@@ -221,6 +294,9 @@ public:
   Vector3f focus() const { return m_focus; }
 
 private:
+  /** The projection divided by its homogeneous scale (see isOrthographic()). */
+  Eigen::Matrix4f normalizedProjection() const;
+
   int m_width;
   int m_height;
   Projection m_projectionType;

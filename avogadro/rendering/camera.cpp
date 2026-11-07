@@ -183,6 +183,93 @@ void Camera::setModelView(const Eigen::Affine3f& transform)
   m_data->modelView = transform;
 }
 
+bool Camera::isOrthographic() const
+{
+  // A projection is only defined up to a homogeneous scale: k * P is the same
+  // projection. Orthographic has w = 1 (P(3, 3) != 0, P(3, 2) == 0),
+  // perspective has w = -z (P(3, 3) == 0, P(3, 2) != 0).
+  const Eigen::Matrix4f& p = m_data->projection.matrix();
+  return p(3, 3) != 0.0f && p(3, 2) == 0.0f;
+}
+
+Eigen::Matrix4f Camera::normalizedProjection() const
+{
+  const Eigen::Matrix4f& p = m_data->projection.matrix();
+  const float scale = isOrthographic() ? p(3, 3) : -p(3, 2);
+  if (scale == 0.0f)
+    return p;
+  return p / scale;
+}
+
+float Camera::verticalFieldOfView() const
+{
+  if (isOrthographic())
+    return 0.0f;
+  const double p11 = normalizedProjection()(1, 1);
+  return static_cast<float>(360.0 / M_PI * std::atan(1.0 / std::abs(p11)));
+}
+
+float Camera::aspectRatio() const
+{
+  const Eigen::Matrix4f p = normalizedProjection();
+  return std::abs(p(1, 1) / p(0, 0));
+}
+
+float Camera::nearPlane() const
+{
+  const Eigen::Matrix4f p = normalizedProjection();
+  const double p22 = p(2, 2);
+  const double p23 = p(2, 3);
+  return static_cast<float>(isOrthographic() ? (p23 + 1.0) / p22
+                                             : p23 / (p22 - 1.0));
+}
+
+float Camera::farPlane() const
+{
+  const Eigen::Matrix4f p = normalizedProjection();
+  const double p22 = p(2, 2);
+  const double p23 = p(2, 3);
+  return static_cast<float>(isOrthographic() ? (p23 - 1.0) / p22
+                                             : p23 / (p22 + 1.0));
+}
+
+Vector2f Camera::orthographicHalfExtents() const
+{
+  if (!isOrthographic())
+    return Vector2f::Zero();
+  const Eigen::Matrix4f p = normalizedProjection();
+  return Vector2f(1.0f / std::abs(p(0, 0)), 1.0f / std::abs(p(1, 1)));
+}
+
+Vector2f Camera::orthographicCenter() const
+{
+  if (!isOrthographic())
+    return Vector2f::Zero();
+  const Eigen::Matrix4f p = normalizedProjection();
+  return Vector2f(-p(0, 3) / p(0, 0), -p(1, 3) / p(1, 1));
+}
+
+float Camera::viewScale() const
+{
+  return m_data->modelView.matrix().topLeftCorner<3, 1>().norm();
+}
+
+Eigen::Matrix3f Camera::viewRotation() const
+{
+  const Eigen::Matrix3f linear =
+    m_data->modelView.matrix().topLeftCorner<3, 3>();
+  return (linear / viewScale()).transpose();
+}
+
+Vector3f Camera::eyePosition() const
+{
+  const Eigen::Matrix4f& m = m_data->modelView.matrix();
+  const Eigen::Matrix3d linear = m.topLeftCorner<3, 3>().cast<double>();
+  const Eigen::Vector3d translation = m.topRightCorner<3, 1>().cast<double>();
+  const double s = linear.col(0).norm();
+  return (-(linear.transpose() * translation) / (s * s)).cast<float>();
+}
+
 void Camera::calculatePerspective(float left, float right, float bottom,
                                   float top, float zNear, float zFar)
 {

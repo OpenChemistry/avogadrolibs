@@ -37,17 +37,13 @@ public:
   ~PLYVisitor() override;
 
   /**
-   * Output transform, applied to positions when writing only:
-   * p_out = (p - center) * scale. Normals are unchanged. The tessellated
-   * meshes (and the tessellation tolerance) stay in Angstrom. The defaults
-   * (origin, 1) leave positions as they are. A non-finite or non-positive
-   * scale is ignored.
+   * The output transform (offset and scale, see TessellatingVisitor) is
+   * applied to positions: p_out = (p - center) * scale. setCenter() and
+   * center() are the older names of setOffset() and offset().
    * @{
    */
-  void setCenter(const Vector3f& center) { m_center = center; }
-  Vector3f center() const { return m_center; }
-  void setScale(float scale);
-  float scale() const { return m_scale; }
+  void setCenter(const Vector3f& center) { setOffset(center); }
+  Vector3f center() const { return offset(); }
   /** @} */
 
   /** Binary little-endian (default) or ASCII output. */
@@ -76,8 +72,6 @@ private:
   Vector3ub m_ambientColor;
   float m_aspectRatio;
   bool m_binary = true;
-  Vector3f m_center = Vector3f::Zero();
-  float m_scale = 1.0f;
 };
 
 } // namespace Avogadro::Rendering

@@ -10,6 +10,7 @@ set(tests
   CylinderGeometry
   GLRenderer
   GeometryVisitor
+  GltfVisitor
   Node
   PLYVisitor
   SphereGeometry
@@ -39,6 +40,7 @@ target_include_directories(AvogadroRenderingTests PRIVATE
 target_compile_definitions(AvogadroRenderingTests PRIVATE
   AVOGADRO_DATA="${AVOGADRO_DATA_ROOT}")
 target_link_libraries(AvogadroRenderingTests Avogadro::Rendering Avogadro::IO
+  nlohmann_json::nlohmann_json
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
