@@ -643,8 +643,10 @@ public:
    * options are stored in a file referenced by the pyproject.toml metadata.
    * Insert "inputMoleculeFormat" into @p opts before calling if you need a
    * specific molecule format (mirrors the InputGenerator::setOptions()
-   * pattern). After calling this, reloadOptions() on the widget will use the
-   * cached options without invoking the script.
+   * pattern). A "highlightStyles" array in @p opts replaces any styles parsed
+   * earlier, so a package can supply its styles this way. After calling this,
+   * reloadOptions() on the widget will use the cached options without
+   * invoking the script.
    */
   void setOptionsJson(const QJsonObject& opts);
 

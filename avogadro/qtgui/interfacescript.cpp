@@ -22,8 +22,16 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QSet>
+
+#include <QtGui/QColor>
+#include <QtGui/QPalette>
 
 #include <QtWidgets/QMessageBox>
+
+#include <map>
+#include <string>
+#include <unordered_map>
 
 namespace Avogadro::QtGui {
 
@@ -114,6 +122,17 @@ QJsonObject InterfaceScript::options() const
 
     if (m_options.contains(QStringLiteral("highlightStyles")) &&
         m_options.value(QStringLiteral("highlightStyles")).isArray()) {
+      // Deprecated: only packages supply highlight styles now (declared in
+      // pyproject.toml); --print-options is a single-file script mechanism.
+      static QSet<QString> warnedScripts;
+      const QString scriptPath(scriptFilePath());
+      if (!warnedScripts.contains(scriptPath)) {
+        warnedScripts.insert(scriptPath);
+        qWarning() << "Supplying highlightStyles through --print-options is "
+                      "deprecated; packages should declare them with "
+                      "highlight-styles in pyproject.toml. Script:"
+                   << scriptPath;
+      }
       if (!parseHighlightStyles(
             m_options.value(QStringLiteral("highlightStyles")).toArray())) {
         qDebug() << "Failed to parse highlighting styles.";
@@ -178,6 +197,25 @@ void InterfaceScript::setScriptFilePath(const QString& scriptFile)
 void InterfaceScript::setOptionsJson(const QJsonObject& opts)
 {
   m_options = opts;
+
+  // Same default as options() applies when the key is absent.
+  m_moleculeExtension = QLatin1String("cjson");
+  if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
+      m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
+    m_moleculeExtension =
+      m_options[QStringLiteral("inputMoleculeFormat")].toString();
+  }
+
+  // The caller's styles replace any parsed earlier.
+  qDeleteAll(m_highlightStyles.values());
+  m_highlightStyles.clear();
+  if (m_options.contains(QStringLiteral("highlightStyles")) &&
+      m_options.value(QStringLiteral("highlightStyles")).isArray()) {
+    if (!parseHighlightStyles(
+          m_options.value(QStringLiteral("highlightStyles")).toArray())) {
+      qDebug() << "Failed to parse highlighting styles.";
+    }
+  }
 }
 
 void InterfaceScript::reset()
@@ -477,9 +515,26 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
   if (!insertMolecule(allOptions, mol))
     return false;
 
-  QByteArray json(
-    m_interpreter->execute(QStringList() << QStringLiteral("--generate-input"),
-                           QJsonDocument(allOptions).toJson()));
+  // Package-mode generators take no command-line flag; JSON arrives on stdin
+  // (mirrors runCommand() and InputGenerator::generateInput()).
+  QStringList generateArgs;
+  if (!m_interpreter->isPackageMode()) {
+    // Deprecated: single-file input generator scripts are being phased out
+    // in favour of packages.
+    static QSet<QString> warnedScripts;
+    const QString scriptPath(scriptFilePath());
+    if (!warnedScripts.contains(scriptPath)) {
+      warnedScripts.insert(scriptPath);
+      qWarning() << "Single-file input generator scripts (--generate-input) "
+                    "are deprecated; please provide the generator as a "
+                    "package. Script:"
+                 << scriptPath;
+    }
+    generateArgs << QStringLiteral("--generate-input");
+  }
+
+  QByteArray json(m_interpreter->execute(
+    generateArgs, QJsonDocument(allOptions).toJson(QJsonDocument::Compact)));
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();
@@ -557,6 +612,14 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
                     }
                   }
                 }
+                if (highlighter->ruleCount() > 0)
+                  m_fileHighlighters[fileName] = highlighter;
+                else
+                  highlighter->deleteLater();
+              } else if (m_highlightStyles.contains(
+                           QStringLiteral("default"))) {
+                auto* highlighter(new GenericHighlighter(this));
+                *highlighter += *m_highlightStyles[QStringLiteral("default")];
                 if (highlighter->ruleCount() > 0)
                   m_fileHighlighters[fileName] = highlighter;
                 else
@@ -1040,6 +1103,41 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
   return result;
 }
 
+// Dark-mode palette: brighter / higher-value colors for contrast on dark
+// backgrounds.
+static const std::map<std::string, QColor> darkModeColors = {
+  { "red", QColorConstants::Svg::crimson },         // #DC143C
+  { "orange", QColorConstants::Svg::coral },        // #FF7F50
+  { "yellow", QColorConstants::Svg::goldenrod },    // #DAA520
+  { "green", QColorConstants::Svg::springgreen },   // #00FF7F
+  { "cyan", QColorConstants::Svg::cyan },           // #00FFFF
+  { "blue", QColorConstants::Svg::dodgerblue },     // #1E90FF
+  { "purple", QColorConstants::Svg::mediumpurple }, // #9370DB
+  { "pink", QColorConstants::Svg::orchid },         // #DA70D6
+  { "white", QColorConstants::Svg::whitesmoke },    // #F5F5F5
+  { "gray", QColorConstants::Svg::darkgray },       // #A9A9A9
+};
+
+// Light-mode palette: deeper / more saturated colors for contrast on light
+// backgrounds.
+static const std::map<std::string, QColor> lightModeColors = {
+  { "red", QColorConstants::Svg::maroon },        // #800000
+  { "orange", QColorConstants::Svg::coral },      // #FF7F50
+  { "yellow", QColorConstants::Svg::goldenrod },  // #DAA520
+  { "green", QColorConstants::Svg::limegreen },   // #32CD32
+  { "cyan", QColorConstants::Svg::deepskyblue },  // #00BFFF
+  { "blue", QColorConstants::Svg::blue },         // #0000FF
+  { "purple", QColorConstants::Svg::blueviolet }, // #8A2BE2
+  { "pink", QColorConstants::Svg::fuchsia },      // #FF00FF
+  { "white", QColorConstants::Svg::black },       // #000000
+  { "gray", QColorConstants::Svg::dimgray },      // #696969
+};
+
+inline const QColor highlightColor(const std::string& name, bool isDarkMode)
+{
+  return isDarkMode ? darkModeColors.at(name) : lightModeColors.at(name);
+}
+
 bool InterfaceScript::parseFormat(const QJsonObject& json,
                                   QTextCharFormat& format) const
 {
@@ -1051,30 +1149,80 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
     }
 
     QString preset(json[QStringLiteral("preset")].toString());
-    /// @todo Store presets in a singleton that can be configured in the GUI,
-    /// rather than hardcoding them.
-    if (preset == QLatin1String("title")) {
-      format.setFontFamily(QStringLiteral("serif"));
-      format.setForeground(Qt::darkGreen);
-      format.setFontWeight(QFont::Bold);
-    } else if (preset == QLatin1String("keyword")) {
-      format.setFontFamily(QStringLiteral("mono"));
-      format.setForeground(Qt::darkBlue);
-    } else if (preset == QLatin1String("property")) {
-      format.setFontFamily(QStringLiteral("mono"));
-      format.setForeground(Qt::darkRed);
-    } else if (preset == QLatin1String("literal")) {
-      format.setFontFamily(QStringLiteral("mono"));
-      format.setForeground(Qt::darkMagenta);
-    } else if (preset == QLatin1String("comment")) {
-      format.setFontFamily(QStringLiteral("serif"));
-      format.setForeground(Qt::darkGreen);
-      format.setFontItalic(true);
-    } else {
+
+    enum class HighlightPreset
+    {
+      Title,
+      Keyword,
+      Property,
+      NumLiteral,
+      StrLiteral,
+      Comment,
+      Method,
+      Basis,
+      Block,
+    };
+
+    std::unordered_map<QString, HighlightPreset> mapStringToPreset{
+      { QString("title"), HighlightPreset::Title },
+      { QString("keyword"), HighlightPreset::Keyword },
+      { QString("property"), HighlightPreset::Property },
+      { QString("num_literal"), HighlightPreset::NumLiteral },
+      // "literal" is the old name for "num_literal"
+      { QString("literal"), HighlightPreset::NumLiteral },
+      { QString("str_literal"), HighlightPreset::StrLiteral },
+      { QString("comment"), HighlightPreset::Comment },
+      { QString("method"), HighlightPreset::Method },
+      { QString("basis"), HighlightPreset::Basis },
+      { QString("block"), HighlightPreset::Block },
+    };
+
+    const QPalette defaultPalette;
+    bool isDarkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
+                       defaultPalette.color(QPalette::Window).lightness());
+
+    if (mapStringToPreset.count(preset) == 0) {
       qDebug() << "Invalid style preset: " << preset;
       return false;
     }
-    return true;
+
+    HighlightPreset presetType = mapStringToPreset[preset];
+
+    format.setFontFamily(QStringLiteral("mono"));
+
+    /// @todo Store presets in a singleton that can be configured in the GUI,
+    /// rather than hardcoding them.
+    switch (presetType) {
+      case HighlightPreset::Title:
+        format.setFontWeight(QFont::Bold);
+        format.setForeground(highlightColor("green", isDarkMode));
+        return true;
+      case HighlightPreset::Keyword:
+        format.setForeground(highlightColor("blue", isDarkMode));
+        return true;
+      case HighlightPreset::Property:
+        format.setForeground(highlightColor("cyan", isDarkMode));
+        return true;
+      case HighlightPreset::NumLiteral:
+        format.setForeground(highlightColor("orange", isDarkMode));
+        return true;
+      case HighlightPreset::StrLiteral:
+        format.setForeground(highlightColor("red", isDarkMode));
+        return true;
+      case HighlightPreset::Comment:
+        format.setFontItalic(true);
+        format.setForeground(highlightColor("gray", isDarkMode));
+        return true;
+      case HighlightPreset::Method:
+        format.setForeground(highlightColor("purple", isDarkMode));
+        return true;
+      case HighlightPreset::Basis:
+        format.setForeground(highlightColor("pink", isDarkMode));
+        return true;
+      case HighlightPreset::Block:
+        format.setForeground(highlightColor("yellow", isDarkMode));
+        return true;
+    }
   }
 
   // Extract an RGB tuple from 'array' as a QBrush:

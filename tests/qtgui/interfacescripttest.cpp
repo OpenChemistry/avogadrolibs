@@ -6,11 +6,15 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/interfacescript.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/pythonscript.h>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QTemporaryDir>
 #include <QtTest/QSignalSpy>
@@ -315,4 +319,186 @@ TEST(InterfaceScriptTest, ReorderedZMatrixWarns)
   ASSERT_EQ(1, interface.warningList().size());
   EXPECT_TRUE(interface.warningList().first().contains(
     QStringLiteral("different order")));
+}
+
+namespace {
+
+// A generator that returns one file per entry in @p files (a Python
+// expression for the list of file dictionaries).
+QString writeFilesScript(const QTemporaryDir& directory,
+                         const QByteArray& files)
+{
+  QFile script(directory.filePath("files.py"));
+  if (!script.open(QIODevice::WriteOnly | QIODevice::Text))
+    return QString();
+  const QByteArray source("import json, sys\n"
+                          "sys.stdin.read()\n"
+                          "print(json.dumps({'files': " +
+                          files + "}))\n");
+  if (script.write(source) != source.size())
+    return QString();
+  script.close();
+  return script.fileName();
+}
+
+// A highlightStyles array with one style whose single rule uses @p preset.
+QJsonArray styleArray(const QString& styleName, const QString& preset)
+{
+  QJsonObject format;
+  format.insert(QStringLiteral("preset"), preset);
+  QJsonObject pattern;
+  pattern.insert(QStringLiteral("string"), QStringLiteral("foo"));
+  QJsonObject rule;
+  rule.insert(QStringLiteral("patterns"), QJsonArray{ pattern });
+  rule.insert(QStringLiteral("format"), format);
+  QJsonObject style;
+  style.insert(QStringLiteral("style"), styleName);
+  style.insert(QStringLiteral("rules"), QJsonArray{ rule });
+  return QJsonArray{ style };
+}
+
+// Options that skip --print-options and carry the given highlight styles.
+QJsonObject optionsWithStyles(const QJsonArray& styles)
+{
+  QJsonObject settings;
+  settings.insert(QStringLiteral("inputMoleculeFormat"),
+                  QStringLiteral("None"));
+  settings.insert(QStringLiteral("highlightStyles"), styles);
+  return settings;
+}
+
+} // namespace
+
+// Package generators reject unknown arguments, so no --generate-input flag may
+// be passed; the JSON still arrives on stdin.
+TEST(InterfaceScriptTest, PackageModeDoesNotPassGenerateInput)
+{
+#ifdef Q_OS_WIN
+  GTEST_SKIP() << "The fake package command is a POSIX script.";
+#endif
+  ensureApp();
+  QTemporaryDir packageDirectory;
+  ASSERT_TRUE(packageDirectory.isValid());
+  ASSERT_TRUE(QDir().mkpath(packageDirectory.filePath(".venv/bin")));
+
+  // PackageManager finds this as the installed command (no pixi needed) and
+  // echoes its arguments, and whether stdin held JSON, as the file contents.
+  QFile command(packageDirectory.filePath(".venv/bin/fakegen"));
+  ASSERT_TRUE(command.open(QIODevice::WriteOnly | QIODevice::Text));
+  const QByteArray source(
+    "#!/usr/bin/env python3\n"
+    "import json, sys\n"
+    "stdin = json.loads(sys.stdin.read())\n"
+    "text = ' '.join(sys.argv[1:]) + ' json=' + str(isinstance(stdin, dict))\n"
+    "print(json.dumps({'files': [{'filename': 'job.inp',"
+    " 'contents': text}]}))\n");
+  ASSERT_EQ(command.write(source), source.size());
+  command.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner |
+                         QFileDevice::ExeOwner);
+  command.close();
+
+  InterfaceScript interface;
+  interface.interpreter().setPackageInfo(
+    packageDirectory.path(), QStringLiteral("fakegen"), QStringLiteral("fake"));
+  interface.setOptionsJson(optionsWithStyles(QJsonArray()));
+
+  const Avogadro::Core::Molecule molecule(waterMolecule());
+  ASSERT_TRUE(interface.generateInput(QJsonObject(), molecule))
+    << interface.errorList().join(QLatin1Char('\n')).toStdString();
+  const QString contents(interface.fileContents(QStringLiteral("job.inp")));
+  EXPECT_TRUE(contents.startsWith(QStringLiteral("fake ")))
+    << contents.toStdString();
+  EXPECT_FALSE(contents.contains(QStringLiteral("--generate-input")))
+    << contents.toStdString();
+  EXPECT_TRUE(contents.endsWith(QStringLiteral("json=True")))
+    << contents.toStdString();
+}
+
+// The current presets, and "literal" as the old name of "num_literal", all
+// build a rule; an unknown preset leaves the style out.
+TEST(InterfaceScriptTest, HighlightPresetsAndLiteralAlias)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+  const QString script(writeFilesScript(
+    temporaryDirectory, "[{'filename': 'job.inp', 'contents': 'foo',"
+                        " 'highlightStyles': ['s']}]"));
+  ASSERT_FALSE(script.isEmpty());
+  const Avogadro::Core::Molecule molecule(waterMolecule());
+
+  for (const char* preset : { "num_literal", "str_literal", "method", "basis",
+                              "block", "literal" }) {
+    InterfaceScript interface(script);
+    interface.setOptionsJson(optionsWithStyles(
+      styleArray(QStringLiteral("s"), QString::fromLatin1(preset))));
+    ASSERT_TRUE(interface.generateInput(QJsonObject(), molecule)) << preset;
+    QScopedPointer<Avogadro::QtGui::GenericHighlighter> highlighter(
+      interface.createFileHighlighter(QStringLiteral("job.inp")));
+    ASSERT_FALSE(highlighter.isNull()) << preset;
+    EXPECT_GT(highlighter->ruleCount(), 0) << preset;
+  }
+
+  InterfaceScript bad(script);
+  bad.setOptionsJson(
+    optionsWithStyles(styleArray(QStringLiteral("s"), QStringLiteral("nope"))));
+  ASSERT_TRUE(bad.generateInput(QJsonObject(), molecule));
+  QScopedPointer<Avogadro::QtGui::GenericHighlighter> none(
+    bad.createFileHighlighter(QStringLiteral("job.inp")));
+  EXPECT_TRUE(none.isNull() || none->ruleCount() == 0);
+}
+
+// A file with no styles of its own gets the "default" style, but only when
+// nothing more specific was requested.
+TEST(InterfaceScriptTest, DefaultHighlightStyleIsTheFallback)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+  const QString script(writeFilesScript(
+    temporaryDirectory, "[{'filename': 'plain.inp', 'contents': 'foo'},"
+                        " {'filename': 'other.inp', 'contents': 'foo',"
+                        " 'highlightStyles': ['missing']}]"));
+  ASSERT_FALSE(script.isEmpty());
+
+  InterfaceScript interface(script);
+  interface.setOptionsJson(optionsWithStyles(
+    styleArray(QStringLiteral("default"), QStringLiteral("keyword"))));
+  ASSERT_TRUE(
+    interface.generateInput(QJsonObject(), Avogadro::Core::Molecule()));
+
+  QScopedPointer<Avogadro::QtGui::GenericHighlighter> plain(
+    interface.createFileHighlighter(QStringLiteral("plain.inp")));
+  ASSERT_FALSE(plain.isNull());
+  EXPECT_GT(plain->ruleCount(), 0);
+  EXPECT_EQ(nullptr,
+            interface.createFileHighlighter(QStringLiteral("other.inp")));
+}
+
+// Styles supplied through setOptionsJson() are used, and a later call
+// replaces them.
+TEST(InterfaceScriptTest, SetOptionsJsonParsesHighlightStyles)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+  const QString script(writeFilesScript(
+    temporaryDirectory, "[{'filename': 'job.inp', 'contents': 'foo',"
+                        " 'highlightStyles': ['mine']}]"));
+  ASSERT_FALSE(script.isEmpty());
+  const Avogadro::Core::Molecule molecule(waterMolecule());
+
+  InterfaceScript interface(script);
+  interface.setOptionsJson(optionsWithStyles(
+    styleArray(QStringLiteral("mine"), QStringLiteral("title"))));
+  ASSERT_TRUE(interface.generateInput(QJsonObject(), molecule));
+  QScopedPointer<Avogadro::QtGui::GenericHighlighter> highlighter(
+    interface.createFileHighlighter(QStringLiteral("job.inp")));
+  ASSERT_FALSE(highlighter.isNull());
+  EXPECT_GT(highlighter->ruleCount(), 0);
+
+  interface.setOptionsJson(optionsWithStyles(QJsonArray()));
+  ASSERT_TRUE(interface.generateInput(QJsonObject(), molecule));
+  EXPECT_EQ(nullptr,
+            interface.createFileHighlighter(QStringLiteral("job.inp")));
 }
