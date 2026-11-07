@@ -246,10 +246,10 @@ public:
    * Decide where a package installed from a local directory should live.
    *
    * @return the path of a direct child of @p pluginsDir named after
-   * @p sourceDir (trailing slashes and "." / ".." components are
-   * normalized away), or an empty string if the install must be refused:
-   * the source does not exist, has no usable name, or is the plugins
-   * directory itself, inside it, or contains it.
+   * the symlink-resolved @p sourceDir, or an empty string if the install must
+   * be refused: the source does not exist, has no usable name, or is the
+   * plugins directory itself, inside it, or contains it. Callers should install
+   * from the resolved source path (QFileInfo::canonicalFilePath()).
    */
   static QString localInstallDestination(const QString& pluginsDir,
                                          const QString& sourceDir);

@@ -1722,3 +1722,32 @@ TEST_F(LocalInstallTest, uninstallGuardAllowsSymlinkedPackage)
     GTEST_SKIP() << "symlinks unavailable";
   EXPECT_TRUE(PackageManager::isManagedPackagePath(m_plugins, link));
 }
+
+TEST_F(LocalInstallTest, symlinkThenDotDotUsesResolvedSource)
+{
+  // "<plugins>/link/.." cleans lexically to the plugins directory, but the
+  // OS resolves it to the link target's parent; name it after that.
+  ASSERT_TRUE(QDir().mkpath(m_root.path() + "/outer/inner"));
+  if (!QFile::link(m_root.path() + "/outer/inner", m_plugins + "/link"))
+    GTEST_SKIP() << "symlinks unavailable";
+  EXPECT_EQ(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/link/.."),
+    QDir::cleanPath(m_plugins + "/outer"));
+}
+
+#ifdef Q_OS_WIN
+TEST_F(LocalInstallTest, overlapIgnoresCaseOnWindows)
+{
+  ASSERT_TRUE(QDir().mkpath(m_plugins + "/installed"));
+  EXPECT_TRUE(PackageManager::localInstallDestination(
+                m_plugins.toLower(), m_plugins.toUpper() + "/INSTALLED")
+                .isEmpty());
+  EXPECT_TRUE(PackageManager::localInstallDestination(m_plugins.toLower(),
+                                                      m_plugins.toUpper())
+                .isEmpty());
+  EXPECT_TRUE(PackageManager::isManagedPackagePath(
+    m_plugins.toLower(), m_plugins.toUpper() + "/installed"));
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(m_plugins.toLower(),
+                                                    m_plugins.toUpper()));
+}
+#endif

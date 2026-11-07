@@ -95,10 +95,11 @@ target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui ${QtOpenGLLink}
 # cases are run in each test invocation.
 foreach(TestName ${tests})
   if(TestName STREQUAL "PackageManager")
-    # packagemanagertest.cpp also defines the TomlParsing suite.
+    # packagemanagertest.cpp also defines the TomlParsing and LocalInstallTest
+    # suites.
     add_test(NAME "QtGui-PackageManager"
       COMMAND AvogadroQtGuiTests
-      "--gtest_filter=PackageManagerTest.*:TomlParsing.*")
+      "--gtest_filter=PackageManagerTest.*:TomlParsing.*:LocalInstallTest.*")
   else()
     add_test(NAME "QtGui-${TestName}"
       COMMAND AvogadroQtGuiTests "--gtest_filter=${TestName}Test.*")

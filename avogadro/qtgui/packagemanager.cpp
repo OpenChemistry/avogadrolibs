@@ -931,6 +931,19 @@ bool isUsableName(const QString& name)
   return !name.isEmpty() && name != QLatin1String(".") &&
          name != QLatin1String("..");
 }
+
+// Windows paths are case-insensitive, and canonical paths there can keep
+// the drive letter's case as given.
+#ifdef Q_OS_WIN
+constexpr Qt::CaseSensitivity kPathCase = Qt::CaseInsensitive;
+#else
+constexpr Qt::CaseSensitivity kPathCase = Qt::CaseSensitive;
+#endif
+
+bool samePath(const QString& a, const QString& b)
+{
+  return QString::compare(a, b, kPathCase) == 0;
+}
 } // namespace
 
 QString PackageManager::localInstallDestination(const QString& pluginsDir,
@@ -943,19 +956,22 @@ QString PackageManager::localInstallDestination(const QString& pluginsDir,
   if (!sourceInfo.isDir())
     return QString();
 
-  // Clean first: QFileInfo::fileName() is empty for a trailing '/'.
-  const QString cleanSource = QDir::cleanPath(sourceInfo.absoluteFilePath());
-  const QString name = QFileInfo(cleanSource).fileName();
+  const QString source = resolvedDir(sourceDir);
+  const QString plugins = resolvedDir(pluginsDir);
+
+  // Name the package after the resolved path, so that "link/.." names (and
+  // the dialog copies) what was validated. Resolved paths never end in '/'.
+  const QString name = QFileInfo(source).fileName();
   if (!isUsableName(name))
     return QString();
 
-  const QString source = resolvedDir(sourceDir);
-  const QString plugins = resolvedDir(pluginsDir);
-  if (source == plugins)
+  if (samePath(source, plugins))
     return QString();
-  if (source.startsWith(plugins + '/')) // already inside the plugins dir
+  // Already inside the plugins directory.
+  if (source.startsWith(plugins + '/', kPathCase))
     return QString();
-  if (plugins.startsWith(source + '/') || source == QLatin1String("/"))
+  if (plugins.startsWith(source + '/', kPathCase) ||
+      source == QLatin1String("/"))
     return QString(); // would copy a directory into itself
 
   const QString destination =
@@ -977,7 +993,7 @@ bool PackageManager::isManagedPackagePath(const QString& pluginsDir,
     return false;
 
   // Resolve only the parent so that a symlinked package itself is accepted.
-  return resolvedDir(leaf.absolutePath()) == resolvedDir(pluginsDir);
+  return samePath(resolvedDir(leaf.absolutePath()), resolvedDir(pluginsDir));
 }
 
 void PackageManager::clearInstallFailure(const QString& packageDir)

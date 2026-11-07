@@ -714,15 +714,19 @@ void PackageManagerDialog::removeSelected()
     QtGui::PackageManager::instance()->unregisterPackage(packageKey);
     QtGui::PackageManager::instance()->clearInstallFailure(e.installedDir);
     if (deleteFiles && !e.installedDir.isEmpty()) {
+      // Normalize once so the guard, the symlink check and the deletion
+      // all act on the same path (no trailing '/').
+      const QString installedDir =
+        QDir::cleanPath(QFileInfo(e.installedDir).absoluteFilePath());
       // Never delete anything that is not a direct child of the plugins
       // directory (older versions could register the directory itself).
       if (!QtGui::PackageManager::isManagedPackagePath(m_filePath,
-                                                       e.installedDir)) {
-        unsafePaths << e.installedDir;
-      } else if (QFileInfo{ e.installedDir }.isSymLink()) {
-        QFile(e.installedDir).remove();
+                                                       installedDir)) {
+        unsafePaths << installedDir;
+      } else if (QFileInfo{ installedDir }.isSymLink()) {
+        QFile(installedDir).remove();
       } else {
-        QDir(e.installedDir).removeRecursively();
+        QDir(installedDir).removeRecursively();
       }
     }
   }
@@ -771,7 +775,8 @@ void PackageManagerDialog::installFromDirectory()
         .arg(m_filePath));
     return;
   }
-  dir = QDir::cleanPath(QFileInfo(dir).absoluteFilePath());
+  // Link or copy the same resolved directory that was validated above.
+  dir = QFileInfo(dir).canonicalFilePath();
 
   QFileInfo existing(linkPath);
   if (existing.isSymLink()) {
