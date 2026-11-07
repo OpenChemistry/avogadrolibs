@@ -32,12 +32,24 @@ class GenericHighlighter;
 class PythonScript;
 } // namespace QtGui
 
+// Deprecated for code outside the MoleQueue library. The library defines
+// AVOGADRO_MOLEQUEUE_BUILDING for its own sources (see CMakeLists.txt), which
+// also covers the moc output, so building it does not warn about itself.
+#ifdef AVOGADRO_MOLEQUEUE_BUILDING
+#define AVOGADRO_INPUTGENERATOR_DEPRECATED
+#else
+#define AVOGADRO_INPUTGENERATOR_DEPRECATED                                     \
+  Q_DECL_DEPRECATED_X("Use Avogadro::QtGui::InterfaceScript")
+#endif
+
 namespace MoleQueue {
 /**
  * @class InputGenerator inputgenerator.h <avogadro/molequeue/inputgenerator.h>
  * @brief The InputGenerator class provides an interface to input generator
  * scripts.
  * @sa InputGeneratorWidget
+ * @deprecated Use QtGui::InterfaceScript (<avogadro/qtgui/interfacescript.h>),
+ * which supports package-mode generators and has the same API.
  *
  * The QuantumInput extension provides a scriptable method for users to add
  * custom input generators to Avogadro. By writing an executable that implements
@@ -477,7 +489,8 @@ $$zmatpad:[coordSpec]$$
  * qDebug() stream from within avogadro. The script is free to handle the
  * debug flag as the author wishes.
  */
-class AVOGADROMOLEQUEUE_EXPORT InputGenerator : public QObject
+class AVOGADRO_INPUTGENERATOR_DEPRECATED AVOGADROMOLEQUEUE_EXPORT InputGenerator
+  : public QObject
 {
   Q_OBJECT
 public:
