@@ -9,8 +9,10 @@
 #include <QtCore/QJsonObject>
 #include <QtWidgets/QWidget>
 
+#include "avogadromolequeueexport.h"
+
+#include <avogadro/qtgui/interfacescript.h>
 #include <avogadro/qtgui/jsonwidget.h>
-#include "inputgenerator.h"
 
 class QJsonValue;
 class QTextEdit;
@@ -33,8 +35,8 @@ class BatchJob;
  * <avogadro/molequeue/inputgeneratorwidget.h>
  * @brief The InputGeneratorWidget class provides a user interface for
  * configuring, saving, editing, and running input files produced by
- * InputGenerator scripts.
- * @sa InputGenerator InputGeneratorDialog
+ * InterfaceScript input generators.
+ * @sa QtGui::InterfaceScript InputGeneratorDialog
  *
  * The InputGeneratorWidget creates a GUI to represent the options given by an
  * input generator script, and has some utilities for job submission through
@@ -55,7 +57,7 @@ class AVOGADROMOLEQUEUE_EXPORT InputGeneratorWidget : public QtGui::JsonWidget
 public:
   /**
    * Construct a widget that dynamically generates a GUI to configure the
-   * InputGenerator script specified by scriptFilePath.
+   * input generator script specified by scriptFilePath.
    */
   explicit InputGeneratorWidget(QWidget* parent_ = nullptr);
   ~InputGeneratorWidget() override;
@@ -75,8 +77,11 @@ public:
   /**
    * Access to the underlying input generator object. @{
    */
-  InputGenerator& inputGenerator() { return m_inputGenerator; }
-  const InputGenerator& inputGenerator() const { return m_inputGenerator; }
+  QtGui::InterfaceScript& inputGenerator() { return m_inputGenerator; }
+  const QtGui::InterfaceScript& inputGenerator() const
+  {
+    return m_inputGenerator;
+  }
 
   /**
    * @return True if the widget is in batch mode. See the class documentation
@@ -220,7 +225,7 @@ private:
   Ui::InputGeneratorWidget* m_ui;
   bool m_updatePending;
   QList<QTextEdit*> m_dirtyTextEdits;
-  InputGenerator m_inputGenerator;
+  QtGui::InterfaceScript m_inputGenerator;
 };
 
 } // namespace MoleQueue
