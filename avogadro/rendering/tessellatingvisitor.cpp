@@ -282,18 +282,46 @@ void sanitize(TessellatedMesh& mesh)
 
   // Keep the triangles that are whole and use existing, usable vertices.
   size_t kept = 0;
+  bool dropped = false;
   for (size_t i = 0; i + 2 < mesh.indices.size(); i += 3) {
     const unsigned int a = mesh.indices[i], b = mesh.indices[i + 1],
                        c = mesh.indices[i + 2];
-    if (a >= count || b >= count || c >= count)
+    if (a >= count || b >= count || c >= count ||
+        (anyBad && (bad[a] || bad[b] || bad[c]))) {
+      dropped = true;
       continue;
-    if (anyBad && (bad[a] || bad[b] || bad[c]))
-      continue;
+    }
     mesh.indices[kept++] = a;
     mesh.indices[kept++] = b;
     mesh.indices[kept++] = c;
   }
   mesh.indices.resize(kept);
+  if (!dropped)
+    return;
+
+  // The surface is no longer known to be closed, and vertices that only the
+  // dropped triangles used (including the zeroed bad ones) must not stay: they
+  // would affect bounds() and the centre. Keep the order of the others.
+  mesh.closed = false;
+  std::vector<unsigned int> remap(count, 0);
+  std::vector<bool> used(count, false);
+  for (unsigned int index : mesh.indices)
+    used[index] = true;
+  size_t next = 0;
+  for (size_t i = 0; i < count; ++i) {
+    if (!used[i])
+      continue;
+    remap[i] = static_cast<unsigned int>(next);
+    mesh.positions[next] = mesh.positions[i];
+    mesh.normals[next] = mesh.normals[i];
+    mesh.colors[next] = mesh.colors[i];
+    ++next;
+  }
+  mesh.positions.resize(next);
+  mesh.normals.resize(next);
+  mesh.colors.resize(next);
+  for (unsigned int& index : mesh.indices)
+    index = remap[index];
 }
 
 void keepIfNotEmpty(std::vector<TessellatedMesh>& meshes,
@@ -360,7 +388,9 @@ void TessellatingVisitor::centerOn(const Core::Molecule* molecule)
 {
   Vector3f center = Vector3f::Zero();
   Vector3f minimum, maximum;
-  if (molecule != nullptr && molecule->atomCount() > 0)
+  // A partial positions array keeps the centroid behaviour.
+  if (molecule != nullptr && molecule->atomCount() > 0 &&
+      !molecule->atomPositions3d().empty())
     center = molecule->centerOfGeometry().cast<float>();
   else if (bounds(minimum, maximum))
     center = 0.5f * (minimum + maximum);
@@ -552,7 +582,12 @@ void TessellatingVisitor::visit(CylinderGeometry& geometry)
     const Vector4ub c1 = withAlpha(cylinder.color, alpha);
     const Vector4ub c2 = withAlpha(cylinder.color2, alpha);
     const unsigned int sides = cylinderSidesForRadius(cylinder.radius);
-    if (m_cylinderColoring == CylinderColoring::Split && c1 != c2) {
+    // A half shorter than the minimum would be dropped: use the one gradient
+    // tube, which accepts every cylinder the halves do not.
+    const bool halvesUsable =
+      0.5f * (cylinder.end2 - cylinder.end1).norm() >= kMinLength;
+    if (m_cylinderColoring == CylinderColoring::Split && c1 != c2 &&
+        halvesUsable) {
       const Vector3f mid = 0.5f * (cylinder.end1 + cylinder.end2);
       appendTube(mesh, cylinder.end1, mid, c1, c1, cylinder.radius, sides, true,
                  false);

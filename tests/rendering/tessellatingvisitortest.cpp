@@ -373,7 +373,64 @@ TEST(TessellatingVisitorTest, meshDataIsSanitised)
   EXPECT_TRUE(result.normals[0].isApprox(Vector3f(0, 0, 1)));
   EXPECT_TRUE(result.normals[1].isApprox(Vector3f(0, 0, 1)));
   EXPECT_TRUE(result.normals[2].isApprox(Vector3f(0, 0, 1)));
-  EXPECT_EQ(result.positions[3], Vector3f::Zero());
+  // Dropping triangles also drops the vertices only they used (the bad one),
+  // and the surface can no longer be called closed.
+  EXPECT_EQ(result.positions.size(), static_cast<size_t>(3));
+  EXPECT_FALSE(result.closed);
+  Vector3f minimum, maximum;
+  ASSERT_TRUE(visitor.bounds(minimum, maximum));
+  EXPECT_EQ(minimum, Vector3f(0, 0, 0));
+  EXPECT_EQ(maximum, Vector3f(1, 1, 0));
+}
+
+TEST(TessellatingVisitorTest, sanitizeCompactsAndRemaps)
+{
+  // Vertex 1 is only used by a dropped triangle; the others keep their order.
+  Array<Vector3f> vertices, normals;
+  for (int i = 0; i < 4; ++i) {
+    vertices.push_back(Vector3f(static_cast<float>(i), 0, 0));
+    normals.push_back(Vector3f(0, 0, 1));
+  }
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 2, 3);
+  mesh.addTriangle(0, 1, 7); // out of range
+  TessellatingVisitor visitor;
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  const TessellatedMesh& result = visitor.meshes()[0];
+  ASSERT_EQ(result.positions.size(), static_cast<size_t>(3));
+  EXPECT_EQ(result.positions[0], Vector3f(0, 0, 0));
+  EXPECT_EQ(result.positions[1], Vector3f(2, 0, 0));
+  EXPECT_EQ(result.positions[2], Vector3f(3, 0, 0));
+  ASSERT_EQ(result.indices.size(), static_cast<size_t>(3));
+  EXPECT_EQ(result.indices[0], 0u);
+  EXPECT_EQ(result.indices[1], 1u);
+  EXPECT_EQ(result.indices[2], 2u);
+
+  // Nothing dropped: unreferenced vertices stay, nothing is renumbered.
+  MeshGeometry whole;
+  whole.addVertices(vertices, normals);
+  whole.addTriangle(0, 2, 3);
+  TessellatingVisitor other;
+  whole.accept(other);
+  ASSERT_EQ(other.meshes().size(), static_cast<size_t>(1));
+  EXPECT_EQ(other.meshes()[0].positions.size(), static_cast<size_t>(4));
+  EXPECT_EQ(other.meshes()[0].indices[2], 3u);
+}
+
+TEST(TessellatingVisitorTest, splitShortCylinderFallsBackToGradient)
+{
+  // About 1.5 * the minimum length: each half is too short for a tube, but
+  // the cylinder itself is not.
+  CylinderGeometry cylinders;
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 1.5e-6f), 0.5f,
+                        Vector3ub(255, 0, 0), Vector3ub(0, 0, 255));
+  TessellatingVisitor visitor;
+  visitor.setCylinderColoring(TessellatingVisitor::CylinderColoring::Split);
+  cylinders.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  expectWellFormed(visitor.meshes()[0]);
 }
 
 TEST(TessellatingVisitorTest, closedMeshes)
@@ -669,4 +726,19 @@ TEST(TessellatingVisitorTest, adaptiveCylinderSides)
   EXPECT_EQ(visitor.cylinderSidesForRadius(5.0f), 6u);
   visitor.useAdaptiveCylinders();
   EXPECT_EQ(visitor.cylinderSidesForRadius(5.0f), 23u);
+}
+
+TEST(TessellatingVisitorTest, centerOnWithoutPositions)
+{
+  SphereGeometry spheres;
+  spheres.addSphere(Vector3f(10, 0, 0), Vector3ub(1, 2, 3), 1.0f);
+  TessellatingVisitor visitor;
+  spheres.accept(visitor);
+
+  // Atoms but no coordinates: fall back to the bounds, not the origin.
+  Avogadro::Core::Molecule molecule;
+  molecule.addAtom(1);
+  molecule.atomPositions3d().clear();
+  visitor.centerOn(&molecule);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(10, 0, 0), 1e-5f));
 }
