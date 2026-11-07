@@ -489,7 +489,8 @@ void VolumeGeometry::render(const Camera& camera)
   // Capture the default FBO before initialize() which may change it
   // (resizeFBO creates new framebuffers and unbinds to FBO 0, losing
   // the Qt widget's actual default FBO)
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING,
+                reinterpret_cast<GLint*>(&d->defaultFBO));
 
   if (m_dirty)
     initialize();
