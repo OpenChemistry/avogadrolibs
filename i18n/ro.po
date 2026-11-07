@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-11-06 14:28+0000\n"
+"PO-Revision-Date: 2026-11-08 18:51+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remus-"
 "gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -1557,7 +1557,7 @@ msgstr "Stratul %1"
 
 #: qtgui/layermodel.cpp:180 qtplugins/ballandstick/ballandstick.h:28
 msgid "Ball and Stick"
-msgstr "Bilă și bastonaș"
+msgstr "Sferă și bastonaș"
 
 #: qtgui/layermodel.cpp:182 qtplugins/cartoons/cartoons.h:31
 msgctxt "protein ribbon / cartoon rendering"
@@ -2700,18 +2700,22 @@ msgid ""
 "colorAtomsCustom requires a \"color\" option (a color name or \"#rrggbb\" "
 "value)."
 msgstr ""
+"colorAtomsCustom necesită o opțiune „color” (un nume de culoare sau o "
+"valoare de tip „#rrggbb”)."
 
 #: qtplugins/applycolors/applycolors.cpp:656
 #: qtplugins/applycolors/applycolors.cpp:677
 #, qt-format
 msgid "Unknown color \"%1\"."
-msgstr ""
+msgstr "Culoare necunoscută „%1”."
 
 #: qtplugins/applycolors/applycolors.cpp:670
 msgid ""
 "colorResiduesCustom requires a \"color\" option (a color name or \"#rrggbb\" "
 "value)."
 msgstr ""
+"colorResiduesCustom necesită o opțiune „color” (un nume de culoare sau o "
+"valoare de tip „#rrggbb”)."
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -3226,6 +3230,8 @@ msgstr ""
 msgid ""
 "Zero-based atom indices: 2 for a distance, 3 for an angle or 4 for a torsion."
 msgstr ""
+"Indici de atomi începând de la zero: 2 pentru o distanță, 3 pentru un unghi "
+"sau 4 pentru o torsiune."
 
 #: qtplugins/constraints/constraintsextension.cpp:174
 msgid ""
@@ -3253,6 +3259,8 @@ msgid ""
 "Target in Å for a distance or degrees for an angle or torsion. Defaults to "
 "the current geometry."
 msgstr ""
+"Valoarea țintă în Å pentru o distanță sau în grade pentru un unghi ori o "
+"torsiune. Implicit se folosește geometria curentă."
 
 #: qtplugins/constraints/constraintsextension.cpp:198
 msgid ""
@@ -4924,7 +4932,7 @@ msgstr "Etichetă reziduu:"
 
 #: qtplugins/label/label.h:36
 msgid "Display labels on ball and stick style."
-msgstr "Afișează etichetele în stilul de bilă și bastonaș."
+msgstr "Afișează etichetele în stilul de sferă și bastonaș."
 
 #: qtplugins/label/labeleditor.cpp:31
 msgid "Edit Labels"
@@ -5167,11 +5175,11 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid "The new distance in Å."
-msgstr ""
+msgstr "Noua distanță în Å."
 
 #: qtplugins/measuretool/measuretool.cpp:705
 msgid "The new angle in degrees."
-msgstr ""
+msgstr "Noul unghi, exprimat în grade."
 
 #: qtplugins/measuretool/measuretool.cpp:733
 msgid ""
@@ -5238,7 +5246,7 @@ msgstr ""
 
 #: qtplugins/measuretool/measuretool.cpp:772
 msgid "Zero-based atom indices, in chain order."
-msgstr ""
+msgstr "Indici atomici începând cu zero, în ordinea lanțului."
 
 #: qtplugins/measuretool/measuretool.cpp:912
 msgid "That's not a value this distance can be set to."
@@ -6336,12 +6344,12 @@ msgstr "Videoclip (*.mp4);;Videoclip (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:455 qtplugins/surfaces/surfaces.cpp:1420
 msgid "Movie Size"
-msgstr ""
+msgstr "Dimensiunea filmului"
 
 #: qtplugins/playertool/playertool.cpp:481
 #, qt-format
 msgid "Cannot render frame %1: %2"
-msgstr ""
+msgstr "Nu se poate reda cadrul %1: %2"
 
 #: qtplugins/playertool/playertool.cpp:487 qtplugins/surfaces/surfaces.cpp:1436
 msgid "GIF (*.gif)"
@@ -6362,7 +6370,7 @@ msgstr "Videoclip (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:519
 msgid "Cannot create the video file."
-msgstr ""
+msgstr "Nu se poate crea fișierul video."
 
 #: qtplugins/playertool/playertool.cpp:536 qtplugins/surfaces/surfaces.cpp:1515
 msgid "Error: cannot add frame to video."
@@ -6373,6 +6381,8 @@ msgid ""
 "Cannot run ffmpeg or avconv to encode the movie. The frames were saved as "
 "PNG files."
 msgstr ""
+"Nu se poate executa ffmpeg sau avconv pentru a codifica filmul. Cadrele au "
+"fost salvate ca fișiere PNG."
 
 #: qtplugins/playertool/playertool.cpp:668
 msgid ""
@@ -7147,7 +7157,7 @@ msgstr "Selectează toți atomii unui anumit tip de element."
 
 #: qtplugins/select/select.cpp:641
 msgid "An element symbol or atomic number."
-msgstr ""
+msgstr "Simbolul unui element sau numărul atomic."
 
 #: qtplugins/select/select.cpp:650
 msgid "Select all atoms that belong to amino acid backbones"
@@ -7187,14 +7197,17 @@ msgid ""
 "\"indices\" is a deprecated alias) and optional \"mode\": \"replace\" "
 "(default), \"add\" or \"remove\"."
 msgstr ""
+"Selectează atomii după indice. Opțiuni: „atoms” (listă de indici ai atomilor "
+"începând de la zero; „indices” este un alias învechit) și „mode” opțional: „"
+"replace” (implicit), „add” sau „remove”."
 
 #: qtplugins/select/select.cpp:680
 msgid "Zero-based indices of the atoms to select."
-msgstr ""
+msgstr "Indicii atomilor de selectat, începând de la zero."
 
 #: qtplugins/select/select.cpp:685
 msgid "How to combine the atoms with the current selection."
-msgstr ""
+msgstr "Cum se combină atomii cu selecția curentă."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -7533,7 +7546,7 @@ msgstr "Deschide fereastra de dialog „Spectre”."
 
 #: qtplugins/spectra/spectra.cpp:183
 msgid "The molecule has no spectra data."
-msgstr ""
+msgstr "Molecula nu are date spectrale."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -7927,7 +7940,7 @@ msgstr "Nu s-a găsit elementul grafic de redare activ, eșec."
 #: qtplugins/surfaces/surfaces.cpp:1486
 #, qt-format
 msgid "Cannot render the movie frame: %1"
-msgstr ""
+msgstr "Nu se poate reda cadrul filmului: %1"
 
 #: qtplugins/surfaces/surfaces.h:79
 msgid "Read and render surfaces."
@@ -7944,7 +7957,7 @@ msgstr "SVG (*.svg)"
 #: qtplugins/svg/svg.cpp:284
 #, qt-format
 msgid "Ball-and-stick view of %1, %2 atoms"
-msgstr ""
+msgstr "Vizualizare cu sfere și bastonașe pentru %1, %2 atomi"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
