@@ -164,7 +164,9 @@ target_link_libraries(Rendering
   PUBLIC
     Avogadro::Headers
   PRIVATE
-    nlohmann_json::nlohmann_json
+    # Header-only; the bundled target is not installed, so keep it out of the
+    # installed link interface of static builds.
+    $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
     Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
     GLEW::GLEW
     OpenGL::GL)
