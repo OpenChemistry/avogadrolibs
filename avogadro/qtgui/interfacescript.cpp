@@ -22,6 +22,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QMutex>
 #include <QtCore/QSet>
 
 #include <QtGui/QColor>
@@ -71,6 +72,18 @@ static void stripLeadingNonJson(QByteArray& data)
   }
 }
 
+// True the first time @p key is added to @p seen. The sets are shared by every
+// InterfaceScript, which may live on different threads.
+static bool firstTimeSeen(QSet<QString>& seen, const QString& key)
+{
+  static QMutex mutex;
+  QMutexLocker locker(&mutex);
+  if (seen.contains(key))
+    return false;
+  seen.insert(key);
+  return true;
+}
+
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
@@ -94,7 +107,7 @@ bool InterfaceScript::debug() const
 QJsonObject InterfaceScript::options() const
 {
   m_errors.clear();
-  if (m_options.isEmpty()) {
+  if (!m_optionsLoaded) {
     qDeleteAll(m_highlightStyles.values());
     m_highlightStyles.clear();
 
@@ -119,6 +132,7 @@ QJsonObject InterfaceScript::options() const
     }
 
     m_options = doc.object();
+    m_optionsLoaded = true;
 
     if (m_options.contains(QStringLiteral("highlightStyles")) &&
         m_options.value(QStringLiteral("highlightStyles")).isArray()) {
@@ -126,8 +140,7 @@ QJsonObject InterfaceScript::options() const
       // pyproject.toml); --print-options is a single-file script mechanism.
       static QSet<QString> warnedScripts;
       const QString scriptPath(scriptFilePath());
-      if (!warnedScripts.contains(scriptPath)) {
-        warnedScripts.insert(scriptPath);
+      if (firstTimeSeen(warnedScripts, scriptPath)) {
         qWarning() << "Supplying highlightStyles through --print-options is "
                       "deprecated; packages should declare them with "
                       "highlight-styles in pyproject.toml. Script:"
@@ -197,6 +210,7 @@ void InterfaceScript::setScriptFilePath(const QString& scriptFile)
 void InterfaceScript::setOptionsJson(const QJsonObject& opts)
 {
   m_options = opts;
+  m_optionsLoaded = true;
 
   // Same default as options() applies when the key is absent.
   m_moleculeExtension = QLatin1String("cjson");
@@ -225,12 +239,15 @@ void InterfaceScript::reset()
   m_moleculeExtension = QLatin1String("Unknown");
   m_displayName = QString();
   m_options = QJsonObject();
+  m_optionsLoaded = false;
   m_warnings.clear();
   m_errors.clear();
   m_filenames.clear();
   m_mainFileName.clear();
   m_files.clear();
+  qDeleteAll(m_fileHighlighters.values());
   m_fileHighlighters.clear();
+  qDeleteAll(m_highlightStyles.values());
   m_highlightStyles.clear();
 }
 
@@ -510,9 +527,14 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
   const QJsonObject scriptOptions(
     options_.value(QStringLiteral("options")).toObject());
 
-  // Add the molecule file to the options
+  // Input generators get no molecule unless they ask for one with
+  // inputMoleculeFormat, as with MoleQueue::InputGenerator; the geometry
+  // keywords below are filled in from @p mol either way.
+  if (m_moleculeExtension == QLatin1String("Unknown"))
+    options();
   QJsonObject allOptions(options_);
-  if (!insertMolecule(allOptions, mol))
+  if (m_options.value(QStringLiteral("inputMoleculeFormat")).isString() &&
+      !insertMolecule(allOptions, mol, false))
     return false;
 
   // Package-mode generators take no command-line flag; JSON arrives on stdin
@@ -523,8 +545,7 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
     // in favour of packages.
     static QSet<QString> warnedScripts;
     const QString scriptPath(scriptFilePath());
-    if (!warnedScripts.contains(scriptPath)) {
-      warnedScripts.insert(scriptPath);
+    if (firstTimeSeen(warnedScripts, scriptPath)) {
       qWarning() << "Single-file input generator scripts (--generate-input) "
                     "are deprecated; please provide the generator as a "
                     "package. Script:"
@@ -728,7 +749,8 @@ bool InterfaceScript::parseJson(const QByteArray& json,
 }
 
 bool InterfaceScript::insertMolecule(QJsonObject& json,
-                                     const Core::Molecule& mol) const
+                                     const Core::Molecule& mol,
+                                     bool includeCubes) const
 {
   // Update the cached options if the format is not set
   if (m_moleculeExtension == QLatin1String("Unknown"))
@@ -764,6 +786,14 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
                    "Unrecognized file format: %1")
                   .arg(m_moleculeExtension);
     return false;
+  }
+
+  // Cubes can be hundreds of MB and input generators never use them (CJSON
+  // never writes meshes).
+  if (!includeCubes) {
+    cjsonFormat->setOptions(R"({"cubes": false})");
+    if (m_moleculeExtension == QLatin1String("cjson"))
+      format->setOptions(R"({"cubes": false})");
   }
 
   std::string str;

@@ -34,9 +34,17 @@ class PythonScript;
 
 // Deprecated for code outside the MoleQueue library. The library defines
 // AVOGADRO_MOLEQUEUE_BUILDING for its own sources (see CMakeLists.txt), which
-// also covers the moc output, so building it does not warn about itself.
-#ifdef AVOGADRO_MOLEQUEUE_BUILDING
+// also covers the moc output, so building it does not warn about itself. An
+// in-tree user that is still being migrated can define
+// AVOGADRO_INPUTGENERATOR_NO_DEPRECATION to opt out. GCC before 12 rejects a
+// standard [[deprecated]] ahead of the export macro's __attribute__, hence the
+// GNU spelling.
+#if defined(AVOGADRO_MOLEQUEUE_BUILDING) ||                                    \
+  defined(AVOGADRO_INPUTGENERATOR_NO_DEPRECATION)
 #define AVOGADRO_INPUTGENERATOR_DEPRECATED
+#elif defined(__GNUC__)
+#define AVOGADRO_INPUTGENERATOR_DEPRECATED                                     \
+  __attribute__((deprecated("Use Avogadro::QtGui::InterfaceScript")))
 #else
 #define AVOGADRO_INPUTGENERATOR_DEPRECATED                                     \
   Q_DECL_DEPRECATED_X("Use Avogadro::QtGui::InterfaceScript")

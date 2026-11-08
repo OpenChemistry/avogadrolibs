@@ -3,8 +3,11 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "avogadropython.h"
+
 #include <gtest/gtest.h>
 
+#include <avogadro/core/cube.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/interfacescript.h>
@@ -383,16 +386,24 @@ TEST(InterfaceScriptTest, PackageModeDoesNotPassGenerateInput)
 
   // PackageManager finds this as the installed command (no pixi needed) and
   // echoes its arguments, and whether stdin held JSON, as the file contents.
-  QFile command(packageDirectory.filePath(".venv/bin/fakegen"));
-  ASSERT_TRUE(command.open(QIODevice::WriteOnly | QIODevice::Text));
+  // The command is a sh wrapper around the CMake-selected interpreter.
+  QFile script(packageDirectory.filePath("fakegen.py"));
+  ASSERT_TRUE(script.open(QIODevice::WriteOnly | QIODevice::Text));
   const QByteArray source(
-    "#!/usr/bin/env python3\n"
     "import json, sys\n"
     "stdin = json.loads(sys.stdin.read())\n"
     "text = ' '.join(sys.argv[1:]) + ' json=' + str(isinstance(stdin, dict))\n"
     "print(json.dumps({'files': [{'filename': 'job.inp',"
     " 'contents': text}]}))\n");
-  ASSERT_EQ(command.write(source), source.size());
+  ASSERT_EQ(script.write(source), source.size());
+  script.close();
+
+  QFile command(packageDirectory.filePath(".venv/bin/fakegen"));
+  ASSERT_TRUE(command.open(QIODevice::WriteOnly | QIODevice::Text));
+  const QByteArray wrapper(
+    "#!/bin/sh\nexec \"" + QByteArray(Avogadro::pythonInterpreterPath) +
+    "\" \"" + QFile::encodeName(script.fileName()) + "\" \"$@\"\n");
+  ASSERT_EQ(command.write(wrapper), wrapper.size());
   command.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner |
                          QFileDevice::ExeOwner);
   command.close();
@@ -501,4 +512,61 @@ TEST(InterfaceScriptTest, SetOptionsJsonParsesHighlightStyles)
   ASSERT_TRUE(interface.generateInput(QJsonObject(), molecule));
   EXPECT_EQ(nullptr,
             interface.createFileHighlighter(QStringLiteral("job.inp")));
+}
+
+// An empty object from setOptionsJson() is a cached answer, so options() must
+// not fall back to --print-options (which this script would answer).
+TEST(InterfaceScriptTest, EmptyOptionsJsonIsCached)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+  const QString script(writeFilesScript(temporaryDirectory, "[]"));
+  ASSERT_FALSE(script.isEmpty());
+
+  InterfaceScript interface(script);
+  interface.setOptionsJson(QJsonObject());
+  EXPECT_TRUE(interface.options().isEmpty());
+}
+
+// As with MoleQueue::InputGenerator, a generator that names no
+// inputMoleculeFormat gets no molecule, and one that asks for CJSON gets no
+// cube data.
+TEST(InterfaceScriptTest, GeneratorMoleculeOnlyWhenRequested)
+{
+  ensureApp();
+  QTemporaryDir temporaryDirectory;
+  ASSERT_TRUE(temporaryDirectory.isValid());
+  QFile script(temporaryDirectory.filePath("echo.py"));
+  ASSERT_TRUE(script.open(QIODevice::WriteOnly | QIODevice::Text));
+  const QByteArray source("import json, sys\n"
+                          "opts = json.load(sys.stdin)\n"
+                          "text = 'cjson=%s cube=%s' % ('cjson' in opts,"
+                          " 'cube' in opts.get('cjson', {}))\n"
+                          "print(json.dumps({'files': [{'filename': 'job.inp',"
+                          " 'contents': text}]}))\n");
+  ASSERT_EQ(script.write(source), source.size());
+  script.close();
+
+  Avogadro::Core::Molecule molecule(waterMolecule());
+  Avogadro::Core::Cube* cube = molecule.addCube();
+  ASSERT_TRUE(cube->setLimits(Avogadro::Vector3(-1.0, -1.0, -1.0),
+                              Avogadro::Vector3i(2, 2, 2), 1.0f));
+
+  InterfaceScript omitted(script.fileName());
+  omitted.setOptionsJson(QJsonObject());
+  ASSERT_TRUE(omitted.generateInput(QJsonObject(), molecule))
+    << omitted.errorList().join(QLatin1Char('\n')).toStdString();
+  EXPECT_EQ(omitted.fileContents(QStringLiteral("job.inp")),
+            QStringLiteral("cjson=False cube=False"));
+
+  InterfaceScript requested(script.fileName());
+  QJsonObject settings;
+  settings.insert(QStringLiteral("inputMoleculeFormat"),
+                  QStringLiteral("cjson"));
+  requested.setOptionsJson(settings);
+  ASSERT_TRUE(requested.generateInput(QJsonObject(), molecule))
+    << requested.errorList().join(QLatin1Char('\n')).toStdString();
+  EXPECT_EQ(requested.fileContents(QStringLiteral("job.inp")),
+            QStringLiteral("cjson=True cube=False"));
 }
