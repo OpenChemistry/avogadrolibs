@@ -461,13 +461,13 @@ void Label::processResidue(const Core::Molecule& molecule,
     Vector3ub color = interface->color;
     std::string text = "";
     if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
-      text = (text == "" ? "" : " / ") + name;
+      text = (text.empty() ? "" : " / ") + name;
     }
     if (interface->residueOptions & LayerLabel::LabelOptions::Index) {
       text += std::to_string(residue.residueId());
     }
     if (interface->residueOptions & LayerLabel::LabelOptions::Custom) {
-      text += (text == "" ? "" : " / ") + customLabel;
+      text += (text.empty() ? "" : " / ") + customLabel;
     }
     TextLabel3D* residueLabel =
       createLabel(text, pos, radius, color, interface->labelScale);
@@ -609,7 +609,7 @@ void Label::processAtom(const QtGui::Molecule& molecule,
       // already set
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
+      text += (text.empty() ? "" : " / ") + std::to_string(atom.index() + 1);
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Name) {
       std::string name = std::string(Elements::symbol(atomicNumber));
@@ -621,17 +621,17 @@ void Label::processAtom(const QtGui::Molecule& molecule,
           name = "T";
         }
       }
-      text += (text == "" ? "" : " / ") + name;
+      text += (text.empty() ? "" : " / ") + name;
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Ordinal) {
-      text += (text == "" ? "" : " / ") +
+      text += (text.empty() ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::UniqueID) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+      text += (text.empty() ? "" : " / ") + std::to_string(atom.index());
     }
-    if (text != "") {
+    if (!text.empty()) {
       const Vector3f pos(atom.position3d().cast<float>());
       Vector3ub color = atom.color();
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *

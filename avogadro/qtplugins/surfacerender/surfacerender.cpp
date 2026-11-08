@@ -71,7 +71,7 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
     const Mesh* mesh = mol.mesh(0);
     Core::Array<Vector3f> triangles = mesh->triangles();
 
-    bool hasColors = (mesh->colors().size() != 0);
+    bool hasColors = (!mesh->colors().empty());
 
     if (m_style == SurfaceRender::Surface) {
       auto* mesh1 = new MeshGeometry;

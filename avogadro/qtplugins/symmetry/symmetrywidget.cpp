@@ -163,7 +163,7 @@ void SymmetryWidget::operationsSelectionChanged(
 
   // qDebug() << "cleared elements";
 
-  if (m_sopsl > 0 && selection.size() > 0) {
+  if (m_sopsl > 0 && !selection.empty()) {
     m_molecule->setProperty("SymmetryOrigo", m_cm);
     m_molecule->setProperty("SymmetryRadius", m_radius);
   }
@@ -192,13 +192,13 @@ void SymmetryWidget::operationsSelectionChanged(
         break;
     }
   }
-  if (properRotationVariantList.size() > 0)
+  if (!properRotationVariantList.empty())
     m_molecule->setProperty("SymmetryProperRotationVariantList",
                             properRotationVariantList);
-  if (improperRotationVariantList.size() > 0)
+  if (!improperRotationVariantList.empty())
     m_molecule->setProperty("SymmetryImproperRotationVariantList",
                             improperRotationVariantList);
-  if (reflectionVariantList.size() > 0)
+  if (!reflectionVariantList.empty())
     m_molecule->setProperty("SymmetryReflectionVariantList",
                             reflectionVariantList);
 

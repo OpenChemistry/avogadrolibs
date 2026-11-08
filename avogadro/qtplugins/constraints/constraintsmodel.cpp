@@ -156,7 +156,7 @@ void ConstraintsModel::addConstraint(int /*type*/, int a, int b, int c, int d,
 
 void ConstraintsModel::clear()
 {
-  if (m_constraints.size()) {
+  if (!m_constraints.empty()) {
     beginRemoveRows(QModelIndex(), 0, m_constraints.size() - 1);
     m_constraints.clear();
     endRemoveRows();
@@ -165,7 +165,7 @@ void ConstraintsModel::clear()
 
 void ConstraintsModel::deleteConstraint(int index)
 {
-  if (m_constraints.size() && (index >= 0)) {
+  if (!m_constraints.empty() && (index >= 0)) {
     beginRemoveRows(QModelIndex(), index, index);
     auto position = m_constraints.begin() + index;
     m_constraints.erase(position);
