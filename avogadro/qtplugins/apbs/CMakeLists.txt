@@ -21,3 +21,7 @@ avogadro_plugin(apbs
 
 target_link_libraries(apbs
   PRIVATE Avogadro::IO Avogadro::MoleQueue)
+
+# Still uses the deprecated MoleQueue::InputGenerator until this plugin is
+# replaced; keep the warning on for everyone else.
+target_compile_definitions(apbs PRIVATE AVOGADRO_INPUTGENERATOR_NO_DEPRECATION)
