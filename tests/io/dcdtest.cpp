@@ -9,6 +9,7 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/io/dcdformat.h>
 
@@ -295,16 +296,20 @@ std::string byteSwapDcd(const std::string& in)
   size_t pos = 0;
   int record = 0;
   while (pos + 4 <= s.size()) {
-    uint32_t len;
-    std::memcpy(&len, s.data() + pos, 4); // little-endian host assumed
-    swapBytes(s, pos, 4);
+    // The input is little-endian; decode independent of the host.
+    const size_t len = static_cast<uint32_t>(Avogadro::Core::unpackInt32(
+      s.data() + pos, Avogadro::Core::ByteOrder::LittleEndian));
     size_t payload = pos + 4;
+    // A bad length must never index past the string.
+    if (len > s.size() || payload + len + 4 > s.size())
+      break;
+    swapBytes(s, pos, 4);
     size_t width = 4;
     size_t first = payload;
     size_t count;
     if (record == 0) {
       first = payload + 4; // skip "CORD"
-      count = (len - 4) / 4;
+      count = len >= 4 ? (len - 4) / 4 : 0;
     } else if (record == 1) {
       count = 1; // NTITLE; the rest is text
     } else if (len == 48) {
