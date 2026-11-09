@@ -6,15 +6,14 @@
 #include "bufferobject.h"
 
 #include "avogadrogl.h"
+#include "geometrytiming.h"
 
 #include <atomic>
-#include <chrono>
 
 namespace Avogadro::Rendering {
 
 namespace {
 std::atomic<std::uint64_t> s_totalBytesUploaded{ 0 };
-std::atomic<std::uint64_t> s_totalUploadNanoseconds{ 0 };
 
 inline GLenum convertType(BufferObject::ObjectType type)
 {
@@ -93,15 +92,11 @@ bool BufferObject::uploadInternal(const void* buffer, size_t size,
     return false;
   }
   glBindBuffer(d->type, d->handle);
-  const auto start = std::chrono::steady_clock::now();
-  glBufferData(d->type, size, static_cast<const GLvoid*>(buffer),
-               GL_STATIC_DRAW);
-  s_totalUploadNanoseconds.fetch_add(
-    static_cast<std::uint64_t>(
-      std::chrono::duration_cast<std::chrono::nanoseconds>(
-        std::chrono::steady_clock::now() - start)
-        .count()),
-    std::memory_order_relaxed);
+  {
+    GeometryTiming::Scope timer(GeometryTiming::Counter::Upload);
+    glBufferData(d->type, size, static_cast<const GLvoid*>(buffer),
+                 GL_STATIC_DRAW);
+  }
   s_totalBytesUploaded.fetch_add(static_cast<std::uint64_t>(size),
                                  std::memory_order_relaxed);
   m_dirty = false;
@@ -111,11 +106,6 @@ bool BufferObject::uploadInternal(const void* buffer, size_t size,
 std::uint64_t BufferObject::totalBytesUploaded()
 {
   return s_totalBytesUploaded.load(std::memory_order_relaxed);
-}
-
-std::uint64_t BufferObject::totalUploadNanoseconds()
-{
-  return s_totalUploadNanoseconds.load(std::memory_order_relaxed);
 }
 
 } // namespace Avogadro::Rendering

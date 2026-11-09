@@ -148,8 +148,10 @@ struct TimingState
     current = &slots[next];
     current->frame = ++frameCounter;
     bytesAtStart = BufferObject::totalBytesUploaded();
-    tessellateNsAtStart = GeometryTiming::totalTessellateNanoseconds();
-    uploadNsAtStart = BufferObject::totalUploadNanoseconds();
+    tessellateNsAtStart =
+      GeometryTiming::totalNanoseconds(GeometryTiming::Counter::Tessellate);
+    uploadNsAtStart =
+      GeometryTiming::totalNanoseconds(GeometryTiming::Counter::Upload);
     section = -1;
   }
 
@@ -180,11 +182,12 @@ struct TimingState
     endSection();
     current->bytes = BufferObject::totalBytesUploaded() - bytesAtStart;
     current->tessellateMs =
-      1.0e-6 *
-      static_cast<double>(GeometryTiming::totalTessellateNanoseconds() -
-                          tessellateNsAtStart);
+      1.0e-6 * static_cast<double>(GeometryTiming::totalNanoseconds(
+                                     GeometryTiming::Counter::Tessellate) -
+                                   tessellateNsAtStart);
     current->uploadMs =
-      1.0e-6 * static_cast<double>(BufferObject::totalUploadNanoseconds() -
+      1.0e-6 * static_cast<double>(GeometryTiming::totalNanoseconds(
+                                     GeometryTiming::Counter::Upload) -
                                    uploadNsAtStart);
     if (!gpuAvailable) {
       publish(*current, out);

@@ -10,17 +10,22 @@
 namespace Avogadro::Rendering {
 
 namespace {
-std::atomic<std::uint64_t> s_tessellateNanoseconds{ 0 };
+std::atomic<std::uint64_t> s_nanoseconds[2] = {};
+
+std::atomic<std::uint64_t>& slot(GeometryTiming::Counter counter)
+{
+  return s_nanoseconds[counter == GeometryTiming::Counter::Upload ? 1 : 0];
+}
+} // namespace
+
+void GeometryTiming::addNanoseconds(Counter counter, std::uint64_t nanoseconds)
+{
+  slot(counter).fetch_add(nanoseconds, std::memory_order_relaxed);
 }
 
-void GeometryTiming::addTessellateNanoseconds(std::uint64_t nanoseconds)
+std::uint64_t GeometryTiming::totalNanoseconds(Counter counter)
 {
-  s_tessellateNanoseconds.fetch_add(nanoseconds, std::memory_order_relaxed);
-}
-
-std::uint64_t GeometryTiming::totalTessellateNanoseconds()
-{
-  return s_tessellateNanoseconds.load(std::memory_order_relaxed);
+  return slot(counter).load(std::memory_order_relaxed);
 }
 
 } // namespace Avogadro::Rendering
