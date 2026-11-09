@@ -26,6 +26,36 @@ namespace Avogadro::Rendering {
 
 using Core::Array;
 
+namespace {
+// One program shared by every curve geometry (like SphereGeometry and
+// CylinderGeometry), compiled the first time any of them needs it.
+Shader* curveVertexShader = nullptr;
+Shader* curveFragmentShader = nullptr;
+ShaderProgram* curveProgram = nullptr;
+
+ShaderProgram& sharedProgram()
+{
+  if (curveProgram == nullptr) {
+    curveVertexShader = new Shader;
+    curveVertexShader->setType(Shader::Vertex);
+    curveVertexShader->setSource(cylinders_vs);
+    curveFragmentShader = new Shader;
+    curveFragmentShader->setType(Shader::Fragment);
+    curveFragmentShader->setSource(cylinders_fs);
+    if (!curveVertexShader->compile())
+      cout << curveVertexShader->error() << '\n';
+    if (!curveFragmentShader->compile())
+      cout << curveFragmentShader->error() << '\n';
+    curveProgram = new ShaderProgram;
+    curveProgram->attachShader(*curveVertexShader);
+    curveProgram->attachShader(*curveFragmentShader);
+    if (!curveProgram->link())
+      cout << curveProgram->error() << '\n';
+  }
+  return *curveProgram;
+}
+} // namespace
+
 CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true)
 {
   setRenderPass(SolidPass);
@@ -309,6 +339,7 @@ void CurveGeometry::update(int index)
   }
 
   // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+  ShaderProgram& program = sharedProgram();
   line->vao.bind();
   line->vbo.bind();
   if (!indices.empty()) {
@@ -317,18 +348,18 @@ void CurveGeometry::update(int index)
     line->ibo.release();
   }
 
-  processShaderError(!m_shaderInfo.program.enableAttributeArray("vertex"));
-  processShaderError(!m_shaderInfo.program.useAttributeArray(
+  processShaderError(!program.enableAttributeArray("vertex"));
+  processShaderError(!program.useAttributeArray(
     "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
     FloatType, 3, ShaderProgram::NoNormalize));
 
-  processShaderError(!m_shaderInfo.program.enableAttributeArray("color"));
-  processShaderError(!m_shaderInfo.program.useAttributeArray(
+  processShaderError(!program.enableAttributeArray("color"));
+  processShaderError(!program.useAttributeArray(
     "color", ColorNormalVertex::colorOffset(), sizeof(ColorNormalVertex),
     UCharType, 3, ShaderProgram::Normalize));
 
-  processShaderError(!m_shaderInfo.program.enableAttributeArray("normal"));
-  processShaderError(!m_shaderInfo.program.useAttributeArray(
+  processShaderError(!program.enableAttributeArray("normal"));
+  processShaderError(!program.useAttributeArray(
     "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
     FloatType, 3, ShaderProgram::NoNormalize));
 
@@ -345,48 +376,26 @@ void CurveGeometry::accept(Visitor& visitor)
   visitor.visit(*this);
 }
 
-void checkShaderInfo(ShaderInfo& shaderInfo, const std::string& fs,
-                     const std::string& vs)
-{
-  if (shaderInfo.vertexShader.type() == Shader::Unknown) {
-    shaderInfo.vertexShader.setType(Shader::Vertex);
-    shaderInfo.vertexShader.setSource(vs);
-    shaderInfo.fragmentShader.setType(Shader::Fragment);
-    shaderInfo.fragmentShader.setSource(fs);
-    if (!shaderInfo.vertexShader.compile())
-      cout << shaderInfo.vertexShader.error() << '\n';
-    if (!shaderInfo.fragmentShader.compile())
-      cout << shaderInfo.fragmentShader.error() << '\n';
-    shaderInfo.program.attachShader(shaderInfo.vertexShader);
-    shaderInfo.program.attachShader(shaderInfo.fragmentShader);
-    if (!shaderInfo.program.link())
-      cout << shaderInfo.program.error() << '\n';
-  }
-}
-
 void CurveGeometry::processShaderError(bool error)
 {
   if (error) {
-    cout << m_shaderInfo.program.error() << '\n';
+    cout << sharedProgram().error() << '\n';
   }
 }
 
 void CurveGeometry::render(const Camera& camera)
 {
-  if (m_dirty) {
-    checkShaderInfo(m_shaderInfo, cylinders_fs, cylinders_vs);
-    m_dirty = false;
-  }
+  m_dirty = false;
+  ShaderProgram& program = sharedProgram();
 
-  processShaderError(!m_shaderInfo.program.bind());
-  processShaderError(!m_shaderInfo.program.setUniformValue(
-    "modelView", camera.modelView().matrix()));
-  processShaderError(!m_shaderInfo.program.setUniformValue(
-    "projection", camera.projection().matrix()));
+  processShaderError(!program.bind());
+  processShaderError(
+    !program.setUniformValue("modelView", camera.modelView().matrix()));
+  processShaderError(
+    !program.setUniformValue("projection", camera.projection().matrix()));
   Eigen::Matrix3f normalMatrix =
     camera.modelView().linear().inverse().transpose();
-  processShaderError(
-    !m_shaderInfo.program.setUniformValue("normalMatrix", normalMatrix));
+  processShaderError(!program.setUniformValue("normalMatrix", normalMatrix));
 
   for (size_t i = 0; i < m_lines.size(); ++i) {
     Line* line = m_lines[i];
@@ -414,7 +423,7 @@ void CurveGeometry::render(const Camera& camera)
     }
     line->vao.release();
   }
-  m_shaderInfo.program.release();
+  program.release();
 }
 
 void CurveGeometry::addPoint(const Vector3f& pos, const Vector3ub& color,
