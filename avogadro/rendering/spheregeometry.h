@@ -108,6 +108,12 @@ public:
   const Core::Array<SphereColor>& spheres() const { return m_spheres; }
 
   /**
+   * Call after changing the spheres in place through spheres() so the
+   * next render uploads them again.
+   */
+  void markDirty() { m_dirty = true; }
+
+  /**
    * Clear the contents of the node.
    */
   void clear() override;
