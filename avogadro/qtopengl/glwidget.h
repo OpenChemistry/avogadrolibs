@@ -246,6 +246,7 @@ protected:
   void paintGL() override;
 
   /** Reimplemented from QOpenGLWidget @{ */
+  bool event(QEvent*) override;
   void mouseDoubleClickEvent(QMouseEvent*) override;
   void mousePressEvent(QMouseEvent*) override;
   void mouseMoveEvent(QMouseEvent*) override;
@@ -262,8 +263,16 @@ private slots:
   void requestSceneRebuild();
 
 private:
+  /**
+   * Build the pending scene changes, if any, without scheduling a repaint.
+   * @return true if the scene was rebuilt.
+   */
+  bool applyPending();
+  /** Rebuild the whole scene without scheduling a repaint. @return false if
+   * deferred to the running build. */
+  bool rebuildScene();
   /** Update the existing scene tree after a positions-only change. */
-  void updateCoordinates();
+  void rebuildCoordinates();
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
   bool isNavigationKeyGesture(const QKeyEvent* event) const;
 
@@ -276,7 +285,8 @@ private:
   QtGui::ScenePluginModel m_scenePlugins;
 
   // Frame statistics overlay, see setFrameStatsVisible().
-  void drawFrameStats();
+  /** @param windowRolled true if this frame completed a statistics window. */
+  void drawFrameStats(bool windowRolled);
 
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;
