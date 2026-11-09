@@ -56,12 +56,12 @@ ShaderProgram& sharedProgram()
 }
 } // namespace
 
-CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true)
+CurveGeometry::CurveGeometry() : m_canBeFlat(true)
 {
   setRenderPass(SolidPass);
 }
 
-CurveGeometry::CurveGeometry(bool flat) : m_dirty(true), m_canBeFlat(flat)
+CurveGeometry::CurveGeometry(bool flat) : m_canBeFlat(flat)
 {
   setRenderPass(SolidPass);
 }
@@ -385,7 +385,6 @@ void CurveGeometry::processShaderError(bool error)
 
 void CurveGeometry::render(const Camera& camera)
 {
-  m_dirty = false;
   ShaderProgram& program = sharedProgram();
 
   processShaderError(!program.bind());

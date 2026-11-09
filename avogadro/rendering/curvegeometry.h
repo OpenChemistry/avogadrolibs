@@ -147,7 +147,6 @@ public:
 protected:
   std::vector<Line*> m_lines;
   std::map<size_t, size_t> m_indexMap;
-  bool m_dirty;
   bool m_canBeFlat;
   size_t m_segmentsPerResidue = 0;
   size_t m_sides = 0;
