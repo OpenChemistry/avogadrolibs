@@ -158,12 +158,6 @@ endif()
 avogadro_add_library(QtGui)
 target_link_libraries(QtGui PUBLIC Avogadro::IO Avogadro::Calc Qt::Widgets Qt::Concurrent
   PRIVATE tomlplusplus::tomlplusplus)
-# ScenePlugin::updateCoordinates() clears a Rendering::GroupNode. Rendering is
-# optional (USE_OPENGL), and nothing else in QtGui needs it.
-if(TARGET Avogadro::Rendering)
-  target_link_libraries(QtGui PRIVATE Avogadro::Rendering)
-  target_compile_definitions(QtGui PRIVATE QTGUI_HAS_RENDERING)
-endif()
 if(USE_PLOTTER)
   target_link_libraries(QtGui PUBLIC JKQTPlotter${QT_VERSION}::JKQTPlotter${QT_VERSION})
   target_compile_definitions(QtGui PUBLIC USE_PLOTTER)

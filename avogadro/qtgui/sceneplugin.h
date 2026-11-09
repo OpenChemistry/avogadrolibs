@@ -57,11 +57,11 @@ public:
    * same @p node that was passed to the last process() call; the node still
    * holds what that call added.
    *
-   * The default implementation clears the children of @p node and calls
-   * process(), so it gives the same scene as a full rebuild. Override it to
-   * update the existing geometry in place when that is cheaper.
+   * @return True if the plugin updated @p node in place. Return false (the
+   * default) to have the caller rebuild this plugin's node: the caller clears
+   * the children of @p node, keeping the node itself, and calls process().
    */
-  virtual void updateCoordinates(const QtGui::Molecule& molecule,
+  virtual bool updateCoordinates(const QtGui::Molecule& molecule,
                                  Rendering::GroupNode& node);
 
   /**

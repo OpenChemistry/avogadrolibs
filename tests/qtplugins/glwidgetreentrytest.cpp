@@ -194,15 +194,15 @@ public:
     ++processCalls;
     node.addChild(new GeometryNode);
   }
-  void updateCoordinates(const Molecule& molecule, GroupNode& node) override
+  bool updateCoordinates(const Molecule&, GroupNode&) override
   {
     ++coordCalls;
-    if (useBase)
-      ScenePlugin::updateCoordinates(molecule, node);
+    return inPlace;
   }
   int processCalls = 0;
   int coordCalls = 0;
-  bool useBase = false;
+  // What updateCoordinates() returns; false asks the widget to rebuild.
+  bool inPlace = true;
 };
 
 struct CoordFixture
@@ -332,10 +332,10 @@ TEST(GLWidgetCoordsTest, clearedSceneIsFull)
   EXPECT_EQ(f.plugin->coordCalls, 0);
 }
 
-TEST(GLWidgetCoordsTest, defaultUpdateKeepsNodeAndDoesNotAccumulate)
+TEST(GLWidgetCoordsTest, fallbackKeepsNodeAndDoesNotAccumulate)
 {
   CoordFixture f;
-  f.plugin->useBase = true;
+  f.plugin->inPlace = false;
   auto& root = f.widget.renderer().scene().rootNode();
   auto* molNode = dynamic_cast<GroupNode*>(root.children().front().node);
   ASSERT_NE(molNode, nullptr);
@@ -347,10 +347,24 @@ TEST(GLWidgetCoordsTest, defaultUpdateKeepsNodeAndDoesNotAccumulate)
     f.molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
     f.widget.applyPendingSceneChanges();
     EXPECT_EQ(f.plugin->coordCalls, 1);
-    EXPECT_EQ(f.plugin->processCalls, 1); // from the base implementation
-    EXPECT_EQ(molNode->children().size(), 1u);
+    EXPECT_EQ(f.plugin->processCalls, 1); // the widget's fallback
     ASSERT_EQ(molNode->children().size(), 1u);
     EXPECT_EQ(molNode->children().front().node, engine);
     EXPECT_EQ(engine->children().size(), 1u);
   }
+}
+
+TEST(GLWidgetCoordsTest, inPlaceUpdateLeavesNodeAlone)
+{
+  CoordFixture f;
+  auto& root = f.widget.renderer().scene().rootNode();
+  auto* molNode = dynamic_cast<GroupNode*>(root.children().front().node);
+  ASSERT_NE(molNode, nullptr);
+  auto* engine = dynamic_cast<GroupNode*>(molNode->children().front().node);
+  ASSERT_NE(engine, nullptr);
+  auto* child = engine->children().front().node;
+  EXPECT_TRUE(f.coordsPath(Molecule::Atoms | Molecule::Moved));
+  EXPECT_EQ(f.plugin->processCalls, 0);
+  ASSERT_EQ(engine->children().size(), 1u);
+  EXPECT_EQ(engine->children().front().node, child);
 }

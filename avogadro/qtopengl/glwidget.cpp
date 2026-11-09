@@ -319,7 +319,12 @@ void GLWidget::updateCoordinates()
       continue;
     if (stats)
       mark = Clock::now();
-    engine.plugin->updateCoordinates(*mol, *engine.node);
+    if (!engine.plugin->updateCoordinates(*mol, *engine.node)) {
+      // No in-place update: rebuild this plugin's node, keeping the node.
+      engine.node->clear();
+      engine.node->clearUI();
+      engine.plugin->process(*mol, *engine.node);
+    }
     if (stats)
       d->rebuildPlugins.emplace_back(engine.plugin->name(), lap());
   }

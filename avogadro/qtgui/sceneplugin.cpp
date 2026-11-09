@@ -5,10 +5,6 @@
 
 #include "sceneplugin.h"
 
-#ifdef QTGUI_HAS_RENDERING
-#include <avogadro/rendering/groupnode.h>
-#endif
-
 namespace Avogadro::QtGui {
 
 ScenePlugin::ScenePlugin(QObject* parent_) : QObject(parent_) {}
@@ -19,15 +15,10 @@ void ScenePlugin::process(const QtGui::Molecule&, Rendering::GroupNode&) {}
 
 void ScenePlugin::processEditable(const RWMolecule&, Rendering::GroupNode&) {}
 
-void ScenePlugin::updateCoordinates(const QtGui::Molecule& molecule,
-                                    Rendering::GroupNode& node)
+bool ScenePlugin::updateCoordinates(const QtGui::Molecule&,
+                                    Rendering::GroupNode&)
 {
-#ifdef QTGUI_HAS_RENDERING
-  // Keep the node itself: plugins may hold a pointer to it.
-  node.clear();
-  node.clearUI();
-#endif
-  process(molecule, node);
+  return false;
 }
 
 QWidget* ScenePlugin::setupWidget()
