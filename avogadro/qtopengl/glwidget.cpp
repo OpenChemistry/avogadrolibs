@@ -98,6 +98,15 @@ public:
   std::vector<std::pair<QString, double>> rebuildPlugins;
   int rebuildsSincePaint = 0;
   int rebuildsAtLastPaint = 0;
+  // Aggregates over the ~1 s window starting at lastStatsLog; the "shown"
+  // values are those of the last completed window.
+  int windowMaxRebuilds = 0;
+  int windowRebuilds = 0;
+  int windowFrames = 0;
+  int shownMaxRebuilds = 0;
+  int shownRebuilds = 0;
+  int shownFrames = 0;
+  bool windowRolled = false;
 };
 
 GLWidget::GLWidget(QWidget* p)
@@ -426,6 +435,18 @@ void GLWidget::paintGL()
   d->rebuildsAtLastPaint = d->rebuildsSincePaint;
   d->rebuildsSincePaint = 0;
 
+  d->windowMaxRebuilds = std::max(d->windowMaxRebuilds, d->rebuildsAtLastPaint);
+  d->windowRebuilds += d->rebuildsAtLastPaint;
+  ++d->windowFrames;
+  if (elapsedMs(d->lastStatsLog, now) >= 1000.0) {
+    d->shownMaxRebuilds = d->windowMaxRebuilds;
+    d->shownRebuilds = d->windowRebuilds;
+    d->shownFrames = d->windowFrames;
+    d->windowMaxRebuilds = d->windowRebuilds = d->windowFrames = 0;
+    d->lastStatsLog = now;
+    d->windowRolled = true;
+  }
+
   m_renderer.render();
   drawFrameStats();
 }
@@ -470,8 +491,10 @@ void GLWidget::drawFrameStats()
                                interval);
   else
     lines << QStringLiteral("idle");
-  lines << QString::asprintf("rebuild %.1f ms (%d this frame)",
-                             d->rebuildTotalMs, d->rebuildsAtLastPaint);
+  lines << QString::asprintf(
+    "rebuild %.1f ms (%d this frame; last 1 s: max %d, %d in %d frames)",
+    d->rebuildTotalMs, d->rebuildsAtLastPaint, d->shownMaxRebuilds,
+    d->shownRebuilds, d->shownFrames);
   lines << QString::asprintf("  clear %.1f  tools %.1f  reset %.1f",
                              d->rebuildClearMs, d->rebuildToolsMs,
                              d->rebuildResetMs);
@@ -495,10 +518,9 @@ void GLWidget::drawFrameStats()
                              static_cast<long long>(atoms),
                              static_cast<long long>(bonds));
 
-  if (d->statsLog && elapsedMs(d->lastStatsLog, d->lastPaint) >= 1000.0) {
-    d->lastStatsLog = d->lastPaint;
+  if (d->statsLog && d->windowRolled)
     qInfo().noquote() << "frame-stats:" << lines.join(QStringLiteral(" | "));
-  }
+  d->windowRolled = false;
 
   // Hand the context to QPainter in the state its paint engine expects: none
   // of our objects bound, and the widget's own framebuffer as the target.
@@ -566,6 +588,9 @@ void GLWidget::setFrameStatsVisible(bool visible)
   d->frameIntervalNext = 0;
   d->rebuildsSincePaint = 0;
   d->rebuildsAtLastPaint = 0;
+  d->windowMaxRebuilds = d->windowRebuilds = d->windowFrames = 0;
+  d->shownMaxRebuilds = d->shownRebuilds = d->shownFrames = 0;
+  d->windowRolled = false;
   makeCurrent();
   m_renderer.setTimingEnabled(visible);
   doneCurrent();
