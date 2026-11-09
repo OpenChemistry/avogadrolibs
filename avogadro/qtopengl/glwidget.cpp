@@ -113,6 +113,9 @@ public:
   bool scenePending = false;
   bool sceneFullRebuild = false;
   unsigned int pendingChanges = 0;
+  // True while paintGL() applies pending changes: the paint that follows is
+  // the one in progress, so updateScene() must not schedule another.
+  bool inPaint = false;
 };
 
 GLWidget::GLWidget(QWidget* p)
@@ -307,7 +310,9 @@ void GLWidget::updateScene()
     d->rebuildResetMs = lap();
     d->rebuildTotalMs = elapsedMs(tStart, mark);
   }
-  update();
+  // A rebuild made by paintGL() is drawn by that same paint.
+  if (!d->inPaint)
+    update();
 }
 
 void GLWidget::clearScene()
@@ -453,7 +458,9 @@ void GLWidget::paintGL()
 
   // Coalesced scene changes are built here, so a burst of changes between
   // paints costs one rebuild (counted toward this frame).
+  d->inPaint = true;
   applyPendingSceneChanges();
+  d->inPaint = false;
 
   if (!d->statsVisible) {
     m_renderer.render();
