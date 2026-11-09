@@ -7,7 +7,10 @@
 
 #include "avogadrogl.h"
 
+#include "bufferobject.h"
+
 #include "geometrynode.h"
+#include "geometrytiming.h"
 #include "glrendervisitor.h"
 #include "rendertimings.h"
 #include "shader.h"
@@ -58,6 +61,8 @@ struct TimingState
     std::array<double, TimedSections> cpuMs = {};
     std::uint64_t frame = 0;
     std::uint64_t bytes = 0;
+    double tessellateMs = 0.0;
+    double uploadMs = 0.0;
   };
 
   std::array<Slot, TimedSlots> slots;
@@ -70,6 +75,8 @@ struct TimingState
   int section = -1;
   Clock::time_point sectionStart;
   std::uint64_t bytesAtStart = 0;
+  std::uint64_t tessellateNsAtStart = 0;
+  std::uint64_t uploadNsAtStart = 0;
 
   // Only call with the owning context current. A TimingState destroyed
   // without releaseQueries() leaves its names to be reclaimed with their
@@ -97,6 +104,8 @@ struct TimingState
   {
     out.frame = slot.frame;
     out.bufferBytesUploaded = slot.bytes;
+    out.tessellateCpuMs = slot.tessellateMs;
+    out.uploadCpuMs = slot.uploadMs;
     out.gpuTimingAvailable = gpuAvailable;
     out.passes.resize(TimedSections);
     for (int i = 0; i < TimedSections; ++i) {
@@ -139,6 +148,8 @@ struct TimingState
     current = &slots[next];
     current->frame = ++frameCounter;
     bytesAtStart = BufferObject::totalBytesUploaded();
+    tessellateNsAtStart = GeometryTiming::totalTessellateNanoseconds();
+    uploadNsAtStart = BufferObject::totalUploadNanoseconds();
     section = -1;
   }
 
@@ -168,6 +179,13 @@ struct TimingState
   {
     endSection();
     current->bytes = BufferObject::totalBytesUploaded() - bytesAtStart;
+    current->tessellateMs =
+      1.0e-6 *
+      static_cast<double>(GeometryTiming::totalTessellateNanoseconds() -
+                          tessellateNsAtStart);
+    current->uploadMs =
+      1.0e-6 * static_cast<double>(BufferObject::totalUploadNanoseconds() -
+                                   uploadNsAtStart);
     if (!gpuAvailable) {
       publish(*current, out);
     } else if (synchronous) {

@@ -33,6 +33,7 @@ avogadro_headers(Rendering
   cartoongeometry.h
   curvegeometry.h
   cylindergeometry.h
+  geometrytiming.h
   dashedlinegeometry.h
   drawable.h
   geometrynode.h
@@ -82,6 +83,7 @@ target_sources(Rendering PRIVATE
   camera.cpp
   curvegeometry.cpp
   cylindergeometry.cpp
+  geometrytiming.cpp
   dashedlinegeometry.cpp
   drawable.cpp
   geometrynode.cpp

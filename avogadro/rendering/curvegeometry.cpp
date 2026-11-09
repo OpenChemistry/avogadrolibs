@@ -6,6 +6,7 @@
 #include "curvegeometry.h"
 
 #include "camera.h"
+#include "geometrytiming.h"
 #include "scene.h"
 #include "visitor.h"
 
@@ -296,7 +297,10 @@ void CurveGeometry::update(int index)
   // The pure-CPU geometry lives in tessellate(); only the GL upload is here.
   std::vector<ColorNormalVertex> vertices;
   std::vector<unsigned int> indices;
-  tessellate(static_cast<size_t>(index), vertices, indices);
+  {
+    GeometryTiming::Scope timer;
+    tessellate(static_cast<size_t>(index), vertices, indices);
+  }
 
   if (vertices.empty()) {
     line->dirty = false;

@@ -1187,6 +1187,8 @@ int main(int argc, char** argv)
       series.add("render total gpu", timings.totalGpuMs());
     series.add("uploaded MB",
                static_cast<double>(timings.bufferBytesUploaded) / 1.0e6);
+    series.add("tessellate cpu", timings.tessellateCpuMs);
+    series.add("upload cpu", timings.uploadCpuMs);
   };
 
   auto rotateCamera = [&]() {

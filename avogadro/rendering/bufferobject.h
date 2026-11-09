@@ -73,6 +73,12 @@ public:
    */
   static std::uint64_t totalBytesUploaded();
 
+  /**
+   * @return the wall time, in nanoseconds, spent inside glBufferData by every
+   * BufferObject in the process so far. Monotonic, like totalBytesUploaded().
+   */
+  static std::uint64_t totalUploadNanoseconds();
+
   /** Return a string describing errors. */
   std::string error() const { return m_error; }
 
