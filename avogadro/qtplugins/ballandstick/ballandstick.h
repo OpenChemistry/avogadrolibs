@@ -9,12 +9,6 @@
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro::Rendering {
-class CylinderGeometry;
-class GeometryNode;
-class SphereGeometry;
-} // namespace Avogadro::Rendering
-
 namespace Avogadro::QtPlugins {
 
 /**
@@ -65,14 +59,7 @@ public slots:
 
 private:
   Rendering::GroupNode* m_group;
-  // What the last process() built, for updateCoordinates(). Only dereferenced
-  // after checking that m_group still holds them.
-  Rendering::GeometryNode* m_geometry = nullptr;
-  Rendering::SphereGeometry* m_spheres = nullptr;
-  Rendering::SphereGeometry* m_translucentSpheres = nullptr;
-  Rendering::SphereGeometry* m_selectedSpheres = nullptr;
-  Rendering::CylinderGeometry* m_cylinders = nullptr;
-  Rendering::CylinderGeometry* m_translucentBonds = nullptr;
+  // What the last process() built, checked by updateCoordinates().
   const QtGui::Molecule* m_molecule = nullptr;
   Index m_atomCount = 0;
   Index m_bondCount = 0;
