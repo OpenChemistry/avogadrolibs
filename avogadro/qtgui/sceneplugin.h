@@ -52,6 +52,19 @@ public:
                                Rendering::GroupNode& node);
 
   /**
+   * Update the scene after only the atom positions changed (the Moved and
+   * Conformer molecule changes). It is called instead of process(), with the
+   * same @p node that was passed to the last process() call; the node still
+   * holds what that call added.
+   *
+   * The default implementation clears the children of @p node and calls
+   * process(), so it gives the same scene as a full rebuild. Override it to
+   * update the existing geometry in place when that is cheaper.
+   */
+  virtual void updateCoordinates(const QtGui::Molecule& molecule,
+                                 Rendering::GroupNode& node);
+
+  /**
    * The name of the scene plugin, will be displayed in the user interface.
    */
   virtual QString name() const = 0;

@@ -262,6 +262,8 @@ private slots:
   void requestSceneRebuild();
 
 private:
+  /** Update the existing scene tree after a positions-only change. */
+  void updateCoordinates();
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
   bool isNavigationKeyGesture(const QKeyEvent* event) const;
 
