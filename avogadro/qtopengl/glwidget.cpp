@@ -107,6 +107,12 @@ public:
   int shownRebuilds = 0;
   int shownFrames = 0;
   bool windowRolled = false;
+  // Scene changes that arrived since the last rebuild. The merged
+  // Molecule::changed flags are kept for dispatching on the kind of change;
+  // anything from plugins or tools needs a full rebuild.
+  bool scenePending = false;
+  bool sceneFullRebuild = false;
+  unsigned int pendingChanges = 0;
 };
 
 GLWidget::GLWidget(QWidget* p)
@@ -115,9 +121,9 @@ GLWidget::GLWidget(QWidget* p)
 {
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginStateChanged, this,
-          &GLWidget::updateScene);
+          &GLWidget::requestSceneRebuild);
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginConfigChanged, this,
-          &GLWidget::updateScene);
+          &GLWidget::requestSceneRebuild);
   m_renderer.setTextRenderStrategy(new QtTextRenderStrategy);
 
   QSettings settings;
@@ -151,7 +157,7 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
   // document modified), which may still be watching the same molecule.
   if (m_molecule) {
     disconnect(m_molecule, &QtGui::Molecule::changed, this,
-               &GLWidget::updateScene);
+               &GLWidget::moleculeChanged);
   }
   m_molecule = mol;
   foreach (QtGui::ToolPlugin* tool, m_tools)
@@ -164,7 +170,7 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
 
   if (m_molecule != nullptr) {
     connect(m_molecule, &QtGui::Molecule::changed, this,
-            &GLWidget::updateScene);
+            &GLWidget::moleculeChanged);
   }
 }
 
@@ -186,6 +192,37 @@ void GLWidget::updateMolecule()
   }
 }
 
+void GLWidget::moleculeChanged(unsigned int changes)
+{
+  d->scenePending = true;
+  d->pendingChanges |= changes;
+  update();
+}
+
+void GLWidget::requestSceneRebuild()
+{
+  d->scenePending = true;
+  d->sceneFullRebuild = true;
+  update();
+}
+
+void GLWidget::applyPendingSceneChanges()
+{
+  if (!d->scenePending)
+    return;
+  // A nested event loop inside a build: the running pass rebuilds once more
+  // when it finishes, which supersedes what is pending now.
+  if (m_updatingScene) {
+    m_sceneUpdatePending = true;
+    d->scenePending = false;
+    d->sceneFullRebuild = false;
+    d->pendingChanges = 0;
+    return;
+  }
+  // For now every kind of change is a full rebuild.
+  updateScene();
+}
+
 void GLWidget::updateScene()
 {
   // A scene plugin or tool can spin a nested event loop while it builds the
@@ -197,6 +234,11 @@ void GLWidget::updateScene()
     m_sceneUpdatePending = true;
     return;
   }
+
+  // A rebuild now supersedes anything waiting for the next paint.
+  d->scenePending = false;
+  d->sceneFullRebuild = false;
+  d->pendingChanges = 0;
 
   // Each pass counts as a rebuild; the overlay shows the last pass's
   // breakdown and the total for the whole call.
@@ -280,12 +322,14 @@ void GLWidget::clearScene()
 
 void GLWidget::resetCamera()
 {
+  applyPendingSceneChanges();
   m_renderer.resetCamera();
   update();
 }
 
 void GLWidget::resetGeometry()
 {
+  applyPendingSceneChanges();
   m_renderer.resetGeometry();
 }
 
@@ -329,7 +373,7 @@ void GLWidget::setActiveTool(QtGui::ToolPlugin* tool)
 
   if (m_activeTool && m_activeTool != m_defaultTool) {
     disconnect(m_activeTool, &QtGui::ToolPlugin::drawablesChanged, this,
-               &GLWidget::updateScene);
+               &GLWidget::requestSceneRebuild);
   }
 
   if (tool)
@@ -338,7 +382,7 @@ void GLWidget::setActiveTool(QtGui::ToolPlugin* tool)
 
   if (m_activeTool && m_activeTool != m_defaultTool) {
     connect(m_activeTool, &QtGui::ToolPlugin::drawablesChanged, this,
-            &GLWidget::updateScene);
+            &GLWidget::requestSceneRebuild);
   }
 }
 
@@ -362,7 +406,7 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
 
   if (m_defaultTool && m_activeTool != m_defaultTool) {
     disconnect(m_defaultTool, &QtGui::ToolPlugin::drawablesChanged, this,
-               &GLWidget::updateScene);
+               &GLWidget::requestSceneRebuild);
   }
 
   if (tool)
@@ -371,7 +415,7 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
 
   if (m_defaultTool && m_activeTool != m_defaultTool) {
     connect(m_defaultTool, &QtGui::ToolPlugin::drawablesChanged, this,
-            &GLWidget::updateScene);
+            &GLWidget::requestSceneRebuild);
   }
 }
 
@@ -406,6 +450,10 @@ void GLWidget::paintGL()
   auto pixelRatio = static_cast<float>(devicePixelRatioF());
   if (pixelRatio != m_pixelRatio)
     resizeGL(width(), height());
+
+  // Coalesced scene changes are built here, so a burst of changes between
+  // paints costs one rebuild (counted toward this frame).
+  applyPendingSceneChanges();
 
   if (!d->statsVisible) {
     m_renderer.render();
@@ -704,6 +752,8 @@ QImage GLWidget::renderImage(const RenderOptions& options, QString* error)
   // A scene change that has not been built yet must not be missed.
   if (m_sceneUpdatePending)
     updateScene();
+  else
+    applyPendingSceneChanges();
   // updateScene() calls update() and leaves the context alone, but a scene
   // plugin may have spun an event loop; make sure we are still current.
   makeCurrent();
@@ -823,6 +873,8 @@ bool GLWidget::isNavigationKeyGesture(const QKeyEvent* event) const
 void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   if (m_activeTool)
     m_activeTool->mouseDoubleClickEvent(e);
@@ -837,6 +889,8 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
 void GLWidget::mousePressEvent(QMouseEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   // Latch the navigation gesture for the duration of the drag: once a press
   // starts the camera navigating, keep it there through move and release
@@ -856,6 +910,8 @@ void GLWidget::mousePressEvent(QMouseEvent* e)
 void GLWidget::mouseMoveEvent(QMouseEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   if (m_activeTool && !m_navigationDrag)
     m_activeTool->mouseMoveEvent(e);
@@ -870,6 +926,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent* e)
 void GLWidget::mouseReleaseEvent(QMouseEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   if (m_activeTool && !m_navigationDrag)
     m_activeTool->mouseReleaseEvent(e);
@@ -888,6 +946,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
 void GLWidget::wheelEvent(QWheelEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   if (m_activeTool)
     m_activeTool->wheelEvent(e);
@@ -902,6 +962,8 @@ void GLWidget::wheelEvent(QWheelEvent* e)
 void GLWidget::keyPressEvent(QKeyEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   if (m_activeTool && !isNavigationKeyGesture(e))
     m_activeTool->keyPressEvent(e);
@@ -916,6 +978,8 @@ void GLWidget::keyPressEvent(QKeyEvent* e)
 void GLWidget::keyReleaseEvent(QKeyEvent* e)
 {
   e->ignore();
+  // Tools hit-test against the scene, so it must be current.
+  applyPendingSceneChanges();
 
   if (m_activeTool && !isNavigationKeyGesture(e))
     m_activeTool->keyReleaseEvent(e);

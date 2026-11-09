@@ -176,6 +176,14 @@ public slots:
   void updateScene();
 
   /**
+   * Rebuild the scene now if changes are pending (see Molecule::changed).
+   * Changes are normally coalesced and built once in paintGL(); callers that
+   * read the scene outside a paint (hit testing, bounds, export) should call
+   * this first. Does nothing if no changes are pending.
+   */
+  void applyPendingSceneChanges();
+
+  /**
    * Request update of molecule properties (e.g., dipole moment)
    */
   void updateMolecule();
@@ -246,6 +254,12 @@ protected:
   void keyPressEvent(QKeyEvent*) override;
   void keyReleaseEvent(QKeyEvent*) override;
   /** @} */
+
+private slots:
+  /** Record a molecule change; the scene is rebuilt at the next paint. */
+  void moleculeChanged(unsigned int changes);
+  /** Record a change that always needs a full rebuild (plugins, tools). */
+  void requestSceneRebuild();
 
 private:
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
