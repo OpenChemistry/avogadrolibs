@@ -122,65 +122,6 @@ TEST(GLWidgetReentryTest, clearSceneDuringBuildIsDeferred)
 
 namespace {
 
-class CountingPlugin : public Avogadro::QtGui::ScenePlugin
-{
-public:
-  QString name() const override { return "Counting"; }
-  QString description() const override { return "Test plugin"; }
-  bool isEnabled() const override { return true; }
-  void process(const Avogadro::QtGui::Molecule&, GroupNode& node) override
-  {
-    ++calls;
-    node.addChild(new GeometryNode);
-  }
-  int calls = 0;
-};
-
-} // namespace
-
-TEST(GLWidgetCoalesceTest, changesAreCoalescedUntilApplied)
-{
-  GLWidget widget;
-  auto* molecule = new Avogadro::QtGui::Molecule(&widget);
-  widget.setMolecule(molecule);
-  auto* plugin = new CountingPlugin;
-  widget.sceneModel().addItem(plugin);
-
-  molecule->emitChanged(Avogadro::QtGui::Molecule::Atoms);
-  molecule->emitChanged(Avogadro::QtGui::Molecule::Atoms |
-                        Avogadro::QtGui::Molecule::Added);
-  molecule->emitChanged(Avogadro::QtGui::Molecule::Bonds);
-  EXPECT_EQ(plugin->calls, 0);
-
-  widget.applyPendingSceneChanges();
-  EXPECT_EQ(plugin->calls, 1);
-
-  // Nothing pending now.
-  widget.applyPendingSceneChanges();
-  EXPECT_EQ(plugin->calls, 1);
-}
-
-TEST(GLWidgetCoalesceTest, updateSceneIsImmediateAndClearsPending)
-{
-  GLWidget widget;
-  auto* molecule = new Avogadro::QtGui::Molecule(&widget);
-  widget.setMolecule(molecule);
-  auto* plugin = new CountingPlugin;
-  widget.sceneModel().addItem(plugin);
-
-  molecule->emitChanged(Avogadro::QtGui::Molecule::Atoms);
-  EXPECT_EQ(plugin->calls, 0);
-  widget.updateScene();
-  EXPECT_EQ(plugin->calls, 1);
-
-  widget.applyPendingSceneChanges();
-  EXPECT_EQ(plugin->calls, 1);
-}
-
-// Positions-only dispatch: a coordinate change keeps the scene tree and calls
-// ScenePlugin::updateCoordinates() instead of process().
-namespace {
-
 using Avogadro::QtGui::Molecule;
 
 class CoordPlugin : public Avogadro::QtGui::ScenePlugin
@@ -204,6 +145,51 @@ public:
   // What updateCoordinates() returns; false asks the widget to rebuild.
   bool inPlace = true;
 };
+
+} // namespace
+
+TEST(GLWidgetCoalesceTest, changesAreCoalescedUntilApplied)
+{
+  GLWidget widget;
+  auto* molecule = new Avogadro::QtGui::Molecule(&widget);
+  widget.setMolecule(molecule);
+  auto* plugin = new CoordPlugin;
+  widget.sceneModel().addItem(plugin);
+
+  molecule->emitChanged(Avogadro::QtGui::Molecule::Atoms);
+  molecule->emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                        Avogadro::QtGui::Molecule::Added);
+  molecule->emitChanged(Avogadro::QtGui::Molecule::Bonds);
+  EXPECT_EQ(plugin->processCalls, 0);
+
+  widget.applyPendingSceneChanges();
+  EXPECT_EQ(plugin->processCalls, 1);
+
+  // Nothing pending now.
+  widget.applyPendingSceneChanges();
+  EXPECT_EQ(plugin->processCalls, 1);
+}
+
+TEST(GLWidgetCoalesceTest, updateSceneIsImmediateAndClearsPending)
+{
+  GLWidget widget;
+  auto* molecule = new Avogadro::QtGui::Molecule(&widget);
+  widget.setMolecule(molecule);
+  auto* plugin = new CoordPlugin;
+  widget.sceneModel().addItem(plugin);
+
+  molecule->emitChanged(Avogadro::QtGui::Molecule::Atoms);
+  EXPECT_EQ(plugin->processCalls, 0);
+  widget.updateScene();
+  EXPECT_EQ(plugin->processCalls, 1);
+
+  widget.applyPendingSceneChanges();
+  EXPECT_EQ(plugin->processCalls, 1);
+}
+
+// Positions-only dispatch: a coordinate change keeps the scene tree and calls
+// ScenePlugin::updateCoordinates() instead of process().
+namespace {
 
 struct CoordFixture
 {
