@@ -26,6 +26,8 @@ target_sources(Calc PRIVATE
 
 avogadro_add_library(Calc)
 
+find_package(Threads REQUIRED)
+
 target_link_libraries(Calc
   PUBLIC Avogadro::Core
-  PRIVATE cppoptlib)
+  PRIVATE cppoptlib Threads::Threads)

@@ -105,8 +105,11 @@ public:
    * @param points The points in space to calculate the potential at.
    * @return The electrostatic potential at the points in an array.
    *
-   * This method is used for batch calculation and defaults to simply
-   * calculating each point at a time. Some methods work faster in batches.
+   * This method is used for batch calculation. The default implementation
+   * evaluates the point-charge model directly (using the same math as
+   * potential()), in parallel across the points. Subclasses that override
+   * potential() should also override this method, since the default does not
+   * call potential().
    */
   virtual Core::Array<double> potentials(
     Core::Molecule& mol, const Core::Array<Vector3>& points) const;
