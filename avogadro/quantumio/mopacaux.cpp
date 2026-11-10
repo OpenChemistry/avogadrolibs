@@ -221,7 +221,6 @@ bool MopacAux::processLine(std::istream& in)
   } else if (Core::contains(key, "HEAT_OF_FORMATION:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_heatOfFormation = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Heat of formation = " << m_heatOfFormation << " kcal/mol"
            << '\n';
@@ -229,26 +228,22 @@ bool MopacAux::processLine(std::istream& in)
   } else if (Core::contains(key, "HEAT_OF_FORM_UPDATED:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_energies.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
     }
   } else if (Core::contains(key, "GRADIENT_NORM_UPDATED:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_forces.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
     }
   } else if (Core::contains(key, "AREA:SQUARE ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_area = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Area = " << m_area << " square Angstroms" << '\n';
     }
   } else if (Core::contains(key, "VOLUME:CUBIC ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_volume = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Volume = " << m_volume << " cubic Angstroms" << '\n';
     }
@@ -280,7 +275,6 @@ bool MopacAux::processLine(std::istream& in)
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
       // split based on spaces
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       vector<string> dipole = Core::split(list[1], ' ');
       if (dipole.size() == 3) {
         m_dipoleMoment =
