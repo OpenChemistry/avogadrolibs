@@ -105,6 +105,9 @@ style guidelines when contributing code to our project.
 * Minimize dependencies on third party libraries, think carefully before adding
   more
 * Use templates where they make sense
+* `Core::Array` is copy-on-write and its non-const `operator[]` checks for
+  sharing on every call. In hot loops read through a `const` reference and
+  write through a pointer from `data()` taken once before the loop
 
 ### Including Headers
 
