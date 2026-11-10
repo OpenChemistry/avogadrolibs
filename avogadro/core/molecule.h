@@ -539,11 +539,15 @@ public:
   /**
    * @brief Get all bonds to @p a.
    * @return A vector of bonds to the supplied atom @p a.
+   * @note The const overload allocates on every call and is deprecated; use
+   * the non-const overload, or iterate graph().edges(a) with bondPair().
+   * It will be removed at the next ABI break.
    * @{
    */
   Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
-  Array<BondType> bonds(Index a) const;
+  [[deprecated("Use the non-const bonds() or graph().edges()")]] Array<BondType>
+  bonds(Index a) const;
   /** @} */
 
   /**
