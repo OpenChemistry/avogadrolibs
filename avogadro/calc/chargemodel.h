@@ -114,6 +114,15 @@ public:
   virtual Core::Array<double> potentials(
     Core::Molecule& mol, const Core::Array<Vector3>& points) const;
 
+  /**
+   * @return true if potential() / potentials() are computed by something
+   * other than the point-charge model on partialCharges() (for example an
+   * external script). Such models can not be replaced by evaluating the
+   * partial charges directly, and are not safe to call from another thread
+   * while the model is in use elsewhere. The default is false.
+   */
+  virtual bool hasCustomPotentials() const { return false; }
+
 protected:
   /**
    * @brief Append an error to the error string for the model.

@@ -10,6 +10,7 @@
 
 #include <tinycolormap.hpp>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/color3f.h>
 
@@ -107,6 +108,7 @@ private slots:
 
   void displayMesh();
   void meshFinished();
+  void colorFinished();
 
   void recordMovie();
   void movieFrame();
@@ -151,7 +153,18 @@ private:
   /// Switch the MO set step; @return whether a calculation was interrupted.
   bool changeStep(int step);
 
-  void colorMesh(Core::Mesh& mesh);
+  /// Colour the pending mesh on a worker thread when the dialog asks for an
+  /// ESP colouring that can be computed from a snapshot.
+  /// @return false when the pending meshes can be published right away
+  /// (nothing to colour, or colouring was done synchronously).
+  bool startColoring();
+  /// Publish the pending meshes and finish the calculation (movie frame,
+  /// dialog, script command). The tail shared by both colouring paths.
+  void publishPendingMeshes();
+  /// Wait for a colouring job, dropping its result.
+  void waitForColoring();
+
+  /// Colour on the GUI thread through the shared charge model.
   void colorMeshByPotential(Core::Mesh& mesh);
 
   /**
@@ -206,6 +219,11 @@ private:
   std::unique_ptr<Core::Mesh> m_pendingMesh1;
   std::unique_ptr<Core::Mesh> m_pendingMesh2;
   bool m_meshJobStale = false;
+  /// meshFinished() -> colorFinished(): the potentials and colours of the
+  /// pending mesh, computed from a snapshot on a worker thread. The pending
+  /// meshes stay owned by the GUI thread meanwhile.
+  QFutureWatcher<Core::Array<Core::Color3f>> m_colorWatcher;
+  bool m_coloring = false;
   /// Indices of the published meshes, -1 for none.
   int m_mesh1Index = -1;
   int m_mesh2Index = -1;

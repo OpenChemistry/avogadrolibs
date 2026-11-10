@@ -249,4 +249,20 @@ Core::Array<double> ChargeManager::potentials(
   return model->potentials(molecule, points);
 }
 
+bool ChargeManager::hasCustomPotentials(const std::string& identifier,
+                                        const Core::Molecule& molecule) const
+{
+  // Mirrors potentials(): charges stored in the molecule use DefaultModel
+  const auto molIdentifiers = molecule.partialChargeTypes();
+  if (molIdentifiers.find(identifier) != molIdentifiers.end())
+    return false;
+
+  const auto it = m_identifiers.find(identifier);
+  if (it == m_identifiers.end())
+    return false;
+
+  const ChargeModel* model = m_models[it->second];
+  return model != nullptr && model->hasCustomPotentials();
+}
+
 } // namespace Avogadro::Calc
