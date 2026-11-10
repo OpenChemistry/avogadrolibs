@@ -9,31 +9,35 @@
 
 #include <avogadro/core/utilities.h>
 
+#include <optional>
+
 namespace Avogadro::Calc {
 
 using Core::toLower;
 
 namespace {
-// Finds the key under which the molecule stores charges for this identifier;
-// returns false if it has none. Readers store types
-// verbatim ("Mulliken", "From File"), so try the exact name first and then
-// the lowercase one.
-bool moleculeChargeKey(const Core::Molecule& molecule,
-                       const std::string& identifier, std::string& key)
+// Finds the key under which the molecule stores charges for this identifier.
+// Readers store types verbatim ("Mulliken", "From File"), so try the exact
+// name first and then the lowercase one.
+std::optional<std::string> moleculeChargeKey(const Core::Molecule& molecule,
+                                             const std::string& identifier)
 {
   const auto types = molecule.partialChargeTypes();
-  if (types.find(identifier) != types.end()) {
-    key = identifier;
-    return true;
-  }
+  if (types.find(identifier) != types.end())
+    return identifier;
   const std::string lowerId = toLower(identifier);
-  if (types.find(lowerId) != types.end()) {
-    key = lowerId;
-    return true;
-  }
-  return false;
+  if (types.find(lowerId) != types.end())
+    return lowerId;
+  return std::nullopt;
 }
 } // namespace
+
+const ChargeModel* ChargeManager::registeredModel(
+  const std::string& identifier) const
+{
+  const auto it = m_identifiers.find(toLower(identifier));
+  return it == m_identifiers.end() ? nullptr : m_models[it->second];
+}
 
 ChargeManager& ChargeManager::instance()
 {
@@ -180,22 +184,17 @@ MatrixX ChargeManager::partialCharges(const std::string& identifier,
 {
   // first check if the type is found in the molecule
   // (i.e., read from a file not computed dynamically)
-  std::string key;
-  const std::string lowerId = toLower(identifier);
-
-  if (moleculeChargeKey(molecule, identifier, key)) {
-    return molecule.partialCharges(key);
-  }
+  if (const auto key = moleculeChargeKey(molecule, identifier))
+    return molecule.partialCharges(*key);
 
   // otherwise go through our list
-  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
+  const ChargeModel* model = registeredModel(identifier);
+  if (model == nullptr) {
     MatrixX charges(molecule.atomCount(),
                     1); // we have to return something, so zeros
     return charges;
   }
 
-  const auto id = m_identifiers[lowerId];
-  const ChargeModel* model = m_models[id];
   return model->partialCharges(molecule);
 }
 
@@ -204,25 +203,16 @@ Vector3 ChargeManager::dipoleMoment(const std::string& identifier,
 {
   // If the type is found in the molecule
   // we'll use the DefaultModel to handle the dipole moment
-  std::string key;
-  const std::string lowerId = toLower(identifier);
-
-  if (moleculeChargeKey(molecule, identifier, key)) {
-    DefaultModel model(key); // so it knows which charges to use
+  if (const auto key = moleculeChargeKey(molecule, identifier)) {
+    DefaultModel model(*key); // so it knows which charges to use
     return model.dipoleMoment(molecule);
   }
 
   // otherwise go through our list
-  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
+  const ChargeModel* model = registeredModel(identifier);
+  if (model == nullptr || molecule.atomCount() < 2)
     return Vector3(0.0, 0.0, 0.0);
-  }
 
-  if (molecule.atomCount() < 2) {
-    return Vector3(0.0, 0.0, 0.0);
-  }
-
-  const auto id = m_identifiers[lowerId];
-  const ChargeModel* model = m_models[id];
   return model->dipoleMoment(molecule);
 }
 
@@ -232,22 +222,14 @@ double ChargeManager::potential(const std::string& identifier,
 {
   // If the type is found in the molecule
   // we'll use the DefaultModel to handle the potential
-  std::string key;
-  const std::string lowerId = toLower(identifier);
-
-  if (moleculeChargeKey(molecule, identifier, key)) {
-    DefaultModel model(key); // so it knows which charges to use
+  if (const auto key = moleculeChargeKey(molecule, identifier)) {
+    DefaultModel model(*key); // so it knows which charges to use
     return model.potential(molecule, point);
   }
 
   // otherwise go through our list
-  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
-    return 0.0;
-  }
-
-  const auto id = m_identifiers[lowerId];
-  const ChargeModel* model = m_models[id];
-  return model->potential(molecule, point);
+  const ChargeModel* model = registeredModel(identifier);
+  return model == nullptr ? 0.0 : model->potential(molecule, point);
 }
 
 Core::Array<double> ChargeManager::potentials(
@@ -255,21 +237,15 @@ Core::Array<double> ChargeManager::potentials(
   const Core::Array<Vector3>& points) const
 {
   // As above
-  std::string key;
-  const std::string lowerId = toLower(identifier);
-
-  if (moleculeChargeKey(molecule, identifier, key)) {
-    DefaultModel model(key); // so it knows which charges to use
+  if (const auto key = moleculeChargeKey(molecule, identifier)) {
+    DefaultModel model(*key); // so it knows which charges to use
     return model.potentials(molecule, points);
   }
 
-  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
-    Core::Array<double> potentials(points.size(), 0.0);
-    return potentials;
-  }
+  const ChargeModel* model = registeredModel(identifier);
+  if (model == nullptr)
+    return Core::Array<double>(points.size(), 0.0);
 
-  const auto id = m_identifiers[lowerId];
-  const ChargeModel* model = m_models[id];
   return model->potentials(molecule, points);
 }
 
@@ -277,16 +253,10 @@ bool ChargeManager::hasCustomPotentials(const std::string& identifier,
                                         const Core::Molecule& molecule) const
 {
   // Mirrors potentials(): charges stored in the molecule use DefaultModel
-  std::string key;
-  const std::string lowerId = toLower(identifier);
-  if (moleculeChargeKey(molecule, identifier, key))
+  if (moleculeChargeKey(molecule, identifier))
     return false;
 
-  const auto it = m_identifiers.find(lowerId);
-  if (it == m_identifiers.end())
-    return false;
-
-  const ChargeModel* model = m_models[it->second];
+  const ChargeModel* model = registeredModel(identifier);
   return model != nullptr && model->hasCustomPotentials();
 }
 

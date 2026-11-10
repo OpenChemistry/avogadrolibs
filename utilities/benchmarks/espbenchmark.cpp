@@ -9,11 +9,11 @@
 // For each workload (molecule x number of points) this compares
 //   (a) legacy: a serial loop calling potential() once per point, which
 //       refetches the charges and positions on every call (old behaviour)
-//   (b) potentials() restricted to one thread
+//   (b) the potentials() kernel restricted to one thread
 //   (c) potentials() with the default thread count
 //   (d) a thread sweep (1, 2, 4, ... hardware_concurrency)
-// Thread counts are set through the AVOGADRO_ESP_THREADS environment
-// variable, which potentials() reads on each call.
+// Thread counts are set by calling ChargeModel::pointChargePotentials()
+// directly with an explicit maxThreads.
 
 #include <avogadro/calc/chargemodel.h>
 
@@ -59,6 +59,14 @@ struct Options
   std::vector<std::size_t> pointCounts;
 };
 
+// Portable LCG (std distributions differ between standard libraries); returns
+// a deterministic value in [0, 1).
+double nextUniform(std::uint64_t& state)
+{
+  state = state * 6364136223846793005ULL + 1442695040888963407ULL;
+  return static_cast<double>(state >> 11) / 9007199254740992.0;
+}
+
 // Fixed, seeded charges: no external charge model is needed.
 class SyntheticChargeModel : public ChargeModel
 {
@@ -66,13 +74,9 @@ public:
   explicit SyntheticChargeModel(std::size_t atoms)
     : m_charges(static_cast<Eigen::Index>(atoms), 1)
   {
-    // portable LCG (std distributions differ between standard libraries)
     std::uint64_t state = 12345;
-    for (Eigen::Index i = 0; i < m_charges.rows(); ++i) {
-      state = state * 6364136223846793005ULL + 1442695040888963407ULL;
-      const double u = static_cast<double>(state >> 11) / 9007199254740992.0;
-      m_charges(i, 0) = 0.8 * (u - 0.5);
-    }
+    for (Eigen::Index i = 0; i < m_charges.rows(); ++i)
+      m_charges(i, 0) = 0.8 * (nextUniform(state) - 0.5);
   }
 
   ChargeModel* newInstance() const override
@@ -94,19 +98,6 @@ private:
   MatrixX m_charges;
 };
 
-void setThreads(std::size_t threads)
-{
-#ifdef _WIN32
-  _putenv_s("AVOGADRO_ESP_THREADS",
-            threads > 0 ? std::to_string(threads).c_str() : "");
-#else
-  if (threads > 0)
-    setenv("AVOGADRO_ESP_THREADS", std::to_string(threads).c_str(), 1);
-  else
-    unsetenv("AVOGADRO_ESP_THREADS");
-#endif
-}
-
 Array<Vector3> makePoints(const Molecule& molecule, std::size_t count)
 {
   const Array<Vector3>& pos = molecule.atomPositions3d();
@@ -123,11 +114,8 @@ Array<Vector3> makePoints(const Molecule& molecule, std::size_t count)
   std::uint64_t state = 987654321;
   for (std::size_t i = 0; i < count; ++i) {
     Vector3 p;
-    for (int k = 0; k < 3; ++k) {
-      state = state * 6364136223846793005ULL + 1442695040888963407ULL;
-      const double u = static_cast<double>(state >> 11) / 9007199254740992.0;
-      p[k] = lo[k] + u * (hi[k] - lo[k]);
-    }
+    for (int k = 0; k < 3; ++k)
+      p[k] = lo[k] + nextUniform(state) * (hi[k] - lo[k]);
     points.push_back(p);
   }
   return points;
@@ -161,8 +149,7 @@ void printUsage(const char* argv0)
                " [--legacy-max-pairs N] [molecule files...]\n"
             << "Default molecules: caffeine.cjson, 1CRN.pdb, 4HHB.pdb\n"
             << "Default point counts: 10000, 100000, 1000000\n"
-            << "Thread counts are set via AVOGADRO_ESP_THREADS "
-               "(read by ChargeModel::potentials()).\n";
+            << "The thread sweep calls ChargeModel::pointChargePotentials().\n";
 }
 
 bool parseArgs(int argc, char** argv, Options& options)
@@ -236,14 +223,19 @@ bool runWorkload(const std::string& label, Molecule& molecule,
                           static_cast<double>(legacyPoints);
   const bool extrapolated = legacyPoints < pointCount;
 
-  // (b) one thread
-  setThreads(1);
-  Array<double> single;
-  const double oneMs =
-    medianMs(repeats, [&]() { single = model.potentials(molecule, points); });
+  // The same inputs potentials() fetches once; the thread count is explicit.
+  const MatrixX charges = model.partialCharges(molecule);
+  const Array<Vector3>& positions = molecule.atomPositions3d();
+  const auto kernel = [&](std::size_t threads) {
+    return ChargeModel::pointChargePotentials(charges.data(), positions.data(),
+                                              atoms, points, 1.0, threads);
+  };
 
-  // (c) default thread count
-  setThreads(0);
+  // (b) one thread
+  Array<double> single;
+  const double oneMs = medianMs(repeats, [&]() { single = kernel(1); });
+
+  // (c) default thread count, through the public potentials()
   Array<double> parallel;
   const double defaultMs =
     medianMs(repeats, [&]() { parallel = model.potentials(molecule, points); });
@@ -270,7 +262,7 @@ bool runWorkload(const std::string& label, Molecule& molecule,
               << std::setw(13) << ratio(oneMs, ms) << "x\n";
   };
   row("legacy serial potential() loop", legacyMs, extrapolated);
-  row("potentials(), 1 thread", oneMs, false);
+  row("kernel, 1 thread", oneMs, false);
   row("potentials(), default threads", defaultMs, false);
 
   // (d) thread sweep
@@ -280,16 +272,13 @@ bool runWorkload(const std::string& label, Molecule& molecule,
     sweep.push_back(t);
   sweep.push_back(hardware);
   for (std::size_t t : sweep) {
-    setThreads(t);
     Array<double> r;
-    const double ms =
-      medianMs(repeats, [&]() { r = model.potentials(molecule, points); });
+    const double ms = medianMs(repeats, [&]() { r = kernel(t); });
     for (std::size_t i = 0; i < pointCount; ++i)
       maxDiffSweep = std::max(maxDiffSweep, std::fabs(single[i] - r[i]));
     row("  sweep: " + std::to_string(t) + " thread" + (t > 1 ? "s" : ""), ms,
         false);
   }
-  setThreads(0);
 
   if (extrapolated) {
     std::cout << "legacy timed on first " << legacyPoints << " of "

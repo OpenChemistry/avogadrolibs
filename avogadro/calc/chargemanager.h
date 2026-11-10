@@ -164,6 +164,9 @@ public:
   std::string error() const;
 
 private:
+  /// The registered model for an identifier (case-insensitive), or nullptr.
+  const ChargeModel* registeredModel(const std::string& identifier) const;
+
   using ChargeIdMap = std::map<std::string, size_t>;
 
   ChargeManager();

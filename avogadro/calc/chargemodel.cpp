@@ -12,12 +12,10 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
-#include <cstdlib>
 #include <iostream>
 #include <system_error>
 #include <thread>
 #include <vector>
-#include <functional>
 
 namespace Avogadro {
 
@@ -76,14 +74,16 @@ inline double pointChargeSum(const double* q, const Vector3* r,
 }
 
 // Evaluate points [begin, end) into out. Each call touches only its own
-// slice of out; q, r and points are read-only, so no locking is needed.
-void evaluateRange(const std::vector<double>& q, const std::vector<Vector3>& r,
-                   const Array<Vector3>& points, double dielectric,
-                   std::size_t begin, std::size_t end, double* out)
+// slice of out; the charges, positions and points are read-only, so no
+// locking is needed.
+void evaluateRange(const double* charges, const Vector3* positions,
+                   std::size_t atomCount, const Array<Vector3>& points,
+                   double dielectric, std::size_t begin, std::size_t end,
+                   double* out)
 {
   for (std::size_t i = begin; i < end; ++i)
     out[i] =
-      pointChargeSum(q.data(), r.data(), q.size(), points[i]) / dielectric;
+      pointChargeSum(charges, positions, atomCount, points[i]) / dielectric;
 }
 
 // A non-positive or non-finite dielectric constant is meaningless (and would
@@ -99,23 +99,63 @@ inline double effectiveDielectric(double dielectric)
 // on the calling thread.
 constexpr std::size_t MinPairsPerThread = 100000;
 
-// Optional override of the thread count for potentials(), used by the ESP
-// benchmark (and handy for debugging / limiting CPU use). Returns 0 when
-// AVOGADRO_ESP_THREADS is unset or invalid. Kept as an environment variable
-// so it adds nothing to the public API.
-std::size_t threadCountOverride()
-{
-  const char* value = std::getenv("AVOGADRO_ESP_THREADS");
-  if (value == nullptr || *value == '\0')
-    return 0;
-  char* end = nullptr;
-  const unsigned long parsed = std::strtoul(value, &end, 10);
-  if (end == value || *end != '\0')
-    return 0;
-  return static_cast<std::size_t>(parsed);
-}
-
 } // namespace
+
+Array<double> ChargeModel::pointChargePotentials(
+  const double* charges, const Vector3* atomPositions, std::size_t atomCount,
+  const Array<Vector3>& points, double dielectric, std::size_t maxThreads)
+{
+  Array<double> results(points.size(), 0.0);
+  if (points.empty() || atomCount == 0 || charges == nullptr ||
+      atomPositions == nullptr)
+    return results;
+
+  const std::size_t n = points.size();
+  const double eps = effectiveDielectric(dielectric);
+  double* out = results.data();
+
+#if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
+  (void)maxThreads;
+  evaluateRange(charges, atomPositions, atomCount, points, eps, 0, n, out);
+#else
+  std::size_t threadCount = maxThreads;
+  if (threadCount == 0) {
+    const std::size_t hardware =
+      std::max<std::size_t>(1, std::thread::hardware_concurrency());
+    // cap so each thread gets at least MinPairsPerThread pair evaluations
+    const std::size_t byWork =
+      std::max<std::size_t>(1, (n * atomCount) / MinPairsPerThread);
+    threadCount = std::min(hardware, byWork);
+  }
+  threadCount = std::min(threadCount, n);
+
+  // contiguous, disjoint chunks of the output; the last one runs inline
+  const std::size_t chunk = (n + threadCount - 1) / threadCount;
+  const std::size_t chunkCount = (n + chunk - 1) / chunk;
+  std::vector<std::thread> threads;
+  threads.reserve(chunkCount);
+  for (std::size_t c = 0; c + 1 < chunkCount; ++c) {
+    const std::size_t begin = c * chunk;
+    const std::size_t end = begin + chunk;
+    try {
+      threads.emplace_back([=, &points]() {
+        evaluateRange(charges, atomPositions, atomCount, points, eps, begin,
+                      end, out);
+      });
+    } catch (const std::system_error&) {
+      // could not start a thread: compute this chunk here instead
+      evaluateRange(charges, atomPositions, atomCount, points, eps, begin, end,
+                    out);
+    }
+  }
+  evaluateRange(charges, atomPositions, atomCount, points, eps,
+                (chunkCount - 1) * chunk, n, out);
+  for (auto& t : threads)
+    t.join();
+#endif
+
+  return results;
+}
 
 double ChargeModel::potential(Molecule& mol, const Vector3& point) const
 {
@@ -141,74 +181,19 @@ double ChargeModel::potential(Molecule& mol, const Vector3& point) const
 Array<double> ChargeModel::potentials(Core::Molecule& mol,
                                       const Array<Vector3>& points) const
 {
-  Array<double> results(points.size(), 0.0);
   if (points.empty())
-    return results;
+    return Array<double>();
 
   // Fetch the charges and positions once, not once per point
   const MatrixX charges = partialCharges(mol);
   const Array<Vector3>& positions = mol.atomPositions3d();
   if (charges.cols() < 1)
-    return results;
+    return Array<double>(points.size(), 0.0);
 
   const std::size_t count =
     std::min(static_cast<std::size_t>(charges.rows()), positions.size());
-  if (count == 0)
-    return results;
-
-  // contiguous copies, shared read-only by all threads
-  std::vector<double> q(charges.data(), charges.data() + count);
-  std::vector<Vector3> r(positions.data(), positions.data() + count);
-
-  const std::size_t n = points.size();
-  const double dielectric = effectiveDielectric(m_dielectric);
-  double* out = results.data();
-
-  std::size_t threadCount = 1;
-#if !(defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__))
-  const std::size_t hardware =
-    std::max<std::size_t>(1, std::thread::hardware_concurrency());
-  // cap so each thread gets at least MinPairsPerThread pair evaluations
-  const std::size_t byWork =
-    std::max<std::size_t>(1, (n * count) / MinPairsPerThread);
-  threadCount = std::min({ hardware, byWork, n });
-  // an explicit override bypasses the work heuristic (but never exceeds n)
-  const std::size_t forced = threadCountOverride();
-  if (forced > 0)
-    threadCount = std::min(forced, n);
-#endif
-
-  if (threadCount <= 1) {
-    evaluateRange(q, r, points, dielectric, 0, n, out);
-    return results;
-  }
-
-#if !(defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__))
-  // contiguous, disjoint chunks of the output
-  const std::size_t chunk = (n + threadCount - 1) / threadCount;
-  std::vector<std::thread> threads;
-  threads.reserve(threadCount);
-  std::size_t begin = 0;
-  // the last chunk is always computed on the calling thread
-  while (begin < n) {
-    const std::size_t end = std::min(n, begin + chunk);
-    if (end == n)
-      break;
-    try {
-      threads.emplace_back(evaluateRange, std::cref(q), std::cref(r),
-                           std::cref(points), dielectric, begin, end, out);
-    } catch (const std::system_error&) {
-      // could not start a thread: compute this chunk here instead
-      evaluateRange(q, r, points, dielectric, begin, end, out);
-    }
-    begin = end;
-  }
-  evaluateRange(q, r, points, dielectric, begin, n, out);
-  for (auto& t : threads)
-    t.join();
-#endif
-
-  return results;
+  return pointChargePotentials(charges.data(), positions.data(), count, points,
+                               m_dielectric);
 }
 
 void ChargeModel::appendError(const std::string& errorString,

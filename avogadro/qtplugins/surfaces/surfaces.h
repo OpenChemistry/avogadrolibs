@@ -161,6 +161,8 @@ private:
   /// Publish the pending meshes and finish the calculation (movie frame,
   /// dialog, script command). The tail shared by both colouring paths.
   void publishPendingMeshes();
+  /// Drop the pending meshes of a stale or interrupted job and report it.
+  void discardPendingMeshes();
   /// Wait for a colouring job, dropping its result.
   void waitForColoring();
 
@@ -174,8 +176,6 @@ private:
    * by @p padding Angstrom around the atoms.
    */
   float resolution(float specified = 0.0, double padding = 0.0);
-  Core::Color3f chargeGradient(double value, double clamp,
-                               tinycolormap::ColormapType colormap) const;
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;

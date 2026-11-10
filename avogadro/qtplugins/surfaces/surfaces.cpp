@@ -15,7 +15,7 @@ namespace {
 #include <gwavi.h>
 
 #include <avogadro/calc/chargemanager.h>
-#include <avogadro/calc/defaultmodel.h>
+#include <avogadro/calc/chargemodel.h>
 
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/variant.h>
@@ -1289,13 +1289,27 @@ Core::Color3f gradientColor(double value, double clamp, ColormapType colormap)
 
   return r;
 }
-} // namespace
 
-Core::Color3f Surfaces::chargeGradient(double value, double clamp,
-                                       ColormapType colormap) const
+// Colours for a set of potentials, scaled by the largest magnitude. Pure
+// function of its arguments, so the colouring worker can call it.
+Core::Array<Core::Color3f> colorsFromPotentials(
+  const Core::Array<double>& potentials, ColormapType colormap)
 {
-  return gradientColor(value, clamp, colormap);
+  if (potentials.empty())
+    return Core::Array<Core::Color3f>();
+
+  const double minPotential =
+    *std::min_element(potentials.begin(), potentials.end());
+  const double maxPotential =
+    *std::max_element(potentials.begin(), potentials.end());
+  const double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
+
+  Core::Array<Core::Color3f> colors(potentials.size());
+  for (size_t i = 0; i < potentials.size(); i++)
+    colors[i] = gradientColor(potentials[i], clamp, colormap);
+  return colors;
 }
+} // namespace
 
 ColormapType Surfaces::getColormapFromString(const QString& name) const
 {
@@ -1337,7 +1351,7 @@ void Surfaces::colorMeshByPotential(Core::Mesh& mesh)
   const auto model = m_dialog->colorModel().toStdString();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
 
-  const auto positionsf = mesh.vertices();
+  const auto& positionsf = mesh.vertices();
   if (positionsf.empty())
     return;
 
@@ -1349,15 +1363,7 @@ void Surfaces::colorMeshByPotential(Core::Mesh& mesh)
 
   if (potentials.empty())
     return;
-  double minPotential = *std::min_element(potentials.begin(), potentials.end());
-  double maxPotential = *std::max_element(potentials.begin(), potentials.end());
-  double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
-
-  Core::Array<Core::Color3f> colors(positions.size());
-  for (size_t i = 0; i < potentials.size(); i++)
-    colors[i] = chargeGradient(potentials[i], clamp, colormap);
-
-  mesh.setColors(colors);
+  mesh.setColors(colorsFromPotentials(potentials, colormap));
 }
 
 bool Surfaces::startColoring()
@@ -1367,8 +1373,7 @@ bool Surfaces::startColoring()
       m_molecule == nullptr || !m_pendingMesh1)
     return false;
 
-  const auto positionsf = m_pendingMesh1->vertices();
-  if (positionsf.empty())
+  if (m_pendingMesh1->vertices().empty())
     return false;
 
   const std::string model = m_dialog->colorModel().toStdString();
@@ -1384,42 +1389,42 @@ bool Surfaces::startColoring()
   // Everything below is read on the GUI thread. The charge models are shared
   // singletons with mutable state (error strings, interpreters, an Open
   // Babel listener that needs this thread's event loop) and cache charges
-  // into the molecule, so the worker never sees them: the charges are
-  // fetched here, and the worker evaluates the point-charge potential on a
-  // snapshot with a private DefaultModel.
+  // into the molecule, so the worker never sees them or the molecule: the
+  // charges are fetched here, and the worker only evaluates the point-charge
+  // sum on copy-on-write copies of the data.
   const MatrixX charges = manager.partialCharges(model, *m_molecule);
-  const std::string key = "surfaces-esp";
-  // Core::Molecule's arrays are copy-on-write, so this is cheap.
-  auto snapshot =
-    std::make_shared<Core::Molecule>(static_cast<Core::Molecule&>(*m_molecule));
-  snapshot->setPartialCharges(key, charges);
+  const Core::Array<Vector3> atomPositions =
+    std::as_const(*m_molecule).atomPositions3d();
+  const Core::Array<Vector3f> vertices = m_pendingMesh1->vertices();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
-
-  Core::Array<Vector3> positions(positionsf.size());
-  std::transform(positionsf.begin(), positionsf.end(), positions.begin(),
-                 [](const Vector3f& pos) { return pos.cast<double>(); });
 
   m_coloring = true;
   m_colorWatcher.setFuture(
-    QtConcurrent::run([snapshot, positions = std::move(positions), key,
-                       colormap]() mutable -> Core::Array<Core::Color3f> {
-      Calc::DefaultModel defaultModel(key);
-      const auto potentials = defaultModel.potentials(*snapshot, positions);
-      if (potentials.empty())
-        return Core::Array<Core::Color3f>();
+    QtConcurrent::run([charges, atomPositions, vertices,
+                       colormap]() -> Core::Array<Core::Color3f> {
+      Core::Array<Vector3> points(vertices.size());
+      std::transform(vertices.begin(), vertices.end(), points.begin(),
+                     [](const Vector3f& pos) { return pos.cast<double>(); });
 
-      double minPotential =
-        *std::min_element(potentials.begin(), potentials.end());
-      double maxPotential =
-        *std::max_element(potentials.begin(), potentials.end());
-      double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
-
-      Core::Array<Core::Color3f> colors(positions.size());
-      for (size_t i = 0; i < potentials.size(); i++)
-        colors[i] = gradientColor(potentials[i], clamp, colormap);
-      return colors;
+      const std::size_t atomCount =
+        charges.cols() < 1 ? 0
+                           : std::min(static_cast<std::size_t>(charges.rows()),
+                                      atomPositions.size());
+      // The selected model's dielectric is not reachable through
+      // ChargeManager, and nothing in the tree sets it away from 1.
+      const auto potentials = Calc::ChargeModel::pointChargePotentials(
+        charges.data(), atomPositions.data(), atomCount, points, 1.0);
+      return colorsFromPotentials(potentials, colormap);
     }));
   return true;
+}
+
+void Surfaces::discardPendingMeshes()
+{
+  m_pendingMesh1.reset();
+  m_pendingMesh2.reset();
+  m_meshJobStale = false;
+  reportInterrupted();
 }
 
 void Surfaces::colorFinished()
@@ -1434,12 +1439,8 @@ void Surfaces::colorFinished()
   if (!m_pendingMesh1)
     return;
 
-  const bool stale = m_meshJobStale || m_molecule == nullptr;
-  if (stale) {
-    m_pendingMesh1.reset();
-    m_pendingMesh2.reset();
-    m_meshJobStale = false;
-    reportInterrupted();
+  if (m_meshJobStale || m_molecule == nullptr) {
+    discardPendingMeshes();
     return;
   }
 
@@ -1474,10 +1475,7 @@ void Surfaces::meshFinished()
 
   m_meshCube.reset();
   if (m_meshJobStale || m_molecule == nullptr) {
-    m_pendingMesh1.reset();
-    m_pendingMesh2.reset();
-    m_meshJobStale = false;
-    reportInterrupted();
+    discardPendingMeshes();
     return;
   }
 
