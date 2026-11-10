@@ -541,6 +541,8 @@ public:
    * @return A vector of bonds to the supplied atom @p a.
    * @note The const overload allocates on every call and is deprecated; use
    * the non-const overload, or iterate graph().edges(a) with bondPair().
+   * The const overload returns an empty array when @p a >= atomCount(), but
+   * graph().edges(a) does not, so check @p a < atomCount() before calling it.
    * It will be removed at the next ABI break.
    * @{
    */
