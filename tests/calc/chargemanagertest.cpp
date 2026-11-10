@@ -9,6 +9,7 @@
 
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/calc/chargemodel.h>
+#include <avogadro/calc/defaultmodel.h>
 #include <avogadro/core/molecule.h>
 
 #include <algorithm>
@@ -263,4 +264,38 @@ TEST_F(ChargeManagerTest, HasCustomPotentialsIgnoresIdentifierCase)
   EXPECT_FALSE(manager.hasCustomPotentials("MixedCaseCustom", molecule));
 
   EXPECT_TRUE(manager.removeModel("MixedCaseCustom"));
+}
+
+TEST_F(ChargeManagerTest, StoredChargeTypesKeepTheirCase)
+{
+  // Readers store types verbatim ("Mulliken", "From File")
+  MatrixX charges(3, 1);
+  charges << -0.8, 0.4, 0.4;
+  m_testMolecule.setPartialCharges("Mulliken", charges);
+
+  const MatrixX fetched =
+    m_chargeManager->partialCharges("Mulliken", m_testMolecule);
+  ASSERT_EQ(fetched.rows(), 3);
+  EXPECT_DOUBLE_EQ(fetched(0, 0), -0.8);
+
+  Array<Vector3> points;
+  points.push_back(Vector3(2.0, 0.0, 0.0));
+  points.push_back(Vector3(0.0, 2.0, 1.0));
+  const auto potentials =
+    m_chargeManager->potentials("Mulliken", m_testMolecule, points);
+  DefaultModel reference("Mulliken");
+  const auto expected = reference.potentials(m_testMolecule, points);
+  ASSERT_EQ(potentials.size(), points.size());
+  for (size_t i = 0; i < points.size(); ++i) {
+    EXPECT_NE(potentials[i], 0.0);
+    EXPECT_EQ(potentials[i], expected[i]);
+  }
+  EXPECT_EQ(m_chargeManager->potential("Mulliken", m_testMolecule, points[0]),
+            expected[0]);
+  EXPECT_FALSE(
+    m_chargeManager->hasCustomPotentials("Mulliken", m_testMolecule));
+
+  // dipole uses the same lookup
+  EXPECT_NE(m_chargeManager->dipoleMoment("Mulliken", m_testMolecule).norm(),
+            0.0);
 }

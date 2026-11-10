@@ -13,6 +13,28 @@ namespace Avogadro::Calc {
 
 using Core::toLower;
 
+namespace {
+// Finds the key under which the molecule stores charges for this identifier;
+// returns false if it has none. Readers store types
+// verbatim ("Mulliken", "From File"), so try the exact name first and then
+// the lowercase one.
+bool moleculeChargeKey(const Core::Molecule& molecule,
+                       const std::string& identifier, std::string& key)
+{
+  const auto types = molecule.partialChargeTypes();
+  if (types.find(identifier) != types.end()) {
+    key = identifier;
+    return true;
+  }
+  const std::string lowerId = toLower(identifier);
+  if (types.find(lowerId) != types.end()) {
+    key = lowerId;
+    return true;
+  }
+  return false;
+}
+} // namespace
+
 ChargeManager& ChargeManager::instance()
 {
   static ChargeManager instance;
@@ -158,11 +180,11 @@ MatrixX ChargeManager::partialCharges(const std::string& identifier,
 {
   // first check if the type is found in the molecule
   // (i.e., read from a file not computed dynamically)
-  auto molIdentifiers = molecule.partialChargeTypes();
-  std::string lowerId = toLower(identifier);
+  std::string key;
+  const std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
-    return molecule.partialCharges(lowerId);
+  if (moleculeChargeKey(molecule, identifier, key)) {
+    return molecule.partialCharges(key);
   }
 
   // otherwise go through our list
@@ -182,11 +204,11 @@ Vector3 ChargeManager::dipoleMoment(const std::string& identifier,
 {
   // If the type is found in the molecule
   // we'll use the DefaultModel to handle the dipole moment
-  auto molIdentifiers = molecule.partialChargeTypes();
-  std::string lowerId = toLower(identifier);
+  std::string key;
+  const std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
-    DefaultModel model(lowerId); // so it knows which charges to use
+  if (moleculeChargeKey(molecule, identifier, key)) {
+    DefaultModel model(key); // so it knows which charges to use
     return model.dipoleMoment(molecule);
   }
 
@@ -210,11 +232,11 @@ double ChargeManager::potential(const std::string& identifier,
 {
   // If the type is found in the molecule
   // we'll use the DefaultModel to handle the potential
-  auto molIdentifiers = molecule.partialChargeTypes();
+  std::string key;
   const std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
-    DefaultModel model(lowerId); // so it knows which charges to use
+  if (moleculeChargeKey(molecule, identifier, key)) {
+    DefaultModel model(key); // so it knows which charges to use
     return model.potential(molecule, point);
   }
 
@@ -233,11 +255,11 @@ Core::Array<double> ChargeManager::potentials(
   const Core::Array<Vector3>& points) const
 {
   // As above
-  auto molIdentifiers = molecule.partialChargeTypes();
+  std::string key;
   const std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
-    DefaultModel model(lowerId); // so it knows which charges to use
+  if (moleculeChargeKey(molecule, identifier, key)) {
+    DefaultModel model(key); // so it knows which charges to use
     return model.potentials(molecule, points);
   }
 
@@ -255,9 +277,9 @@ bool ChargeManager::hasCustomPotentials(const std::string& identifier,
                                         const Core::Molecule& molecule) const
 {
   // Mirrors potentials(): charges stored in the molecule use DefaultModel
+  std::string key;
   const std::string lowerId = toLower(identifier);
-  const auto molIdentifiers = molecule.partialChargeTypes();
-  if (molIdentifiers.find(lowerId) != molIdentifiers.end())
+  if (moleculeChargeKey(molecule, identifier, key))
     return false;
 
   const auto it = m_identifiers.find(lowerId);
