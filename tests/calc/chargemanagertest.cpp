@@ -215,3 +215,52 @@ TEST_F(ChargeManagerTest, MissingChargeColumnYieldsZeroResults)
   EXPECT_NEAR(model.potential(m_testMolecule, Vector3(2.0, 0.0, 0.0)), 0.0,
               1e-12);
 }
+
+namespace {
+class MixedCaseCustomPotentialModel : public ChargeModel
+{
+public:
+  ChargeModel* newInstance() const override
+  {
+    return new MixedCaseCustomPotentialModel;
+  }
+  std::string identifier() const override { return "MixedCaseCustom"; }
+  std::string name() const override { return "Mixed Case Custom"; }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    mask.set();
+    return mask;
+  }
+  MatrixX partialCharges(Molecule& mol) const override
+  {
+    return MatrixX::Zero(static_cast<Eigen::Index>(mol.atomCount()), 1);
+  }
+  MatrixX partialCharges(const Molecule& mol) const override
+  {
+    return MatrixX::Zero(static_cast<Eigen::Index>(mol.atomCount()), 1);
+  }
+  bool hasCustomPotentials() const override { return true; }
+};
+} // namespace
+
+TEST_F(ChargeManagerTest, HasCustomPotentialsIgnoresIdentifierCase)
+{
+  auto& manager = ChargeManager::instance();
+  // the manager takes ownership of the model and deletes it in removeModel()
+  ASSERT_TRUE(manager.addModel(new MixedCaseCustomPotentialModel));
+
+  Molecule molecule;
+  molecule.addAtom(6);
+  EXPECT_TRUE(manager.hasCustomPotentials("MixedCaseCustom", molecule));
+  EXPECT_TRUE(manager.hasCustomPotentials("mixedcasecustom", molecule));
+  EXPECT_FALSE(manager.hasCustomPotentials("unknown", molecule));
+
+  // charges stored in the molecule are served by DefaultModel instead
+  MatrixX charges(1, 1);
+  charges << 0.5;
+  molecule.setPartialCharges("mixedcasecustom", charges);
+  EXPECT_FALSE(manager.hasCustomPotentials("MixedCaseCustom", molecule));
+
+  EXPECT_TRUE(manager.removeModel("MixedCaseCustom"));
+}

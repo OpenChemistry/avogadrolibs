@@ -211,18 +211,19 @@ double ChargeManager::potential(const std::string& identifier,
   // If the type is found in the molecule
   // we'll use the DefaultModel to handle the potential
   auto molIdentifiers = molecule.partialChargeTypes();
+  const std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(identifier) != molIdentifiers.end()) {
-    DefaultModel model(identifier); // so it knows which charges to use
+  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
+    DefaultModel model(lowerId); // so it knows which charges to use
     return model.potential(molecule, point);
   }
 
   // otherwise go through our list
-  if (m_identifiers.find(identifier) == m_identifiers.end()) {
+  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
     return 0.0;
   }
 
-  const auto id = m_identifiers[identifier];
+  const auto id = m_identifiers[lowerId];
   const ChargeModel* model = m_models[id];
   return model->potential(molecule, point);
 }
@@ -233,18 +234,19 @@ Core::Array<double> ChargeManager::potentials(
 {
   // As above
   auto molIdentifiers = molecule.partialChargeTypes();
+  const std::string lowerId = toLower(identifier);
 
-  if (molIdentifiers.find(identifier) != molIdentifiers.end()) {
-    DefaultModel model(identifier); // so it knows which charges to use
+  if (molIdentifiers.find(lowerId) != molIdentifiers.end()) {
+    DefaultModel model(lowerId); // so it knows which charges to use
     return model.potentials(molecule, points);
   }
 
-  if (m_identifiers.find(identifier) == m_identifiers.end()) {
+  if (m_identifiers.find(lowerId) == m_identifiers.end()) {
     Core::Array<double> potentials(points.size(), 0.0);
     return potentials;
   }
 
-  const auto id = m_identifiers[identifier];
+  const auto id = m_identifiers[lowerId];
   const ChargeModel* model = m_models[id];
   return model->potentials(molecule, points);
 }
@@ -253,11 +255,12 @@ bool ChargeManager::hasCustomPotentials(const std::string& identifier,
                                         const Core::Molecule& molecule) const
 {
   // Mirrors potentials(): charges stored in the molecule use DefaultModel
+  const std::string lowerId = toLower(identifier);
   const auto molIdentifiers = molecule.partialChargeTypes();
-  if (molIdentifiers.find(identifier) != molIdentifiers.end())
+  if (molIdentifiers.find(lowerId) != molIdentifiers.end())
     return false;
 
-  const auto it = m_identifiers.find(identifier);
+  const auto it = m_identifiers.find(lowerId);
   if (it == m_identifiers.end())
     return false;
 

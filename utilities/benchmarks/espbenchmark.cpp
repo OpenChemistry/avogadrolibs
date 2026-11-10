@@ -274,6 +274,7 @@ bool runWorkload(const std::string& label, Molecule& molecule,
   row("potentials(), default threads", defaultMs, false);
 
   // (d) thread sweep
+  double maxDiffSweep = 0.0;
   std::vector<std::size_t> sweep;
   for (std::size_t t = 1; t < hardware; t *= 2)
     sweep.push_back(t);
@@ -283,6 +284,8 @@ bool runWorkload(const std::string& label, Molecule& molecule,
     Array<double> r;
     const double ms =
       medianMs(repeats, [&]() { r = model.potentials(molecule, points); });
+    for (std::size_t i = 0; i < pointCount; ++i)
+      maxDiffSweep = std::max(maxDiffSweep, std::fabs(single[i] - r[i]));
     row("  sweep: " + std::to_string(t) + " thread" + (t > 1 ? "s" : ""), ms,
         false);
   }
@@ -296,8 +299,9 @@ bool runWorkload(const std::string& label, Molecule& molecule,
             << "max|legacy - default| over " << legacyPoints
             << " points: " << maxDiff
             << "   max|1 thread - default| over all points: " << maxDiffAll
+            << "   max|1 thread - sweep| over all points: " << maxDiffSweep
             << "\n";
-  return maxDiff == 0.0 && maxDiffAll == 0.0;
+  return maxDiff == 0.0 && maxDiffAll == 0.0 && maxDiffSweep == 0.0;
 }
 
 } // namespace

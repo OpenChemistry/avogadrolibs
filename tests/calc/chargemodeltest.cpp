@@ -13,6 +13,8 @@
 #include <avogadro/core/molecule.h>
 
 #include <cmath>
+#include <cstdlib>
+#include <string>
 
 using namespace Avogadro::Calc;
 using namespace Avogadro::Core;
@@ -337,6 +339,46 @@ Molecule gridMolecule(int atoms)
   return molecule;
 }
 
+// Sets AVOGADRO_ESP_THREADS for the lifetime of the object, then restores the
+// previous value (or unsets it), so the threaded path runs on any machine.
+class ScopedEspThreads
+{
+public:
+  explicit ScopedEspThreads(const char* value)
+  {
+    const char* old = std::getenv(Name);
+    m_hadOld = old != nullptr;
+    if (m_hadOld)
+      m_old = old;
+    set(value);
+  }
+  ~ScopedEspThreads()
+  {
+    if (m_hadOld)
+      set(m_old.c_str());
+    else
+      set(nullptr);
+  }
+  ScopedEspThreads(const ScopedEspThreads&) = delete;
+  ScopedEspThreads& operator=(const ScopedEspThreads&) = delete;
+
+private:
+  static constexpr const char* Name = "AVOGADRO_ESP_THREADS";
+  static void set(const char* value)
+  {
+#ifdef _WIN32
+    _putenv_s(Name, value != nullptr ? value : "");
+#else
+    if (value != nullptr)
+      setenv(Name, value, 1);
+    else
+      unsetenv(Name);
+#endif
+  }
+  bool m_hadOld = false;
+  std::string m_old;
+};
+
 Array<Vector3> gridPoints(size_t count)
 {
   Array<Vector3> points;
@@ -352,11 +394,12 @@ Array<Vector3> gridPoints(size_t count)
 
 TEST(ChargeModelTest, ParallelPotentialsMatchPotentialExactly)
 {
+  const ScopedEspThreads threads("4");
   Molecule molecule = gridMolecule(48);
   DefaultModel model("test");
 
-  // 48 atoms x 20000 points is well above the per-thread work threshold
-  const Array<Vector3> points = gridPoints(20000);
+  // 20003 points is not divisible by the thread count: uneven last chunk
+  const Array<Vector3> points = gridPoints(20003);
   const Array<double> batch = model.potentials(molecule, points);
   ASSERT_EQ(batch.size(), points.size());
   for (size_t i = 0; i < points.size(); ++i)
@@ -377,10 +420,11 @@ TEST(ChargeModelTest, SmallPotentialsMatchPotentialExactly)
 
 TEST(ChargeModelTest, ParallelPotentialsPointNearAtom)
 {
+  const ScopedEspThreads threads("4");
   Molecule molecule = gridMolecule(48);
   DefaultModel model("test");
 
-  Array<Vector3> points = gridPoints(20000);
+  Array<Vector3> points = gridPoints(20003);
   // within 0.01 A of an atom (skipped term) and exactly on another atom
   points[5000] = molecule.atomPosition3d(3) + Vector3(0.005, 0.0, 0.0);
   points[12345] = molecule.atomPosition3d(10);
@@ -406,10 +450,11 @@ TEST(ChargeModelTest, PotentialsWithoutAtomsAreZero)
 
 TEST(ChargeModelTest, ParallelPotentialsRespectDielectric)
 {
+  const ScopedEspThreads threads("4");
   Molecule molecule = gridMolecule(48);
   DefaultModel model("test");
 
-  const Array<Vector3> points = gridPoints(20000);
+  const Array<Vector3> points = gridPoints(20003);
   const Array<double> unscaled = model.potentials(molecule, points);
 
   model.setDielectric(4.0f);
@@ -423,10 +468,11 @@ TEST(ChargeModelTest, ParallelPotentialsRespectDielectric)
 
 TEST(ChargeModelTest, NonPositiveDielectricIsTreatedAsVacuum)
 {
+  const ScopedEspThreads threads("4");
   Molecule molecule = gridMolecule(48);
   DefaultModel model("test");
 
-  const Array<Vector3> points = gridPoints(20000);
+  const Array<Vector3> points = gridPoints(20003);
   const Array<double> reference = model.potentials(molecule, points);
 
   model.setDielectric(0.0f);
