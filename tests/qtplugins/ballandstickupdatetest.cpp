@@ -112,6 +112,22 @@ protected:
                     : std::vector<Rendering::Drawable*>();
   }
 
+  // Rays through `point` must give the same hits and identifiers.
+  template <typename Geometry>
+  static void expectSameHits(Geometry* a, Geometry* b, const Vector3f& point)
+  {
+    Vector3f origin = point - Vector3f(0, 0, 10);
+    Vector3f dir(0, 0, 1);
+    auto ha = a->hits(origin, origin + dir * 20.0f, dir);
+    auto hb = b->hits(origin, origin + dir * 20.0f, dir);
+    ASSERT_EQ(ha.size(), hb.size());
+    auto ib = hb.begin();
+    for (auto ia = ha.begin(); ia != ha.end(); ++ia, ++ib) {
+      EXPECT_EQ(ia->first, ib->first);
+      EXPECT_EQ(ia->second, ib->second);
+    }
+  }
+
   // Exact comparison of every drawable, including what picking sees.
   void expectSame(GroupNode& a, GroupNode& b)
   {
@@ -132,18 +148,7 @@ protected:
         EXPECT_EQ(x.center, y.center) << d << ":" << i;
         EXPECT_EQ(x.radius, y.radius) << d << ":" << i;
         EXPECT_EQ(x.color, y.color) << d << ":" << i;
-        // Rays through each centre must give the same hits and identifiers.
-        Vector3f origin = y.center - Vector3f(0, 0, 10);
-        Vector3f dir(0, 0, 1);
-        auto ha = sa->hits(origin, origin + dir * 20.0f, dir);
-        auto hb = sb->hits(origin, origin + dir * 20.0f, dir);
-        ASSERT_EQ(ha.size(), hb.size());
-        auto ia = ha.begin();
-        auto ib = hb.begin();
-        for (; ia != ha.end(); ++ia, ++ib) {
-          EXPECT_EQ(ia->first, ib->first);
-          EXPECT_EQ(ia->second, ib->second);
-        }
+        expectSameHits(sa, sb, y.center);
       }
     }
     for (size_t d = 3; d < 5; ++d) {
@@ -161,18 +166,7 @@ protected:
         EXPECT_EQ(x.radius, y.radius) << d << ":" << i;
         EXPECT_EQ(x.color, y.color) << d << ":" << i;
         EXPECT_EQ(x.color2, y.color2) << d << ":" << i;
-        Vector3f mid = (y.end1 + y.end2) * 0.5f;
-        Vector3f origin = mid - Vector3f(0, 0, 10);
-        Vector3f dir(0, 0, 1);
-        auto ha = ca->hits(origin, origin + dir * 20.0f, dir);
-        auto hb = cb->hits(origin, origin + dir * 20.0f, dir);
-        ASSERT_EQ(ha.size(), hb.size());
-        auto ia = ha.begin();
-        auto ib = hb.begin();
-        for (; ia != ha.end(); ++ia, ++ib) {
-          EXPECT_EQ(ia->first, ib->first);
-          EXPECT_EQ(ia->second, ib->second);
-        }
+        expectSameHits(ca, cb, (y.end1 + y.end2) * 0.5f);
       }
     }
   }
