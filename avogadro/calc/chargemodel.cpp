@@ -10,6 +10,7 @@
 #include <avogadro/core/molecule.h>
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
@@ -85,6 +86,13 @@ void evaluateRange(const std::vector<double>& q, const std::vector<Vector3>& r,
       pointChargeSum(q.data(), r.data(), q.size(), points[i]) / dielectric;
 }
 
+// A non-positive or non-finite dielectric constant is meaningless (and would
+// divide by zero); treat it as vacuum.
+inline double effectiveDielectric(double dielectric)
+{
+  return (dielectric > 0.0 && std::isfinite(dielectric)) ? dielectric : 1.0;
+}
+
 // Minimum number of (point, atom) pair evaluations per thread. Each pair costs
 // a few ns (sqrt + divide), so this is roughly 0.2-0.5 ms of work, which is
 // well above the ~50 microsecond cost of starting a thread. Smaller jobs run
@@ -127,7 +135,7 @@ double ChargeModel::potential(Molecule& mol, const Vector3& point) const
   // charges is column-major, so column 0 is contiguous
   const double sum =
     pointChargeSum(charges.data(), positions.data(), count, point);
-  return sum / m_dielectric;
+  return sum / effectiveDielectric(m_dielectric);
 }
 
 Array<double> ChargeModel::potentials(Core::Molecule& mol,
@@ -153,7 +161,7 @@ Array<double> ChargeModel::potentials(Core::Molecule& mol,
   std::vector<Vector3> r(positions.data(), positions.data() + count);
 
   const std::size_t n = points.size();
-  const double dielectric = m_dielectric;
+  const double dielectric = effectiveDielectric(m_dielectric);
   double* out = results.data();
 
   std::size_t threadCount = 1;

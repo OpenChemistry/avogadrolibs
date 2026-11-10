@@ -420,3 +420,21 @@ TEST(ChargeModelTest, ParallelPotentialsRespectDielectric)
     EXPECT_DOUBLE_EQ(scaled[i], unscaled[i] / 4.0);
   }
 }
+
+TEST(ChargeModelTest, NonPositiveDielectricIsTreatedAsVacuum)
+{
+  Molecule molecule = gridMolecule(48);
+  DefaultModel model("test");
+
+  const Array<Vector3> points = gridPoints(20000);
+  const Array<double> reference = model.potentials(molecule, points);
+
+  model.setDielectric(0.0f);
+  const Array<double> zero = model.potentials(molecule, points);
+  ASSERT_EQ(zero.size(), points.size());
+  for (size_t i = 0; i < points.size(); ++i) {
+    EXPECT_TRUE(std::isfinite(zero[i]));
+    EXPECT_EQ(zero[i], reference[i]);
+  }
+  EXPECT_EQ(model.potential(molecule, points[0]), reference[0]);
+}

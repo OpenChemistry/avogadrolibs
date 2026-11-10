@@ -148,6 +148,12 @@ double medianMs(std::size_t repeats, F&& f)
   return samples[samples.size() / 2];
 }
 
+// Speedup ratio; a timing of 0 ms (coarse clock) gives 0 rather than inf.
+double ratio(double numerator, double denominator)
+{
+  return denominator > 0.0 ? numerator / denominator : 0.0;
+}
+
 void printUsage(const char* argv0)
 {
   std::cout << "Usage: " << argv0
@@ -260,8 +266,8 @@ bool runWorkload(const std::string& label, Molecule& molecule,
     std::cout << std::left << std::setw(34) << (name + (est ? " (est.)" : ""))
               << std::right << std::setw(12) << std::fixed
               << std::setprecision(3) << ms << std::setw(13)
-              << std::setprecision(2) << legacyMs / ms << "x" << std::setw(13)
-              << oneMs / ms << "x\n";
+              << std::setprecision(2) << ratio(legacyMs, ms) << "x"
+              << std::setw(13) << ratio(oneMs, ms) << "x\n";
   };
   row("legacy serial potential() loop", legacyMs, extrapolated);
   row("potentials(), 1 thread", oneMs, false);

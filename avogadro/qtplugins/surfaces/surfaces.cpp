@@ -64,6 +64,7 @@ namespace {
 #include <QtWidgets/QMessageBox>
 
 #include <algorithm>
+#include <cmath>
 #include <numeric>
 #include <utility>
 #include <vector>
@@ -1272,9 +1273,16 @@ Core::Color3f gradientColor(double value, double clamp, ColormapType colormap)
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
   // we also need to scale the color to the range of the charge.
-  double scaledValue = value / clamp; // from -1 to 1.0
-  double scaledValue2 =
-    1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  // A uniform (e.g., all-zero) potential has no range to scale by; use the
+  // neutral midpoint rather than 0/0 = NaN, which the colormap lookup would
+  // turn into an out-of-bounds index.
+  double scaledValue2 = 0.5;
+  if (clamp > 0.0 && std::isfinite(clamp) && std::isfinite(value)) {
+    double scaledValue = value / clamp; // from -1 to 1.0
+    scaledValue2 =
+      1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  }
+  scaledValue2 = std::clamp(scaledValue2, 0.0, 1.0);
 
   auto color = tinycolormap::GetColor(scaledValue2, colormap);
   Core::Color3f r(float(color.r()), color.g(), color.b());
@@ -1339,6 +1347,8 @@ void Surfaces::colorMeshByPotential(Core::Mesh& mesh)
   const auto potentials =
     Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
 
+  if (potentials.empty())
+    return;
   double minPotential = *std::min_element(potentials.begin(), potentials.end());
   double maxPotential = *std::max_element(potentials.begin(), potentials.end());
   double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
@@ -1395,6 +1405,8 @@ bool Surfaces::startColoring()
                        colormap]() mutable -> Core::Array<Core::Color3f> {
       Calc::DefaultModel defaultModel(key);
       const auto potentials = defaultModel.potentials(*snapshot, positions);
+      if (potentials.empty())
+        return Core::Array<Core::Color3f>();
 
       double minPotential =
         *std::min_element(potentials.begin(), potentials.end());
@@ -1431,7 +1443,9 @@ void Surfaces::colorFinished()
     return;
   }
 
-  m_pendingMesh1->setColors(m_colorWatcher.result());
+  const auto colors = m_colorWatcher.result();
+  if (colors.size() == m_pendingMesh1->vertices().size())
+    m_pendingMesh1->setColors(colors);
   publishPendingMeshes();
 }
 
