@@ -152,7 +152,7 @@ endforeach()
 
 if(haveGLWidgetTest)
   add_test(NAME "QtPlugins-GLWidgetReentry"
-    COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*")
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*:GLWidgetCoalesceTest.*:GLWidgetCoordsTest.*")
   set_tests_properties("QtPlugins-GLWidgetReentry" PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)

@@ -176,6 +176,14 @@ public slots:
   void updateScene();
 
   /**
+   * Rebuild the scene now if changes are pending (see Molecule::changed).
+   * Changes are normally coalesced and built once in paintGL(); callers that
+   * read the scene outside a paint (hit testing, bounds, export) should call
+   * this first. Does nothing if no changes are pending.
+   */
+  void applyPendingSceneChanges();
+
+  /**
    * Request update of molecule properties (e.g., dipole moment)
    */
   void updateMolecule();
@@ -238,6 +246,7 @@ protected:
   void paintGL() override;
 
   /** Reimplemented from QOpenGLWidget @{ */
+  bool event(QEvent*) override;
   void mouseDoubleClickEvent(QMouseEvent*) override;
   void mousePressEvent(QMouseEvent*) override;
   void mouseMoveEvent(QMouseEvent*) override;
@@ -247,7 +256,23 @@ protected:
   void keyReleaseEvent(QKeyEvent*) override;
   /** @} */
 
+private slots:
+  /** Record a molecule change; the scene is rebuilt at the next paint. */
+  void moleculeChanged(unsigned int changes);
+  /** Record a change that always needs a full rebuild (plugins, tools). */
+  void requestSceneRebuild();
+
 private:
+  /**
+   * Build the pending scene changes, if any, without scheduling a repaint.
+   * @return true if the scene was rebuilt.
+   */
+  bool applyPending();
+  /** Rebuild the whole scene without scheduling a repaint. @return false if
+   * deferred to the running build. */
+  bool rebuildScene();
+  /** Update the existing scene tree after a positions-only change. */
+  void rebuildCoordinates();
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
   bool isNavigationKeyGesture(const QKeyEvent* event) const;
 
@@ -260,7 +285,8 @@ private:
   QtGui::ScenePluginModel m_scenePlugins;
 
   // Frame statistics overlay, see setFrameStatsVisible().
-  void drawFrameStats();
+  /** @param windowRolled true if this frame completed a statistics window. */
+  void drawFrameStats(bool windowRolled);
 
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;
