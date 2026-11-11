@@ -7,6 +7,7 @@
 
 #include "copyasdialog.h"
 
+#include <avogadro/core/stereo.h>
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/io/smilesformat.h>
@@ -51,6 +52,9 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
     if (!label.empty())
       copy->setAtomLabel(a.index(), label);
 
+    if (Core::atomStereoUnspecified(mol, i))
+      Core::setAtomStereoUnspecified(*copy, a.index());
+
     // track the index
     atomIndex[i] = a.index();
   }
@@ -59,8 +63,12 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
     Core::Bond bond = mol.bond(i);
     Index start = bond.atom1().index();
     Index end = bond.atom2().index();
-    if (atomIndex[start] != MaxIndex && atomIndex[end] != MaxIndex)
-      copy->addBond(atomIndex[start], atomIndex[end], bond.order());
+    if (atomIndex[start] != MaxIndex && atomIndex[end] != MaxIndex) {
+      Core::Bond newBond =
+        copy->addBond(atomIndex[start], atomIndex[end], bond.order());
+      if (Core::bondStereoUnspecified(mol, i))
+        Core::setBondStereoUnspecified(*copy, newBond.index());
+    }
   }
 
   // Residues keep only the selected atoms; PDB-style writers need them.

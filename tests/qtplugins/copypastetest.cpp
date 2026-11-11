@@ -6,9 +6,14 @@
 #include "commandtestharness.h"
 
 #include "copyasdialog.h"
+// copy() is a private slot; the test drives it directly.
+#define private public
 #include "copypaste.h"
+#undef private
 
+#include <avogadro/core/stereo.h>
 #include <avogadro/io/fileformat.h>
+#include <avogadro/io/mdlformat.h>
 #include <avogadro/qtgui/molecule.h>
 
 #include <gtest/gtest.h>
@@ -18,6 +23,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QAction>
 
+#include <memory>
 #include <string>
 
 using Avogadro::QtPlugins::CopyAsDialog;
@@ -36,7 +42,7 @@ QAction* findAction(const QList<QAction*>& actions, const QString& text)
 }
 
 // Methanol from CommandTestHarness::buildMethanol(): C0 O1 H2 H3 H4 H5.
-class CopyPasteTest : public ::testing::Test
+class CopyPasteCommandTest : public ::testing::Test
 {
 protected:
   void SetUp() override
@@ -51,7 +57,7 @@ protected:
 
 } // namespace
 
-TEST_F(CopyPasteTest, copyAsSubmenuHasOtherFormatLast)
+TEST_F(CopyPasteCommandTest, copyAsSubmenuHasOtherFormatLast)
 {
   const QList<QAction*> actions = m_plugin.actions();
   QAction* other = findAction(actions, QStringLiteral("Other Format…"));
@@ -70,7 +76,7 @@ TEST_F(CopyPasteTest, copyAsSubmenuHasOtherFormatLast)
   }
 }
 
-TEST_F(CopyPasteTest, copyAsFormatsIncludeV3000)
+TEST_F(CopyPasteCommandTest, copyAsFormatsIncludeV3000)
 {
   const std::vector<CopyAsFormat> formats = CopyAsDialog::availableFormats();
   QStringList labels;
@@ -86,7 +92,7 @@ TEST_F(CopyPasteTest, copyAsFormatsIncludeV3000)
 
 // The selection-only copy used to keep nothing but element, position and bond
 // order, so a charged or labelled atom came out neutral.
-TEST_F(CopyPasteTest, selectionCopyKeepsChargeAndIsotope)
+TEST_F(CopyPasteCommandTest, selectionCopyKeepsChargeAndIsotope)
 {
   Avogadro::QtGui::Molecule* mol = m_harness.molecule();
   mol->setFormalCharge(1, -1);
@@ -102,11 +108,53 @@ TEST_F(CopyPasteTest, selectionCopyKeepsChargeAndIsotope)
   EXPECT_TRUE(text.contains("13")) << text.toStdString();
 }
 
-TEST_F(CopyPasteTest, wholeMoleculeCopyUnchanged)
+TEST_F(CopyPasteCommandTest, wholeMoleculeCopyUnchanged)
 {
   QAction* copyXyz = findAction(m_plugin.actions(), "XYZ");
   ASSERT_NE(copyXyz, nullptr);
   copyXyz->trigger();
   const QString text = QGuiApplication::clipboard()->text();
   EXPECT_EQ(text.section('\n', 0, 0).trimmed(), "6");
+}
+
+// Stereo-unspecified markers on the selected atoms and bonds must survive the
+// selection-only copy, or the clipboard MDL silently turns "either" into a
+// defined configuration.
+TEST_F(CopyPasteCommandTest, selectionCopyKeepsStereoUnspecified)
+{
+  Avogadro::QtGui::Molecule* mol = m_harness.molecule();
+  mol->clearAtoms();
+  // a stray atom first, so the copied indices differ from the originals
+  mol->addAtom(8, Avogadro::Vector3(9.0, 9.0, 9.0));
+  mol->addAtom(6, Avogadro::Vector3(0.0, 0.0, 0.0));
+  mol->addAtom(6, Avogadro::Vector3(1.3, 0.0, 0.0));
+  mol->addAtom(6, Avogadro::Vector3(2.0, 1.2, 0.0));
+  mol->addBond(1, 2, 2); // bond 0: double, marked
+  mol->addBond(2, 3, 1); // bond 1: single, atom 2 marked
+  Avogadro::Core::setBondStereoUnspecified(*mol, 0);
+  Avogadro::Core::setAtomStereoUnspecified(*mol, 2);
+  for (Avogadro::Index i = 0; i < mol->atomCount(); ++i)
+    mol->setAtomSelected(i, i > 0);
+
+  for (const char* label : { "MDL MOL (V3000)", "MDL MOL (V2000)" }) {
+    std::unique_ptr<Avogadro::Io::FileFormat> format;
+    for (const CopyAsFormat& f : CopyAsDialog::availableFormats())
+      if (f.label == label)
+        format = CopyAsDialog::createFormat(f);
+    ASSERT_NE(format, nullptr) << label;
+
+    Avogadro::Io::FileFormat* raw = format.get();
+    const bool ok = m_plugin.copy(raw);
+    ASSERT_TRUE(ok) << label;
+
+    const std::string text = QGuiApplication::clipboard()->text().toStdString();
+    Avogadro::Io::MdlFormat reader;
+    Avogadro::QtGui::Molecule back;
+    ASSERT_TRUE(reader.readString(text, back)) << label << "\n" << text;
+    ASSERT_EQ(back.atomCount(), static_cast<size_t>(3)) << label;
+    ASSERT_EQ(back.bondCount(), static_cast<size_t>(2)) << label;
+    EXPECT_TRUE(Avogadro::Core::bondStereoUnspecified(back, 0)) << label;
+    EXPECT_TRUE(Avogadro::Core::atomStereoUnspecified(back, 1)) << label;
+    EXPECT_FALSE(Avogadro::Core::bondStereoUnspecified(back, 1)) << label;
+  }
 }

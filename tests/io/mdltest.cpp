@@ -813,3 +813,79 @@ TEST(MdlTest, newInstanceKeepsVariant)
   delete a;
   delete b;
 }
+
+TEST(MdlTest, v3000VariantIgnoresV3000FalseOption)
+{
+  Molecule mol = makeAcetate();
+  MdlV3000Format mdl;
+  mdl.setOptions("{ \"v3000\": false }");
+  std::string out;
+  ASSERT_TRUE(mdl.writeString(out, mol));
+  EXPECT_NE(out.find("V3000"), std::string::npos);
+  EXPECT_EQ(out.find("V2000"), std::string::npos);
+
+  SdfV3000Format sdf;
+  sdf.setOptions("{ \"v3000\": false }");
+  std::string sdfOut;
+  ASSERT_TRUE(sdf.writeString(sdfOut, mol));
+  EXPECT_NE(sdfOut.find("V3000"), std::string::npos);
+  EXPECT_EQ(sdfOut.find("V2000"), std::string::npos);
+
+  // the plain format still honours the option
+  MdlFormat plain;
+  plain.setOptions("{ \"v3000\": false }");
+  std::string plainOut;
+  ASSERT_TRUE(plain.writeString(plainOut, mol));
+  EXPECT_NE(plainOut.find("V2000"), std::string::npos);
+}
+
+TEST(MdlTest, readV3000IsotopeOutOfRange)
+{
+  Molecule mol = makeAcetate();
+  MdlV3000Format mdl;
+  std::string out;
+  ASSERT_TRUE(mdl.writeString(out, mol));
+  ASSERT_NE(out.find("MASS=13"), std::string::npos);
+
+  for (const char* bad : { "MASS=70000", "MASS=-5" }) {
+    std::string text = out;
+    text.replace(text.find("MASS=13"), 7, bad);
+    MdlFormat reader;
+    Molecule back;
+    EXPECT_FALSE(reader.readString(text, back)) << bad;
+    EXPECT_FALSE(reader.error().empty()) << bad;
+  }
+}
+
+TEST(MdlTest, readV3000StopsAtRecordDelimiter)
+{
+  // Two different molecules, each with its own data item.
+  Molecule first = makeAcetate();
+  first.setData("ID", std::string("1"));
+  Molecule second;
+  Atom o = second.addAtom(8);
+  o.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  Atom h = second.addAtom(1);
+  h.setPosition3d(Avogadro::Vector3(0.96, 0.0, 0.0));
+  second.addBond(o, h, 1);
+  second.setData("ID", std::string("2"));
+
+  SdfV3000Format writer;
+  std::ostringstream out;
+  ASSERT_TRUE(writer.write(out, first));
+  ASSERT_TRUE(writer.write(out, second));
+
+  // Different atom counts, so the second record is not a conformer of the
+  // first: each read() call consumes exactly one record.
+  std::istringstream in(out.str());
+  SdfFormat reader;
+  Molecule a;
+  ASSERT_TRUE(reader.read(in, a));
+  EXPECT_EQ(a.atomCount(), static_cast<size_t>(4));
+  EXPECT_EQ(a.data("ID").toString().substr(0, 1), "1");
+
+  Molecule b;
+  ASSERT_TRUE(reader.read(in, b));
+  EXPECT_EQ(b.atomCount(), static_cast<size_t>(2));
+  EXPECT_EQ(b.data("ID").toString().substr(0, 1), "2");
+}

@@ -18,6 +18,7 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <istream>
 #include <ostream>
 #include <sstream>
@@ -453,7 +454,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                       buffer.substr(14 + 8 * i, 3));
           return false;
         }
-        mol.setIsotope(index, isotope);
+        if (isotope < 0 ||
+            isotope > std::numeric_limits<unsigned short>::max()) {
+          appendError("Isotope out of range: " + buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        mol.setIsotope(index, static_cast<unsigned short>(isotope));
       }
     } // isotope
 #ifndef NDEBUG
@@ -848,7 +854,12 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             appendError("Failed to parse isotope type: " + key);
             return false;
           }
-          mol.setIsotope(newAtom.index(), isotope);
+          if (isotope < 0 ||
+              isotope > std::numeric_limits<unsigned short>::max()) {
+            appendError("Isotope out of range: " + key);
+            return false;
+          }
+          mol.setIsotope(newAtom.index(), static_cast<unsigned short>(isotope));
         } else if (startsWith(key, "VAL=")) {
           // explicit valence — map to hybridization
           int valence = lexicalCast<int>(key.substr(4), ok);
@@ -967,21 +978,35 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   }
 
   // look for M  END
+  bool atRecordEnd = false;
   while (Core::getLine(in, buffer)) {
     if (trimmed(buffer) == "M  END")
       break;
+    if (trimmed(buffer) == "$$$$") {
+      atRecordEnd = true;
+      break;
+    }
   }
-  // read in any properties
-  while (Core::getLine(in, buffer)) {
-    if (startsWith(buffer, "> <")) {
+  // read in any properties, stopping at the end of the SDF record
+  while (!atRecordEnd && Core::getLine(in, buffer)) {
+    if (trimmed(buffer) == "$$$$")
+      break;
+    if (startsWith(buffer, "> <") && buffer.length() >= 4) {
       string key = trimmed(buffer.substr(3, buffer.length() - 4));
       string value;
+      bool endOfRecord = false;
       while (Core::getLine(in, buffer)) {
+        if (trimmed(buffer) == "$$$$") {
+          endOfRecord = true;
+          break;
+        }
         if (trimmed(buffer).empty())
           break;
         value += buffer + "\n";
       }
       mol.setData(key, value);
+      if (endOfRecord)
+        break;
     }
   }
 
@@ -1069,9 +1094,11 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out << "  Avogadro" << std::put_time(local_time, "%m%d%y%H%M") << "3D\n\n";
 
   // Counts line.
-  bool useV3000 = m_writeV3000;
+  // The V3000 variants always write V3000; the plain formats honour the option
+  bool useV3000 = false;
   boolOption("v3000", useV3000);
-  if (useV3000 || mol.atomCount() > 999 || mol.bondCount() > 999) {
+  if (m_writeV3000 || useV3000 || mol.atomCount() > 999 ||
+      mol.bondCount() > 999) {
     // V3000 was requested, or we need it for big molecules
     return writeV3000(out, mol);
   }
