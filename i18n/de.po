@@ -7062,7 +7062,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:653
 msgid "Select all atoms that belong to amino acid sidechains"
-msgstr ""
+msgstr "Wählen Sie alle Atome, die zu Aminosäure-Seitenketten gehören"
 
 #: qtplugins/select/select.cpp:655
 msgid "Select all water molecules"
