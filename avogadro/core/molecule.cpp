@@ -22,7 +22,6 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <cmath>
 #include <iostream>
 #include <memory>
 #include <utility>
