@@ -34,21 +34,27 @@ const FileFormat* readerFor(const QString& fileName)
 class FakeFormat : public FileFormat
 {
 public:
-  FakeFormat(std::string ident, std::string displayName, std::string ext)
+  FakeFormat(std::string ident, std::string displayName, std::string ext,
+             std::string ext2 = std::string())
     : m_ident(std::move(ident)), m_name(std::move(displayName)),
-      m_ext(std::move(ext))
+      m_ext(std::move(ext)), m_ext2(std::move(ext2))
   {
   }
   Operations supportedOperations() const override { return Read | File; }
   FileFormat* newInstance() const override
   {
-    return new FakeFormat(m_ident, m_name, m_ext);
+    return new FakeFormat(m_ident, m_name, m_ext, m_ext2);
   }
   std::string identifier() const override { return m_ident; }
   std::string name() const override { return m_name; }
   std::string description() const override { return std::string(); }
   std::string specificationUrl() const override { return std::string(); }
-  std::vector<std::string> fileExtensions() const override { return { m_ext }; }
+  std::vector<std::string> fileExtensions() const override
+  {
+    if (m_ext2.empty())
+      return { m_ext };
+    return { m_ext, m_ext2 };
+  }
   std::vector<std::string> mimeTypes() const override { return {}; }
   bool read(std::istream&, Avogadro::Core::Molecule&) override { return false; }
   bool write(std::ostream&, const Avogadro::Core::Molecule&) override
@@ -60,6 +66,7 @@ private:
   std::string m_ident;
   std::string m_name;
   std::string m_ext;
+  std::string m_ext2;
 };
 
 // Registers fake readers claiming a private extension, in the order given, and
@@ -183,39 +190,85 @@ TEST(FileFormatDialogTest, noGenericOutputKeepsFirstMatch)
 
 // The save dialog reports which filter entry the user picked; two formats may
 // share an extension, so the entry (not the extension) decides.
-TEST(FileFormatDialogTest, formatFromFilterHonorsSelectedEntry)
+TEST(FileFormatDialogTest, formatsFromFilterHonorsSelectedEntry)
 {
   FakeFormat plain("Test: SDF", "Test SDF", "sdf");
   FakeFormat other("Test: SDF3", "Test SDF V3000 (alt)", "sdf");
   std::vector<const FileFormat*> formats{ &plain, &other };
+  using Matches = std::vector<const FileFormat*>;
 
-  EXPECT_EQ(FileFormatDialog::formatFromFilter("Test SDF (*.sdf)", "/tmp/a.sdf",
-                                               formats),
-            &plain);
+  EXPECT_EQ(FileFormatDialog::formatsFromFilter("Test SDF (*.sdf)",
+                                                "/tmp/a.sdf", formats),
+            Matches{ &plain });
   // Names may contain parentheses; the extension match ignores case and any
   // compression suffix.
-  EXPECT_EQ(FileFormatDialog::formatFromFilter("Test SDF V3000 (alt) (*.sdf)",
-                                               "/tmp/A.SDF.gz", formats),
-            &other);
+  EXPECT_EQ(FileFormatDialog::formatsFromFilter("Test SDF V3000 (alt) (*.sdf)",
+                                                "/tmp/A.SDF.gz", formats),
+            Matches{ &other });
 }
 
-TEST(FileFormatDialogTest, formatFromFilterFallsBack)
+// Writers with the same name and extension are all returned so that the
+// caller can apply its usual preferences.
+TEST(FileFormatDialogTest, formatsFromFilterReturnsAllMatches)
+{
+  FakeFormat a("User Script: X", "Test X", "tx");
+  FakeFormat b("Avogadro: X", "Test X", "tx");
+  std::vector<const FileFormat*> formats{ &a, &b };
+  EXPECT_EQ(
+    FileFormatDialog::formatsFromFilter("Test X (*.tx)", "a.tx", formats),
+    formats);
+}
+
+// Only extensions shown in the selected entry count, not every extension the
+// writer supports.
+TEST(FileFormatDialogTest, formatsFromFilterUsesDisplayedExtensions)
+{
+  FakeFormat two("Test: SDF", "Name", "sdf", "sd3");
+  std::vector<const FileFormat*> formats{ &two };
+  using Matches = std::vector<const FileFormat*>;
+
+  EXPECT_TRUE(
+    FileFormatDialog::formatsFromFilter("Name (*.sdf)", "a.sd3", formats)
+      .empty());
+  EXPECT_EQ(
+    FileFormatDialog::formatsFromFilter("Name (*.sdf)", "a.sdf", formats),
+    Matches{ &two });
+
+  FakeFormat multi("Test: MOL", "Name", "mol", "mdl");
+  std::vector<const FileFormat*> mformats{ &multi };
+  EXPECT_EQ(FileFormatDialog::formatsFromFilter("Name (*.mol *.mdl)", "a.MDL",
+                                                mformats),
+            Matches{ &multi });
+
+  // Names shown without "*." match the whole file name.
+  FakeFormat poscar("Test: POSCAR", "VASP", "POSCAR");
+  std::vector<const FileFormat*> pformats{ &poscar };
+  EXPECT_EQ(
+    FileFormatDialog::formatsFromFilter("VASP (POSCAR)", "POSCAR", pformats),
+    Matches{ &poscar });
+}
+
+TEST(FileFormatDialogTest, formatsFromFilterFallsBack)
 {
   FakeFormat plain("Test: SDF", "Test SDF", "sdf");
   std::vector<const FileFormat*> formats{ &plain };
 
   // Generic entries, empty selections, unknown names and mismatched
   // extensions all defer to the extension lookup.
-  EXPECT_EQ(
-    FileFormatDialog::formatFromFilter("All files (*)", "a.sdf", formats),
-    nullptr);
-  EXPECT_EQ(FileFormatDialog::formatFromFilter(QString(), "a.sdf", formats),
-            nullptr);
-  EXPECT_EQ(
-    FileFormatDialog::formatFromFilter("Test SDF (*.sdf)", "a.mol", formats),
-    nullptr);
-  EXPECT_EQ(FileFormatDialog::formatFromFilter("Test SDF (*.sdf)", "", formats),
-            nullptr);
-  EXPECT_EQ(FileFormatDialog::formatFromFilter("NoParens", "a.sdf", formats),
-            nullptr);
+  EXPECT_TRUE(
+    FileFormatDialog::formatsFromFilter("All files (*)", "a.sdf", formats)
+      .empty());
+  EXPECT_TRUE(
+    FileFormatDialog::formatsFromFilter(QString(), "a.sdf", formats).empty());
+  EXPECT_TRUE(
+    FileFormatDialog::formatsFromFilter("Test SDF (*.sdf)", "a.mol", formats)
+      .empty());
+  EXPECT_TRUE(
+    FileFormatDialog::formatsFromFilter("Test SDF (*.sdf)", "", formats)
+      .empty());
+  EXPECT_TRUE(
+    FileFormatDialog::formatsFromFilter("NoParens", "a.sdf", formats).empty());
 }
+
+// Note: fileToWrite()'s chooser path (several writers sharing a name and
+// extension) needs a GUI and is not unit-tested.
