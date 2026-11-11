@@ -13,6 +13,7 @@
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QMessageBox>
 
+#include <QtCore/QRegularExpression>
 #include <QtCore/QSettings>
 
 #include <vector>
@@ -81,14 +82,37 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
 
   QString fileName;
   do { // jump point for continue statements on retry
-    fileName =
-      QFileDialog::getSaveFileName(parentWidget, caption, dir, realFilter);
+    QString selectedFilter;
+    fileName = QFileDialog::getSaveFileName(parentWidget, caption, dir,
+                                            realFilter, &selectedFilter);
 
     if (fileName.isEmpty()) // user cancel
       return result;
 
-    const Io::FileFormat* format = findFileFormat(
-      parentWidget, caption, fileName, FileFormat::File | FileFormat::Write);
+    // If the user picked a specific format in the filter list (e.g., two
+    // formats sharing the "sdf" extension), honor that choice.
+    const std::vector<const Io::FileFormat*> matches =
+      formatsFromFilter(selectedFilter, fileName,
+                        FileFormatManager::instance().fileFormats(
+                          FileFormat::File | FileFormat::Write));
+
+    const Io::FileFormat* format = nullptr;
+    if (matches.size() == 1) {
+      format = matches.front();
+    } else if (matches.size() > 1) {
+      // Writers sharing a name and extension: apply the usual preferences.
+      format = selectFileFormat(
+        parentWidget, matches, caption,
+        tr("Multiple %1 found that can %2 this format. Which should be used?")
+          .arg(tr("writers", "File writers"),
+               tr("write", "e.g. file writers that can 'write' this file.")),
+        writeSettingsKey(fileName));
+      if (!format) // user cancelled the chooser
+        return result;
+    } else {
+      format = findFileFormat(parentWidget, caption, fileName,
+                              FileFormat::File | FileFormat::Write);
+    }
 
     // If none found, give user the option to retry.
     if (!format) {
@@ -134,6 +158,67 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
   } while (fileName.isEmpty());
 
   return result;
+}
+
+std::vector<const Io::FileFormat*> FileFormatDialog::formatsFromFilter(
+  const QString& selectedFilter, const QString& fileName,
+  const std::vector<const Io::FileFormat*>& formats)
+{
+  std::vector<const Io::FileFormat*> matches;
+  if (selectedFilter.isEmpty() || fileName.isEmpty())
+    return matches;
+
+  // Filters look like "Name (*.ext1 *.ext2)"; the name itself may contain
+  // parentheses, so split on the last " (".
+  int split = selectedFilter.lastIndexOf(QStringLiteral(" ("));
+  if (split <= 0)
+    return matches;
+  const std::string name = selectedFilter.left(split).toStdString();
+
+  // The patterns shown in the entry, e.g. "*.mol *.mdl" or "POSCAR".
+  QString patterns = selectedFilter.mid(split + 2);
+  const int close = patterns.lastIndexOf(QLatin1Char(')'));
+  if (close >= 0)
+    patterns.truncate(close);
+  QStringList displayed;
+  for (QString token :
+       patterns.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts)) {
+    if (token.startsWith(QLatin1String("*.")))
+      token.remove(0, 2);
+    displayed << token.toLower();
+  }
+
+  QFileInfo fileInfo(
+    QString::fromStdString(Io::stripCompressionSuffix(fileName.toStdString())));
+  QString extension = fileInfo.suffix();
+  if (extension.isEmpty())
+    extension = fileInfo.fileName();
+  extension = extension.toLower();
+  if (!displayed.contains(extension))
+    return matches;
+  const std::string ext = extension.toStdString();
+
+  for (const auto* ff : formats) {
+    if (ff == nullptr || ff->name() != name)
+      continue;
+    for (const auto& e : ff->fileExtensions()) {
+      if (QString::fromStdString(e).toLower().toStdString() == ext) {
+        matches.push_back(ff);
+        break;
+      }
+    }
+  }
+  return matches;
+}
+
+QString FileFormatDialog::writeSettingsKey(const QString& fileName)
+{
+  QFileInfo fileInfo(
+    QString::fromStdString(Io::stripCompressionSuffix(fileName.toStdString())));
+  QString extension = fileInfo.suffix();
+  if (extension.isEmpty())
+    extension = fileInfo.fileName();
+  return QString("FileFormatDialog/fileToWrite/%1/lastUsed").arg(extension);
 }
 
 const Io::FileFormat* FileFormatDialog::findFileFormat(

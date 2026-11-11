@@ -98,6 +98,22 @@ public:
     const Io::FileFormat::Operations formatFlags,
     const QString& formatPrefix = QString());
 
+  /**
+   * Map the filter entry chosen in a save dialog back to writers.
+   * @param selectedFilter The selected entry, e.g. "SDF V3000 (*.sdf)".
+   * @param fileName The file name typed by the user.
+   * @param formats Candidate formats (usually all File | Write formats).
+   * @return Every format whose name() matches the filter's name and whose
+   * extensions include the extension of @p fileName (ignoring case and any
+   * compression suffix), provided that extension is one of the patterns shown
+   * in the entry. Empty if there is no such format (e.g., "All files"), in
+   * which case callers should fall back to extension lookup. Several formats
+   * may share a name and extension, so callers must choose among them.
+   */
+  static std::vector<const Io::FileFormat*> formatsFromFilter(
+    const QString& selectedFilter, const QString& fileName,
+    const std::vector<const Io::FileFormat*>& formats);
+
 private:
   /**
    * Constructor is private for now to force use of static methods. This
@@ -139,6 +155,9 @@ public: // Must be public for operator declarations
   Q_DECLARE_FLAGS(FilterStringOptions, FilterStringOption)
 
 private:
+  /** @return The QSettings key findFileFormat() uses to write @p fileName. */
+  static QString writeSettingsKey(const QString& fileName);
+
   static QString generateFilterString(
     const std::vector<const Io::FileFormat*>& ffs, FilterStringOptions options);
   /** @} */
