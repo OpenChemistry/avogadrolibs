@@ -8,8 +8,10 @@
 #include <avogadro/qtgui/colortheme.h>
 
 #include <QtGui/QColor>
+#include <QtGui/QGuiApplication>
 #include <QtGui/QPalette>
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 
 using Avogadro::QtGui::ColorTheme;
@@ -45,6 +47,22 @@ TEST(ColorThemeTest, currentThemeIsCallable)
   // Platform-dependent: only check that it returns a valid value.
   const ColorTheme theme = colorTheme();
   EXPECT_TRUE(theme == ColorTheme::Light || theme == ColorTheme::Dark);
+}
+
+TEST(ColorThemeTest, coreApplicationOnly)
+{
+  // Regression: a plain QCoreApplication must not be used as a
+  // QGuiApplication (this crashed in the sanitizer CI).
+  static int argc = 1;
+  static char name[] = "colorthemetest";
+  static char* argv[] = { name, nullptr };
+  if (QCoreApplication::instance() == nullptr)
+    static QCoreApplication app(argc, argv);
+
+  if (qobject_cast<QGuiApplication*>(QCoreApplication::instance()) != nullptr)
+    GTEST_SKIP() << "A QGuiApplication already exists in this process";
+
+  EXPECT_EQ(colorTheme(), colorTheme(QPalette()));
 }
 
 TEST(ColorThemeTest, highlightColorsDifferByTheme)

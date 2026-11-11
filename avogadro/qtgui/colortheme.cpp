@@ -5,6 +5,7 @@
 
 #include "colortheme.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include <QtCore/QtGlobal>
 #include <QtGui/QColor>
@@ -28,18 +29,20 @@ ColorTheme colorTheme(const QPalette& palette)
 
 ColorTheme colorTheme()
 {
+  // qGuiApp is a static_cast, so it is non-null (and invalid) when only a
+  // QCoreApplication exists, e.g. in command-line tools and unit tests.
+  auto* guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance());
+  if (guiApp == nullptr)
+    return colorTheme(QPalette());
+
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-  if (qGuiApp != nullptr) {
-    const Qt::ColorScheme scheme = qGuiApp->styleHints()->colorScheme();
-    if (scheme == Qt::ColorScheme::Dark)
-      return ColorTheme::Dark;
-    if (scheme == Qt::ColorScheme::Light)
-      return ColorTheme::Light;
-  }
+  const Qt::ColorScheme scheme = guiApp->styleHints()->colorScheme();
+  if (scheme == Qt::ColorScheme::Dark)
+    return ColorTheme::Dark;
+  if (scheme == Qt::ColorScheme::Light)
+    return ColorTheme::Light;
 #endif
-  if (qGuiApp != nullptr)
-    return colorTheme(QGuiApplication::palette());
-  return colorTheme(QPalette());
+  return colorTheme(QGuiApplication::palette());
 }
 
 // Dark-mode palette: brighter / higher-value colors for contrast on dark
