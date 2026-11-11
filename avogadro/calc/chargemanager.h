@@ -149,11 +149,24 @@ public:
                                  const Core::Array<Vector3>& points) const;
 
   /**
+   * @return true if potentials() for this identifier and molecule would call
+   * a model that computes potentials by something other than the point-charge
+   * model on the partial charges (see ChargeModel::hasCustomPotentials()).
+   * False means the potentials equal DefaultModel's on the charges returned
+   * by partialCharges().
+   */
+  bool hasCustomPotentials(const std::string& identifier,
+                           const Core::Molecule& mol) const;
+
+  /**
    * Get any errors that have been logged when loading models.
    */
   std::string error() const;
 
 private:
+  /// The registered model for an identifier (case-insensitive), or nullptr.
+  const ChargeModel* registeredModel(const std::string& identifier) const;
+
   using ChargeIdMap = std::map<std::string, size_t>;
 
   ChargeManager();

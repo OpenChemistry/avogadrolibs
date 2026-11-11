@@ -15,6 +15,7 @@ namespace {
 #include <gwavi.h>
 
 #include <avogadro/calc/chargemanager.h>
+#include <avogadro/calc/chargemodel.h>
 
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/variant.h>
@@ -63,6 +64,7 @@ namespace {
 #include <QtWidgets/QMessageBox>
 
 #include <algorithm>
+#include <cmath>
 #include <numeric>
 #include <utility>
 #include <vector>
@@ -119,6 +121,7 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(edtFinished()));
   connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
+  connect(&m_colorWatcher, SIGNAL(finished()), SLOT(colorFinished()));
 
   m_actions.push_back(action);
 
@@ -405,6 +408,9 @@ void Surfaces::waitForOwnWorkers()
   m_displayMeshWatcher.waitForFinished();
   m_displayMeshWatcher.blockSignals(false);
 
+  // The colouring worker works on a snapshot, but cannot be interrupted.
+  waitForColoring();
+
   if (m_gaussianConcurrent != nullptr) {
     m_gaussianConcurrent->watcher().cancel();
     m_gaussianConcurrent->watcher().waitForFinished();
@@ -418,6 +424,14 @@ void Surfaces::waitForOwnWorkers()
     m_meshGenerator1->wait();
   if (m_meshGenerator2 != nullptr)
     m_meshGenerator2->wait();
+}
+
+void Surfaces::waitForColoring()
+{
+  m_colorWatcher.blockSignals(true);
+  m_colorWatcher.waitForFinished();
+  m_colorWatcher.blockSignals(false);
+  m_coloring = false;
 }
 
 bool Surfaces::clearSurfaceData()
@@ -1204,6 +1218,10 @@ void Surfaces::displayMesh()
   else
     m_smoothingPasses = m_commandSmoothing;
 
+  // A colouring job still in flight belongs to the pending meshes about to
+  // be replaced; its result is dropped.
+  waitForColoring();
+
   // A previous mesh job may still be writing into the pending meshes and
   // reading its cube; it is superseded, but has to finish before they go.
   if (m_meshGenerator1 != nullptr)
@@ -1248,21 +1266,50 @@ void Surfaces::displayMesh()
     m_meshGenerator2->start();
 }
 
-Core::Color3f Surfaces::chargeGradient(double value, double clamp,
-                                       ColormapType colormap) const
+namespace {
+// Free of any plugin state, so that the colouring worker can call it.
+Core::Color3f gradientColor(double value, double clamp, ColormapType colormap)
 {
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
   // we also need to scale the color to the range of the charge.
-  double scaledValue = value / clamp; // from -1 to 1.0
-  double scaledValue2 =
-    1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  // A uniform (e.g., all-zero) potential has no range to scale by; use the
+  // neutral midpoint rather than 0/0 = NaN, which the colormap lookup would
+  // turn into an out-of-bounds index.
+  double scaledValue2 = 0.5;
+  if (clamp > 0.0 && std::isfinite(clamp) && std::isfinite(value)) {
+    double scaledValue = value / clamp; // from -1 to 1.0
+    scaledValue2 =
+      1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  }
+  scaledValue2 = std::clamp(scaledValue2, 0.0, 1.0);
 
   auto color = tinycolormap::GetColor(scaledValue2, colormap);
   Core::Color3f r(float(color.r()), color.g(), color.b());
 
   return r;
 }
+
+// Colours for a set of potentials, scaled by the largest magnitude. Pure
+// function of its arguments, so the colouring worker can call it.
+Core::Array<Core::Color3f> colorsFromPotentials(
+  const Core::Array<double>& potentials, ColormapType colormap)
+{
+  if (potentials.empty())
+    return Core::Array<Core::Color3f>();
+
+  const double minPotential =
+    *std::min_element(potentials.begin(), potentials.end());
+  const double maxPotential =
+    *std::max_element(potentials.begin(), potentials.end());
+  const double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
+
+  Core::Array<Core::Color3f> colors(potentials.size());
+  for (size_t i = 0; i < potentials.size(); i++)
+    colors[i] = gradientColor(potentials[i], clamp, colormap);
+  return colors;
+}
+} // namespace
 
 ColormapType Surfaces::getColormapFromString(const QString& name) const
 {
@@ -1304,7 +1351,7 @@ void Surfaces::colorMeshByPotential(Core::Mesh& mesh)
   const auto model = m_dialog->colorModel().toStdString();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
 
-  const auto positionsf = mesh.vertices();
+  const auto& positionsf = mesh.vertices();
   if (positionsf.empty())
     return;
 
@@ -1314,29 +1361,93 @@ void Surfaces::colorMeshByPotential(Core::Mesh& mesh)
   const auto potentials =
     Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
 
-  double minPotential = *std::min_element(potentials.begin(), potentials.end());
-  double maxPotential = *std::max_element(potentials.begin(), potentials.end());
-  double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
-
-  Core::Array<Core::Color3f> colors(positions.size());
-  for (size_t i = 0; i < potentials.size(); i++)
-    colors[i] = chargeGradient(potentials[i], clamp, colormap);
-
-  mesh.setColors(colors);
+  if (potentials.empty())
+    return;
+  mesh.setColors(colorsFromPotentials(potentials, colormap));
 }
 
-void Surfaces::colorMesh(Core::Mesh& mesh)
+bool Surfaces::startColoring()
 {
-  if (m_dialog == nullptr)
+  if (m_dialog == nullptr ||
+      m_dialog->colorProperty() != ByElectrostaticPotential ||
+      m_molecule == nullptr || !m_pendingMesh1)
+    return false;
+
+  if (m_pendingMesh1->vertices().empty())
+    return false;
+
+  const std::string model = m_dialog->colorModel().toStdString();
+  auto& manager = Calc::ChargeManager::instance();
+
+  // A model that computes potentials by itself (a script) is a shared object
+  // with a process interpreter; keep using it on this thread as before.
+  if (manager.hasCustomPotentials(model, *m_molecule)) {
+    colorMeshByPotential(*m_pendingMesh1);
+    return false;
+  }
+
+  // Everything below is read on the GUI thread. The charge models are shared
+  // singletons with mutable state (error strings, interpreters, an Open
+  // Babel listener that needs this thread's event loop) and cache charges
+  // into the molecule, so the worker never sees them or the molecule: the
+  // charges are fetched here, and the worker only evaluates the point-charge
+  // sum on copy-on-write copies of the data.
+  const MatrixX charges = manager.partialCharges(model, *m_molecule);
+  const Core::Array<Vector3> atomPositions =
+    std::as_const(*m_molecule).atomPositions3d();
+  const Core::Array<Vector3f> vertices = m_pendingMesh1->vertices();
+  const auto colormap = getColormapFromString(m_dialog->colormapName());
+
+  m_coloring = true;
+  m_colorWatcher.setFuture(
+    QtConcurrent::run([charges, atomPositions, vertices,
+                       colormap]() -> Core::Array<Core::Color3f> {
+      Core::Array<Vector3> points(vertices.size());
+      std::transform(vertices.begin(), vertices.end(), points.begin(),
+                     [](const Vector3f& pos) { return pos.cast<double>(); });
+
+      const std::size_t atomCount =
+        charges.cols() < 1 ? 0
+                           : std::min(static_cast<std::size_t>(charges.rows()),
+                                      atomPositions.size());
+      // The selected model's dielectric is not reachable through
+      // ChargeManager, and nothing in the tree sets it away from 1.
+      const auto potentials = Calc::ChargeModel::pointChargePotentials(
+        charges.data(), atomPositions.data(), atomCount, points, 1.0);
+      return colorsFromPotentials(potentials, colormap);
+    }));
+  return true;
+}
+
+void Surfaces::discardPendingMeshes()
+{
+  m_pendingMesh1.reset();
+  m_pendingMesh2.reset();
+  m_meshJobStale = false;
+  reportInterrupted();
+}
+
+void Surfaces::colorFinished()
+{
+  // A signal from a job that was dropped, or from one that finished while
+  // its replacement is already running.
+  if (!m_coloring || m_colorWatcher.isRunning())
+    return;
+  m_coloring = false;
+
+  // The job was already reported interrupted (moleculeChanged()).
+  if (!m_pendingMesh1)
     return;
 
-  switch (m_dialog->colorProperty()) {
-    case None:
-      break;
-    case ByElectrostaticPotential:
-      colorMeshByPotential(mesh);
-      break;
+  if (m_meshJobStale || m_molecule == nullptr) {
+    discardPendingMeshes();
+    return;
   }
+
+  const auto colors = m_colorWatcher.result();
+  if (colors.size() == m_pendingMesh1->vertices().size())
+    m_pendingMesh1->setColors(colors);
+  publishPendingMeshes();
 }
 
 void Surfaces::publishMesh(int& index, std::unique_ptr<Core::Mesh> mesh)
@@ -1354,7 +1465,7 @@ void Surfaces::meshFinished()
 {
   // Wait for every generator of the current job. A finished() left over from
   // a job that displayMesh() superseded must not publish half a pair either.
-  if (!m_pendingMesh1)
+  if (!m_pendingMesh1 || m_coloring)
     return;
   if (m_meshGenerator1 != nullptr && m_meshGenerator1->isRunning())
     return;
@@ -1362,17 +1473,24 @@ void Surfaces::meshFinished()
       m_meshGenerator2->isRunning())
     return;
 
-  std::unique_ptr<Core::Mesh> mesh1 = std::move(m_pendingMesh1);
-  std::unique_ptr<Core::Mesh> mesh2 = std::move(m_pendingMesh2);
   m_meshCube.reset();
-  const bool stale = m_meshJobStale;
-  m_meshJobStale = false;
-  if (stale || m_molecule == nullptr) {
-    reportInterrupted();
+  if (m_meshJobStale || m_molecule == nullptr) {
+    discardPendingMeshes();
     return;
   }
 
-  colorMesh(*mesh1);
+  // Colouring by ESP runs on a worker; colorFinished() publishes.
+  if (startColoring())
+    return;
+
+  publishPendingMeshes();
+}
+
+void Surfaces::publishPendingMeshes()
+{
+  std::unique_ptr<Core::Mesh> mesh1 = std::move(m_pendingMesh1);
+  std::unique_ptr<Core::Mesh> mesh2 = std::move(m_pendingMesh2);
+  m_meshJobStale = false;
 
   // Publish both halves of a pair before anything can repaint.
   publishMesh(m_mesh1Index, std::move(mesh1));

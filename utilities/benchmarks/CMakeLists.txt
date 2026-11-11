@@ -16,6 +16,12 @@ if(ENABLE_CALC_BENCHMARKS)
   target_compile_definitions(AvogadroOptimizerBenchmark
     PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
 
+  add_executable(AvogadroESPBenchmark espbenchmark.cpp)
+  target_link_libraries(AvogadroESPBenchmark
+    PRIVATE Avogadro::Calc Avogadro::IO)
+  target_compile_definitions(AvogadroESPBenchmark
+    PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
+
   add_executable(AvogadroGaussianBenchmark gaussianbenchmark.cpp)
   target_link_libraries(AvogadroGaussianBenchmark
     PRIVATE Avogadro::Core Avogadro::IO Avogadro::QuantumIO)

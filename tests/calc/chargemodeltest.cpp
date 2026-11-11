@@ -317,3 +317,143 @@ TEST(ChargeModelTest, NoChargeColumnYieldsZeroResults)
   const double potential = model.potential(molecule, Vector3(2.0, 0.0, 0.0));
   EXPECT_DOUBLE_EQ(potential, 0.0);
 }
+
+// --- Parallel potentials() --------------------------------------------------
+
+namespace {
+
+// A deterministic molecule on a jittered grid with alternating charges
+Molecule gridMolecule(int atoms)
+{
+  Molecule molecule;
+  MatrixX charges(atoms, 1);
+  for (int i = 0; i < atoms; ++i) {
+    auto atom = molecule.addAtom(6);
+    atom.setPosition3d(Vector3(1.5 * (i % 4) + 0.01 * i, 1.5 * ((i / 4) % 4),
+                               1.5 * (i / 16) + 0.003 * i * i));
+    charges(i, 0) = ((i % 3) - 1) * 0.1 + 0.013 * (i % 5);
+  }
+  molecule.setPartialCharges("test", charges);
+  return molecule;
+}
+
+// Evaluate through the threaded kernel with an explicit thread count, so the
+// threaded path runs even on a single-core machine.
+Array<double> threadedPotentials(Molecule& molecule, const ChargeModel& model,
+                                 const Array<Vector3>& points,
+                                 std::size_t threads)
+{
+  const MatrixX charges = model.partialCharges(molecule);
+  const Array<Vector3>& positions = molecule.atomPositions3d();
+  return ChargeModel::pointChargePotentials(
+    charges.data(), positions.data(),
+    std::min(static_cast<std::size_t>(charges.rows()), positions.size()),
+    points, model.dielectric(), threads);
+}
+
+Array<Vector3> gridPoints(size_t count)
+{
+  Array<Vector3> points;
+  for (size_t i = 0; i < count; ++i) {
+    points.push_back(Vector3(-3.0 + 0.001 * (i % 9000),
+                             -2.0 + 0.0007 * (i % 7001),
+                             -1.0 + 0.0003 * (i % 5003)));
+  }
+  return points;
+}
+
+} // namespace
+
+TEST(ChargeModelTest, ParallelPotentialsMatchPotentialExactly)
+{
+  Molecule molecule = gridMolecule(48);
+  DefaultModel model("test");
+
+  // 20003 points is not divisible by the thread count: uneven last chunk
+  const Array<Vector3> points = gridPoints(20003);
+  const Array<double> batch = threadedPotentials(molecule, model, points, 4);
+  const Array<double> automatic = model.potentials(molecule, points);
+  ASSERT_EQ(batch.size(), points.size());
+  ASSERT_EQ(automatic.size(), points.size());
+  for (size_t i = 0; i < points.size(); ++i) {
+    ASSERT_EQ(batch[i], model.potential(molecule, points[i])) << i;
+    ASSERT_EQ(automatic[i], batch[i]) << i;
+  }
+}
+
+TEST(ChargeModelTest, SmallPotentialsMatchPotentialExactly)
+{
+  Molecule molecule = gridMolecule(48);
+  DefaultModel model("test");
+
+  const Array<Vector3> points = gridPoints(7);
+  const Array<double> batch = model.potentials(molecule, points);
+  ASSERT_EQ(batch.size(), points.size());
+  for (size_t i = 0; i < points.size(); ++i)
+    EXPECT_EQ(batch[i], model.potential(molecule, points[i]));
+}
+
+TEST(ChargeModelTest, ParallelPotentialsPointNearAtom)
+{
+  Molecule molecule = gridMolecule(48);
+  DefaultModel model("test");
+
+  Array<Vector3> points = gridPoints(20003);
+  // within 0.01 A of an atom (skipped term) and exactly on another atom
+  points[5000] = molecule.atomPosition3d(3) + Vector3(0.005, 0.0, 0.0);
+  points[12345] = molecule.atomPosition3d(10);
+
+  const Array<double> batch = threadedPotentials(molecule, model, points, 4);
+  for (size_t i = 0; i < points.size(); ++i) {
+    EXPECT_TRUE(std::isfinite(batch[i]));
+    EXPECT_EQ(batch[i], model.potential(molecule, points[i]));
+  }
+}
+
+TEST(ChargeModelTest, PotentialsWithoutAtomsAreZero)
+{
+  Molecule molecule;
+  DefaultModel model("test");
+
+  const Array<Vector3> points = gridPoints(5000);
+  const Array<double> batch = model.potentials(molecule, points);
+  ASSERT_EQ(batch.size(), points.size());
+  for (size_t i = 0; i < batch.size(); ++i)
+    EXPECT_EQ(batch[i], 0.0);
+}
+
+TEST(ChargeModelTest, ParallelPotentialsRespectDielectric)
+{
+  Molecule molecule = gridMolecule(48);
+  DefaultModel model("test");
+
+  const Array<Vector3> points = gridPoints(20003);
+  const Array<double> unscaled = threadedPotentials(molecule, model, points, 4);
+
+  model.setDielectric(4.0f);
+  const Array<double> scaled = threadedPotentials(molecule, model, points, 4);
+  ASSERT_EQ(scaled.size(), points.size());
+  for (size_t i = 0; i < points.size(); ++i) {
+    EXPECT_EQ(scaled[i], model.potential(molecule, points[i]));
+    EXPECT_DOUBLE_EQ(scaled[i], unscaled[i] / 4.0);
+  }
+}
+
+TEST(ChargeModelTest, NonPositiveDielectricIsTreatedAsVacuum)
+{
+  Molecule molecule = gridMolecule(48);
+  DefaultModel model("test");
+
+  const Array<Vector3> points = gridPoints(20003);
+  const Array<double> reference =
+    threadedPotentials(molecule, model, points, 4);
+
+  model.setDielectric(0.0f);
+  const Array<double> zero = threadedPotentials(molecule, model, points, 4);
+  ASSERT_EQ(zero.size(), points.size());
+  for (size_t i = 0; i < points.size(); ++i) {
+    EXPECT_TRUE(std::isfinite(zero[i]));
+    EXPECT_EQ(zero[i], reference[i]);
+  }
+  EXPECT_EQ(model.potential(molecule, points[0]), reference[0]);
+}
