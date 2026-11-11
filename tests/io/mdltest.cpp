@@ -11,10 +11,13 @@
 #include <avogadro/core/molecule.h>
 
 #include <avogadro/io/mdlformat.h>
+#include <avogadro/io/sdfformat.h>
 
 #include <cctype>
+#include <cmath>
 #include <clocale>
 #include <cstdio>
+#include <sstream>
 #include <string>
 
 using Avogadro::Core::Atom;
@@ -24,6 +27,9 @@ using Avogadro::Core::SP2;
 using Avogadro::Core::Variant;
 using Avogadro::Io::FileFormat;
 using Avogadro::Io::MdlFormat;
+using Avogadro::Io::MdlV3000Format;
+using Avogadro::Io::SdfFormat;
+using Avogadro::Io::SdfV3000Format;
 
 TEST(MdlTest, readFile)
 {
@@ -613,4 +619,197 @@ TEST(MdlTest, readMultiWithoutVersionTag)
   ASSERT_TRUE(mdl.readString(sdf, molecule)) << mdl.error();
   EXPECT_EQ(molecule.atomCount(), 6);
   EXPECT_EQ(molecule.coordinate3dCount(), 2);
+}
+
+namespace {
+// Acetate with a 13C methyl: formal charge, isotope, single and double bonds.
+Molecule makeAcetate()
+{
+  Molecule mol;
+  mol.setData("name", std::string("acetate"));
+  Atom c1 = mol.addAtom(6);
+  c1.setPosition3d(Avogadro::Vector3(0.0, 0.0, 0.0));
+  c1.setIsotope(13);
+  Atom c2 = mol.addAtom(6);
+  c2.setPosition3d(Avogadro::Vector3(1.5, 0.0, 0.0));
+  Atom o1 = mol.addAtom(8);
+  o1.setPosition3d(Avogadro::Vector3(2.1, 1.1, 0.0));
+  Atom o2 = mol.addAtom(8);
+  o2.setPosition3d(Avogadro::Vector3(2.1, -1.1, 0.0));
+  o2.setFormalCharge(-1);
+  mol.addBond(c1, c2, 1);
+  mol.addBond(c2, o1, 2);
+  mol.addBond(c2, o2, 1);
+  return mol;
+}
+
+void expectAcetate(const Molecule& mol)
+{
+  ASSERT_EQ(mol.atomCount(), static_cast<size_t>(4));
+  ASSERT_EQ(mol.bondCount(), static_cast<size_t>(3));
+  EXPECT_EQ(mol.atom(0).isotope(), 13);
+  EXPECT_EQ(mol.atom(1).isotope(), 0);
+  EXPECT_EQ(mol.atom(3).formalCharge(), -1);
+  EXPECT_EQ(mol.atom(2).formalCharge(), 0);
+  EXPECT_EQ(mol.atom(3).atomicNumber(), static_cast<unsigned char>(8));
+  EXPECT_NEAR(mol.atom(2).position3d().x(), 2.1, 1e-5);
+  EXPECT_NEAR(mol.atom(3).position3d().y(), -1.1, 1e-5);
+  int doubles = 0;
+  for (size_t i = 0; i < mol.bondCount(); ++i)
+    if (mol.bond(i).order() == 2)
+      ++doubles;
+  EXPECT_EQ(doubles, 1);
+}
+} // namespace
+
+TEST(MdlTest, writeV2000IsDefault)
+{
+  Molecule mol = makeAcetate();
+  MdlFormat mdl;
+  std::string out;
+  ASSERT_TRUE(mdl.writeString(out, mol));
+  EXPECT_NE(out.find("V2000"), std::string::npos);
+  EXPECT_EQ(out.find("V3000"), std::string::npos);
+  // isotopes and charges are carried in V2000 property lines
+  EXPECT_NE(out.find("M  ISO  1   1  13"), std::string::npos);
+  EXPECT_NE(out.find("M  CHG  1   4  -1"), std::string::npos);
+
+  MdlFormat reader;
+  Molecule back;
+  ASSERT_TRUE(reader.readString(out, back));
+  expectAcetate(back);
+}
+
+TEST(MdlTest, writeV3000Variant)
+{
+  Molecule mol = makeAcetate();
+  MdlV3000Format mdl;
+  EXPECT_FALSE(mdl.supportedOperations() & FileFormat::Read);
+  std::string out;
+  ASSERT_TRUE(mdl.writeString(out, mol));
+  EXPECT_NE(out.find("V3000"), std::string::npos);
+  EXPECT_NE(out.find("M  V30 BEGIN CTAB"), std::string::npos);
+  EXPECT_NE(out.find("CHG=-1"), std::string::npos);
+  EXPECT_NE(out.find("MASS=13"), std::string::npos);
+  EXPECT_EQ(out.find("V2000"), std::string::npos);
+
+  MdlFormat reader;
+  Molecule back;
+  ASSERT_TRUE(reader.readString(out, back));
+  expectAcetate(back);
+  EXPECT_EQ(back.data("name").toString(), "acetate");
+}
+
+TEST(MdlTest, writeV3000Option)
+{
+  Molecule mol = makeAcetate();
+  MdlFormat mdl;
+  mdl.setOptions("{ \"v3000\": true }");
+  std::string out;
+  ASSERT_TRUE(mdl.writeString(out, mol));
+  EXPECT_NE(out.find("M  V30 BEGIN CTAB"), std::string::npos);
+
+  MdlFormat off;
+  off.setOptions("{ \"v3000\": false }");
+  out.clear();
+  ASSERT_TRUE(off.writeString(out, mol));
+  EXPECT_NE(out.find("V2000"), std::string::npos);
+}
+
+TEST(MdlTest, writeV3000KekuleRing)
+{
+  // benzene: alternating single/double bonds
+  Molecule mol;
+  for (int i = 0; i < 6; ++i) {
+    Atom a = mol.addAtom(6);
+    double angle = i * 3.14159265358979 / 3.0;
+    a.setPosition3d(
+      Avogadro::Vector3(1.4 * std::cos(angle), 1.4 * std::sin(angle), 0.0));
+  }
+  for (int i = 0; i < 6; ++i)
+    mol.addBond(mol.atom(i), mol.atom((i + 1) % 6), (i % 2) ? 1 : 2);
+  MdlV3000Format mdl;
+  std::string out;
+  ASSERT_TRUE(mdl.writeString(out, mol));
+  MdlFormat reader;
+  Molecule back;
+  ASSERT_TRUE(reader.readString(out, back));
+  ASSERT_EQ(back.bondCount(), static_cast<size_t>(6));
+  int doubles = 0;
+  for (size_t i = 0; i < 6; ++i)
+    if (back.bond(i).order() == 2)
+      ++doubles;
+  EXPECT_EQ(doubles, 3);
+}
+
+TEST(MdlTest, readV3000AromaticBonds)
+{
+  // order 4 in a V3000 file is kekulized on read
+  std::string v3000 =
+    "benzene\n  test\n\n  0  0  0     0  0            999 V3000\n"
+    "M  V30 BEGIN CTAB\nM  V30 COUNTS 6 6 0 0 0\nM  V30 BEGIN ATOM\n"
+    "M  V30 1 C 1.4 0 0 0\nM  V30 2 C 0.7 1.2 0 0\n"
+    "M  V30 3 C -0.7 1.2 0 0\nM  V30 4 C -1.4 0 0 0\n"
+    "M  V30 5 C -0.7 -1.2 0 0\nM  V30 6 C 0.7 -1.2 0 0\n"
+    "M  V30 END ATOM\nM  V30 BEGIN BOND\n"
+    "M  V30 1 4 1 2\nM  V30 2 4 2 3\nM  V30 3 4 3 4\n"
+    "M  V30 4 4 4 5\nM  V30 5 4 5 6\nM  V30 6 4 6 1\n"
+    "M  V30 END BOND\nM  V30 END CTAB\nM  END\n";
+  MdlFormat reader;
+  Molecule mol;
+  ASSERT_TRUE(reader.readString(v3000, mol));
+  int doubles = 0;
+  for (size_t i = 0; i < mol.bondCount(); ++i)
+    if (mol.bond(i).order() == 2)
+      ++doubles;
+  EXPECT_EQ(doubles, 3);
+}
+
+TEST(MdlTest, writeSdfV3000MultiRecord)
+{
+  Molecule mol = makeAcetate();
+  mol.setData("PUBCHEM_ID", std::string("175"));
+  SdfV3000Format sdf;
+  EXPECT_FALSE(sdf.supportedOperations() & FileFormat::Read);
+  std::ostringstream out;
+  ASSERT_TRUE(sdf.write(out, mol));
+  ASSERT_TRUE(sdf.write(out, mol));
+  const std::string text = out.str();
+
+  size_t records = 0, v30 = 0, data = 0, pos = 0;
+  while ((pos = text.find("$$$$", pos)) != std::string::npos) {
+    ++records;
+    pos += 4;
+  }
+  for (pos = 0;
+       (pos = text.find("M  V30 BEGIN CTAB", pos)) != std::string::npos;
+       pos += 4)
+    ++v30;
+  for (pos = 0; (pos = text.find("> <PUBCHEM_ID>", pos)) != std::string::npos;
+       pos += 4)
+    ++data;
+  EXPECT_EQ(records, static_cast<size_t>(2));
+  EXPECT_EQ(v30, static_cast<size_t>(2));
+  EXPECT_EQ(data, static_cast<size_t>(2));
+  EXPECT_EQ(text.find("V2000"), std::string::npos);
+
+  // the plain SDF writer honours the option for every record too
+  SdfFormat plain;
+  plain.setOptions("{ \"v3000\": true }");
+  std::ostringstream out2;
+  ASSERT_TRUE(plain.write(out2, mol));
+  ASSERT_TRUE(plain.write(out2, mol));
+  EXPECT_EQ(out2.str(), text);
+}
+
+TEST(MdlTest, newInstanceKeepsVariant)
+{
+  MdlV3000Format mdl;
+  SdfV3000Format sdf;
+  FileFormat* a = mdl.newInstance();
+  FileFormat* b = sdf.newInstance();
+  EXPECT_EQ(a->identifier(), "Avogadro: MDL V3000");
+  EXPECT_EQ(b->identifier(), "Avogadro: SDF V3000");
+  delete a;
+  delete b;
 }
