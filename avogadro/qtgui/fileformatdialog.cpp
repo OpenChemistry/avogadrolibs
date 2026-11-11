@@ -81,14 +81,23 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
 
   QString fileName;
   do { // jump point for continue statements on retry
-    fileName =
-      QFileDialog::getSaveFileName(parentWidget, caption, dir, realFilter);
+    QString selectedFilter;
+    fileName = QFileDialog::getSaveFileName(parentWidget, caption, dir,
+                                            realFilter, &selectedFilter);
 
     if (fileName.isEmpty()) // user cancel
       return result;
 
-    const Io::FileFormat* format = findFileFormat(
-      parentWidget, caption, fileName, FileFormat::File | FileFormat::Write);
+    // If the user picked a specific format in the filter list (e.g., two
+    // formats sharing the "sdf" extension), honor that choice.
+    const Io::FileFormat* format =
+      formatFromFilter(selectedFilter, fileName,
+                       FileFormatManager::instance().fileFormats(
+                         FileFormat::File | FileFormat::Write));
+
+    if (!format)
+      format = findFileFormat(parentWidget, caption, fileName,
+                              FileFormat::File | FileFormat::Write);
 
     // If none found, give user the option to retry.
     if (!format) {
@@ -134,6 +143,38 @@ FileFormatDialog::FormatFilePair FileFormatDialog::fileToWrite(
   } while (fileName.isEmpty());
 
   return result;
+}
+
+const Io::FileFormat* FileFormatDialog::formatFromFilter(
+  const QString& selectedFilter, const QString& fileName,
+  const std::vector<const Io::FileFormat*>& formats)
+{
+  if (selectedFilter.isEmpty() || fileName.isEmpty())
+    return nullptr;
+
+  // Filters look like "Name (*.ext1 *.ext2)"; the name itself may contain
+  // parentheses, so split on the last " (".
+  int split = selectedFilter.lastIndexOf(QStringLiteral(" ("));
+  if (split <= 0)
+    return nullptr;
+  const std::string name = selectedFilter.left(split).toStdString();
+
+  QFileInfo fileInfo(
+    QString::fromStdString(Io::stripCompressionSuffix(fileName.toStdString())));
+  QString extension = fileInfo.suffix();
+  if (extension.isEmpty())
+    extension = fileInfo.fileName();
+  const std::string ext = extension.toLower().toStdString();
+
+  for (const auto* ff : formats) {
+    if (ff == nullptr || ff->name() != name)
+      continue;
+    for (const auto& e : ff->fileExtensions()) {
+      if (QString::fromStdString(e).toLower().toStdString() == ext)
+        return ff;
+    }
+  }
+  return nullptr;
 }
 
 const Io::FileFormat* FileFormatDialog::findFileFormat(

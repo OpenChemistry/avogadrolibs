@@ -180,3 +180,42 @@ TEST(FileFormatDialogTest, noGenericOutputKeepsFirstMatch)
     pick("fftesth", { { "User Script: x", "x" }, { "OpenBabel: y", "y" } }),
     "User Script: x");
 }
+
+// The save dialog reports which filter entry the user picked; two formats may
+// share an extension, so the entry (not the extension) decides.
+TEST(FileFormatDialogTest, formatFromFilterHonorsSelectedEntry)
+{
+  FakeFormat plain("Test: SDF", "Test SDF", "sdf");
+  FakeFormat other("Test: SDF3", "Test SDF V3000 (alt)", "sdf");
+  std::vector<const FileFormat*> formats{ &plain, &other };
+
+  EXPECT_EQ(FileFormatDialog::formatFromFilter("Test SDF (*.sdf)", "/tmp/a.sdf",
+                                               formats),
+            &plain);
+  // Names may contain parentheses; the extension match ignores case and any
+  // compression suffix.
+  EXPECT_EQ(FileFormatDialog::formatFromFilter("Test SDF V3000 (alt) (*.sdf)",
+                                               "/tmp/A.SDF.gz", formats),
+            &other);
+}
+
+TEST(FileFormatDialogTest, formatFromFilterFallsBack)
+{
+  FakeFormat plain("Test: SDF", "Test SDF", "sdf");
+  std::vector<const FileFormat*> formats{ &plain };
+
+  // Generic entries, empty selections, unknown names and mismatched
+  // extensions all defer to the extension lookup.
+  EXPECT_EQ(
+    FileFormatDialog::formatFromFilter("All files (*)", "a.sdf", formats),
+    nullptr);
+  EXPECT_EQ(FileFormatDialog::formatFromFilter(QString(), "a.sdf", formats),
+            nullptr);
+  EXPECT_EQ(
+    FileFormatDialog::formatFromFilter("Test SDF (*.sdf)", "a.mol", formats),
+    nullptr);
+  EXPECT_EQ(FileFormatDialog::formatFromFilter("Test SDF (*.sdf)", "", formats),
+            nullptr);
+  EXPECT_EQ(FileFormatDialog::formatFromFilter("NoParens", "a.sdf", formats),
+            nullptr);
+}
