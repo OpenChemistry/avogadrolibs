@@ -5,6 +5,8 @@
 
 #include "copypaste.h"
 
+#include "copyasdialog.h"
+
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/io/smilesformat.h>
@@ -13,6 +15,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QMimeData>
+#include <QtCore/QSettings>
 
 #include <QAction>
 #include <QtGui/QClipboard>
@@ -95,6 +98,7 @@ CopyPaste::CopyPaste(QObject* parent_)
     m_copyMappedSMILES(new QAction(tr("Atom Mapped SMILES"), this)),
     m_copyInChI(new QAction("InChI", this)),
     m_copyXYZ(new QAction("XYZ", this)),
+    m_copyOther(new QAction(tr("Other Format…"), this)),
     m_cutAction(new QAction(tr("Cut"), this)),
     m_clearAction(new QAction(tr("Delete"), this)),
     m_pasteAction(new QAction(tr("&Paste"), this))
@@ -127,6 +131,11 @@ CopyPaste::CopyPaste(QObject* parent_)
   m_copyXYZ->setProperty("menu submenu", copyAs);
   connect(m_copyXYZ, SIGNAL(triggered()), SLOT(copyXYZ()));
 
+  // last in the submenu, but above Paste (which is in the Edit menu itself)
+  m_copyOther->setProperty("menu priority", 515);
+  m_copyOther->setProperty("menu submenu", copyAs);
+  connect(m_copyOther, SIGNAL(triggered()), SLOT(copyOther()));
+
   m_pasteAction->setShortcut(QKeySequence::Paste);
   m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
   m_pasteAction->setProperty("menu priority", 510);
@@ -147,8 +156,8 @@ QList<QAction*> CopyPaste::actions() const
 {
   QList<QAction*> result;
   return result << m_copyAction << m_copySMILES << m_copyMappedSMILES
-                << m_copyInChI << m_copyXYZ << m_cutAction << m_pasteAction
-                << m_clearAction;
+                << m_copyInChI << m_copyXYZ << m_copyOther << m_cutAction
+                << m_pasteAction << m_clearAction;
 }
 
 QStringList CopyPaste::menuPath(QAction* action) const
@@ -213,6 +222,32 @@ void CopyPaste::copyXYZ()
 
   copy(format);
   delete format;
+}
+
+void CopyPaste::copyOther()
+{
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
+  const std::vector<CopyAsFormat> formats = CopyAsDialog::availableFormats();
+  if (formats.empty())
+    return;
+
+  QSettings settings;
+  const QString key("copypaste/lastCopyAsFormat");
+  CopyAsDialog dialog(formats, settings.value(key).toString(),
+                      qobject_cast<QWidget*>(this->parent()));
+  if (dialog.exec() != QDialog::Accepted)
+    return;
+
+  const int index = dialog.selectedIndex();
+  if (index < 0 || index >= static_cast<int>(formats.size()))
+    return;
+
+  settings.setValue(key, formats[index].label);
+  std::unique_ptr<Io::FileFormat> format =
+    CopyAsDialog::createFormat(formats[index]);
+  copy(format.get());
 }
 
 bool CopyPaste::copy(Io::FileFormat* format)

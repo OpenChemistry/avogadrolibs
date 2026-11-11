@@ -17,6 +17,7 @@ set(plugins
   ApplyColors
   Bonding
   ConstraintsExtension
+  CopyPaste
   Crystal
   Editor
   Focus
