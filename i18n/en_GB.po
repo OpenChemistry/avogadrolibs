@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-10-24 19:52+0000\n"
+"PO-Revision-Date: 2026-11-08 18:51+0000\n"
 "Last-Translator: Andi Chandler <andibing@users.noreply.hosted.weblate.org>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.11.dev0\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -566,62 +566,62 @@ msgstr "No molecule"
 #: qtgui/commandregistry.cpp:77
 #, qt-format
 msgid "atom index #%1 in %2 must be a whole number."
-msgstr ""
+msgstr "atom index #%1 in %2 must be a whole number."
 
 #: qtgui/commandregistry.cpp:80
 #, qt-format
 msgid "%1 must be a whole number (an atom index)."
-msgstr ""
+msgstr "%1 must be a whole number (an atom index)."
 
 #: qtgui/commandregistry.cpp:92
 #, qt-format
 msgid "atom index #%1 in %2 is negative; atom indices must be zero or greater."
-msgstr ""
+msgstr "atom index #%1 in %2 is negative; atom indices must be zero or greater."
 
 #: qtgui/commandregistry.cpp:96
 #, qt-format
 msgid "%1 is negative; atom indices must be zero or greater."
-msgstr ""
+msgstr "%1 is negative; atom indices must be zero or greater."
 
 #: qtgui/commandregistry.cpp:152
 #, qt-format
 msgid "%1 must list between %2 and %3 atom indices."
-msgstr ""
+msgstr "%1 must list between %2 and %3 atom indices."
 
 #: qtgui/commandregistry.cpp:173
 #, qt-format
 msgid "%1 must be at least %2."
-msgstr ""
+msgstr "%1 must be at least %2."
 
 #: qtgui/commandregistry.cpp:179
 #, qt-format
 msgid "%1 must be at most %2."
-msgstr ""
+msgstr "%1 must be at most %2."
 
 #: qtgui/commandregistry.cpp:191
 #, qt-format
 msgid "%1 must be a whole number."
-msgstr ""
+msgstr "%1 must be a whole number."
 
 #: qtgui/commandregistry.cpp:207 qtgui/commandregistry.cpp:218
 #, qt-format
 msgid "%1 is too large."
-msgstr ""
+msgstr "%1 is too large."
 
 #: qtgui/commandregistry.cpp:239
 #, qt-format
 msgid "%1 must be a finite number."
-msgstr ""
+msgstr "%1 must be a finite number."
 
 #: qtgui/commandregistry.cpp:266
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "%1 must be a list of 3 finite numbers [x, y, z]."
 
 #: qtgui/commandregistry.cpp:269
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z] in %2."
-msgstr ""
+msgstr "%1 must be a list of 3 finite numbers [x, y, z] in %2."
 
 #: qtgui/commandregistry.cpp:284
 #, qt-format
@@ -629,6 +629,8 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b, a] with values "
 "0-255."
 msgstr ""
+"%1 must be a colour: \"#RRGGBB\", a colour name, or [r, g, b, a] with values "
+"0-255."
 
 #: qtgui/commandregistry.cpp:287
 #, qt-format
@@ -636,51 +638,53 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b] with values "
 "0-255."
 msgstr ""
+"%1 must be a colour: \"#RRGGBB\", a colour name, or [r, g, b] with values 0-"
+"255."
 
 #: qtgui/commandregistry.cpp:313
 #, qt-format
 msgid "%1 does not take an alpha channel; give \"#RRGGBB\" or [r, g, b]."
-msgstr ""
+msgstr "%1 does not take an alpha channel; give \"#RRGGBB\" or [r, g, b]."
 
 #: qtgui/commandregistry.cpp:435
 #, qt-format
 msgid "%1 must be a string."
-msgstr ""
+msgstr "%1 must be a string."
 
 #: qtgui/commandregistry.cpp:444
 #, qt-format
 msgid "%1 must be one of: %2."
-msgstr ""
+msgstr "%1 must be one of: %2."
 
 #: qtgui/commandregistry.cpp:454
 #, qt-format
 msgid "%1 must be true or false."
-msgstr ""
+msgstr "%1 must be true or false."
 
 #: qtgui/commandregistry.cpp:915
 #, qt-format
 msgid "unknown option \"%1\" for command \"%2\"."
-msgstr ""
+msgstr "unknown option \"%1\" for command \"%2\"."
 
 #: qtgui/commandregistry.cpp:940
 #, qt-format
 msgid "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
-msgstr ""
+msgstr "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
 
 #: qtgui/commandregistry.cpp:971
 #, qt-format
 msgid "missing required option \"%1\"."
-msgstr ""
+msgstr "missing required option \"%1\"."
 
 #: qtgui/commandregistry.cpp:997
 #, qt-format
 msgid "%1 must be a list of zero-based atom indices."
-msgstr ""
+msgstr "%1 must be a list of zero-based atom indices."
 
 #: qtgui/commandregistry.cpp:1022
 #, qt-format
 msgid "atom index %1 is repeated in %2; each atom must be different."
-msgstr ""
+msgstr "atom index %1 is repeated in %2; each atom must be different."
 
 #: qtgui/commandregistry.cpp:1049 qtplugins/editor/editor.cpp:1106
 #, qt-format
@@ -2011,15 +2015,15 @@ msgstr[1] "%n hours remaining"
 
 #: qtopengl/glwidget.cpp:310
 msgid "The image size must be positive."
-msgstr ""
+msgstr "The image size must be positive."
 
 #: qtopengl/glwidget.cpp:313
 msgid "Supersampling must be between 1 and 4."
-msgstr ""
+msgstr "Supersampling must be between 1 and 4."
 
 #: qtopengl/glwidget.cpp:315
 msgid "The scene is being rebuilt; try again in a moment."
-msgstr ""
+msgstr "The scene is being rebuilt; try again in a moment."
 
 #: qtopengl/glwidget.cpp:317
 #, qt-format

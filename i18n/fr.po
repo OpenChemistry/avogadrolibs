@@ -16,14 +16,14 @@
 # Li Chaoyu <2395074867@qq.com>, 2026.
 # Li Chaoyu <ilqq@users.noreply.hosted.weblate.org>, 2026.
 # Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>, 2026.
+# Eric Remy <eremy@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-10-13 12:26+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"PO-Revision-Date: 2026-11-09 22:06+0000\n"
+"Last-Translator: Eric Remy <eremy@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/fr/>\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.11.dev0\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -11571,7 +11571,7 @@ msgid "Your names"
 msgstr ""
 "Contributions du Launchpad : Geoffrey Hutchison, Laurent Peuch, Louis "
 "Ricard, Maijin, Nizar Kerkeni, Benoit Jacob, Mathieu Pasquet, Pierre "
-"Slamich, Jean-Marc, etc et les traducteurs via Weblate"
+"Slamich, Jean-Marc, etc., et les traducteurs via Weblate"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
@@ -11579,7 +11579,7 @@ msgstr ""
 "benoitjacob@users.sourceforge.net, louis.ricard@polytechnique.fr, "
 "psycojoker@gmail.com, louis.ricard@polytechnique.edu "
 "nizar.kerkeni@gmail.com, jacob.benoit.1@gmail.com, nizarus@nizarus.org, "
-"nizarus@nizarus.tn, pierre.slamich@gmail.com, etc"
+"nizarus@nizarus.tn, pierre.slamich@gmail.com, etc."
 
 #~ msgid "PLY (*.ply);;Text file (*.txt)"
 #~ msgstr "PLY (*.ply);;Fichier Texte (*.txt)"
