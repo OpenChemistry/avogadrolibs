@@ -6,6 +6,7 @@
 #ifndef AVOGADRO_QTPLUGINS_BALLANDSTICK_H
 #define AVOGADRO_QTPLUGINS_BALLANDSTICK_H
 
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
 namespace Avogadro::QtPlugins {
@@ -24,6 +25,15 @@ public:
 
   void process(const QtGui::Molecule& molecule,
                Rendering::GroupNode& node) override;
+
+  /**
+   * Move the existing spheres and cylinders to the new atom positions.
+   * Returns false (so the caller rebuilds) unless @p node is the node of the
+   * last process() call, still holding what it built, for the same molecule
+   * with the same numbers of atoms and bonds.
+   */
+  bool updateCoordinates(const QtGui::Molecule& molecule,
+                         Rendering::GroupNode& node) override;
 
   QString name() const override { return tr("Ball and Stick"); }
 
@@ -49,6 +59,10 @@ public slots:
 
 private:
   Rendering::GroupNode* m_group;
+  // What the last process() built, checked by updateCoordinates().
+  const QtGui::Molecule* m_molecule = nullptr;
+  Index m_atomCount = 0;
+  Index m_bondCount = 0;
   std::string m_name = "Ball and Stick";
   float m_atomScale = 0.3f;
   float m_bondRadius = 0.1f;
