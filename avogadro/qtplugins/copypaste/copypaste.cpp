@@ -19,6 +19,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -26,9 +27,69 @@ namespace Avogadro::QtPlugins {
 
 using namespace Avogadro::QtGui;
 
+namespace {
+
+// Build a molecule from the selected atoms (and the bonds between them) of
+// mol, keeping the per-atom data the clipboard formats can carry.
+std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
+{
+  auto copy = std::make_unique<QtGui::Molecule>();
+
+  // MaxIndex marks an atom that was not copied
+  std::vector<Index> atomIndex(mol.atomCount(), MaxIndex);
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    if (!mol.atomSelected(i))
+      continue;
+    auto a = copy->addAtom(mol.atomicNumber(i));
+    a.setPosition3d(mol.atomPosition3d(i));
+    a.setFormalCharge(mol.formalCharge(i));
+    a.setIsotope(mol.isotope(i));
+    const std::string label = mol.atomLabel(i);
+    if (!label.empty())
+      copy->setAtomLabel(a.index(), label);
+
+    // track the index
+    atomIndex[i] = a.index();
+  }
+
+  for (Index i = 0; i < mol.bondCount(); ++i) {
+    Core::Bond bond = mol.bond(i);
+    Index start = bond.atom1().index();
+    Index end = bond.atom2().index();
+    if (atomIndex[start] != MaxIndex && atomIndex[end] != MaxIndex)
+      copy->addBond(atomIndex[start], atomIndex[end], bond.order());
+  }
+
+  // Residues keep only the selected atoms; PDB-style writers need them.
+  for (Index r = 0; r < mol.residueCount(); ++r) {
+    const Core::Residue& residue = mol.residue(r);
+    std::vector<Core::Atom> kept;
+    for (const Core::Atom& atom : residue.residueAtoms())
+      if (atom.index() < atomIndex.size() &&
+          atomIndex[atom.index()] != MaxIndex)
+        kept.push_back(atom);
+    if (kept.empty())
+      continue;
+
+    std::string name = residue.residueName();
+    Index number = residue.residueId();
+    char chain = residue.chainId();
+    Core::Residue& newResidue = copy->addResidue(name, number, chain);
+    newResidue.setHeterogen(residue.isHeterogen());
+    newResidue.setSecondaryStructure(residue.secondaryStructure());
+    for (const Core::Atom& atom : kept)
+      newResidue.addResidueAtom(residue.atomName(atom),
+                                copy->atom(atomIndex[atom.index()]));
+  }
+
+  return copy;
+}
+
+} // namespace
+
 CopyPaste::CopyPaste(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_pastedFormat(nullptr),
-    m_copyAction(new QAction(tr("Copy"), this)),
+    m_molecule(nullptr), m_copyAction(new QAction(tr("Copy"), this)),
     // don't translate SMILES, InChI, or XYZ
     m_copySMILES(new QAction("SMILES", this)),
     m_copyMappedSMILES(new QAction(tr("Atom Mapped SMILES"), this)),
@@ -161,32 +222,12 @@ bool CopyPaste::copy(Io::FileFormat* format)
     return false;
 
   std::string output;
-  QtGui::Molecule* copy = m_molecule;
+  const QtGui::Molecule* copy = m_molecule;
+  std::unique_ptr<QtGui::Molecule> selection; // owns the copy, if any
 
   if (!m_molecule->isSelectionEmpty()) {
-    // create a copy of the selected atoms only
-    copy = new QtGui::Molecule(m_molecule->parent());
-
-    // go through the selected atoms and add them
-    // make sure to track the new index
-    std::vector<Index> atomIndex(m_molecule->atomCount(), 0);
-    for (Index i = 0; i < m_molecule->atomCount(); ++i)
-      if (m_molecule->atomSelected(i)) {
-        auto a = copy->addAtom(m_molecule->atomicNumber(i));
-        a.setPosition3d(m_molecule->atomPosition3d(i));
-
-        // track the index
-        atomIndex[i] = a.index();
-      }
-
-    for (Index i = 0; i < m_molecule->bondCount(); ++i) {
-      Core::Bond bond = m_molecule->bond(i);
-      Index start = bond.atom1().index();
-      Index end = bond.atom2().index();
-      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(end)) {
-        copy->addBond(atomIndex[start], atomIndex[end], bond.order());
-      }
-    }
+    selection = selectionCopy(*m_molecule);
+    copy = selection.get();
   }
 
   if (!format->writeString(output, *copy)) {
@@ -211,9 +252,6 @@ bool CopyPaste::copy(Io::FileFormat* format)
 
   mimeData->setData("text/plain", outputBA);
   QApplication::clipboard()->setMimeData(mimeData);
-
-  if (!m_molecule->isSelectionEmpty())
-    copy->deleteLater(); // don't leak our copy
 
   return true;
 }
