@@ -37,6 +37,7 @@ avogadro_headers(QtGui
   backgroundfileformat.h
   calcworker.h
   colorbutton.h
+  colortheme.h
   commandregistry.h
   containerwidget.h
   customelementdialog.h
@@ -86,6 +87,7 @@ target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
   calcworker.cpp
   colorbutton.cpp
+  colortheme.cpp
   commandregistry.cpp
   containerwidget.cpp
   customelementdialog.cpp

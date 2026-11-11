@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "chartwidget.h"
+#include "colortheme.h"
 
 #include <jkqtplotter/jkqtplotter.h>
 #include <jkqtplotter/graphs/jkqtplines.h>
@@ -11,7 +12,6 @@
 #include <QDebug>
 #include <QEvent>
 #include <QHBoxLayout>
-#include <QPalette>
 
 namespace Avogadro::QtGui {
 
@@ -32,10 +32,7 @@ public:
 
   void updateAxisColorsForTheme()
   {
-    const QPalette defaultPalette;
-    // is the text lighter than the window color?
-    bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
-                     defaultPalette.color(QPalette::Window).lightness());
+    const bool darkMode = colorTheme() == ColorTheme::Dark;
     QColor textColor = darkMode ? Qt::white : Qt::black;
     plot->getXAxis()->setTickLabelColor(textColor);
     plot->getYAxis()->setTickLabelColor(textColor);
