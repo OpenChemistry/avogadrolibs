@@ -6,10 +6,7 @@
 #include "commandtestharness.h"
 
 #include "copyasdialog.h"
-// copy() is a private slot; the test drives it directly.
-#define private public
 #include "copypaste.h"
-#undef private
 
 #include <avogadro/core/stereo.h>
 #include <avogadro/io/fileformat.h>
@@ -18,6 +15,8 @@
 
 #include <gtest/gtest.h>
 
+#include <QtCore/QMetaObject>
+#include <QtCore/QMetaType>
 #include <QtCore/QMimeData>
 #include <QtGui/QClipboard>
 #include <QtGui/QGuiApplication>
@@ -25,6 +24,8 @@
 
 #include <memory>
 #include <string>
+
+namespace Io = Avogadro::Io;
 
 using Avogadro::QtPlugins::CopyAsDialog;
 using Avogadro::QtPlugins::CopyAsFormat;
@@ -144,7 +145,14 @@ TEST_F(CopyPasteCommandTest, selectionCopyKeepsStereoUnspecified)
     ASSERT_NE(format, nullptr) << label;
 
     Avogadro::Io::FileFormat* raw = format.get();
-    const bool ok = m_plugin.copy(raw);
+    // copy() is a private slot; the meta-object system can still call it.
+    // moc records the parameter as "Io::FileFormat*"; give it that name.
+    qRegisterMetaType<Avogadro::Io::FileFormat*>("Io::FileFormat*");
+    bool ok = false;
+    const bool invoked = QMetaObject::invokeMethod(
+      &m_plugin, "copy", Qt::DirectConnection, Q_RETURN_ARG(bool, ok),
+      Q_ARG(Io::FileFormat*, raw));
+    ASSERT_TRUE(invoked) << label;
     ASSERT_TRUE(ok) << label;
 
     const std::string text = QGuiApplication::clipboard()->text().toStdString();
