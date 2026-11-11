@@ -22,9 +22,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-10-22 14:23+0000\n"
-"Last-Translator: matterhorn103 "
-"<83813148+matterhorn103@users.noreply.github.com>\n"
+"PO-Revision-Date: 2026-11-12 08:53+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -32,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.11.dev0\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4597,7 +4596,7 @@ msgstr "Alle Wasserstoffatome im Molekül entfernen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
-msgstr ""
+msgstr "Kein Molekül."
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -7051,7 +7050,7 @@ msgstr ""
 
 #: qtplugins/select/select.cpp:639
 msgid "Select all atoms of a certain element type."
-msgstr ""
+msgstr "Wählen Sie alle Atome eines bestimmten Elementtyps aus."
 
 #: qtplugins/select/select.cpp:641
 msgid "An element symbol or atomic number."
