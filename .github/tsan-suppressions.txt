@@ -79,3 +79,9 @@ race:QtConcurrent::map<QList<Avogadro::QtGui::GaussianShell>
 # generator's reads of the cube stay visible; a mesh freed while still in use
 # would be a use-after-free, which the ASan job covers.
 race:Avogadro::Core::Mesh::~Mesh
+# After run() returns, QThread's exit code (uninstrumented libQt6Core) emits
+# finished(), which reads the generator's vptr through the moc-generated
+# metaObject(). ~MeshGenerator() wait()s for the thread before the destructor
+# chain rewrites the vptr, but that join is a futex inside Qt. Run()'s own
+# writes are ordered by MeshGenerator::isDone(), so match only metaObject().
+race:Avogadro::QtGui::MeshGenerator::metaObject
