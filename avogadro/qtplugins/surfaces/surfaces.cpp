@@ -731,6 +731,10 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     }
   }
 
+  // The surface is the zero level of both kinds of EDT field (signed
+  // distance, or +1/-1). Do not inherit the last orbital's isovalue.
+  m_isoValue = 0.0f;
+
   // Filled here, and published to the molecule by publishCube() once done.
   m_pendingCube = std::make_unique<Cube>();
   m_cubeProducer = CubeProducer::EDT;
@@ -769,7 +773,13 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
       // cube empty; edtFinished() and performEDTStep() then report that.
       if (!cube->setLimits(cubeMin, cubeMax, res))
         return;
-      fillBinarySpheres(*cube, atoms);
+      // The solvent-excluded erosion that follows works on a set of voxels,
+      // so that surface stays binary. The other two use a signed distance
+      // field, whose zero level lies exactly on the spheres.
+      if (type == SolventExcluded)
+        fillBinarySpheres(*cube, atoms);
+      else
+        fillDistanceSpheres(*cube, atoms);
     });
 
   // SolventExcluded requires an extra pass

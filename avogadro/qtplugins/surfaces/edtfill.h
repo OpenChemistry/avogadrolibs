@@ -34,6 +34,28 @@ using EdtSphere = std::pair<Vector3, double>;
  */
 bool fillBinarySpheres(Core::Cube& cube, const std::vector<EdtSphere>& spheres);
 
+/**
+ * The value an outside voxel far from every sphere has in the field written
+ * by fillDistanceSpheres(): minus twice the cube's largest grid spacing.
+ */
+double distanceFieldMargin(const Core::Cube& cube);
+
+/**
+ * Fill @p cube with the signed distance field f(x) = max_i (r_i - |x - c_i|)
+ * of the @p spheres: positive inside, negative outside, and zero exactly on
+ * the sphere surfaces, so the zero isosurface follows them.
+ *
+ * Values below -distanceFieldMargin() are not computed: those voxels hold
+ * -distanceFieldMargin(). That keeps the field exact in every voxel a
+ * marching-cubes pass or a gradient of neighboring voxels can see near the
+ * surface, at a cost proportional to the sphere volume plus the margin.
+ * The grid and threading are as for fillBinarySpheres().
+ *
+ * @return False, leaving the cube untouched, if the cube holds no grid.
+ */
+bool fillDistanceSpheres(Core::Cube& cube,
+                         const std::vector<EdtSphere>& spheres);
+
 } // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_EDTFILL_H

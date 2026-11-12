@@ -5,6 +5,7 @@
 
 #include "commandtestharness.h"
 
+#include "edtfill.h"
 #include "surfaceresolution.h"
 #include "surfaces.h"
 
@@ -23,6 +24,7 @@
 #include <cmath>
 #include <functional>
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -46,6 +48,8 @@ namespace {
 // Requested grid resolution in Angstrom; coarse so the cubes stay small.
 constexpr float Resolution = 0.25f;
 constexpr double SolventProbe = 1.4;
+// Float arithmetic in the distance field, for distances of a few Angstrom.
+constexpr float DistanceTolerance = 1.0e-4f;
 
 using AtomSphere = std::pair<Vector3, double>; // centre, radius incl. probe
 
@@ -83,6 +87,25 @@ public:
     if (first >= m_data.size() || last >= m_data.size())
       return;
     std::fill(m_data.begin() + first, m_data.begin() + last + 1, 1.0f);
+  }
+
+  // The distance field of fillDistanceSpheres(), by brute force over every
+  // voxel and atom: the largest (radius - distance), but no lower than
+  // -margin, the background of voxels the plugin never visits.
+  void fillDistance(const std::vector<AtomSphere>& atoms, const Vector3& min,
+                    const Vector3& spacing, double margin)
+  {
+    for (int x = 0; x < m_dims(0); ++x) {
+      for (int y = 0; y < m_dims(1); ++y) {
+        for (int z = 0; z < m_dims(2); ++z) {
+          const Vector3 pos = min + Vector3(x, y, z).cwiseProduct(spacing);
+          double best = -margin;
+          for (const AtomSphere& in : atoms)
+            best = std::max(best, in.second - (pos - in.first).norm());
+          at(x, y, z) = static_cast<float>(best);
+        }
+      }
+    }
   }
 
   void fillSpheres(const std::vector<AtomSphere>& atoms, const Vector3& min,
@@ -197,13 +220,12 @@ protected:
     const Vector3 min = cube.min();
     const Vector3i dims = cube.dimensions();
     const Vector3 spacing = cube.spacing();
-    const double margin = 2.0 * spacing.maxCoeff();
+    const double margin = Avogadro::QtPlugins::distanceFieldMargin(cube);
     size_t checkedInside = 0, checkedOutside = 0;
     for (int x = 0; x < dims(0); ++x) {
       for (int y = 0; y < dims(1); ++y) {
         for (int z = 0; z < dims(2); ++z) {
-          const Vector3 pos(min(0) + x * spacing(0), min(1) + y * spacing(1),
-                            min(2) + z * spacing(2));
+          const Vector3 pos = min + Vector3(x, y, z).cwiseProduct(spacing);
           double deepest = -1.0e9; // largest (radius - distance)
           for (const AtomSphere& a : atoms)
             deepest = std::max(deepest, a.second - (pos - a.first).norm());
@@ -231,22 +253,31 @@ protected:
   }
 
   // Build the serial reference for a vdW (probe 0) or SAS (probe 1.4) cube
-  // laid out like @p cube.
-  ReferenceGrid fillReference(const Cube& cube, double probe) const
+  // laid out like @p cube: the signed distance field those surfaces use, or
+  // with @p binary the +1/-1 fill that the solvent-excluded one starts from.
+  ReferenceGrid fillReference(const Cube& cube, double probe,
+                              bool binary = false) const
   {
     ReferenceGrid ref(cube.dimensions());
-    ref.fillSpheres(spheres(probe), cube.min(), cube.spacing());
+    if (binary) {
+      ref.fillSpheres(spheres(probe), cube.min(), cube.spacing());
+    } else {
+      ref.fillDistance(spheres(probe), cube.min(), cube.spacing(),
+                       Avogadro::QtPlugins::distanceFieldMargin(cube));
+    }
     return ref;
   }
 
-  void expectEqual(const Cube& cube, const ReferenceGrid& ref, const char* what)
+  // The binary fill is exact; the distance field is float arithmetic.
+  void expectEqual(const Cube& cube, const ReferenceGrid& ref, const char* what,
+                   float tolerance = 0.0f)
   {
     const Vector3i dims = cube.dimensions();
     size_t mismatches = 0;
     for (int x = 0; x < dims(0); ++x) {
       for (int y = 0; y < dims(1); ++y) {
         for (int z = 0; z < dims(2); ++z) {
-          if (cube.value(x, y, z) != ref.at(x, y, z)) {
+          if (std::abs(cube.value(x, y, z) - ref.at(x, y, z)) > tolerance) {
             if (mismatches++ < 5) {
               ADD_FAILURE()
                 << what << ": voxel " << x << "," << y << "," << z << " is "
@@ -323,7 +354,7 @@ TEST_F(SurfacesCommandTest, vanDerWaalsMatchesSerialReference)
   EXPECT_GT(inside, total / 50) << "the reference cube is nearly empty";
   EXPECT_LT(inside, total);
 
-  expectEqual(*cube, ref, "VdW");
+  expectEqual(*cube, ref, "VdW", DistanceTolerance);
   expectGeometry(*cube, spheres(0.0));
 
   // Every atom centre is inside its own sphere.
@@ -358,7 +389,7 @@ TEST_F(SurfacesCommandTest, solventAccessibleMatchesSerialReference)
   // Compare on the same grid, so only the radii differ.
   EXPECT_GT(inside, fillReference(*cube, 0.0).insideCount());
 
-  expectEqual(*cube, ref, "SAS");
+  expectEqual(*cube, ref, "SAS", DistanceTolerance);
   expectGeometry(*cube, spheres(SolventProbe));
 }
 
@@ -374,7 +405,7 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   EXPECT_GT(total, 10000u);
 
   // Stage 1: the SAS fill with a 1.4 A probe (calculateEDT).
-  ReferenceGrid ref = fillReference(*cube, SolventProbe);
+  ReferenceGrid ref = fillReference(*cube, SolventProbe, true);
   const size_t sasInside = ref.insideCount();
   EXPECT_GT(sasInside, total / 50) << "the reference cube is nearly empty";
 
@@ -403,8 +434,7 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
         if (ref.at(xp, y, z) > 0.0f || ref.at(xn, y, z) > 0.0f ||
             ref.at(x, yp, z) > 0.0f || ref.at(x, yn, z) > 0.0f ||
             ref.at(x, y, zp) > 0.0f || ref.at(x, y, zn) > 0.0f) {
-          outsideContact.emplace_back(x * spacing(0), y * spacing(1),
-                                      z * spacing(2));
+          outsideContact.push_back(Vector3(x, y, z).cwiseProduct(spacing));
         }
       }
     }
@@ -415,8 +445,7 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   // the plugin, which only ever reads the original outside voxels.
   size_t erased = 0;
   for (const Vector3i& in : insideVoxels) {
-    const Vector3 pos(in(0) * spacing(0), in(1) * spacing(1),
-                      in(2) * spacing(2));
+    const Vector3 pos = in.cast<double>().cwiseProduct(spacing);
     for (const Vector3& npos : outsideContact) {
       const float distance = (npos - pos).norm();
       if (distance <= probe) {
@@ -706,7 +735,8 @@ TEST_F(SurfacesCommandTest, copyMidCalculationSeesNoPartialSurface)
     ASSERT_EQ(mol->meshCount(), 1u);
     EXPECT_GT(std::as_const(*mol).mesh(0)->numVertices(), 0u);
     if (c.probe >= 0.0)
-      expectEqual(*cube, fillReference(*cube, c.probe), c.command);
+      expectEqual(*cube, fillReference(*cube, c.probe), c.command,
+                  DistanceTolerance);
 
     // Copied between the cube's publication and the mesh's: the cube there
     // is already complete, and it stays without a mesh.
@@ -801,7 +831,8 @@ TEST_F(SurfacesCommandTest, editMidCalculationInterruptsCommand)
   const Cube* cube = runSurface("renderVDW", out);
   ASSERT_NE(cube, nullptr);
   EXPECT_EQ(m_harness.molecule()->meshCount(), 1u);
-  expectEqual(*cube, fillReference(*cube, 0.0), "VdW after an interruption");
+  expectEqual(*cube, fillReference(*cube, 0.0), "VdW after an interruption",
+              DistanceTolerance);
 }
 
 // Switching to another molecule mid-calculation (as closing a window does)
@@ -824,4 +855,53 @@ TEST_F(SurfacesCommandTest, switchMoleculeMidCalculationInterruptsCommand)
   EXPECT_EQ(other.cubeCount(), 0u);
   EXPECT_EQ(other.meshCount(), 0u);
   m_harness.setPluginMolecule(mol);
+}
+
+// The zero level of the distance field is the sphere itself: on an isolated
+// atom, with no smoothing, every mesh vertex lies on the van der Waals sphere
+// to within a small fraction of the grid spacing. The old +1/-1 fill put the
+// vertices at edge midpoints, up to half a voxel off.
+TEST(SurfacesDistanceFieldTest, isolatedAtomVerticesLieOnTheSphere)
+{
+  // Off the grid in every axis, and a few different spacings.
+  const Vector3 center(0.137, -0.211, 0.318);
+  const double radius = Avogadro::Core::Elements::radiusVDW(6);
+  ASSERT_GT(radius, 1.0);
+
+  for (float resolution : { 0.3f, 0.2f, 0.1f }) {
+    SCOPED_TRACE(resolution);
+    Surfaces surfaces;
+    CommandTestHarness harness{ 60000 };
+    harness.buildEmpty();
+    harness.molecule()->addAtom(6, center);
+    harness.attach(&surfaces);
+    harness.registerCommands();
+
+    QVariantMap options;
+    options.insert(QStringLiteral("resolution"), resolution);
+    options.insert(QStringLiteral("smoothing"), 0);
+    const CommandOutcome out =
+      harness.run(QStringLiteral("renderVDW"), options);
+    ASSERT_EQ(out.status, CommandStatus::Finished) << describe(out);
+    EXPECT_FLOAT_EQ(out.result.value("isovalue").toFloat(), 0.0f);
+
+    const Cube* cube = harness.molecule()->activeCube();
+    ASSERT_NE(cube, nullptr);
+    ASSERT_EQ(harness.molecule()->meshCount(), 1u);
+    const Mesh* mesh = std::as_const(*harness.molecule()).mesh(0);
+    ASSERT_NE(mesh, nullptr);
+    ASSERT_GT(mesh->numVertices(), 100u);
+
+    const double spacing = cube->spacing().maxCoeff();
+    double worst = 0.0;
+    for (const Avogadro::Vector3f& vertex : mesh->vertices()) {
+      const double distance = (vertex.cast<double>() - center).norm();
+      worst = std::max(worst, std::abs(distance - radius));
+    }
+    RecordProperty("max_vertex_error_over_spacing",
+                   std::to_string(worst / spacing));
+    EXPECT_LE(worst, 0.05 * spacing)
+      << "max |distance - radius| = " << worst << " A over "
+      << mesh->numVertices() << " vertices, spacing " << spacing << " A";
+  }
 }
