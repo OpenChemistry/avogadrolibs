@@ -43,4 +43,15 @@ if(ENABLE_RENDERING_BENCHMARKS)
             Avogadro::IO Avogadro::Core Qt6::Widgets Qt6::Gui Qt6::OpenGL)
   target_include_directories(AvogadroRenderBenchmark PRIVATE
     "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/surfaces")
+
+  find_package(Qt6 REQUIRED COMPONENTS Concurrent)
+  add_executable(AvogadroSurfaceFillBenchmark
+    surfacefillbenchmark.cpp
+    "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/surfaces/edtfill.cpp")
+  target_link_libraries(AvogadroSurfaceFillBenchmark
+    PRIVATE Avogadro::QtGui Avogadro::IO Avogadro::Core Qt6::Concurrent)
+  target_include_directories(AvogadroSurfaceFillBenchmark PRIVATE
+    "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/surfaces")
+  target_compile_definitions(AvogadroSurfaceFillBenchmark
+    PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
 endif()
