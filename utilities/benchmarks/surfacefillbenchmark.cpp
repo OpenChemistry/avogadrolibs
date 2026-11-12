@@ -4,15 +4,19 @@
 ******************************************************************************/
 
 // Benchmark for the grid fill behind the van der Waals and solvent-accessible
-// surfaces (edtfill.cpp), and for the marching-cubes pass that follows.
+// surfaces (edtfill.cpp), and for the mesh extraction and smoothing that
+// follow.
 //
 // For each molecule x resolution x surface type it reports the median of
 // several runs of
 //   - fillBinarySpheres():   the +1/-1 field the surfaces used to use
 //   - fillDistanceSpheres(): the signed distance field they use now
-//   - MeshGenerator on the binary field with 0 and 1 smoothing passes (1 is
-//     the GUI default, "Light") and on the distance field with 0 passes,
-//     with the number of triangles each produces.
+//   - MeshGenerator (Flying Edges) with 0 smoothing passes on each field,
+//     with the number of triangles produced
+//   - Mesh::smooth(1) on a fresh copy of the binary mesh (1 pass is the old
+//     GUI default, "Light"); the copy is not timed.
+// The totals compare fill + extraction + 1 smoothing pass on the binary
+// field with fill + extraction on the distance field (no smoothing).
 // The grid is built the way Surfaces::calculateEDT() builds it.
 
 #include <avogadro/core/cube.h>
@@ -85,7 +89,8 @@ void usage(const char* program)
   std::cout
     << "Usage: " << program << " [options]\n\n"
     << "Times the VdW/SAS grid fill (binary vs signed distance) and the\n"
-    << "marching-cubes pass on the resulting fields.\n\n"
+    << "Flying Edges extraction and mesh smoothing on the resulting\n"
+    << "fields.\n\n"
     << "Options:\n"
     << "  --data-root DIR     Directory holding data/ (default: avogadrodata)\n"
     << "  --repeats N         Timed runs per measurement, after one warm-up\n"
@@ -185,18 +190,44 @@ struct MeshTiming
   std::size_t triangles = 0;
 };
 
-MeshTiming timeMesh(const Cube& cube, int passes, std::size_t repeats)
+// Flying Edges extraction only (no smoothing passes). The last extracted mesh
+// is returned through @p out (extracted untimed) for the smoothing timing.
+MeshTiming timeExtract(const Cube& cube, std::size_t repeats, Mesh& out)
 {
   MeshTiming result;
   MeshGenerator generator;
   result.ms = timeMedian(repeats, [&]() {
     Mesh mesh;
-    generator.initialize(&cube, &mesh, 0.0f, passes);
+    generator.initialize(&cube, &mesh, 0.0f, 0);
     generator.start();
     generator.wait();
     result.triangles = mesh.triangles().size();
   });
+  // One untimed extraction to hand back the mesh.
+  generator.initialize(&cube, &out, 0.0f, 0);
+  generator.start();
+  generator.wait();
   return result;
+}
+
+// Median milliseconds of Mesh::smooth(@p passes), applied to a fresh copy of
+// @p base each run; the copy is excluded from the timing.
+double timeSmooth(const Mesh& base, int passes, std::size_t repeats)
+{
+  {
+    Mesh warm(base);
+    warm.smooth(passes);
+  }
+  std::vector<double> times;
+  for (std::size_t i = 0; i < repeats; ++i) {
+    Mesh mesh(base);
+    const auto start = Clock::now();
+    mesh.smooth(passes);
+    const std::chrono::duration<double, std::milli> elapsed =
+      Clock::now() - start;
+    times.push_back(elapsed.count());
+  }
+  return median(times);
 }
 
 struct Row
@@ -209,7 +240,35 @@ struct Row
   double spacing = 0.0;
   std::size_t voxels = 0;
   double binaryFill = 0.0, distanceFill = 0.0;
-  MeshTiming binary0, binary1, distance0;
+  MeshTiming binaryExtract, distanceExtract;
+  double binarySmooth1 = 0.0; // Mesh::smooth(1) on the binary mesh
+
+  double totalBinary() const
+  {
+    return binaryFill + binaryExtract.ms + binarySmooth1;
+  }
+  double totalDistance() const { return distanceFill + distanceExtract.ms; }
+};
+
+// The requested resolution as printed in the table: "auto" for 0.
+std::string resolutionLabel(double requested)
+{
+  if (requested <= 0.0)
+    return "auto";
+  std::ostringstream text;
+  text << requested;
+  return text.str();
+}
+
+struct SurfaceKind
+{
+  const char* name;
+  double probe; // Angstrom; 0 for the van der Waals surface
+};
+
+const SurfaceKind SurfaceKinds[] = {
+  { "vdw", 0.0 },
+  { "sas", SolventProbeRadius },
 };
 
 void printHeader(std::ostream& out)
@@ -219,17 +278,17 @@ void printHeader(std::ostream& out)
       << " " << std::left << std::setw(4) << "type" << std::right
       << std::setw(7) << "res" << std::setw(8) << "spacing" << std::setw(11)
       << "voxels" << std::setw(10) << "fill-bin" << std::setw(10) << "fill-dist"
-      << std::setw(7) << "ratio" << std::setw(10) << "mc-b0" << std::setw(10)
-      << "tri-b0" << std::setw(10) << "mc-b1" << std::setw(10) << "tri-b1"
-      << std::setw(10) << "mc-d0" << std::setw(10) << "tri-d0" << std::setw(11)
-      << "tot-b1" << std::setw(11) << "tot-d0" << std::setw(7) << "ratio"
+      << std::setw(7) << "ratio" << std::setw(10) << "fe-bin" << std::setw(10)
+      << "tri-bin" << std::setw(10) << "fe-dist" << std::setw(10) << "tri-dist"
+      << std::setw(13) << "smooth1-bin" << std::setw(11) << "tot-b1"
+      << std::setw(11) << "tot-d0" << std::setw(7) << "ratio"
       << "\n";
 }
 
 void printRow(std::ostream& out, const Row& r)
 {
-  const double totalBinary = r.binaryFill + r.binary1.ms;
-  const double totalDistance = r.distanceFill + r.distance0.ms;
+  const double totalBinary = r.totalBinary();
+  const double totalDistance = r.totalDistance();
   out << std::left << std::setw(9) << r.molecule << std::right << std::setw(6)
       << r.atoms << " " << std::left << std::setw(4) << r.type << std::right
       << std::setw(7) << r.requested << std::fixed << std::setprecision(3)
@@ -237,25 +296,26 @@ void printRow(std::ostream& out, const Row& r)
       << std::setprecision(1) << std::setw(10) << r.binaryFill << std::setw(10)
       << r.distanceFill << std::setprecision(2) << std::setw(7)
       << (r.binaryFill > 0.0 ? r.distanceFill / r.binaryFill : 0.0)
-      << std::setprecision(1) << std::setw(10) << r.binary0.ms << std::setw(10)
-      << r.binary0.triangles << std::setw(10) << r.binary1.ms << std::setw(10)
-      << r.binary1.triangles << std::setw(10) << r.distance0.ms << std::setw(10)
-      << r.distance0.triangles << std::setw(11) << totalBinary << std::setw(11)
-      << totalDistance << std::setprecision(2) << std::setw(7)
+      << std::setprecision(1) << std::setw(10) << r.binaryExtract.ms
+      << std::setw(10) << r.binaryExtract.triangles << std::setw(10)
+      << r.distanceExtract.ms << std::setw(10) << r.distanceExtract.triangles
+      << std::setw(13) << r.binarySmooth1 << std::setw(11) << totalBinary
+      << std::setw(11) << totalDistance << std::setprecision(2) << std::setw(7)
       << (totalBinary > 0.0 ? totalDistance / totalBinary : 0.0) << "\n";
 }
 
 void writeCsv(std::ostream& out, const std::vector<Row>& rows)
 {
   out << "molecule,atoms,type,requested_res,spacing,voxels,fill_binary_ms,"
-         "fill_distance_ms,mesh_binary0_ms,tri_binary0,mesh_binary1_ms,"
-         "tri_binary1,mesh_distance0_ms,tri_distance0\n";
+         "fill_distance_ms,fe_binary_ms,tri_binary,fe_distance_ms,"
+         "tri_distance,smooth1_binary_ms,tot_b1_ms,tot_d0_ms\n";
   for (const Row& r : rows) {
     out << r.molecule << ',' << r.atoms << ',' << r.type << ',' << r.requested
         << ',' << r.spacing << ',' << r.voxels << ',' << r.binaryFill << ','
-        << r.distanceFill << ',' << r.binary0.ms << ',' << r.binary0.triangles
-        << ',' << r.binary1.ms << ',' << r.binary1.triangles << ','
-        << r.distance0.ms << ',' << r.distance0.triangles << '\n';
+        << r.distanceFill << ',' << r.binaryExtract.ms << ','
+        << r.binaryExtract.triangles << ',' << r.distanceExtract.ms << ','
+        << r.distanceExtract.triangles << ',' << r.binarySmooth1 << ','
+        << r.totalBinary() << ',' << r.totalDistance() << '\n';
   }
 }
 
@@ -281,9 +341,11 @@ int main(int argc, char** argv)
   std::cout << "Threads: " << QThreadPool::globalInstance()->maxThreadCount()
             << ", repeats: " << options.repeats
             << " (median, after one warm-up)\n"
-            << "Times in ms. fill = grid fill; mc = marching cubes; b0/b1 = "
-               "binary field, 0/1 smoothing passes; d0 = distance field, 0 "
-               "passes; tot = fill + mc.\n\n";
+            << "Times in ms. fill = grid fill; fe = Flying Edges extraction "
+               "(0 smoothing passes); smooth1 = Mesh::smooth(1) on a copy of "
+               "the binary mesh; bin/dist = binary/distance field; tot-b1 = "
+               "fill-bin + fe-bin + smooth1-bin; tot-d0 = fill-dist + "
+               "fe-dist.\n\n";
   printHeader(std::cout);
 
   std::vector<Row> rows;
@@ -297,9 +359,9 @@ int main(int argc, char** argv)
       continue;
     }
 
-    for (const char* type : { "vdw", "sas" }) {
-      const double probe =
-        (std::string(type) == "sas") ? SolventProbeRadius : 0.0;
+    for (const SurfaceKind& kind : SurfaceKinds) {
+      const char* type = kind.name;
+      const double probe = kind.probe;
       std::vector<EdtSphere> spheres;
       Vector3 low = molecule.atomPositions3d()[0];
       Vector3 high = low;
@@ -346,29 +408,24 @@ int main(int argc, char** argv)
         row.molecule = spec.label;
         row.atoms = molecule.atomCount();
         row.type = type;
-        row.requested = (requested <= 0.0) ? "auto" : [&]() {
-          std::ostringstream text;
-          text << requested;
-          return text.str();
-        }();
+        row.requested = resolutionLabel(requested);
         row.resolution = resolution;
         row.spacing = cube.spacing().maxCoeff();
         const Vector3i dims = cube.dimensions();
         row.voxels = static_cast<std::size_t>(dims(0)) * dims(1) * dims(2);
 
-        // Cheaper to repeat small grids; a long grid is run fewer times.
-        std::size_t repeats = options.repeats;
-
-        row.binaryFill = timeMedian(repeats, [&]() {
+        row.binaryFill = timeMedian(options.repeats, [&]() {
           Avogadro::QtPlugins::fillBinarySpheres(cube, spheres);
         });
-        row.binary0 = timeMesh(cube, 0, repeats);
-        row.binary1 = timeMesh(cube, 1, repeats);
+        Mesh binaryMesh;
+        row.binaryExtract = timeExtract(cube, options.repeats, binaryMesh);
+        row.binarySmooth1 = timeSmooth(binaryMesh, 1, options.repeats);
 
-        row.distanceFill = timeMedian(repeats, [&]() {
+        row.distanceFill = timeMedian(options.repeats, [&]() {
           Avogadro::QtPlugins::fillDistanceSpheres(cube, spheres);
         });
-        row.distance0 = timeMesh(cube, 0, repeats);
+        Mesh distanceMesh;
+        row.distanceExtract = timeExtract(cube, options.repeats, distanceMesh);
 
         printRow(std::cout, row);
         std::cout.flush();
