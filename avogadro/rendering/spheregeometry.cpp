@@ -6,6 +6,7 @@
 #include "spheregeometry.h"
 
 #include "camera.h"
+#include "geometrytiming.h"
 #include "scene.h"
 
 #include "bufferobject.h"
@@ -104,35 +105,38 @@ void SphereGeometry::update()
   if (!d->vbo.ready() || m_dirty) {
     std::vector<unsigned int> sphereIndices;
     std::vector<ColorTextureVertex> sphereVertices;
-    sphereIndices.reserve(m_indices.size() * 4);
-    sphereVertices.reserve(m_spheres.size() * 4);
+    {
+      GeometryTiming::Scope timer;
+      sphereIndices.reserve(m_indices.size() * 4);
+      sphereVertices.reserve(m_spheres.size() * 4);
 
-    auto itIndex = m_indices.begin();
-    auto itSphere = m_spheres.begin();
+      auto itIndex = m_indices.begin();
+      auto itSphere = m_spheres.begin();
 
-    for (size_t i = 0;
-         itIndex != m_indices.end() && itSphere != m_spheres.end();
-         ++i, ++itIndex, ++itSphere) {
-      // Use our packed data structure...
-      float r = itSphere->radius;
-      unsigned int index = 4 * static_cast<unsigned int>(i);
-      ColorTextureVertex vert(itSphere->center, itSphere->color,
-                              Vector2f(-r, -r));
-      sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f(-r, r);
-      sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f(r, -r);
-      sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f(r, r);
-      sphereVertices.push_back(vert);
+      for (size_t i = 0;
+           itIndex != m_indices.end() && itSphere != m_spheres.end();
+           ++i, ++itIndex, ++itSphere) {
+        // Use our packed data structure...
+        float r = itSphere->radius;
+        unsigned int index = 4 * static_cast<unsigned int>(i);
+        ColorTextureVertex vert(itSphere->center, itSphere->color,
+                                Vector2f(-r, -r));
+        sphereVertices.push_back(vert);
+        vert.textureCoord = Vector2f(-r, r);
+        sphereVertices.push_back(vert);
+        vert.textureCoord = Vector2f(r, -r);
+        sphereVertices.push_back(vert);
+        vert.textureCoord = Vector2f(r, r);
+        sphereVertices.push_back(vert);
 
-      // 6 indexed vertices to draw a quad...
-      sphereIndices.push_back(index + 0);
-      sphereIndices.push_back(index + 1);
-      sphereIndices.push_back(index + 2);
-      sphereIndices.push_back(index + 3);
-      sphereIndices.push_back(index + 2);
-      sphereIndices.push_back(index + 1);
+        // 6 indexed vertices to draw a quad...
+        sphereIndices.push_back(index + 0);
+        sphereIndices.push_back(index + 1);
+        sphereIndices.push_back(index + 2);
+        sphereIndices.push_back(index + 3);
+        sphereIndices.push_back(index + 2);
+        sphereIndices.push_back(index + 1);
+      }
     }
 
     if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))

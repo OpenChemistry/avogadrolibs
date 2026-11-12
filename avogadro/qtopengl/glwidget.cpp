@@ -733,8 +733,9 @@ void GLWidget::drawFrameStats(bool windowRolled)
                .arg(post.cpuMs, 0, 'f', 1)
                .arg(gpuText(post.gpuMs));
     lines << QString::asprintf(
-      "uploaded %.2f MB",
-      static_cast<double>(timings.bufferBytesUploaded) / 1.0e6);
+      "uploaded %.2f MB (tess %.1f ms, upload %.1f ms)",
+      static_cast<double>(timings.bufferBytesUploaded) / 1.0e6,
+      timings.tessellateCpuMs, timings.uploadCpuMs);
   }
   lines << QString::asprintf("%lld atoms  %lld bonds",
                              static_cast<long long>(atoms),

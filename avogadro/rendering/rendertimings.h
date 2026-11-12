@@ -43,6 +43,19 @@ struct AVOGADRORENDERING_EXPORT RenderTimings
    * same time.
    */
   std::uint64_t bufferBytesUploaded = 0;
+  /**
+   * Growth of GeometryTiming::totalNanoseconds(Counter::Tessellate) across the
+   * frame: CPU time spent generating vertex and index data, in ms. Part of the
+   * CPU time of the pass that triggered the update.
+   */
+  double tessellateCpuMs = 0.0;
+  /**
+   * Growth of GeometryTiming::totalNanoseconds(Counter::Upload) across the
+   * frame: wall time spent inside glBufferData, in ms. Like
+   * bufferBytesUploaded, exact only when no other renderer works at the same
+   * time.
+   */
+  double uploadCpuMs = 0.0;
   /** True if the passes carry GPU times. */
   bool gpuTimingAvailable = false;
 
