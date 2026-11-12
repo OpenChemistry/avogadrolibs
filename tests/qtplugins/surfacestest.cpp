@@ -136,7 +136,8 @@ public:
           double lengthXY = std::sqrt(lengthXYsq);
           double startPosZ = in.first(2) - lengthXY;
           double endPosZ = in.first(2) + lengthXY;
-          int startIndexZ = (startPosZ - min(2)) / spacing(2);
+          int startIndexZ =
+            static_cast<int>(std::ceil((startPosZ - min(2)) / spacing(2)));
           int endIndexZ = (endPosZ - min(2)) / spacing(2) + 1;
           fillStripe(static_cast<unsigned int>(indexX),
                      static_cast<unsigned int>(indexY),
@@ -277,7 +278,10 @@ protected:
     for (int x = 0; x < dims(0); ++x) {
       for (int y = 0; y < dims(1); ++y) {
         for (int z = 0; z < dims(2); ++z) {
-          if (std::abs(cube.value(x, y, z) - ref.at(x, y, z)) > tolerance) {
+          const float value = cube.value(x, y, z);
+          const float expected = ref.at(x, y, z);
+          if (!std::isfinite(value) || !std::isfinite(expected) ||
+              std::abs(value - expected) > tolerance) {
             if (mismatches++ < 5) {
               ADD_FAILURE()
                 << what << ": voxel " << x << "," << y << "," << z << " is "

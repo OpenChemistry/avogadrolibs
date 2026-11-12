@@ -434,6 +434,11 @@ int main(int argc, char** argv)
     }
   }
 
+  if (rows.empty()) {
+    std::cerr << "No measurements: every molecule or grid was skipped\n";
+    return 1;
+  }
+
   if (!options.csvPath.empty()) {
     std::ofstream csv(options.csvPath);
     if (!csv) {

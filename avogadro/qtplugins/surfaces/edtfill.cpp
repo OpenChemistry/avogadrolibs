@@ -125,8 +125,9 @@ bool fillBinarySpheres(Core::Cube& cube, const std::vector<EdtSphere>& spheres)
         const double lengthXY = std::sqrt(lengthXYsq);
         const double startPosZ = in.first(2) - lengthXY;
         const double endPosZ = in.first(2) + lengthXY;
-        const int firstZ =
-          static_cast<int>(std::max((startPosZ - min(2)) / spacing(2), 0.0));
+        // Round up: a voxel below startPosZ lies outside the sphere.
+        const int firstZ = static_cast<int>(
+          std::max(std::ceil((startPosZ - min(2)) / spacing(2)), 0.0));
         const int lastZ = static_cast<int>(std::min(
           (endPosZ - min(2)) / spacing(2), static_cast<double>(dims(2) - 1)));
         if (firstZ > lastZ)
