@@ -5,6 +5,7 @@
 
 #include "surfaces.h"
 #include "surfacedialog.h"
+#include "edtfill.h"
 #include "surfaceresolution.h"
 
 // Header only, but duplicate symbols if included globally...
@@ -65,7 +66,6 @@ namespace {
 
 #include <algorithm>
 #include <cmath>
-#include <numeric>
 #include <utility>
 #include <vector>
 
@@ -668,11 +668,6 @@ namespace {
 constexpr double SolventProbeRadius = 1.4;
 } // namespace
 
-float inline square(float x)
-{
-  return x * x;
-}
-
 void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
   if (type == Unknown && m_dialog != nullptr)
@@ -686,8 +681,10 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   // delete the very basis set this calculation is about to read.
   m_molecule->emitChanged(Molecule::Added);
 
-  // Decide the resolution here, on the main thread, and remember it:
-  // performEDTStep() must erode with the grid spacing the cube was built with.
+  // Decide the resolution here, on the main thread: resolution() reads the
+  // dialog widgets and the molecule, which the workers must not touch. It is
+  // remembered for the command result; performEDTStep() reads the spacing from
+  // the cube itself, so it needs no copy.
   //
   // The padding here has to match the one computed in the worker below, which
   // skips atoms in hidden layers. Using every atom gives the same value or a
@@ -704,7 +701,6 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
   const double edtPadding = maxRadius + probe + 0.2;
 
   const float res = resolution(defaultResolution, edtPadding);
-  m_edtResolution = res;
   if (m_commandPending)
     m_commandResolution = res;
 
@@ -734,6 +730,10 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
       atoms.emplace_back(positions[i], radius);
     }
   }
+
+  // The surface is the zero level of both kinds of EDT field (signed
+  // distance, or +1/-1). Do not inherit the last orbital's isovalue.
+  m_isoValue = 0.0f;
 
   // Filled here, and published to the molecule by publishCube() once done.
   m_pendingCube = std::make_unique<Cube>();
@@ -769,71 +769,17 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
       const Vector3 pad(padding, padding, padding);
       const Vector3 cubeMin = low - pad;
       const Vector3 cubeMax = high + pad;
-      cube->setLimits(cubeMin, cubeMax, res);
-      cube->fill(-1.0);
-
-      const Vector3 min = cube->min();
-
-      // Overlapping atom spheres touch the same voxels, so threads must not
-      // be handed atoms: two of them would write one voxel at the same time.
-      // Instead, bin each atom into every x slab (constant indexX) it covers,
-      // and give each slab to exactly one thread. A slab task only writes
-      // voxels with its own indexX, so no two threads ever share a voxel.
-      // Filling is idempotent (it only sets 1.0 over the -1.0 background), so
-      // the result is the same as filling atom by atom.
-      const Vector3i dims = cube->dimensions();
-      std::vector<std::vector<size_t>> slabAtoms(dims(0));
-      for (size_t a = 0; a < atoms.size(); ++a) {
-        const std::pair<Vector3, double>& in = atoms[a];
-        double startPosX = in.first(0) - in.second;
-        double endPosX = in.first(0) + in.second;
-        int startIndexX = (startPosX - min(0)) / res;
-        int endIndexX = (endPosX - min(0)) / res + 1;
-        // Slabs outside the cube have no voxels to write.
-        for (int indexX = std::max(startIndexX, 0);
-             indexX < std::min(endIndexX, dims(0)); indexX++)
-          slabAtoms[indexX].push_back(a);
-      }
-
-      std::vector<int> slabIndices(dims(0));
-      std::iota(slabIndices.begin(), slabIndices.end(), 0);
-
-      // then, for each slab, set cubes around its atoms up to a certain radius
-      QFuture innerFuture = QtConcurrent::map(slabIndices, [&](int indexX) {
-        const double posX = indexX * res + min(0);
-        for (size_t a : slabAtoms[indexX]) {
-          const std::pair<Vector3, double>& in = atoms[a];
-          double radiusXsq = square(in.second) - square(posX - in.first(0));
-          if (radiusXsq < 0.0)
-            continue;
-          double radiusX = sqrt(radiusXsq);
-          double startPosY = in.first(1) - radiusX;
-          double endPosY = in.first(1) + radiusX;
-          int startIndexY = (startPosY - min(1)) / res;
-          int endIndexY = (endPosY - min(1)) / res + 1;
-          // fillStripe() only checks the flat index, so keep y and z inside
-          // the cube; an overflow would spill into a neighbouring slab.
-          for (int indexY = std::max(startIndexY, 0);
-               indexY < std::min(endIndexY, dims(1)); indexY++) {
-            double posY = indexY * res + min(1);
-            double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-            if (lengthXYsq < 0.0)
-              continue;
-            double lengthXY = sqrt(lengthXYsq);
-            double startPosZ = in.first(2) - lengthXY;
-            double endPosZ = in.first(2) + lengthXY;
-            int startIndexZ = (startPosZ - min(2)) / res;
-            int endIndexZ = (endPosZ - min(2)) / res + 1;
-            int firstZ = std::max(startIndexZ, 0);
-            int lastZ = std::min(endIndexZ - 1, dims(2) - 1);
-            if (firstZ > lastZ)
-              continue;
-            cube->fillStripe(indexX, indexY, firstZ, lastZ, 1.0f);
-          }
-        }
-      });
-
-      innerFuture.waitForFinished();
+      // A grid that cannot be built (non-finite or absurdly large) leaves the
+      // cube empty; edtFinished() and performEDTStep() then report that.
+      if (!cube->setLimits(cubeMin, cubeMax, res))
+        return;
+      // The solvent-excluded erosion that follows works on a set of voxels,
+      // so that surface stays binary. The other two use a signed distance
+      // field, whose zero level lies exactly on the spheres.
+      if (type == SolventExcluded)
+        fillBinarySpheres(*cube, atoms);
+      else
+        fillDistanceSpheres(*cube, atoms);
     });
 
   // SolventExcluded requires an extra pass
@@ -854,9 +800,17 @@ void Surfaces::performEDTStep()
   }
 
   Cube* cube = m_pendingCube.get();
-  const double scaledProbeRadius = SolventProbeRadius / m_edtResolution;
+  if (cube->data()->empty()) {
+    // The grid could not be built, so there is nothing to erode.
+    publishCube(true); // reports the interruption
+    return;
+  }
+  // The grid spacing differs slightly from the requested resolution (see
+  // Cube::setLimits()), and per axis, so measure the probe in Angstrom.
+  const Vector3 spacing = cube->spacing();
+  const float probeRadius = static_cast<float>(SolventProbeRadius);
 
-  QFuture future = QtConcurrent::run([cube, scaledProbeRadius]() {
+  QFuture future = QtConcurrent::run([cube, spacing, probeRadius]() {
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
@@ -881,26 +835,26 @@ void Surfaces::performEDTStep()
           if (cube->value(xp, y, z) > 0.0 || cube->value(xn, y, z) > 0.0 ||
               cube->value(x, yp, z) > 0.0 || cube->value(x, yn, z) > 0.0 ||
               cube->value(x, y, zp) > 0.0 || cube->value(x, y, zn) > 0.0) {
-            relativePositions.push_back(Vector3(x, y, z));
+            relativePositions.push_back(Vector3(x, y, z).cwiseProduct(spacing));
           }
         }
       }
     }
 
     // pass the list to a NeighborPerceiver so it's faster to look up
-    NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
+    NeighborPerceiver perceiver(relativePositions, probeRadius);
 
     // now, exclude all "inside" cubes too close to any "outside" cube
     // The scratch list is per pool thread; getNeighborsInclusiveInPlace()
     // clears it before refilling it.
     QFuture innerFuture = QtConcurrent::map(insideIndices, [=](Vector3i& in) {
       thread_local Array<Index> neighbors;
-      Vector3 pos = in.cast<double>();
+      const Vector3 pos = in.cast<double>().cwiseProduct(spacing);
       perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
       for (Index neighbor : neighbors) {
         const Vector3& npos = relativePositions[neighbor];
         float distance = (npos - pos).norm();
-        if (distance <= scaledProbeRadius) {
+        if (distance <= probeRadius) {
           cube->setValue(in(0), in(1), in(2), -1.0f);
           break;
         }
@@ -917,7 +871,8 @@ void Surfaces::edtFinished()
 {
   if (m_cubeProducer != CubeProducer::EDT)
     return; // a stale signal from a job that was dropped
-  publishCube(false);
+  // An empty cube means the grid could not be built: nothing to show.
+  publishCube(m_pendingCube && m_pendingCube->data()->empty());
 }
 
 void Surfaces::qmFinished()
@@ -1465,12 +1420,15 @@ void Surfaces::meshFinished()
 {
   // Wait for every generator of the current job. A finished() left over from
   // a job that displayMesh() superseded must not publish half a pair either.
+  // isDone() is the acquire that orders each generator's writes before the
+  // meshes are published (QThread's own sync is invisible to TSan).
   if (!m_pendingMesh1 || m_coloring)
     return;
-  if (m_meshGenerator1 != nullptr && m_meshGenerator1->isRunning())
+  if (m_meshGenerator1 != nullptr &&
+      (m_meshGenerator1->isRunning() || !m_meshGenerator1->isDone()))
     return;
   if (m_pendingMesh2 && m_meshGenerator2 != nullptr &&
-      m_meshGenerator2->isRunning())
+      (m_meshGenerator2->isRunning() || !m_meshGenerator2->isDone()))
     return;
 
   m_meshCube.reset();

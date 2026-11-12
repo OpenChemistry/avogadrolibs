@@ -139,3 +139,88 @@ TEST(MeshGeneratorTest, initializeRejectsThinCube)
   gen.run();
   EXPECT_EQ(mesh.numVertices(), 0u);
 }
+
+// Regression test: the convenience constructor dropped its reverse argument.
+TEST(MeshGeneratorTest, constructorHonorsReverse)
+{
+  Cube cube;
+  ASSERT_TRUE(cube.setLimits(Vector3(-2.0, -2.0, -2.0), Vector3i(16, 16, 16),
+                             Vector3(0.25, 0.25, 0.25)));
+  Vector3i dim = cube.dimensions();
+  for (int i = 0; i < dim.x(); ++i)
+    for (int j = 0; j < dim.y(); ++j)
+      for (int k = 0; k < dim.z(); ++k) {
+        Vector3 pos = cube.position(i * dim.y() * dim.z() + j * dim.z() + k);
+        cube.setValue(i, j, k, static_cast<float>(pos.norm()) - 1.2f);
+      }
+
+  Mesh viaCtor, viaInit;
+  MeshGenerator ctorGen(&cube, &viaCtor, 0.0f, 0, true);
+  MeshGenerator initGen;
+  ASSERT_TRUE(initGen.initialize(&cube, &viaInit, 0.0f, 0, true));
+  ctorGen.run();
+  initGen.run();
+
+  ASSERT_GT(viaInit.triangles().size(), static_cast<size_t>(0));
+  ASSERT_EQ(viaCtor.triangles().size(), viaInit.triangles().size());
+  ASSERT_EQ(viaCtor.normals().size(), viaInit.normals().size());
+  for (size_t t = 0; t < viaInit.triangles().size(); ++t)
+    EXPECT_EQ(viaCtor.triangles()[t], viaInit.triangles()[t]);
+  for (size_t v = 0; v < viaInit.normals().size(); ++v)
+    EXPECT_TRUE(viaCtor.normals()[v].isApprox(viaInit.normals()[v]));
+}
+
+// Regression test: the gradient-based normals used with 0 smoothing passes
+// pointed opposite to the face-based normals of smoothed meshes.
+TEST(MeshGeneratorTest, normalsAgreeAcrossSmoothingPasses)
+{
+  const Vector3 center(0.17, -0.23, 0.11);
+  const float radius = 1.5f;
+
+  for (bool negated : { false, true }) {
+    Cube cube;
+    ASSERT_TRUE(cube.setLimits(Vector3(-2.9, -3.1, -2.7), Vector3i(24, 24, 24),
+                               Vector3(0.25, 0.26, 0.24)));
+    Vector3i dim = cube.dimensions();
+    for (int i = 0; i < dim.x(); ++i)
+      for (int j = 0; j < dim.y(); ++j)
+        for (int k = 0; k < dim.z(); ++k) {
+          Vector3 pos = cube.position(i * dim.y() * dim.z() + j * dim.z() + k);
+          float f = radius - static_cast<float>((pos - center).norm());
+          cube.setValue(i, j, k, negated ? -f : f);
+        }
+
+    Mesh mesh0, mesh1;
+    MeshGenerator gen0, gen1;
+    ASSERT_TRUE(gen0.initialize(&cube, &mesh0, 0.0f, 0, negated));
+    ASSERT_TRUE(gen1.initialize(&cube, &mesh1, 0.0f, 1, negated));
+    gen0.run();
+    gen1.run();
+
+    ASSERT_GT(mesh0.vertices().size(), static_cast<size_t>(0));
+    ASSERT_GT(mesh1.vertices().size(), static_cast<size_t>(0));
+
+    // Compare against the radial direction for each mesh. Both must agree
+    // on the sign (inward or outward), whichever it is.
+    auto meanRadial = [&](const Mesh& m) {
+      double sum = 0.0;
+      for (size_t v = 0; v < m.vertices().size(); ++v) {
+        Vector3 r = m.vertices()[v].cast<double>() - center;
+        Vector3 n = m.normals()[v].cast<double>();
+        if (r.norm() > 0.0 && n.norm() > 0.0)
+          sum += n.normalized().dot(r.normalized());
+      }
+      return sum / static_cast<double>(m.vertices().size());
+    };
+    double d0 = meanRadial(mesh0);
+    double d1 = meanRadial(mesh1);
+    EXPECT_GT(std::abs(d0), 0.9) << "negated=" << negated;
+    EXPECT_GT(std::abs(d1), 0.9) << "negated=" << negated;
+    EXPECT_GT(d0 * d1, 0.0)
+      << "negated=" << negated << " d0=" << d0 << " d1=" << d1;
+    // The face normals point toward increasing |f| inside the lobe, i.e.
+    // inward, for both the positive and the reversed negative lobe.
+    EXPECT_LT(d0, -0.9) << "negated=" << negated;
+    EXPECT_LT(d1, -0.9) << "negated=" << negated;
+  }
+}

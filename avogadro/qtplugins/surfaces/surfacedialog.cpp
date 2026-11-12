@@ -9,6 +9,17 @@
 
 namespace Avogadro::QtPlugins {
 
+namespace {
+
+// Item order of smoothingCombo in surfacedialog.ui.
+constexpr int SmoothingNone = 0;
+constexpr int SmoothingLight = 1;
+constexpr int SmoothingMedium = 2;
+constexpr int SmoothingStrong = 3;
+constexpr int SmoothingCustom = 4;
+
+} // namespace
+
 SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   : QDialog(parent_, f), m_ui(new Ui::SurfaceDialog),
     m_automaticResolution(true)
@@ -39,6 +50,10 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
   connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
   connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
+
+  // currentIndexChanged() did not fire for the first item, so apply the
+  // per-type defaults (including smoothing) to the initial surface type.
+  surfaceComboChanged(m_ui->surfaceCombo->currentIndex());
 }
 
 SurfaceDialog::~SurfaceDialog()
@@ -59,12 +74,24 @@ void SurfaceDialog::surfaceComboChanged(int n)
     m_ui->orbitalCombo->setEnabled(false);
     m_ui->propertyCombo->setEnabled(true);
   }
+
+  // The van der Waals and solvent-accessible surfaces come from a signed
+  // distance field that is already smooth; the other types use binary or
+  // noisy grids and look better with light smoothing. Never override a
+  // user's custom choice.
+  if (m_ui->smoothingCombo->currentIndex() != SmoothingCustom) {
+    m_ui->smoothingCombo->setCurrentIndex(
+      (type == Surfaces::Type::VanDerWaals ||
+       type == Surfaces::Type::SolventAccessible)
+        ? SmoothingNone
+        : SmoothingLight);
+  }
 }
 
 void SurfaceDialog::propertyComboChanged(int n)
 {
   switch (n) {
-    case 0: // None
+    case SmoothingNone: // None
       m_ui->colormapCombo->setEnabled(false);
       m_ui->modelCombo->setEnabled(false);
       m_ui->modelCombo->clear();
@@ -90,7 +117,7 @@ void SurfaceDialog::resolutionComboChanged(int n)
       m_ui->resolutionDoubleSpinBox->setValue(0.35);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
       break;
-    case 2: // Medium resolution
+    case SmoothingMedium: // Medium resolution
       m_ui->resolutionDoubleSpinBox->setValue(0.18);
       m_ui->resolutionDoubleSpinBox->setEnabled(false);
       break;
@@ -128,15 +155,15 @@ void SurfaceDialog::smoothingComboChanged(int n)
       m_ui->smoothingPassesSpinBox->setValue(5);
       m_ui->smoothingPassesSpinBox->setEnabled(false);
       break;
-    case 3: // Strong smoothing
+    case SmoothingStrong: // Strong smoothing
       m_ui->smoothingPassesSpinBox->setValue(9);
       m_ui->smoothingPassesSpinBox->setEnabled(false);
       break;
-    case 4: // Custom smoothing
+    case SmoothingCustom: // Custom smoothing
       m_ui->smoothingPassesSpinBox->setValue(5);
       m_ui->smoothingPassesSpinBox->setEnabled(true);
       break;
-    case 1: // Light smoothing
+    case SmoothingLight: // Light smoothing
     default:
       m_ui->smoothingPassesSpinBox->setValue(1);
       m_ui->smoothingPassesSpinBox->setEnabled(false);

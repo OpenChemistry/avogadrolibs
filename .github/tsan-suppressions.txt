@@ -42,6 +42,12 @@ called_from_lib:libglib-2.0.so
 race:Avogadro::QtPlugins::Surfaces::calculateEDT
 race:Avogadro::QtPlugins::Surfaces::performEDTStep
 race:~MapKernel
+# The sphere fill moved out of calculateEDT into edtfill.cpp, whose
+# blockingMap workers no longer have calculateEDT on their stacks. Their
+# writes are ordered before the mesh generator's reads, the cube's free and
+# the reuse of the caller's stack by the same uninstrumented Qt hand-offs.
+# Matched by file because the worker lambdas are inlined into Qt templates.
+race:avogadro/qtplugins/surfaces/edtfill.cpp
 
 # Qt from install-qt-action is not TSan-instrumented and ships without symbols.
 # libQt6Gui converts and scales large QImages on its own thread pool
@@ -73,3 +79,9 @@ race:QtConcurrent::map<QList<Avogadro::QtGui::GaussianShell>
 # generator's reads of the cube stay visible; a mesh freed while still in use
 # would be a use-after-free, which the ASan job covers.
 race:Avogadro::Core::Mesh::~Mesh
+# After run() returns, QThread's exit code (uninstrumented libQt6Core) emits
+# finished(), which reads the generator's vptr through the moc-generated
+# metaObject(). ~MeshGenerator() wait()s for the thread before the destructor
+# chain rewrites the vptr, but that join is a futex inside Qt. Run()'s own
+# writes are ordered by MeshGenerator::isDone(), so match only metaObject().
+race:Avogadro::QtGui::MeshGenerator::metaObject

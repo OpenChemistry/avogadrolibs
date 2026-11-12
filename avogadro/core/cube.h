@@ -252,7 +252,9 @@ public:
   Mutex* lock() const { return m_lock; }
 
   /**
-   * Compute the gradient at a specific point in the cube.
+   * Compute the gradient of the cube's values at a specific point, using
+   * central differences (one-sided differences at the edges of the cube).
+   * The vector points toward increasing values, i.e., it is +grad f.
    * @param i x index
    * @param j y index
    * @param k z index
