@@ -264,3 +264,32 @@ TEST(CubeTest, limitsFromMolecule)
   EXPECT_FALSE(flat.setLimits(mol, 0.5f, 0.0f));
   expectEmptyCube(flat);
 }
+
+// computeGradient() must return +grad f (pointing toward increasing values),
+// including the one-sided differences on the cube boundary.
+TEST(CubeTest, computeGradientLinearField)
+{
+  const float a = 2.0f, b = -3.0f, c = 0.5f;
+  Cube cube;
+  ASSERT_TRUE(cube.setLimits(Vector3(-1.0, 0.5, 2.0), Vector3i(5, 6, 7),
+                             Vector3(0.3, 0.4, 0.5)));
+  const Vector3i dim = cube.dimensions();
+  for (int i = 0; i < dim.x(); ++i)
+    for (int j = 0; j < dim.y(); ++j)
+      for (int k = 0; k < dim.z(); ++k) {
+        Vector3 pos = cube.position(i * dim.y() * dim.z() + j * dim.z() + k);
+        cube.setValue(i, j, k,
+                      a * static_cast<float>(pos.x()) +
+                        b * static_cast<float>(pos.y()) +
+                        c * static_cast<float>(pos.z()));
+      }
+
+  const int pts[][3] = { { 2, 3, 3 }, { 0, 0, 0 }, { 4, 5, 6 },
+                         { 0, 3, 6 }, { 4, 0, 3 }, { 2, 5, 0 } };
+  for (const auto& p : pts) {
+    auto g = cube.computeGradient(p[0], p[1], p[2]);
+    EXPECT_NEAR(g[0], a, 1.0e-3) << p[0] << " " << p[1] << " " << p[2];
+    EXPECT_NEAR(g[1], b, 1.0e-3) << p[0] << " " << p[1] << " " << p[2];
+    EXPECT_NEAR(g[2], c, 1.0e-3) << p[0] << " " << p[1] << " " << p[2];
+  }
+}

@@ -253,6 +253,8 @@ std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
   int nz = m_points.z();
   int dataIdx = (i * ny * nz) + (j * nz) + k;
 
+  // x[dim][0] is the "next" sample, x[dim][1] the "previous" one (the
+  // point itself at an edge)
   std::array<std::array<float, 2>, 3> x;
   std::array<float, 3> run;
 
@@ -303,9 +305,9 @@ std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 
   std::array<float, 3> ret;
 
-  ret[0] = (x[0][1] - x[0][0]) / run[0];
-  ret[1] = (x[1][1] - x[1][0]) / run[1];
-  ret[2] = (x[2][1] - x[2][0]) / run[2];
+  ret[0] = (x[0][0] - x[0][1]) / run[0];
+  ret[1] = (x[1][0] - x[1][1]) / run[1];
+  ret[2] = (x[2][0] - x[2][1]) / run[2];
 
   return ret;
 }

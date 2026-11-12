@@ -565,6 +565,14 @@ void MeshGenerator::run()
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
 
+  // The triangle winding (and so the face normals that smoothing computes)
+  // flips when the winding is reversed, so the gradient normals must flip
+  // with it to give the same lighting for any number of smoothing passes.
+  if (m_reverseWinding) {
+    for (auto& normal : m_normals)
+      normal = -normal;
+  }
+
   m_mesh->setVertices(m_vertices);
   m_mesh->setNormals(m_normals);
   m_mesh->setTriangles(m_triangles);
