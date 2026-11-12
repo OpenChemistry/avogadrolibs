@@ -86,15 +86,15 @@ public:
   }
 
   void fillSpheres(const std::vector<AtomSphere>& atoms, const Vector3& min,
-                   float res)
+                   const Vector3& spacing)
   {
     for (const AtomSphere& in : atoms) {
       double startPosX = in.first(0) - in.second;
       double endPosX = in.first(0) + in.second;
-      int startIndexX = (startPosX - min(0)) / res;
-      int endIndexX = (endPosX - min(0)) / res + 1;
+      int startIndexX = (startPosX - min(0)) / spacing(0);
+      int endIndexX = (endPosX - min(0)) / spacing(0) + 1;
       for (int indexX = startIndexX; indexX < endIndexX; indexX++) {
-        double posX = indexX * res + min(0);
+        double posX = indexX * spacing(0) + min(0);
         double radiusXsq =
           in.second * in.second - (posX - in.first(0)) * (posX - in.first(0));
         if (radiusXsq < 0.0)
@@ -102,10 +102,10 @@ public:
         double radiusX = std::sqrt(radiusXsq);
         double startPosY = in.first(1) - radiusX;
         double endPosY = in.first(1) + radiusX;
-        int startIndexY = (startPosY - min(1)) / res;
-        int endIndexY = (endPosY - min(1)) / res + 1;
+        int startIndexY = (startPosY - min(1)) / spacing(1);
+        int endIndexY = (endPosY - min(1)) / spacing(1) + 1;
         for (int indexY = startIndexY; indexY < endIndexY; indexY++) {
-          double posY = indexY * res + min(1);
+          double posY = indexY * spacing(1) + min(1);
           double lengthXYsq =
             radiusX * radiusX - (posY - in.first(1)) * (posY - in.first(1));
           if (lengthXYsq < 0.0)
@@ -113,8 +113,8 @@ public:
           double lengthXY = std::sqrt(lengthXYsq);
           double startPosZ = in.first(2) - lengthXY;
           double endPosZ = in.first(2) + lengthXY;
-          int startIndexZ = (startPosZ - min(2)) / res;
-          int endIndexZ = (endPosZ - min(2)) / res + 1;
+          int startIndexZ = (startPosZ - min(2)) / spacing(2);
+          int endIndexZ = (endPosZ - min(2)) / spacing(2) + 1;
           fillStripe(static_cast<unsigned int>(indexX),
                      static_cast<unsigned int>(indexY),
                      static_cast<unsigned int>(startIndexZ),
@@ -196,13 +196,14 @@ protected:
   {
     const Vector3 min = cube.min();
     const Vector3i dims = cube.dimensions();
-    const double margin = 2.0 * Resolution;
+    const Vector3 spacing = cube.spacing();
+    const double margin = 2.0 * spacing.maxCoeff();
     size_t checkedInside = 0, checkedOutside = 0;
     for (int x = 0; x < dims(0); ++x) {
       for (int y = 0; y < dims(1); ++y) {
         for (int z = 0; z < dims(2); ++z) {
-          const Vector3 pos(min(0) + x * Resolution, min(1) + y * Resolution,
-                            min(2) + z * Resolution);
+          const Vector3 pos(min(0) + x * spacing(0), min(1) + y * spacing(1),
+                            min(2) + z * spacing(2));
           double deepest = -1.0e9; // largest (radius - distance)
           for (const AtomSphere& a : atoms)
             deepest = std::max(deepest, a.second - (pos - a.first).norm());
@@ -234,7 +235,7 @@ protected:
   ReferenceGrid fillReference(const Cube& cube, double probe) const
   {
     ReferenceGrid ref(cube.dimensions());
-    ref.fillSpheres(spheres(probe), cube.min(), Resolution);
+    ref.fillSpheres(spheres(probe), cube.min(), cube.spacing());
     return ref;
   }
 
@@ -327,7 +328,7 @@ TEST_F(SurfacesCommandTest, vanDerWaalsMatchesSerialReference)
 
   // Every atom centre is inside its own sphere.
   for (const AtomSphere& a : spheres(0.0)) {
-    const Vector3 rel = (a.first - cube->min()) / Resolution;
+    const Vector3 rel = (a.first - cube->min()).cwiseQuotient(cube->spacing());
     EXPECT_GT(cube->value(static_cast<int>(std::lround(rel(0))),
                           static_cast<int>(std::lround(rel(1))),
                           static_cast<int>(std::lround(rel(2)))),
@@ -380,7 +381,9 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   // Stage 2: performEDTStep() erodes inside voxels within the probe radius,
   // in voxels of the resolution the cube was built with, of the "outside"
   // voxels touching the filled region.
-  const double scaledProbe = SolventProbe / Resolution;
+  // The plugin measures the probe in Angstrom on the cube's real spacing.
+  const Vector3 spacing = cube->spacing();
+  const float probe = static_cast<float>(SolventProbe);
 
   std::vector<Vector3> outsideContact;
   std::vector<Vector3i> insideVoxels;
@@ -400,7 +403,8 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
         if (ref.at(xp, y, z) > 0.0f || ref.at(xn, y, z) > 0.0f ||
             ref.at(x, yp, z) > 0.0f || ref.at(x, yn, z) > 0.0f ||
             ref.at(x, y, zp) > 0.0f || ref.at(x, y, zn) > 0.0f) {
-          outsideContact.emplace_back(x, y, z);
+          outsideContact.emplace_back(x * spacing(0), y * spacing(1),
+                                      z * spacing(2));
         }
       }
     }
@@ -411,10 +415,11 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   // the plugin, which only ever reads the original outside voxels.
   size_t erased = 0;
   for (const Vector3i& in : insideVoxels) {
-    const Vector3 pos = in.cast<double>();
+    const Vector3 pos(in(0) * spacing(0), in(1) * spacing(1),
+                      in(2) * spacing(2));
     for (const Vector3& npos : outsideContact) {
       const float distance = (npos - pos).norm();
-      if (distance <= scaledProbe) {
+      if (distance <= probe) {
         ref.at(in(0), in(1), in(2)) = -1.0f;
         ++erased;
         break;
@@ -435,8 +440,8 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   // A heavy atom is buried deeper (its SAS sphere reaches 3.1 A) than the
   // probe can erode (1.4 A), so its centre voxel survives.
   for (Index i = 0; i < 3; ++i) {
-    const Vector3 rel =
-      (m_harness.molecule()->atomPosition3d(i) - cube->min()) / Resolution;
+    const Vector3 rel = (m_harness.molecule()->atomPosition3d(i) - cube->min())
+                          .cwiseQuotient(cube->spacing());
     EXPECT_GT(cube->value(static_cast<int>(std::lround(rel(0))),
                           static_cast<int>(std::lround(rel(1))),
                           static_cast<int>(std::lround(rel(2)))),

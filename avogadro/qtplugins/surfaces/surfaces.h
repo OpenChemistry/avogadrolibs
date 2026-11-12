@@ -239,9 +239,6 @@ private:
   /// Mesh smoothing passes asked for by the "smoothing" command option. Used
   /// only when there is no dialog; 0 (none) unless the caller passes one.
   int m_commandSmoothing = 0;
-  /// Grid resolution calculateEDT() built its cube with, for the solvent-
-  /// excluded erosion step in performEDTStep().
-  float m_edtResolution = 0.0f;
   /// True while a script command is waiting on a calculation to finish, so
   /// that an interrupted calculation can report failure rather than leave
   /// the caller waiting for a commandFinished() that will never come.
