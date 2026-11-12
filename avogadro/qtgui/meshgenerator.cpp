@@ -549,10 +549,17 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
   }
 }
 
+bool MeshGenerator::isDone() const noexcept
+{
+  return m_done.load(std::memory_order_acquire);
+}
+
 void MeshGenerator::run()
 {
+  m_done.store(false, std::memory_order_relaxed);
   if (!m_cube || !m_mesh) {
     qDebug() << "No mesh or cube set - nothing to find isosurface of…";
+    m_done.store(true, std::memory_order_release);
     return;
   }
 
@@ -587,6 +594,9 @@ void MeshGenerator::run()
   cubeCases.resize(0);
   gridEdges.resize(0);
   triCounter.resize(0);
+
+  // Last, so the writes above are ordered before isDone() returns true.
+  m_done.store(true, std::memory_order_release);
 }
 
 void MeshGenerator::clear()

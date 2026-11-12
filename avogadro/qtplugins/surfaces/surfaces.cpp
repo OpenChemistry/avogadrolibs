@@ -1420,12 +1420,15 @@ void Surfaces::meshFinished()
 {
   // Wait for every generator of the current job. A finished() left over from
   // a job that displayMesh() superseded must not publish half a pair either.
+  // isDone() is the acquire that orders each generator's writes before the
+  // meshes are published (QThread's own sync is invisible to TSan).
   if (!m_pendingMesh1 || m_coloring)
     return;
-  if (m_meshGenerator1 != nullptr && m_meshGenerator1->isRunning())
+  if (m_meshGenerator1 != nullptr &&
+      (m_meshGenerator1->isRunning() || !m_meshGenerator1->isDone()))
     return;
   if (m_pendingMesh2 && m_meshGenerator2 != nullptr &&
-      m_meshGenerator2->isRunning())
+      (m_meshGenerator2->isRunning() || !m_meshGenerator2->isDone()))
     return;
 
   m_meshCube.reset();
