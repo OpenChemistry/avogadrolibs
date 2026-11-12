@@ -13,6 +13,8 @@
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/qtgui/meshgenerator.h>
 
 #include <QtCore/QEvent>
 #include <QtCore/QMetaObject>
@@ -22,7 +24,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <functional>
+#include <iostream>
+#include <sstream>
+#include <limits>
 #include <memory>
 #include <string>
 #include <utility>
@@ -51,7 +57,7 @@ constexpr double SolventProbe = 1.4;
 // Float arithmetic in the distance field, for distances of a few Angstrom.
 constexpr float DistanceTolerance = 1.0e-4f;
 
-using AtomSphere = std::pair<Vector3, double>; // centre, radius incl. probe
+using AtomSphere = Avogadro::QtPlugins::EdtSphere; // center, radius incl. probe
 
 // The same arithmetic as Surfaces::calculateEDT(), written serially and
 // against a plain array, so the threaded implementation is compared with an
@@ -361,7 +367,7 @@ TEST_F(SurfacesCommandTest, vanDerWaalsMatchesSerialReference)
   expectEqual(*cube, ref, "VdW", DistanceTolerance);
   expectGeometry(*cube, spheres(0.0));
 
-  // Every atom centre is inside its own sphere.
+  // Every atom center is inside its own sphere.
   for (const AtomSphere& a : spheres(0.0)) {
     const Vector3 rel = (a.first - cube->min()).cwiseQuotient(cube->spacing());
     EXPECT_GT(cube->value(static_cast<int>(std::lround(rel(0))),
@@ -413,65 +419,81 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   const size_t sasInside = ref.insideCount();
   EXPECT_GT(sasInside, total / 50) << "the reference cube is nearly empty";
 
-  // Stage 2: performEDTStep() erodes inside voxels within the probe radius,
-  // in voxels of the resolution the cube was built with, of the "outside"
-  // voxels touching the filled region.
-  // The plugin measures the probe in Angstrom on the cube's real spacing.
+  // Stage 2: the field is sqrt(D2) - probe, with D2 the squared distance in
+  // Angstrom to the nearest voxel outside the SAS spheres. Brute force over
+  // every inside voxel and every outside voxel; outside voxels are exactly
+  // -probe.
   const Vector3 spacing = cube->spacing();
-  const float probe = static_cast<float>(SolventProbe);
+  const double probe = SolventProbe;
+  std::vector<Vector3> outsideVoxels;
+  for (int x = 0; x < size(0); x++)
+    for (int y = 0; y < size(1); y++)
+      for (int z = 0; z < size(2); z++)
+        if (ref.at(x, y, z) <= 0.0f)
+          outsideVoxels.push_back(Vector3(x, y, z).cwiseProduct(spacing));
+  EXPECT_FALSE(outsideVoxels.empty());
 
-  std::vector<Vector3> outsideContact;
-  std::vector<Vector3i> insideVoxels;
-  for (int z = 0; z < size(2); z++) {
-    const int zp = std::max(z - 1, 0);
-    const int zn = std::min(z + 1, size(2) - 1);
+  size_t negativeInside = 0;
+  for (int x = 0; x < size(0); x++) {
     for (int y = 0; y < size(1); y++) {
-      const int yp = std::max(y - 1, 0);
-      const int yn = std::min(y + 1, size(1) - 1);
-      for (int x = 0; x < size(0); x++) {
-        if (ref.at(x, y, z) > 0.0f) {
-          insideVoxels.emplace_back(x, y, z);
+      for (int z = 0; z < size(2); z++) {
+        if (ref.at(x, y, z) <= 0.0f) {
+          ref.at(x, y, z) = static_cast<float>(-probe);
           continue;
         }
-        const int xp = std::max(x - 1, 0);
-        const int xn = std::min(x + 1, size(0) - 1);
-        if (ref.at(xp, y, z) > 0.0f || ref.at(xn, y, z) > 0.0f ||
-            ref.at(x, yp, z) > 0.0f || ref.at(x, yn, z) > 0.0f ||
-            ref.at(x, y, zp) > 0.0f || ref.at(x, y, zn) > 0.0f) {
-          outsideContact.push_back(Vector3(x, y, z).cwiseProduct(spacing));
-        }
+        const Vector3 pos = Vector3(x, y, z).cwiseProduct(spacing);
+        double best = std::numeric_limits<double>::max();
+        for (const Vector3& other : outsideVoxels)
+          best = std::min(best, (other - pos).squaredNorm());
+        const float value = static_cast<float>(std::sqrt(best) - probe);
+        ref.at(x, y, z) = value;
+        if (value <= 0.0f)
+          ++negativeInside;
       }
     }
   }
-  EXPECT_FALSE(outsideContact.empty());
-
-  // Brute force, no neighbour lists. Marks are applied after the scan, like
-  // the plugin, which only ever reads the original outside voxels.
-  size_t erased = 0;
-  for (const Vector3i& in : insideVoxels) {
-    const Vector3 pos = in.cast<double>().cwiseProduct(spacing);
-    for (const Vector3& npos : outsideContact) {
-      const float distance = (npos - pos).norm();
-      if (distance <= probe) {
-        ref.at(in(0), in(1), in(2)) = -1.0f;
-        ++erased;
-        break;
-      }
-    }
-  }
-  const size_t sesInside = ref.insideCount();
+  size_t sesInside = ref.insideCount();
   RecordProperty("ses_voxels", static_cast<int>(total));
   RecordProperty("ses_sas_inside", static_cast<int>(sasInside));
   RecordProperty("ses_inside", static_cast<int>(sesInside));
-  EXPECT_EQ(sasInside - sesInside, erased);
   // The probe must erode something, but not everything.
+  EXPECT_GT(negativeInside, 0u);
   EXPECT_GT(sesInside, 0u);
   EXPECT_LT(sesInside, sasInside);
 
-  expectEqual(*cube, ref, "SES");
+  // Near the zero level the plugin measures to the SAS surface itself instead
+  // of to voxel centers, which is up to a voxel less than the center-to-center
+  // distance. Elsewhere the two agree exactly.
+  {
+    const double band = 3.0 * spacing.maxCoeff();
+    size_t refined = 0, bad = 0;
+    for (int x = 0; x < size(0); x++) {
+      for (int y = 0; y < size(1); y++) {
+        for (int z = 0; z < size(2); z++) {
+          const double expected = ref.at(x, y, z);
+          const double value = cube->value(x, y, z);
+          const bool untouched =
+            expected <= -probe + 1.0e-6 || expected >= band;
+          if (untouched) {
+            if (std::abs(value - expected) > DistanceTolerance)
+              ++bad;
+          } else {
+            ++refined;
+            // The center distance overestimates by at most a voxel diagonal
+            // over two, 0.87 of a voxel.
+            if (value < expected - 0.9 * spacing.maxCoeff() ||
+                value > expected + 0.25 * spacing.maxCoeff())
+              ++bad;
+          }
+        }
+      }
+    }
+    EXPECT_GT(refined, 100u);
+    EXPECT_EQ(bad, 0u);
+  }
 
   // A heavy atom is buried deeper (its SAS sphere reaches 3.1 A) than the
-  // probe can erode (1.4 A), so its centre voxel survives.
+  // probe can erode (1.4 A), so its center voxel survives.
   for (Index i = 0; i < 3; ++i) {
     const Vector3 rel = (m_harness.molecule()->atomPosition3d(i) - cube->min())
                           .cwiseQuotient(cube->spacing());
@@ -908,4 +930,525 @@ TEST(SurfacesDistanceFieldTest, isolatedAtomVerticesLieOnTheSphere)
       << "max |distance - radius| = " << worst << " A over "
       << mesh->numVertices() << " vertices, spacing " << spacing << " A";
   }
+}
+
+namespace {
+
+using Avogadro::Vector3f;
+
+// Unit of work for the tests below: a cube laid out over some spheres.
+struct SesGrid
+{
+  Cube cube;
+  std::vector<AtomSphere> sas; // radii include the probe
+};
+
+// Lay out a cube over @p atoms (vdW radii) as Surfaces::calculateEDT() does
+// and fill it with the new solvent-excluded field. Returns false on failure.
+bool buildSes(const std::vector<std::pair<Vector3, int>>& atoms,
+              float resolution, SesGrid& grid)
+{
+  Vector3 low = atoms[0].first, high = atoms[0].first;
+  double maxRadius = 0.0;
+  for (const auto& atom : atoms) {
+    low = low.cwiseMin(atom.first);
+    high = high.cwiseMax(atom.first);
+    const double radius =
+      Avogadro::Core::Elements::radiusVDW(atom.second) + SolventProbe;
+    maxRadius = std::max(maxRadius, radius);
+    grid.sas.emplace_back(atom.first, radius);
+  }
+  const float padding = static_cast<float>(maxRadius + SolventProbe + 0.2);
+  const Vector3 pad(padding, padding, padding);
+  if (!grid.cube.setLimits(Vector3(low - pad), Vector3(high + pad), resolution))
+    return false;
+  return Avogadro::QtPlugins::fillSolventExcluded(grid.cube, grid.sas,
+                                                  SolventProbe);
+}
+
+} // namespace
+
+// The exact squared distances of the separable transform, against brute
+// force, on a grid whose three spacings differ.
+TEST(SurfacesSolventExcludedTest, distanceTransformMatchesBruteForce)
+{
+  const Vector3i dims(13, 9, 11);
+  const Vector3 spacing(0.3, 0.17, 0.5);
+  const size_t total = static_cast<size_t>(dims(0)) * dims(1) * dims(2);
+  const float inf = std::numeric_limits<float>::infinity();
+
+  for (unsigned seed : { 1u, 2u, 3u }) {
+    SCOPED_TRACE(seed);
+    // A small deterministic generator; seeds are about 3%, 15% and 40%.
+    const unsigned threshold = seed == 1 ? 3 : (seed == 2 ? 15 : 40);
+    unsigned state = 12345u * seed;
+    std::vector<float> field(total);
+    for (float& v : field) {
+      state = state * 1664525u + 1013904223u;
+      v = ((state >> 16) % 100) < threshold ? 0.0f : inf;
+    }
+    std::vector<size_t> zeros;
+    for (size_t i = 0; i < total; ++i)
+      if (field[i] == 0.0f)
+        zeros.push_back(i);
+    ASSERT_FALSE(zeros.empty());
+
+    std::vector<float> result = field;
+    Avogadro::QtPlugins::squaredDistanceTransform(result, dims, spacing);
+
+    auto position = [&](size_t i) -> Vector3 {
+      const int z = static_cast<int>(i % dims(2));
+      const int y = static_cast<int>((i / dims(2)) % dims(1));
+      const int x =
+        static_cast<int>(i / (static_cast<size_t>(dims(2)) * dims(1)));
+      return Vector3(x, y, z).cwiseProduct(spacing);
+    };
+    double worst = 0.0;
+    for (size_t i = 0; i < total; ++i) {
+      double best = std::numeric_limits<double>::max();
+      for (size_t j : zeros)
+        best = std::min(best, (position(i) - position(j)).squaredNorm());
+      ASSERT_TRUE(std::isfinite(result[i]));
+      worst = std::max(worst, std::abs(result[i] - best));
+      EXPECT_NEAR(result[i], best, 1.0e-5 * (1.0 + best)) << "voxel " << i;
+    }
+    RecordProperty("worst_error", std::to_string(worst));
+  }
+
+  // No seeds at all: nothing is reachable, and nothing becomes NaN.
+  std::vector<float> empty(total, inf);
+  Avogadro::QtPlugins::squaredDistanceTransform(empty, dims, spacing);
+  for (float v : empty)
+    EXPECT_TRUE(std::isinf(v));
+}
+
+// Two overlapping SAS spheres of radius R at (+-a, 0, 0) cross in a circle of
+// radius rho = sqrt(R^2 - a^2) in the plane x = 0. The solvent-excluded
+// field is the distance to the complement of the union, less the probe. Near
+// the origin the nearest boundary is that crease circle, so at (x, y, z) with
+// r = sqrt(y^2 + z^2) the field is sqrt(x^2 + (r - rho)^2) - probe. The zero
+// level there is a torus around the crease, at r = rho - sqrt(probe^2 - x^2).
+TEST(SurfacesSolventExcludedTest, reentrantCreaseOfTwoSpheres)
+{
+  const double R = 2.0, a = 0.8, probe = 1.0;
+  const double rho = std::sqrt(R * R - a * a); // 1.833 > probe
+  ASSERT_GT(rho, probe);
+  const double spacing = 0.2;
+  const std::vector<AtomSphere> sas = { { Vector3(a, 0, 0), R },
+                                        { Vector3(-a, 0, 0), R } };
+  // Without and with the grid shifted off the axis.
+  for (const Vector3& shift : { Vector3(0, 0, 0), Vector3(0.07, 0.03, 0.05) }) {
+    SCOPED_TRACE(shift.norm());
+    const Vector3i dims(41, 41, 41);
+    Cube cube;
+    ASSERT_TRUE(cube.setLimits(Vector3(-4.0, -4.0, -4.0) + shift, dims,
+                               Vector3::Constant(spacing)));
+    ASSERT_TRUE(Avogadro::QtPlugins::fillSolventExcluded(cube, sas, probe));
+
+    double worstField = 0.0;
+    size_t checked = 0;
+    for (int ix = 0; ix < dims(0); ++ix) {
+      for (int iy = 0; iy < dims(1); ++iy) {
+        for (int iz = 0; iz < dims(2); ++iz) {
+          const Vector3 pos = cube.min() + Vector3(ix, iy, iz) * spacing;
+          const double r = std::hypot(pos(1), pos(2));
+          if (std::abs(pos(0)) > 0.4 || r > rho - 0.3)
+            continue;
+          const double expected = std::hypot(pos(0), r - rho) - probe;
+          if (std::abs(expected) > 1.5 * spacing)
+            continue; // beyond the refined band
+          ++checked;
+          worstField =
+            std::max(worstField, std::abs(cube.value(ix, iy, iz) - expected));
+        }
+      }
+    }
+    EXPECT_GT(checked, 50u);
+    RecordProperty("crease_field_error_over_spacing_" +
+                     std::to_string(shift.norm()),
+                   std::to_string(worstField / spacing));
+    EXPECT_LE(worstField, 0.15 * spacing);
+
+    Avogadro::QtGui::MeshGenerator generator;
+    Mesh mesh;
+    generator.initialize(&cube, &mesh, 0.0f, 0);
+    generator.start();
+    generator.wait();
+    double worstVertex = 0.0;
+    size_t vertices = 0;
+    for (const Vector3f& vertex : mesh.vertices()) {
+      const double x = vertex(0);
+      const double r = std::hypot(vertex(1), vertex(2));
+      if (std::abs(x) > 0.35 || r > rho)
+        continue;
+      ++vertices;
+      const double residual = std::abs(std::hypot(x, r - rho) - probe);
+      worstVertex = std::max(worstVertex, residual);
+    }
+    EXPECT_GT(vertices, 20u);
+    RecordProperty("crease_vertex_error_over_spacing_" +
+                     std::to_string(shift.norm()),
+                   std::to_string(worstVertex / spacing));
+    EXPECT_LE(worstVertex, 0.15 * spacing);
+  }
+}
+
+// One atom: the solvent-excluded surface is its van der Waals sphere, to
+// within the accuracy of the VdW and SAS fields.
+TEST(SurfacesSolventExcludedTest, isolatedAtomIsTheVdwSphere)
+{
+  const Vector3 center(0.137, -0.211, 0.318);
+  const double radius = Avogadro::Core::Elements::radiusVDW(6);
+  const double sasRadius = radius + SolventProbe;
+
+  struct Layout
+  {
+    Vector3 spacing;
+    const char* name;
+  };
+  for (const Layout& layout :
+       { Layout{ Vector3(0.2, 0.2, 0.2), "cubic_0.2" },
+         Layout{ Vector3(0.1, 0.1, 0.1), "cubic_0.1" },
+         Layout{ Vector3(0.25, 0.15, 0.2), "anisotropic" } }) {
+    SCOPED_TRACE(layout.name);
+    const double pad = sasRadius + SolventProbe + 0.2;
+    const Vector3 low = center - Vector3::Constant(pad);
+    const Vector3i dims =
+      (Vector3::Constant(2.0 * pad).cwiseQuotient(layout.spacing))
+        .array()
+        .ceil()
+        .cast<int>()
+        .matrix() +
+      Vector3i(1, 1, 1);
+    Cube cube;
+    ASSERT_TRUE(cube.setLimits(low, dims, layout.spacing));
+    std::vector<AtomSphere> sas = { { center, sasRadius } };
+    ASSERT_TRUE(
+      Avogadro::QtPlugins::fillSolventExcluded(cube, sas, SolventProbe));
+    for (float v : *cube.data())
+      ASSERT_TRUE(std::isfinite(v));
+
+    Avogadro::QtGui::MeshGenerator generator;
+    Mesh mesh;
+    generator.initialize(&cube, &mesh, 0.0f, 0);
+    generator.start();
+    generator.wait();
+    ASSERT_GT(mesh.numVertices(), 100u);
+
+    const double spacing = layout.spacing.maxCoeff();
+    double lowest = 1.0e9, highest = -1.0e9;
+    for (const Vector3f& vertex : mesh.vertices()) {
+      const double error = (vertex.cast<double>() - center).norm() - radius;
+      lowest = std::min(lowest, error);
+      highest = std::max(highest, error);
+    }
+    RecordProperty(
+      std::string("error_over_spacing_") + layout.name,
+      std::to_string(std::max(std::abs(lowest), std::abs(highest)) / spacing));
+    EXPECT_LE(std::max(std::abs(lowest), std::abs(highest)), 0.05 * spacing)
+      << "vertex radius error in [" << lowest << ", " << highest
+      << "] A, spacing " << spacing << " A";
+  }
+}
+
+namespace {
+
+// Lisdexamfetamine (Open Babel --gen3d), element and x y z in Angstrom.
+const char* const LisdexamfetamineXyz = "C 1.07567 -0.64825 -0.48944\n"
+                                        "C 2.51395 -0.27211 -0.13409\n"
+                                        "C 3.41366 -1.51182 0.06376\n"
+                                        "C 2.98053 -2.41922 1.18950\n"
+                                        "C 2.47686 -3.69797 0.91284\n"
+                                        "C 2.05655 -4.53170 1.94855\n"
+                                        "C 2.13876 -4.09923 3.27054\n"
+                                        "C 2.64556 -2.83204 3.55742\n"
+                                        "C 3.06772 -1.99690 2.52290\n"
+                                        "N 3.05257 0.58147 -1.18696\n"
+                                        "C 4.16025 1.38439 -0.99520\n"
+                                        "O 4.67725 1.57825 0.10030\n"
+                                        "C 4.63592 2.05301 -2.30876\n"
+                                        "C 6.10615 2.48192 -2.20278\n"
+                                        "C 6.59671 3.26298 -3.42470\n"
+                                        "C 8.02891 3.76646 -3.22097\n"
+                                        "C 8.52500 4.62948 -4.38199\n"
+                                        "N 8.59806 3.87071 -5.62576\n"
+                                        "N 4.39836 1.12226 -3.44362\n"
+                                        "H 0.59381 -1.20912 0.31685\n"
+                                        "H 1.03968 -1.25724 -1.39953\n"
+                                        "H 0.47449 0.25026 -0.66871\n"
+                                        "H 2.50199 0.32015 0.78922\n"
+                                        "H 4.44821 -1.20120 0.26172\n"
+                                        "H 3.46134 -2.07868 -0.87593\n"
+                                        "H 2.40615 -4.05089 -0.11333\n"
+                                        "H 1.66375 -5.51984 1.72313\n"
+                                        "H 1.80985 -4.74879 4.07633\n"
+                                        "H 2.71239 -2.49517 4.58856\n"
+                                        "H 3.46721 -1.01234 2.76284\n"
+                                        "H 2.88704 0.34771 -2.16440\n"
+                                        "H 4.00426 2.93785 -2.45187\n"
+                                        "H 6.74333 1.60166 -2.04596\n"
+                                        "H 6.23249 3.10852 -1.31097\n"
+                                        "H 5.92913 4.11411 -3.60392\n"
+                                        "H 6.55890 2.62464 -4.31373\n"
+                                        "H 8.70229 2.91175 -3.07887\n"
+                                        "H 8.07627 4.36111 -2.30024\n"
+                                        "H 9.51911 5.02194 -4.14166\n"
+                                        "H 7.85842 5.48761 -4.52150\n"
+                                        "H 9.26069 3.10321 -5.51669\n"
+                                        "H 8.97622 4.46754 -6.36078\n"
+                                        "H 5.10895 0.38919 -3.40433\n"
+                                        "H 4.58251 1.62425 -4.31464\n";
+
+// Caffeine (Open Babel --gen3d).
+const char* const CaffeineXyz = "C -3.24648 -1.13001 0.01710\n"
+                                "N -2.26204 -0.07794 0.01141\n"
+                                "C -2.51652 1.26813 0.00439\n"
+                                "N -1.40270 1.97347 0.00102\n"
+                                "C -0.41054 1.04011 0.00609\n"
+                                "C -0.90503 -0.22869 0.01229\n"
+                                "C -0.08039 -1.38610 0.01839\n"
+                                "O -0.53632 -2.52567 0.02497\n"
+                                "N 1.28337 -1.07869 0.01630\n"
+                                "C 2.23113 -2.17576 0.02196\n"
+                                "C 1.83395 0.22031 0.01030\n"
+                                "O 3.05683 0.39068 0.00943\n"
+                                "N 0.94002 1.29161 0.00551\n"
+                                "C 1.42493 2.65964 -0.00149\n"
+                                "H -4.24801 -0.69215 0.01470\n"
+                                "H -3.10930 -1.73019 0.92000\n"
+                                "H -3.10928 -1.74007 -0.87915\n"
+                                "H -3.51907 1.67754 0.00213\n"
+                                "H 1.74314 -3.15348 0.02300\n"
+                                "H 2.86391 -2.09412 0.91184\n"
+                                "H 2.86978 -2.09905 -0.86418\n"
+                                "H 2.51705 2.70546 0.00624\n"
+                                "H 1.04753 3.17744 0.88604\n"
+                                "H 1.06056 3.16294 -0.90267\n";
+
+std::vector<std::pair<Vector3, int>> parseXyzBody(const char* text)
+{
+  std::vector<std::pair<Vector3, int>> atoms;
+  std::istringstream in(text);
+  std::string symbol;
+  double x, y, z;
+  while (in >> symbol >> x >> y >> z) {
+    const unsigned char number =
+      Avogadro::Core::Elements::atomicNumberFromSymbol(symbol);
+    atoms.emplace_back(Vector3(x, y, z), number);
+  }
+  return atoms;
+}
+
+struct LipschitzResult
+{
+  size_t pairs = 0, violations = 0;
+  double worst = 0.0; // largest |f(a) - f(b)| - |a - b|
+};
+
+// f is a distance minus a constant, so it changes by no more than the
+// distance between two voxels. Check every pair of 6-neighbors that both lie
+// in the refined zone just inside the SAS.
+LipschitzResult lipschitz(const std::vector<std::pair<Vector3, int>>& atoms,
+                          float resolution)
+{
+  LipschitzResult result;
+  SesGrid grid;
+  EXPECT_TRUE(buildSes(atoms, resolution, grid));
+  const Vector3i dims = grid.cube.dimensions();
+  const Vector3 spacing = grid.cube.spacing();
+  const double band = 2.0 * spacing.maxCoeff();
+  auto inZone = [&](float v) {
+    return v > -SolventProbe + 1.0e-4 && std::abs(v) < band;
+  };
+  for (int x = 0; x < dims(0); ++x) {
+    for (int y = 0; y < dims(1); ++y) {
+      for (int z = 0; z < dims(2); ++z) {
+        const float a = grid.cube.value(x, y, z);
+        if (!inZone(a))
+          continue;
+        for (int axis = 0; axis < 3; ++axis) {
+          const int nx = x + (axis == 0), ny = y + (axis == 1),
+                    nz = z + (axis == 2);
+          if (nx >= dims(0) || ny >= dims(1) || nz >= dims(2))
+            continue;
+          const float b = grid.cube.value(nx, ny, nz);
+          if (!inZone(b))
+            continue;
+          ++result.pairs;
+          const double excess = std::abs(a - b) - spacing(axis);
+          if (excess > 1.0e-4)
+            ++result.violations;
+          result.worst = std::max(result.worst, excess);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+} // namespace
+
+TEST(SurfacesSolventExcludedTest, fieldIsLipschitzOnSmallMolecules)
+{
+  const auto caffeine = parseXyzBody(CaffeineXyz);
+  ASSERT_EQ(caffeine.size(), 24u);
+  const auto lisdex = parseXyzBody(LisdexamfetamineXyz);
+  ASSERT_EQ(lisdex.size(), 44u);
+  struct Case
+  {
+    const char* name;
+    const std::vector<std::pair<Vector3, int>>* atoms;
+    float resolution;
+  };
+  for (const Case& c : { Case{ "caffeine_0.3", &caffeine, 0.3f },
+                         Case{ "caffeine_0.15", &caffeine, 0.15f },
+                         Case{ "lisdex_0.3", &lisdex, 0.3f },
+                         Case{ "lisdex_0.15", &lisdex, 0.15f } }) {
+    SCOPED_TRACE(c.name);
+    if (c.atoms->empty())
+      continue;
+    const LipschitzResult r = lipschitz(*c.atoms, c.resolution);
+    std::cout << "lipschitz " << c.name << ": pairs " << r.pairs
+              << ", violations " << r.violations << ", worst excess " << r.worst
+              << " A\n";
+    EXPECT_EQ(r.violations, 0u);
+  }
+}
+
+// Three equal SAS spheres of radius R, centers on a circle of radius s about
+// the z axis at 90, 210 and 330 degrees in the plane z = 0. Their surfaces
+// meet at the two points (0, 0, +-hv), where hv = sqrt(R^2 - s^2): those are
+// at distance R from all three centers. Between them the axis lies inside
+// all three spheres. At (0, 0, t) with t just below hv, the exposed surface
+// is the apex of the cone of outside space, with outward normals
+// n_m = (-s e_m, hv) / R, e_m the horizontal direction to center m, and the
+// displacement (0, 0, -eps) from the apex is the sum of -n_m with equal
+// positive weights (the horizontal parts cancel), so the apex is the nearest
+// exterior point: the distance is hv - t, and the SES field is hv - t -
+// probe. It holds while the apex stays nearer than the creases, which the
+// brute-force comparison below confirms for the range tested.
+TEST(SurfacesSolventExcludedTest, threeSphereVertex)
+{
+  const double R = 2.0, s = 1.0, probe = 0.5, spacing = 0.1;
+  const double hv = std::sqrt(R * R - s * s);
+  std::vector<AtomSphere> sas;
+  for (double degrees : { 90.0, 210.0, 330.0 }) {
+    const double angle = degrees * 3.141592653589793 / 180.0;
+    sas.emplace_back(Vector3(s * std::cos(angle), s * std::sin(angle), 0.0), R);
+  }
+  Cube cube;
+  ASSERT_TRUE(cube.setLimits(Vector3(-4.0, -4.0, -4.0), Vector3i(81, 81, 81),
+                             Vector3::Constant(spacing)));
+  ASSERT_TRUE(Avogadro::QtPlugins::fillSolventExcluded(cube, sas, probe));
+
+  double worst = 0.0;
+  size_t checked = 0;
+  for (int iz = 40; iz < 81; ++iz) {
+    const double t = cube.min()(2) + iz * spacing;
+    const double eps = hv - t;
+    if (eps < 0.25 || eps > 0.6)
+      continue;
+    ++checked;
+    worst = std::max(worst, std::abs(cube.value(40, 40, iz) - (eps - probe)));
+  }
+  EXPECT_GE(checked, 3u);
+  RecordProperty("vertex_error_over_spacing", std::to_string(worst / spacing));
+  EXPECT_LE(worst, 0.1 * spacing);
+}
+
+namespace {
+
+// @p count atoms (C, N, O, H, C, ... in turn) at deterministic pseudo-random
+// positions in a cube of side @p box Angstrom, no two closer than
+// @p minDistance.
+std::vector<std::pair<Vector3, int>> randomCluster(unsigned seed, size_t count,
+                                                   double box,
+                                                   double minDistance)
+{
+  std::vector<std::pair<Vector3, int>> atoms;
+  unsigned state = seed;
+  auto next = [&]() {
+    state = state * 1664525u + 1013904223u;
+    return static_cast<double>((state >> 8) & 0xFFFF) / 65536.0;
+  };
+  const int elements[] = { 6, 7, 8, 1, 6 };
+  while (atoms.size() < count) {
+    const Vector3 p(box * next(), box * next(), box * next());
+    const bool clash = std::any_of(atoms.begin(), atoms.end(), [&](auto& a) {
+      return (a.first - p).norm() < minDistance;
+    });
+    if (!clash)
+      atoms.emplace_back(p, elements[atoms.size() % 5]);
+  }
+  return atoms;
+}
+
+} // namespace
+
+// The refined field against the distance to a dense sampling of the exposed
+// SAS surface, for a crowded cluster of atoms (many creases and vertices).
+TEST(SurfacesSolventExcludedTest, matchesSampledSurfaceDistance)
+{
+  const auto atoms = randomCluster(77u, 22, 5.0, 1.0);
+  SesGrid grid;
+  ASSERT_TRUE(buildSes(atoms, 0.3f, grid));
+
+  // Fibonacci points on each sphere that no other sphere strictly covers.
+  std::vector<Vector3> exposed;
+  const int perSphere = 20000;
+  for (size_t i = 0; i < grid.sas.size(); ++i) {
+    for (int n = 0; n < perSphere; ++n) {
+      const double z = 1.0 - 2.0 * (n + 0.5) / perSphere;
+      const double r = std::sqrt(1.0 - z * z);
+      const double phi = 2.399963229728653 * n;
+      const Vector3 p =
+        grid.sas[i].first +
+        grid.sas[i].second * Vector3(r * std::cos(phi), r * std::sin(phi), z);
+      bool covered = false;
+      for (size_t k = 0; k < grid.sas.size() && !covered; ++k)
+        covered = k != i && (p - grid.sas[k].first).norm() < grid.sas[k].second;
+      if (!covered)
+        exposed.push_back(p);
+    }
+  }
+  ASSERT_GT(exposed.size(), 1000u);
+
+  const Vector3i dims = grid.cube.dimensions();
+  const double band = 2.0 * grid.cube.spacing().maxCoeff();
+  size_t checked = 0, tooLow = 0, tooHigh = 0;
+  double worstLow = 0.0, worstHigh = 0.0;
+  for (int x = 0; x < dims(0); ++x) {
+    for (int y = 0; y < dims(1); ++y) {
+      for (int z = 0; z < dims(2); ++z) {
+        const double f = grid.cube.value(x, y, z);
+        if (f <= -SolventProbe + 1.0e-4 || std::abs(f) > band ||
+            (x + y + z) % 5 != 0)
+          continue;
+        const Vector3 pos =
+          grid.cube.min() + Vector3(x, y, z).cwiseProduct(grid.cube.spacing());
+        double best = 1.0e9;
+        for (const Vector3& p : exposed)
+          best = std::min(best, (p - pos).squaredNorm());
+        best = std::sqrt(best);
+        ++checked;
+        // The samples are a bit farther than the true surface, up to about
+        // half their spacing; the field must never be below the true value.
+        const double excess = f + SolventProbe - best;
+        if (excess > 0.003) {
+          ++tooHigh;
+          worstHigh = std::max(worstHigh, excess);
+        }
+        if (excess < -0.06) {
+          ++tooLow;
+          worstLow = std::max(worstLow, -excess);
+        }
+      }
+    }
+  }
+  std::cout << "sampled surface: " << checked << " voxels, " << tooHigh
+            << " above (worst " << worstHigh << " A), " << tooLow
+            << " below (worst " << worstLow << " A)\n";
+  EXPECT_GT(checked, 300u);
+  EXPECT_EQ(tooHigh, 0u);
+  EXPECT_EQ(tooLow, 0u);
 }

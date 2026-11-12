@@ -40,7 +40,6 @@ called_from_lib:libglib-2.0.so
 # only voxels of its own indexX) and checked by the exact voxel comparison in
 # surfacestest.cpp. With a TSan-instrumented Qt, remove these entries first.
 race:Avogadro::QtPlugins::Surfaces::calculateEDT
-race:Avogadro::QtPlugins::Surfaces::performEDTStep
 race:~MapKernel
 # The sphere fill moved out of calculateEDT into edtfill.cpp, whose
 # blockingMap workers no longer have calculateEDT on their stacks. Their
