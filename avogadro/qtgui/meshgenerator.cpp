@@ -45,7 +45,7 @@ MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
     m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
   liveGenerators().insert(this);
-  initialize(cube_, mesh_, iso, passes);
+  initialize(cube_, mesh_, iso, passes, reverse);
 }
 
 MeshGenerator::~MeshGenerator()

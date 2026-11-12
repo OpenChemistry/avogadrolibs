@@ -175,7 +175,9 @@ bool Apbs::loadOpenDxFile(const QString& fileName, QtGui::Molecule& molecule)
       qApp->processEvents();
 
       mesh = std::make_unique<Mesh>();
-      meshGenerator = new QtGui::MeshGenerator(cube, mesh.get(), -0.1f);
+      // true reverses the winding (and normals) of the negative surface
+      meshGenerator =
+        new QtGui::MeshGenerator(cube, mesh.get(), -0.1f, 6, true);
       connect(meshGenerator, SIGNAL(finished()), this,
               SLOT(meshGeneratorFinished()));
       connect(meshGenerator, SIGNAL(progressValueChanged(int)), this,

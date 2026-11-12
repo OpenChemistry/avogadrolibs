@@ -140,6 +140,36 @@ TEST(MeshGeneratorTest, initializeRejectsThinCube)
   EXPECT_EQ(mesh.numVertices(), 0u);
 }
 
+// Regression test: the convenience constructor dropped its reverse argument.
+TEST(MeshGeneratorTest, constructorHonorsReverse)
+{
+  Cube cube;
+  ASSERT_TRUE(cube.setLimits(Vector3(-2.0, -2.0, -2.0), Vector3i(16, 16, 16),
+                             Vector3(0.25, 0.25, 0.25)));
+  Vector3i dim = cube.dimensions();
+  for (int i = 0; i < dim.x(); ++i)
+    for (int j = 0; j < dim.y(); ++j)
+      for (int k = 0; k < dim.z(); ++k) {
+        Vector3 pos = cube.position(i * dim.y() * dim.z() + j * dim.z() + k);
+        cube.setValue(i, j, k, static_cast<float>(pos.norm()) - 1.2f);
+      }
+
+  Mesh viaCtor, viaInit;
+  MeshGenerator ctorGen(&cube, &viaCtor, 0.0f, 0, true);
+  MeshGenerator initGen;
+  ASSERT_TRUE(initGen.initialize(&cube, &viaInit, 0.0f, 0, true));
+  ctorGen.run();
+  initGen.run();
+
+  ASSERT_GT(viaInit.triangles().size(), static_cast<size_t>(0));
+  ASSERT_EQ(viaCtor.triangles().size(), viaInit.triangles().size());
+  ASSERT_EQ(viaCtor.normals().size(), viaInit.normals().size());
+  for (size_t t = 0; t < viaInit.triangles().size(); ++t)
+    EXPECT_EQ(viaCtor.triangles()[t], viaInit.triangles()[t]);
+  for (size_t v = 0; v < viaInit.normals().size(); ++v)
+    EXPECT_TRUE(viaCtor.normals()[v].isApprox(viaInit.normals()[v]));
+}
+
 // Regression test: the gradient-based normals used with 0 smoothing passes
 // pointed opposite to the face-based normals of smoothed meshes.
 TEST(MeshGeneratorTest, normalsAgreeAcrossSmoothingPasses)
