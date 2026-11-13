@@ -256,6 +256,9 @@ protected:
   float m_iso;              /** The value of the isosurface. */
   int m_passes;             /** Number of smoothing passes to perform. */
   bool m_reverseWinding;    /** Whether the winding and normals are reversed. */
+  bool m_mirrored = false;  /** The cube's step matrix has det < 0. */
+  bool m_flipWinding = false; /** Reverse flag combined with m_mirrored. */
+  bool m_skewed = false;      /** The cube is not axis aligned. */
   const Core::Cube* m_cube; /** The cube that we are generating a Mesh from. */
   Core::Mesh* m_mesh;       /** The mesh that is being generated. */
   Vector3f m_stepSize;      /** The step size vector for cube. */

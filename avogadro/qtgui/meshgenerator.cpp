@@ -16,6 +16,7 @@
 #include <QtConcurrent/QtConcurrent>
 
 #include <atomic>
+#include <cmath>
 #include <numeric>
 #include <vector>
 
@@ -135,6 +136,14 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   m_iso = iso;
   m_passes = passes;
   m_reverseWinding = reverse;
+
+  // The triangle tables assume grid indices form a right-handed frame. A step
+  // matrix with a negative determinant (one or three backwards axes) mirrors
+  // the surface in space, which turns every triangle inside out, so the
+  // winding is swapped again to compensate.
+  m_mirrored = m_cube->steps().determinant() < 0.0;
+  m_flipWinding = (reverse != m_mirrored);
+  m_skewed = !m_cube->isAxisAligned();
 
   for (unsigned int i = 0; i < 3; ++i)
     m_stepSize[i] = static_cast<float>(m_cube->spacing()[i]);
@@ -579,7 +588,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         // Add triangles
         const signed char* caseTri = m_caseTriangles[caseId]; // size 16
         for (int idx = 0; caseTri[idx] != -1; idx += 3) {
-          if (!m_reverseWinding) {
+          if (!m_flipWinding) {
             // Reverse winding order by swapping vertices 1 and 2
             m_triangles[triIdx][0] = globalIdxs[caseTri[idx]];
             m_triangles[triIdx][1] = globalIdxs[caseTri[idx + 2]];
@@ -622,9 +631,21 @@ void MeshGenerator::run()
   // The triangle winding (and so the face normals that smoothing computes)
   // flips when the winding is reversed, so the gradient normals must flip
   // with it to give the same lighting for any number of smoothing passes.
+  // (The gradient is a true gradient in space, so a mirrored step matrix does
+  // not change its direction; only the triangle winding compensates for it.)
   if (m_reverseWinding) {
     for (auto& normal : m_normals)
       normal = -normal;
+  }
+
+  // The gradient of a skewed grid is not scaled like the axis-aligned one;
+  // only its direction means anything.
+  if (m_skewed) {
+    for (auto& normal : m_normals) {
+      const float length = normal.norm();
+      if (length > 0.0f && std::isfinite(length))
+        normal /= length;
+    }
   }
 
   m_mesh->setVertices(m_vertices);
