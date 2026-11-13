@@ -44,12 +44,18 @@
         <property name="text">
          <string>Force field:</string>
         </property>
+        <property name="buddy">
+         <cstring>forceField</cstring>
+        </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Optimization algorithm:</string>
+        </property>
+        <property name="buddy">
+         <cstring>algorithm</cstring>
         </property>
        </widget>
       </item>
@@ -109,6 +115,9 @@
         <property name="text">
          <string>Van der Waals cutoff distance:</string>
         </property>
+        <property name="buddy">
+         <cstring>vdwCutoff</cstring>
+        </property>
        </widget>
       </item>
       <item row="3" column="0">
@@ -116,12 +125,18 @@
         <property name="text">
          <string>Pair update frequency:</string>
         </property>
+        <property name="buddy">
+         <cstring>pairFreq</cstring>
+        </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
          <string>electrostatic cutoff distance:</string>
+        </property>
+        <property name="buddy">
+         <cstring>eleCutoff</cstring>
         </property>
        </widget>
       </item>
@@ -196,12 +211,18 @@
         <property name="text">
          <string>&quot;Energy&quot; convergence:</string>
         </property>
+        <property name="buddy">
+         <cstring>energyConv</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Step limit:</string>
+        </property>
+        <property name="buddy">
+         <cstring>stepLimit</cstring>
         </property>
        </widget>
       </item>
