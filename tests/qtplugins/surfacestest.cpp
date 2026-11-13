@@ -425,11 +425,26 @@ TEST_F(SurfacesCommandTest, solventExcludedMatchesSerialReference)
   // -probe.
   const Vector3 spacing = cube->spacing();
   const double probe = SolventProbe;
+  // The nearest outside voxel always has an inside 6-neighbor (the step
+  // toward the inside voxel is closer), so only those need checking.
+  auto hasInsideNeighbor = [&](int x, int y, int z) {
+    const Vector3i voxel(x, y, z);
+    for (int axis = 0; axis < 3; ++axis) {
+      for (int step : { -1, 1 }) {
+        Vector3i n = voxel;
+        n(axis) += step;
+        if (n(axis) >= 0 && n(axis) < size(axis) &&
+            ref.at(n(0), n(1), n(2)) > 0.0f)
+          return true;
+      }
+    }
+    return false;
+  };
   std::vector<Vector3> outsideVoxels;
   for (int x = 0; x < size(0); x++)
     for (int y = 0; y < size(1); y++)
       for (int z = 0; z < size(2); z++)
-        if (ref.at(x, y, z) <= 0.0f)
+        if (ref.at(x, y, z) <= 0.0f && hasInsideNeighbor(x, y, z))
           outsideVoxels.push_back(Vector3(x, y, z).cwiseProduct(spacing));
   EXPECT_FALSE(outsideVoxels.empty());
 

@@ -10,6 +10,7 @@
 #include <QtConcurrent/QtConcurrent>
 
 #include <algorithm>
+#include <atomic>
 #include <cmath>
 #include <cstdint>
 #include <limits>
@@ -18,6 +19,26 @@
 namespace Avogadro::QtPlugins {
 
 namespace {
+
+// QtConcurrent::blockingMap(begin, end, task), with the hand-offs made
+// visible to thread sanitizers, which cannot see the synchronization inside
+// an uninstrumented Qt: each task acquires what the caller wrote before, and
+// the caller acquires what every task wrote. Without them, every voxel
+// raced, and matching those reports against suppressions cost TSan builds
+// minutes per surface.
+template <typename Iterator, typename Task>
+void parallelFor(Iterator begin, Iterator end, Task&& task)
+{
+  std::atomic<int> handoff{ 0 };
+  handoff.store(1, std::memory_order_release);
+  // The element is read only after the acquire.
+  QtConcurrent::blockingMap(begin, end, [&](const int& item) {
+    handoff.load(std::memory_order_acquire);
+    task(item);
+    handoff.fetch_add(1, std::memory_order_acq_rel);
+  });
+  handoff.load(std::memory_order_acquire);
+}
 
 inline double square(double x)
 {
@@ -86,7 +107,7 @@ void forEachSlab(Core::Cube& cube, const std::vector<EdtSphere>& spheres,
   std::vector<int> slabIndices(dims(0));
   std::iota(slabIndices.begin(), slabIndices.end(), 0);
 
-  QtConcurrent::blockingMap(slabIndices, [&](int indexX) {
+  parallelFor(slabIndices.begin(), slabIndices.end(), [&](int indexX) {
     float* slab = data + static_cast<size_t>(indexX) * slabSize;
     std::fill(slab, slab + slabSize, background);
     const double posX = indexX * spacing(0) + min(0);
@@ -243,12 +264,11 @@ void squaredDistanceTransform(std::vector<float>& squared,
   std::iota(lines.begin(), lines.end(), 0);
   auto runPass = [&](size_t count, auto&& base, size_t stride, int n,
                      double lineSpacing) {
-    QtConcurrent::blockingMap(
-      lines.begin(), lines.begin() + count, [&](int line) {
-        thread_local LineScratch scratch;
-        transformLine(data + base(static_cast<size_t>(line)), stride, n,
-                      lineSpacing, scratch);
-      });
+    parallelFor(lines.begin(), lines.begin() + count, [&](int line) {
+      thread_local LineScratch scratch;
+      transformLine(data + base(static_cast<size_t>(line)), stride, n,
+                    lineSpacing, scratch);
+    });
   };
   // Along z: contiguous, one line per (x, y).
   runPass(
@@ -506,7 +526,7 @@ Topology buildTopology(const std::vector<Ball>& balls, const BallGrid& grid,
   topology.creases.resize(balls.size());
   std::vector<int> indices(balls.size());
   std::iota(indices.begin(), indices.end(), 0);
-  QtConcurrent::blockingMap(indices, [&](int i) {
+  parallelFor(indices.begin(), indices.end(), [&](int i) {
     std::vector<Neighbor>& list = topology.overlaps[i];
     grid.forEachNear(
       balls[i].center, balls[i].radius + maxRadius, [&](std::uint32_t j) {
@@ -519,7 +539,7 @@ Topology buildTopology(const std::vector<Ball>& balls, const BallGrid& grid,
                            balls[j].radius, j });
       });
   });
-  QtConcurrent::blockingMap(indices, [&](int i) {
+  parallelFor(indices.begin(), indices.end(), [&](int i) {
     for (const Neighbor& j : topology.overlaps[i]) {
       if (j.index > static_cast<std::uint32_t>(i))
         addCrease(balls, i, j.index, topology.overlaps[i], topology.creases[i]);
@@ -697,7 +717,7 @@ bool fillSolventExcluded(Core::Cube& cube,
 
   std::vector<int> slabIndices(dims(0));
   std::iota(slabIndices.begin(), slabIndices.end(), 0);
-  QtConcurrent::blockingMap(slabIndices, [&](int x) {
+  parallelFor(slabIndices.begin(), slabIndices.end(), [&](int x) {
     thread_local CloseBalls close;
     const Neighbor* lastCover = nullptr;
     float* data = values.data();
