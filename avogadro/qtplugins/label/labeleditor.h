@@ -15,6 +15,8 @@ namespace Avogadro::QtPlugins {
 class LabelEditor : public QtGui::ToolPlugin
 {
   Q_OBJECT
+  Q_PROPERTY(qsizetype pickedAtomIndex READ pickedAtomIndex NOTIFY atomPickedChanged)
+  Q_PROPERTY(QString pickedLabel READ pickedLabel NOTIFY atomPickedChanged)
 public:
   explicit LabelEditor(QObject* parent_ = nullptr);
   ~LabelEditor() override;
@@ -27,11 +29,17 @@ public:
 
   void setMolecule(QtGui::Molecule* mol) override
   {
-    if (mol)
-      m_molecule = mol->undoMolecule();
+    setEditMolecule(mol ? mol->undoMolecule() : nullptr);
   }
 
-  void setEditMolecule(QtGui::RWMolecule* mol) override { m_molecule = mol; }
+  void setEditMolecule(QtGui::RWMolecule* mol) override
+  {
+    if (m_molecule != mol) {
+      m_selectedAtom.reset();
+      m_text.clear();
+    }
+    m_molecule = mol;
+  }
 
   void setGLWidget(QtOpenGL::GLWidget* widget) override { m_glWidget = widget; }
 
@@ -48,16 +56,23 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
+  qsizetype pickedAtomIndex() const;
+  QString pickedLabel() const { return m_text; }
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+signals:
+  void atomPickedChanged();
 
 private:
+  bool atomPicked() const { return m_selectedAtom.isValid(); }
   void save();
 
   QAction* m_activateAction;
   QtGui::RWMolecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
   Rendering::GLRenderer* m_renderer;
-  bool m_selected;
-  QtGui::RWAtom m_selectedAtom;
+  QtGui::RWMolecule::PersistentAtomType m_selectedAtom;
   QString m_text;
 };
 
