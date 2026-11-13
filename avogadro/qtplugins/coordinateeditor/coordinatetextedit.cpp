@@ -5,7 +5,11 @@
 
 #include "coordinatetextedit.h"
 
+#include <avogadro/qtgui/colortheme.h>
+
+#include <QtGui/QColor>
 #include <QtGui/QHelpEvent>
+#include <QtGui/QPalette>
 #include <QtGui/QTextCursor>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QToolTip>
@@ -20,15 +24,38 @@ CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
   setMouseTracking(true);
 
   m_unmarkedFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
-  m_unmarkedFormat.setForeground(qApp->palette().color(QPalette::WindowText));
-  m_unmarkedFormat.setBackground(qApp->palette().color(QPalette::Base));
-
   m_invalidFormat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
-  m_invalidFormat.setForeground(Qt::darkRed);
-  m_invalidFormat.setBackground(Qt::lightGray);
-
   m_validFormat.setUnderlineStyle(QTextCharFormat::NoUnderline);
-  m_validFormat.setForeground(Qt::darkGreen);
+  updateFormatColors();
+}
+
+void CoordinateTextEdit::updateFormatColors()
+{
+  // Pick shades for the light or dark theme, so marked text keeps at least
+  // 4.5:1 contrast in both.
+  const QPalette& pal = palette();
+  const bool darkMode = QtGui::colorTheme() == QtGui::ColorTheme::Dark;
+
+  m_unmarkedFormat.setForeground(pal.color(QPalette::Text));
+  m_unmarkedFormat.setBackground(pal.color(QPalette::Base));
+
+  if (darkMode) {
+    m_invalidFormat.setForeground(QColor(255, 150, 150));
+    m_invalidFormat.setBackground(QColor(70, 25, 25));
+    m_validFormat.setForeground(QColor(120, 220, 120));
+  } else {
+    m_invalidFormat.setForeground(QColor(170, 0, 0));
+    m_invalidFormat.setBackground(QColor(255, 235, 235));
+    m_validFormat.setForeground(QColor(0, 120, 0));
+  }
+}
+
+void CoordinateTextEdit::changeEvent(QEvent* e)
+{
+  // New text is marked with the current theme's colors after a switch.
+  if (e->type() == QEvent::PaletteChange)
+    updateFormatColors();
+  QTextEdit::changeEvent(e);
 }
 
 void CoordinateTextEdit::resetMarks()
