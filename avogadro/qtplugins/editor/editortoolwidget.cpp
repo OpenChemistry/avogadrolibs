@@ -106,6 +106,8 @@ void EditorToolWidget::elementChanged(int index)
   QVariant itemData = m_ui->element->itemData(index);
   if (itemData.isValid()) {
     if (itemData.toInt() == ELEMENT_SELECTOR_TAG) {
+      const QSignalBlocker comboBlocker(m_ui->element);
+      m_ui->element->setCurrentIndex(m_ui->element->findData(m_currentElement));
       if (!m_elementSelector) {
         m_elementSelector = new QtGui::PeriodicTableView(this);
         connect(m_elementSelector, SIGNAL(elementChanged(int)), this,
