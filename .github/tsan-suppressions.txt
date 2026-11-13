@@ -85,13 +85,3 @@ race:Avogadro::Core::Mesh::~Mesh
 # chain rewrites the vptr, but that join is a futex inside Qt. Run()'s own
 # writes are ordered by MeshGenerator::isDone(), so match only metaObject().
 race:Avogadro::QtGui::MeshGenerator::metaObject
-# MeshGenerator's Flying Edges passes 1, 2 and 4 run on QtConcurrent::blockingMap
-# over z slabs. Each pass hands its buffers to the next, and to run(), through
-# the same uninstrumented libQt6Core pool sync, so every hand-off looks like a
-# race. This matches the pass functions and their worker lambdas
-# (FlyingEdgesAlgorithmPassN()::<lambda(int)>), not run() itself, so races
-# between the generator thread and its callers stay visible. Trade-off: TSan
-# is blind to a real race between slabs. Slabs write disjoint rows by
-# construction, and MeshGeneratorTest.parallelMatchesSingleThread checks the
-# mesh is identical with one thread and with several.
-race:Avogadro::QtGui::MeshGenerator::FlyingEdgesAlgorithmPass

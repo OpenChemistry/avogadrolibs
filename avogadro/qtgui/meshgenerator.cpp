@@ -15,6 +15,7 @@
 #include <QtCore/QSet>
 #include <QtConcurrent/QtConcurrent>
 
+#include <atomic>
 #include <numeric>
 #include <vector>
 
@@ -40,6 +41,29 @@ std::vector<int> slabIndices(int count)
   std::vector<int> indices(count > 0 ? static_cast<size_t>(count) : 0);
   std::iota(indices.begin(), indices.end(), 0);
   return indices;
+}
+
+/// QtConcurrent::blockingMap over the z slabs 0 .. count - 1, with the
+/// hand-offs made visible to thread sanitizers, which cannot see the
+/// synchronization inside an uninstrumented Qt: each task acquires what the
+/// caller wrote before, and the caller acquires what every task wrote.
+/// Without them, every buffer access across passes raced, and matching those
+/// reports against suppressions cost TSan builds minutes per surface.
+/// This mirrors parallelFor() in qtplugins/surfaces/edtfill.cpp; share it
+/// once both land.
+template <typename Task>
+void parallelForSlabs(int count, Task&& task)
+{
+  // Built before the release, so the elements are covered by it.
+  std::vector<int> slabs = slabIndices(count);
+  std::atomic<int> handoff{ 0 };
+  handoff.store(1, std::memory_order_release);
+  QtConcurrent::blockingMap(slabs, [&](const int& k) {
+    handoff.load(std::memory_order_acquire);
+    task(k);
+    handoff.fetch_add(1, std::memory_order_acq_rel);
+  });
+  handoff.load(std::memory_order_acquire);
 }
 } // namespace
 
@@ -130,10 +154,8 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
   // Each pass runs in parallel over z slabs. Every slab only writes the
   // buffer entries of its own (j, k) rows; see the notes on each pass.
-  const std::vector<int> slabs = slabIndices(m_dim.z());
-
   // Writes edgeCases for the rows of slab k only.
-  QtConcurrent::blockingMap(slabs, [&](int k) {
+  parallelForSlabs(m_dim.z(), [&](int k) {
     for (int j = 0; j != m_dim.y(); ++j) {
 
       auto curEdgeCases =
@@ -150,7 +172,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
 
   // isCutEdge() reads edgeCases of the neighboring rows j + 1 and k + 1, so
   // this has to wait until every slab has finished the loop above.
-  QtConcurrent::blockingMap(slabs, [&](int k) {
+  parallelForSlabs(m_dim.z(), [&](int k) {
     for (int j = 0; j != m_dim.y(); ++j) {
       gridEdge& curGridEdge = gridEdges[k * m_dim.y() + j];
       curGridEdge.xl = m_dim.x();
@@ -174,7 +196,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
   // ge0..ge3, gridEdges rows j / j + 1 and k / k + 1. The j + 1 and k + 1 rows
   // are only written at the last j or k, and those rows are never the "own"
   // row of any slab, so every gridEdge has exactly one writer.
-  QtConcurrent::blockingMap(slabIndices(m_dim.z() - 1), [&](int k) {
+  parallelForSlabs(m_dim.z() - 1, [&](int k) {
     for (int j = 0; j != m_dim.y() - 1; ++j) {
       int xl, xr;
       calcTrimValues(xl, xr, j, k); // xl, xr set in this function
@@ -290,7 +312,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
 {
   // The prefix sums of pass 3 give every row its own range of m_vertices,
   // m_normals and m_triangles, so slabs write disjoint elements.
-  QtConcurrent::blockingMap(slabIndices(m_dim.z() - 1), [&](int k) {
+  parallelForSlabs(m_dim.z() - 1, [&](int k) {
     for (int j = 0; j != m_dim.y() - 1; ++j) {
       // find adjusted trim values
       int xl, xr;
