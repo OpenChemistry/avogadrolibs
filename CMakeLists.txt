@@ -199,6 +199,15 @@ if(EMSCRIPTEN AND (NOT USE_QT OR NOT USE_OPENGL))
   message(FATAL_ERROR "EMSCRIPTEN requires USE_QT=ON and USE_OPENGL=ON for its viewport")
 endif()
 
+if(EMSCRIPTEN)
+  find_package(Qt6 REQUIRED COMPONENTS Core)
+  # Non-Qt libraries and host-run WASM tools also need to match the Qt ABI.
+  if(QT_FEATURE_thread)
+    add_compile_options(-pthread)
+    add_link_options(-pthread)
+  endif()
+endif()
+
 add_subdirectory(thirdparty)
 add_subdirectory(utilities)
 add_subdirectory(avogadro)
