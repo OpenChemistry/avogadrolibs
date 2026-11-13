@@ -112,6 +112,9 @@ jobs:
         name: ${{ matrix.config.name }}
         size: ${{ matrix.config.sccache_size || '600M' }}
 
+    - name: Test macOS packaging fixups
+      run: python3 .github/scripts/test_fix_macos_plugins.py
+
     - name: Fix Mac plugins
       if: runner.os == 'macOS'
       run: bash "$GITHUB_WORKSPACE/.github/scripts/fix-macos-plugins.sh" "${{ runner.workspace }}/build/prefix"
