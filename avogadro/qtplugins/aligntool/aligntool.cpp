@@ -319,7 +319,7 @@ void AlignTool::registerCommands()
 bool AlignTool::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  static const QStringList knownCommands = { "centerAtom", "alignAtom" };
+  static const QStringList knownCommands = { "centerAtom", "alignAtom", "alignPickedAtoms" };
 
   if (!knownCommands.contains(command))
     return false; // not one of our commands
