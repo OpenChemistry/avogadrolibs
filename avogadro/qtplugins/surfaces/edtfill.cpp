@@ -29,6 +29,12 @@ namespace {
 template <typename Iterator, typename Task>
 void parallelFor(Iterator begin, Iterator end, Task&& task)
 {
+#ifdef Q_OS_WASM
+  // EDT already runs on a worker. Avoid waiting for a nested pool job
+  // from inside the browser's bounded pthread pool.
+  for (auto it = begin; it != end; ++it)
+    task(*it);
+#else
   std::atomic<int> handoff{ 0 };
   handoff.store(1, std::memory_order_release);
   // The element is read only after the acquire.
@@ -38,6 +44,7 @@ void parallelFor(Iterator begin, Iterator end, Task&& task)
     handoff.fetch_add(1, std::memory_order_acq_rel);
   });
   handoff.load(std::memory_order_acquire);
+#endif
 }
 
 inline double square(double x)

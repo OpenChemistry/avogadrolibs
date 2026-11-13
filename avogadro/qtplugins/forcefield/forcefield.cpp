@@ -5,8 +5,11 @@
 
 #include "forcefield.h"
 #include "forcefielddialog.h"
+#ifdef AVOGADRO_USE_SUBPROCESS
 #include "obmmenergy.h"
 #include "scriptenergy.h"
+#include <avogadro/qtgui/packagemanager.h>
+#endif
 
 #ifdef BUILD_GPL_PLUGINS
 #include "obenergy.h"
@@ -23,13 +26,10 @@
 
 #include <QProgressDialog>
 
-#include <avogadro/qtgui/avogadropython.h>
 #include <avogadro/qtgui/calcworker.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/utilities.h>
-
-#include <avogadro/qtgui/packagemanager.h>
 
 #include <avogadro/calc/energymanager.h>
 #include <avogadro/calc/energyoptimizer.h>
@@ -187,6 +187,7 @@ Forcefield::Forcefield(QObject* parent_)
 
   // initialize the calculators
 
+#ifdef AVOGADRO_USE_SUBPROCESS
   // prefer to use Python interface scripts if available
   refreshScripts();
 
@@ -196,6 +197,7 @@ Forcefield::Forcefield(QObject* parent_)
           &Forcefield::registerFeature);
   connect(pm, &QtGui::PackageManager::featureRemoved, this,
           &Forcefield::unregisterFeature);
+#endif
 
   // add the openbabel calculators in case they don't exist
 #ifdef BUILD_GPL_PLUGINS
@@ -230,7 +232,7 @@ Forcefield::Forcefield(QObject* parent_)
   } else {
     delete ob;
   }
-#else
+#elif defined(AVOGADRO_USE_SUBPROCESS)
   // These call obmm and can be slower
   // Without obmm, the energies would silently be zero
   if (OBMMEnergy::isAvailable()) {
@@ -450,8 +452,9 @@ void Forcefield::handleOptimizeCommand(const QVariantMap& options)
     emit commandFailed(tr("A force field calculation is already running."));
     return;
   }
-  if (m_molecule->atomCount() == 0) {
-    emit commandFailed(tr("No atoms provided for optimization."));
+  if (m_molecule->atomCount() == 0 ||
+      m_molecule->atomPositions3d().size() != m_molecule->atomCount()) {
+    emit commandFailed(tr("Optimization needs atoms with 3D coordinates."));
     return;
   }
 
@@ -671,7 +674,7 @@ void Forcefield::showDialog()
 
 void Forcefield::setMolecule(QtGui::Molecule* mol)
 {
-  if (mol == nullptr || m_molecule == mol)
+  if (m_molecule == mol)
     return;
 
   // Any running calculation belongs to the outgoing molecule. Cancel it and
@@ -798,7 +801,11 @@ void Forcefield::cleanupWorker()
       disconnect(m_worker, nullptr, this, nullptr);
     }
     m_workerThread->quit();
+#ifdef Q_OS_WASM
+    if (m_workerThread->isFinished()) {
+#else
     if (m_workerThread->wait(5000)) {
+#endif
       m_workerThread->deleteLater();
     } else {
       QThread* stalled = m_workerThread;
@@ -1737,6 +1744,7 @@ void Forcefield::fuseSelected()
   m_molecule->emitChanged(QtGui::Molecule::Constraints);
 }
 
+#ifdef AVOGADRO_USE_SUBPROCESS
 void Forcefield::refreshScripts()
 {
   unregisterScripts();
@@ -1817,5 +1825,7 @@ void Forcefield::unregisterFeature(const QString& type,
     }
   }
 }
+
+#endif
 
 } // namespace Avogadro::QtPlugins
