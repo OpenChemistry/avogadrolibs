@@ -40,6 +40,8 @@ EditorToolWidget::EditorToolWidget(QWidget* parent_)
   selectElement(6);
   connect(m_ui->bondOrder, &QComboBox::currentIndexChanged, this,
           &EditorToolWidget::optionsChanged);
+  connect(m_ui->adjustBondLengths, &QCheckBox::toggled, this,
+          &EditorToolWidget::optionsChanged);
   connect(m_ui->adjustHydrogens, &QCheckBox::toggled, this,
           &EditorToolWidget::optionsChanged);
 }
@@ -86,6 +88,12 @@ void EditorToolWidget::setAdjustHydrogens(bool adjust)
 {
   const QSignalBlocker blocker(this);
   m_ui->adjustHydrogens->setChecked(adjust);
+}
+
+void EditorToolWidget::setAdjustBondLengths(bool adjust)
+{
+  const QSignalBlocker blocker(this);
+  m_ui->adjustBondLengths->setChecked(adjust);
 }
 
 bool EditorToolWidget::adjustBondLengths() const

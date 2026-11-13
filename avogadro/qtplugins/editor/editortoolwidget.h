@@ -36,6 +36,7 @@ public:
   bool adjustHydrogens() const;
   void setAdjustHydrogens(bool adjust);
   bool adjustBondLengths() const;
+  void setAdjustBondLengths(bool adjust);
 
 signals:
   void optionsChanged();

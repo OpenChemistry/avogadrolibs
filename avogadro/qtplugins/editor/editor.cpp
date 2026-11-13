@@ -156,7 +156,6 @@ Editor::Editor(QObject* parent_)
        "Left Mouse:\tClick and Drag to create Atoms and Bond\n"
        "Right Mouse:\tDelete Atom")
       .arg(shortcut));
-  setProperty("drawOptions", drawOptions());
   m_keyPressTimer = new QTimer(this);
   m_keyPressTimer->setSingleShot(true);
   m_keyPressTimer->setInterval(2000);
@@ -200,6 +199,7 @@ void Editor::syncToolWidget() const
   m_toolWidget->setAtomicNumber(atomicNumber());
   m_toolWidget->setBondOrder(bondOrder());
   m_toolWidget->setAdjustHydrogens(adjustHydrogens());
+  m_toolWidget->setAdjustBondLengths(m_adjustBondLengths);
 }
 
 void Editor::updateDrawOptionsFromWidget()
@@ -210,14 +210,16 @@ void Editor::updateDrawOptionsFromWidget()
   handleCommand(QStringLiteral("setDrawOptions"),
                 { { "atomicNumber", m_toolWidget->atomicNumber() },
                   { "bondOrder", m_toolWidget->bondOrder() },
-                  { "adjustHydrogens", m_toolWidget->adjustHydrogens() } });
+                  { "adjustHydrogens", m_toolWidget->adjustHydrogens() },
+                  { "adjustBondLengths", m_toolWidget->adjustBondLengths() } });
 }
 
 QVariantMap Editor::drawOptions() const
 {
   return { { "atomicNumber", m_atomicNumber },
            { "bondOrder", m_bondOrder },
-           { "adjustHydrogens", m_adjustHydrogens } };
+           { "adjustHydrogens", m_adjustHydrogens },
+           { "adjustBondLengths", m_adjustBondLengths } };
 }
 
 void Editor::setAtomicNumber(unsigned char number)
@@ -631,7 +633,7 @@ void Editor::atomLeftClick(QMouseEvent* e)
 
       // If we found a valid bond, adjust the bond distance
       if (bond.isValid() &&
-          (!m_toolWidget || m_toolWidget->adjustBondLengths())) {
+          m_adjustBondLengths) {
         RWAtom atom2 = bond.getOtherAtom(atom);
 
         m_bondDistance = Core::AtomUtilities::idealBondLength(
@@ -695,7 +697,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
 
   // can we move atom1?
   if (adjustBondLength &&
-      (!m_toolWidget || m_toolWidget->adjustBondLengths())) {
+      m_adjustBondLengths) {
     Vector3 bondVector = atom1.position3d() - atom2.position3d();
     bondVector.normalize();
     bondVector *= distance;
@@ -715,7 +717,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
       adjustBondLength = true;
     }
     if (adjustBondLength &&
-        (!m_toolWidget || m_toolWidget->adjustBondLengths())) {
+        m_adjustBondLengths) {
       Vector3 bondVector = atom2.position3d() - atom1.position3d();
       bondVector.normalize();
       bondVector *= distance;
@@ -1087,6 +1089,10 @@ void Editor::atomLeftDrag(QMouseEvent* e)
 
 void Editor::registerCommands()
 {
+  emit registerCommand(
+    "setDrawOptions",
+    tr("Set drawing options: element (symbol or atomic number), bondOrder, "
+       "adjustHydrogens, and adjustBondLengths."));
   emit registerCommand("addAtom",
                        tr("Add an atom. Options: \"element\" (symbol or atomic "
                           "number), \"position\" ([x, y, z] in Angstroms), "
@@ -1111,6 +1117,22 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
     int number = options.contains("atomicNumber")
                    ? options.value("atomicNumber").toInt(&numberOk)
                    : m_atomicNumber;
+    if (options.contains("element")) {
+      const auto element = options.value("element");
+      int parsed = InvalidElement;
+      if (element.typeId() == QMetaType::QString)
+        parsed = Core::Elements::atomicNumberFromSymbol(
+          element.toString().toStdString());
+      else if (isNumber(element)) {
+        const double raw = element.toDouble();
+        if (raw >= 1 && raw <= 118 && raw == std::floor(raw))
+          parsed = static_cast<int>(raw);
+      }
+      if (parsed < 1 || parsed > 118 ||
+          (options.contains("atomicNumber") && (!numberOk || number != parsed)))
+        return false;
+      number = parsed;
+    }
     int order = options.contains("bondOrder")
                   ? options.value("bondOrder").toInt(&orderOk)
                   : m_bondOrder;
@@ -1119,12 +1141,14 @@ bool Editor::handleCommand(const QString& command, const QVariantMap& options)
       return false;
     bool hydrogens =
       options.value("adjustHydrogens", m_adjustHydrogens).toBool();
+    const bool lengths =
+      options.value("adjustBondLengths", m_adjustBondLengths).toBool();
     if (number != m_atomicNumber || order != m_bondOrder ||
-        hydrogens != m_adjustHydrogens) {
+        hydrogens != m_adjustHydrogens || lengths != m_adjustBondLengths) {
       m_atomicNumber = static_cast<unsigned char>(number);
       m_bondOrder = static_cast<unsigned char>(order);
       m_adjustHydrogens = hydrogens;
-      setProperty("drawOptions", drawOptions());
+      m_adjustBondLengths = lengths;
       emit drawOptionsChanged();
     }
     return true;

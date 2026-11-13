@@ -28,6 +28,7 @@ class EditorToolWidget;
 class Editor : public QtGui::ToolPlugin
 {
   Q_OBJECT
+  Q_PROPERTY(QVariantMap drawOptions READ drawOptions NOTIFY drawOptionsChanged)
 public:
   explicit Editor(QObject* parent_ = nullptr);
   ~Editor() override;
@@ -132,6 +133,7 @@ private:
   unsigned char m_atomicNumber = 6;
   unsigned char m_bondOrder = 0;
   bool m_adjustHydrogens = true;
+  bool m_adjustBondLengths = true;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;
   Rendering::Identifier m_bondedAtom;
