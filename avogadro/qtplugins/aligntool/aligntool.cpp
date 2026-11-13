@@ -135,13 +135,29 @@ void AlignTool::alignChanged(int align)
 
 void AlignTool::align()
 {
-  if (m_molecule == nullptr || m_atoms.empty())
-    return;
+  alignPickedAtoms();
+}
 
-  if (!m_atoms.empty())
-    shiftAtomToOrigin(m_atoms[0].index);
-  if (m_atoms.size() == 2)
-    alignAtomToAxis(m_atoms[1].index, m_axis);
+bool AlignTool::alignPickedAtoms()
+{
+  if (!m_molecule || m_atomIds.isEmpty())
+    return false;
+
+  QVector<Index> indices;
+  for (const auto id : m_atomIds) {
+    const auto atom = m_molecule->atomByUniqueId(id);
+    if (!atom.isValid())
+      return false;
+    indices.append(atom.index());
+  }
+
+  auto& undo = m_molecule->undoStack();
+  undo.beginMacro(tr("Align Molecule"));
+  shiftAtomToOrigin(indices[0]);
+  if (indices.size() == 2)
+    alignAtomToAxis(indices[1], m_axis);
+  undo.endMacro();
+  return true;
 }
 
 void AlignTool::shiftAtomToOrigin(Index atomIndex)
@@ -229,8 +245,8 @@ QUndoCommand* AlignTool::mousePressEvent(QMouseEvent* e)
 QUndoCommand* AlignTool::mouseDoubleClickEvent(QMouseEvent* e)
 {
   // Reset the atom list
-  if (e->button() == Qt::LeftButton && !m_atoms.isEmpty()) {
-    m_atoms.clear();
+  if (e->button() == Qt::LeftButton && !m_atomIds.isEmpty()) {
+    m_atomIds.clear();
     emit drawablesChanged();
     e->accept();
   }
@@ -239,51 +255,44 @@ QUndoCommand* AlignTool::mouseDoubleClickEvent(QMouseEvent* e)
 
 bool AlignTool::toggleAtom(const Rendering::Identifier& atom)
 {
-  int ind = m_atoms.indexOf(atom);
-  if (ind >= 0) {
-    m_atoms.remove(ind);
+  if (!m_molecule || atom.type != Rendering::AtomType ||
+      atom.molecule != &m_molecule->molecule() ||
+      atom.index >= m_molecule->atomCount())
+    return false;
+  const auto id = m_molecule->atomUniqueId(atom.index);
+  if (id == MaxIndex)
+    return false;
+
+  const auto index = m_atomIds.indexOf(id);
+  if (index >= 0) {
+    m_atomIds.remove(index);
     return true;
   }
 
-  if (m_atoms.size() >= 2)
+  if (m_atomIds.size() >= 2)
     return false;
 
-  m_atoms.push_back(atom);
+  m_atomIds.append(id);
   return true;
 }
 
 void AlignTool::draw(Rendering::GroupNode& node)
 {
-  if (m_molecule == nullptr || m_atoms.empty())
+  if (!m_molecule || m_atomIds.isEmpty())
     return;
-
-  // check to make sure we have atoms for all of these
-  for (int i = 0; i < m_atoms.size(); ++i) {
-    Identifier& ident = m_atoms[i];
-    if (ident.type == Rendering::AtomType &&
-        ident.index >= m_molecule->atomCount())
-      return;
-  }
 
   auto* geo = new GeometryNode;
   node.addChild(geo);
-
-  // Add labels, extract positions
-  QVector<Vector3> positions(m_atoms.size(), Vector3());
 
   TextProperties atomLabelProp;
   atomLabelProp.setFontFamily(TextProperties::SansSerif);
   atomLabelProp.setAlign(TextProperties::HCenter, TextProperties::VCenter);
 
-  for (int i = 0; i < m_atoms.size(); ++i) {
-    Identifier& ident = m_atoms[i];
-    Q_ASSERT(ident.type == Rendering::AtomType);
-    Q_ASSERT(ident.molecule != nullptr);
-
-    auto atom = m_molecule->atom(ident.index);
-    Q_ASSERT(atom.isValid());
-    unsigned char atomicNumber(atom.atomicNumber());
-    positions[i] = atom.position3d();
+  for (qsizetype i = 0; i < m_atomIds.size(); ++i) {
+    const auto atom = m_molecule->atomByUniqueId(m_atomIds[i]);
+    if (!atom.isValid())
+      continue;
+    const auto atomicNumber = atom.atomicNumber();
 
     // get the color of the atom
     const unsigned char* color = Elements::color(atomicNumber);
@@ -292,7 +301,7 @@ void AlignTool::draw(Rendering::GroupNode& node)
     auto* label = new TextLabel3D;
     label->setText(QString("#%1").arg(i + 1).toStdString());
     label->setTextProperties(atomLabelProp);
-    label->setAnchor(positions[i].cast<float>());
+    label->setAnchor(atom.position3d().cast<float>());
     label->setRadius(
       static_cast<float>(Elements::radiusCovalent(atomicNumber)) + 0.1f);
     geo->addDrawable(label);
@@ -310,7 +319,8 @@ void AlignTool::registerCommands()
 bool AlignTool::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  static const QStringList knownCommands = { "centerAtom", "alignAtom" };
+  static const QStringList knownCommands = { "centerAtom", "alignAtom",
+                                             "alignPickedAtoms" };
 
   if (!knownCommands.contains(command))
     return false; // not one of our commands
@@ -320,6 +330,14 @@ bool AlignTool::handleCommand(const QString& command,
     return true;
   }
 
+  if (command == "alignPickedAtoms") {
+    const auto axis =
+      QStringList{ "x", "y", "z" }.indexOf(options.value("axis").toString());
+    if (axis < 0)
+      return false;
+    axisChanged(static_cast<int>(axis));
+    return alignPickedAtoms();
+  }
   if (command == "centerAtom") {
     if (options.contains("id")) {
       Index atomIndex = options["id"].toInt();

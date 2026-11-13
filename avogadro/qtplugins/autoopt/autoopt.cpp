@@ -117,7 +117,11 @@ void AutoOpt::cleanupWorker()
     m_workerThread->quit();
     // The worker deletes itself via the thread's finished() signal, but the
     // thread is parented to us, so one leaks per restart unless we drop it.
+#ifdef Q_OS_WASM
+    if (m_workerThread->isFinished()) {
+#else
     if (m_workerThread->wait(5000)) {
+#endif
       m_workerThread->deleteLater();
     } else {
       // Still chewing on a chunk. Deleting a running QThread is fatal and so
@@ -227,14 +231,39 @@ void setMasses(Eigen::ArrayXd& masses, const QtGui::Molecule* mol)
 
 void AutoOpt::setMolecule(QtGui::Molecule* mol)
 {
-  if (mol != nullptr) {
-    m_molecule = mol->undoMolecule();
-    // connect to any molecule changes
-    connect(mol, SIGNAL(changed(unsigned int)),
-            SLOT(moleculeChanged(unsigned int)));
-
+  auto* next = mol ? mol->undoMolecule() : nullptr;
+  if (next == m_molecule)
+    return;
+  if (m_running)
+    stop();
+  if (m_molecule)
+    disconnect(&m_molecule->molecule(), nullptr, this, nullptr);
+  m_molecule = next;
+  m_object = Rendering::Identifier();
+  if (mol) {
+    connect(mol, &QtGui::Molecule::changed, this, &AutoOpt::moleculeChanged);
     setMasses(m_masses, mol);
   }
+}
+
+bool AutoOpt::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (command == "stopAutoOptimize") {
+    if (m_running)
+      stop();
+    return true;
+  }
+  if (command != "startAutoOptimize" || m_running || !m_molecule)
+    return false;
+
+  const auto method = options.value("method").toString().toStdString();
+  const auto methods = Calc::EnergyManager::instance().identifiersForMolecule(
+    m_molecule->molecule());
+  if (methods.find(method) == methods.end())
+    return false;
+  m_currentMethod = method;
+  start();
+  return m_running;
 }
 
 void AutoOpt::moleculeChanged(unsigned int changes)
@@ -381,23 +410,16 @@ void AutoOpt::startStop()
 
 void AutoOpt::start()
 {
-  if (m_molecule == nullptr || m_toolWidget == nullptr ||
-      m_molecule->atomCount() == 0)
+  if (m_running || !m_molecule || m_molecule->atomCount() == 0 ||
+      m_molecule->atomPositions3d().size() != m_molecule->atomCount())
     return;
 
-  // get the button from the widget
-  QPushButton* startStopButton =
-    m_toolWidget->findChild<QPushButton*>("startStopButton");
-  startStopButton->setText(tr("Stop"));
-  startStopButton->setIcon(QIcon::fromTheme("process-stop"));
-  m_running = true;
-
-  // make sure method is set
   if (m_toolWidget) {
     auto* comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
     QString currentMethod = comboBox->currentText();
     m_currentMethod = currentMethod.toStdString();
   }
+  m_running = true;
 
   m_molecule->beginMergeMode("AutoOpt");
 
@@ -443,7 +465,11 @@ void AutoOpt::start()
 
   // Start the worker thread — timer begins in onWorkerReady
   startWorker();
-
+  if (!m_worker) {
+    stop();
+    return;
+  }
+  emit runningChanged();
   emit drawablesChanged();
 }
 
@@ -478,6 +504,7 @@ void AutoOpt::stop()
   if (m_molecule)
     m_molecule->endMergeMode();
 
+  emit runningChanged();
   emit drawablesChanged();
 }
 

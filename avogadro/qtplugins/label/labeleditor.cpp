@@ -18,15 +18,13 @@
 namespace Avogadro::QtPlugins {
 
 using Core::Elements;
-using QtGui::RWAtom;
 using Rendering::GeometryNode;
 using Rendering::Identifier;
 using Rendering::TextLabel3D;
 
 LabelEditor::LabelEditor(QObject* parent_)
   : QtGui::ToolPlugin(parent_), m_activateAction(new QAction(this)),
-    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr),
-    m_selected(false), m_text("")
+    m_molecule(nullptr), m_glWidget(nullptr), m_renderer(nullptr)
 {
   m_activateAction->setText(tr("Edit Labels"));
   m_activateAction->setToolTip(
@@ -59,42 +57,55 @@ QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent* e)
 
 QUndoCommand* LabelEditor::keyPressEvent(QKeyEvent* e)
 {
-  // Escape cancels: drop the uncommitted text and the picked atom
-  if (e->key() == Qt::Key_Escape && e->modifiers() == Qt::NoModifier &&
-      (m_selected || m_selectedAtom.isValid())) {
-    e->accept();
-    m_text.clear();
-    m_selectedAtom = RWAtom();
-    m_selected = false;
-    emit drawablesChanged();
+  if (!atomPicked())
     return nullptr;
-  }
-
-  if (m_selected && !e->text().isEmpty()) {
-    e->accept();
-    const QChar text = e->text()[0];
-    if (text.isPrint()) {
-      m_text.append(text);
-    } else if (e->key() == Qt::Key_Backspace) {
-      m_text.chop(1);
-    } else if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
-      save();
-    }
-    emit drawablesChanged();
-  }
+  if (e->key() == Qt::Key_Escape && e->modifiers() == Qt::NoModifier) {
+    m_text.clear();
+    m_selectedAtom.reset();
+    emit atomPickedChanged();
+  } else if (e->key() == Qt::Key_Backspace)
+    m_text.chop(1);
+  else if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return)
+    save();
+  else if (!e->text().isEmpty() && e->text()[0].isPrint())
+    m_text.append(e->text());
+  else
+    return nullptr;
+  e->accept();
+  emit drawablesChanged();
   return nullptr;
 }
 
 void LabelEditor::save()
 {
-  m_molecule->beginMergeMode(tr("Create Label"));
-  m_selectedAtom.setLabel(m_text.toStdString());
-  m_molecule->endMergeMode();
+  const auto atom = m_selectedAtom.atom();
+  const auto label = m_text.toStdString();
+  if (label != atom.label())
+    m_molecule->setAtomLabel(atom.index(), label, tr("Edit Atom Label"));
   m_text.clear();
-  m_selectedAtom = RWAtom();
+  m_selectedAtom.reset();
+  emit atomPickedChanged();
 
   // make sure the label display is made active
   emit requestActiveDisplayTypes(QStringList() << "Labels");
+}
+
+qsizetype LabelEditor::pickedAtomIndex() const
+{
+  const auto atom = m_selectedAtom.atom();
+  return atom.isValid() ? static_cast<qsizetype>(atom.index()) : -1;
+}
+
+bool LabelEditor::handleCommand(const QString& command,
+                                const QVariantMap& options)
+{
+  if (command != "setPickedLabel" || !atomPicked() ||
+      !options.contains("label"))
+    return false;
+  m_text = options.value("label").toString();
+  save();
+  emit drawablesChanged();
+  return true;
 }
 
 QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
@@ -110,11 +121,13 @@ QUndoCommand* LabelEditor::mousePressEvent(QMouseEvent* e)
     }
 
     Identifier clickedObject = m_renderer->hit(e->pos().x(), e->pos().y());
-    m_selected = (clickedObject.type == Rendering::AtomType);
-    if (m_selected) {
+    if (clickedObject.type == Rendering::AtomType &&
+        clickedObject.molecule == &m_molecule->molecule() &&
+        clickedObject.index < m_molecule->atomCount()) {
       e->accept();
-      m_selectedAtom = m_molecule->atom(clickedObject.index);
-      m_text = QString::fromStdString(m_selectedAtom.label());
+      m_selectedAtom.set(m_molecule->atom(clickedObject.index));
+      m_text = QString::fromStdString(m_selectedAtom.atom().label());
+      emit atomPickedChanged();
       emit drawablesChanged();
     } else {
       // clicked on empty space
@@ -149,15 +162,15 @@ TextLabel3D* createLabel(const std::string& text, const Vector3f& pos,
 
 void LabelEditor::draw(Rendering::GroupNode& node)
 {
-  if (m_renderer == nullptr || m_molecule == nullptr || !m_selected ||
-      !m_selectedAtom.isValid()) {
+  if (m_renderer == nullptr || !atomPicked()) {
     return;
   }
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
 
-  unsigned char atomicNumber = m_selectedAtom.atomicNumber();
-  const Vector3f pos(m_selectedAtom.position3d().cast<float>());
+  const auto atom = m_selectedAtom.atom();
+  unsigned char atomicNumber = atom.atomicNumber();
+  const Vector3f pos(atom.position3d().cast<float>());
   float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) * 0.6f;
 
   TextLabel3D* atomLabel = createLabel(m_text.toStdString(), pos, radius);

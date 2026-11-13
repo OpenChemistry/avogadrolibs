@@ -485,6 +485,10 @@ bool GLWidget::rebuildScene()
       if (stats)
         lap.reset();
       foreach (QtGui::ToolPlugin* tool, m_tools) {
+#ifdef Q_OS_WASM
+        if (tool != m_activeTool)
+          continue;
+#endif
         auto* toolNode = new Rendering::GroupNode(moleculeNode);
         tool->draw(*toolNode);
         tools.push_back({ tool, toolNode });
@@ -582,6 +586,9 @@ void GLWidget::setActiveTool(QtGui::ToolPlugin* tool)
     connect(m_activeTool, &QtGui::ToolPlugin::drawablesChanged, this,
             &GLWidget::requestSceneRebuild);
   }
+#ifdef Q_OS_WASM
+  updateScene();
+#endif
 }
 
 void GLWidget::setDefaultTool(const QString& name)

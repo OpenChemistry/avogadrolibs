@@ -40,13 +40,13 @@ public:
   void setMolecule(QtGui::Molecule* mol) override
   {
     m_molecule = mol ? mol->undoMolecule() : nullptr;
-    m_atoms.clear();
+    m_atomIds.clear();
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override
   {
     if (m_molecule != mol)
-      m_atoms.clear();
+      m_atomIds.clear();
     m_molecule = mol;
   }
 
@@ -83,7 +83,9 @@ private:
   QAction* m_activateAction;
   QtGui::RWMolecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
-  QVector<Rendering::Identifier> m_atoms;
+  QVector<Index> m_atomIds;
+
+  bool alignPickedAtoms();
 
   int m_axis;
   int m_alignType;

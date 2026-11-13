@@ -82,14 +82,15 @@ public:
                      const QVariantMap& options) override;
 
 public slots:
+  void showDialog();
+
+#ifdef AVOGADRO_USE_SUBPROCESS
   /**
    * Scan for new scripts in the Forcefield directories.
    */
   void refreshScripts();
   void registerScripts();
   void unregisterScripts();
-
-  void showDialog();
 
   /**
    * Handle a feature registered by PackageManager.
@@ -103,6 +104,8 @@ public slots:
    */
   void unregisterFeature(const QString& type, const QString& packageDir,
                          const QString& command, const QString& identifier);
+
+#endif
 
 private slots:
   void energy();
@@ -236,8 +239,10 @@ private:
   double m_gradientTolerance = 1.0e-4;
   QVariantMap m_modelUserOptions;
 
+#ifdef AVOGADRO_USE_SUBPROCESS
   QList<Calc::EnergyCalculator*> m_scripts;
   QMultiHash<QString, QString> m_packageScripts;
+#endif
 
   // worker thread state
   QThread* m_workerThread = nullptr;
