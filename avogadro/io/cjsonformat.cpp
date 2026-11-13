@@ -1567,6 +1567,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     const json& cubeObj = jsonRoot["cube"];
     const json& origin = member(cubeObj, "origin");
     const json& spacing = member(cubeObj, "spacing");
+    // Optional: one step vector per grid axis, which wins over "spacing".
+    const json& stepsJson = member(cubeObj, "steps");
     const json& dimensions = member(cubeObj, "dimensions");
     const json& type = member(cubeObj, "type");
     const json& scalars = member(cubeObj, "scalars");
@@ -1605,8 +1607,41 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
                   scalars.size() == xy * z;
     }
 
+    // "steps" is [[ax, ay, az], [bx, by, bz], [cx, cy, cz]]: row i is the
+    // step vector along grid axis i. When present it must be a valid 3 x 3
+    // step matrix; a malformed one rejects the cube rather than falling back
+    // to "spacing", as the file evidently meant a skewed grid.
+    const bool hasSteps = !stepsJson.is_null();
+    bool stepsOk = !hasSteps;
+    Matrix3 stepMatrix = Matrix3::Zero();
+    if (hasSteps && stepsJson.is_array() && stepsJson.size() == 3) {
+      stepsOk = true;
+      for (int row = 0; stepsOk && row < 3; ++row) {
+        const json& vec = stepsJson[row];
+        if (!isNumericArray(vec) || vec.size() != 3) {
+          stepsOk = false;
+          break;
+        }
+        for (int c = 0; c < 3; ++c) {
+          const double v = vec[c].get<double>();
+          if (!std::isfinite(v))
+            stepsOk = false;
+          // The step vector of axis `row` is column `row` of the matrix.
+          stepMatrix(c, row) = v;
+        }
+      }
+      if (stepsOk) {
+        // Singular matrices are refused by Cube::setLimits() too, but that is
+        // only known after the cube has been added, so test it up front.
+        Cube probe;
+        stepsOk =
+          probe.setLimits(Vector3::Zero(), Vector3i(1, 1, 1), stepMatrix);
+      }
+    }
+
     if (isNumericArray(origin) && origin.size() == 3 &&
-        isNumericArray(spacing) && spacing.size() == 3 && scalarsOk) {
+        (hasSteps || (isNumericArray(spacing) && spacing.size() == 3)) &&
+        stepsOk && scalarsOk) {
       Cube* cube = molecule.addCube();
 
       // types
@@ -1632,12 +1667,16 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         cube->setName(name.get<std::string>());
 
       Vector3 min(origin[0], origin[1], origin[2]);
-      Vector3 delta(spacing[0], spacing[1], spacing[2]);
-      Vector3 max(min[0] + (points[0] - 1) * delta[0],
-                  min[1] + (points[1] - 1) * delta[1],
-                  min[2] + (points[2] - 1) * delta[2]);
+      if (hasSteps) {
+        cube->setLimits(min, points, stepMatrix);
+      } else {
+        Vector3 delta(spacing[0], spacing[1], spacing[2]);
+        Vector3 max(min[0] + (points[0] - 1) * delta[0],
+                    min[1] + (points[1] - 1) * delta[1],
+                    min[2] + (points[2] - 1) * delta[2]);
 
-      cube->setLimits(min, max, points);
+        cube->setLimits(min, max, points);
+      }
       // The scalars are converted explicitly rather than handed to
       // Cube::setData() as json, clamping the way lexicalCast<float> does:
       // scalarsOk above only proved these are numeric, not that they fit in
@@ -2030,6 +2069,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     cubeSpacing.push_back(cube->spacing().y());
     cubeSpacing.push_back(cube->spacing().z());
     cubeObj["spacing"] = cubeSpacing;
+    // A skewed grid also needs its step vectors, one row per grid axis.
+    if (!cube->isAxisAligned()) {
+      const Matrix3 steps = cube->steps();
+      json cubeSteps = json::array();
+      for (int axis = 0; axis < 3; ++axis)
+        cubeSteps.push_back(
+          json::array({ steps(0, axis), steps(1, axis), steps(2, axis) }));
+      cubeObj["steps"] = cubeSteps;
+    }
     json cubeDims;
     cubeDims.push_back(cube->dimensions().x());
     cubeDims.push_back(cube->dimensions().y());

@@ -1481,3 +1481,108 @@ TEST(CjsonTest, primitiveNormalizationReading)
       EXPECT_EQ(cjson.error(), "") << input;
   }
 }
+
+namespace {
+
+std::string cubeStepsDocument(const std::string& stepsMember)
+{
+  return R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6] },
+      "coords": { "3d": [0.0, 0.0, 0.0] }
+    },
+    "cube": {
+      "origin": [1.0, 2.0, 3.0],
+      "spacing": [1.0, 1.0, 1.0],)" +
+         stepsMember + R"(
+      "dimensions": [2, 2, 2],
+      "scalars": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    }
+  })";
+}
+
+} // namespace
+
+TEST(CjsonTest, cubeStepsRoundTrip)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  // Row i is the step vector along grid axis i.
+  ASSERT_TRUE(cjson.readString(
+    cubeStepsDocument(
+      R"("steps": [[1.0, 0.0, 0.0], [0.5, 2.0, 0.0], [0.25, 0.125, 3.0]],)"),
+    molecule))
+    << cjson.error();
+  ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+  const auto* cube = molecule.cube(0);
+  EXPECT_FALSE(cube->isAxisAligned());
+  const Avogadro::Matrix3 steps = cube->steps();
+  EXPECT_EQ(steps.col(0), Avogadro::Vector3(1.0, 0.0, 0.0));
+  EXPECT_EQ(steps.col(1), Avogadro::Vector3(0.5, 2.0, 0.0));
+  EXPECT_EQ(steps.col(2), Avogadro::Vector3(0.25, 0.125, 3.0));
+  EXPECT_EQ(cube->min(), Avogadro::Vector3(1.0, 2.0, 3.0));
+  EXPECT_FLOAT_EQ((*cube->data())[7], 7.0f);
+
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  ASSERT_TRUE(root["cube"].contains("steps"));
+  ASSERT_TRUE(root["cube"].contains("spacing"));
+  EXPECT_EQ(root["cube"]["steps"][1][0].get<double>(), 0.5);
+  EXPECT_EQ(root["cube"]["steps"][2][2].get<double>(), 3.0);
+
+  CjsonFormat again;
+  Molecule second;
+  ASSERT_TRUE(again.readString(output, second)) << again.error();
+  ASSERT_EQ(second.cubeCount(), static_cast<size_t>(1));
+  EXPECT_EQ(second.cube(0)->steps(), steps);
+  EXPECT_EQ(second.cube(0)->min(), cube->min());
+  EXPECT_EQ(*second.cube(0)->data(), *cube->data());
+}
+
+// "steps" wins over "spacing", and a file without it reads as before.
+TEST(CjsonTest, cubeWithoutStepsHasNoStepsKey)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(cubeStepsDocument(""), molecule))
+    << cjson.error();
+  ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+  EXPECT_TRUE(molecule.cube(0)->isAxisAligned());
+  EXPECT_EQ(molecule.cube(0)->spacing(), Avogadro::Vector3(1.0, 1.0, 1.0));
+
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  ASSERT_TRUE(root.contains("cube"));
+  EXPECT_FALSE(root["cube"].contains("steps"));
+  EXPECT_TRUE(root["cube"].contains("spacing"));
+}
+
+TEST(CjsonTest, invalidCubeStepsRejectTheCube)
+{
+  const char* invalid[] = {
+    // singular
+    R"("steps": [[1, 0, 0], [2, 0, 0], [0, 0, 1]],)",
+    // all zero
+    R"("steps": [[0, 0, 0], [0, 0, 0], [0, 0, 0]],)",
+    // wrong shapes
+    R"("steps": [[1, 0, 0], [0, 1, 0]],)",
+    R"("steps": [[1, 0], [0, 1, 0], [0, 0, 1]],)",
+    R"("steps": [1, 0, 0, 0, 1, 0, 0, 0, 1],)",
+    R"("steps": "skewed",)",
+    R"("steps": 3,)",
+    // not numbers
+    R"("steps": [[1, 0, 0], [0, "a", 0], [0, 0, 1]],)",
+  };
+  for (const char* member : invalid) {
+    CjsonFormat cjson;
+    Molecule molecule;
+    // The rest of the file still loads; only the cube is dropped, and
+    // "spacing" is not used instead.
+    ASSERT_TRUE(cjson.readString(cubeStepsDocument(member), molecule))
+      << member << cjson.error();
+    EXPECT_EQ(molecule.cubeCount(), static_cast<size_t>(0)) << member;
+  }
+}
