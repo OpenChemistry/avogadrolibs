@@ -39,7 +39,7 @@ public:
    * color.
    * @param blue Intensity (from 0.0 to 1.0) of the blue component of the color.
    */
-  Color3f(float red = 0.0, float green = 0.0, float blue = 0.0);
+  Color3f(float red = 0.0f, float green = 0.0f, float blue = 0.0f);
 
   /**
    * Constructor where the color is constructed from integer values.
