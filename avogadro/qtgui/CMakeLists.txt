@@ -56,8 +56,6 @@ avogadro_headers(QtGui
   hydrogentools.h
   insertfragmentdialog.h
   iodevicestreambuf.h
-  interfacescript.h
-  interfacewidget.h
   jsonwidget.h
   layermodel.h
   rwlayermanager.h
