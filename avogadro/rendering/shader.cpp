@@ -23,7 +23,7 @@ std::string webGLShaderSource(const std::string& input)
       source.erase(versionPos, versionEnd - versionPos + 1);
   }
   source.insert(
-    0, "#version 300 es\nprecision highp float;\nprecision highp int;\n");
+    0, "#version 300 es\nprecision highp float;\nprecision highp int;\nprecision highp sampler3D;\n");
   return source;
 }
 } // namespace

@@ -54,8 +54,6 @@ if(EMSCRIPTEN)
   if(BUILD_SHARED_LIBS)
     message(FATAL_ERROR "WASM requires BUILD_SHARED_LIBS=OFF")
   endif()
-  add_compile_options(-pthread)
-  add_link_options(-pthread)
 endif()
 
 # Before any plugins are defined, and before any add_subdirectory calls:
