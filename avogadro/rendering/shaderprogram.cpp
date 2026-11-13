@@ -198,11 +198,11 @@ bool ShaderProgram::link()
   glGetProgramiv(static_cast<GLuint>(m_handle), GL_LINK_STATUS, &isCompiled);
   if (isCompiled == 0) {
     GLint length(0);
-    glGetShaderiv(static_cast<GLuint>(m_handle), GL_INFO_LOG_LENGTH, &length);
+    glGetProgramiv(static_cast<GLuint>(m_handle), GL_INFO_LOG_LENGTH, &length);
     if (length > 1) {
       char* logMessage = new char[length];
-      glGetShaderInfoLog(static_cast<GLuint>(m_handle), length, nullptr,
-                         logMessage);
+      glGetProgramInfoLog(static_cast<GLuint>(m_handle), length, nullptr,
+                          logMessage);
       m_error = logMessage;
       delete[] logMessage;
     }

@@ -40,13 +40,12 @@ called_from_lib:libglib-2.0.so
 # only voxels of its own indexX) and checked by the exact voxel comparison in
 # surfacestest.cpp. With a TSan-instrumented Qt, remove these entries first.
 race:Avogadro::QtPlugins::Surfaces::calculateEDT
-race:Avogadro::QtPlugins::Surfaces::performEDTStep
 race:~MapKernel
-# The sphere fill moved out of calculateEDT into edtfill.cpp, whose
-# blockingMap workers no longer have calculateEDT on their stacks. Their
-# writes are ordered before the mesh generator's reads, the cube's free and
-# the reuse of the caller's stack by the same uninstrumented Qt hand-offs.
-# Matched by file because the worker lambdas are inlined into Qt templates.
+# edtfill.cpp runs its loops through parallelFor(), whose atomic hand-offs
+# order the task data, so TSan sees no races in the fills themselves. Qt's
+# own map-kernel state (built on the caller, read by pool threads) is still
+# ordered only inside the uninstrumented Qt. Matched by file because the
+# worker lambdas are inlined into Qt templates.
 race:avogadro/qtplugins/surfaces/edtfill.cpp
 
 # Qt from install-qt-action is not TSan-instrumented and ships without symbols.

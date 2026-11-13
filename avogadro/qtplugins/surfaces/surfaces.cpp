@@ -24,7 +24,6 @@ namespace {
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/mesh.h>
-#include <avogadro/core/neighborperceiver.h>
 
 #include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/meshgenerator.h>
@@ -76,7 +75,6 @@ namespace Avogadro::QtPlugins {
 using Core::Array;
 using Core::Cube;
 using Core::GaussianSet;
-using Core::NeighborPerceiver;
 using QtGui::GaussianSetConcurrent;
 using QtGui::Molecule;
 using QtGui::SlaterSetConcurrent;
@@ -120,7 +118,6 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   action->setText(tr("Create Surfaces…"));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
   connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(edtFinished()));
-  connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
   connect(&m_colorWatcher, SIGNAL(finished()), SLOT(colorFinished()));
 
   m_actions.push_back(action);
@@ -396,14 +393,10 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
 
 void Surfaces::waitForOwnWorkers()
 {
-  // calculateEDT()/performEDTStep() are plain QtConcurrent::run() futures
-  // with no cancellation support of their own. Wait for them with their
-  // finished() signal blocked so a stale performEDTStep()/edtFinished()
-  // callback doesn't run against a job that is being dropped.
-  m_performEDTStepWatcher.blockSignals(true);
-  m_performEDTStepWatcher.waitForFinished();
-  m_performEDTStepWatcher.blockSignals(false);
-
+  // calculateEDT() is a plain QtConcurrent::run() future with no
+  // cancellation support of its own. Wait for it with its finished() signal
+  // blocked so a stale edtFinished() callback doesn't run against a job that
+  // is being dropped.
   m_displayMeshWatcher.blockSignals(true);
   m_displayMeshWatcher.waitForFinished();
   m_displayMeshWatcher.blockSignals(false);
@@ -683,8 +676,7 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
   // Decide the resolution here, on the main thread: resolution() reads the
   // dialog widgets and the molecule, which the workers must not touch. It is
-  // remembered for the command result; performEDTStep() reads the spacing from
-  // the cube itself, so it needs no copy.
+  // remembered for the command result.
   //
   // The padding here has to match the one computed in the worker below, which
   // skips atoms in hidden layers. Using every atom gives the same value or a
@@ -731,8 +723,8 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
     }
   }
 
-  // The surface is the zero level of both kinds of EDT field (signed
-  // distance, or +1/-1). Do not inherit the last orbital's isovalue.
+  // The surface is the zero level of the EDT field (a signed distance).
+  // Do not inherit the last orbital's isovalue.
   m_isoValue = 0.0f;
 
   // Filled here, and published to the molecule by publishCube() once done.
@@ -770,99 +762,17 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
       const Vector3 cubeMin = low - pad;
       const Vector3 cubeMax = high + pad;
       // A grid that cannot be built (non-finite or absurdly large) leaves the
-      // cube empty; edtFinished() and performEDTStep() then report that.
+      // cube empty; edtFinished() then reports that.
       if (!cube->setLimits(cubeMin, cubeMax, res))
         return;
-      // The solvent-excluded erosion that follows works on a set of voxels,
-      // so that surface stays binary. The other two use a signed distance
-      // field, whose zero level lies exactly on the spheres.
+      // All three surfaces are the zero level of a signed distance field. The
+      // solvent-excluded one is derived from the solvent-accessible spheres
+      // with an exact distance transform.
       if (type == SolventExcluded)
-        fillBinarySpheres(*cube, atoms);
+        fillSolventExcluded(*cube, atoms, probeRadius);
       else
         fillDistanceSpheres(*cube, atoms);
     });
-
-  // SolventExcluded requires an extra pass
-  if (type == SolventExcluded) {
-    m_performEDTStepWatcher.setFuture(future);
-  } else {
-    m_displayMeshWatcher.setFuture(future);
-  }
-}
-
-void Surfaces::performEDTStep()
-{
-  if (m_cubeProducer != CubeProducer::EDT || !m_pendingCube)
-    return; // a stale signal from a job that was dropped
-  if (m_cubeJobStale) {
-    publishCube(false); // reports the interruption
-    return;
-  }
-
-  Cube* cube = m_pendingCube.get();
-  if (cube->data()->empty()) {
-    // The grid could not be built, so there is nothing to erode.
-    publishCube(true); // reports the interruption
-    return;
-  }
-  // The grid spacing differs slightly from the requested resolution (see
-  // Cube::setLimits()), and per axis, so measure the probe in Angstrom.
-  const Vector3 spacing = cube->spacing();
-  const float probeRadius = static_cast<float>(SolventProbeRadius);
-
-  QFuture future = QtConcurrent::run([cube, spacing, probeRadius]() {
-    // make a list of all "outside" cubes in contact with an "inside" cube
-    // these are the only ones that can be "nearest" to an "inside" cube
-    Array<Vector3> relativePositions;
-    // also make a list of all "inside" cubes
-    std::vector<Vector3i> insideIndices;
-    Vector3i size = cube->dimensions();
-    relativePositions.reserve(size(0) * size(1) * 4);   // O(n^2)
-    insideIndices.reserve(size(0) * size(1) * size(2)); // O(n^3)
-    for (int z = 0; z < size(2); z++) {
-      int zp = std::max(z - 1, 0);
-      int zn = std::min(z + 1, size(2) - 1);
-      for (int y = 0; y < size(1); y++) {
-        int yp = std::max(y - 1, 0);
-        int yn = std::min(y + 1, size(1) - 1);
-        for (int x = 0; x < size(0); x++) {
-          if (cube->value(x, y, z) > 0.0) {
-            insideIndices.emplace_back(x, y, z);
-            continue;
-          }
-          int xp = std::max(x - 1, 0);
-          int xn = std::min(x + 1, size(0) - 1);
-          if (cube->value(xp, y, z) > 0.0 || cube->value(xn, y, z) > 0.0 ||
-              cube->value(x, yp, z) > 0.0 || cube->value(x, yn, z) > 0.0 ||
-              cube->value(x, y, zp) > 0.0 || cube->value(x, y, zn) > 0.0) {
-            relativePositions.push_back(Vector3(x, y, z).cwiseProduct(spacing));
-          }
-        }
-      }
-    }
-
-    // pass the list to a NeighborPerceiver so it's faster to look up
-    NeighborPerceiver perceiver(relativePositions, probeRadius);
-
-    // now, exclude all "inside" cubes too close to any "outside" cube
-    // The scratch list is per pool thread; getNeighborsInclusiveInPlace()
-    // clears it before refilling it.
-    QFuture innerFuture = QtConcurrent::map(insideIndices, [=](Vector3i& in) {
-      thread_local Array<Index> neighbors;
-      const Vector3 pos = in.cast<double>().cwiseProduct(spacing);
-      perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
-      for (Index neighbor : neighbors) {
-        const Vector3& npos = relativePositions[neighbor];
-        float distance = (npos - pos).norm();
-        if (distance <= probeRadius) {
-          cube->setValue(in(0), in(1), in(2), -1.0f);
-          break;
-        }
-      }
-    });
-
-    innerFuture.waitForFinished();
-  });
 
   m_displayMeshWatcher.setFuture(future);
 }
