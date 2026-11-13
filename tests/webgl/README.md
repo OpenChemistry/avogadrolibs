@@ -18,7 +18,7 @@ cmake --build build-webgl-tests
 ctest --test-dir build-webgl-tests --output-on-failure
 ```
 
-This test does not validate browser rendering. The native `Rendering-GLRenderer`
+This test does not validate browser rendering. The native `Rendering-SolidPipeline`
 test exercises the solid pipeline using optional surfaceless EGL on Linux,
 including ambient occlusion. It skips if the required graphics context is
 unavailable. Browser testing is still needed for WebGL extension availability
