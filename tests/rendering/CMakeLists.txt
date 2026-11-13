@@ -60,5 +60,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(AvogadroSolidPipelineTests PRIVATE Avogadro::Rendering
       OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
     add_test(NAME Rendering-SolidPipeline COMMAND AvogadroSolidPipelineTests)
+    # Keep Mesa worker threads out of this offscreen test under ThreadSanitizer.
+    set_tests_properties(Rendering-SolidPipeline PROPERTIES
+      ENVIRONMENT "LP_NUM_THREADS=0")
+
+    add_executable(AvogadroShaderLinkTests shaderlinktest.cpp)
+    target_link_libraries(AvogadroShaderLinkTests PRIVATE Avogadro::Rendering
+      OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+    add_test(NAME Rendering-ShaderLink COMMAND AvogadroShaderLinkTests)
   endif()
 endif()
