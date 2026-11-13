@@ -67,19 +67,20 @@ if(USE_LIBARCHIVE)
     target_compile_definitions(IO PRIVATE AVO_USE_LIBARCHIVE)
     target_link_libraries(IO PRIVATE LibArchive::LibArchive ZLIB::ZLIB)
 
-    # Do not inherit zlib's include directory blindly. On Unix it is the
-    # platform's own header directory, and adding that to the search path
-    # reorders the standard headers. With both Xcode and the Command Line
-    # Tools installed, FindZLIB picks the Command Line Tools SDK while the
-    # compiler's sysroot is Xcode's, and mixing the two breaks libc++'s
-    # <complex> on the math.h isnan/isinf macros. CMake drops include
-    # directories it knows are implicit, but a second SDK's path is not one of
-    # them. So add it only when zlib.h cannot be found without it, which is
-    # exactly the case that needs it (vcpkg, Conda, a custom prefix).
+    # Link the imported target (so static exports can name it), but do not
+    # inherit zlib's include directory blindly. On Unix it is the platform's
+    # own header directory, and adding that to the search path reorders the
+    # standard headers ahead of libc++'s wrappers. With both Xcode and the
+    # Command Line Tools installed, FindZLIB picks the Command Line Tools SDK,
+    # and the resulting -isystem breaks libc++ on the math.h isnan/isinf
+    # macros. CMake drops include directories it knows are implicit, but an
+    # SDK path is not always one of them. So keep the target's include
+    # directory only when zlib.h cannot be found without it, which is exactly
+    # the case that needs it (vcpkg, Conda, a custom prefix).
     include(CheckIncludeFile)
     check_include_file(zlib.h AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
-    if(NOT AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
-      target_include_directories(IO SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
+    if(AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
+      set_property(TARGET ZLIB::ZLIB PROPERTY INTERFACE_INCLUDE_DIRECTORIES "")
     endif()
   else()
     message(STATUS
