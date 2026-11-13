@@ -2,13 +2,27 @@ name: WASM Build
 
 on:
   push:
-    branches-ignore:
-      - 'dependabot/**'
-      - 'update-i18n-templates'
-    tags:
-      - '**'
+    branches: [master]
+    paths:
+      - 'avogadro/**'
+      - 'cmake/**'
+      - 'thirdparty/**'
+      - 'utilities/**'
+      - 'CMakeLists.txt'
+      - '.github/workflows/build_wasm.yml'
   pull_request:
+    paths:
+      - 'avogadro/**'
+      - 'cmake/**'
+      - 'thirdparty/**'
+      - 'utilities/**'
+      - 'CMakeLists.txt'
+      - '.github/workflows/build_wasm.yml'
   workflow_dispatch:
+    inputs:
+      superbuild_revision:
+        description: Published OpenChemistry superbuild commit
+        required: true
 
 permissions:
   contents: read
@@ -20,12 +34,13 @@ concurrency:
 env:
   QT_VERSION: '6.11.1'
   EMSCRIPTEN_VERSION: '4.0.7'
-  SUPERBUILD_REVISION: dbb1100a931c528b0b887ed6a02c0d4f4395f4c1
+  SUPERBUILD_REVISION: ${{ inputs.superbuild_revision || vars.WASM_SUPERBUILD_REVISION }}
   # ExternalProject's nested builds must use the same limit as the superbuild.
   CMAKE_BUILD_PARALLEL_LEVEL: '2'
 
 jobs:
   build:
+    if: ${{ vars.WASM_SUPERBUILD_REVISION != '' || inputs.superbuild_revision != '' }}
     name: WebAssembly Release
     runs-on: ubuntu-24.04
     timeout-minutes: 60
@@ -37,21 +52,15 @@ jobs:
       - name: Checkout pinned superbuild
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: timvdm/openchemistry
+          repository: OpenChemistry/openchemistry
           ref: ${{ env.SUPERBUILD_REVISION }}
           path: openchemistry
           persist-credentials: false
 
-      # These companion revisions are published in forks pending upstream merge.
-      # Keep the superbuild's exact gitlink pins; only override their fetch URLs.
+      # Upstream-only pins are enabled once the companion PRs land.
       - name: Checkout pinned companion sources
         working-directory: openchemistry
-        run: |
-          git submodule init
-          git config submodule.avogadrolibs.url https://github.com/timvdm/avogadrolibs.git
-          git config submodule.avogadroapp.url https://github.com/timvdm/avogadroapp.git
-          git config submodule.avogadro-web.url https://github.com/timvdm/avogadro-web.git
-          git submodule update --init --recursive
+        run: git submodule update --init --recursive
 
       # With no ref override, pull_request builds GitHub's merge revision,
       # just like the native workflows. Do not build the superbuild's libs pin.
