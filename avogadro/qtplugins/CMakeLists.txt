@@ -18,7 +18,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "${original_library_output_dir}/avogadro2/staticplugins")
 
 # Optionally build all plugins statically.
-option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
 
 # Allow GPL plugins to be disabled.
 option(BUILD_GPL_PLUGINS
