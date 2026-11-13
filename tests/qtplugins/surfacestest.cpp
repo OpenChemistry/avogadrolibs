@@ -1087,8 +1087,9 @@ TEST(SurfacesSolventExcludedTest, reentrantCreaseOfTwoSpheres)
     Avogadro::QtGui::MeshGenerator generator;
     Mesh mesh;
     generator.initialize(&cube, &mesh, 0.0f, 0);
-    generator.start();
-    generator.wait();
+    // Synchronous, like meshgeneratortest.cpp: QThread::wait() joins inside
+    // the uninstrumented Qt, so TSan would see every vertex read as a race.
+    generator.run();
     double worstVertex = 0.0;
     size_t vertices = 0;
     for (const Vector3f& vertex : mesh.vertices()) {
@@ -1146,8 +1147,9 @@ TEST(SurfacesSolventExcludedTest, isolatedAtomIsTheVdwSphere)
     Avogadro::QtGui::MeshGenerator generator;
     Mesh mesh;
     generator.initialize(&cube, &mesh, 0.0f, 0);
-    generator.start();
-    generator.wait();
+    // Synchronous, like meshgeneratortest.cpp: QThread::wait() joins inside
+    // the uninstrumented Qt, so TSan would see every vertex read as a race.
+    generator.run();
     ASSERT_GT(mesh.numVertices(), 100u);
 
     const double spacing = layout.spacing.maxCoeff();
