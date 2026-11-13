@@ -39,6 +39,8 @@ void exportCube(py::module_& m)
     &Cube::setLimits;
   bool (Cube::*setLimits_mDV)(const Vector3&, const Vector3i&, const Vector3&) =
     &Cube::setLimits;
+  bool (Cube::*setLimits_mDM)(const Vector3&, const Vector3i&, const Matrix3&) =
+    &Cube::setStepLimits;
   bool (Cube::*setLimits_C)(const Cube&) = &Cube::setLimits;
   bool (Cube::*setLimits_MSP)(const Molecule&, float, float) = &Cube::setLimits;
 
@@ -96,9 +98,27 @@ void exportCube(py::module_& m)
       "have nx*ny*nz values, so set the limits first, or ValueError is "
       "raised).")
     // Spatial properties
-    .def_property_readonly("min", &Cube::min, "The minimum corner of the cube")
-    .def_property_readonly("max", &Cube::max, "The maximum corner of the cube")
-    .def_property_readonly("spacing", &Cube::spacing, "The grid spacing")
+    .def_property_readonly("min", &Cube::min,
+                           "The position of grid point (0, 0, 0)")
+    .def_property_readonly(
+      "max", &Cube::max,
+      "The position of the far grid point (nx-1, ny-1, nz-1)")
+    .def_property_readonly("spacing", &Cube::spacing,
+                           "The length of the step along each grid axis")
+    .def_property_readonly(
+      "steps", &Cube::steps,
+      "The 3x3 step matrix; column n is the step vector along grid axis n, "
+      "so point (i, j, k) is at min + steps @ (i, j, k)")
+    .def_property_readonly("is_axis_aligned", &Cube::isAxisAligned,
+                           "True if the step matrix is diagonal")
+    .def(
+      "bounding_box",
+      [](const Cube& self) {
+        Vector3 lo, hi;
+        self.boundingBox(lo, hi);
+        return std::make_pair(lo, hi);
+      },
+      "The (low, high) corners of the axis-aligned box around the grid")
     .def_property_readonly("dimensions", &Cube::dimensions,
                            "The grid dimensions (nx, ny, nz)")
     .def_property_readonly("nx", &Cube::nx, "Number of points in x")
@@ -125,6 +145,12 @@ void exportCube(py::module_& m)
     .def("set_limits", setLimits_mDV, py::arg("min"), py::arg("dim"),
          py::arg("spacing_vector"),
          "Set limits from min corner, dimensions and spacing vector")
+    .def("set_limits", setLimits_mDM, py::arg("origin"), py::arg("dim"),
+         py::arg("steps"),
+         "Set the grid from an origin, dimensions and a 3x3 step matrix whose "
+         "columns are the step vectors along i, j and k (skewed grids are "
+         "allowed). Returns False and leaves the cube unchanged if the "
+         "matrix is not finite or is singular.")
     .def("set_limits", setLimits_C, py::arg("cube"),
          "Copy limits from another cube")
     .def("set_limits", setLimits_MSP, py::arg("molecule"), py::arg("spacing"),

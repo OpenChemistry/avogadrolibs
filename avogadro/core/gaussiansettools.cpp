@@ -826,6 +826,12 @@ bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
   if (iStart >= iEnd)
     return true;
 
+  // The grid coordinates below are separable per axis, which only holds for
+  // a grid along x, y and z. Cubes made for these calculations are, but a
+  // skewed cube read from a file is not and cannot be filled this way.
+  if (!cube.isAxisAligned())
+    return false;
+
   Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
   Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
 
@@ -986,6 +992,12 @@ bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
   }
 
   const size_t slabSize = static_cast<size_t>(iEnd - iStart) * ny * nz;
+
+  // The grid coordinates below are separable per axis, which only holds for
+  // a grid along x, y and z. Cubes made for these calculations are, but a
+  // skewed cube read from a file is not and cannot be filled this way.
+  if (!cube.isAxisAligned())
+    return false;
 
   Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
   Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;

@@ -69,12 +69,25 @@ bool OpenDxReader::readFile(const QString& fileName)
     }
   }
 
-  Vector3 spacing(spacings[0][0], spacings[1][1], spacings[2][2]);
+  if (spacings.size() < 3) {
+    m_errorString = "Missing grid delta lines";
+    return false;
+  }
+
+  // Each "delta" line is the step vector along one grid axis.
+  Matrix3 steps;
+  for (int axis = 0; axis < 3; ++axis)
+    steps.col(axis) = spacings[axis];
 
   // create potential cube
   m_cube = new Cube;
   m_cube->setCubeType(Cube::ESP);
-  m_cube->setLimits(origin, dim, spacing);
+  if (!m_cube->setLimits(origin, dim, steps)) {
+    delete m_cube;
+    m_cube = nullptr;
+    m_errorString = "Invalid grid specification";
+    return false;
+  }
   m_cube->setData(values);
 
   return true;
