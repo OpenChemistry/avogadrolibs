@@ -82,7 +82,7 @@ bool OpenDxReader::readFile(const QString& fileName)
   // create potential cube
   m_cube = new Cube;
   m_cube->setCubeType(Cube::ESP);
-  if (!m_cube->setLimits(origin, dim, steps)) {
+  if (!m_cube->setStepLimits(origin, dim, steps)) {
     delete m_cube;
     m_cube = nullptr;
     m_errorString = "Invalid grid specification";

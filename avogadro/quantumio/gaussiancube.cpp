@@ -10,8 +10,6 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/utilities.h>
 
-#include <algorithm>
-#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -342,14 +340,12 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
   }
 
   // The step vectors go into the cube as they are, skewed or not. Whether
-  // they are usable does not depend on the grid size, so check with a
-  // one-point cube rather than allocating the data first.
-  Core::Cube probe;
-  const Vector3i onePoint(1, 1, 1);
-  if (!probe.setLimits(min, onePoint, steps)) {
+  // they are usable does not depend on the grid size, so check them before
+  // allocating anything.
+  if (!Core::Cube::validSteps(steps)) {
     // Only a single-point axis may legitimately have no step.
     steps = effectiveSteps(steps, dim);
-    if (!probe.setLimits(min, onePoint, steps)) {
+    if (!Core::Cube::validSteps(steps)) {
       appendError("Invalid cube grid specification: the voxel axes are "
                   "degenerate.");
       return false;
@@ -361,7 +357,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
     Core::Cube* cube = molecule.addCube();
     cube->setCubeType(Core::Cube::Type::FromFile);
 
-    if (!cube->setLimits(min, dim, steps)) {
+    if (!cube->setStepLimits(min, dim, steps)) {
       appendError("Invalid cube grid specification.");
       return false;
     }

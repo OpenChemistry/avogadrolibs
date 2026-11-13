@@ -335,7 +335,7 @@ TEST(CubeTest, skewedPositionAndIndexRoundTrip)
   const Vector3 origin(-1.0, 0.5, 2.0);
   const Vector3i dim(5, 6, 7);
   Cube cube;
-  ASSERT_TRUE(cube.setLimits(origin, dim, steps));
+  ASSERT_TRUE(cube.setStepLimits(origin, dim, steps));
   EXPECT_FALSE(cube.isAxisAligned());
   EXPECT_EQ(cube.steps(), steps);
   EXPECT_EQ(cube.min(), origin);
@@ -381,7 +381,7 @@ TEST(CubeTest, skewedValueReproducesLinearFunction)
   Cube cube;
   const Vector3 origin(0.3, -0.2, 0.1);
   const Vector3i dim(6, 7, 8);
-  ASSERT_TRUE(cube.setLimits(origin, dim, skewedSteps()));
+  ASSERT_TRUE(cube.setStepLimits(origin, dim, skewedSteps()));
   for (unsigned int i = 0; i < cube.data()->size(); ++i)
     cube.setValue(i, linearFunction(cube.position(i)));
 
@@ -405,8 +405,8 @@ TEST(CubeTest, skewedValueReproducesLinearFunction)
 TEST(CubeTest, skewedGradientOfLinearFunction)
 {
   Cube cube;
-  ASSERT_TRUE(
-    cube.setLimits(Vector3(0.3, -0.2, 0.1), Vector3i(6, 7, 8), skewedSteps()));
+  ASSERT_TRUE(cube.setStepLimits(Vector3(0.3, -0.2, 0.1), Vector3i(6, 7, 8),
+                                 skewedSteps()));
   for (unsigned int i = 0; i < cube.data()->size(); ++i)
     cube.setValue(i, linearFunction(cube.position(i)));
 
@@ -430,7 +430,7 @@ TEST(CubeTest, leftHandedStepsAreAccepted)
   steps.col(0) *= -1.0;
   ASSERT_LT(steps.determinant(), 0.0);
   Cube cube;
-  ASSERT_TRUE(cube.setLimits(Vector3(0, 0, 0), Vector3i(4, 4, 4), steps));
+  ASSERT_TRUE(cube.setStepLimits(Vector3(0, 0, 0), Vector3i(4, 4, 4), steps));
   for (unsigned int i = 0; i < cube.data()->size(); ++i)
     cube.setValue(i, linearFunction(cube.position(i)));
   const auto g = cube.computeGradient(1, 2, 1);
@@ -443,30 +443,30 @@ TEST(CubeTest, invalidStepsAreRejected)
 {
   Cube cube;
   const Vector3 origin(1.0, 2.0, 3.0);
-  ASSERT_TRUE(cube.setLimits(origin, Vector3i(2, 2, 2), skewedSteps()));
+  ASSERT_TRUE(cube.setStepLimits(origin, Vector3i(2, 2, 2), skewedSteps()));
   const Matrix3 good = cube.steps();
 
   // Singular: two parallel columns, and a zero column.
   Matrix3 parallel = skewedSteps();
   parallel.col(1) = 2.0 * parallel.col(0);
-  EXPECT_FALSE(cube.setLimits(origin, Vector3i(3, 3, 3), parallel));
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), parallel));
   Matrix3 zero = skewedSteps();
   zero.col(2).setZero();
-  EXPECT_FALSE(cube.setLimits(origin, Vector3i(3, 3, 3), zero));
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), zero));
   // Nearly singular for its size, whatever the unit.
-  EXPECT_FALSE(cube.setLimits(origin, Vector3i(3, 3, 3), parallel * 1.0e6));
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), parallel * 1.0e6));
   // Not finite.
   Matrix3 bad = skewedSteps();
   bad(1, 1) = std::numeric_limits<double>::quiet_NaN();
-  EXPECT_FALSE(cube.setLimits(origin, Vector3i(3, 3, 3), bad));
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), bad));
   bad = skewedSteps();
   bad(0, 2) = std::numeric_limits<double>::infinity();
-  EXPECT_FALSE(cube.setLimits(origin, Vector3i(3, 3, 3), bad));
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), bad));
   EXPECT_FALSE(
-    cube.setLimits(Vector3(std::numeric_limits<double>::quiet_NaN(), 0, 0),
-                   Vector3i(3, 3, 3), skewedSteps()));
+    cube.setStepLimits(Vector3(std::numeric_limits<double>::quiet_NaN(), 0, 0),
+                       Vector3i(3, 3, 3), skewedSteps()));
   // Too few points.
-  EXPECT_FALSE(cube.setLimits(origin, Vector3i(0, 3, 3), skewedSteps()));
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(0, 3, 3), skewedSteps()));
 
   // The cube is as it was.
   EXPECT_EQ(cube.dimensions(), Vector3i(2, 2, 2));
@@ -477,7 +477,8 @@ TEST(CubeTest, invalidStepsAreRejected)
 TEST(CubeTest, copyingLimitsKeepsSteps)
 {
   Cube a;
-  ASSERT_TRUE(a.setLimits(Vector3(1, 2, 3), Vector3i(3, 3, 3), skewedSteps()));
+  ASSERT_TRUE(
+    a.setStepLimits(Vector3(1, 2, 3), Vector3i(3, 3, 3), skewedSteps()));
   Cube b;
   ASSERT_TRUE(b.setLimits(a));
   EXPECT_FALSE(b.isAxisAligned());

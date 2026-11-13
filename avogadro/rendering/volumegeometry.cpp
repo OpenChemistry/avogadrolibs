@@ -507,19 +507,17 @@ void VolumeGeometry::render(const Camera& camera)
 
   // The box the volume fills in world space: the unit cube [0,1]^3 (the
   // texture coordinates) maps to origin + S * diag(n - 1) * u. It is a
-  // parallelepiped for a skewed grid. A degenerate grid (non-finite or
-  // singular steps cannot get here, but be safe) draws nothing.
+  // parallelepiped for a skewed grid.
   const Eigen::Vector3d extent(m_cube->nx() - 1, m_cube->ny() - 1,
                                m_cube->nz() - 1);
   const Eigen::Matrix3d linear = m_cube->steps() * extent.asDiagonal();
   Eigen::Matrix4d boxD = Eigen::Matrix4d::Identity();
   boxD.block<3, 3>(0, 0) = linear;
   boxD.block<3, 1>(0, 3) = m_cube->min();
-  if (!boxD.allFinite() || std::abs(linear.determinant()) <= 0.0)
-    return;
   const bool mirrored = linear.determinant() < 0.0;
   const Eigen::Matrix4f boxMatrix = boxD.cast<float>();
   const Eigen::Matrix4f boxInverse = boxD.inverse().cast<float>();
+  // Valid steps cannot give this; bail out rather than draw garbage.
   if (!boxInverse.allFinite())
     return;
   // Longest of the four body diagonals bounds any ray inside the box.

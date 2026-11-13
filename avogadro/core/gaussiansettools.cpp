@@ -20,6 +20,31 @@ using std::sqrt;
 
 namespace {
 
+// The per-axis coordinate tables (in bohr) of a cube whose grid runs along
+// x, y and z. The MO evaluators below are separable per axis, which a skewed
+// cube read from a file is not, so this refuses one (returns false) rather
+// than fill it on the wrong grid. Cubes made for these calculations are
+// axis aligned.
+bool separableGrid(const Avogadro::Core::Cube& cube, Avogadro::Vector3& minBohr,
+                   Avogadro::Vector3& spBohr, std::vector<double>& gridX,
+                   std::vector<double>& gridY, std::vector<double>& gridZ)
+{
+  if (!cube.isAxisAligned())
+    return false;
+  minBohr = cube.min() * Avogadro::ANGSTROM_TO_BOHR;
+  spBohr = cube.spacing() * Avogadro::ANGSTROM_TO_BOHR;
+  gridX.resize(cube.nx());
+  gridY.resize(cube.ny());
+  gridZ.resize(cube.nz());
+  for (int i = 0; i < cube.nx(); ++i)
+    gridX[i] = minBohr.x() + i * spBohr.x();
+  for (int j = 0; j < cube.ny(); ++j)
+    gridY[j] = minBohr.y() + j * spBohr.y();
+  for (int k = 0; k < cube.nz(); ++k)
+    gridZ[k] = minBohr.z() + k * spBohr.z();
+  return true;
+}
+
 // Shell-major grid evaluators with factored exp() and fused MO coefficients.
 // Each function handles the primitive loop and the triple (i,j,k) grid loop
 // for one shell type. The MO coefficient is fused directly, so these
@@ -826,22 +851,10 @@ bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
   if (iStart >= iEnd)
     return true;
 
-  // The grid coordinates below are separable per axis, which only holds for
-  // a grid along x, y and z. Cubes made for these calculations are, but a
-  // skewed cube read from a file is not and cannot be filled this way.
-  if (!cube.isAxisAligned())
+  Vector3 minBohr, spBohr;
+  std::vector<double> gridX, gridY, gridZ;
+  if (!separableGrid(cube, minBohr, spBohr, gridX, gridY, gridZ))
     return false;
-
-  Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
-  Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
-
-  std::vector<double> gridX(nx), gridY(ny), gridZ(nz);
-  for (int i = 0; i < nx; ++i)
-    gridX[i] = minBohr.x() + i * spBohr.x();
-  for (int j = 0; j < ny; ++j)
-    gridY[j] = minBohr.y() + j * spBohr.y();
-  for (int k = 0; k < nz; ++k)
-    gridZ[k] = minBohr.z() + k * spBohr.z();
 
   // Slab buffer: indexed by global i via (i - iStart) inside the shell
   // evaluators
@@ -993,22 +1006,10 @@ bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
 
   const size_t slabSize = static_cast<size_t>(iEnd - iStart) * ny * nz;
 
-  // The grid coordinates below are separable per axis, which only holds for
-  // a grid along x, y and z. Cubes made for these calculations are, but a
-  // skewed cube read from a file is not and cannot be filled this way.
-  if (!cube.isAxisAligned())
+  Vector3 minBohr, spBohr;
+  std::vector<double> gridX, gridY, gridZ;
+  if (!separableGrid(cube, minBohr, spBohr, gridX, gridY, gridZ))
     return false;
-
-  Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
-  Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
-
-  std::vector<double> gridX(nx), gridY(ny), gridZ(nz);
-  for (int i = 0; i < nx; ++i)
-    gridX[i] = minBohr.x() + i * spBohr.x();
-  for (int j = 0; j < ny; ++j)
-    gridY[j] = minBohr.y() + j * spBohr.y();
-  for (int k = 0; k < nz; ++k)
-    gridZ[k] = minBohr.z() + k * spBohr.z();
 
   std::vector<double> density(slabSize, 0.0);
   std::vector<double> moGrid(slabSize);

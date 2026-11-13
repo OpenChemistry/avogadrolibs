@@ -12,7 +12,6 @@
 #include "vector.h"
 
 #include <array>
-#include <type_traits>
 #include <vector>
 
 namespace Avogadro::Core {
@@ -167,19 +166,12 @@ public:
                      const Matrix3& steps);
 
   /**
-   * Set the limits of the cube from a step matrix, as setStepLimits(). Any 3x3
-   * Eigen expression is accepted; being a template that only takes 3x3
-   * matrices keeps calls that pass a 3-vector expression (such as
-   * Vector3::Constant(spacing)) choosing the spacing overload above.
+   * @return True if @p steps can be used as a step matrix: it is finite and
+   * its columns are linearly independent (|det| larger than 1e-9 times the
+   * product of the three column lengths, so the test does not depend on the
+   * unit or the grid spacing). This is the test setStepLimits() applies.
    */
-  template <typename Derived,
-            typename = std::enable_if_t<Derived::RowsAtCompileTime == 3 &&
-                                        Derived::ColsAtCompileTime == 3>>
-  bool setLimits(const Vector3& origin, const Vector3i& dim,
-                 const Eigen::MatrixBase<Derived>& steps)
-  {
-    return setStepLimits(origin, dim, Matrix3(steps));
-  }
+  static bool validSteps(const Matrix3& steps);
 
   /**
    * Set the limits of the cube - copy the limits of an existing Cube.
@@ -355,7 +347,11 @@ public:
   std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const;
 
   /**
-   * Get the data value at the specified indices.
+   * Get the data value at the specified indices. This is called for every
+   * voxel, so it makes a single memory-safety check: an index that lies
+   * outside the data gives zero. It does not check each axis, so an index
+   * just past one axis may alias a point of the grid; use value() for
+   * interpolation at the edges.
    * @param i x index
    * @param j y index
    * @param k z index
@@ -398,7 +394,7 @@ protected:
   Mutex* m_lock;
   /** Columns are the step vectors along i, j, k. */
   Matrix3 m_steps;
-  /** The inverse of m_steps (zero if m_steps is singular). */
+  /** The inverse of m_steps; only set (and used) for a skewed grid. */
   Matrix3 m_stepsInverse;
   /** True when m_steps has exactly zero off-diagonal elements. */
   bool m_axisAligned;
@@ -408,6 +404,8 @@ protected:
                    const Matrix3& steps);
   /** Fractional grid index of a position, or false if not finite. */
   bool fractionalIndex(const Vector3& pos, Vector3& index) const;
+  /** computeGradient() without the check that the data matches the grid. */
+  std::array<float, 3> gradientAt(int i, int j, int k) const;
 };
 
 inline bool Cube::setValue(unsigned int i, float value_)

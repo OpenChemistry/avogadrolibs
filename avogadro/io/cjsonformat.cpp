@@ -1631,11 +1631,10 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         }
       }
       if (stepsOk) {
-        // Singular matrices are refused by Cube::setLimits() too, but that is
-        // only known after the cube has been added, so test it up front.
-        Cube probe;
-        stepsOk =
-          probe.setLimits(Vector3::Zero(), Vector3i(1, 1, 1), stepMatrix);
+        // Singular matrices are refused by Cube::setStepLimits() too, but
+        // that is only known after the cube has been added, so test it up
+        // front.
+        stepsOk = Cube::validSteps(stepMatrix);
       }
     }
 
@@ -1668,7 +1667,7 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
 
       Vector3 min(origin[0], origin[1], origin[2]);
       if (hasSteps) {
-        cube->setLimits(min, points, stepMatrix);
+        cube->setStepLimits(min, points, stepMatrix);
       } else {
         Vector3 delta(spacing[0], spacing[1], spacing[2]);
         Vector3 max(min[0] + (points[0] - 1) * delta[0],

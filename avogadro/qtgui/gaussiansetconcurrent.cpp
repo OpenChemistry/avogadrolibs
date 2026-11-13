@@ -216,6 +216,9 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
   return true;
 }
 
+// The slab functions return false (leaving the slab untouched) for a skewed
+// cube or an invalid basis set; the concurrent map has no way to report that,
+// so the cube is left unfilled.
 void GaussianSetConcurrent::processOrbital(GaussianShell& shell)
 {
   shell.tools->calculateMolecularOrbitalSlab(

@@ -52,21 +52,6 @@ bool validSpacing(const Vector3& spacing)
          spacing.z() > 0.0;
 }
 
-// A step matrix is usable when it is finite and its columns are linearly
-// independent, judged against the size of the columns so the test does not
-// depend on the unit (Angstrom or bohr) or on the grid being fine or coarse.
-bool validSteps(const Matrix3& steps)
-{
-  if (!steps.allFinite())
-    return false;
-  const double scale =
-    steps.col(0).norm() * steps.col(1).norm() * steps.col(2).norm();
-  const double det = steps.determinant();
-  if (!std::isfinite(scale) || !std::isfinite(det))
-    return false;
-  return std::abs(det) > 1.0e-9 * scale;
-}
-
 // Truncating a double outside int's range is undefined, so index conversions
 // are clamped well inside it.
 int truncateIndex(double value)
@@ -80,6 +65,21 @@ int truncateIndex(double value)
 }
 
 } // namespace
+
+// A step matrix is usable when it is finite and its columns are linearly
+// independent, judged against the size of the columns so the test does not
+// depend on the unit (Angstrom or bohr) or on the grid being fine or coarse.
+bool Cube::validSteps(const Matrix3& steps)
+{
+  if (!steps.allFinite())
+    return false;
+  const double scale =
+    steps.col(0).norm() * steps.col(1).norm() * steps.col(2).norm();
+  const double det = steps.determinant();
+  if (!std::isfinite(scale) || !std::isfinite(det))
+    return false;
+  return std::abs(det) > 1.0e-9 * scale;
+}
 
 bool Cube::setLimits(const Vector3& min_, const Vector3& max_,
                      const Vector3i& points)
@@ -149,25 +149,22 @@ void Cube::applyLimits(const Vector3& origin, const Vector3i& dim,
   m_min = origin;
   m_points = dim;
   m_steps = steps_;
-  m_axisAligned = steps_(0, 1) == 0.0 && steps_(0, 2) == 0.0 &&
-                  steps_(1, 0) == 0.0 && steps_(1, 2) == 0.0 &&
-                  steps_(2, 0) == 0.0 && steps_(2, 1) == 0.0;
+  // With a precision of zero this is an exact test for zero off-diagonals.
+  m_axisAligned = steps_.isDiagonal(0.0);
 
   const Vector3 last(dim.x() - 1, dim.y() - 1, dim.z() - 1);
   m_max = origin + steps_ * last;
 
   if (m_axisAligned) {
     m_spacing = Vector3(steps_(0, 0), steps_(1, 1), steps_(2, 2));
-    // A diagonal with a zero entry is singular; keep the inverse zero then.
+    // The axis-aligned code paths divide by the spacing and never use this.
     m_stepsInverse.setZero();
-    for (int d = 0; d < 3; ++d)
-      if (steps_(d, d) != 0.0)
-        m_stepsInverse(d, d) = 1.0 / steps_(d, d);
   } else {
     m_spacing =
       Vector3(steps_.col(0).norm(), steps_.col(1).norm(), steps_.col(2).norm());
-    m_stepsInverse =
-      validSteps(steps_) ? Matrix3(steps_.inverse()) : Matrix3(Matrix3::Zero());
+    // Skewed steps only arrive through setStepLimits() (validated) or copied
+    // from another cube, so they are known to be invertible.
+    m_stepsInverse = steps_.inverse();
   }
   m_data.resize(static_cast<size_t>(m_points.x()) * m_points.y() *
                 m_points.z());
@@ -310,9 +307,9 @@ unsigned int Cube::closestIndex(const Vector3& pos) const
   if (m_points.x() < 1 || m_points.y() < 1 || m_points.z() < 1)
     return 0;
   const Vector3i idx = indexVector(pos);
-  const int i = std::min(std::max(idx.x(), 0), m_points.x() - 1);
-  const int j = std::min(std::max(idx.y(), 0), m_points.y() - 1);
-  const int k = std::min(std::max(idx.z(), 0), m_points.z() - 1);
+  const int i = std::clamp(idx.x(), 0, m_points.x() - 1);
+  const int j = std::clamp(idx.y(), 0, m_points.y() - 1);
+  const int k = std::clamp(idx.z(), 0, m_points.z() - 1);
   return static_cast<unsigned int>(i * m_points.y() * m_points.z() +
                                    j * m_points.z() + k);
 }
@@ -351,12 +348,21 @@ float Cube::value(int i, int j, int k) const
 
 std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 {
+  // The data must match the grid before it is indexed (checked here once; the
+  // eight-corner getGradCube() checks once and calls gradientAt()).
+  if (m_data.size() != static_cast<size_t>(m_points.x()) * m_points.y() *
+                         static_cast<size_t>(m_points.z()))
+    return { 0.0f, 0.0f, 0.0f };
+  return gradientAt(i, j, k);
+}
+
+std::array<float, 3> Cube::gradientAt(int i, int j, int k) const
+{
   const int nx = m_points.x();
   const int ny = m_points.y();
   const int nz = m_points.z();
   std::array<float, 3> ret = { 0.0f, 0.0f, 0.0f };
-  if (i < 0 || j < 0 || k < 0 || i >= nx || j >= ny || k >= nz ||
-      m_data.size() != static_cast<size_t>(nx) * ny * nz)
+  if (i < 0 || j < 0 || k < 0 || i >= nx || j >= ny || k >= nz)
     return ret;
   const int dataIdx = (i * ny * nz) + (j * nz) + k;
 
@@ -406,15 +412,19 @@ std::array<float, 3> Cube::computeGradient(int i, int j, int k) const
 std::array<std::array<float, 3>, 8> Cube::getGradCube(int i, int j, int k) const
 {
   std::array<std::array<float, 3>, 8> grad;
+  grad.fill({ 0.0f, 0.0f, 0.0f });
+  if (m_data.size() != static_cast<size_t>(m_points.x()) * m_points.y() *
+                         static_cast<size_t>(m_points.z()))
+    return grad;
 
-  grad[0] = computeGradient(i, j, k);
-  grad[1] = computeGradient(i + 1, j, k);
-  grad[2] = computeGradient(i + 1, j + 1, k);
-  grad[3] = computeGradient(i, j + 1, k);
-  grad[4] = computeGradient(i, j, k + 1);
-  grad[5] = computeGradient(i + 1, j, k + 1);
-  grad[6] = computeGradient(i + 1, j + 1, k + 1);
-  grad[7] = computeGradient(i, j + 1, k + 1);
+  grad[0] = gradientAt(i, j, k);
+  grad[1] = gradientAt(i + 1, j, k);
+  grad[2] = gradientAt(i + 1, j + 1, k);
+  grad[3] = gradientAt(i, j + 1, k);
+  grad[4] = gradientAt(i, j, k + 1);
+  grad[5] = gradientAt(i + 1, j, k + 1);
+  grad[6] = gradientAt(i + 1, j + 1, k + 1);
+  grad[7] = gradientAt(i, j + 1, k + 1);
 
   return grad;
 }
@@ -437,9 +447,8 @@ std::array<float, 8> Cube::getValsCube(int i, int j, int k) const
 
 float Cube::getData(int i, int j, int k) const
 {
-  if (i < 0 || j < 0 || k < 0 || i >= m_points.x() || j >= m_points.y() ||
-      k >= m_points.z())
-    return 0.0f;
+  // One check keeps this memory safe: a negative index wraps to a huge
+  // unsigned value, so it fails the comparison unless the terms cancel.
   const size_t index = (static_cast<size_t>(i) * m_points.y() + j) *
                          static_cast<size_t>(m_points.z()) +
                        k;
@@ -453,18 +462,19 @@ std::array<std::array<float, 3>, 8> Cube::getPosCube(int i, int j, int k) const
 
   if (!m_axisAligned) {
     // Corners in the order of getValsCube: the cell spanned by one step
-    // along each of the three step vectors.
-    static constexpr int corners[8][3] = { { 0, 0, 0 }, { 1, 0, 0 },
-                                           { 1, 1, 0 }, { 0, 1, 0 },
-                                           { 0, 0, 1 }, { 1, 0, 1 },
-                                           { 1, 1, 1 }, { 0, 1, 1 } };
-    for (int c = 0; c < 8; ++c) {
-      const Vector3 r =
-        m_min + m_steps * Vector3(i + corners[c][0], j + corners[c][1],
-                                  k + corners[c][2]);
-      pos[c] = { static_cast<float>(r.x()), static_cast<float>(r.y()),
-                 static_cast<float>(r.z()) };
-    }
+    // along each of the three step vectors, summed in double.
+    const Vector3 p0 = m_min + m_steps * Vector3(i, j, k);
+    const Vector3 a = m_steps.col(0);
+    const Vector3 b = m_steps.col(1);
+    const Vector3 c = m_steps.col(2);
+    const Vector3 corners[8] = {
+      p0,     p0 + a,     p0 + a + b,     p0 + b,
+      p0 + c, p0 + a + c, p0 + a + b + c, p0 + b + c
+    };
+    for (int n = 0; n < 8; ++n)
+      pos[n] = { static_cast<float>(corners[n].x()),
+                 static_cast<float>(corners[n].y()),
+                 static_cast<float>(corners[n].z()) };
     return pos;
   }
 
@@ -530,29 +540,53 @@ float Cube::value(const Vector3& pos) const
   Vector3 frac;
   if (!fractionalIndex(pos, frac))
     return 0.0f;
-  // Far outside the grid everything is zero (and the int conversion below
-  // would not be defined).
-  if (frac.cwiseAbs().maxCoeff() > 1.0e9)
-    return 0.0f;
   const Vector3 low = frac.array().floor().matrix();
+  // Far outside the grid everything is zero (and the int conversion below
+  // would not be defined). fractionalIndex() guarantees frac is finite; no
+  // valid grid has more than INT_MAX points along an axis.
+  constexpr double limit = 2.0e9;
+  if (low.cwiseAbs().maxCoeff() > limit)
+    return 0.0f;
   const Vector3i lC(static_cast<int>(low.x()), static_cast<int>(low.y()),
                     static_cast<int>(low.z()));
-  const Vector3i hC(lC.x() + 1, lC.y() + 1, lC.z() + 1);
   const Vector3 P = frac - low;
   const Vector3 dP = Vector3(1.0, 1.0, 1.0) - P;
-  // Points outside the grid count as zero (getData() checks the bounds).
-  auto at = [this](int a, int b, int c) {
-    return static_cast<double>(getData(a, b, c));
-  };
+
+  const int nx = m_points.x(), ny = m_points.y(), nz = m_points.z();
+  const size_t nyz = static_cast<size_t>(ny) * nz;
+  double v[8]; // corner values, indexed by the bits (x, y, z) = (1, 2, 4)
+  if (lC.x() >= 0 && lC.y() >= 0 && lC.z() >= 0 && lC.x() < nx - 1 &&
+      lC.y() < ny - 1 && lC.z() < nz - 1 &&
+      m_data.size() >= static_cast<size_t>(nx) * nyz) {
+    // The whole cell is inside the grid: one index, fixed offsets.
+    const size_t base = static_cast<size_t>(lC.x()) * nyz +
+                        static_cast<size_t>(lC.y()) * nz + lC.z();
+    v[0] = m_data[base];
+    v[1] = m_data[base + nyz];
+    v[2] = m_data[base + nz];
+    v[3] = m_data[base + nyz + nz];
+    v[4] = m_data[base + 1];
+    v[5] = m_data[base + nyz + 1];
+    v[6] = m_data[base + nz + 1];
+    v[7] = m_data[base + nyz + nz + 1];
+  } else {
+    // At the edge of the grid: points outside it count as zero. The bounds
+    // are checked exactly per corner, as getData() alone could alias a
+    // negative index into the grid.
+    auto at = [this, nx, ny, nz](int a, int b, int c) {
+      if (a < 0 || b < 0 || c < 0 || a >= nx || b >= ny || c >= nz)
+        return 0.0;
+      return static_cast<double>(getData(a, b, c));
+    };
+    for (int corner = 0; corner < 8; ++corner)
+      v[corner] = at(lC.x() + (corner & 1), lC.y() + ((corner >> 1) & 1),
+                     lC.z() + ((corner >> 2) & 1));
+  }
   return static_cast<float>(
-    at(lC.x(), lC.y(), lC.z()) * dP.x() * dP.y() * dP.z() +
-    at(hC.x(), lC.y(), lC.z()) * P.x() * dP.y() * dP.z() +
-    at(lC.x(), hC.y(), lC.z()) * dP.x() * P.y() * dP.z() +
-    at(lC.x(), lC.y(), hC.z()) * dP.x() * dP.y() * P.z() +
-    at(hC.x(), lC.y(), hC.z()) * P.x() * dP.y() * P.z() +
-    at(lC.x(), hC.y(), hC.z()) * dP.x() * P.y() * P.z() +
-    at(hC.x(), hC.y(), lC.z()) * P.x() * P.y() * dP.z() +
-    at(hC.x(), hC.y(), hC.z()) * P.x() * P.y() * P.z());
+    v[0] * dP.x() * dP.y() * dP.z() + v[1] * P.x() * dP.y() * dP.z() +
+    v[2] * dP.x() * P.y() * dP.z() + v[4] * dP.x() * dP.y() * P.z() +
+    v[5] * P.x() * dP.y() * P.z() + v[6] * dP.x() * P.y() * P.z() +
+    v[3] * P.x() * P.y() * dP.z() + v[7] * P.x() * P.y() * P.z());
 }
 
 bool Cube::setValue(unsigned int i, unsigned int j, unsigned int k,

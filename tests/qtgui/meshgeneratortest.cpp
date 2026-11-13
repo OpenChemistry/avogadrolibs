@@ -339,7 +339,7 @@ void checkSphereOnGrid(const Matrix3& steps, int smoothingPasses)
   const Vector3 half = 0.5 * Vector3(dim.x() - 1, dim.y() - 1, dim.z() - 1);
 
   Cube cube;
-  ASSERT_TRUE(cube.setLimits(center - steps * half, dim, steps));
+  ASSERT_TRUE(cube.setStepLimits(center - steps * half, dim, steps));
   for (unsigned int i = 0; i < cube.data()->size(); ++i)
     cube.setValue(i, static_cast<float>((cube.position(i) - center).norm()));
 

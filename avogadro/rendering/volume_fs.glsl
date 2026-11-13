@@ -40,20 +40,8 @@ out vec4 colorOut;
 // affine map keeps the ray parameter t, so the ray is transformed into that
 // space and the t values are the world-space ones.
 
-// Returns exit t value for ray origin + t * dir
-float rayBoxExit(vec3 origin, vec3 dir)
-{
-    vec3 o = (uBoxInverse * vec4(origin, 1.0)).xyz;
-    vec3 d = (uBoxInverse * vec4(dir, 0.0)).xyz;
-    vec3 invDir = 1.0 / d;
-    vec3 t1 = (vec3(0.0) - o) * invDir;
-    vec3 t2 = (vec3(1.0) - o) * invDir;
-    vec3 tMax = max(t1, t2);
-    return min(min(tMax.x, tMax.y), tMax.z);
-}
-
-// Returns entry t value for ray origin + t * dir
-float rayBoxEntry(vec3 origin, vec3 dir)
+// Returns (entry, exit) t values for ray origin + t * dir
+vec2 rayBox(vec3 origin, vec3 dir)
 {
     vec3 o = (uBoxInverse * vec4(origin, 1.0)).xyz;
     vec3 d = (uBoxInverse * vec4(dir, 0.0)).xyz;
@@ -61,7 +49,9 @@ float rayBoxEntry(vec3 origin, vec3 dir)
     vec3 t1 = (vec3(0.0) - o) * invDir;
     vec3 t2 = (vec3(1.0) - o) * invDir;
     vec3 tMin = min(t1, t2);
-    return max(max(tMin.x, tMin.y), tMin.z);
+    vec3 tMax = max(t1, t2);
+    return vec2(max(max(tMin.x, tMin.y), tMin.z),
+                min(min(tMax.x, tMax.y), tMax.z));
 }
 
 void main()
@@ -108,8 +98,9 @@ void main()
             // Trace ray through reference point to find both entry and exit
             // Move reference point back along ray to ensure we're outside the box
             vec3 rayOrigin = refPoint - rayDir * boxDiagonal * 2.0;
-            float tEntry = rayBoxEntry(rayOrigin, rayDir);
-            float tExit = rayBoxExit(rayOrigin, rayDir);
+            vec2 tBox = rayBox(rayOrigin, rayDir);
+            float tEntry = tBox.x;
+            float tExit = tBox.y;
 
             if (tExit <= tEntry) {
                 discard; // Ray misses box
@@ -119,8 +110,9 @@ void main()
             exitPos = rayOrigin + rayDir * tExit;
         } else {
             // Perspective: use camera position as ray origin
-            float tEntry = rayBoxEntry(uCameraPos, rayDir);
-            float tExit = rayBoxExit(uCameraPos, rayDir);
+            vec2 tBox = rayBox(uCameraPos, rayDir);
+            float tEntry = tBox.x;
+            float tExit = tBox.y;
 
             if (tExit <= tEntry || tExit <= 0.0) {
                 discard; // Ray misses box or is behind camera
