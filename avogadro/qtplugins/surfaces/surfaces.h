@@ -97,7 +97,6 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT(Type type = Unknown, float defaultResolution = 0.0);
-  void performEDTStep(); // EDT step for SolventExcluded
   void edtFinished();
   void calculateQM(Type type = Unknown, int index = -1, bool betaSpin = false,
                    float isoValue = 0.0, float defaultResolution = 0.0);
@@ -208,8 +207,7 @@ private:
   bool m_cubeJobStale = false;
 
   /* One QFutureWatcher per asynchronous slot function, e.g.:*/
-  /* calculateEDT() -> [performEDTStep()] -> edtFinished() */
-  QFutureWatcher<void> m_performEDTStepWatcher;
+  /* calculateEDT() -> edtFinished() */
   QFutureWatcher<void> m_displayMeshWatcher;
 
   /* displayMesh() -> meshFinished() */
