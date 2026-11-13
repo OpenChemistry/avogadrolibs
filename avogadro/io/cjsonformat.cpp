@@ -1674,7 +1674,9 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
                     min[1] + (points[1] - 1) * delta[1],
                     min[2] + (points[2] - 1) * delta[2]);
 
-        cube->setLimits(min, max, points);
+        Matrix3 diag = Vector3(delta).asDiagonal();
+        if (!cube->setStepLimits(min, points, diag))
+          cube->setLimits(min, max, points);
       }
       // The scalars are converted explicitly rather than handed to
       // Cube::setData() as json, clamping the way lexicalCast<float> does:

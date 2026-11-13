@@ -102,6 +102,11 @@ bool GaussianSetConcurrent::calculateMolecularOrbital(Core::Cube* cube,
                                                       unsigned int state,
                                                       bool beta)
 {
+  // The orbital slab code needs a separable (axis-aligned) grid; the density
+  // and spin paths evaluate through position() and handle skewed cubes.
+  if (cube == nullptr || !cube->isAxisAligned())
+    return false;
+
   if (!ensureSetUp() || !m_tools)
     return false;
 
@@ -216,9 +221,9 @@ bool GaussianSetConcurrent::setUpCalculation(Core::Cube* cube,
   return true;
 }
 
-// The slab functions return false (leaving the slab untouched) for a skewed
-// cube or an invalid basis set; the concurrent map has no way to report that,
-// so the cube is left unfilled.
+// The slab function returns false (leaving the slab untouched) for an invalid
+// basis set; the concurrent map has no way to report that, so the cube is left
+// unfilled. Skewed cubes are rejected earlier, in calculateMolecularOrbital().
 void GaussianSetConcurrent::processOrbital(GaussianShell& shell)
 {
   shell.tools->calculateMolecularOrbitalSlab(

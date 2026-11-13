@@ -1541,6 +1541,34 @@ TEST(CjsonTest, cubeStepsRoundTrip)
   EXPECT_EQ(*second.cube(0)->data(), *cube->data());
 }
 
+TEST(CjsonTest, flatAxisAlignedCubeReads)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  const std::string doc = R"({
+    "chemicalJson": 1,
+    "atoms": {
+      "elements": { "number": [6] },
+      "coords": { "3d": [0.0, 0.0, 0.0] }
+    },
+    "cube": {
+      "origin": [1.0, 2.0, 3.0],
+      "spacing": [0.5, 0.25, 1.0],
+      "dimensions": [3, 3, 1],
+      "scalars": [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+    }
+  })";
+  ASSERT_TRUE(cjson.readString(doc, molecule)) << cjson.error();
+  ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
+  const auto* cube = molecule.cube(0);
+  EXPECT_EQ(cube->dimensions(), Avogadro::Vector3i(3, 3, 1));
+  EXPECT_TRUE(cube->isAxisAligned());
+  EXPECT_EQ(cube->spacing(), Avogadro::Vector3(0.5, 0.25, 1.0));
+  ASSERT_EQ(cube->data()->size(), static_cast<size_t>(9));
+  for (size_t i = 0; i < 9; ++i)
+    EXPECT_FLOAT_EQ((*cube->data())[i], static_cast<float>(i));
+}
+
 // "steps" wins over "spacing", and a file without it reads as before.
 TEST(CjsonTest, cubeWithoutStepsHasNoStepsKey)
 {

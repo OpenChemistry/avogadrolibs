@@ -306,10 +306,19 @@ unsigned int Cube::closestIndex(const Vector3& pos) const
   // give the nearest edge point instead of an out-of-range index.
   if (m_points.x() < 1 || m_points.y() < 1 || m_points.z() < 1)
     return 0;
-  const Vector3i idx = indexVector(pos);
-  const int i = std::clamp(idx.x(), 0, m_points.x() - 1);
-  const int j = std::clamp(idx.y(), 0, m_points.y() - 1);
-  const int k = std::clamp(idx.z(), 0, m_points.z() - 1);
+  Vector3 frac;
+  if (!fractionalIndex(pos, frac))
+    frac.setZero();
+  // On a skewed grid the inverse step matrix leaves roundoff, so a position
+  // that is a grid point can come out as 18.9999999: snap those to the point.
+  auto snap = [](double v) {
+    constexpr double tolerance = 1.0e-6;
+    const double r = std::round(v);
+    return std::abs(v - r) < tolerance ? truncateIndex(r) : truncateIndex(v);
+  };
+  const int i = std::clamp(snap(frac.x()), 0, m_points.x() - 1);
+  const int j = std::clamp(snap(frac.y()), 0, m_points.y() - 1);
+  const int k = std::clamp(snap(frac.z()), 0, m_points.z() - 1);
   return static_cast<unsigned int>(i * m_points.y() * m_points.z() +
                                    j * m_points.z() + k);
 }

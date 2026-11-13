@@ -764,25 +764,34 @@ bool GaussianSetTools::evaluateMOGrid(
     for (int k = 0; k < nz; ++k)
       dz[k] = gridZ[k] - shell.centerBohr[2];
 
-    // Range-clipped index bounds (clipped to slab in x)
-    int imin = std::max(
-      iStart, static_cast<int>(std::floor(
-                (shell.centerBohr[0] - cutoff - minBohr.x()) / spBohr.x())));
-    int imax = std::min(
-      iEnd - 1, static_cast<int>(std::ceil(
-                  (shell.centerBohr[0] + cutoff - minBohr.x()) / spBohr.x())));
-    int jmin = std::max(
-      0, static_cast<int>(std::floor(
-           (shell.centerBohr[1] - cutoff - minBohr.y()) / spBohr.y())));
-    int jmax = std::min(
-      ny - 1, static_cast<int>(std::ceil(
-                (shell.centerBohr[1] + cutoff - minBohr.y()) / spBohr.y())));
-    int kmin = std::max(
-      0, static_cast<int>(std::floor(
-           (shell.centerBohr[2] - cutoff - minBohr.z()) / spBohr.z())));
-    int kmax = std::min(
-      nz - 1, static_cast<int>(std::ceil(
-                (shell.centerBohr[2] + cutoff - minBohr.z()) / spBohr.z())));
+    // Range-clipped index bounds (clipped to slab in x). The spacing may be
+    // negative, which swaps the two bounds, so they are ordered first and
+    // clamped in double before the int conversion.
+    auto axisBounds = [cutoff](double center, double minimum, double spacing,
+                               int& lo, int& hi) {
+      constexpr double limit = 1.0e9;
+      double a = (center - cutoff - minimum) / spacing;
+      double b = (center + cutoff - minimum) / spacing;
+      if (!std::isfinite(a) || !std::isfinite(b)) {
+        lo = 1;
+        hi = 0; // empty
+        return;
+      }
+      if (a > b)
+        std::swap(a, b);
+      lo = static_cast<int>(std::floor(std::clamp(a, -limit, limit)));
+      hi = static_cast<int>(std::ceil(std::clamp(b, -limit, limit)));
+    };
+    int imin, imax, jmin, jmax, kmin, kmax;
+    axisBounds(shell.centerBohr[0], minBohr.x(), spBohr.x(), imin, imax);
+    axisBounds(shell.centerBohr[1], minBohr.y(), spBohr.y(), jmin, jmax);
+    axisBounds(shell.centerBohr[2], minBohr.z(), spBohr.z(), kmin, kmax);
+    imin = std::max(iStart, imin);
+    imax = std::min(iEnd - 1, imax);
+    jmin = std::max(0, jmin);
+    jmax = std::min(ny - 1, jmax);
+    kmin = std::max(0, kmin);
+    kmax = std::min(nz - 1, kmax);
 
     if (imin > imax || jmin > jmax || kmin > kmax)
       continue;

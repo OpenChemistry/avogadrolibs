@@ -488,6 +488,30 @@ void VolumeGeometry::render(const Camera& camera)
   if (!m_cube)
     return;
 
+  // The box the volume fills in world space: the unit cube [0,1]^3 (the
+  // texture coordinates) maps to origin + S * diag(n - 1) * u. It is a
+  // parallelepiped for a skewed grid.
+  const Eigen::Vector3d extent(m_cube->nx() - 1, m_cube->ny() - 1,
+                               m_cube->nz() - 1);
+  const Eigen::Matrix3d linear = m_cube->steps() * extent.asDiagonal();
+  Eigen::Matrix4d boxD = Eigen::Matrix4d::Identity();
+  boxD.block<3, 3>(0, 0) = linear;
+  boxD.block<3, 1>(0, 3) = m_cube->min();
+  const bool mirrored = linear.determinant() < 0.0;
+  const Eigen::Matrix4f boxMatrix = boxD.cast<float>();
+  const Eigen::Matrix4f boxInverse = boxD.inverse().cast<float>();
+  // Valid steps cannot give this; bail out rather than draw garbage. This is
+  // done before initialize() so the caller's framebuffer binding is intact.
+  if (!boxInverse.allFinite())
+    return;
+  // Longest of the four body diagonals bounds any ray inside the box.
+  float boxDiagonal = 0.0f;
+  for (int corner = 0; corner < 4; ++corner) {
+    Eigen::Vector3d u((corner & 1) ? -1.0 : 1.0, (corner & 2) ? -1.0 : 1.0,
+                      1.0);
+    boxDiagonal =
+      std::max(boxDiagonal, static_cast<float>((linear * u).norm()));
+  }
   // Capture the default FBO before initialize() which may change it
   // (resizeFBO creates new framebuffers and unbinds to FBO 0, losing
   // the Qt widget's actual default FBO)
@@ -505,29 +529,6 @@ void VolumeGeometry::render(const Camera& camera)
     initialize();
   }
 
-  // The box the volume fills in world space: the unit cube [0,1]^3 (the
-  // texture coordinates) maps to origin + S * diag(n - 1) * u. It is a
-  // parallelepiped for a skewed grid.
-  const Eigen::Vector3d extent(m_cube->nx() - 1, m_cube->ny() - 1,
-                               m_cube->nz() - 1);
-  const Eigen::Matrix3d linear = m_cube->steps() * extent.asDiagonal();
-  Eigen::Matrix4d boxD = Eigen::Matrix4d::Identity();
-  boxD.block<3, 3>(0, 0) = linear;
-  boxD.block<3, 1>(0, 3) = m_cube->min();
-  const bool mirrored = linear.determinant() < 0.0;
-  const Eigen::Matrix4f boxMatrix = boxD.cast<float>();
-  const Eigen::Matrix4f boxInverse = boxD.inverse().cast<float>();
-  // Valid steps cannot give this; bail out rather than draw garbage.
-  if (!boxInverse.allFinite())
-    return;
-  // Longest of the four body diagonals bounds any ray inside the box.
-  float boxDiagonal = 0.0f;
-  for (int corner = 0; corner < 4; ++corner) {
-    Eigen::Vector3d u((corner & 1) ? -1.0 : 1.0, (corner & 2) ? -1.0 : 1.0,
-                      1.0);
-    boxDiagonal =
-      std::max(boxDiagonal, static_cast<float>((linear * u).norm()));
-  }
   Eigen::Matrix4f mv = camera.modelView().matrix();
   Eigen::Matrix4f proj = camera.projection().matrix();
 
@@ -542,6 +543,10 @@ void VolumeGeometry::render(const Camera& camera)
 
   // Get projection type (0 = perspective, 1 = orthographic)
   int projType = (camera.projectionType() == Projection::Orthographic) ? 1 : 0;
+
+  // The box passes change the cull mode; put the caller's back afterwards.
+  GLint savedCullMode = GL_BACK;
+  glGetIntegerv(GL_CULL_FACE_MODE, &savedCullMode);
 
   // 2) Render the BACK faces of bounding box (exit points):
   {
@@ -599,6 +604,7 @@ void VolumeGeometry::render(const Camera& camera)
 
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+    glCullFace(static_cast<GLenum>(savedCullMode));
   }
 
   // 4) Final pass: ray marching into the default framebuffer:

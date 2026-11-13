@@ -24,6 +24,7 @@ bool OpenDxReader::readFile(const QString& fileName)
   }
 
   delete m_cube;
+  m_cube = nullptr;
 
   Vector3i dim(0, 0, 0);
   Vector3 origin(0, 0, 0);

@@ -402,6 +402,22 @@ TEST(CubeTest, skewedValueReproducesLinearFunction)
 }
 
 // computeGradient() is +grad f (toward increasing values).
+TEST(CubeTest, closestIndexRoundTripsGridPoints)
+{
+  const Vector3i dim(5, 6, 7);
+  Cube skewed;
+  ASSERT_TRUE(
+    skewed.setStepLimits(Vector3(0.3, -0.2, 0.1), dim, skewedSteps()));
+  Cube aligned;
+  Matrix3 diag = Vector3(0.1, 0.3, 0.7).asDiagonal();
+  ASSERT_TRUE(aligned.setStepLimits(Vector3(-1.0, 2.0, 0.5), dim, diag));
+  for (const Cube* cube : { &skewed, &aligned }) {
+    const unsigned int count = static_cast<unsigned int>(dim.prod());
+    for (unsigned int i = 0; i < count; ++i)
+      EXPECT_EQ(cube->closestIndex(cube->position(i)), i);
+  }
+}
+
 TEST(CubeTest, skewedGradientOfLinearFunction)
 {
   Cube cube;
