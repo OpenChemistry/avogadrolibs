@@ -101,10 +101,31 @@ TEST_F(EditorTest, PeriodicTableDoesNotPublishSentinelsOrIntermediateElements)
   EXPECT_EQ(changes.count(), 0);
   auto* table = panel->findChild<Avogadro::QtGui::PeriodicTableView*>();
   ASSERT_NE(table, nullptr);
+  table->close();
+  EXPECT_EQ(elements->currentData().toInt(), 6);
+  EXPECT_EQ(changes.count(), 0);
   ASSERT_TRUE(
     QMetaObject::invokeMethod(table, "elementChanged", Q_ARG(int, 26)));
   EXPECT_EQ(panel->atomicNumber(), 26);
   EXPECT_EQ(editor.atomicNumber(), 26);
   EXPECT_EQ(changes.count(), 1);
   EXPECT_EQ(elements->findData(255), elements->count() - 1);
+}
+
+TEST_F(EditorTest, DrawOptionsPropertySupportsSymbolsAndAtomicUpdates)
+{
+  Editor editor;
+  QSignalSpy changes(&editor, &Editor::drawOptionsChanged);
+  ASSERT_GE(editor.metaObject()->indexOfProperty("drawOptions"), 0);
+  ASSERT_TRUE(editor.handleCommand(
+    "setDrawOptions", { { "element", "Fe" }, { "adjustBondLengths", false } }));
+  const auto options = editor.property("drawOptions").toMap();
+  EXPECT_EQ(options.value("atomicNumber").toInt(), 26);
+  EXPECT_FALSE(options.value("adjustBondLengths").toBool());
+  EXPECT_EQ(changes.count(), 1);
+  EXPECT_TRUE(editor.handleCommand("setDrawOptions", { { "element", 26 } }));
+  EXPECT_FALSE(editor.handleCommand(
+    "setDrawOptions", { { "element", "O" }, { "atomicNumber", 26 } }));
+  EXPECT_EQ(editor.property("drawOptions").toMap(), options);
+  EXPECT_EQ(changes.count(), 1);
 }

@@ -632,8 +632,7 @@ void Editor::atomLeftClick(QMouseEvent* e)
       }
 
       // If we found a valid bond, adjust the bond distance
-      if (bond.isValid() &&
-          m_adjustBondLengths) {
+      if (bond.isValid() && m_adjustBondLengths) {
         RWAtom atom2 = bond.getOtherAtom(atom);
 
         m_bondDistance = Core::AtomUtilities::idealBondLength(
@@ -696,8 +695,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
   }
 
   // can we move atom1?
-  if (adjustBondLength &&
-      m_adjustBondLengths) {
+  if (adjustBondLength && m_adjustBondLengths) {
     Vector3 bondVector = atom1.position3d() - atom2.position3d();
     bondVector.normalize();
     bondVector *= distance;
@@ -716,8 +714,7 @@ void Editor::bondLeftClick(QMouseEvent* e)
       }
       adjustBondLength = true;
     }
-    if (adjustBondLength &&
-        m_adjustBondLengths) {
+    if (adjustBondLength && m_adjustBondLengths) {
       Vector3 bondVector = atom2.position3d() - atom1.position3d();
       bondVector.normalize();
       bondVector *= distance;
