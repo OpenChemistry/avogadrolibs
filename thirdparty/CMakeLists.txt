@@ -72,6 +72,86 @@ else()
   unset(_PUGIXML_ROOT)
 endif(USE_EXTERNAL_PUGIXML)
 
+if(USE_EXTERNAL_GEMMI)
+  # gemmi's own install exports gemmi::gemmi_cpp.
+  find_package(gemmi CONFIG REQUIRED GLOBAL)
+else()
+  # A trimmed copy of gemmi: CIF, mmCIF, CCP4/MRC maps and MTZ. See
+  # gemmi/README.md for the file list and how to update it.
+  set(_GEMMI_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/gemmi)
+  add_library(gemmi STATIC
+    ${_GEMMI_ROOT}/src/gz.cpp
+    ${_GEMMI_ROOT}/src/mmcif.cpp
+    ${_GEMMI_ROOT}/src/mtz.cpp
+    ${_GEMMI_ROOT}/src/polyheur.cpp
+    ${_GEMMI_ROOT}/src/resinfo.cpp
+    ${_GEMMI_ROOT}/src/sprintf.cpp
+    ${_GEMMI_ROOT}/src/symmetry.cpp
+  )
+  set_target_properties(gemmi PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON)
+  target_include_directories(gemmi PUBLIC
+    $<BUILD_INTERFACE:${_GEMMI_ROOT}/include>)
+  target_compile_definitions(gemmi PRIVATE GEMMI_BUILD)
+  add_library(gemmi::gemmi_cpp ALIAS gemmi)
+  # Upstream code, kept unmodified: stb_sprintf.h trips -Wcast-align, so do
+  # not apply our warning flags to it.
+  if(NOT MSVC)
+    target_compile_options(gemmi PRIVATE -w)
+  endif()
+
+  # gz.cpp reads gzip (.mtz.gz) through zlib. Use the system zlib when there
+  # is one, otherwise gemmi's own unmodified copy of the inflate-only subset.
+  find_package(ZLIB QUIET)
+  if(ZLIB_FOUND)
+    message(STATUS "gemmi: using system zlib")
+    target_link_libraries(gemmi PRIVATE ${ZLIB_LIBRARIES})
+    # See the zlib include-directory comment in avogadro/io/CMakeLists.txt:
+    # add zlib's directory only when zlib.h is not already on the default
+    # search path (vcpkg, Conda, a custom prefix).
+    include(CheckIncludeFile)
+    check_include_file(zlib.h AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
+    if(NOT AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
+      target_include_directories(gemmi SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
+    endif()
+  else()
+    message(STATUS "gemmi: zlib not found, building the bundled copy")
+    set(_GEMMI_ZLIB ${_GEMMI_ROOT}/zlib)
+    target_sources(gemmi PRIVATE
+      ${_GEMMI_ZLIB}/adler32.c
+      ${_GEMMI_ZLIB}/crc32.c
+      ${_GEMMI_ZLIB}/gzlib.c
+      ${_GEMMI_ZLIB}/gzread.c
+      ${_GEMMI_ZLIB}/inffast.c
+      ${_GEMMI_ZLIB}/inflate.c
+      ${_GEMMI_ZLIB}/inftrees.c
+      ${_GEMMI_ZLIB}/zutil.c)
+    target_include_directories(gemmi PRIVATE ${_GEMMI_ZLIB})
+    # Same settings as gemmi's own CMakeLists.txt for this subset.
+    target_compile_definitions(gemmi PRIVATE
+      NO_GZCOMPRESS=1 DYNAMIC_CRC_TABLE=1)
+    include(CheckIncludeFile)
+    check_include_file(unistd.h AvogadroLibs_GEMMI_HAS_UNISTD_H)
+    if(AvogadroLibs_GEMMI_HAS_UNISTD_H)
+      target_compile_definitions(gemmi PRIVATE Z_HAVE_UNISTD_H=1)
+    endif()
+    if(MSVC)
+      # size_t to unsigned int conversions in zlib
+      target_compile_options(gemmi PRIVATE /wd4267)
+    endif()
+    unset(_GEMMI_ZLIB)
+  endif()
+
+  # See the pugixml block above.
+  if(NOT BUILD_SHARED_LIBS AND NOT SKBUILD)
+    install(TARGETS gemmi EXPORT "AvogadroLibsTargets"
+      ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
+  endif()
+  unset(_GEMMI_ROOT)
+endif(USE_EXTERNAL_GEMMI)
+
 if(USE_EXTERNAL_STRUCT)
   find_package(struct REQUIRED GLOBAL)
 else()
