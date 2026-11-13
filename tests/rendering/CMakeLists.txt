@@ -60,13 +60,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(AvogadroSolidPipelineTests PRIVATE Avogadro::Rendering
       OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
     add_test(NAME Rendering-SolidPipeline COMMAND AvogadroSolidPipelineTests)
-    # Avoid Mesa software rasterizer and disk cache worker threads in this test.
-    set_tests_properties(Rendering-SolidPipeline PROPERTIES
-      ENVIRONMENT "LP_NUM_THREADS=0;MESA_SHADER_CACHE_DISABLE=true")
 
     add_executable(AvogadroShaderLinkTests shaderlinktest.cpp)
     target_link_libraries(AvogadroShaderLinkTests PRIVATE Avogadro::Rendering
       OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
     add_test(NAME Rendering-ShaderLink COMMAND AvogadroShaderLinkTests)
+
+    # Avoid Mesa software rasterizer and disk cache worker threads in EGL tests.
+    set_tests_properties(Rendering-SolidPipeline Rendering-ShaderLink PROPERTIES
+      ENVIRONMENT "LP_NUM_THREADS=0;MESA_SHADER_CACHE_DISABLE=true")
   endif()
 endif()
