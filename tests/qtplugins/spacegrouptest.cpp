@@ -59,7 +59,7 @@ public:
     m_timer.start(10);
   }
 
-  ~DialogWatcher() { m_timer.stop(); }
+  virtual ~DialogWatcher() { m_timer.stop(); }
 
   bool dialogSeen() const { return m_seen; }
 

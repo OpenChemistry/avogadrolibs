@@ -6,14 +6,11 @@
 #ifndef AVOGADRO_QTPLUGINS_YAEHMOP_SPECIALKPOINTS_H
 #define AVOGADRO_QTPLUGINS_YAEHMOP_SPECIALKPOINTS_H
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 class Molecule;
 }
-} // namespace Avogadro
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 #include <QString>
 
@@ -49,7 +46,6 @@ private:
                                       unsigned short spgNum);
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif

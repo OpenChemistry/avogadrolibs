@@ -53,18 +53,11 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Line search technique:</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1">
        <widget class="QComboBox" name="algorithm">
         <item>
          <property name="text">
-          <string>Steepest Descent</string>
+          <string>L-BFGS</string>
          </property>
         </item>
         <item>
@@ -72,18 +65,9 @@
           <string>Conjugate Gradient</string>
          </property>
         </item>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="lineSearch">
         <item>
          <property name="text">
-          <string>Simple</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Newton's Method</string>
+          <string>Steepest Descent</string>
          </property>
         </item>
        </widget>
@@ -268,7 +252,6 @@
   <tabstop>forceField</tabstop>
   <tabstop>useRecommended</tabstop>
   <tabstop>algorithm</tabstop>
-  <tabstop>lineSearch</tabstop>
   <tabstop>energyConv</tabstop>
   <tabstop>stepLimit</tabstop>
   <tabstop>enableCutoffs</tabstop>

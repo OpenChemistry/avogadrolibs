@@ -47,10 +47,7 @@ extern "C"
   msym::_msym_symmetry_operation::MSYM_SYMMETRY_OPERATION_TYPE_IMPROPER_ROTATION
 #endif
 
-namespace Avogadro {
-namespace QtPlugins {
-
-namespace SymmetryUtil {
+namespace Avogadro::QtPlugins::SymmetryUtil {
 QString pointGroupSymbol(const char* point_group);
 /**
  * @brief The point group as plain text, for scripts rather than labels.
@@ -62,7 +59,6 @@ QString pointGroupSymbol(const char* point_group);
  */
 QString pointGroupPlainText(const char* point_group);
 QString operationSymbol(const msym::msym_symmetry_operation_t* operation);
-} // namespace SymmetryUtil
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins::SymmetryUtil
+
 #endif // AVOGADRO_QTPLUGINS_SYMMETRYUTIL_H

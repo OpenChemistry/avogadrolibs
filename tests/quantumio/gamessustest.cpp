@@ -209,3 +209,26 @@ TEST(GAMESSUSTest, eigenvectorsMatchBasisFunctionCount)
             "    4  C  1 Z     0.000036   0.400000   0.4\n"
             " ...... END OF RHF CALCULATION ......\n"));
 }
+
+// Later coordinate blocks update the atoms read from the first. A block with
+// more atoms than that ran off the end of the molecule (fuzz_gamess).
+TEST(GAMESSUSTest, laterAtomBlockWithMoreAtomsIsRefused)
+{
+  const std::string twoAtoms =
+    " ATOM      ATOMIC                      COORDINATES (BOHR)\n"
+    "           CHARGE         X                   Y                   Z\n"
+    " C           6.0     0.0000000000     0.0000000000     0.5000000000\n"
+    " H           1.0     1.1888606339     1.1888606339     1.1888606339\n"
+    "\n";
+
+  GAMESSUSOutput format;
+  Molecule molecule;
+  format.readString(kCoordinates + twoAtoms, molecule);
+  ASSERT_EQ(molecule.atomCount(), 1u);
+  EXPECT_EQ(molecule.atomicNumber(0), 6);
+  // The matching first row still updated the existing atom.
+  EXPECT_NEAR(molecule.atomPosition3d(0).z(),
+              0.5 * Avogadro::BOHR_TO_ANGSTROM_D, 1e-12);
+  EXPECT_NE(format.error().find("more atoms than the first"), std::string::npos)
+    << format.error();
+}

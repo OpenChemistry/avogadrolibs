@@ -9,8 +9,7 @@
 #include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class GroupNode;
 class Visitor;
@@ -33,7 +32,7 @@ public:
   /**
    * Accept a visit from our friendly visitor.
    */
-  virtual void accept(Visitor&) { return; }
+  virtual void accept(Visitor&) {}
 
   /**
    * @brief Get a pointer to the node's parent.
@@ -88,7 +87,7 @@ const T* Node::cast() const
   return dynamic_cast<const T*>(this);
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_NODE_H

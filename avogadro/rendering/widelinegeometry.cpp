@@ -78,13 +78,13 @@ void WideLineGeometry::update()
     d->fragmentShader.setType(Shader::Fragment);
     d->fragmentShader.setSource(wideline_fs);
     if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
+      cout << d->vertexShader.error() << '\n';
     if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << endl;
+      cout << d->fragmentShader.error() << '\n';
     d->program.attachShader(d->vertexShader);
     d->program.attachShader(d->fragmentShader);
     if (!d->program.link())
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
 
     d->program.detachShader(d->vertexShader);
     d->program.detachShader(d->fragmentShader);
@@ -103,43 +103,43 @@ void WideLineGeometry::update()
     d->ibo.bind();
 
     if (!d->program.enableAttributeArray("position"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray(
           "position", PackedVertex::positionOffset(), sizeof(PackedVertex),
           FloatType, 3, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
 
     if (!d->program.enableAttributeArray("otherEnd"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray(
           "otherEnd", PackedVertex::otherEndOffset(), sizeof(PackedVertex),
           FloatType, 3, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
 
     if (!d->program.enableAttributeArray("color"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
                                       sizeof(PackedVertex), UCharType, 4,
                                       ShaderProgram::Normalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
 
     if (!d->program.enableAttributeArray("widthSide"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray(
           "widthSide", PackedVertex::widthSideOffset(), sizeof(PackedVertex),
           FloatType, 1, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
 
     if (!d->program.enableAttributeArray("lineParam"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray(
           "lineParam", PackedVertex::lineParamOffset(), sizeof(PackedVertex),
           FloatType, 1, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
 
     d->vao.release();
@@ -157,16 +157,16 @@ void WideLineGeometry::render(const Camera& camera)
   update();
 
   if (!d->program.bind())
-    cout << d->program.error() << endl;
+    cout << d->program.error() << '\n';
 
   // Bind the VAO
   d->vao.bind();
 
   // Set up our uniforms
   if (!d->program.setUniformValue("modelView", camera.modelView().matrix()))
-    cout << d->program.error() << endl;
+    cout << d->program.error() << '\n';
   if (!d->program.setUniformValue("projection", camera.projection().matrix()))
-    cout << d->program.error() << endl;
+    cout << d->program.error() << '\n';
 
   // Render the quads
   glDrawRangeElements(GL_TRIANGLES, 0,

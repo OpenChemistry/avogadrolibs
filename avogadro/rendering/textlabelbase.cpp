@@ -6,6 +6,7 @@
 #include "textlabelbase.h"
 
 #include "avogadrogl.h"
+#include "blendstateguard_p.h"
 #include "bufferobject.h"
 #include "camera.h"
 #include "shader.h"
@@ -161,7 +162,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   if (textureInvalid) {
     std::cerr << "Unable to render text label -- no texture set. "
                  "This is a bug."
-              << std::endl;
+              << '\n';
     return;
   }
 
@@ -178,7 +179,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
 
   // Bind VAO (captures all vertex attribute state)
   if (!vao.bind()) {
-    std::cerr << "Error while binding TextLabelBase VAO" << std::endl;
+    std::cerr << "Error while binding TextLabelBase VAO" << '\n';
     return;
   }
 
@@ -190,7 +191,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
       !shaderProgram->setUniformValue("radius", radius) ||
       !shaderProgram->setTextureSampler("u_texture", texture)) {
     std::cerr << "Error setting up TextLabelBase shader program: "
-              << shaderProgram->error() << std::endl;
+              << shaderProgram->error() << '\n';
     vao.release();
     shaderProgram->release();
     return;
@@ -199,25 +200,15 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   // The texture holds premultiplied color (QPainter renders into
   // Format_ARGB32_Premultiplied), so blend with GL_ONE rather than
   // GL_SRC_ALPHA, which would multiply by alpha a second time. Save and
-  // restore the caller's blend state.
-  const GLboolean blendWasEnabled = glIsEnabled(GL_BLEND);
-  GLint srcRgb = GL_SRC_ALPHA, dstRgb = GL_ONE_MINUS_SRC_ALPHA;
-  GLint srcAlpha = GL_ONE, dstAlpha = GL_ONE;
-  glGetIntegerv(GL_BLEND_SRC_RGB, &srcRgb);
-  glGetIntegerv(GL_BLEND_DST_RGB, &dstRgb);
-  glGetIntegerv(GL_BLEND_SRC_ALPHA, &srcAlpha);
-  glGetIntegerv(GL_BLEND_DST_ALPHA, &dstAlpha);
+  // restore the caller's blend state. The alpha channel is "over" blended too,
+  // so a label over a transparent background keeps its partial alpha.
+  BlendStateGuard blendState;
   glEnable(GL_BLEND);
-  glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+  glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
 
   // Draw texture
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-  glBlendFuncSeparate(static_cast<GLenum>(srcRgb), static_cast<GLenum>(dstRgb),
-                      static_cast<GLenum>(srcAlpha),
-                      static_cast<GLenum>(dstAlpha));
-  if (!blendWasEnabled)
-    glDisable(GL_BLEND);
 
   // Release resources:
   vao.release();
@@ -235,7 +226,7 @@ void TextLabelBase::RenderImpl::compileShaders()
   vertexShader->setType(Shader::Vertex);
   vertexShader->setSource(textlabelbase_vs);
   if (!vertexShader->compile()) {
-    std::cerr << vertexShader->error() << std::endl;
+    std::cerr << vertexShader->error() << '\n';
     return;
   }
 
@@ -244,7 +235,7 @@ void TextLabelBase::RenderImpl::compileShaders()
   fragmentShader->setType(Shader::Fragment);
   fragmentShader->setSource(textlabelbase_fs);
   if (!fragmentShader->compile()) {
-    std::cerr << fragmentShader->error() << std::endl;
+    std::cerr << fragmentShader->error() << '\n';
     return;
   }
 
@@ -253,7 +244,7 @@ void TextLabelBase::RenderImpl::compileShaders()
   shaderProgram->attachShader(*vertexShader);
   shaderProgram->attachShader(*fragmentShader);
   if (!shaderProgram->link()) {
-    std::cerr << shaderProgram->error() << std::endl;
+    std::cerr << shaderProgram->error() << '\n';
     return;
   }
   /*  shaderProgram->detachShader(vertexShader);
@@ -268,7 +259,7 @@ void TextLabelBase::RenderImpl::compileShaders()
 void TextLabelBase::RenderImpl::uploadVbo()
 {
   if (!vbo.upload(vertices, BufferObject::ArrayBuffer)) {
-    std::cerr << "TextLabelBase VBO error: " << vbo.error() << std::endl;
+    std::cerr << "TextLabelBase VBO error: " << vbo.error() << '\n';
     return;
   }
 
@@ -285,7 +276,7 @@ void TextLabelBase::RenderImpl::uploadVbo()
         "texCoord", PackedVertex::tcoordOffset(), sizeof(PackedVertex),
         FloatType, 2, ShaderProgram::NoNormalize)) {
     std::cerr << "Error setting up TextLabelBase VAO: "
-              << shaderProgram->error() << std::endl;
+              << shaderProgram->error() << '\n';
   }
 
   vao.release();
@@ -341,7 +332,7 @@ void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
     bytesPerPixel);
 
   // Render the text to the buffer
-  if (m_imageRgba.size() > 0) {
+  if (!m_imageRgba.empty()) {
     tren.render(m_text, scaledProperties, m_imageRgba.data(),
                 m_imageDimensions);
   }

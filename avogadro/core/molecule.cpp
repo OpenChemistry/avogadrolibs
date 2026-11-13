@@ -5,7 +5,9 @@
 
 #include "molecule.h"
 
+#include "atomutilities.h"
 #include "basisset.h"
+#include "bondordersolver_p.h"
 #include "cube.h"
 #include "elements.h"
 #include "layermanager.h"
@@ -28,8 +30,7 @@
 namespace Avogadro::Core {
 
 Molecule::Molecule()
-  : m_basisSet(nullptr), m_unitCell(nullptr),
-    m_layerInfo(std::make_shared<MoleculeInfo>())
+  : m_unitCell(nullptr), m_layerInfo(std::make_shared<MoleculeInfo>())
 {
   m_elements.reset();
 }
@@ -51,31 +52,22 @@ Molecule::Molecule(const Molecule& other)
     m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
     m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
     m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
-    m_meshes(), m_cubes(),
-    m_basisSet(other.m_basisSet ? other.m_basisSet->clone() : nullptr),
-    m_unitCell(other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr),
+    m_basisSet(other.m_basisSet),
+    m_unitCell(other.m_unitCell ? std::make_unique<UnitCell>(*other.m_unitCell)
+                                : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
     m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
     m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::make_shared<MoleculeInfo>(other.ensureLayerInfo()))
 {
-  // Copy over any meshes
-  for (Index i = 0; i < other.meshCount(); ++i) {
-    Mesh* m = addMesh();
-    *m = *other.mesh(i);
-  }
-
-  // Copy over any cubes
-  for (Index i = 0; i < other.cubeCount(); ++i) {
-    Cube* c = addCube();
-    *c = *other.cube(i);
-  }
+  // Share the meshes and cubes; a mutable access detaches (see detachMesh)
+  m_meshes = other.m_meshes;
+  m_cubes = other.m_cubes;
   m_activeCubeIndex = other.m_activeCubeIndex;
 
-  // The clone copied the basis set's back-pointer to the original.
-  if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
-    m_basisSet->setMolecule(this);
+  // The basis set is shared too; its molecule() still names other, and the
+  // mutable basisSet() repoints it when this molecule first writes.
   repointResidueAtoms(other);
 
   // Make sure all the atoms are in the active layer
@@ -112,27 +104,18 @@ void Molecule::readProperties(const Molecule& other)
   m_residueProperties = other.m_residueProperties;
   m_conformerProperties = other.m_conformerProperties;
 
-  // copy orbital information, replacing (and freeing) any we already had
-  if (other.m_basisSet != nullptr) {
-    setBasisSet(other.m_basisSet->clone());
-    m_basisSet->setMolecule(this);
-  }
+  // share orbital information, replacing any we already had; the mutable
+  // basisSet() detaches and repoints it when this molecule first writes
+  if (other.m_basisSet != nullptr)
+    m_basisSet = other.m_basisSet;
 
   // copy over spectra information
   if (!other.m_vibrations.empty())
     m_vibrations = other.m_vibrations;
 
-  // Copy over any meshes
-  for (Index i = 0; i < other.meshCount(); ++i) {
-    Mesh* m = addMesh();
-    *m = *other.mesh(i);
-  }
-
-  // Copy over any cubes
-  for (Index i = 0; i < other.cubeCount(); ++i) {
-    Cube* c = addCube();
-    *c = *other.cube(i);
-  }
+  // Share the meshes and cubes; a mutable access detaches (see detachMesh)
+  m_meshes.insert(m_meshes.end(), other.m_meshes.begin(), other.m_meshes.end());
+  m_cubes.insert(m_cubes.end(), other.m_cubes.begin(), other.m_cubes.end());
 }
 
 Molecule::Molecule(Molecule&& other) noexcept
@@ -186,27 +169,18 @@ Molecule& Molecule::operator=(const Molecule& other)
 
     clearMeshes();
 
-    // Copy over any meshes
-    for (Index i = 0; i < other.meshCount(); ++i) {
-      Mesh* m = addMesh();
-      *m = *other.mesh(i);
-    }
+    // Share the meshes and cubes; a mutable access detaches
+    m_meshes = other.m_meshes;
 
     clearCubes();
-
-    // Copy over any cubes
-    for (Index i = 0; i < other.cubeCount(); ++i) {
-      Cube* c = addCube();
-      *c = *other.cube(i);
-    }
+    m_cubes = other.m_cubes;
     m_activeCubeIndex = other.m_activeCubeIndex;
 
-    delete m_basisSet;
-    m_basisSet = other.m_basisSet ? other.m_basisSet->clone() : nullptr;
-    if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
-      m_basisSet->setMolecule(this);
-    delete m_unitCell;
-    m_unitCell = other.m_unitCell ? new UnitCell(*other.m_unitCell) : nullptr;
+    // Shared; the mutable basisSet() detaches and repoints it
+    m_basisSet = other.m_basisSet;
+    m_unitCell = other.m_unitCell
+                   ? std::make_unique<UnitCell>(*other.m_unitCell)
+                   : nullptr;
 
     // Assign into the existing MoleculeInfo rather than replacing the handle,
     // so anything already sharing it (an undo command, say) sees the update.
@@ -222,7 +196,7 @@ void Molecule::copyDisplayStateFrom(const Molecule& other)
     return;
 
   // Go through a copy so the settings are cloned rather than shared.
-  const MoleculeInfo source(other.ensureLayerInfo());
+  const MoleculeInfo& source(other.ensureLayerInfo());
   MoleculeInfo& info = ensureLayerInfo();
   info.enable = source.enable;
   info.settings = source.settings;
@@ -249,10 +223,8 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
     // Free what this molecule owns; none of it goes to the source.
     clearMeshes();
     clearCubes();
-    delete m_basisSet;
-    m_basisSet = nullptr;
-    delete m_unitCell;
-    m_unitCell = nullptr;
+    m_basisSet.reset();
+    m_unitCell.reset();
 
     takeContentsFrom(other);
 
@@ -352,11 +324,12 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   other.m_cubes.clear();
   m_activeCubeIndex = std::exchange(other.m_activeCubeIndex, 0);
 
-  m_basisSet = std::exchange(other.m_basisSet, nullptr);
+  m_basisSet = std::move(other.m_basisSet);
+  other.m_basisSet.reset();
   // The basis set points back at its molecule, which is now this one.
   if (m_basisSet != nullptr && m_basisSet->molecule() == &other)
     m_basisSet->setMolecule(this);
-  m_unitCell = std::exchange(other.m_unitCell, nullptr);
+  m_unitCell = std::move(other.m_unitCell);
 
   takeArray(m_residues, other.m_residues);
   repointResidueAtoms(other);
@@ -378,8 +351,6 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
 Molecule::~Molecule()
 {
   // LayerManager::deleteMolecule(this);
-  delete m_basisSet;
-  delete m_unitCell;
   clearMeshes();
   clearCubes();
 }
@@ -401,6 +372,11 @@ void Molecule::setPartialCharges(const std::string& type, const MatrixX& value)
   m_partialCharges[type] = value;
 }
 
+void Molecule::removePartialCharges(const std::string& type)
+{
+  m_partialCharges.erase(type);
+}
+
 MatrixX Molecule::partialCharges(const std::string& type) const
 {
   auto search = m_partialCharges.find(type);
@@ -416,7 +392,7 @@ MatrixX Molecule::partialCharges(const std::string& type) const
 std::set<std::string> Molecule::partialChargeTypes() const
 {
   std::set<std::string> types;
-  for (auto& it : m_partialCharges)
+  for (const auto& it : m_partialCharges)
     types.insert(it.first);
   return types;
 }
@@ -464,7 +440,7 @@ const PropertyMap& Molecule::conformerProperties() const
 std::set<std::string> Molecule::spectraTypes() const
 {
   std::set<std::string> types;
-  for (auto& it : m_spectra)
+  for (const auto& it : m_spectra)
     types.insert(it.first);
   return types;
 }
@@ -821,6 +797,23 @@ void Molecule::setCustomElementMap(const Molecule::CustomElementMap& map)
   m_customElementMap = map;
 }
 
+namespace {
+
+// Make room for the atom about to become @p newAtom in every frame that has an
+// entry for each of the atoms before it. Frames of any other length are left
+// alone, the rule removeAtomEntryFrames() applies in the other direction, so
+// that adding and then removing an atom restores every frame exactly.
+template <typename T, typename Fill>
+void addAtomEntryFrames(Array<Array<T>>& frames, Index newAtom, Fill fill)
+{
+  for (auto& frame : frames) {
+    if (frame.size() == newAtom)
+      frame.push_back(fill(newAtom));
+  }
+}
+
+} // namespace
+
 Molecule::AtomType Molecule::addAtom(unsigned char number)
 {
   m_graph.addVertex();
@@ -831,11 +824,17 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   else
     m_elements.set(element_count - 1); // custom element
 
+  // The new atom's position, if addAtom(number, position) has just stored it.
+  addAtomEntryFrames(m_coordinates3d, atomCount() - 1, [this](Index i) {
+    return m_positions3d.size() == atomCount() ? m_positions3d[i]
+                                               : Vector3::Zero();
+  });
+
   ensureLayerInfo().layer.addAtomToActiveLayer(atomCount() - 1);
   // The calculated results are per-atom, so a new atom invalidates them just
   // as a removed atom does (see removeAtom()).
   clearCalculatedResults();
-  m_atomProperties.addEntry();
+  m_atomProperties.addEntry(atomCount());
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -1235,7 +1234,7 @@ void Molecule::swapAtom(Index a, Index b)
   // molecular orbital coefficients, which are indexed by basis function,
   // remain valid.
   if (m_basisSet != nullptr)
-    m_basisSet->swapAtomIndices(a, b);
+    basisSet()->swapAtomIndices(a, b);
 }
 
 bool Molecule::removeAtom(Index index)
@@ -1381,7 +1380,10 @@ void Molecule::clearAtoms()
 
 Molecule::AtomType Molecule::atom(Index index) const
 {
-  assert(index < atomCount());
+  // Not assert(): NDEBUG removes it, and callers such as the Python bindings
+  // can pass any index. Return an invalid proxy instead.
+  if (index >= atomCount())
+    return AtomType();
   return AtomType(const_cast<Molecule*>(this), index);
 }
 
@@ -1396,7 +1398,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
     m_bondOrders.push_back(order);
-    m_bondProperties.addEntry();
+    m_bondProperties.addEntry(bondCount());
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
     m_bondOrders[index] = order;
@@ -1490,7 +1492,10 @@ void Molecule::clearBonds()
 
 Molecule::BondType Molecule::bond(Index index) const
 {
-  assert(index < bondCount());
+  // See atom(): refuse an out-of-range index rather than build a proxy that
+  // reads past the end of the bond arrays.
+  if (index >= bondCount())
+    return BondType();
 
   return BondType(const_cast<Molecule*>(this), index);
 }
@@ -1527,23 +1532,23 @@ Array<Molecule::BondType> Molecule::bonds(const AtomType& a)
   return bonds(a.index());
 }
 
-Array<const Molecule::BondType*> Molecule::bonds(Index a) const
+Array<Molecule::BondType> Molecule::bonds(Index a) const
 {
-  Array<const BondType*> atomBonds;
+  Array<BondType> atomBonds;
   if (a < atomCount()) {
     const std::vector<Index>& edgeIndices = m_graph.edges(a);
     for (unsigned long index : edgeIndices) {
       if (m_graph.endpoints(index).first == a ||
           m_graph.endpoints(index).second == a) {
         // work around to consult bonds without breaking constantness
-        atomBonds.push_back(new BondType(const_cast<Molecule*>(this), index));
+        atomBonds.push_back(BondType(const_cast<Molecule*>(this), index));
       }
     }
   }
 
   std::sort(atomBonds.begin(), atomBonds.end(),
-            [](const BondType*& ba, const BondType*& bb) {
-              return ba->index() < bb->index();
+            [](const BondType& ba, const BondType& bb) {
+              return ba.index() < bb.index();
             });
   return atomBonds;
 }
@@ -1567,62 +1572,134 @@ Array<Molecule::BondType> Molecule::bonds(Index a)
 
 Mesh* Molecule::addMesh()
 {
-  m_meshes.push_back(new Mesh);
-  return m_meshes.back();
+  m_meshes.push_back(std::make_shared<Mesh>());
+  return m_meshes.back().get();
+}
+
+Mesh* Molecule::addMesh(std::unique_ptr<Mesh> mesh)
+{
+  if (!mesh)
+    return nullptr;
+  m_meshes.push_back(std::shared_ptr<Mesh>(std::move(mesh)));
+  return m_meshes.back().get();
+}
+
+bool Molecule::setMesh(Index index, std::unique_ptr<Mesh> mesh)
+{
+  if (!mesh || index >= static_cast<Index>(m_meshes.size()))
+    return false;
+  m_meshes[index] = std::shared_ptr<Mesh>(std::move(mesh));
+  return true;
+}
+
+Mesh* Molecule::detachMesh(Index index)
+{
+  if (index >= static_cast<Index>(m_meshes.size()))
+    return nullptr;
+  auto& slot = m_meshes[index];
+  if (slot.use_count() > 1)
+    slot = std::make_shared<Mesh>(*slot);
+  return slot.get();
+}
+
+Cube* Molecule::detachCube(Index index)
+{
+  if (index >= static_cast<Index>(m_cubes.size()))
+    return nullptr;
+  auto& slot = m_cubes[index];
+  if (slot.use_count() > 1)
+    slot = std::make_shared<Cube>(*slot);
+  return slot.get();
 }
 
 Mesh* Molecule::mesh(Index index)
 {
-  if (index < static_cast<Index>(m_meshes.size()))
-    return m_meshes[index];
-  else
-    return nullptr;
+  return detachMesh(index);
 }
 
 const Mesh* Molecule::mesh(Index index) const
 {
   if (index < static_cast<Index>(m_meshes.size()))
-    return m_meshes[index];
+    return m_meshes[index].get();
   else
     return nullptr;
+}
+
+std::shared_ptr<const Mesh> Molecule::sharedMesh(Index index) const
+{
+  if (index < static_cast<Index>(m_meshes.size()))
+    return m_meshes[index];
+  return nullptr;
 }
 
 void Molecule::clearMeshes()
 {
-  while (!m_meshes.empty()) {
-    delete m_meshes.back();
-    m_meshes.pop_back();
-  }
+  m_meshes.clear();
 }
 
 Cube* Molecule::addCube()
 {
-  m_cubes.push_back(new Cube);
-  return m_cubes.back();
+  m_cubes.push_back(std::make_shared<Cube>());
+  return m_cubes.back().get();
+}
+
+Cube* Molecule::addCube(std::unique_ptr<Cube> cube)
+{
+  if (!cube)
+    return nullptr;
+  m_cubes.push_back(std::shared_ptr<Cube>(std::move(cube)));
+  return m_cubes.back().get();
+}
+
+bool Molecule::setCube(Index index, std::unique_ptr<Cube> cube)
+{
+  if (!cube || index >= static_cast<Index>(m_cubes.size()))
+    return false;
+  m_cubes[index] = std::shared_ptr<Cube>(std::move(cube));
+  return true;
+}
+
+std::vector<Cube*> Molecule::cubes()
+{
+  std::vector<Cube*> result;
+  result.reserve(m_cubes.size());
+  for (Index i = 0; i < static_cast<Index>(m_cubes.size()); ++i)
+    result.push_back(detachCube(i));
+  return result;
+}
+
+std::vector<const Cube*> Molecule::cubes() const
+{
+  std::vector<const Cube*> result;
+  result.reserve(m_cubes.size());
+  for (const auto& c : m_cubes)
+    result.push_back(c.get());
+  return result;
 }
 
 Cube* Molecule::cube(Index index)
 {
-  if (index < static_cast<Index>(m_cubes.size()))
-    return m_cubes[index];
-  else
-    return nullptr;
+  return detachCube(index);
 }
 
 const Cube* Molecule::cube(Index index) const
 {
   if (index < static_cast<Index>(m_cubes.size()))
-    return m_cubes[index];
+    return m_cubes[index].get();
   else
     return nullptr;
 }
 
+std::shared_ptr<const Cube> Molecule::sharedCube(Index index) const
+{
+  if (index < static_cast<Index>(m_cubes.size()))
+    return m_cubes[index];
+  return nullptr;
+}
+
 void Molecule::clearCubes()
 {
-  while (!m_cubes.empty()) {
-    delete m_cubes.back();
-    m_cubes.pop_back();
-  }
+  m_cubes.clear();
   m_activeCubeIndex = 0;
 }
 
@@ -1638,18 +1715,18 @@ bool Molecule::setActiveCubeIndex(Index index)
 Cube* Molecule::activeCube()
 {
   if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
-    return m_cubes[m_activeCubeIndex];
+    return detachCube(m_activeCubeIndex);
   else if (!m_cubes.empty())
-    return m_cubes[0];
+    return detachCube(0);
   return nullptr;
 }
 
 const Cube* Molecule::activeCube() const
 {
   if (m_activeCubeIndex < static_cast<Index>(m_cubes.size()))
-    return m_cubes[m_activeCubeIndex];
+    return m_cubes[m_activeCubeIndex].get();
   else if (!m_cubes.empty())
-    return m_cubes[0];
+    return m_cubes[0].get();
   return nullptr;
 }
 
@@ -1707,18 +1784,32 @@ std::string Molecule::formula(const std::string& delimiter, int over) const
 
 void Molecule::setBasisSet(BasisSet* basis)
 {
-  if (basis == m_basisSet)
+  if (basis == m_basisSet.get())
     return;
-  delete m_basisSet;
-  m_basisSet = basis;
+  m_basisSet.reset(basis);
+}
+
+BasisSet* Molecule::basisSet()
+{
+  if (m_basisSet == nullptr)
+    return nullptr;
+  if (m_basisSet.use_count() > 1)
+    m_basisSet.reset(m_basisSet->clone());
+  // Even a sole owner may still point back at the molecule it was copied,
+  // assigned or moved from, which may be gone by now.
+  m_basisSet->setMolecule(this);
+  return m_basisSet.get();
+}
+
+std::shared_ptr<const BasisSet> Molecule::sharedBasisSet() const
+{
+  return m_basisSet;
 }
 
 void Molecule::setUnitCell(UnitCell* uc)
 {
-  if (uc != m_unitCell) {
-    delete m_unitCell;
-    m_unitCell = uc;
-  }
+  if (uc != m_unitCell.get())
+    m_unitCell.reset(uc);
 }
 
 double Molecule::mass() const
@@ -1953,147 +2044,304 @@ void Molecule::clearVibrations()
   m_vibrations.clear();
 }
 
-void Molecule::perceiveBondOrders()
+namespace {
+
+/** The ceiling on any bond order that perception will assign. */
+constexpr unsigned char MaxPerceivedOrder = 3;
+
+bool isHalogen(unsigned char atomicNumber)
 {
-  // check for coordinates and that there are some bonds
-  if (m_positions3d.size() != atomCount() || m_positions3d.size() < 2 ||
-      m_graph.edgeCount() == 0)
-    return;
+  return atomicNumber == 9 || atomicNumber == 17 || atomicNumber == 35 ||
+         atomicNumber == 53 || atomicNumber == 85;
+}
 
-  // save the existing bonds and bond orders
-  // first calculate the unsaturated valence for every atom
-  Array<unsigned char> originalBonds = m_bondOrders;
-  Array<unsigned char> unsaturatedValence(atomCount(), 0);
-  bool anyUnsaturated = false;
-  for (Index i = 0; i < atomCount(); ++i) {
-    unsigned char boSum = 0;
-    for (auto bond : bonds(i)) {
-      boSum += bond.order();
+/**
+ * The highest bond order perception may give a bond between two elements.
+ *
+ * TODO(review): chemistry. Hydrogen and the halogens are held to single
+ * bonds. That forbids real but rare cases (the higher-valent halogen oxides,
+ * for instance, which are written with double bonds in some conventions) and
+ * is what stops a heavy-atom-only structure from being handed a bond order
+ * of 4 by pushing all of its missing valence onto one bond.
+ */
+unsigned char maxBondOrder(unsigned char atomicNumber1,
+                           unsigned char atomicNumber2)
+{
+  if (atomicNumber1 == 1 || atomicNumber2 == 1 || isHalogen(atomicNumber1) ||
+      isHalogen(atomicNumber2))
+    return 1;
+  return MaxPerceivedOrder;
+}
+
+struct GeometricPreference
+{
+  unsigned char preferred; //!< Extra order to try first (order - 1).
+  double score;            //!< cost(1) - cost(2): how double the bond looks.
+};
+
+/**
+ * cost(k) is how far the measured length @a distance is from the ideal
+ * length of an order-k bond between the two elements, for k = 1 to
+ * capacity + 1. The order with the lowest cost (the lowest k of equals) is
+ * the one tried first. The bonds whose cost falls most on going from single
+ * to double are branched on first (score = cost(1) - cost(2)).
+ *
+ * Ideal lengths come from AtomUtilities::idealBondLength()
+ * Nothing here is about periodic images, so a bond across a cell
+ * boundary is measured the long way round. The first valid assignment
+ * found is kept; no attempt is made to find the one with the lowest
+ * total cost. (TODO)
+ */
+GeometricPreference geometricPreference(Real distance,
+                                        unsigned char atomicNumber1,
+                                        unsigned char atomicNumber2,
+                                        unsigned char capacity)
+{
+  unsigned char bestOrder = 1;
+  Real bestCost = 0.0;
+  Real costSingle = 0.0;
+  Real costDouble = 0.0;
+  for (unsigned char order = 1; order <= capacity + 1; ++order) {
+    const Real cost =
+      std::abs(distance - AtomUtilities::idealBondLength(atomicNumber1,
+                                                         atomicNumber2, order));
+    if (order == 1)
+      costSingle = cost;
+    if (order == 2)
+      costDouble = cost;
+    if (order == 1 || cost < bestCost) {
+      bestOrder = order;
+      bestCost = cost;
     }
-    const unsigned int target =
-      atomValence(atomicNumber(i), formalCharge(i), bonds(i).size());
+  }
+  return { static_cast<unsigned char>(bestOrder - 1), costSingle - costDouble };
+}
 
-    // check to see if the atom needs valence
-    //  if boSum is too large, then the atom already has too many bonds
-    //  so return zero instead of an underflow
-    unsaturatedValence[i] =
-      target > boSum ? static_cast<unsigned char>(target - boSum) : 0;
+/**
+ * Neighbors of a two-coordinate atom that make a smaller angle than this are
+ * bent (sp2 or sp3), and cannot be linear (sp) as two double bonds require.
+ */
+constexpr Real MaxBentAngleDegrees = 150.0;
 
-    if (unsaturatedValence[i] > 0)
-      anyUnsaturated = true;
+/** Worded like kekulizeFailureMessage(). */
+std::string bondOrderFailureMessage(Index culprit, std::size_t failedAtoms,
+                                    bool oddUnsaturation)
+{
+  if (oddUnsaturation) {
+    return "Could not perceive bond orders: an odd number of unpaired "
+           "valences remains in a connected group of atoms, so no "
+           "arrangement of bonds can satisfy it (a radical or charged site "
+           "is likely), leaving " +
+           std::to_string(failedAtoms) +
+           (failedAtoms == 1 ? " atom" : " atoms") + " unsatisfied.";
+  }
+  std::string message =
+    "Could not perceive bond orders: no valid arrangement of multiple bonds "
+    "exists";
+  // MaxIndex means the search ran out of steps rather than hitting one atom.
+  if (culprit != MaxIndex)
+    message += " that satisfies atom " + std::to_string(culprit);
+  else
+    message += " that the search could find within its step limit";
+  message += ", leaving " + std::to_string(failedAtoms) +
+             (failedAtoms == 1 ? " atom" : " atoms") + " unsatisfied.";
+  return message;
+}
+
+} // namespace
+
+BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
+{
+  BondOrderResult result;
+  const Index atoms = atomCount();
+  const Index bondTotal = bondCount();
+  if (atoms < 2 || bondTotal == 0)
+    return result;
+
+  const bool haveGeometry =
+    options.useGeometry && m_positions3d.size() == atoms;
+
+  // Step 1: the unsaturation of every atom. The order sum handed to
+  // atomValence() is a sum of bond orders and not a bond count, as in
+  // kekulize(): it is what selects among the valences an element has (the
+  // 3 or 5 of nitrogen, the 2, 4 or 6 of sulfur).
+  //
+  // For now: Metals are skipped (unsaturation 0, never a
+  // candidate), and a bond to a metal is left out of the order sum of the
+  // atom on the other end, so that a ligand is judged as if it were free: the
+  // nitrogen of pyridine bound to Zn has a sum of 2 and a target of 3, and
+  // comes out aromatic, while the N-Zn bond stays single. Dative bonds and
+  // metal-ligand multiple bonds (carbonyls, carbenes) are therefore never
+  // perceived. (TODO)
+  //
+  // An atom whose bonds all go to metals (chloride on PtCl4,
+  // or the terminal ligand atoms of a simple complex) has no
+  // non-metal bond to take valence from. It gets unsaturation 0 and is never
+  // a failure. An atom with both kinds of bond is still held to its full
+  // valence from its non-metal bonds. An atom with no bonds at all is not
+  // covered by this rule, and fails if its element wants any valence.
+  std::vector<char> metal(atoms, 0);
+  for (Index atom = 0; atom < atoms; ++atom)
+    metal[atom] = Elements::isMetal(m_atomicNumbers[atom]) ? 1 : 0;
+
+  std::vector<unsigned int> orderSum(atoms, 0);
+  std::vector<char> hasMetalBond(atoms, 0);
+  std::vector<char> hasNonMetalBond(atoms, 0);
+  for (Index bond = 0; bond < bondTotal; ++bond) {
+    const Index a = m_graph.endpoints(bond).first;
+    const Index b = m_graph.endpoints(bond).second;
+    if (metal[a] || metal[b]) {
+      hasMetalBond[a] = 1;
+      hasMetalBond[b] = 1;
+      continue;
+    }
+    hasNonMetalBond[a] = 1;
+    hasNonMetalBond[b] = 1;
+    orderSum[a] += m_bondOrders[bond];
+    orderSum[b] += m_bondOrders[bond];
   }
 
-  Index startIndex = 0;
-  Index initialAtom = 0;
-  while (anyUnsaturated) {
+  BondOrderProblem problem;
+  problem.demand.assign(atoms, 0);
+  // Check to see if we have a demand for increased bond orders
+  bool anyDemand = false;
+  for (Index atom = 0; atom < atoms; ++atom) {
+    // skip metals
+    if (metal[atom])
+      continue;
+    if (hasMetalBond[atom] && !hasNonMetalBond[atom])
+      continue; // Bonded only to metals: satisfied.
 
-    // okay, we're first going to try placing *one* bond from our start atom
-    // .. then we can try placing bonds anywhere
+    const unsigned int target =
+      atomValence(m_atomicNumbers[atom], formalCharge(atom), orderSum[atom]);
+    // An overbonded atom has no room left: zero
+    const unsigned int unsaturation =
+      target > orderSum[atom] ? target - orderSum[atom] : 0;
 
-    // find the first atom with unsaturated valence of ONE
-    bool foundStart = false;
-    for (Index i = startIndex; i < atomCount(); ++i) {
-      if (unsaturatedValence[i] == 1) {
-        startIndex = i;
-        foundStart = true;
-        break;
-      }
-    }
+    // If we have unsaturation, there's a demand (i.e., this atom needs more
+    // bonds)
+    unsigned int demand =
+      std::min(unsaturation, static_cast<unsigned int>(MaxPerceivedOrder));
 
-    // if we didn't find an atom with unsaturated valence of ONE,
-    // .. then find *something*
-    if (!foundStart) {
-      for (Index i = startIndex; i < atomCount(); ++i) {
-        if (unsaturatedValence[i] > 0) {
-          startIndex = i;
-          foundStart = true;
-          break;
+    // Hybridization from geometry. A period-2 atom with exactly two
+    // neighbors and a demand of two or more could be sp (two pi bonds,
+    // cumulene-like, linear) or sp2 (one pi bond and a lone pair or radical,
+    // bent). Connectivity cannot tell them apart, and without this a bare
+    // C6 ring (no hydrogens) is handed six double bonds, an all-cumulene
+    // ring. A bent atom has at most one pi bond, so its demand is capped at
+    // one; only a near-linear atom keeps its full demand. This is not applied
+    // beyond period 2, where S in SO2 is bent with two double bonds, and it
+    // needs coordinates, so it only applies when the geometry is in use.
+    //
+    // The exception is a bent atom with a bond that measures closer to a
+    // triple bond than to a double one (an aryne such as o-benzyne, or a
+    // reconstructed armchair edge): the length shows it is not a radical, so
+    // it keeps its full demand.
+    if (haveGeometry && demand >= 2) {
+      const unsigned char z = m_atomicNumbers[atom];
+      if (z >= 3 && z <= 10 && m_graph.degree(atom) == 2) {
+        const std::vector<size_t> neighbors = m_graph.neighbors(atom);
+        bool looksTriple = false;
+        for (size_t neighbor : neighbors) {
+          const unsigned char zn = m_atomicNumbers[neighbor];
+          if (Elements::isMetal(zn))
+            continue;
+          const Real length =
+            (m_positions3d[neighbor] - m_positions3d[atom]).norm();
+          const Real toDouble =
+            std::abs(length - AtomUtilities::idealBondLength(z, zn, 2));
+          const Real toTriple =
+            std::abs(length - AtomUtilities::idealBondLength(z, zn, 3));
+          looksTriple = looksTriple || toTriple < toDouble;
+        }
+        const Vector3 u = m_positions3d[neighbors[0]] - m_positions3d[atom];
+        const Vector3 w = m_positions3d[neighbors[1]] - m_positions3d[atom];
+        const Real lengths = u.norm() * w.norm();
+        if (!looksTriple && lengths > 0.0) {
+          const Real cosine = u.dot(w) / lengths;
+          if (cosine > std::cos(MaxBentAngleDegrees * DEG_TO_RAD))
+            demand = 1;
         }
       }
     }
+    problem.demand[atom] = static_cast<unsigned char>(demand);
+    anyDemand = anyDemand || problem.demand[atom] != 0;
+  }
 
-    if (foundStart) {
-      // std::cerr << "Found start index " << startIndex << std::endl;
+  // Step 2: the candidate bonds. Only single bonds between two unsaturated
+  // non-metal atoms can be raised; existing multiple bonds are fixed.
+  std::vector<Index> bondOfEdge;
+  for (Index bond = 0; bond < bondTotal; ++bond) {
+    if (m_bondOrders[bond] != 1)
+      continue;
+    const Index a = m_graph.endpoints(bond).first;
+    const Index b = m_graph.endpoints(bond).second;
+    if (problem.demand[a] == 0 || problem.demand[b] == 0)
+      continue;
+    const unsigned char ceiling =
+      maxBondOrder(m_atomicNumbers[a], m_atomicNumbers[b]);
+    const unsigned char capacity = static_cast<unsigned char>(
+      std::min<unsigned int>({ static_cast<unsigned int>(ceiling - 1),
+                               problem.demand[a], problem.demand[b] }));
+    if (capacity == 0)
+      continue;
 
-      // look at the neighbors of our start atom
-      Index bestIndex = MaxIndex;
-      unsigned bestValence = 256; // something impossible
-      Real bestDistance = 100.0;  // 10 Angstroms squared
-      Vector3 startPosition = m_positions3d[startIndex];
-      // iterate through the Indexes of the neighbors
-      for (auto neighbor : graph().neighbors(startIndex)) {
-        // if this neighbor doesn't have an unsaturated valence, skip it
-        if (unsaturatedValence[neighbor] == 0) {
-          continue;
-        }
+    BondOrderProblem::Edge edge;
+    edge.a = a;
+    edge.b = b;
+    edge.capacity = capacity;
 
-        if (unsaturatedValence[neighbor] < bestValence) {
-          bestIndex = neighbor;
-          bestValence = unsaturatedValence[neighbor];
-          bestDistance =
-            (m_positions3d[neighbor] - startPosition).squaredNorm();
-        } else if (unsaturatedValence[neighbor] == bestValence) {
-          // check if this neighbor is closer
-          Real distance =
-            (m_positions3d[neighbor] - startPosition).squaredNorm();
-          if (distance < bestDistance) {
-            bestIndex = neighbor;
-            bestDistance = distance;
-          }
-        }
-      }
-      // if we found a neighbor, then we can assign a bond order and update
-      // charges
-      if (bestIndex != MaxIndex) {
-        /*std::cerr << "Assigning bond " << startIndex << " " << bestIndex
-                  << std::endl; */
-
-        // assign the bond order
-        m_bondOrders[bond(startIndex, bestIndex).index()] += 1;
-        // update the unsaturated valence of the start atom
-        unsaturatedValence[startIndex] -= 1;
-        // update the unsaturated valence of the neighbor atom
-        unsaturatedValence[bestIndex] -= 1;
-
-        startIndex = 0; // we can now try placing bonds anywhere
-      } else {
-        startIndex += 1;
-      }
+    // Geometry only orders the search; see geometricPreference().
+    if (haveGeometry) {
+      const GeometricPreference preference =
+        geometricPreference((m_positions3d[a] - m_positions3d[b]).norm(),
+                            m_atomicNumbers[a], m_atomicNumbers[b], capacity);
+      edge.preferred = preference.preferred;
+      edge.score = preference.score;
+    } else {
+      edge.preferred = capacity; // Highest order first, in edge order.
     }
+    problem.edges.push_back(edge);
+    bondOfEdge.push_back(bond);
+  }
 
-    // TODO: update the current formal charges
+  // Nothing to raise and nothing wanted: a saturated molecule, say. Skip the
+  // solver and its allocations altogether.
+  if (problem.edges.empty() && !anyDemand)
+    return result;
 
-    anyUnsaturated = false; // check if we're done
-    for (Index i = 0; i < atomCount(); ++i) {
-      if (unsaturatedValence[i] > 0) {
-        anyUnsaturated = true;
-        break;
-      }
+  // Step 3: solve each connected component of candidates on its own.
+  const BondOrderSolution solution =
+    solveBondOrders(problem, options.stepBudgetPerComponent, true);
+
+  // Step 4: commit what was found. A component that failed still gets the
+  // best-effort partial assignment (see solveBondOrders()), and the atoms it
+  // could not satisfy are reported.
+  for (std::size_t edge = 0; edge < bondOfEdge.size(); ++edge) {
+    if (solution.extra[edge] > 0) {
+      m_bondOrders[bondOfEdge[edge]] = static_cast<unsigned char>(
+        m_bondOrders[bondOfEdge[edge]] + solution.extra[edge]);
     }
+  }
 
-    if (!foundStart && anyUnsaturated) {
-      // we've gone through and it's not working
-      // try a new starting atom and reset the bond orders
-      // std::cerr << " didn't work " << initialAtom << std::endl;
+  if (solution.success())
+    return result;
 
-      initialAtom += 1;
-      startIndex = initialAtom;
-      for (Index i = 0; i < m_bondOrders.size(); ++i) {
-        unsigned change = m_bondOrders[i] - originalBonds[i];
-        if (change > 0) {
-          // update the valences
-          unsaturatedValence[bond(i).atom1().index()] += change;
-          unsaturatedValence[bond(i).atom2().index()] += change;
-        }
-        m_bondOrders[i] = originalBonds[i];
-      }
-    }
+  result.success = false;
+  for (const ComponentFailure& failure : solution.failures) {
+    result.failedAtoms.insert(result.failedAtoms.end(),
+                              failure.vertices.begin(), failure.vertices.end());
+  }
+  std::sort(result.failedAtoms.begin(), result.failedAtoms.end());
+  result.message = bondOrderFailureMessage(
+    solution.failures.front().culprit, result.failedAtoms.size(),
+    solution.failures.front().reason == BondOrderFailure::OddUnsaturation);
+  return result;
+}
 
-    if (initialAtom >= atomCount()) {
-      break;
-    }
-
-  } // keep going until we've assigned all the bond orders
+void Molecule::perceiveBondOrders()
+{
+  perceiveBondOrders(BondOrderOptions());
 }
 
 void Molecule::perceiveBondsSimple(const double tolerance, const double min)
@@ -2331,6 +2579,15 @@ void Molecule::estimateVelocities(const std::vector<double>& intervals)
 
 void Molecule::updateVelocityProperties()
 {
+  // No velocities means no properties, rather than empty lists that a file
+  // writer would have to know to skip.
+  if (m_velocities.empty()) {
+    m_data.remove("velocities");
+    m_data.remove("velocityDeviations");
+    m_data.remove("temperatures");
+    return;
+  }
+
   std::vector<double> speeds(m_velocities.size(), 0.0);
   std::vector<double> deviations(m_velocities.size(), 0.0);
   std::vector<double> temperatures(m_velocities.size(), 0.0);

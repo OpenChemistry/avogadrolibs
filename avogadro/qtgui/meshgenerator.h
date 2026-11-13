@@ -13,6 +13,8 @@
 
 #include <QtCore/QThread>
 
+#include <atomic>
+
 namespace Avogadro {
 
 namespace Core {
@@ -68,6 +70,13 @@ public:
   /**
    * Initialization function, set up the MeshGenerator ready to find an
    * isosurface of the supplied Cube.
+   *
+   * The generator keeps both pointers and uses them on its own thread until
+   * run() returns, so the caller must keep @p cube and @p mesh alive, and
+   * leave them unmodified, for the whole job. Hold a molecule's cube through
+   * Molecule::sharedCube() rather than a raw pointer, and generate into a
+   * Mesh the caller owns, handing it to the molecule (Molecule::addMesh() or
+   * setMesh() with a std::unique_ptr) once finished() has been emitted.
    * @param cube The source Cube with the volumetric data.
    * @param mesh The Mesh that will hold the isosurface.
    * @param iso The iso value of the surface.
@@ -81,6 +90,14 @@ public:
    * and so avoids locking the user interface while the isosurface is found.
    */
   void run() override;
+
+  /**
+   * @return true once run() has returned. This is an acquire on a flag that
+   * run() releases last, so a caller that sees true also sees every write
+   * run() made (the mesh and this generator's buffers). Unlike
+   * QThread::isFinished(), thread sanitizers can check that ordering.
+   */
+  bool isDone() const noexcept;
 
   /**
    * It holds the range and starting offsets of isosurface-intersected
@@ -255,6 +272,9 @@ protected:
   Core::Array<Vector3f> m_triangles; // triangles of a mesh
   int m_progmin;
   int m_progmax;
+
+  /** Set (release) as the last action of run(); see isDone(). */
+  std::atomic<bool> m_done{ false };
 
   /**
    * These are the lookup tables for flying edges.

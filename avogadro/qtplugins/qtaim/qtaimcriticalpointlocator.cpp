@@ -431,7 +431,7 @@ void QTAIMCriticalPointLocator::locateNuclearCriticalPoints()
 void QTAIMCriticalPointLocator::locateBondCriticalPoints()
 {
 
-  if (m_nuclearCriticalPoints.length() < 1) {
+  if (m_nuclearCriticalPoints.empty()) {
     return;
   }
 

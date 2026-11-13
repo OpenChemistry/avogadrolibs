@@ -12,8 +12,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Index templateAttachmentDummy(const Core::Molecule& templateMolecule)
 {
@@ -54,8 +53,8 @@ std::vector<Index> templateAttachmentPoints(
   if (dummyIndex == MaxIndex || dummyIndex >= templateMolecule.atomCount())
     return attachmentPoints;
 
-  for (const Core::Bond* bond : templateMolecule.bonds(dummyIndex))
-    attachmentPoints.push_back(bond->getOtherAtom(dummyIndex).index());
+  for (const Core::Bond& bond : templateMolecule.bonds(dummyIndex))
+    attachmentPoints.push_back(bond.getOtherAtom(dummyIndex).index());
 
   return attachmentPoints;
 }
@@ -79,5 +78,4 @@ int templateDenticity(const QString& fileName)
       .size());
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

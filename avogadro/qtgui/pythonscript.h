@@ -18,8 +18,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @brief The PythonScript class implements a interface for calling short-lived
@@ -297,7 +296,6 @@ private:
   QString processErrorString(const QProcess& proc) const;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_PYTHONSCRIPT_H

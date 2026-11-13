@@ -43,7 +43,7 @@ const std::map<char, std::string> threeLetterCodes = {
 class InsertPeptideDialog : public QDialog, public Ui::InsertPeptideDialog
 {
 public:
-  InsertPeptideDialog(QWidget* parent = 0) : QDialog(parent)
+  InsertPeptideDialog(QWidget* parent = nullptr) : QDialog(parent)
   {
     setWindowFlags(Qt::Dialog | Qt::Tool);
     setupUi(this);
@@ -227,8 +227,8 @@ AminoAcid InsertPeptide::readAminoAcid(const QString& threeLetterCode)
     if (parts.size() < 8)
       continue;
 
-    QString element = parts[0];
-    QString atomName = parts[1];
+    const QString& element = parts[0];
+    const QString& atomName = parts[1];
     double distance = parts[2].toDouble();
     double angle = parts[3].toDouble();
     double dihedral = parts[4].toDouble();
@@ -358,7 +358,7 @@ void InsertPeptide::performInsert()
   Index currentO = MaxIndex;
 
   for (int i = 0; i < sequenceList.size(); i++) {
-    QString aaString = sequenceList[i];
+    const QString& aaString = sequenceList[i];
     std::string aaStdString = aaString.toUpper().toStdString();
 
     // Read amino acid if not already cached
@@ -519,6 +519,19 @@ void InsertPeptide::performInsert()
     previousCA = currentCA;
     previousC = currentC;
     previousO = currentO;
+  }
+
+  // A nitrogen with four bonds (counting bond orders) is an ammonium or
+  // iminium, e.g. Lys NZ, Arg NH2, His ND1. The residue dictionary supplies
+  // the double bonds, so infer the +1 charge here rather than from data.
+  for (Index i = 0; i < newMol.atomCount(); ++i) {
+    if (newMol.atomicNumber(i) != 7 || newMol.formalCharge(i) != 0)
+      continue;
+    unsigned int bondOrderSum = 0;
+    for (const auto& bond : newMol.bonds(i))
+      bondOrderSum += bond.order();
+    if (bondOrderSum == 4)
+      newMol.setFormalCharge(i, 1);
   }
 
   // Convert internal coordinates to Cartesian

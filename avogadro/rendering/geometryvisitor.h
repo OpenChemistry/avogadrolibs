@@ -6,14 +6,14 @@
 #ifndef AVOGADRO_RENDERING_GEOMETRYVISITOR_H
 #define AVOGADRO_RENDERING_GEOMETRYVISITOR_H
 
+#include "avogadrorenderingexport.h"
 #include "visitor.h"
 
 #include <avogadro/core/vector.h>
 
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class GeometryVisitor geometryvisitor.h
@@ -25,7 +25,7 @@ namespace Rendering {
  * notably the center and radius of the bounding sphere.
  */
 
-class GeometryVisitor : public Visitor
+class AVOGADRORENDERING_EXPORT GeometryVisitor : public Visitor
 {
 public:
   GeometryVisitor();
@@ -34,16 +34,16 @@ public:
   /**
    * The overloaded visit functions, the base versions of which do nothing.
    */
-  void visit(Node&) override { return; }
-  void visit(GroupNode&) override { return; }
-  void visit(GeometryNode&) override { return; }
+  void visit(Node&) override {}
+  void visit(GroupNode&) override {}
+  void visit(GeometryNode&) override {}
   void visit(Drawable&) override;
   void visit(SphereGeometry&) override;
   void visit(CurveGeometry&) override;
-  void visit(CylinderGeometry&) override { return; }
-  void visit(MeshGeometry&) override { return; }
-  void visit(TextLabel2D&) override { return; }
-  void visit(TextLabel3D&) override { return; }
+  void visit(CylinderGeometry&) override {}
+  void visit(MeshGeometry&) override;
+  void visit(TextLabel2D&) override {}
+  void visit(TextLabel3D&) override {}
   void visit(LineStripGeometry&) override;
   void visit(WideLineGeometry&) override;
 
@@ -76,7 +76,7 @@ private:
   std::vector<float> m_radii;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_GEOMETRYVISITOR_H

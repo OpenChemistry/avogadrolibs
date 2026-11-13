@@ -217,6 +217,8 @@ template <class Molecule_T>
 typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom1()
   const
 {
+  if (!isValid())
+    return AtomType();
   return AtomType(m_molecule, m_molecule->bondPairs()[m_index].first);
 }
 
@@ -224,6 +226,8 @@ template <class Molecule_T>
 typename BondTemplate<Molecule_T>::AtomType BondTemplate<Molecule_T>::atom2()
   const
 {
+  if (!isValid())
+    return AtomType();
   return AtomType(m_molecule, m_molecule->bondPairs()[m_index].second);
 }
 

@@ -10,6 +10,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QTimer>
 
 class QLabel;
@@ -19,8 +20,7 @@ class QOpenGLWidget;
 class QPushButton;
 class QSlider;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief PlayerTool enables playback of trajectories.
@@ -67,6 +67,7 @@ protected slots:
   void play();
   void stop();
   void animate(int advance = 1);
+  void animateDue();
 
   void recordMovie();
   void sliderPositionChanged(int k);
@@ -94,6 +95,9 @@ private:
   bool m_updatingWidgets;
   mutable QWidget* m_toolWidget;
   QTimer m_timer;
+  QElapsedTimer m_playClock;
+  qint64 m_playTicks = 0;
+  double m_playFps = 5.0;
   mutable QSpinBox* m_animationFPS;
   mutable QSpinBox* m_frameIdx;
   mutable QSpinBox* m_firstFrameIdx;
@@ -109,7 +113,6 @@ inline void PlayerTool::setGLRenderer(Rendering::GLRenderer* renderer)
   m_renderer = renderer;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_PLAYERTOOL_H

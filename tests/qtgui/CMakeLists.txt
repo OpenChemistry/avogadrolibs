@@ -19,10 +19,14 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qtguitests.h.in"
 set(tests
   BackgroundFileFormat
   CalcWorker
+  ColorTheme
+  CommandRegistry
   ElementTranslator
   EnergyUnits
+  ExtensionPlugin
   FileFormatDialog
   FragmentTools
+  GaussianSetConcurrent
   GenericHighlighter
   HydrogenTools
   JsonWidget
@@ -41,7 +45,7 @@ set(tests
 
 # GLWidget lives in QtOpenGL, which is only built with USE_OPENGL.
 if(TARGET Avogadro::QtOpenGL)
-  list(APPEND tests GLWidgetMolecule)
+  list(APPEND tests GLWidgetMolecule GLWidgetRenderImage ImageSizeDialog)
   set(QtOpenGLLink Avogadro::QtOpenGL)
 endif()
 
@@ -91,8 +95,16 @@ target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui ${QtOpenGLLink}
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 foreach(TestName ${tests})
-  add_test(NAME "QtGui-${TestName}"
-    COMMAND AvogadroQtGuiTests "--gtest_filter=${TestName}Test.*")
+  if(TestName STREQUAL "PackageManager")
+    # packagemanagertest.cpp also defines the TomlParsing and LocalInstallTest
+    # suites.
+    add_test(NAME "QtGui-PackageManager"
+      COMMAND AvogadroQtGuiTests
+      "--gtest_filter=PackageManagerTest.*:TomlParsing.*:LocalInstallTest.*")
+  else()
+    add_test(NAME "QtGui-${TestName}"
+      COMMAND AvogadroQtGuiTests "--gtest_filter=${TestName}Test.*")
+  endif()
 endforeach()
 
 if (DEFINED ENV{LIB_FUZZING_ENGINE})

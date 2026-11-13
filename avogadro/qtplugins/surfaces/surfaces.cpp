@@ -5,6 +5,8 @@
 
 #include "surfaces.h"
 #include "surfacedialog.h"
+#include "edtfill.h"
+#include "surfaceresolution.h"
 
 // Header only, but duplicate symbols if included globally...
 namespace {
@@ -14,6 +16,7 @@ namespace {
 #include <gwavi.h>
 
 #include <avogadro/calc/chargemanager.h>
+#include <avogadro/calc/chargemodel.h>
 
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/variant.h>
@@ -29,9 +32,11 @@ namespace {
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/slatersetconcurrent.h>
 #include <avogadro/qtgui/timedprogressdialog.h>
+#include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/qtopengl/activeobjects.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/imagesizedialog.h>
 
 #include <avogadro/core/basisset.h>
 #include <avogadro/core/gaussiansettools.h>
@@ -50,22 +55,18 @@ namespace {
 #include <avogadro/quantumio/qcschema.h>
 
 #include <QAction>
-#include <QOpenGLFramebufferObject>
 #include <QtConcurrent/QtConcurrentMap>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QProcess>
 #include <QtCore/QVariantMap>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
-#include <QGuiApplication>
-#include <QScreen>
-
 #include <algorithm>
-#include <numeric>
+#include <cmath>
+#include <utility>
 #include <vector>
 
 using namespace tinycolormap;
@@ -85,6 +86,8 @@ class Surfaces::PIMPL
 public:
   GifWriter* gifWriter = nullptr;
   gwavi_t* gwaviWriter = nullptr;
+  // Frame size chosen when recording started.
+  QSize movieSize = QSize(800, 600);
 };
 
 namespace {
@@ -95,6 +98,20 @@ void registerQuantumFormat(Io::FileFormat* format)
   if (!Io::FileFormatManager::registerFormat(format))
     delete format;
 }
+
+// Finish and release whichever movie writer is open.
+void closeMovieWriters(GifWriter*& gif, gwavi_t*& avi)
+{
+  if (gif != nullptr) {
+    GifEnd(gif);
+    delete gif;
+    gif = nullptr;
+  }
+  if (avi != nullptr) {
+    gwavi_close(avi);
+    avi = nullptr;
+  }
+}
 } // namespace
 
 Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
@@ -102,8 +119,9 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
   auto action = new QAction(this);
   action->setText(tr("Create Surfaces…"));
   connect(action, SIGNAL(triggered()), SLOT(surfacesActivated()));
-  connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(displayMesh()));
+  connect(&m_displayMeshWatcher, SIGNAL(finished()), SLOT(edtFinished()));
   connect(&m_performEDTStepWatcher, SIGNAL(finished()), SLOT(performEDTStep()));
+  connect(&m_colorWatcher, SIGNAL(finished()), SLOT(colorFinished()));
 
   m_actions.push_back(action);
 
@@ -123,11 +141,15 @@ Surfaces::Surfaces(QObject* p) : ExtensionPlugin(p), d(new PIMPL())
 
 Surfaces::~Surfaces()
 {
+  // The workers write into m_pendingCube and the pending meshes, which are
+  // members and go before the child calculators would stop them.
+  waitForOwnWorkers();
   // Parentless QThreads; ~MeshGenerator() waits for a running thread.
   delete m_meshGenerator1;
   delete m_meshGenerator2;
+  // Parentless when the plugin has no widget parent (e.g., in tests).
+  delete m_progressDialog;
   delete d;
-  // delete m_cube; // should be freed by the molecule
 }
 
 void Surfaces::registerCommands()
@@ -158,7 +180,9 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   int index = -1;
   int homo = -1;
   float isoValue = 0.03;
-  float cubeResolution = resolution(); // use default resolution
+  // Zero means "automatic": calculateEDT() and calculateQM() choose it once
+  // they know the grid padding.
+  float cubeResolution = 0.0f;
 
   if (options.contains("resolution") &&
       options["resolution"].canConvert<float>()) {
@@ -166,6 +190,17 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     float res = options["resolution"].toFloat(&ok);
     if (ok)
       cubeResolution = res;
+  }
+  // Smoothing passes for the mesh; the dialog, when there is one, decides
+  // for itself. Callers that do not ask get none, as before. Stored in
+  // m_commandSmoothing only once a calculation starts, so a rejected or
+  // unknown command cannot change what one in flight will use.
+  int smoothing = 0;
+  if (options.contains("smoothing") && options["smoothing"].canConvert<int>()) {
+    bool ok;
+    int passes = options["smoothing"].toInt(&ok);
+    if (ok)
+      smoothing = std::clamp(passes, 0, 19);
   }
   if (options.contains("isovalue") && options["isovalue"].canConvert<float>()) {
     bool ok;
@@ -219,25 +254,29 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
   }
 
   // Everything below hands work to a background thread, so the caller's reply
-  // is held until meshFinished() reports back.
+  // is held until meshFinished() reports back. The calculation records the
+  // resolution it actually used in m_commandResolution.
   m_commandResolution = cubeResolution;
 
   if ((command.compare("renderVanDerWaals", Qt::CaseInsensitive) == 0) ||
       (command.compare("renderVDW", Qt::CaseInsensitive) == 0)) {
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateEDT(VanDerWaals, cubeResolution);
     return true;
   } else if (command.compare("renderSolventAccessible", Qt::CaseInsensitive) ==
              0) {
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateEDT(SolventAccessible, cubeResolution);
     return true;
   } else if (command.compare("renderSolventExcluded", Qt::CaseInsensitive) ==
              0) {
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateEDT(SolventExcluded, cubeResolution);
     return true;
   } else if ((command.compare("renderOrbital", Qt::CaseInsensitive) == 0) ||
@@ -254,6 +293,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateQM(MolecularOrbital, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderElectronDensity", Qt::CaseInsensitive) ==
@@ -265,6 +305,7 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateQM(ElectronDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderSpinDensity", Qt::CaseInsensitive) == 0) {
@@ -275,10 +316,11 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateQM(SpinDensity, index, beta, isoValue, cubeResolution);
     return true;
   } else if (command.compare("renderCube", Qt::CaseInsensitive) == 0) {
-    if (m_cubes.empty()) {
+    if (m_fileCubeCount == 0) {
       emit commandFailed(tr("This file does not contain any cube data."));
       return true;
     }
@@ -288,18 +330,19 @@ bool Surfaces::handleCommand(const QString& command, const QVariantMap& options)
       cubeIndex = options.value("index").toInt() - 1;
     else if (options.contains("cube"))
       cubeIndex = options.value("cube").toInt() - 1;
-    if (cubeIndex < 0 || cubeIndex >= static_cast<int>(m_cubes.size())) {
+    if (cubeIndex < 0 || cubeIndex >= static_cast<int>(m_fileCubeCount)) {
       emit commandFailed(tr("Cube %1 is out of range, this file has %2.")
                            .arg(cubeIndex + 1)
-                           .arg(m_cubes.size()));
+                           .arg(m_fileCubeCount));
       return true;
     }
-    if (m_cubes[cubeIndex] == nullptr) {
+    if (std::as_const(*m_molecule).cube(cubeIndex) == nullptr) {
       emit commandFailed(tr("Cube %1 could not be read.").arg(cubeIndex + 1));
       return true;
     }
     emit commandStarted();
     m_commandPending = true;
+    m_commandSmoothing = smoothing;
     calculateCube(cubeIndex, isoValue);
     return true;
   }
@@ -314,25 +357,36 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
     m_molecule->disconnect(this);
   }
 
-  m_cube = nullptr;
-  m_mesh1 = nullptr;
-  m_mesh2 = nullptr;
+  // A calculation in progress belongs to the old molecule. Its QM workers
+  // read that molecule's basis set, so stop them now; the EDT workers only
+  // read a snapshot. Whatever they produce is discarded, not published.
+  if (m_gaussianConcurrent != nullptr) {
+    m_gaussianConcurrent->watcher().cancel();
+    m_gaussianConcurrent->watcher().waitForFinished();
+  }
+  if (m_slaterConcurrent != nullptr) {
+    m_slaterConcurrent->watcher().cancel();
+    m_slaterConcurrent->watcher().waitForFinished();
+  }
+  markPendingStale();
+
+  m_cubeIndex = -1;
+  m_mesh1Index = -1;
+  m_mesh2Index = -1;
+  m_fileCubeCount = 0;
+  m_fileCubeRows.clear();
   m_molecule = mol;
 
   if (mol == nullptr) {
     m_basis = nullptr;
-    m_cubes.clear();
     return;
   }
 
-  if (mol->basisSet()) {
-    m_basis = mol->basisSet();
-  } else if (mol->cubes().size() != 0) {
-    m_cubes = mol->cubes();
+  m_basis = std::as_const(*mol).basisSet();
+  if (m_basis == nullptr && mol->cubeCount() != 0) {
+    m_fileCubeCount = mol->cubeCount();
     // calculate the mesh for the first cube
-    if (m_cubes.size() > 0) {
-      calculateCube(0, m_isoValue);
-    }
+    calculateCube(0, m_isoValue);
   }
 
   if (m_molecule != nullptr) {
@@ -340,36 +394,89 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   }
 }
 
-void Surfaces::clearSurfaceData()
+void Surfaces::waitForOwnWorkers()
 {
+  // calculateEDT()/performEDTStep() are plain QtConcurrent::run() futures
+  // with no cancellation support of their own. Wait for them with their
+  // finished() signal blocked so a stale performEDTStep()/edtFinished()
+  // callback doesn't run against a job that is being dropped.
+  m_performEDTStepWatcher.blockSignals(true);
+  m_performEDTStepWatcher.waitForFinished();
+  m_performEDTStepWatcher.blockSignals(false);
+
+  m_displayMeshWatcher.blockSignals(true);
+  m_displayMeshWatcher.waitForFinished();
+  m_displayMeshWatcher.blockSignals(false);
+
+  // The colouring worker works on a snapshot, but cannot be interrupted.
+  waitForColoring();
+
+  if (m_gaussianConcurrent != nullptr) {
+    m_gaussianConcurrent->watcher().cancel();
+    m_gaussianConcurrent->watcher().waitForFinished();
+  }
+  if (m_slaterConcurrent != nullptr) {
+    m_slaterConcurrent->watcher().cancel();
+    m_slaterConcurrent->watcher().waitForFinished();
+  }
+  // There is no way to interrupt a mesh generator, only to join it.
+  if (m_meshGenerator1 != nullptr)
+    m_meshGenerator1->wait();
+  if (m_meshGenerator2 != nullptr)
+    m_meshGenerator2->wait();
+}
+
+void Surfaces::waitForColoring()
+{
+  m_colorWatcher.blockSignals(true);
+  m_colorWatcher.waitForFinished();
+  m_colorWatcher.blockSignals(false);
+  m_coloring = false;
+}
+
+bool Surfaces::clearSurfaceData()
+{
+  const bool interrupted =
+    m_cubeProducer != CubeProducer::None || m_pendingMesh1 != nullptr;
+
   if (m_molecule) {
-    // A calculation started elsewhere -- the Orbitals dialog, say -- may be
-    // writing into one of these cubes on a worker thread. Stop it before the
-    // cube it holds is deleted.
+    // A calculation started elsewhere -- the Orbitals dialog, say -- may
+    // still be reading one of the molecule's cubes. Stop it promptly; the
+    // shared handles it holds keep the cube itself alive either way.
     QtGui::GaussianSetConcurrent::cancelAllCalculations();
     QtGui::SlaterSetConcurrent::cancelAllCalculations();
     QtGui::MeshGenerator::cancelAllCalculations();
+  }
+  // Our own workers write into the pending objects freed below.
+  waitForOwnWorkers();
 
-    // calculateEDT()/performEDTStep() are plain QtConcurrent::run() futures
-    // reading and writing m_cube directly, with no cancellation support of
-    // their own. Wait for them here too, with their finished() signal
-    // blocked so a stale performEDTStep()/displayMesh() callback doesn't run
-    // against the cube/meshes we are about to free.
-    m_performEDTStepWatcher.blockSignals(true);
-    m_performEDTStepWatcher.waitForFinished();
-    m_performEDTStepWatcher.blockSignals(false);
-
-    m_displayMeshWatcher.blockSignals(true);
-    m_displayMeshWatcher.waitForFinished();
-    m_displayMeshWatcher.blockSignals(false);
-
+  if (m_molecule) {
     m_molecule->clearCubes();
     m_molecule->clearMeshes();
   }
-  m_cubes.clear();
-  m_cube = nullptr;
-  m_mesh1 = nullptr;
-  m_mesh2 = nullptr;
+
+  m_pendingCube.reset();
+  m_cubeProducer = CubeProducer::None;
+  m_cubeJobStale = false;
+  m_pendingMesh1.reset();
+  m_pendingMesh2.reset();
+  m_meshCube.reset();
+  m_meshJobStale = false;
+
+  m_fileCubeCount = 0;
+  m_fileCubeRows.clear();
+  m_cubeIndex = -1;
+  m_mesh1Index = -1;
+  m_mesh2Index = -1;
+  return interrupted;
+}
+
+void Surfaces::markPendingStale()
+{
+  if (m_cubeProducer != CubeProducer::None)
+    m_cubeJobStale = true;
+  if (m_pendingMesh1 != nullptr)
+    m_meshJobStale = true;
 }
 
 void Surfaces::moleculeChanged(unsigned int changes)
@@ -377,25 +484,44 @@ void Surfaces::moleculeChanged(unsigned int changes)
   if (m_molecule == nullptr)
     return;
 
-  auto currentCubes = m_cubes.size();
+  auto currentCubes = m_fileCubeCount;
 
   // readProperties() can replace the basis set (freeing the old one)
-  // without a structural change, so refresh our cached pointer on every
-  // change, not just when derived data is invalidated.
-  m_basis = m_molecule->basisSet();
+  // without a structural change, and any mutable access may have detached
+  // it, so refresh our cached pointer on every change, not just when derived
+  // data is invalidated.
+  m_basis = std::as_const(*m_molecule).basisSet();
 
-  // These are raw pointers into storage that Molecule::emitChanged() frees,
-  // so refresh them exactly when it does.
+  // Molecule::emitChanged() discards the cubes and meshes on exactly these
+  // changes (or a replacement brought its own), so our indices into them no
+  // longer mean anything, and a calculation in progress describes a
+  // structure that has gone.
   if (Molecule::invalidatesDerivedData(changes)) {
-    m_cubes = m_molecule->cubes();
-    m_cube = nullptr;
-    m_mesh1 = nullptr;
-    m_mesh2 = nullptr;
+    m_fileCubeCount = m_molecule->cubeCount();
+    m_cubeIndex = -1;
+    m_mesh1Index = -1;
+    m_mesh2Index = -1;
+    markPendingStale();
+
+    // emitChanged() has already joined the mesh generators with their
+    // finished() signals blocked, so meshFinished() may never come for this
+    // job. Once nothing writes into the pending meshes, drop them here.
+    const bool generating =
+      (m_meshGenerator1 != nullptr && m_meshGenerator1->isRunning()) ||
+      (m_meshGenerator2 != nullptr && m_meshGenerator2->isRunning());
+    if (m_meshJobStale && !generating) {
+      m_pendingMesh1.reset();
+      m_pendingMesh2.reset();
+      m_meshCube.reset();
+      m_meshJobStale = false;
+      if (m_cubeProducer == CubeProducer::None)
+        reportInterrupted();
+    }
   }
 
   // if we now have more cubes than before
   // calculate the new mesh
-  if (currentCubes == 0 && m_cubes.size() > 0) {
+  if (currentCubes == 0 && m_fileCubeCount > 0) {
     calculateCube(0, m_isoValue);
   }
 }
@@ -424,7 +550,7 @@ void Surfaces::surfacesActivated()
 
   if (m_basis) {
     // we have quantum data, set up the dialog accordingly
-    auto gaussian = dynamic_cast<Core::GaussianSet*>(m_basis);
+    auto gaussian = dynamic_cast<const Core::GaussianSet*>(m_basis);
     bool beta = false;
     if (gaussian) {
       auto b = gaussian->moMatrix(GaussianSet::Beta);
@@ -435,10 +561,12 @@ void Surfaces::surfacesActivated()
                          m_basis->molecularOrbitalCount(), beta);
   }
   // only show cubes from files so we don't duplicate orbitals
-  if (m_cubes.size() > 0) {
+  if (m_fileCubeCount > 0) {
     QStringList cubeNames;
-    for (auto* cube : m_cubes) {
-      if (cube->cubeType() == Core::Cube::Type::FromFile) {
+    m_fileCubeRows.clear();
+    for (Index i = 0; i < m_fileCubeCount; ++i) {
+      const Cube* cube = std::as_const(*m_molecule).cube(i);
+      if (cube != nullptr && cube->cubeType() == Core::Cube::Type::FromFile) {
         // check if there's a name
         if (cube->name().empty()) {
           // use a numbered name
@@ -449,6 +577,7 @@ void Surfaces::surfacesActivated()
         } else {
           cubeNames << cube->name().c_str();
         }
+        m_fileCubeRows.push_back(static_cast<int>(i));
       }
     }
     m_dialog->setupCubes(cubeNames);
@@ -468,7 +597,7 @@ void Surfaces::surfacesActivated()
   m_dialog->activateWindow();
 }
 
-float Surfaces::resolution(float specified)
+float Surfaces::resolution(float specified, double padding)
 {
   if (specified != 0.0)
     return specified;
@@ -476,9 +605,7 @@ float Surfaces::resolution(float specified)
   if (m_dialog != nullptr && !m_dialog->automaticResolution())
     return m_dialog->resolution();
 
-  float r = 0.02 * powf(m_molecule->atomCount(), 1.0f / 3.0f);
   float minimum = 0.05;
-  float maximum = 0.5;
 
   if (m_dialog != nullptr) {
     switch (m_dialog->surfaceType()) {
@@ -489,8 +616,21 @@ float Surfaces::resolution(float specified)
     }
   }
 
-  r = std::clamp(r, minimum, maximum);
-  return r;
+  // The grid spans the atoms' bounding box (as in Cube::setLimits) plus the
+  // padding on every side; the voxel budget is applied to that volume.
+  Vector3 extent = Vector3::Zero();
+  const Array<Vector3>& positions = m_molecule->atomPositions3d();
+  if (!positions.empty()) {
+    Vector3 low = positions[0];
+    Vector3 high = positions[0];
+    for (const Vector3& position : positions) {
+      low = low.cwiseMin(position);
+      high = high.cwiseMax(position);
+    }
+    extent = (high - low) + Vector3::Constant(2.0 * padding);
+  }
+
+  return automaticSurfaceResolution(m_molecule->atomCount(), extent, minimum);
 }
 
 void Surfaces::calculateSurface()
@@ -528,135 +668,119 @@ namespace {
 constexpr double SolventProbeRadius = 1.4;
 } // namespace
 
-float inline square(float x)
-{
-  return x * x;
-}
-
 void Surfaces::calculateEDT(Type type, float defaultResolution)
 {
   if (type == Unknown && m_dialog != nullptr)
     type = m_dialog->surfaceType();
 
   // Reset state to avoid stale meshes/cubes from prior calculations
-  // (e.g., switching from MO to VdW would leave m_mesh2 rendering)
+  // (e.g., switching from MO to VdW would leave the second mesh rendering)
   clearSurfaceData();
   // Report only that something was added. Including Atoms would make
   // Molecule::invalidatesDerivedData() true, and emitChanged() would then
   // delete the very basis set this calculation is about to read.
   m_molecule->emitChanged(Molecule::Added);
 
-  if (!m_cube)
-    m_cube = m_molecule->addCube();
+  // Decide the resolution here, on the main thread: resolution() reads the
+  // dialog widgets and the molecule, which the workers must not touch. It is
+  // remembered for the command result; performEDTStep() reads the spacing from
+  // the cube itself, so it needs no copy.
+  //
+  // The padding here has to match the one computed in the worker below, which
+  // skips atoms in hidden layers. Using every atom gives the same value or a
+  // slightly larger one, so the voxel budget is never underestimated.
+  const double probe = (type == SolventAccessible || type == SolventExcluded)
+                         ? SolventProbeRadius
+                         : 0.0;
+  double maxRadius = probe;
+  for (size_t i = 0; i < m_molecule->atomCount(); ++i) {
+    const double radius =
+      Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probe;
+    maxRadius = std::max(maxRadius, radius);
+  }
+  const double edtPadding = maxRadius + probe + 0.2;
 
-  // Set this cube as the active cube for volume rendering
-  m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
+  const float res = resolution(defaultResolution, edtPadding);
+  if (m_commandPending)
+    m_commandResolution = res;
 
-  // Decide the resolution here, on the main thread, and remember it:
-  // performEDTStep() must erode with the grid spacing the cube was built with.
-  const float res = resolution(defaultResolution);
-  m_edtResolution = res;
-
-  QFuture future = QtConcurrent::run([=]() {
-    double probeRadius = 0.0;
-    switch (type) {
-      case VanDerWaals:
-        m_cube->setCubeType(Core::Cube::Type::VdW);
-        break;
-      case SolventAccessible:
-        probeRadius = SolventProbeRadius;
-        m_cube->setCubeType(Core::Cube::Type::SolventAccessible);
-        break;
-      case SolventExcluded:
-        probeRadius = SolventProbeRadius;
-        m_cube->setCubeType(Core::Cube::Type::SolventExcluded);
-        break;
-      default:
-        break;
-    }
-
-    // first, make a list of all atom positions and radii
-    Array<Vector3> atomPositions = m_molecule->atomPositions3d();
-    std::vector<std::pair<Vector3, double>> atoms;
-    double max_radius = probeRadius;
+  // The workers never touch the molecule: it may be edited, replaced or
+  // closed while they run. Take what they need here: the visible atoms'
+  // spheres, and the bounding box of every atom, as Cube::setLimits(Molecule)
+  // computes it.
+  std::vector<std::pair<Vector3, double>> atoms;
+  Vector3 low = Vector3::Zero();
+  Vector3 high = Vector3::Zero();
+  {
+    const Array<Vector3>& positions = m_molecule->atomPositions3d();
+    const size_t count =
+      std::min<size_t>(m_molecule->atomCount(), positions.size());
     QtGui::RWLayerManager layerManager;
-    for (size_t i = 0; i < m_molecule->atomCount(); i++) {
+    for (size_t i = 0; i < count; i++) {
+      if (i == 0) {
+        low = high = positions[i];
+      } else {
+        low = low.cwiseMin(positions[i]);
+        high = high.cwiseMax(positions[i]);
+      }
       if (!layerManager.visible(m_molecule->layer(i)))
         continue; // ignore invisible atoms
       auto radius =
-        Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probeRadius;
-      atoms.emplace_back(atomPositions[i], radius);
-      if (radius > max_radius)
-        max_radius = radius;
+        Core::Elements::radiusVDW(m_molecule->atomicNumber(i)) + probe;
+      atoms.emplace_back(positions[i], radius);
     }
+  }
 
-    double padding = max_radius + probeRadius + 0.2;
-    m_cube->setLimits(*m_molecule, res, padding);
-    m_cube->fill(-1.0);
+  // The surface is the zero level of both kinds of EDT field (signed
+  // distance, or +1/-1). Do not inherit the last orbital's isovalue.
+  m_isoValue = 0.0f;
 
-    const Vector3 min = m_cube->min();
+  // Filled here, and published to the molecule by publishCube() once done.
+  m_pendingCube = std::make_unique<Cube>();
+  m_cubeProducer = CubeProducer::EDT;
+  m_cubeJobStale = false;
+  Cube* cube = m_pendingCube.get();
 
-    // Overlapping atom spheres touch the same voxels, so threads must not
-    // be handed atoms: two of them would write one voxel at the same time.
-    // Instead, bin each atom into every x slab (constant indexX) it covers,
-    // and give each slab to exactly one thread. A slab task only writes
-    // voxels with its own indexX, so no two threads ever share a voxel.
-    // Filling is idempotent (it only sets 1.0 over the -1.0 background), so
-    // the result is the same as filling atom by atom.
-    const Vector3i dims = m_cube->dimensions();
-    std::vector<std::vector<size_t>> slabAtoms(dims(0));
-    for (size_t a = 0; a < atoms.size(); ++a) {
-      const std::pair<Vector3, double>& in = atoms[a];
-      double startPosX = in.first(0) - in.second;
-      double endPosX = in.first(0) + in.second;
-      int startIndexX = (startPosX - min(0)) / res;
-      int endIndexX = (endPosX - min(0)) / res + 1;
-      // Slabs outside the cube have no voxels to write.
-      for (int indexX = std::max(startIndexX, 0);
-           indexX < std::min(endIndexX, dims(0)); indexX++)
-        slabAtoms[indexX].push_back(a);
-    }
-
-    std::vector<int> slabIndices(dims(0));
-    std::iota(slabIndices.begin(), slabIndices.end(), 0);
-
-    // then, for each slab, set cubes around its atoms up to a certain radius
-    QFuture innerFuture = QtConcurrent::map(slabIndices, [&](int indexX) {
-      const double posX = indexX * res + min(0);
-      for (size_t a : slabAtoms[indexX]) {
-        const std::pair<Vector3, double>& in = atoms[a];
-        double radiusXsq = square(in.second) - square(posX - in.first(0));
-        if (radiusXsq < 0.0)
-          continue;
-        double radiusX = sqrt(radiusXsq);
-        double startPosY = in.first(1) - radiusX;
-        double endPosY = in.first(1) + radiusX;
-        int startIndexY = (startPosY - min(1)) / res;
-        int endIndexY = (endPosY - min(1)) / res + 1;
-        // fillStripe() only checks the flat index, so keep y and z inside the
-        // cube; an overflow would spill into a neighbouring slab.
-        for (int indexY = std::max(startIndexY, 0);
-             indexY < std::min(endIndexY, dims(1)); indexY++) {
-          double posY = indexY * res + min(1);
-          double lengthXYsq = square(radiusX) - square(posY - in.first(1));
-          if (lengthXYsq < 0.0)
-            continue;
-          double lengthXY = sqrt(lengthXYsq);
-          double startPosZ = in.first(2) - lengthXY;
-          double endPosZ = in.first(2) + lengthXY;
-          int startIndexZ = (startPosZ - min(2)) / res;
-          int endIndexZ = (endPosZ - min(2)) / res + 1;
-          int firstZ = std::max(startIndexZ, 0);
-          int lastZ = std::min(endIndexZ - 1, dims(2) - 1);
-          if (firstZ > lastZ)
-            continue;
-          m_cube->fillStripe(indexX, indexY, firstZ, lastZ, 1.0f);
-        }
+  QFuture future =
+    QtConcurrent::run([cube, type, res, low, high, atoms = std::move(atoms)]() {
+      double probeRadius = 0.0;
+      switch (type) {
+        case VanDerWaals:
+          cube->setCubeType(Core::Cube::Type::VdW);
+          break;
+        case SolventAccessible:
+          probeRadius = SolventProbeRadius;
+          cube->setCubeType(Core::Cube::Type::SolventAccessible);
+          break;
+        case SolventExcluded:
+          probeRadius = SolventProbeRadius;
+          cube->setCubeType(Core::Cube::Type::SolventExcluded);
+          break;
+        default:
+          break;
       }
-    });
 
-    innerFuture.waitForFinished();
-  });
+      double max_radius = probeRadius;
+      for (const auto& atom : atoms)
+        max_radius = std::max(max_radius, atom.second);
+
+      // Cube::setLimits(Molecule, ...) takes the padding as a float.
+      const float padding = static_cast<float>(max_radius + probeRadius + 0.2);
+      const Vector3 pad(padding, padding, padding);
+      const Vector3 cubeMin = low - pad;
+      const Vector3 cubeMax = high + pad;
+      // A grid that cannot be built (non-finite or absurdly large) leaves the
+      // cube empty; edtFinished() and performEDTStep() then report that.
+      if (!cube->setLimits(cubeMin, cubeMax, res))
+        return;
+      // The solvent-excluded erosion that follows works on a set of voxels,
+      // so that surface stays binary. The other two use a signed distance
+      // field, whose zero level lies exactly on the spheres.
+      if (type == SolventExcluded)
+        fillBinarySpheres(*cube, atoms);
+      else
+        fillDistanceSpheres(*cube, atoms);
+    });
 
   // SolventExcluded requires an extra pass
   if (type == SolventExcluded) {
@@ -668,15 +792,31 @@ void Surfaces::calculateEDT(Type type, float defaultResolution)
 
 void Surfaces::performEDTStep()
 {
-  QFuture future = QtConcurrent::run([=]() {
-    const double scaledProbeRadius = SolventProbeRadius / m_edtResolution;
+  if (m_cubeProducer != CubeProducer::EDT || !m_pendingCube)
+    return; // a stale signal from a job that was dropped
+  if (m_cubeJobStale) {
+    publishCube(false); // reports the interruption
+    return;
+  }
 
+  Cube* cube = m_pendingCube.get();
+  if (cube->data()->empty()) {
+    // The grid could not be built, so there is nothing to erode.
+    publishCube(true); // reports the interruption
+    return;
+  }
+  // The grid spacing differs slightly from the requested resolution (see
+  // Cube::setLimits()), and per axis, so measure the probe in Angstrom.
+  const Vector3 spacing = cube->spacing();
+  const float probeRadius = static_cast<float>(SolventProbeRadius);
+
+  QFuture future = QtConcurrent::run([cube, spacing, probeRadius]() {
     // make a list of all "outside" cubes in contact with an "inside" cube
     // these are the only ones that can be "nearest" to an "inside" cube
     Array<Vector3> relativePositions;
     // also make a list of all "inside" cubes
     std::vector<Vector3i> insideIndices;
-    Vector3i size = m_cube->dimensions();
+    Vector3i size = cube->dimensions();
     relativePositions.reserve(size(0) * size(1) * 4);   // O(n^2)
     insideIndices.reserve(size(0) * size(1) * size(2)); // O(n^3)
     for (int z = 0; z < size(2); z++) {
@@ -686,36 +826,36 @@ void Surfaces::performEDTStep()
         int yp = std::max(y - 1, 0);
         int yn = std::min(y + 1, size(1) - 1);
         for (int x = 0; x < size(0); x++) {
-          if (m_cube->value(x, y, z) > 0.0) {
+          if (cube->value(x, y, z) > 0.0) {
             insideIndices.emplace_back(x, y, z);
             continue;
           }
           int xp = std::max(x - 1, 0);
           int xn = std::min(x + 1, size(0) - 1);
-          if (m_cube->value(xp, y, z) > 0.0 || m_cube->value(xn, y, z) > 0.0 ||
-              m_cube->value(x, yp, z) > 0.0 || m_cube->value(x, yn, z) > 0.0 ||
-              m_cube->value(x, y, zp) > 0.0 || m_cube->value(x, y, zn) > 0.0) {
-            relativePositions.push_back(Vector3(x, y, z));
+          if (cube->value(xp, y, z) > 0.0 || cube->value(xn, y, z) > 0.0 ||
+              cube->value(x, yp, z) > 0.0 || cube->value(x, yn, z) > 0.0 ||
+              cube->value(x, y, zp) > 0.0 || cube->value(x, y, zn) > 0.0) {
+            relativePositions.push_back(Vector3(x, y, z).cwiseProduct(spacing));
           }
         }
       }
     }
 
     // pass the list to a NeighborPerceiver so it's faster to look up
-    NeighborPerceiver perceiver(relativePositions, scaledProbeRadius);
+    NeighborPerceiver perceiver(relativePositions, probeRadius);
 
     // now, exclude all "inside" cubes too close to any "outside" cube
     // The scratch list is per pool thread; getNeighborsInclusiveInPlace()
     // clears it before refilling it.
     QFuture innerFuture = QtConcurrent::map(insideIndices, [=](Vector3i& in) {
       thread_local Array<Index> neighbors;
-      Vector3 pos = in.cast<double>();
+      const Vector3 pos = in.cast<double>().cwiseProduct(spacing);
       perceiver.getNeighborsInclusiveInPlace(neighbors, pos);
       for (Index neighbor : neighbors) {
         const Vector3& npos = relativePositions[neighbor];
         float distance = (npos - pos).norm();
-        if (distance <= scaledProbeRadius) {
-          m_cube->setValue(in(0), in(1), in(2), -1.0f);
+        if (distance <= probeRadius) {
+          cube->setValue(in(0), in(1), in(2), -1.0f);
           break;
         }
       }
@@ -725,6 +865,71 @@ void Surfaces::performEDTStep()
   });
 
   m_displayMeshWatcher.setFuture(future);
+}
+
+void Surfaces::edtFinished()
+{
+  if (m_cubeProducer != CubeProducer::EDT)
+    return; // a stale signal from a job that was dropped
+  // An empty cube means the grid could not be built: nothing to show.
+  publishCube(m_pendingCube && m_pendingCube->data()->empty());
+}
+
+void Surfaces::qmFinished()
+{
+  QFutureWatcher<void>* watcher = nullptr;
+  if (m_cubeProducer == CubeProducer::Gaussian && m_gaussianConcurrent)
+    watcher = &m_gaussianConcurrent->watcher();
+  else if (m_cubeProducer == CubeProducer::Slater && m_slaterConcurrent)
+    watcher = &m_slaterConcurrent->watcher();
+  // A stale signal from a job that was dropped, or one from a cancelled run
+  // arriving while its replacement is still running.
+  if (watcher == nullptr || watcher->isRunning())
+    return;
+  // Cancelled from the progress dialog, or by an edit to the molecule: the
+  // cube is only partly filled, so it is never shown.
+  publishCube(watcher->isCanceled());
+}
+
+void Surfaces::publishCube(bool canceled)
+{
+  std::unique_ptr<Cube> cube = std::move(m_pendingCube);
+  const bool stale = m_cubeJobStale;
+  m_cubeProducer = CubeProducer::None;
+  m_cubeJobStale = false;
+
+  if (!cube || stale || canceled || m_molecule == nullptr) {
+    reportInterrupted();
+    return;
+  }
+
+  const Index index = m_molecule->cubeCount();
+  m_molecule->addCube(std::move(cube));
+  // Set this cube as the active cube for volume rendering
+  m_molecule->setActiveCubeIndex(index);
+  m_cubeIndex = static_cast<int>(index);
+  displayMesh();
+}
+
+void Surfaces::reportInterrupted()
+{
+  if (m_dialog != nullptr)
+    m_dialog->reenableCalculateButton();
+
+  if (m_recordingMovie) {
+    closeMovieWriters(d->gifWriter, d->gwaviWriter);
+    m_recordingMovie = false;
+    if (m_dialog != nullptr)
+      m_dialog->enableRecord();
+  }
+
+  // Anyone waiting on the command has to be told, or they wait for a
+  // commandFinished() that is never coming.
+  if (m_commandPending) {
+    m_commandPending = false;
+    m_commandResolution = 0.0f;
+    emit commandFailed(tr("The calculation was interrupted."));
+  }
 }
 
 void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
@@ -748,7 +953,7 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
   bool connectSlots = false;
 
   // set up QtConcurrent calculators for Gaussian or Slater basis sets
-  if (dynamic_cast<GaussianSet*>(m_basis)) {
+  if (dynamic_cast<const GaussianSet*>(m_basis)) {
     if (!m_gaussianConcurrent) {
       m_gaussianConcurrent = new GaussianSetConcurrent(this);
       connectSlots = true;
@@ -761,6 +966,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     }
     m_slaterConcurrent->setMolecule(m_molecule);
   }
+  // setMolecule() may have given the molecule a private copy of the basis set
+  m_basis = std::as_const(*m_molecule).basisSet();
 
   // TODO: Check to see if this cube or surface has already been computed
   if (!m_progressDialog) {
@@ -770,11 +977,12 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     connectSlots = true;
   }
 
-  if (!m_cube)
-    m_cube = m_molecule->addCube();
-
-  // Set this cube as the active cube for volume rendering
-  m_molecule->setActiveCubeIndex(m_molecule->cubeCount() - 1);
+  // Filled here, and published to the molecule by publishCube() once done.
+  m_pendingCube = std::make_unique<Cube>();
+  m_cubeJobStale = false;
+  Cube* cube = m_pendingCube.get();
+  const bool gaussian = dynamic_cast<const GaussianSet*>(m_basis) != nullptr;
+  m_cubeProducer = gaussian ? CubeProducer::Gaussian : CubeProducer::Slater;
 
   if (type == Unknown)
     type = m_dialog->surfaceType();
@@ -785,43 +993,65 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_isoValue = m_dialog->isosurfaceValue();
   else
     m_isoValue = isoValue;
-  float cubeResolution = resolution(defaultResolution);
-  float padding = 5.0;
   // TODO: allow extra padding for some molecules / properties
-  m_cube->setLimits(*m_molecule, cubeResolution, padding);
+  const float padding = 5.0;
+  const float cubeResolution = resolution(defaultResolution, padding);
+  if (m_commandPending)
+    m_commandResolution = cubeResolution;
+  cube->setLimits(*m_molecule, cubeResolution, padding);
 
   QString progressText;
+  bool started = true;
   if (type == ElectronDensity) {
     progressText = tr("Calculating electron density");
-    m_cube->setName("Electron Density");
-    m_cube->setCubeType(Core::Cube::Type::ElectronDensity);
-    if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateElectronDensity(m_cube);
+    cube->setName("Electron Density");
+    cube->setCubeType(Core::Cube::Type::ElectronDensity);
+    if (gaussian) {
+      started = m_gaussianConcurrent->calculateElectronDensity(cube);
     } else {
-      m_slaterConcurrent->calculateElectronDensity(m_cube);
+      started = m_slaterConcurrent->calculateElectronDensity(cube);
     }
   } else if (type == SpinDensity) {
     progressText = tr("Calculating spin density");
-    m_cube->setName("Spin Density");
-    m_cube->setCubeType(Core::Cube::Type::SpinDensity);
-    if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateSpinDensity(m_cube);
+    cube->setName("Spin Density");
+    cube->setCubeType(Core::Cube::Type::SpinDensity);
+    if (gaussian) {
+      started = m_gaussianConcurrent->calculateSpinDensity(cube);
     } else {
-      m_slaterConcurrent->calculateSpinDensity(m_cube);
+      started = m_slaterConcurrent->calculateSpinDensity(cube);
     }
   } else if (type == MolecularOrbital) {
     progressText = tr("Calculating molecular orbital %L1").arg(index);
-    m_cube->setName("Molecular Orbital " + std::to_string(index + 1));
-    m_cube->setCubeType(Core::Cube::Type::MO);
-    if (dynamic_cast<GaussianSet*>(m_basis)) {
-      m_gaussianConcurrent->calculateMolecularOrbital(m_cube, index, beta);
+    cube->setName("Molecular Orbital " + std::to_string(index + 1));
+    cube->setCubeType(Core::Cube::Type::MO);
+    if (gaussian) {
+      started =
+        m_gaussianConcurrent->calculateMolecularOrbital(cube, index, beta);
     } else {
-      m_slaterConcurrent->calculateMolecularOrbital(m_cube, index);
+      started = m_slaterConcurrent->calculateMolecularOrbital(cube, index);
     }
   }
 
+  // The calculator refuses a basis set it cannot evaluate safely; there is
+  // nothing to wait for, so drop the empty cube rather than show progress.
+  // qmFinished() will never run, so do its bookkeeping here: the dialog's
+  // button was disabled on click, and a command caller is waiting on a reply.
+  if (!started) {
+    clearSurfaceData();
+    if (m_dialog != nullptr)
+      m_dialog->reenableCalculateButton();
+    if (m_commandPending) {
+      m_commandPending = false;
+      m_commandResolution = 0.0f;
+      // TODO: translate after 2.1 (string freeze)
+      emit commandFailed(
+        QStringLiteral("The basis set is inconsistent and cannot be used."));
+    }
+    return;
+  }
+
   // Set up the progress dialog.
-  if (dynamic_cast<GaussianSet*>(m_basis)) {
+  if (gaussian) {
     m_progressDialog->setWindowTitle(progressText);
     m_progressDialog->setRange(
       m_gaussianConcurrent->watcher().progressMinimum(),
@@ -836,7 +1066,8 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
       connect(&m_gaussianConcurrent->watcher(),
               SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
               SLOT(setRange(int, int)));
-      connect(m_gaussianConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
+      connect(m_gaussianConcurrent, SIGNAL(finished()), SLOT(qmFinished()),
+              Qt::UniqueConnection);
       connect(m_progressDialog, SIGNAL(canceled()),
               &m_gaussianConcurrent->watcher(), SLOT(cancel()));
     }
@@ -848,31 +1079,39 @@ void Surfaces::calculateQM(Type type, int index, bool beta, float isoValue,
     m_progressDialog->setValue(m_slaterConcurrent->watcher().progressValue());
     m_progressDialog->show();
 
+    // These run on every calculation, so keep a single connection each:
+    // a duplicate finished() connection would publish the cube twice.
     connect(&m_slaterConcurrent->watcher(), SIGNAL(progressValueChanged(int)),
-            m_progressDialog, SLOT(setValue(int)));
+            m_progressDialog, SLOT(setValue(int)), Qt::UniqueConnection);
     connect(&m_slaterConcurrent->watcher(),
             SIGNAL(progressRangeChanged(int, int)), m_progressDialog,
-            SLOT(setRange(int, int)));
+            SLOT(setRange(int, int)), Qt::UniqueConnection);
     connect(m_progressDialog, SIGNAL(canceled()),
-            &m_slaterConcurrent->watcher(), SLOT(cancel()));
-    connect(m_slaterConcurrent, SIGNAL(finished()), SLOT(displayMesh()));
+            &m_slaterConcurrent->watcher(), SLOT(cancel()),
+            Qt::UniqueConnection);
+    connect(m_slaterConcurrent, SIGNAL(finished()), SLOT(qmFinished()),
+            Qt::UniqueConnection);
   }
 }
 
 void Surfaces::calculateCube(int index, float isoValue)
 {
-  if (m_cubes.size() == 0)
+  if (m_fileCubeCount == 0 || m_molecule == nullptr)
     return;
 
-  if (index == -1 && m_dialog != nullptr)
-    index = m_dialog->surfaceIndex();
-  if (index < 0 || index >= static_cast<int>(m_cubes.size()))
+  if (index == -1 && m_dialog != nullptr) {
+    const int row = m_dialog->surfaceIndex();
+    if (row < 0 || row >= static_cast<int>(m_fileCubeRows.size()))
+      return;
+    index = m_fileCubeRows[row];
+  }
+  if (index < 0 || index >= static_cast<int>(m_fileCubeCount))
     return;
 
   // check bounds
-  m_cube = m_cubes[index];
-  if (m_cube == nullptr)
+  if (std::as_const(*m_molecule).cube(index) == nullptr)
     return;
+  m_cubeIndex = index;
 
   // Set this cube as the active cube for volume rendering
   m_molecule->setActiveCubeIndex(index);
@@ -886,96 +1125,146 @@ void Surfaces::calculateCube(int index, float isoValue)
 
 void Surfaces::stepChanged(int n)
 {
+  // A calculation still running was for the previous step; nothing else
+  // will report that it stopped.
+  if (changeStep(n))
+    reportInterrupted();
+}
+
+bool Surfaces::changeStep(int n)
+{
   if (!m_molecule || !m_basis)
-    return;
+    return false;
 
   qDebug() << "\n\t==== Step changed to" << n << "====";
-  auto g = dynamic_cast<GaussianSet*>(m_basis);
-  if (g) {
-    g->setActiveSetStep(n - 1);
-    clearSurfaceData();
+  if (dynamic_cast<const GaussianSet*>(m_basis) != nullptr) {
+    // Stop the workers first: a QM calculation reads the set being stepped.
+    const bool interrupted = clearSurfaceData();
+    // Step the molecule's own basis set. The mutable accessor gives it a
+    // private copy if an undo snapshot shares it; writing through m_basis
+    // would change the snapshot's copy too.
+    auto* g = dynamic_cast<GaussianSet*>(m_molecule->basisSet());
+    m_basis = g;
+    if (g != nullptr)
+      g->setActiveSetStep(n - 1);
     // Switching the MO set step moves to that conformer's geometry. Emit a
     // moved-only change: Added would delete the basis set we are stepping
     // through (see Molecule::invalidatesDerivedData()).
     m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved |
                             Molecule::Conformer);
+    return interrupted;
   }
+  return false;
 }
 
 void Surfaces::displayMesh()
 {
-  if (!m_cube) {
-    // The cubes were deleted while this calculation was running, so it was
-    // cancelled. Anyone waiting on the command has to be told, or they wait
-    // for a commandFinished() that is never coming.
-    if (m_commandPending) {
-      m_commandPending = false;
-      m_commandResolution = 0.0f;
-      emit commandFailed(tr("The calculation was interrupted."));
-    }
+  std::shared_ptr<const Cube> cube;
+  if (m_molecule != nullptr && m_cubeIndex >= 0)
+    cube = m_molecule->sharedCube(static_cast<Index>(m_cubeIndex));
+  if (!cube) {
+    // The cubes were deleted while this calculation was running.
+    reportInterrupted();
     return;
   }
 
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
   else
-    m_smoothingPasses = 0;
+    m_smoothingPasses = m_commandSmoothing;
 
-  if (!m_mesh1)
-    m_mesh1 = m_molecule->addMesh();
+  // A colouring job still in flight belongs to the pending meshes about to
+  // be replaced; its result is dropped.
+  waitForColoring();
+
+  // A previous mesh job may still be writing into the pending meshes and
+  // reading its cube; it is superseded, but has to finish before they go.
+  if (m_meshGenerator1 != nullptr)
+    m_meshGenerator1->wait();
+  if (m_meshGenerator2 != nullptr)
+    m_meshGenerator2->wait();
+
+  // The handle keeps the cube alive for the generators, whatever happens to
+  // the molecule's own list meanwhile. The meshes are ours until published.
+  m_meshCube = cube;
+  m_meshJobStale = false;
+  m_pendingMesh1 = std::make_unique<Core::Mesh>();
+  m_pendingMesh2.reset();
+
   if (!m_meshGenerator1) {
     m_meshGenerator1 = new QtGui::MeshGenerator;
     connect(m_meshGenerator1, SIGNAL(finished()), SLOT(meshFinished()));
   }
-  m_meshGenerator1->initialize(m_cube, m_mesh1, m_isoValue, m_smoothingPasses);
+  m_meshGenerator1->initialize(m_meshCube.get(), m_pendingMesh1.get(),
+                               m_isoValue, m_smoothingPasses);
 
   bool isMO = false;
   // if it's from a file we should "play it safe"
-  if (m_cube->cubeType() == Cube::Type::MO ||
-      m_cube->cubeType() == Cube::Type::FromFile) {
+  if (m_meshCube->cubeType() == Cube::Type::MO ||
+      m_meshCube->cubeType() == Cube::Type::FromFile) {
     isMO = true;
   }
 
   if (isMO) {
-    if (!m_mesh2)
-      m_mesh2 = m_molecule->addMesh();
+    m_pendingMesh2 = std::make_unique<Core::Mesh>();
     if (!m_meshGenerator2) {
       m_meshGenerator2 = new QtGui::MeshGenerator;
       connect(m_meshGenerator2, SIGNAL(finished()), SLOT(meshFinished()));
     }
-    m_meshGenerator2->initialize(m_cube, m_mesh2, -m_isoValue,
-                                 m_smoothingPasses, true);
+    m_meshGenerator2->initialize(m_meshCube.get(), m_pendingMesh2.get(),
+                                 -m_isoValue, m_smoothingPasses, true);
   }
 
-  // Start the mesh generation - this needs an improved mutex with a read lock
-  // to function as expected. Write locks are exclusive, read locks can have
-  // many read locks but no write lock.
+  // Both generators only read the cube, so they can run side by side.
   m_meshGenerator1->start();
   if (isMO)
     m_meshGenerator2->start();
-
-  // Track how many meshes are left to show.
-  if (isMO)
-    m_meshesLeft = 2;
-  else
-    m_meshesLeft = 1;
 }
 
-Core::Color3f Surfaces::chargeGradient(double value, double clamp,
-                                       ColormapType colormap) const
+namespace {
+// Free of any plugin state, so that the colouring worker can call it.
+Core::Color3f gradientColor(double value, double clamp, ColormapType colormap)
 {
   // okay, typically color scales have blue at the bottom, red at the top.
   // so we need to invert, so blue is positive charge, red is negative charge.
   // we also need to scale the color to the range of the charge.
-  double scaledValue = value / clamp; // from -1 to 1.0
-  double scaledValue2 =
-    1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  // A uniform (e.g., all-zero) potential has no range to scale by; use the
+  // neutral midpoint rather than 0/0 = NaN, which the colormap lookup would
+  // turn into an out-of-bounds index.
+  double scaledValue2 = 0.5;
+  if (clamp > 0.0 && std::isfinite(clamp) && std::isfinite(value)) {
+    double scaledValue = value / clamp; // from -1 to 1.0
+    scaledValue2 =
+      1.0 - ((scaledValue + 1.0) / 2.0); // from 0 to 1.0 red to blue
+  }
+  scaledValue2 = std::clamp(scaledValue2, 0.0, 1.0);
 
   auto color = tinycolormap::GetColor(scaledValue2, colormap);
   Core::Color3f r(float(color.r()), color.g(), color.b());
 
   return r;
 }
+
+// Colours for a set of potentials, scaled by the largest magnitude. Pure
+// function of its arguments, so the colouring worker can call it.
+Core::Array<Core::Color3f> colorsFromPotentials(
+  const Core::Array<double>& potentials, ColormapType colormap)
+{
+  if (potentials.empty())
+    return Core::Array<Core::Color3f>();
+
+  const double minPotential =
+    *std::min_element(potentials.begin(), potentials.end());
+  const double maxPotential =
+    *std::max_element(potentials.begin(), potentials.end());
+  const double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
+
+  Core::Array<Core::Color3f> colors(potentials.size());
+  for (size_t i = 0; i < potentials.size(); i++)
+    colors[i] = gradientColor(potentials[i], clamp, colormap);
+  return colors;
+}
+} // namespace
 
 ColormapType Surfaces::getColormapFromString(const QString& name) const
 {
@@ -1012,12 +1301,12 @@ ColormapType Surfaces::getColormapFromString(const QString& name) const
   return ColormapType::Turbo;
 }
 
-void Surfaces::colorMeshByPotential()
+void Surfaces::colorMeshByPotential(Core::Mesh& mesh)
 {
   const auto model = m_dialog->colorModel().toStdString();
   const auto colormap = getColormapFromString(m_dialog->colormapName());
 
-  const auto positionsf = m_mesh1->vertices();
+  const auto& positionsf = mesh.vertices();
   if (positionsf.empty())
     return;
 
@@ -1027,68 +1316,174 @@ void Surfaces::colorMeshByPotential()
   const auto potentials =
     Calc::ChargeManager::instance().potentials(model, *m_molecule, positions);
 
-  double minPotential = *std::min_element(potentials.begin(), potentials.end());
-  double maxPotential = *std::max_element(potentials.begin(), potentials.end());
-  double clamp = std::max(std::abs(minPotential), std::abs(maxPotential));
-
-  Core::Array<Core::Color3f> colors(positions.size());
-  for (size_t i = 0; i < potentials.size(); i++)
-    colors[i] = chargeGradient(potentials[i], clamp, colormap);
-
-  m_mesh1->setColors(colors);
+  if (potentials.empty())
+    return;
+  mesh.setColors(colorsFromPotentials(potentials, colormap));
 }
 
-void Surfaces::colorMesh()
+bool Surfaces::startColoring()
 {
-  if (m_dialog == nullptr)
+  if (m_dialog == nullptr ||
+      m_dialog->colorProperty() != ByElectrostaticPotential ||
+      m_molecule == nullptr || !m_pendingMesh1)
+    return false;
+
+  if (m_pendingMesh1->vertices().empty())
+    return false;
+
+  const std::string model = m_dialog->colorModel().toStdString();
+  auto& manager = Calc::ChargeManager::instance();
+
+  // A model that computes potentials by itself (a script) is a shared object
+  // with a process interpreter; keep using it on this thread as before.
+  if (manager.hasCustomPotentials(model, *m_molecule)) {
+    colorMeshByPotential(*m_pendingMesh1);
+    return false;
+  }
+
+  // Everything below is read on the GUI thread. The charge models are shared
+  // singletons with mutable state (error strings, interpreters, an Open
+  // Babel listener that needs this thread's event loop) and cache charges
+  // into the molecule, so the worker never sees them or the molecule: the
+  // charges are fetched here, and the worker only evaluates the point-charge
+  // sum on copy-on-write copies of the data.
+  const MatrixX charges = manager.partialCharges(model, *m_molecule);
+  const Core::Array<Vector3> atomPositions =
+    std::as_const(*m_molecule).atomPositions3d();
+  const Core::Array<Vector3f> vertices = m_pendingMesh1->vertices();
+  const auto colormap = getColormapFromString(m_dialog->colormapName());
+
+  m_coloring = true;
+  m_colorWatcher.setFuture(
+    QtConcurrent::run([charges, atomPositions, vertices,
+                       colormap]() -> Core::Array<Core::Color3f> {
+      Core::Array<Vector3> points(vertices.size());
+      std::transform(vertices.begin(), vertices.end(), points.begin(),
+                     [](const Vector3f& pos) { return pos.cast<double>(); });
+
+      const std::size_t atomCount =
+        charges.cols() < 1 ? 0
+                           : std::min(static_cast<std::size_t>(charges.rows()),
+                                      atomPositions.size());
+      // The selected model's dielectric is not reachable through
+      // ChargeManager, and nothing in the tree sets it away from 1.
+      const auto potentials = Calc::ChargeModel::pointChargePotentials(
+        charges.data(), atomPositions.data(), atomCount, points, 1.0);
+      return colorsFromPotentials(potentials, colormap);
+    }));
+  return true;
+}
+
+void Surfaces::discardPendingMeshes()
+{
+  m_pendingMesh1.reset();
+  m_pendingMesh2.reset();
+  m_meshJobStale = false;
+  reportInterrupted();
+}
+
+void Surfaces::colorFinished()
+{
+  // A signal from a job that was dropped, or from one that finished while
+  // its replacement is already running.
+  if (!m_coloring || m_colorWatcher.isRunning())
+    return;
+  m_coloring = false;
+
+  // The job was already reported interrupted (moleculeChanged()).
+  if (!m_pendingMesh1)
     return;
 
-  switch (m_dialog->colorProperty()) {
-    case None:
-      break;
-    case ByElectrostaticPotential:
-      colorMeshByPotential();
-      break;
+  if (m_meshJobStale || m_molecule == nullptr) {
+    discardPendingMeshes();
+    return;
   }
+
+  const auto colors = m_colorWatcher.result();
+  if (colors.size() == m_pendingMesh1->vertices().size())
+    m_pendingMesh1->setColors(colors);
+  publishPendingMeshes();
+}
+
+void Surfaces::publishMesh(int& index, std::unique_ptr<Core::Mesh> mesh)
+{
+  // setMesh takes ownership even when it refuses, so only call it in range.
+  if (index >= 0 && static_cast<Index>(index) < m_molecule->meshCount() &&
+      m_molecule->setMesh(static_cast<Index>(index), std::move(mesh))) {
+    return;
+  }
+  index = static_cast<int>(m_molecule->meshCount());
+  m_molecule->addMesh(std::move(mesh));
 }
 
 void Surfaces::meshFinished()
 {
-  --m_meshesLeft;
-  if (m_meshesLeft == 0) {
-    colorMesh();
+  // Wait for every generator of the current job. A finished() left over from
+  // a job that displayMesh() superseded must not publish half a pair either.
+  // isDone() is the acquire that orders each generator's writes before the
+  // meshes are published (QThread's own sync is invisible to TSan).
+  if (!m_pendingMesh1 || m_coloring)
+    return;
+  if (m_meshGenerator1 != nullptr &&
+      (m_meshGenerator1->isRunning() || !m_meshGenerator1->isDone()))
+    return;
+  if (m_pendingMesh2 && m_meshGenerator2 != nullptr &&
+      (m_meshGenerator2->isRunning() || !m_meshGenerator2->isDone()))
+    return;
 
-    // finished, so request to enable the mesh display type
-    QStringList displayTypes;
-    displayTypes << tr("Surfaces");
-    emit requestActiveDisplayTypes(displayTypes);
+  m_meshCube.reset();
+  if (m_meshJobStale || m_molecule == nullptr) {
+    discardPendingMeshes();
+    return;
+  }
 
-    if (m_recordingMovie) {
-      // Move to the next frame.
-      qDebug() << "Let's get to the next frame…";
-      m_molecule->emitChanged(QtGui::Molecule::Added);
-      movieFrame();
-    } else {
-      if (m_dialog != nullptr)
-        m_dialog->reenableCalculateButton();
+  // Colouring by ESP runs on a worker; colorFinished() publishes.
+  if (startColoring())
+    return;
 
-      m_molecule->emitChanged(QtGui::Molecule::Added);
+  publishPendingMeshes();
+}
 
-      // Report what was actually rendered: resolution() picks a value from
-      // the molecule when the caller does not supply one.
-      m_commandPending = false;
-      QVariantMap result;
-      result["cubeIndex"] = static_cast<int>(m_molecule->activeCubeIndex()) + 1;
-      result["isovalue"] = m_isoValue;
-      if (m_commandResolution > 0.0f)
-        result["resolution"] = m_commandResolution;
-      m_commandResolution = 0.0f;
+void Surfaces::publishPendingMeshes()
+{
+  std::unique_ptr<Core::Mesh> mesh1 = std::move(m_pendingMesh1);
+  std::unique_ptr<Core::Mesh> mesh2 = std::move(m_pendingMesh2);
+  m_meshJobStale = false;
 
-      emit commandFinished(
-        tr("Surface Finished",
-           "finished rendering surface or molecular orbital"),
-        result);
-    }
+  // Publish both halves of a pair before anything can repaint.
+  publishMesh(m_mesh1Index, std::move(mesh1));
+  if (mesh2)
+    publishMesh(m_mesh2Index, std::move(mesh2));
+
+  // finished, so request to enable the mesh display type
+  QStringList displayTypes;
+  displayTypes << tr("Surfaces");
+  emit requestActiveDisplayTypes(displayTypes);
+
+  if (m_recordingMovie) {
+    // Move to the next frame.
+    qDebug() << "Let's get to the next frame…";
+    m_molecule->emitChanged(QtGui::Molecule::Added);
+    movieFrame();
+  } else {
+    if (m_dialog != nullptr)
+      m_dialog->reenableCalculateButton();
+
+    m_molecule->emitChanged(QtGui::Molecule::Added);
+
+    // Report what was actually rendered: resolution() picks a value from
+    // the molecule when the caller does not supply one.
+    m_commandPending = false;
+    QVariantMap result;
+    result["cubeIndex"] = static_cast<int>(m_molecule->activeCubeIndex()) + 1;
+    result["isovalue"] = m_isoValue;
+    if (m_commandResolution > 0.0f)
+      result["resolution"] = m_commandResolution;
+    m_commandResolution = 0.0f;
+
+    emit commandFinished(
+      tr("Surface Finished", "finished rendering surface or molecular orbital"),
+      result);
   }
 }
 
@@ -1112,6 +1507,17 @@ void Surfaces::recordMovie()
   if (!fileInfo.suffix().isEmpty())
     baseName = fileInfo.absolutePath() + "/" + fileInfo.baseName();
 
+  // Ask for the frame size. Video encoders need even dimensions.
+  auto* activeWidget = QtOpenGL::ActiveObjects::instance().activeGLWidget();
+  QtOpenGL::ImageSizeDialog sizeDialog(activeWidget, "surfaces/movie", false,
+                                       true, qobject_cast<QWidget*>(parent()));
+  sizeDialog.setWindowTitle(tr("Movie Size"));
+  if (sizeDialog.exec() != QDialog::Accepted) {
+    m_dialog->enableRecord();
+    return;
+  }
+  d->movieSize = sizeDialog.imageSize();
+
   m_baseFileName = baseName;
   m_numberLength = static_cast<int>(
     ceil(log10(static_cast<float>(m_molecule->coordinate3dCount()) + 1)));
@@ -1124,18 +1530,26 @@ void Surfaces::recordMovie()
   if (selectedFilter == tr("GIF (*.gif)")) {
     d->gwaviWriter = nullptr;
     d->gifWriter = new GifWriter;
-    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(), 800, 600,
-             100 / 4);
+    GifBegin(d->gifWriter, (baseName + ".gif").toLatin1().data(),
+             d->movieSize.width(), d->movieSize.height(), 100 / 4);
   } else if (selectedFilter == tr("Movie AVI (*.avi)")) {
     d->gifWriter = nullptr;
-    d->gwaviWriter = gwavi_open((baseName + ".avi").toLatin1().data(), 800, 600,
-                                "MJPG", 4, nullptr);
+    d->gwaviWriter =
+      gwavi_open((baseName + ".avi").toLatin1().data(), d->movieSize.width(),
+                 d->movieSize.height(), "MJPG", 4, nullptr);
   } else {
     d->gwaviWriter = nullptr;
     d->gifWriter = nullptr;
   }
 
-  stepChanged(m_currentFrame);
+  // A scripted calculation this displaces is never coming back. Tell its
+  // caller, but keep the movie writers opened above (reportInterrupted()
+  // would close them).
+  if (changeStep(m_currentFrame) && m_commandPending) {
+    m_commandPending = false;
+    m_commandResolution = 0.0f;
+    emit commandFailed(tr("The calculation was interrupted."));
+  }
   m_dialog->setStep(m_currentFrame);
   calculateSurface();
 }
@@ -1156,35 +1570,32 @@ void Surfaces::movieFrame()
     m_dialog->enableRecord();
     return;
   }
-  glWidget->resize(800 / glWidget->devicePixelRatio(),
-                   600 / glWidget->devicePixelRatio());
-  QImage exportImage;
-  glWidget->raise();
-  glWidget->repaint();
-  if (QOpenGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-    exportImage = glWidget->grabFramebuffer();
-  } else {
-    auto* screen = QGuiApplication::primaryScreen();
-    auto pixmap = screen->grabWindow(glWidget->winId());
-    exportImage = pixmap.toImage();
+  QtOpenGL::RenderOptions renderOptions;
+  renderOptions.size = d->movieSize;
+  QString renderError;
+  QImage exportImage = glWidget->renderImage(renderOptions, &renderError);
+  if (exportImage.isNull()) {
+    QMessageBox::warning(
+      qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+      tr("Cannot render the movie frame: %1").arg(renderError));
+    closeMovieWriters(d->gifWriter, d->gwaviWriter);
+    m_recordingMovie = false;
+    m_dialog->enableRecord();
+    return;
   }
 
   if (d->gifWriter) {
-    int pixelCount = exportImage.width() * exportImage.height();
-    auto* imageData = new uint8_t[pixelCount * 4];
-    int imageIndex = 0;
-    for (int j = 0; j < exportImage.height(); ++j) {
-      for (int k = 0; k < exportImage.width(); ++k) {
-        QColor color = exportImage.pixel(k, j);
-        imageData[imageIndex] = static_cast<uint8_t>(color.red());
-        imageData[imageIndex + 1] = static_cast<uint8_t>(color.green());
-        imageData[imageIndex + 2] = static_cast<uint8_t>(color.blue());
-        imageData[imageIndex + 3] = static_cast<uint8_t>(color.alpha());
-        imageIndex += 4;
-      }
+    // GIF-H wants tightly packed RGBA, which is what RGBA8888 scanlines are
+    // (4 bytes per pixel is always 32-bit aligned).
+    exportImage = exportImage.convertToFormat(QImage::Format_RGBA8888);
+    if (exportImage.size() != d->movieSize) {
+      closeMovieWriters(d->gifWriter, d->gwaviWriter);
+      m_recordingMovie = false;
+      m_dialog->enableRecord();
+      return;
     }
-    GifWriteFrame(d->gifWriter, imageData, 800, 600, 100 / 4);
-    delete[] imageData;
+    GifWriteFrame(d->gifWriter, exportImage.constBits(), exportImage.width(),
+                  exportImage.height(), 100 / 4);
   } else if (d->gwaviWriter) {
     QByteArray ba;
     QBuffer buffer(&ba);
@@ -1216,20 +1627,14 @@ void Surfaces::movieFrame()
   ++m_currentFrame;
   if (m_currentFrame <= m_frameCount) {
     qDebug() << "Starting next frame…";
-    stepChanged(m_currentFrame);
+    changeStep(m_currentFrame);
     m_dialog->setStep(m_currentFrame);
     calculateSurface();
   } else {
     qDebug() << "We are done! Make some movies.";
-    if (d->gifWriter) {
-      GifEnd(d->gifWriter);
-      delete d->gifWriter;
-      d->gifWriter = nullptr;
-    } else if (d->gwaviWriter) {
-      gwavi_close(d->gwaviWriter);
-      d->gwaviWriter = nullptr;
+    if (d->gifWriter || d->gwaviWriter) {
+      closeMovieWriters(d->gifWriter, d->gwaviWriter);
     } else {
-      QProcess proc;
       QStringList args;
       args << "-y"
            << "-r" << QString::number(10) << "-i"
@@ -1240,7 +1645,12 @@ void Surfaces::movieFrame()
            << "30"
            << "-pix_fmt"
            << "yuv420p" << m_baseFileName + ".mp4";
-      proc.execute("avconv", args);
+      if (!QtGui::Utilities::runVideoEncoder(args)) {
+        QMessageBox::warning(
+          qobject_cast<QWidget*>(parent()), tr("Avogadro"),
+          tr("Cannot run ffmpeg or avconv to encode the movie. The frames "
+             "were saved as PNG files."));
+      }
     }
     /*
     args.clear();

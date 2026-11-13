@@ -9,7 +9,9 @@ set(tests
   AtomUtilities
   BasisSet
   Bond
+  BondOrderPerception
   Constraint
+  ContrastColor
   ConformerQuantity
   CoordinateBlockGenerator
   CoordinateSet
@@ -18,6 +20,7 @@ set(tests
   DihedralIterator
   Eigen
   Element
+  GaussianPrimitiveNormalization
   GaussianSet
   GaussianShellNormalization
   Graph
@@ -55,6 +58,8 @@ message(STATUS "Test source files: ${testSrcs}")
 add_executable(AvogadroTests ${testSrcs})
 target_link_libraries(AvogadroTests Avogadro::Core
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+# Helpers shared between the core and io bond order tests.
+target_include_directories(AvogadroTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
@@ -63,12 +68,16 @@ target_link_libraries(AvogadroTests Avogadro::Core
 # filter below would not match -- ctest would then run zero cases and still
 # report success.
 set(parameterizedTests
+  GaussianPrimitiveNormalization
   GaussianShellNormalization
   )
 
 foreach(TestName ${tests})
   if(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
+  elseif(TestName STREQUAL "Molecule")
+    # moleculetest.cpp also defines MoleculeCoordinateSetTest.
+    set(testFilter "MoleculeTest.*:MoleculeCoordinateSetTest.*")
   else()
     set(testFilter "${TestName}Test.*")
   endif()

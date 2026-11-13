@@ -14,6 +14,7 @@
 #include <QtCore/QDebug>
 
 #include <limits>
+#include <utility>
 
 namespace Avogadro::QtPlugins {
 
@@ -291,6 +292,25 @@ bool MolecularModel::setData(const QModelIndex& index, const QVariant& value,
 
 void MolecularModel::updateTable(unsigned int flags)
 {
+  // Nothing in the table depends on atom positions, so skip the (potentially
+  // per-frame) rebuild when atoms only moved: animation, playback and
+  // optimization emit exactly Atoms | Moved, optionally with Conformer.
+  // Position edits that also carry Modified are indistinguishable from element
+  // changes, so those still refresh. A Conformer change can add or remove
+  // coordinate sets, so refresh if that count no longer matches the cache.
+  constexpr unsigned int moveOnlyMask =
+    Molecule::Atoms | Molecule::Moved | Molecule::Conformer;
+  if ((flags & Molecule::Moved) && !(flags & ~moveOnlyMask)) {
+    const int cachedSets =
+      m_propertiesCache.hasValue(" 6coordinateSets")
+        ? m_propertiesCache.value(" 6coordinateSets").toInt()
+        : 0;
+    const int currentSets =
+      m_molecule ? static_cast<int>(m_molecule->coordinate3dCount()) : 0;
+    if (cachedSets == currentSets)
+      return;
+  }
+
   // cache all the properties
   m_propertiesCache.clear();
   if (m_molecule == nullptr)
@@ -344,7 +364,8 @@ void MolecularModel::updateTable(unsigned int flags)
   }
 
   // TODO check for homo, lumo, or somo energies
-  const auto* basis = m_molecule->basisSet();
+  // Only look: a mutable basisSet() would detach a shared basis set.
+  const auto* basis = std::as_const(*m_molecule).basisSet();
   const GaussianSet* gaussianSet = dynamic_cast<const GaussianSet*>(basis);
   if (gaussianSet != nullptr && gaussianSet->scfType() == Core::Rhf) {
     unsigned int homo = gaussianSet->homo();

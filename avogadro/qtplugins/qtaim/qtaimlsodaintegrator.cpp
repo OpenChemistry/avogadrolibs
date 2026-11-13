@@ -121,7 +121,7 @@ QVector3D QTAIMLSODAIntegrator::integrate(QVector3D x0y0z0)
     //    if( t0 + dt > tf ) qDebug() << "END";
     // beta spheres
     if (m_mode == QTAIMLSODAIntegrator::SteepestAscentPathInElectronDensity) {
-      if (m_betaSpheres.length() > 0) {
+      if (!m_betaSpheres.empty()) {
         for (qint64 n_ = 0; n_ < m_betaSpheres.length(); ++n_) {
           Matrix<qreal, 3, 1> a(y[1], y[2], y[3]);
           Matrix<qreal, 3, 1> b(m_betaSpheres.at(n_).first.x(),
@@ -160,12 +160,9 @@ QVector3D QTAIMLSODAIntegrator::integrate(QVector3D x0y0z0)
   return QVector3D(y[1], y[2], y[3]);
 }
 
-void QTAIMLSODAIntegrator::f(int neq, double t, double* y, double* ydot)
+void QTAIMLSODAIntegrator::f([[maybe_unused]] int neq,
+                             [[maybe_unused]] double t, double* y, double* ydot)
 {
-
-  neq = neq; // suppress warning
-  t = t;     // suppress warning
-
   Matrix<qreal, 3, 1> gradient;
 
   Matrix<qreal, 3, 4> gH;

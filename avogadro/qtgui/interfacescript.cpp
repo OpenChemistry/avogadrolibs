@@ -11,6 +11,7 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
+#include <avogadro/qtgui/colortheme.h>
 #include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
@@ -22,8 +23,16 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QMutex>
+#include <QtCore/QSet>
+
+#include <QtGui/QColor>
 
 #include <QtWidgets/QMessageBox>
+
+#include <map>
+#include <string>
+#include <unordered_map>
 
 namespace Avogadro::QtGui {
 
@@ -63,6 +72,18 @@ static void stripLeadingNonJson(QByteArray& data)
   }
 }
 
+// True the first time @p key is added to @p seen. The sets are shared by every
+// InterfaceScript, which may live on different threads.
+static bool firstTimeSeen(QSet<QString>& seen, const QString& key)
+{
+  static QMutex mutex;
+  QMutexLocker locker(&mutex);
+  if (seen.contains(key))
+    return false;
+  seen.insert(key);
+  return true;
+}
+
 InterfaceScript::InterfaceScript(const QString& scriptFilePath_,
                                  QObject* parent_)
   : QObject(parent_), m_interpreter(new PythonScript(scriptFilePath_, this)),
@@ -86,7 +107,7 @@ bool InterfaceScript::debug() const
 QJsonObject InterfaceScript::options() const
 {
   m_errors.clear();
-  if (m_options.isEmpty()) {
+  if (!m_optionsLoaded) {
     qDeleteAll(m_highlightStyles.values());
     m_highlightStyles.clear();
 
@@ -111,9 +132,20 @@ QJsonObject InterfaceScript::options() const
     }
 
     m_options = doc.object();
+    m_optionsLoaded = true;
 
     if (m_options.contains(QStringLiteral("highlightStyles")) &&
         m_options.value(QStringLiteral("highlightStyles")).isArray()) {
+      // Deprecated: only packages supply highlight styles now (declared in
+      // pyproject.toml); --print-options is a single-file script mechanism.
+      static QSet<QString> warnedScripts;
+      const QString scriptPath(scriptFilePath());
+      if (firstTimeSeen(warnedScripts, scriptPath)) {
+        qWarning() << "Supplying highlightStyles through --print-options is "
+                      "deprecated; packages should declare them with "
+                      "highlight-styles in pyproject.toml. Script:"
+                   << scriptPath;
+      }
       if (!parseHighlightStyles(
             m_options.value(QStringLiteral("highlightStyles")).toArray())) {
         qDebug() << "Failed to parse highlighting styles.";
@@ -178,6 +210,26 @@ void InterfaceScript::setScriptFilePath(const QString& scriptFile)
 void InterfaceScript::setOptionsJson(const QJsonObject& opts)
 {
   m_options = opts;
+  m_optionsLoaded = true;
+
+  // Same default as options() applies when the key is absent.
+  m_moleculeExtension = QLatin1String("cjson");
+  if (m_options.contains(QStringLiteral("inputMoleculeFormat")) &&
+      m_options[QStringLiteral("inputMoleculeFormat")].isString()) {
+    m_moleculeExtension =
+      m_options[QStringLiteral("inputMoleculeFormat")].toString();
+  }
+
+  // The caller's styles replace any parsed earlier.
+  qDeleteAll(m_highlightStyles.values());
+  m_highlightStyles.clear();
+  if (m_options.contains(QStringLiteral("highlightStyles")) &&
+      m_options.value(QStringLiteral("highlightStyles")).isArray()) {
+    if (!parseHighlightStyles(
+          m_options.value(QStringLiteral("highlightStyles")).toArray())) {
+      qDebug() << "Failed to parse highlighting styles.";
+    }
+  }
 }
 
 void InterfaceScript::reset()
@@ -187,12 +239,15 @@ void InterfaceScript::reset()
   m_moleculeExtension = QLatin1String("Unknown");
   m_displayName = QString();
   m_options = QJsonObject();
+  m_optionsLoaded = false;
   m_warnings.clear();
   m_errors.clear();
   m_filenames.clear();
   m_mainFileName.clear();
   m_files.clear();
+  qDeleteAll(m_fileHighlighters.values());
   m_fileHighlighters.clear();
+  qDeleteAll(m_highlightStyles.values());
   m_highlightStyles.clear();
 }
 
@@ -349,7 +404,7 @@ bool InterfaceScript::processCommand(Core::Molecule* mol)
       moleculeString = obj[m_moleculeExtension].toString();
     }
 
-    auto* guiMol = static_cast<QtGui::Molecule*>(mol);
+    auto* guiMol = dynamic_cast<QtGui::Molecule*>(mol);
 
     if (!moleculeString.isEmpty()) {
       Io::FileFormatManager& formats = Io::FileFormatManager::instance();
@@ -472,14 +527,35 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
   const QJsonObject scriptOptions(
     options_.value(QStringLiteral("options")).toObject());
 
-  // Add the molecule file to the options
+  // Input generators get no molecule unless they ask for one with
+  // inputMoleculeFormat, as with MoleQueue::InputGenerator; the geometry
+  // keywords below are filled in from @p mol either way.
+  if (m_moleculeExtension == QLatin1String("Unknown"))
+    options();
   QJsonObject allOptions(options_);
-  if (!insertMolecule(allOptions, mol))
+  if (m_options.value(QStringLiteral("inputMoleculeFormat")).isString() &&
+      !insertMolecule(allOptions, mol, false))
     return false;
 
-  QByteArray json(
-    m_interpreter->execute(QStringList() << QStringLiteral("--generate-input"),
-                           QJsonDocument(allOptions).toJson()));
+  // Package-mode generators take no command-line flag; JSON arrives on stdin
+  // (mirrors runCommand() and InputGenerator::generateInput()).
+  QStringList generateArgs;
+  if (!m_interpreter->isPackageMode()) {
+    // Deprecated: single-file input generator scripts are being phased out
+    // in favour of packages.
+    static QSet<QString> warnedScripts;
+    const QString scriptPath(scriptFilePath());
+    if (firstTimeSeen(warnedScripts, scriptPath)) {
+      qWarning() << "Single-file input generator scripts (--generate-input) "
+                    "are deprecated; please provide the generator as a "
+                    "package. Script:"
+                 << scriptPath;
+    }
+    generateArgs << QStringLiteral("--generate-input");
+  }
+
+  QByteArray json(m_interpreter->execute(
+    generateArgs, QJsonDocument(allOptions).toJson(QJsonDocument::Compact)));
 
   if (m_interpreter->hasErrors()) {
     m_errors << m_interpreter->errorList();
@@ -557,6 +633,14 @@ bool InterfaceScript::generateInput(const QJsonObject& options_,
                     }
                   }
                 }
+                if (highlighter->ruleCount() > 0)
+                  m_fileHighlighters[fileName] = highlighter;
+                else
+                  highlighter->deleteLater();
+              } else if (m_highlightStyles.contains(
+                           QStringLiteral("default"))) {
+                auto* highlighter(new GenericHighlighter(this));
+                *highlighter += *m_highlightStyles[QStringLiteral("default")];
                 if (highlighter->ruleCount() > 0)
                   m_fileHighlighters[fileName] = highlighter;
                 else
@@ -665,7 +749,8 @@ bool InterfaceScript::parseJson(const QByteArray& json,
 }
 
 bool InterfaceScript::insertMolecule(QJsonObject& json,
-                                     const Core::Molecule& mol) const
+                                     const Core::Molecule& mol,
+                                     bool includeCubes) const
 {
   // Update the cached options if the format is not set
   if (m_moleculeExtension == QLatin1String("Unknown"))
@@ -701,6 +786,14 @@ bool InterfaceScript::insertMolecule(QJsonObject& json,
                    "Unrecognized file format: %1")
                   .arg(m_moleculeExtension);
     return false;
+  }
+
+  // Cubes can be hundreds of MB and input generators never use them (CJSON
+  // never writes meshes).
+  if (!includeCubes) {
+    cjsonFormat->setOptions(R"({"cubes": false})");
+    if (m_moleculeExtension == QLatin1String("cjson"))
+      format->setOptions(R"({"cubes": false})");
   }
 
   std::string str;
@@ -1051,30 +1144,78 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
     }
 
     QString preset(json[QStringLiteral("preset")].toString());
-    /// @todo Store presets in a singleton that can be configured in the GUI,
-    /// rather than hardcoding them.
-    if (preset == QLatin1String("title")) {
-      format.setFontFamily(QStringLiteral("serif"));
-      format.setForeground(Qt::darkGreen);
-      format.setFontWeight(QFont::Bold);
-    } else if (preset == QLatin1String("keyword")) {
-      format.setFontFamily(QStringLiteral("mono"));
-      format.setForeground(Qt::darkBlue);
-    } else if (preset == QLatin1String("property")) {
-      format.setFontFamily(QStringLiteral("mono"));
-      format.setForeground(Qt::darkRed);
-    } else if (preset == QLatin1String("literal")) {
-      format.setFontFamily(QStringLiteral("mono"));
-      format.setForeground(Qt::darkMagenta);
-    } else if (preset == QLatin1String("comment")) {
-      format.setFontFamily(QStringLiteral("serif"));
-      format.setForeground(Qt::darkGreen);
-      format.setFontItalic(true);
-    } else {
+
+    enum class HighlightPreset
+    {
+      Title,
+      Keyword,
+      Property,
+      NumLiteral,
+      StrLiteral,
+      Comment,
+      Method,
+      Basis,
+      Block,
+    };
+
+    std::unordered_map<QString, HighlightPreset> mapStringToPreset{
+      { QString("title"), HighlightPreset::Title },
+      { QString("keyword"), HighlightPreset::Keyword },
+      { QString("property"), HighlightPreset::Property },
+      { QString("num_literal"), HighlightPreset::NumLiteral },
+      // "literal" is the old name for "num_literal"
+      { QString("literal"), HighlightPreset::NumLiteral },
+      { QString("str_literal"), HighlightPreset::StrLiteral },
+      { QString("comment"), HighlightPreset::Comment },
+      { QString("method"), HighlightPreset::Method },
+      { QString("basis"), HighlightPreset::Basis },
+      { QString("block"), HighlightPreset::Block },
+    };
+
+    const ColorTheme theme = colorTheme();
+
+    if (mapStringToPreset.count(preset) == 0) {
       qDebug() << "Invalid style preset: " << preset;
       return false;
     }
-    return true;
+
+    HighlightPreset presetType = mapStringToPreset[preset];
+
+    format.setFontFamily(QStringLiteral("mono"));
+
+    /// @todo Store presets in a singleton that can be configured in the GUI,
+    /// rather than hardcoding them.
+    switch (presetType) {
+      case HighlightPreset::Title:
+        format.setFontWeight(QFont::Bold);
+        format.setForeground(highlightColor("green", theme));
+        return true;
+      case HighlightPreset::Keyword:
+        format.setForeground(highlightColor("blue", theme));
+        return true;
+      case HighlightPreset::Property:
+        format.setForeground(highlightColor("cyan", theme));
+        return true;
+      case HighlightPreset::NumLiteral:
+        format.setForeground(highlightColor("orange", theme));
+        return true;
+      case HighlightPreset::StrLiteral:
+        format.setForeground(highlightColor("red", theme));
+        return true;
+      case HighlightPreset::Comment:
+        format.setFontItalic(true);
+        format.setForeground(highlightColor("gray", theme));
+        return true;
+      case HighlightPreset::Method:
+        format.setForeground(highlightColor("purple", theme));
+        return true;
+      case HighlightPreset::Basis:
+        format.setForeground(highlightColor("pink", theme));
+        return true;
+      case HighlightPreset::Block:
+        format.setForeground(highlightColor("yellow", theme));
+        return true;
+    }
   }
 
   // Extract an RGB tuple from 'array' as a QBrush:

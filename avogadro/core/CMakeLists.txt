@@ -46,6 +46,7 @@ avogadro_headers(Core
   atomtyper.h
   atomtyper-inline.h
   atomutilities.h
+  bondorderperception.h
   basisset.h
   bond.h
   conformerquantity.h
@@ -87,6 +88,8 @@ target_sources(Core PRIVATE
   angleiterator.cpp
   aromaticity.cpp
   atomutilities.cpp
+  bondordersolver_p.cpp
+  bondordersolver_p.h
   conformerquantity.cpp
   coordinateblockgenerator.cpp
   crystaltools.cpp

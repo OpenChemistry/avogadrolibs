@@ -9,8 +9,7 @@
 #include "avogadroquantumioexport.h"
 #include <avogadro/io/fileformat.h>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 /**
  * @class QCSchema qcschema.h <avogadro/quantumio/qcschema.h>
@@ -57,7 +56,6 @@ public:
                            const Core::Molecule& molecule) override;
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif // AVOGADRO_IO_NWCHEMJSON_H

@@ -8,21 +8,23 @@
 
 #include "curvegeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class AVOGADRORENDERING_EXPORT BSplineGeometry : public CurveGeometry
 {
 public:
-  BSplineGeometry();
-  BSplineGeometry(bool flat);
+  using CurveGeometry::CurveGeometry;
 
 protected:
-  Vector3f computeCurvePoint(float t,
-                             const std::vector<Point>& points) const override;
+  /**
+   * Uniform quadratic B-spline (C1) with the end control points doubled, so
+   * that the curve runs from the first to the last control point.
+   */
+  Vector3f computeSegmentPoint(size_t segment, float f,
+                               const std::vector<Point>& points) const override;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

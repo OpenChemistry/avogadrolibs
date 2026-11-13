@@ -13,8 +13,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QIcon>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class Molecule;
 class RWMolecule;
@@ -114,7 +113,6 @@ private:
   QIcon m_removeIcon;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_LAYERMODEL_H

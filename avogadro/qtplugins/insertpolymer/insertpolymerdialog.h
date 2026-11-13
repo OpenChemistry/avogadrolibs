@@ -15,8 +15,7 @@ namespace Ui {
 class InsertPolymerDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class InsertPolymerDialog : public QDialog
 {
@@ -72,7 +71,6 @@ private:
   double m_massC = 0.0;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_INSERTPOLYMERDIALOG_H

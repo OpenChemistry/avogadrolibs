@@ -23,14 +23,13 @@ namespace Avogadro::QtGui {
 using std::swap;
 
 Molecule::Molecule(QObject* p)
-  : QObject(p), Core::Molecule(), m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(p), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(false);
 }
 
 Molecule::Molecule(const Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : Core::Molecule(other), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(false);
   // Now assign the unique ids
@@ -42,8 +41,7 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : Core::Molecule(other), m_undoMolecule(new RWMolecule(*this, this))
 {
   // As in the two constructors above: without this the undo molecule was
   // left uninitialized, so undoMolecule() handed back a wild pointer and the
@@ -119,19 +117,26 @@ Molecule::AtomType Molecule::addAtom(unsigned char number, Index uniqueId)
 Molecule::AtomType Molecule::addAtom(unsigned char number, Vector3 position3d,
                                      Index uniqueId)
 {
-  if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size())) {
-    // Add atom using our own addAtom (which handles unique IDs)
-    // then set the position
-    auto atom = Molecule::addAtom(number);
-    if (atom.isValid())
-      atom.setPosition3d(position3d);
-    return atom;
-  } else {
-    auto atom = Molecule::addAtom(number, uniqueId);
-    if (atom.isValid())
-      atom.setPosition3d(position3d);
+  // Store the position first, as Core::Molecule::addAtom() does, so the atom
+  // is added to the coordinate sets with it.
+  const bool covered = m_positions3d.size() == atomCount();
+  if (covered)
+    m_positions3d.push_back(position3d);
+
+  // Add atom using our own addAtom (which handles unique IDs)
+  auto atom = uniqueId >= static_cast<Index>(m_atomUniqueIds.size())
+                ? Molecule::addAtom(number)
+                : Molecule::addAtom(number, uniqueId);
+  if (!atom.isValid()) {
+    // A refused add leaves the molecule as it was.
+    if (covered)
+      m_positions3d.pop_back();
     return atom;
   }
+
+  // Positions that did not cover the atoms yet are extended by this.
+  atom.setPosition3d(position3d);
+  return atom;
 }
 
 bool Molecule::removeAtom(Index index)
@@ -361,10 +366,12 @@ void Molecule::emitChanged(unsigned int change)
       MeshGenerator::cancelAllCalculations();
       clearCubes();
       clearMeshes();
-      delete m_basisSet;
-      m_basisSet = nullptr;
+      m_basisSet.reset();
       m_spectra.clear();
       clearVibrations();
+      // Charges computed or read for the old structure no longer describe it.
+      for (const std::string& type : partialChargeTypes())
+        removePartialCharges(type);
     }
     emit changed(change);
   }

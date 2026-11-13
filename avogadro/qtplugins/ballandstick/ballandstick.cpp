@@ -13,6 +13,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFormLayout>
@@ -49,7 +50,8 @@ std::string commaToDot(std::string token)
 
 struct LayerBallAndStick : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   bool multiBonds = true;
   bool showHydrogens = true;
   float atomScale = 0.3f;
@@ -177,42 +179,119 @@ BallAndStick::BallAndStick(QObject* p) : ScenePlugin(p), m_group(nullptr)
 
 BallAndStick::~BallAndStick() {}
 
-void BallAndStick::process(const QtGui::Molecule& molecule,
-                           Rendering::GroupNode& node)
+namespace {
+
+// A sphere drawable and a cursor into it. In update mode `data` points at the
+// geometry's array, fetched once so that writing does not detach per element.
+struct SphereTarget
 {
-  m_layerManager.load<LayerBallAndStick>();
-  // Add a sphere node to contain all of the spheres.
-  m_group = &node;
-  auto* geometry = new GeometryNode;
-  node.addChild(geometry);
-  auto* spheres = new SphereGeometry;
-  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
-  spheres->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(spheres);
+  SphereGeometry* geometry;
+  size_t cursor = 0;
+  Rendering::SphereColor* data = nullptr;
+  size_t size = 0;
 
-  // if we have to draw any translucent spheres, we need to add a separate
-  // geometry node for them
-  auto translucentSpheres = new SphereGeometry;
-  translucentSpheres->setRenderPass(Rendering::TranslucentPass);
-  translucentSpheres->identifier().molecule =
-    reinterpret_cast<const void*>(&molecule);
-  translucentSpheres->identifier().type = Rendering::AtomType;
-  geometry->addDrawable(translucentSpheres);
+  void beginUpdate()
+  {
+    size = geometry->spheres().size();
+    data = geometry->spheres().data();
+  }
+};
 
-  // for the selected atoms
-  auto selectedSpheres = new SphereGeometry;
-  selectedSpheres->setOpacity(0.42);
-  geometry->addDrawable(selectedSpheres);
+struct CylinderTarget
+{
+  CylinderGeometry* geometry;
+  size_t cursor = 0;
+};
 
+// The drawables process() builds, and a cursor into each. The same code walks
+// the atoms and bonds to build them (append) and to move them (overwrite at
+// the cursor), so an update cannot differ from a rebuild.
+struct Targets
+{
+  SphereTarget spheres;
+  SphereTarget translucentSpheres;
+  SphereTarget selectedSpheres;
+  CylinderTarget cylinders;
+  CylinderTarget translucentBonds;
+
+  bool update = false;
+
+  Targets(SphereGeometry* s, SphereGeometry* ts, SphereGeometry* sel,
+          CylinderGeometry* c, CylinderGeometry* tb)
+    : spheres{ s }, translucentSpheres{ ts }, selectedSpheres{ sel },
+      cylinders{ c }, translucentBonds{ tb }
+  {
+  }
+
+  void beginUpdate()
+  {
+    update = true;
+    spheres.beginUpdate();
+    translucentSpheres.beginUpdate();
+    selectedSpheres.beginUpdate();
+  }
+
+  // The cursor always advances, so writing more than the drawable holds shows
+  // up as a cursor past its size in complete(); nothing is written then.
+  void addSphere(SphereTarget& target, const Vector3f& position,
+                 const Vector3ub& color, float radius, size_t index)
+  {
+    if (!update) {
+      target.geometry->addSphere(position, color, radius, index);
+    } else if (target.cursor < target.size) {
+      target.data[target.cursor] =
+        Rendering::SphereColor(position, radius, color);
+    }
+    ++target.cursor;
+  }
+
+  void addCylinder(CylinderTarget& target, const Vector3f& pos1,
+                   const Vector3f& pos2, float radius, const Vector3ub& color1,
+                   const Vector3ub& color2, size_t index)
+  {
+    if (!update) {
+      target.geometry->addCylinder(pos1, pos2, radius, color1, color2, index);
+    } else if (target.cursor < target.geometry->size()) {
+      target.geometry->cylinders()[target.cursor] =
+        Rendering::CylinderColor(pos1, pos2, radius, color1, color2);
+    }
+    ++target.cursor;
+  }
+
+  // True if every drawable was filled exactly to its size.
+  bool complete() const
+  {
+    return spheres.cursor == spheres.geometry->size() &&
+           translucentSpheres.cursor == translucentSpheres.geometry->size() &&
+           selectedSpheres.cursor == selectedSpheres.geometry->size() &&
+           cylinders.cursor == cylinders.geometry->size() &&
+           translucentBonds.cursor == translucentBonds.geometry->size();
+  }
+
+  void markDirty()
+  {
+    spheres.geometry->markDirty();
+    translucentSpheres.geometry->markDirty();
+    selectedSpheres.geometry->markDirty();
+    cylinders.geometry->markDirty();
+    translucentBonds.geometry->markDirty();
+  }
+};
+
+// Add (or, when t.update, overwrite) the spheres and cylinders for @p molecule.
+template <typename Layers>
+void populate(const QtGui::Molecule& molecule, Layers& layers,
+              float singleBondRadius, Targets& t)
+{
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    if (!m_layerManager.atomEnabled(i)) {
+    size_t layer = layers.getLayerID(i);
+    if (!layers.layerEnabled(layer)) {
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
 
-    auto* interface = m_layerManager.getSetting<LayerBallAndStick>(
-      m_layerManager.getLayerID(i));
+    auto* interface = layers.setting(layer);
     if (atomicNumber == 1 && !interface->showHydrogens)
       continue;
 
@@ -221,45 +300,35 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     float scale = interface->atomScale;
 
     if (interface->opacity < 1.0f) {
-      translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
-                                    radius * scale, i);
-      translucentSpheres->setOpacity(interface->opacity);
+      t.addSphere(t.translucentSpheres, atom.position3d().cast<float>(), color,
+                  radius * scale, i);
+      t.translucentSpheres.geometry->setOpacity(interface->opacity);
     } else
-      spheres->addSphere(atom.position3d().cast<float>(), color, radius * scale,
-                         i);
+      t.addSphere(t.spheres, atom.position3d().cast<float>(), color,
+                  radius * scale, i);
 
     if (atom.selected()) {
       // add the selected indicator
       color = Vector3ub(0, 0, 255);
       radius *= 1.2;
-      selectedSpheres->addSphere(atom.position3d().cast<float>(), color,
-                                 radius * scale, i);
+      t.addSphere(t.selectedSpheres, atom.position3d().cast<float>(), color,
+                  radius * scale, i);
     }
   }
 
-  auto* cylinders = new CylinderGeometry;
-  cylinders->identifier().molecule = &molecule;
-  cylinders->identifier().type = Rendering::BondType;
-  geometry->addDrawable(cylinders);
-
-  auto* translucentBonds = new CylinderGeometry;
-  translucentBonds->setRenderPass(Rendering::TranslucentPass);
-  translucentBonds->identifier().molecule = &molecule;
-  translucentBonds->identifier().type = Rendering::BondType;
   float opacity = 1.0f; // for any translucent bonds
-  geometry->addDrawable(translucentBonds);
-
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!m_layerManager.bondEnabled(bond.atom1().index(),
-                                    bond.atom2().index())) {
+    Index a1 = bond.atom1().index();
+    Index a2 = bond.atom2().index();
+    size_t layer1 = layers.getLayerID(a1);
+    size_t layer2 = layers.getLayerID(a2);
+    if (!layers.layerEnabled(layer1) && !layers.layerEnabled(layer2)) {
       continue;
     }
 
-    auto* interface1 = m_layerManager.getSetting<LayerBallAndStick>(
-      m_layerManager.getLayerID(bond.atom1().index()));
-    auto* interface2 = m_layerManager.getSetting<LayerBallAndStick>(
-      m_layerManager.getLayerID(bond.atom2().index()));
+    auto* interface1 = layers.setting(layer1);
+    auto* interface2 = layers.setting(layer2);
 
     if (!interface1->showHydrogens && !interface2->showHydrogens &&
         (bond.atom1().atomicNumber() == 1 ||
@@ -270,9 +339,10 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
     bool doOpaque = true;
     if (interface1->opacity < 1.0f || interface2->opacity < 1.0f) {
       opacity = std::min(interface1->opacity, interface2->opacity);
-      translucentBonds->setOpacity(opacity);
+      t.translucentBonds.geometry->setOpacity(opacity);
       doOpaque = false;
     }
+    CylinderTarget& target = doOpaque ? t.cylinders : t.translucentBonds;
 
     float bondRadius = (interface1->bondRadius + interface2->bondRadius) * 0.5f;
 
@@ -292,28 +362,16 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
         Eigen::Quaternionf q;
         q = Eigen::AngleAxisf(45.0f * DEG_TO_RAD_F, bondVector);
         delta = q * delta * 2.0f * bondRadius;
-        if (doOpaque) {
-          cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.15,
-                                 color1, color2, i);
-          cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.15,
-                                 color1, color2, i);
-        } else {
-          translucentBonds->addCylinder(pos1 + delta, pos2 + delta,
-                                        bondRadius * 1.15, color1, color2, i);
-          translucentBonds->addCylinder(pos1 - delta, pos2 - delta,
-                                        bondRadius * 1.15, color1, color2, i);
-        }
+        t.addCylinder(target, pos1 + delta, pos2 + delta, bondRadius * 1.15,
+                      color1, color2, i);
+        t.addCylinder(target, pos1 - delta, pos2 - delta, bondRadius * 1.15,
+                      color1, color2, i);
         // This relies upon the single bond case below for the third cylinder.
         [[fallthrough]];
       }
       default:
       case 1:
-        if (doOpaque) {
-          cylinders->addCylinder(pos1, pos2, m_bondRadius, color1, color2, i);
-        } else {
-          translucentBonds->addCylinder(pos1, pos2, m_bondRadius, color1,
-                                        color2, i);
-        }
+        t.addCylinder(target, pos1, pos2, singleBondRadius, color1, color2, i);
         break;
       case 2: {
         Vector3f delta = bondVector.unitOrthogonal();
@@ -321,20 +379,101 @@ void BallAndStick::process(const QtGui::Molecule& molecule,
         Eigen::Quaternionf q;
         q = Eigen::AngleAxisf(45.0f * DEG_TO_RAD_F, bondVector);
         delta = q * delta * bondRadius;
-        if (doOpaque) {
-          cylinders->addCylinder(pos1 + delta, pos2 + delta, bondRadius * 1.3,
-                                 color1, color2, i);
-          cylinders->addCylinder(pos1 - delta, pos2 - delta, bondRadius * 1.3,
-                                 color1, color2, i);
-        } else {
-          translucentBonds->addCylinder(pos1 + delta, pos2 + delta,
-                                        bondRadius * 1.3, color1, color2, i);
-          translucentBonds->addCylinder(pos1 - delta, pos2 - delta,
-                                        bondRadius * 1.3, color1, color2, i);
-        }
+        t.addCylinder(target, pos1 + delta, pos2 + delta, bondRadius * 1.3,
+                      color1, color2, i);
+        t.addCylinder(target, pos1 - delta, pos2 - delta, bondRadius * 1.3,
+                      color1, color2, i);
       }
     }
   }
+}
+
+} // namespace
+
+void BallAndStick::process(const QtGui::Molecule& molecule,
+                           Rendering::GroupNode& node)
+{
+  m_layerManager.load<LayerBallAndStick>();
+  // Add a sphere node to contain all of the spheres.
+  m_group = &node;
+  auto* geometry = new GeometryNode;
+  node.addChild(geometry);
+  auto* spheres = new SphereGeometry;
+  spheres->identifier().molecule = reinterpret_cast<const void*>(&molecule);
+  spheres->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(spheres);
+
+  // if we have to draw any translucent spheres, we need to add a separate
+  // geometry node for them
+  auto* translucentSpheres = new SphereGeometry;
+  translucentSpheres->setRenderPass(Rendering::TranslucentPass);
+  translucentSpheres->identifier().molecule =
+    reinterpret_cast<const void*>(&molecule);
+  translucentSpheres->identifier().type = Rendering::AtomType;
+  geometry->addDrawable(translucentSpheres);
+
+  // for the selected atoms
+  auto* selectedSpheres = new SphereGeometry;
+  selectedSpheres->setOpacity(0.42);
+  geometry->addDrawable(selectedSpheres);
+
+  auto* cylinders = new CylinderGeometry;
+  cylinders->identifier().molecule = &molecule;
+  cylinders->identifier().type = Rendering::BondType;
+  geometry->addDrawable(cylinders);
+
+  auto* translucentBonds = new CylinderGeometry;
+  translucentBonds->setRenderPass(Rendering::TranslucentPass);
+  translucentBonds->identifier().molecule = &molecule;
+  translucentBonds->identifier().type = Rendering::BondType;
+  geometry->addDrawable(translucentBonds);
+
+  Targets targets(spheres, translucentSpheres, selectedSpheres, cylinders,
+                  translucentBonds);
+  auto layers = m_layerManager.snapshot<LayerBallAndStick>();
+  populate(molecule, layers, m_bondRadius, targets);
+
+  // Remember what was built so updateCoordinates() can move it.
+  m_molecule = &molecule;
+  m_atomCount = molecule.atomCount();
+  m_bondCount = molecule.bondCount();
+}
+
+bool BallAndStick::updateCoordinates(const QtGui::Molecule& molecule,
+                                     Rendering::GroupNode& node)
+{
+  if (&node != m_group || &molecule != m_molecule ||
+      molecule.atomCount() != m_atomCount ||
+      molecule.bondCount() != m_bondCount)
+    return false;
+
+  // process() added exactly one geometry node to the node, holding its five
+  // drawables in this order.
+  if (node.childCount() != 1)
+    return false;
+  auto* geometry = node.children().front().node->cast<GeometryNode>();
+  if (geometry == nullptr)
+    return false;
+  const auto& drawables = geometry->drawables();
+  if (drawables.size() != 5)
+    return false;
+  auto* spheres = dynamic_cast<SphereGeometry*>(drawables[0]);
+  auto* translucentSpheres = dynamic_cast<SphereGeometry*>(drawables[1]);
+  auto* selectedSpheres = dynamic_cast<SphereGeometry*>(drawables[2]);
+  auto* cylinders = dynamic_cast<CylinderGeometry*>(drawables[3]);
+  auto* translucentBonds = dynamic_cast<CylinderGeometry*>(drawables[4]);
+  if (!spheres || !translucentSpheres || !selectedSpheres || !cylinders ||
+      !translucentBonds)
+    return false;
+
+  m_layerManager.load<LayerBallAndStick>();
+  Targets targets(spheres, translucentSpheres, selectedSpheres, cylinders,
+                  translucentBonds);
+  targets.beginUpdate();
+  auto layers = m_layerManager.snapshot<LayerBallAndStick>();
+  populate(molecule, layers, m_bondRadius, targets);
+  targets.markDirty();
+  return targets.complete();
 }
 
 QWidget* BallAndStick::setupWidget()

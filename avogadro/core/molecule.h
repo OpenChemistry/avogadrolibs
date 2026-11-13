@@ -12,6 +12,7 @@
 
 #include "array.h"
 #include "bond.h"
+#include "bondorderperception.h"
 #include "constraint.h"
 #include "elements.h"
 #include "graph.h"
@@ -127,6 +128,12 @@ public:
 
   /** Sets atomic partial charges with @p type to @p value. */
   void setPartialCharges(const std::string& type, const MatrixX& value);
+
+  /**
+   * Discards the stored partial charges of type @p type, if any. Other
+   * charge types are left alone.
+   */
+  void removePartialCharges(const std::string& type);
 
   /** @return the atomic partial charges of type @p type */
   MatrixX partialCharges(const std::string& type) const;
@@ -407,8 +414,24 @@ public:
   /** @return the elements currently in this molecule */
   const ElementMask elements() const;
 
-  /**  Adds an atom to the molecule. */
+  /**
+   * Adds an atom to the molecule.
+   *
+   * Every conformer / trajectory coordinate set that has an entry for each
+   * existing atom gets an entry for the new one: the atom's position in the
+   * active coordinates if it has one by now (see the overload below), else the
+   * origin, which is what atomPosition3d() reports for an atom without a
+   * position. Coordinate sets of any other length are left alone, as
+   * removeAtom() does.
+   */
   virtual AtomType addAtom(unsigned char atomicNumber);
+
+  /**
+   * Adds an atom at @p position3d. The position is stored in the active
+   * coordinates when they have an entry for every atom, and then, with the
+   * above, is also the atom's position in every coordinate set that was given
+   * an entry for it, so the atom stays put when the active set changes.
+   */
   AtomType addAtom(unsigned char atomicNumber, Vector3 position3d);
 
   /**
@@ -516,11 +539,17 @@ public:
   /**
    * @brief Get all bonds to @p a.
    * @return A vector of bonds to the supplied atom @p a.
+   * @note The const overload allocates on every call and is deprecated; use
+   * the non-const overload, or iterate graph().edges(a) with bondPair().
+   * The const overload returns an empty array when @p a >= atomCount(), but
+   * graph().edges(a) does not, so check @p a < atomCount() before calling it.
+   * It will be removed at the next ABI break.
    * @{
    */
   Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
-  Array<const BondType*> bonds(Index a) const;
+  [[deprecated("Use the non-const bonds() or graph().edges()")]] Array<BondType>
+  bonds(Index a) const;
   /** @} */
 
   /**
@@ -529,8 +558,51 @@ public:
    */
   Mesh* addMesh();
 
+  /**
+   * @brief Add a mesh the caller already built to the molecule.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this overload when the job is done.
+   * @param mesh The mesh to add; the molecule takes ownership.
+   * @return The mesh added, or nullptr (molecule unchanged) if @p mesh is null.
+   */
+  Mesh* addMesh(std::unique_ptr<Mesh> mesh);
+
+  /**
+   * @brief Replace the mesh at @p index with one the caller already built.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this method when the job is done.
+   * @param index The index of the mesh to replace.
+   * @param mesh The new mesh; the molecule takes ownership.
+   * @return False, leaving the molecule unchanged, if @p index is out of range
+   * or @p mesh is null; true otherwise.
+   */
+  bool setMesh(Index index, std::unique_ptr<Mesh> mesh);
+
+  /**
+   * @brief Get a mutable mesh of the molecule.
+   *
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedMesh()
+   * when only reading.
+   * @return The mesh, or nullptr if @p index is out of range.
+   */
   Mesh* mesh(Index index);
   const Mesh* mesh(Index index) const;
+
+  /**
+   * @brief A handle to the mesh at @p index that keeps it alive.
+   *
+   * For readers that outlive the call, e.g. a mesh generator on another
+   * thread: the mesh stays valid for as long as the handle is held, even
+   * after clearMeshes() or setMesh() replaces it in the molecule.
+   * @return The mesh, or nullptr if @p index is out of range.
+   */
+  std::shared_ptr<const Mesh> sharedMesh(Index index) const;
 
   Index meshCount() const { return static_cast<Index>(m_meshes.size()); }
 
@@ -542,8 +614,51 @@ public:
    */
   Cube* addCube();
 
+  /**
+   * @brief Add a cube the caller already built to the molecule.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this overload when the job is done.
+   * @param cube The cube to add; the molecule takes ownership.
+   * @return The cube added, or nullptr (molecule unchanged) if @p cube is null.
+   */
+  Cube* addCube(std::unique_ptr<Cube> cube);
+
+  /**
+   * @brief Replace the cube at @p index with one the caller already built.
+   *
+   * An asynchronous producer can fill an object it owns and publish it with
+   * this method when the job is done. The active cube index is not changed.
+   * @param index The index of the cube to replace.
+   * @param cube The new cube; the molecule takes ownership.
+   * @return False, leaving the molecule unchanged, if @p index is out of range
+   * or @p cube is null; true otherwise.
+   */
+  bool setCube(Index index, std::unique_ptr<Cube> cube);
+
+  /**
+   * @brief Get a mutable cube of the molecule.
+   *
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedCube()
+   * when only reading.
+   * @return The cube, or nullptr if @p index is out of range.
+   */
   Cube* cube(Index index);
   const Cube* cube(Index index) const;
+
+  /**
+   * @brief A handle to the cube at @p index that keeps it alive.
+   *
+   * For readers that outlive the call, e.g. a mesh generator on another
+   * thread: the cube stays valid for as long as the handle is held, even
+   * after clearCubes() or setCube() replaces it in the molecule.
+   * @return The cube, or nullptr if @p index is out of range.
+   */
+  std::shared_ptr<const Cube> sharedCube(Index index) const;
 
   Index cubeCount() const { return static_cast<Index>(m_cubes.size()); }
 
@@ -564,6 +679,13 @@ public:
 
   /**
    * @brief Get the active cube for volume rendering.
+   *
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedCube()
+   * when only reading.
    * @return A pointer to the active cube, or nullptr if no cubes exist.
    */
   Cube* activeCube();
@@ -571,10 +693,19 @@ public:
 
   /**
    * @brief Get the cubes vector set (if present) for the molecule.
+   *
+   * The non-const overload detaches every shared cube, which can copy all of
+   * them.
+   * Copies of a molecule share their cubes and meshes. A non-const accessor
+   * first gives this molecule a private copy of a shared one (a sole owner is
+   * not copied), so a mutable pointer must not be held across a copy of the
+   * molecule: take it again afterwards. Reading through a non-const molecule
+   * can therefore cost a copy; prefer the const overloads or sharedCube()
+   * when only reading.
    * @return The cube vector for the molecule
    */
-  std::vector<Cube*> cubes() { return m_cubes; }
-  const std::vector<Cube*> cubes() const { return m_cubes; }
+  std::vector<Cube*> cubes();
+  std::vector<const Cube*> cubes() const;
 
   /**
    * @return the chemical formula of the molecule.
@@ -635,10 +766,35 @@ public:
   void setBasisSet(BasisSet* basis);
 
   /**
-   * @return the basis set (if present) for the molecule.
+   * @brief Get the mutable basis set (if present) for the molecule.
+   *
+   * Copies of a molecule share their basis set. This accessor first gives
+   * this molecule a private copy of a shared one (a sole owner is not
+   * copied), and then points the basis set's molecule() back at this
+   * molecule. A mutable pointer must therefore not be held across a copy of
+   * the molecule: take it again afterwards. Reading through a non-const
+   * molecule can cost a copy; prefer the const overload or sharedBasisSet()
+   * when only reading.
+   *
+   * The molecule() of a basis set reached through the const overload or
+   * sharedBasisSet() names some molecule that holds it, not necessarily this
+   * one, and must not be relied on.
+   * @return The basis set, or nullptr if there is none.
    */
-  BasisSet* basisSet() { return m_basisSet; }
-  const BasisSet* basisSet() const { return m_basisSet; }
+  BasisSet* basisSet();
+  const BasisSet* basisSet() const { return m_basisSet.get(); }
+
+  /**
+   * @brief A handle to the basis set that keeps it alive.
+   *
+   * For readers that outlive the call, e.g. a calculation on worker threads:
+   * the basis set stays valid for as long as the handle is held, even after
+   * setBasisSet() replaces it or a copy of the molecule detaches. While the
+   * handle is held, the next mutable basisSet() gives the molecule a private
+   * copy. Its molecule() must not be relied on (see basisSet()).
+   * @return The basis set, or nullptr if there is none.
+   */
+  std::shared_ptr<const BasisSet> sharedBasisSet() const;
 
   /**
    * The unit cell for this molecule. May be nullptr for non-periodic
@@ -646,8 +802,8 @@ public:
    * @{
    */
   void setUnitCell(UnitCell* uc);
-  UnitCell* unitCell() { return m_unitCell; }
-  const UnitCell* unitCell() const { return m_unitCell; }
+  UnitCell* unitCell() { return m_unitCell.get(); }
+  const UnitCell* unitCell() const { return m_unitCell.get(); }
   /** @} */
 
   /**
@@ -781,6 +937,66 @@ public:
    */
   void perceiveBondsFromResidueData();
 
+  /**
+   * Perceives bond orders from the connectivity (and, optionally, the
+   * geometry) of the molecule. Bonds are assumed to be present already; only
+   * bonds currently of order 1 are ever raised.
+   *
+   * Every non-metal atom has one target valence, from atomValence() for its
+   * element, formal charge and current bond order sum. The atom's
+   * unsaturation is that target minus the bond order sum it already has. The
+   * task is then to give each candidate bond (a single bond between two
+   * unsaturated atoms) an extra order of 0, 1 or 2 so that the extras at every
+   * atom add up to exactly its unsaturation. This is a degree-constrained
+   * subgraph problem; it is solved exactly by constraint propagation with
+   * bounded backtracking, separately for each connected group of candidate
+   * bonds. A group that can be solved is written back. For a group that cannot
+   * (an unpaired electron, missing hydrogens, a dangling edge atom) the
+   * demands are treated as upper bounds and a best-effort Kekule-like pattern
+   * is written back instead: a greedy assignment improved by augmenting
+   * paths, optimal for bipartite systems such as benzenoids and graphene and
+   * a heuristic otherwise. Only the atoms it still could not satisfy are
+   * reported, and success is false.
+   *
+   * Rules, all of them chemistry judgements for a reviewer to check:
+   *  - No bond ends up above order 3, and a bond to hydrogen or a halogen
+   *    stays single.
+   *  - Bonds that already have an order above 1 are kept as they are, and
+   *    count toward their atoms' valence.
+   *  - Metal atoms (see Elements::isMetal()) are never given bond orders, and
+   *    their bonds do not count toward their ligands' valence: a pyridine
+   *    nitrogen bound to zinc is still a pyridine nitrogen.
+   *  - With 3D coordinates in use, a period-2 atom with exactly two neighbors
+   *    whose bond angle is below 150 degrees is sp2 and can carry at most one
+   *    pi bond, so it is not offered a second one (a bare C6 ring becomes
+   *    benzene, not a cumulene). A near-linear atom, and any atom of period 3
+   *    or later, is not limited. The cap is also waived if at least one of
+   *    the atom's bonds to a non-metal neighbor is closer to its ideal
+   *    triple-bond length than to its ideal double-bond length
+   *    (AtomUtilities::idealBondLength()), as in an aryne such as
+   *    o-benzyne.
+   *  - If the molecule has 3D coordinates and @p options asks for it, bond
+   *    lengths decide which of several valid assignments is tried first. For
+   *    a bond of length d the order k nearest to d, among the
+   *    AtomUtilities::idealBondLength() values for k = 1, 2, 3, is the one
+   *    preferred, and bonds that look most strongly multiple are branched on
+   *    first. This only steers the search: the first valid assignment found
+   *    is taken, with no attempt to find the best one overall.
+   *
+   * Limits: there is one fixed valence per atom, chosen by the sum of its
+   * existing bond orders. Atoms whose valence depends on the answer
+   * (hypervalent S and P, nitro groups, N-oxides), charged or radical atoms,
+   * and heavy-atom-only structures with missing hydrogens will be reported as
+   * failures instead of being assigned charges or implicit hydrogens.
+   *
+   * @return which atoms, if any, could not be satisfied.
+   */
+  BondOrderResult perceiveBondOrders(const BondOrderOptions& options);
+
+  /**
+   * Perceives bond orders with default options, ignoring the result.
+   * @sa perceiveBondOrders(const BondOrderOptions&)
+   */
   void perceiveBondOrders();
 
   /**
@@ -1243,12 +1459,16 @@ protected:
   // Array declaring whether atoms are selected or not.
   std::vector<bool> m_selectedAtoms;
 
-  std::vector<Mesh*> m_meshes;
-  std::vector<Cube*> m_cubes;
+  // Shared between copies of the molecule; the non-const accessors detach a
+  // shared element before handing it out (copy on write).
+  std::vector<std::shared_ptr<Mesh>> m_meshes;
+  std::vector<std::shared_ptr<Cube>> m_cubes;
   Index m_activeCubeIndex = 0;
 
-  BasisSet* m_basisSet;
-  UnitCell* m_unitCell;
+  // Shared between copies of the molecule; the non-const basisSet() detaches
+  // a shared one before handing it out (copy on write).
+  std::shared_ptr<BasisSet> m_basisSet;
+  std::unique_ptr<UnitCell> m_unitCell;
   Array<Residue> m_residues;
 
   // This will be stored from the last space group operation
@@ -1289,6 +1509,13 @@ private:
    * allocate small empty containers; an allocation failure terminates.
    */
   void takeContentsFrom(Molecule& other) noexcept;
+
+  /**
+   * Replace the mesh / cube at @p index with a private copy if another
+   * molecule or handle shares it, then return it. nullptr if out of range.
+   */
+  Mesh* detachMesh(Index index);
+  Cube* detachCube(Index index);
 
   /**
    * Residues name their atoms through Atom proxies that carry a molecule

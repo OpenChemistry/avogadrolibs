@@ -35,10 +35,12 @@ avogadro_headers(Rendering
   cartoongeometry.h
   curvegeometry.h
   cylindergeometry.h
+  geometrytiming.h
   dashedlinegeometry.h
   drawable.h
   geometrynode.h
   geometryvisitor.h
+  gltfvisitor.h
   groupnode.h
   glrenderer.h
   glrendervisitor.h
@@ -51,6 +53,7 @@ avogadro_headers(Rendering
   primitive.h
   quad.h
   quadoutline.h
+  rendertimings.h
   scene.h
   shader.h
   shaderprogram.h
@@ -82,10 +85,12 @@ target_sources(Rendering PRIVATE
   camera.cpp
   curvegeometry.cpp
   cylindergeometry.cpp
+  geometrytiming.cpp
   dashedlinegeometry.cpp
   drawable.cpp
   geometrynode.cpp
   geometryvisitor.cpp
+  gltfvisitor.cpp
   groupnode.cpp
   glrenderer.cpp
   glrendervisitor.cpp
@@ -163,6 +168,7 @@ target_link_libraries(Rendering
   PUBLIC
     Avogadro::Headers
   PRIVATE
+    $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
     Avogadro::Core) # Needed for an enum in residue.h.
 if(EMSCRIPTEN)
   # Emscripten supplies GLES headers and GL entry points. Finding desktop

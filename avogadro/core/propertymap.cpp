@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <utility>
 
 namespace Avogadro::Core {
 
@@ -241,32 +242,86 @@ std::set<std::string> PropertyMap::matrixNames() const
 
 // --- Structural operations ---
 
-void PropertyMap::addEntry()
+void PropertyMap::addEntry(Index entityCount)
 {
-  for (auto& kv : m_doubles)
+  // Entries at or past the new entity's index belong to no entity (the
+  // setters don't check the index), so drop them before appending.
+  const Index index = entityCount > 0 ? entityCount - 1 : 0;
+  for (auto& kv : m_doubles) {
+    if (kv.second.size() > index)
+      kv.second.resize(index);
     kv.second.push_back(doubleSentinel);
-  for (auto& kv : m_ints)
+  }
+  for (auto& kv : m_ints) {
+    if (kv.second.size() > index)
+      kv.second.resize(index);
     kv.second.push_back(intSentinel);
-  for (auto& kv : m_strings)
+  }
+  for (auto& kv : m_strings) {
+    if (kv.second.size() > index)
+      kv.second.resize(index);
     kv.second.push_back(std::string());
-  // Sparse matrices: nothing to do on add.
+  }
+  // Sparse matrices: the new entity has no entry.
+  for (auto& kv : m_matrices) {
+    auto& col = kv.second;
+    for (auto it = col.begin(); it != col.end();) {
+      if (it->first >= index)
+        it = col.erase(it);
+      else
+        ++it;
+    }
+  }
 }
+
+namespace {
+
+// A dense column can be shorter than the entity count: setDouble() and
+// friends only grow it as far as the entity they were given, and an entity
+// added afterwards has no entry. The entries it does have still belong to
+// entities 0..size-1, so a swap or a swap-and-pop has to follow the same
+// three cases as the optional arrays in Molecule (see swapAtomEntry() in
+// molecule.cpp) rather than skip a short column, which would leave every
+// value on the entity that now has its old index.
+template <typename T>
+void swapColumnEntries(Array<T>& column, Index a, Index b, const T& sentinel)
+{
+  const Index lo = a < b ? a : b;
+  const Index hi = a < b ? b : a;
+  if (column.size() <= lo)
+    return; // neither entity has an entry
+  if (column.size() <= hi)
+    column.resize(hi + 1, sentinel); // only lo has one: it travels to hi
+  std::swap(column[a], column[b]);
+}
+
+template <typename T>
+void removeColumnEntry(Array<T>& column, Index index, Index entityCount,
+                       const T& sentinel)
+{
+  // Entries past entityCount belong to no entity (the setters don't check
+  // the index), so drop them and treat the column as full.
+  if (column.size() > entityCount)
+    column.resize(entityCount);
+  if (column.size() == entityCount) {
+    column.swapAndPop(index);
+  } else if (index < column.size()) {
+    // The entity swapped into index (the former last one) has no entry of
+    // its own, so the stale value at index must not stay behind.
+    column[index] = sentinel;
+  }
+}
+
+} // namespace
 
 void PropertyMap::removeEntry(Index index, Index entityCount)
 {
-  // Dense columns: swap-and-pop if column is at full size.
-  for (auto& kv : m_doubles) {
-    if (kv.second.size() == entityCount)
-      kv.second.swapAndPop(index);
-  }
-  for (auto& kv : m_ints) {
-    if (kv.second.size() == entityCount)
-      kv.second.swapAndPop(index);
-  }
-  for (auto& kv : m_strings) {
-    if (kv.second.size() == entityCount)
-      kv.second.swapAndPop(index);
-  }
+  for (auto& kv : m_doubles)
+    removeColumnEntry(kv.second, index, entityCount, doubleSentinel);
+  for (auto& kv : m_ints)
+    removeColumnEntry(kv.second, index, entityCount, intSentinel);
+  for (auto& kv : m_strings)
+    removeColumnEntry(kv.second, index, entityCount, std::string());
 
   // Sparse matrices: remove the entry at index, re-key the last entry.
   Index lastIndex = entityCount - 1;
@@ -283,20 +338,14 @@ void PropertyMap::removeEntry(Index index, Index entityCount)
   }
 }
 
-void PropertyMap::swapEntries(Index a, Index b, Index entityCount)
+void PropertyMap::swapEntries(Index a, Index b, Index /*entityCount*/)
 {
-  for (auto& kv : m_doubles) {
-    if (kv.second.size() == entityCount)
-      std::swap(kv.second[a], kv.second[b]);
-  }
-  for (auto& kv : m_ints) {
-    if (kv.second.size() == entityCount)
-      std::swap(kv.second[a], kv.second[b]);
-  }
-  for (auto& kv : m_strings) {
-    if (kv.second.size() == entityCount)
-      std::swap(kv.second[a], kv.second[b]);
-  }
+  for (auto& kv : m_doubles)
+    swapColumnEntries(kv.second, a, b, doubleSentinel);
+  for (auto& kv : m_ints)
+    swapColumnEntries(kv.second, a, b, intSentinel);
+  for (auto& kv : m_strings)
+    swapColumnEntries(kv.second, a, b, std::string());
 
   // Sparse matrices: swap entries at a and b.
   for (auto& kv : m_matrices) {

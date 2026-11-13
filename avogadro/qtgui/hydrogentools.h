@@ -13,14 +13,16 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 class RWAtom;
 class RWMolecule;
 
 class AVOGADROQTGUI_EXPORT HydrogenTools
 {
 public:
+  HydrogenTools() = delete;  // Not implemented
+  ~HydrogenTools() = delete; // Not implemented
+
   /**
    * Remove all hydrogen atoms from @a molecule.
    */
@@ -85,13 +87,8 @@ public:
   static void generateNewHydrogenPositions(const RWAtom& atom,
                                            int numberOfHydrogens,
                                            std::vector<Vector3>& positions);
-
-private:
-  HydrogenTools();  // Not implemented
-  ~HydrogenTools(); // Not implemented
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_HYDROGENTOOLS_H

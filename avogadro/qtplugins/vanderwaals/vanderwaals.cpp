@@ -12,6 +12,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QSlider>
@@ -41,7 +42,8 @@ std::string commaToDot(std::string token)
 
 struct LayerVdW : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   float opacity = 1.0f;
 
   LayerVdW()
@@ -57,7 +59,14 @@ struct LayerVdW : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerVdW(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerVdW(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerVdW() override
   {
@@ -128,7 +137,7 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   translucentSpheres->identifier().molecule = &molecule;
   translucentSpheres->identifier().type = Rendering::AtomType;
 
-  auto selectedSpheres = new SphereGeometry;
+  auto* selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
   selectedSpheres->setRenderPass(Rendering::TranslucentPass);
 
@@ -136,17 +145,18 @@ void VanDerWaals::process(const QtGui::Molecule& molecule,
   geometry->addDrawable(selectedSpheres);
   geometry->addDrawable(translucentSpheres);
 
+  auto layers = m_layerManager.snapshot<LayerVdW>();
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    if (!m_layerManager.atomEnabled(i)) {
+    size_t layer = layers.getLayerID(i);
+    if (!layers.layerEnabled(layer)) {
       continue;
     }
     unsigned char atomicNumber = atom.atomicNumber();
 
     Vector3ub color = atom.color();
     auto radius = static_cast<float>(Elements::radiusVDW(atomicNumber));
-    auto* interface =
-      m_layerManager.getSetting<LayerVdW>(m_layerManager.getLayerID(i));
+    auto* interface = layers.setting(layer);
     float opacity = interface->opacity;
     if (opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,

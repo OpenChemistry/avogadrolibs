@@ -329,7 +329,10 @@ std::vector<const FileFormat*> FileFormatManager::fileFormats(
 {
   std::vector<const FileFormat*> result;
 
-  for (auto m_format : m_formats) {
+  for (auto* m_format : m_formats) {
+    // removeFormat() leaves a null entry so the other formats keep their ids.
+    if (m_format == nullptr)
+      continue;
     if (filter == FileFormat::None ||
         (filter & m_format->supportedOperations()) == filter) {
       result.push_back(m_format);
@@ -374,6 +377,10 @@ FileFormatManager::FileFormatManager()
   addFormat(new PdbFormat);
   addFormat(new PoscarFormat);
   addFormat(new SdfFormat);
+  // Write-only V3000 variants. They must stay after the V2000 formats: lookups
+  // by extension return the first match, so plain "mol" / "sdf" stay V2000.
+  addFormat(new MdlV3000Format);
+  addFormat(new SdfV3000Format);
   // Write only, so the Open Babel plugin stays the reader for "smi": a SMILES
   // string carries no coordinates, and generating them is still its job.
   addFormat(new SmilesFormat);

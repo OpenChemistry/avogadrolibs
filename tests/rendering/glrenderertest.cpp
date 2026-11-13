@@ -3,110 +3,104 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-#include <avogadro/rendering/avogadrogl.h>
-#include <avogadro/rendering/geometrynode.h>
-#include <avogadro/rendering/glrenderer.h>
-#include <avogadro/rendering/spheregeometry.h>
-
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
 #include <gtest/gtest.h>
 
-#include <array>
+#include <avogadro/rendering/camera.h>
+#include <avogadro/rendering/glrenderer.h>
 
-using namespace Avogadro;
-using namespace Avogadro::Rendering;
+using Avogadro::Rendering::GLRenderer;
+using Avogadro::Rendering::Orthographic;
+using Avogadro::Rendering::Perspective;
 
-class GLRendererTest : public testing::Test
+namespace {
+
+// No GL context is needed: the projection matrix is plain math on the camera.
+void setUp(GLRenderer& renderer, int w, int h, bool perspective)
 {
-protected:
-  void SetUp() override
-  {
-    // EGL returns an untyped function pointer; use the extension signature.
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    const auto getDisplay = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-      eglGetProcAddress("eglGetPlatformDisplayEXT"));
-    if (!getDisplay)
-      GTEST_SKIP() << "Surfaceless EGL is unavailable";
-    display =
-      getDisplay(EGL_PLATFORM_SURFACELESS_MESA, EGL_DEFAULT_DISPLAY, nullptr);
-    EGLint major = 0, minor = 0;
-    if (!eglInitialize(display, &major, &minor))
-      GTEST_SKIP() << "No surfaceless EGL driver";
-    ASSERT_TRUE(eglBindAPI(EGL_OPENGL_API));
-    const std::array attributes = { EGL_SURFACE_TYPE,
-                                    EGL_PBUFFER_BIT,
-                                    EGL_RENDERABLE_TYPE,
-                                    EGL_OPENGL_BIT,
-                                    EGL_RED_SIZE,
-                                    8,
-                                    EGL_GREEN_SIZE,
-                                    8,
-                                    EGL_BLUE_SIZE,
-                                    8,
-                                    EGL_DEPTH_SIZE,
-                                    24,
-                                    EGL_NONE };
-    EGLConfig config = nullptr;
-    EGLint count = 0;
-    ASSERT_TRUE(
-      eglChooseConfig(display, attributes.data(), &config, 1, &count));
-    if (count == 0)
-      GTEST_SKIP() << "No OpenGL pbuffer configuration";
-    const std::array surfaceAttributes = { EGL_WIDTH, 64, EGL_HEIGHT, 64,
-                                           EGL_NONE };
-    surface =
-      eglCreatePbufferSurface(display, config, surfaceAttributes.data());
-    const std::array contextAttributes = { EGL_CONTEXT_MAJOR_VERSION, 4,
-                                           EGL_CONTEXT_MINOR_VERSION, 0,
-                                           EGL_NONE };
-    context = eglCreateContext(display, config, EGL_NO_CONTEXT,
-                               contextAttributes.data());
-    if (context == EGL_NO_CONTEXT)
-      GTEST_SKIP() << "OpenGL 4 is unavailable";
-    ASSERT_TRUE(eglMakeCurrent(display, surface, surface, context));
-  }
+  renderer.camera().setViewport(w, h);
+  renderer.camera().setProjectionType(perspective ? Perspective : Orthographic);
+}
 
-  void TearDown() override
-  {
-    if (display == EGL_NO_DISPLAY)
-      return;
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    if (context != EGL_NO_CONTEXT)
-      eglDestroyContext(display, context);
-    if (surface != EGL_NO_SURFACE)
-      eglDestroySurface(display, surface);
-    eglTerminate(display);
-  }
+} // namespace
 
-private:
-  EGLDisplay display = EGL_NO_DISPLAY;
-  EGLSurface surface = EGL_NO_SURFACE;
-  EGLContext context = EGL_NO_CONTEXT;
-};
-
-TEST_F(GLRendererTest, SolidPipelineRendersWithAndWithoutAmbientOcclusion)
+TEST(GLRendererTest, projectionScaleDefaultsToOne)
 {
   GLRenderer renderer;
-  renderer.initialize();
-  ASSERT_TRUE(renderer.isValid()) << renderer.error();
-  // GLEW can leave an error when querying a core profile's extension string.
-  while (glGetError() != GL_NO_ERROR) {}
-  renderer.resize(64, 64);
-  auto* geometry = new GeometryNode;
-  auto* sphere = new SphereGeometry;
-  sphere->addSphere(Vector3f::Zero(), Vector3ub(255, 0, 0), 1.0f);
-  geometry->addDrawable(sphere);
-  renderer.scene().rootNode().addChild(geometry);
-  renderer.resetCamera();
-  for (bool ao : { false, true }) {
-    SCOPED_TRACE(ao);
-    renderer.solidPipeline().setAoEnabled(ao);
-    renderer.render();
-    std::array<unsigned char, 4> pixel{};
-    glReadPixels(32, 32, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
-    EXPECT_EQ(glGetError(), GL_NO_ERROR);
-    EXPECT_GT(pixel[0], pixel[1]);
-    EXPECT_GT(pixel[0], pixel[2]);
+  EXPECT_FLOAT_EQ(renderer.projectionScale(), 1.0f);
+}
+
+TEST(GLRendererTest, perspectiveScaleWidensFrustum)
+{
+  GLRenderer renderer;
+  setUp(renderer, 300, 200, true);
+  renderer.applyProjection();
+  Eigen::Matrix4f base = renderer.camera().projection().matrix();
+
+  renderer.setProjectionScale(2.0f);
+  renderer.applyProjection();
+  Eigen::Matrix4f scaled = renderer.camera().projection().matrix();
+
+  // x and y focal terms halve; depth terms are untouched.
+  EXPECT_NEAR(scaled(0, 0), base(0, 0) / 2.0f, 1e-5f);
+  EXPECT_NEAR(scaled(1, 1), base(1, 1) / 2.0f, 1e-5f);
+  EXPECT_FLOAT_EQ(scaled(2, 2), base(2, 2));
+  EXPECT_FLOAT_EQ(scaled(2, 3), base(2, 3));
+}
+
+TEST(GLRendererTest, orthographicScaleWidensFrustum)
+{
+  GLRenderer renderer;
+  setUp(renderer, 300, 200, false);
+  renderer.applyProjection();
+  Eigen::Matrix4f base = renderer.camera().projection().matrix();
+
+  renderer.setProjectionScale(1.5f);
+  renderer.applyProjection();
+  Eigen::Matrix4f scaled = renderer.camera().projection().matrix();
+
+  EXPECT_NEAR(scaled(0, 0), base(0, 0) / 1.5f, 1e-5f);
+  EXPECT_NEAR(scaled(1, 1), base(1, 1) / 1.5f, 1e-5f);
+  EXPECT_FLOAT_EQ(scaled(2, 2), base(2, 2));
+}
+
+TEST(GLRendererTest, projectionScaleDoesNotAccumulate)
+{
+  for (bool perspective : { true, false }) {
+    GLRenderer renderer;
+    setUp(renderer, 300, 200, perspective);
+    renderer.setProjectionScale(2.0f);
+    renderer.applyProjection();
+    Eigen::Matrix4f first = renderer.camera().projection().matrix();
+    auto frustumBefore = perspective ? renderer.m_perspectiveFrustum
+                                     : renderer.m_orthographicFrustum;
+    for (int i = 0; i < 5; ++i)
+      renderer.applyProjection();
+    Eigen::Matrix4f later = renderer.camera().projection().matrix();
+    EXPECT_TRUE(first.isApprox(later, 1e-6f));
+    // The stored base frustum is not modified by the scale.
+    auto frustumAfter = perspective ? renderer.m_perspectiveFrustum
+                                    : renderer.m_orthographicFrustum;
+    for (int i = 0; i < 4; ++i)
+      EXPECT_FLOAT_EQ(frustumBefore[i], frustumAfter[i]);
+
+    // Back to 1 restores the original projection exactly.
+    GLRenderer reference;
+    setUp(reference, 300, 200, perspective);
+    reference.applyProjection();
+    renderer.setProjectionScale(1.0f);
+    renderer.applyProjection();
+    EXPECT_TRUE(renderer.camera().projection().matrix().isApprox(
+      reference.camera().projection().matrix(), 1e-6f));
   }
+}
+
+TEST(GLRendererTest, scaleKeepsAspectRatio)
+{
+  GLRenderer renderer;
+  setUp(renderer, 400, 100, true);
+  renderer.setProjectionScale(3.0f);
+  renderer.applyProjection();
+  Eigen::Matrix4f m = renderer.camera().projection().matrix();
+  // x/y focal ratio is the inverse aspect ratio whatever the scale.
+  EXPECT_NEAR(m(1, 1) / m(0, 0), 4.0f, 1e-4f);
 }

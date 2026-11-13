@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "chartwidget.h"
+#include "colortheme.h"
 
 #include <jkqtplotter/jkqtplotter.h>
 #include <jkqtplotter/graphs/jkqtplines.h>
@@ -11,7 +12,6 @@
 #include <QDebug>
 #include <QEvent>
 #include <QHBoxLayout>
-#include <QPalette>
 
 namespace Avogadro::QtGui {
 
@@ -32,10 +32,7 @@ public:
 
   void updateAxisColorsForTheme()
   {
-    const QPalette defaultPalette;
-    // is the text lighter than the window color?
-    bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
-                     defaultPalette.color(QPalette::Window).lightness());
+    const bool darkMode = colorTheme() == ColorTheme::Dark;
     QColor textColor = darkMode ? Qt::white : Qt::black;
     plot->getXAxis()->setTickLabelColor(textColor);
     plot->getYAxis()->setTickLabelColor(textColor);
@@ -48,7 +45,7 @@ public:
 
 ChartWidget::ChartWidget(QWidget* p) : QWidget(p), m_impl(new ChartWidgetImpl)
 {
-  auto hLayout = new QHBoxLayout(this);
+  auto* hLayout = new QHBoxLayout(this);
   auto* plot = m_impl->plot;
 
   // connect the single-click and double-click signals
@@ -205,13 +202,13 @@ bool ChartWidget::addPlots(const std::vector<std::vector<float>>& plotData,
     return false;
 
   auto* ds = plot->getDatastore();
-  const QString xName = names[0];
+  const QString& xName = names[0];
   size_t columnX = ds->addCopiedColumn(plotData[0], xName);
   QColor c(color[0], color[1], color[2], color[3]);
 
   // loop through the columns
   for (size_t i = 1; i < plotData.size(); i++) {
-    const QString yName = names[i];
+    const QString& yName = names[i];
     size_t columnY = ds->addCopiedColumn(plotData[i], yName);
 
     JKQTPXYLineGraph* graph = new JKQTPXYLineGraph(plot);
@@ -340,7 +337,7 @@ void ChartWidget::setTickLabels(Axis a, const std::vector<float>& tickPositions,
   if (tickPositions.size() != tickLabels.size())
     return;
 
-  if (tickPositions.size() == 0)
+  if (tickPositions.empty())
     return;
 
   JKQTPCoordinateAxis* axis;

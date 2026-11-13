@@ -793,3 +793,34 @@ TEST_F(MoleculeTest, swapIgnoresIndicesThatAreNotThere)
   EXPECT_EQ(1, molecule.atom(1).atomicNumber());
   EXPECT_TRUE(molecule.bond(0, 1).isValid());
 }
+
+TEST_F(MoleculeTest, partialChargesFollowStructuralChanges)
+{
+  Avogadro::MatrixX charges(3, 1);
+  charges << -0.8, 0.4, 0.4;
+  const auto store = [&]() {
+    m_testMolecule.setPartialCharges("test", charges);
+    m_testMolecule.setPartialCharges("other", charges);
+    ASSERT_EQ(m_testMolecule.partialChargeTypes().size(), 2u);
+  };
+
+  // Moving atoms keeps them: animation and optimization move every frame.
+  store();
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  EXPECT_EQ(m_testMolecule.partialChargeTypes().size(), 2u);
+
+  // Structural edits drop every type.
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Modified);
+  EXPECT_TRUE(m_testMolecule.partialChargeTypes().empty());
+
+  store();
+  m_testMolecule.emitChanged(Molecule::Bonds | Molecule::Added);
+  EXPECT_TRUE(m_testMolecule.partialChargeTypes().empty());
+
+  // A replacement brings its own charges.
+  store();
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Bonds |
+                             Molecule::Added | Molecule::Removed |
+                             Molecule::Replaced);
+  EXPECT_EQ(m_testMolecule.partialChargeTypes().size(), 2u);
+}

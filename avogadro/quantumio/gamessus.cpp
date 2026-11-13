@@ -144,6 +144,12 @@ void GAMESSUSOutput::readAtomBlock(std::istream& in, Core::Molecule& molecule,
     if (!atomsExist) {
       atom = molecule.addAtom(atomicNumber, pos);
     } else {
+      // Later blocks update the atoms from the first; one with more atoms
+      // than that is not the same molecule.
+      if (index >= molecule.atomCount()) {
+        appendError("Atom block has more atoms than the first: " + buffer);
+        return;
+      }
       atom = molecule.atom(index);
       atom.setPosition3d(pos);
       index++;

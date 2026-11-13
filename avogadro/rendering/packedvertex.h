@@ -8,8 +8,7 @@
 
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @struct PackedVertex packedvertex.h <avogadro/rendering/packedvertex.h>
@@ -40,7 +39,6 @@ struct PackedVertex
   }
 }; // 32 bytes total size - 16/32/64 are ideal for alignment.
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_PACKEDVERTEX_H

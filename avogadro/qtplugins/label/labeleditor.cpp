@@ -59,6 +59,17 @@ QUndoCommand* LabelEditor::mouseMoveEvent(QMouseEvent* e)
 
 QUndoCommand* LabelEditor::keyPressEvent(QKeyEvent* e)
 {
+  // Escape cancels: drop the uncommitted text and the picked atom
+  if (e->key() == Qt::Key_Escape && e->modifiers() == Qt::NoModifier &&
+      (m_selected || m_selectedAtom.isValid())) {
+    e->accept();
+    m_text.clear();
+    m_selectedAtom = RWAtom();
+    m_selected = false;
+    emit drawablesChanged();
+    return nullptr;
+  }
+
   if (m_selected && !e->text().isEmpty()) {
     e->accept();
     const QChar text = e->text()[0];

@@ -11,6 +11,7 @@ set(tests
   nwchemlog
   orca
   qcschema
+  referencedensity
   # TODO
   # GAMESS UK
   # NWChem JSON
@@ -50,6 +51,10 @@ foreach(TestName ${tests})
     # filter would not match -- ctest would run nothing and report success.
     add_test(NAME "QuantumIo-densitycube"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=*DensityCubeTest*")
+  elseif(TestName STREQUAL "referencedensity")
+    # Parameterized (TEST_P), see densitycube above.
+    add_test(NAME "QuantumIo-referencedensity"
+      COMMAND AvogadroQuantumIOTests "--gtest_filter=*ReferenceDensityTest*")
   elseif(TestName STREQUAL "fchk")
     add_test(NAME "QuantumIo-fchk"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianFchkTest.*")
@@ -60,8 +65,10 @@ foreach(TestName ${tests})
     add_test(NAME "QuantumIo-gaussiansettools"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=GaussianSetToolsTest.*")
   elseif(TestName STREQUAL "genericoutput")
+    # genericoutputtest.cpp also defines GenericOutputPatternTest.
     add_test(NAME "QuantumIo-genericoutput"
-      COMMAND AvogadroQuantumIOTests "--gtest_filter=GenericOutputTest.*")
+      COMMAND AvogadroQuantumIOTests
+      "--gtest_filter=GenericOutputTest.*:GenericOutputPatternTest.*")
   elseif(TestName STREQUAL "molden")
     add_test(NAME "QuantumIo-molden"
       COMMAND AvogadroQuantumIOTests "--gtest_filter=MoldenTest.*")

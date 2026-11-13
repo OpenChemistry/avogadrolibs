@@ -26,7 +26,7 @@ class OBCharges::ProcessListener : public QObject
 {
   Q_OBJECT
 public:
-  ProcessListener() : QObject(), m_finished(false) {}
+  ProcessListener() : m_finished(false) {}
 
   bool waitForOutput(Array<double>& output, int msTimeout = 120000)
   {
@@ -52,7 +52,7 @@ private:
     timer.start(msTimeout);
 
     while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::AllEvents, 500);
+      qApp->processEvents(QEventLoop::ExcludeUserInputEvents, 500);
 
     return m_finished;
   }
@@ -62,7 +62,7 @@ private:
   Array<double> m_output;
 };
 
-OBCharges::OBCharges(const std::string& id) : ChargeModel(), m_identifier(id)
+OBCharges::OBCharges(const std::string& id) : m_identifier(id)
 {
   // set the element mask based on our type / identifier
   m_elements.reset();

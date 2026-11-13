@@ -98,8 +98,8 @@ static enum InteractionTypes getInteractionType(const Molecule& molecule,
   unsigned char inum = molecule.atomicNumber(i);
   switch (inum) {
     case 1: // hydrogen bond
-      for (const Bond* b : molecule.bonds(i)) {
-        Index j = b->getOtherAtom(i).index();
+      for (const Bond& b : molecule.bonds(i)) {
+        Index j = b.getOtherAtom(i).index();
         unsigned char jnum = molecule.atomicNumber(j);
         switch (jnum) {
           case 7:
@@ -113,8 +113,8 @@ static enum InteractionTypes getInteractionType(const Molecule& molecule,
     case 17:
     case 35:
     case 53: // halogen bond
-      for (const Bond* b : molecule.bonds(i)) {
-        Index j = (b->atom1().index() == i ? b->atom2() : b->atom1()).index();
+      for (const Bond& b : molecule.bonds(i)) {
+        Index j = (b.atom1().index() == i ? b.atom2() : b.atom1()).index();
         unsigned char jnum = molecule.atomicNumber(j);
         switch (jnum) {
           case 6:
@@ -133,8 +133,8 @@ static enum InteractionTypes getInteractionType(const Molecule& molecule,
     case 16:
     case 34:
     case 52: // chalcogen bond
-      for (const Bond* b : molecule.bonds(i)) {
-        Index j = (b->atom1().index() == i ? b->atom2() : b->atom1()).index();
+      for (const Bond& b : molecule.bonds(i)) {
+        Index j = (b.atom1().index() == i ? b.atom2() : b.atom1()).index();
         unsigned char jnum = molecule.atomicNumber(j);
         switch (jnum) {
           case 6: // C
@@ -187,10 +187,10 @@ static bool checkPairDonorIsValid(const Molecule& molecule, Index n,
 
 static bool checkAtomPairNotBonded(const Molecule& molecule, Index i, Index n)
 {
-  Array<const Bond*> bonds = molecule.bonds(i);
+  Array<Bond> bonds = molecule.bonds(i);
   /* Return true if all of the bonds from i are to atoms other than n */
-  return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond* b) {
-    return b->getOtherAtom(i).index() != n;
+  return std::all_of(bonds.begin(), bonds.end(), [i, n](const Bond& b) {
+    return b.getOtherAtom(i).index() != n;
   });
 }
 
@@ -203,12 +203,12 @@ static float computeAngle(const Vector3& a, const Vector3& b)
 static bool checkHoleVector(const Molecule& molecule, Index i,
                             const Vector3& in, float angleTolerance)
 {
-  Array<const Bond*> bonds = molecule.bonds(i);
+  Array<Bond> bonds = molecule.bonds(i);
   Vector3 pos = molecule.atomPosition3d(i);
   /* Return true if any of the bonds to i forms a small enough angle
    * with 'in' at the opposite side of atom 'i' */
-  for (const Bond* b : bonds) {
-    Index n = b->getOtherAtom(i).index();
+  for (const Bond& b : bonds) {
+    Index n = b.getOtherAtom(i).index();
     Vector3 npos = molecule.atomPosition3d(n);
     float oppositeAngle = M_PI - computeAngle(in, npos - pos);
     if (oppositeAngle <= angleTolerance)
@@ -222,14 +222,14 @@ static bool checkPairVector(const Molecule& molecule, Index n,
 {
   AtomHybridization hybridization =
     AtomUtilities::perceiveHybridization(molecule.atom(n));
-  Array<const Bond*> bonds = molecule.bonds(n);
+  Array<Bond> bonds = molecule.bonds(n);
   size_t bondCount = bonds.size();
   std::vector<Vector3> bondVectors;
   Vector3 pos = molecule.atomPosition3d(n);
   /* Compute all bond vectors around atom n */
-  for (const Bond* b : bonds)
+  for (const Bond& b : bonds)
     bondVectors.emplace_back(
-      molecule.atomPosition3d(b->getOtherAtom(n).index()) - pos);
+      molecule.atomPosition3d(b.getOtherAtom(n).index()) - pos);
   float pairAngle;
   switch (hybridization) {
     case Core::SP3:

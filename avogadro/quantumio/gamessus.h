@@ -12,8 +12,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT GAMESSUSOutput : public Io::FileFormat
 {
@@ -108,7 +107,6 @@ private:
 
   MatrixX m_density; /// Total density matrix
 };
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

@@ -15,6 +15,12 @@ void ScenePlugin::process(const QtGui::Molecule&, Rendering::GroupNode&) {}
 
 void ScenePlugin::processEditable(const RWMolecule&, Rendering::GroupNode&) {}
 
+bool ScenePlugin::updateCoordinates(const QtGui::Molecule&,
+                                    Rendering::GroupNode&)
+{
+  return false;
+}
+
 QWidget* ScenePlugin::setupWidget()
 {
   return nullptr;

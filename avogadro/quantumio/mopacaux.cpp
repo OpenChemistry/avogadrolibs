@@ -14,6 +14,7 @@
 #include <cmath>
 #include <iostream>
 #include <limits>
+#include <optional>
 
 using std::cout;
 using std::endl;
@@ -24,6 +25,27 @@ namespace Avogadro::QuantumIO {
 
 using Core::Atom;
 using Core::SlaterSet;
+
+namespace {
+
+// The n in a "KEY[n]=" header, or nullopt when the key has no complete
+// bracket pair or its contents are not an integer. Counts used to be parsed
+// from just after find('[') even when there was none, i.e. from the start of
+// the line, so a data line that merely contained e.g. "ATOM_X" and began with
+// a number was taken as a header carrying that number.
+std::optional<int> arrayCount(const string& key)
+{
+  const auto lBracket = key.find('[');
+  if (lBracket == string::npos)
+    return std::nullopt;
+  const auto rBracket = key.find(']', lBracket);
+  if (rBracket == string::npos)
+    return std::nullopt;
+  return Core::lexicalCast<int>(
+    key.substr(lBracket + 1, rBracket - lBracket - 1));
+}
+
+} // namespace
 
 MopacAux::MopacAux() : m_electrons(0) {}
 
@@ -185,27 +207,20 @@ bool MopacAux::processLine(std::istream& in)
 
   // Every array count below comes from a KEY[n]= header and reaches the
   // readers as an unsigned int, where a negative count asks for billions of
-  // values (and readArrayVec() allocates them all up front).
-  const auto countStart = key.find('[');
-  if (countStart != string::npos) {
-    const auto countEnd = key.find(']', countStart);
-    const string count = key.substr(countStart + 1, countEnd - countStart - 1);
-    if (Core::lexicalCast<int>(count).value_or(0) < 0) {
-      appendError("Negative array count: " + key);
-      return false;
-    }
+  // values.
+  if (arrayCount(key).value_or(0) < 0) {
+    appendError("Negative array count: " + key);
+    return false;
   }
 
   // Big switch statement checking for various things we are interested in
   if (Core::contains(key, "ATOM_EL")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atoms = " << tmp << '\n';
     m_atomNums = readArrayElements(in, tmp);
   } else if (Core::contains(key, "HEAT_OF_FORMATION:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_heatOfFormation = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Heat of formation = " << m_heatOfFormation << " kcal/mol"
            << '\n';
@@ -213,26 +228,22 @@ bool MopacAux::processLine(std::istream& in)
   } else if (Core::contains(key, "HEAT_OF_FORM_UPDATED:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_energies.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
     }
   } else if (Core::contains(key, "GRADIENT_NORM_UPDATED:KCAL/MOL")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_forces.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
     }
   } else if (Core::contains(key, "AREA:SQUARE ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_area = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Area = " << m_area << " square Angstroms" << '\n';
     }
   } else if (Core::contains(key, "VOLUME:CUBIC ANGSTROMS")) {
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       m_volume = Core::lexicalCast<double>(list[1]).value_or(0.0);
       cout << "Volume = " << m_volume << " cubic Angstroms" << '\n';
     }
@@ -264,7 +275,6 @@ bool MopacAux::processLine(std::istream& in)
     vector<string> list = Core::split(line, '=');
     if (list.size() > 1) {
       // split based on spaces
-      std::replace(list[1].begin(), list[1].end(), 'D', 'E');
       vector<string> dipole = Core::split(list[1], ' ');
       if (dipole.size() == 3) {
         m_dipoleMoment =
@@ -275,30 +285,25 @@ bool MopacAux::processLine(std::istream& in)
     }
     cout << "Dipole moment " << m_dipoleMoment.norm() << " Debye" << '\n';
   } else if (Core::contains(key, "AO_ATOMINDEX")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic orbitals = " << tmp << '\n';
     m_atomIndex = readArrayI(in, tmp);
     for (int& i : m_atomIndex)
       --i;
   } else if (Core::contains(key, "ATOM_SYMTYPE")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic orbital types = " << tmp << '\n';
     m_atomSym = readArraySym(in, tmp);
   } else if (Core::contains(key, "AO_ZETA")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of zeta values = " << tmp << '\n';
     m_zeta = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_CHARGES")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic charges = " << tmp << '\n';
     m_partialCharges = readArrayD(in, tmp);
   } else if (Core::contains(key, "ATOM_PQN")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 4)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of PQN values =" << tmp << '\n';
     m_pqn = readArrayI(in, tmp);
   } else if (Core::contains(key, "NUM_ELECTRONS")) {
@@ -308,11 +313,7 @@ bool MopacAux::processLine(std::istream& in)
       cout << "Number of electrons = " << m_electrons << '\n';
     }
   } else if (Core::contains(key, "ATOM_X")) {
-    auto lBracket = key.find('[');
-    auto rBracket = key.find(']');
-    int tmp =
-      Core::lexicalCast<int>(key.substr(lBracket + 1, rBracket - lBracket - 1))
-        .value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     cout << "Number of atomic coordinates = " << tmp << '\n';
     // A new geometry means any Hessian read so far belongs to the previous
     // one, so bank it before the geometry changes underneath it.
@@ -336,37 +337,30 @@ bool MopacAux::processLine(std::istream& in)
     m_atomPos = readArrayVec(in, tmp);
     m_coordSets.push_back(m_atomPos);
   } else if (Core::contains(key, "OVERLAP_MATRIX")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
-    cout << "Size of lower half triangle of overlap matrix = " << tmp << '\n';
-    if (!readOverlapMatrix(in, tmp))
+    cout << "Size of lower half triangle of overlap matrix = "
+         << m_zeta.size() * (m_zeta.size() + 1) / 2 << '\n';
+    if (!readOverlapMatrix(in))
       return false;
   } else if (Core::contains(key, "EIGENVECTORS")) {
     // For large molecules the Eigenvectors counter overflows to [*****]
-    // So just use the square of the m_atomIndex array
-    //      QString tmp = key.mid(key.indexOf('[')+1, 6);
-    cout << "Size of eigen vectors matrix = "
-         << m_atomIndex.size() * m_atomIndex.size() << '\n';
-    if (!readEigenVectors(
-          in, static_cast<int>(m_atomIndex.size() * m_atomIndex.size())))
+    // So just use the square of the basis size (the number of AO_ZETA values)
+    cout << "Size of eigen vectors matrix = " << m_zeta.size() * m_zeta.size()
+         << '\n';
+    if (!readEigenVectors(in))
       return false;
   } else if (Core::contains(key, "TOTAL_DENSITY_MATRIX")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
-    cout << "Size of lower half triangle of density matrix = " << tmp << '\n';
-    if (!readDensityMatrix(in, tmp))
+    cout << "Size of lower half triangle of density matrix = "
+         << m_zeta.size() * (m_zeta.size() + 1) / 2 << '\n';
+    if (!readDensityMatrix(in))
       return false;
   } else if (Core::contains(key, "VIB._FREQ")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     readVibrationFrequencies(in, tmp);
   } else if (Core::contains(key, "VIB._T_DIP")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     readVibrationIntensities(in, tmp);
   } else if (Core::contains(key, "NORMAL_MODES")) {
-    int tmp =
-      Core::lexicalCast<int>(key.substr(key.find('[') + 1, 6)).value_or(0);
+    int tmp = arrayCount(key).value_or(0);
     readNormalModes(in, tmp);
   }
   return true;
@@ -478,14 +472,15 @@ vector<int> MopacAux::readArraySym(std::istream& in, unsigned int n)
 
 vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
 {
-  vector<Vector3> tmp(n / 3);
-  if (tmp.empty())
-    return tmp;
-  // Only whole vectors are stored, and a line may hold more values than the
-  // header promised, so never write past 3 * tmp.size() values.
-  const size_t size = 3 * tmp.size();
-  double* ptr = tmp[0].data();
+  // The vectors are built as the values arrive rather than sized from n: the
+  // count is only a header claim, and a bogus one must not decide how much
+  // memory is requested. The result is bounded by the file size instead.
+  vector<Vector3> tmp;
+  const size_t size = 3 * static_cast<size_t>(n / 3);
+  Vector3 current;
   size_t cnt = 0;
+  // Only whole vectors are stored, and a line may hold more values than the
+  // header promised, so never read past 3 * (n / 3) values.
   while (cnt < size) {
     string line;
     // Stop at end of file; see readArrayElements().
@@ -495,12 +490,12 @@ vector<Vector3> MopacAux::readArrayVec(std::istream& in, unsigned int n)
     for (auto& i : list) {
       if (cnt >= size)
         break;
-      ptr[cnt++] = Core::lexicalCast<double>(i).value_or(0.0);
+      current[cnt % 3] = Core::lexicalCast<double>(i).value_or(0.0);
+      if (++cnt % 3 == 0)
+        tmp.push_back(current);
     }
   }
-  // A file that ends mid-block leaves the tail zero-filled; keep only the
-  // vectors that were read in full.
-  tmp.resize(cnt / 3);
+  // A file that ends mid-vector leaves current partly filled; it is dropped.
   return tmp;
 }
 
@@ -544,98 +539,86 @@ bool MopacAux::readNormalModes(std::istream& in, unsigned int n)
   return true;
 }
 
-bool MopacAux::readOverlapMatrix(std::istream& in, unsigned int n)
+// Read whole lines of numbers until at least n values are held or the stream
+// ends. The result is bounded by the size of the input, not by n.
+static std::vector<double> readMatrixValues(std::istream& in, size_t n)
 {
-  m_overlap.resize(m_zeta.size(), m_zeta.size());
-  unsigned int cnt = 0;
-  unsigned int i = 0, j = 0;
-  unsigned int f = 1;
-  // Skip the first comment line...
+  vector<double> values;
   string line;
-  Core::getLine(in, line);
-  while (cnt < n) {
+  while (values.size() < n) {
     // Stop at end of file; see readArrayElements().
     if (!Core::getLine(in, line))
       break;
-    vector<string> list = Core::split(line, ' ');
-    for (auto& k : list) {
-      // The header's count is not checked against the basis size.
-      if (j >= static_cast<unsigned int>(m_overlap.rows()))
-        return false;
-      // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_overlap(i, j) = m_overlap(j, i) =
-        Core::lexicalCast<double>(k).value_or(0.0);
-      ++i;
-      ++cnt;
-      if (i == f) {
-        // We need to move down to the next row and increment f - lower tri
-        i = 0;
-        ++f;
-        ++j;
-      }
-    }
+    for (auto& k : Core::split(line, ' '))
+      values.push_back(Core::lexicalCast<double>(k).value_or(0.0));
+  }
+  return values;
+}
+
+// The matrices below are basis x basis (m_zeta.size()) no matter how much data
+// the block holds, and MOPAC's bracket counts overflow to asterisks for large
+// systems, so the expected number of values comes from the basis size. The
+// values are read first and the matrix is only allocated once the block is
+// known to be complete: a corrupt AO_ZETA count followed by a short block
+// used to reserve gigabytes for a file of a few hundred kilobytes.
+bool MopacAux::readOverlapMatrix(std::istream& in)
+{
+  const size_t dim = m_zeta.size();
+  const size_t expected = dim * (dim + 1) / 2;
+  // Skip the first comment line...
+  string line;
+  Core::getLine(in, line);
+  const vector<double> values = readMatrixValues(in, expected);
+  if (values.size() != expected) {
+    appendError("Overlap matrix size does not match the basis.");
+    return false;
+  }
+  m_overlap.resize(dim, dim);
+  size_t cnt = 0;
+  for (size_t j = 0; j < dim; ++j) {
+    // Lower triangle, row by row; mirror it into the upper triangle
+    for (size_t i = 0; i <= j; ++i)
+      m_overlap(i, j) = m_overlap(j, i) = values[cnt++];
   }
   return true;
 }
 
-bool MopacAux::readEigenVectors(std::istream& in, unsigned int n)
+bool MopacAux::readEigenVectors(std::istream& in)
 {
-  m_eigenVectors.resize(m_zeta.size(), m_zeta.size());
-  unsigned int cnt = 0;
-  unsigned int i = 0, j = 0;
-  while (cnt < n) {
-    string line;
-    // Stop at end of file; see readArrayElements().
-    if (!Core::getLine(in, line))
-      break;
-    vector<string> list = Core::split(line, ' ');
-    for (auto& k : list) {
-      // The header's count is not checked against the basis size.
-      if (j >= static_cast<unsigned int>(m_eigenVectors.cols()))
-        return false;
-      m_eigenVectors(i, j) = Core::lexicalCast<double>(k).value_or(0.0);
-      ++i;
-      ++cnt;
-      if (i == m_zeta.size()) {
-        // We need to move down to the next row and increment f - lower tri
-        i = 0;
-        ++j;
-      }
-    }
+  const size_t dim = m_zeta.size();
+  const size_t expected = dim * dim;
+  const vector<double> values = readMatrixValues(in, expected);
+  if (values.size() != expected) {
+    appendError("Eigenvector matrix size does not match the basis.");
+    return false;
+  }
+  m_eigenVectors.resize(dim, dim);
+  // Stored one eigenvector (column) after another
+  size_t cnt = 0;
+  for (size_t j = 0; j < dim; ++j) {
+    for (size_t i = 0; i < dim; ++i)
+      m_eigenVectors(i, j) = values[cnt++];
   }
   return true;
 }
 
-bool MopacAux::readDensityMatrix(std::istream& in, unsigned int n)
+bool MopacAux::readDensityMatrix(std::istream& in)
 {
-  m_density.resize(m_zeta.size(), m_zeta.size());
-  unsigned int cnt = 0;
-  unsigned int i = 0, j = 0;
-  unsigned int f = 1;
+  const size_t dim = m_zeta.size();
+  const size_t expected = dim * (dim + 1) / 2;
   // Skip the first comment line...
   string line;
   Core::getLine(in, line);
-  while (cnt < n) {
-    // Stop at end of file; see readArrayElements().
-    if (!Core::getLine(in, line))
-      break;
-    vector<string> list = Core::split(line, ' ');
-    for (auto& k : list) {
-      // The header's count is not checked against the basis size.
-      if (j >= static_cast<unsigned int>(m_density.rows()))
-        return false;
-      // m_overlap.part<Eigen::SelfAdjoint>()(i, j) = list.at(k).toDouble();
-      m_density(i, j) = m_density(j, i) =
-        Core::lexicalCast<double>(k).value_or(0.0);
-      ++i;
-      ++cnt;
-      if (i == f) {
-        // We need to move down to the next row and increment f - lower tri
-        i = 0;
-        ++f;
-        ++j;
-      }
-    }
+  const vector<double> values = readMatrixValues(in, expected);
+  if (values.size() != expected) {
+    appendError("Density matrix size does not match the basis.");
+    return false;
+  }
+  m_density.resize(dim, dim);
+  size_t cnt = 0;
+  for (size_t j = 0; j < dim; ++j) {
+    for (size_t i = 0; i <= j; ++i)
+      m_density(i, j) = m_density(j, i) = values[cnt++];
   }
   return true;
 }

@@ -9,9 +9,9 @@
 #include "constraintsmodel.h"
 
 #include <QDialog>
+#include <QtCore/QPointer>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace Ui {
 class ConstraintsDialog;
@@ -26,6 +26,10 @@ public:
                              Qt::WindowFlags f = Qt::WindowFlags());
   ~ConstraintsDialog() override;
 
+  /**
+   * Show the constraints of @p molecule and follow its changes. A null
+   * molecule empties the table and stops following the previous one.
+   */
   void setMolecule(QtGui::Molecule* molecule);
 
 public slots:
@@ -44,9 +48,11 @@ public slots:
 private:
   Ui::ConstraintsDialog* ui;
   ConstraintsModel* m_model;
-  QtGui::Molecule* m_molecule = nullptr;
+  // Guarded: the molecule can be closed while the dialog stays open.
+  QPointer<QtGui::Molecule> m_molecule;
+  QMetaObject::Connection m_changedConnection;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_CONSTRAINTSDIALOG_H

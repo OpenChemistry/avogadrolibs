@@ -296,7 +296,7 @@ void MoleQueueWidget::listenForJobStateChange(bool listen)
 bool MoleQueueWidget::programSelected()
 {
   QModelIndexList sel(m_ui->queueListView->selectionModel()->selectedIndexes());
-  return sel.size() > 0;
+  return !sel.empty();
 }
 
 } // namespace Avogadro::MoleQueue

@@ -80,6 +80,8 @@ public:
 
   bool supportsElectrostatics() const { return m_electrostatics; }
 
+  bool hasCustomPotentials() const override { return m_electrostatics; }
+
   Core::Array<double> potentials(
     Core::Molecule& mol, const Core::Array<Vector3>& points) const override;
 

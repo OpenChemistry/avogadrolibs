@@ -175,6 +175,17 @@ class Solver {
 
   void SetCallback(CallbackType callback) { step_callback_ = callback; }
 
+  // Avogadro patch: seed the consecutive x_delta / f_delta violation counters
+  // for the next Minimize() call, so a caller running in short chunks can
+  // carry them over (they otherwise restart at zero each call and a
+  // "3 in a row" test can never fire in chunks shorter than 3). The final
+  // counts are in the returned Progress. Single use; defaults to zero.
+  void SetInitialDeltaViolations(int x_delta_violations, int f_delta_violations)
+  {
+    initial_x_delta_violations_ = x_delta_violations;
+    initial_f_delta_violations_ = f_delta_violations;
+  }
+
   virtual void InitializeSolver(const FunctionType& /*function*/,
                                 const StateType& /*initial_state*/) = 0;
 
@@ -182,6 +193,11 @@ class Solver {
       const FunctionType& function, const StateType& function_state) {
     // Solver state during the optimization.
     ProgressType solver_state;
+    // Avogadro patch: restore carried-over violation counters (single use).
+    solver_state.x_delta_violations = initial_x_delta_violations_;
+    solver_state.f_delta_violations = initial_f_delta_violations_;
+    initial_x_delta_violations_ = 0;
+    initial_f_delta_violations_ = 0;
     // Evaluate `function` once at the user-supplied starting point so the
     // `(value, gradient)` invariant on `FunctionState` is established.  For
     // `AugmentedLagrangeState` and other non-FunctionState types this
@@ -234,6 +250,10 @@ class Solver {
                                      const ProgressType& state) = 0;
 
   CallbackType step_callback_;  // A user-defined callback function.
+
+  // Avogadro patch: see SetInitialDeltaViolations.
+  int initial_x_delta_violations_ = 0;
+  int initial_f_delta_violations_ = 0;
 };
 
 }  // namespace cppoptlib::solver

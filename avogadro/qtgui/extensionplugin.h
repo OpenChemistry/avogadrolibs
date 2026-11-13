@@ -10,8 +10,11 @@
 
 #include <avogadro/qtplugins/pluginfactory.h>
 
+#include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
+
+#include <memory>
 
 class QAction;
 class QDockWidget;
@@ -19,6 +22,7 @@ class QDockWidget;
 namespace Avogadro {
 
 namespace QtGui {
+class CommandRegistry;
 class Molecule;
 }
 
@@ -37,6 +41,23 @@ namespace QtGui {
  * @class ExtensionPlugin extensionplugin.h <avogadro/qtgui/extensionplugin.h>
  * @brief The base class for extension plugin factories in Avogadro.
  * @author Marcus D. Hanwell
+ *
+ * A plugin with scripting commands can describe them with a CommandRegistry:
+ * add CommandSpec entries from the constructor via commandRegistry(), and
+ * override handleCommand() to forward to commandRegistry().handle(). The
+ * options are then validated before the handler runs, and registerCommands()
+ * and commandSchema() work without further code.
+ * @code
+ * // In the constructor, once per command:
+ * commandRegistry().add(spec);   // see CommandSpec
+ *
+ * bool MyPlugin::handleCommand(const QString& command,
+ *                              const QVariantMap& options)
+ * {
+ *   return commandRegistry().handle(command, options, m_molecule);
+ * }
+ * @endcode
+ * @sa CommandRegistry
  */
 class AVOGADROQTGUI_EXPORT ExtensionPlugin : public QObject
 {
@@ -77,10 +98,23 @@ public:
   virtual QList<Io::FileFormat*> fileFormats() const;
 
   /**
-   * If the extension plugin has script commands, this method
-   * should be implemented to emit the registerCommand signals.
+   * Called by the app to tell the extension to register commands.
+   * The default emits registerCommand() for every command in the
+   * commandRegistry(), in registration order. Override it only for commands
+   * that are not in the registry (and call the base to keep both).
    */
-  virtual void registerCommands() {}
+  virtual void registerCommands();
+
+  /**
+   * @return A JSON Schema (draft 2020-12) describing the options accepted by
+   * @p command, or an empty object if the plugin does not describe it.
+   *
+   * The default implementation exports the command registry (see
+   * commandRegistry()), including the "x-avogadro-async" and
+   * "x-avogadro-needs-molecule" keys. Plugins that override handleCommand()
+   * without using the registry need not change anything.
+   */
+  virtual QJsonObject commandSchema(const QString& command) const;
 
   /**
    * @return The dock widgets this extension contributes to the main window.
@@ -212,7 +246,9 @@ signals:
                        const QVariantMap& result = QVariantMap());
 
   /**
-   * Indicate that a command that was started cannot be completed.
+   * Indicate that a command failed. This covers a synchronous refusal
+   * (bad options, no molecule, an unknown option) as well as a started
+   * command that cannot be completed.
    * @param message A message to the script or user explaining the failure
    * @sa commandStarted
    */
@@ -223,6 +259,18 @@ signals:
    * The application should rebuild menus to reflect the new action list.
    */
   void actionsChanged();
+
+protected:
+  /**
+   * @return The registry of validated commands for this plugin, created on
+   * first use. Failures it finds are reported through commandFailed().
+   * See the ExtensionPlugin class documentation for an example.
+   */
+  CommandRegistry& commandRegistry();
+
+private:
+  /** Created on first use by commandRegistry(); null if never used. */
+  std::unique_ptr<CommandRegistry> m_commandRegistry;
 };
 
 /**

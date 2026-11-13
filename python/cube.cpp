@@ -7,6 +7,8 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/molecule.h>
 
+#include <string>
+
 namespace py = pybind11;
 
 using namespace Avogadro;
@@ -50,14 +52,16 @@ void exportCube(py::module_& m)
   bool (Cube::*setValue_idx)(unsigned int, float) = &Cube::setValue;
 
   cubeClass
-    // Data as 3D numpy array (zero-copy view)
+    // Data as a 3D numpy array: a zero-copy, read-only view (cubes can be
+    // many MB). Writes go through the setter, which also refreshes the
+    // min/max values.
     .def_property(
       "data",
       [](Cube& self) -> py::array_t<float> {
         auto* vec = self.data();
         if (vec->empty())
           return py::array_t<float>();
-        return py::array_t<float>(
+        auto view = py::array_t<float>(
           { static_cast<Py_ssize_t>(self.nx()),
             static_cast<Py_ssize_t>(self.ny()),
             static_cast<Py_ssize_t>(self.nz()) },
@@ -65,13 +69,32 @@ void exportCube(py::module_& m)
             static_cast<Py_ssize_t>(self.nz() * sizeof(float)),
             static_cast<Py_ssize_t>(sizeof(float)) },
           vec->data(), py::cast(self));
+        // Not writeable: an in-place write would skip the min/max update
+        // that the setter does.
+        view.attr("setflags")(py::arg("write") = false);
+        return view;
       },
       [](Cube& self, py::array_t<float, py::array::c_style> arr) {
         auto buf = arr.request();
+        // Cube::setData() accepts only exactly nx*ny*nz values, so this is
+        // also false for an empty array and when no limits have been set
+        // yet (nx*ny*nz == 0): there is nothing sensible to size the data
+        // against then.
+        const auto expected =
+          static_cast<Py_ssize_t>(self.nx()) * self.ny() * self.nz();
         auto* ptr = static_cast<float*>(buf.ptr);
-        self.setData(std::vector<float>(ptr, ptr + buf.size));
+        if (buf.size != expected ||
+            !self.setData(std::vector<float>(ptr, ptr + buf.size)))
+          throw py::value_error(
+            "Cube data must have nx*ny*nz = " + std::to_string(expected) +
+            " values (set the limits first), got " + std::to_string(buf.size));
       },
-      "Cube data as a numpy array of shape (nx, ny, nz)")
+      "Cube data as a read-only numpy array of shape (nx, ny, nz). This is a "
+      "view of the cube's storage, not a copy, and is invalidated by "
+      "set_limits() or by assigning to data; do not keep it across those. "
+      "To modify the data, assign a new array: cube.data = new_array (it must "
+      "have nx*ny*nz values, so set the limits first, or ValueError is "
+      "raised).")
     // Spatial properties
     .def_property_readonly("min", &Cube::min, "The minimum corner of the cube")
     .def_property_readonly("max", &Cube::max, "The maximum corner of the cube")

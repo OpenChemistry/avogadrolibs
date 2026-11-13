@@ -12,7 +12,6 @@
 #include <QtCore/QSettings>
 
 #include <QtGui/QColor>
-#include <QtGui/QPalette>
 #include <QtGui/QScreen>
 #include <QtWidgets/QColorDialog>
 #include <QtWidgets/QFileDialog>
@@ -21,38 +20,34 @@
 
 #include <avogadro/core/molecule.h>
 #include <avogadro/qtgui/chartwidget.h>
+#include <avogadro/qtgui/colortheme.h>
 
 using Avogadro::Core::Molecule;
 using Avogadro::QtGui::ChartWidget;
 
 namespace Avogadro::QtPlugins {
 
-// Detect dark mode: text lighter than window background
-static bool isDarkMode()
-{
-  const QPalette p;
-  return p.color(QPalette::WindowText).lightness() >
-         p.color(QPalette::Window).lightness();
-}
-
 // Default colors that adapt to dark/light mode
 static QColor defaultBackgroundColor()
 {
-  return isDarkMode() ? QColor(0, 0, 0) : QColor(255, 255, 255);
+  return (QtGui::colorTheme() == QtGui::ColorTheme::Dark)
+           ? QColorConstants::Black
+           : QColorConstants::White;
 }
 
 static QColor defaultForegroundColor()
 {
-  return isDarkMode() ? QColor(255, 255, 255) : QColor(0, 0, 0);
+  return (QtGui::colorTheme() == QtGui::ColorTheme::Dark)
+           ? QColorConstants::White
+           : QColorConstants::Black;
 }
 
 static QColor defaultCalculatedColor()
 {
-  return isDarkMode() ? QColor(255, 255, 255) : QColor(0, 0, 0);
+  return (QtGui::colorTheme() == QtGui::ColorTheme::Dark)
+           ? QColorConstants::White
+           : QColorConstants::Black;
 }
-
-constexpr QColor red(255, 0, 0);
-constexpr QColor blue(0, 0, 255);
 
 float scaleAndBlur(float x, float peak, float intensity, float scale = 1.0,
                    float shift = 0.0, float fwhm = 0.0)
@@ -92,6 +87,7 @@ float closestTo(float x, float peak, float intensity, float scale = 1.0,
 std::vector<double> fromMatrix(const MatrixX& matrix)
 {
   std::vector<double> result;
+  result.reserve(matrix.rows());
   for (auto i = 0; i < matrix.rows(); ++i)
     result.push_back(matrix(i, 0));
   return result;
@@ -713,7 +709,8 @@ void SpectraDialog::changeCalculatedSpectraColor()
 void SpectraDialog::changeRawSpectraColor()
 {
   QSettings settings;
-  QColor current = settings.value("spectra/rawColor", red).value<QColor>();
+  QColor current =
+    settings.value("spectra/rawColor", QColorConstants::Red).value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Raw Spectra Color"));
   if (color.isValid() && color != current) {
@@ -726,7 +723,8 @@ void SpectraDialog::changeImportedSpectraColor()
 {
   QSettings settings;
   QColor current =
-    settings.value("spectra/importedColor", blue).value<QColor>();
+    settings.value("spectra/importedColor", QColorConstants::Blue)
+      .value<QColor>();
   QColor color =
     QColorDialog::getColor(current, this, tr("Select Imported Spectra Color"));
   if (color.isValid() && color != current) {
@@ -1000,7 +998,8 @@ void SpectraDialog::updatePlot()
   };
   chart->addPlot(xData, yData, calculatedColor, xTitle, tr("Smoothed"));
   // todo add hide/show raw data series
-  QColor rawColor = settings.value("spectra/rawColor", red).value<QColor>();
+  QColor rawColor =
+    settings.value("spectra/rawColor", QColorConstants::Red).value<QColor>();
   QtGui::color4ub rawColor4ub = { static_cast<unsigned char>(rawColor.red()),
                                   static_cast<unsigned char>(rawColor.green()),
                                   static_cast<unsigned char>(rawColor.blue()),
@@ -1010,7 +1009,8 @@ void SpectraDialog::updatePlot()
     chart->addSeries(yStick, rawColor4ub, tr("Raw"));
 
   QColor importedColor =
-    settings.value("spectra/importedColor", blue).value<QColor>();
+    settings.value("spectra/importedColor", QColorConstants::Blue)
+      .value<QColor>();
   QtGui::color4ub importedColor4ub = {
     static_cast<unsigned char>(importedColor.red()),
     static_cast<unsigned char>(importedColor.green()),
@@ -1115,8 +1115,6 @@ void SpectraDialog::importData()
   // enable the imported data series
   m_ui->cb_import->setEnabled(true);
   m_ui->cb_import->setChecked(true);
-
-  return;
 }
 
 void SpectraDialog::toggleOptions()

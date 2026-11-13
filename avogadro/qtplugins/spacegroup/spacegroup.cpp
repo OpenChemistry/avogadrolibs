@@ -125,9 +125,8 @@ bool hallNumberFromOptions(const QVariantMap& options,
 } // namespace
 
 SpaceGroup::SpaceGroup(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_spgTol(1e-5),
-    m_perceiveSpaceGroupAction(new QAction(this)),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_spgTol(1e-5), m_perceiveSpaceGroupAction(new QAction(this)),
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
@@ -220,8 +219,10 @@ bool SpaceGroup::handleCommand(const QString& command,
   if (command != "fillUnitCell" && command != "fillTranslationalCell")
     return false;
 
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command.
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   // An explicit hallNumber or spaceGroup wins over the one of the molecule.
   // Without either, the molecule has to know its space group already: a

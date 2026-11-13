@@ -10,10 +10,12 @@
 #include <avogadro/qtgui/backgroundfileformat.h>
 
 #include <QCoreApplication>
+#include <QEventLoop>
 #include <QFile>
 #include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QThread>
+#include <QTimer>
 
 using Avogadro::Core::Molecule;
 using Avogadro::Io::XyzFormat;
@@ -213,14 +215,29 @@ TEST_F(BackgroundFileFormatTest, Read_OnWorkerThread_ViaQueuedInvoke)
   QObject::connect(thread, &QThread::finished, bff, &QObject::deleteLater);
   thread->start();
 
-  QSignalSpy finishedSpy(bff, &BackgroundFileFormat::finished);
+  // read() runs as soon as the worker picks up the queued call, so finished()
+  // may be emitted before this thread starts waiting. A queued connection to
+  // a receiver on this thread turns the emission into a posted event, which
+  // is delivered once the loop below runs, however early it was emitted.
+  // (QSignalSpy::wait() only counts emissions that arrive during the wait.)
+  QEventLoop loop;
+  bool finished = false;
+  QObject::connect(
+    bff, &BackgroundFileFormat::finished, &loop,
+    [&]() {
+      finished = true;
+      loop.quit();
+    },
+    Qt::QueuedConnection);
+  QTimer::singleShot(5000, &loop, &QEventLoop::quit);
+
   QMetaObject::invokeMethod(bff, "read", Qt::QueuedConnection);
+  loop.exec();
 
-  ASSERT_TRUE(finishedSpy.wait(5000));
+  ASSERT_TRUE(finished);
 
-  // The worker thread has returned to its event loop by the time the queued
-  // finished() signal is delivered here, so reading bff's state from the
-  // main thread is safe.
+  // read() sets its results before emitting finished(), and the queued
+  // delivery orders those writes before this thread's reads below.
   EXPECT_TRUE(bff->success());
   EXPECT_EQ(mol.atomCount(), 2u);
 

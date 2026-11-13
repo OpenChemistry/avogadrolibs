@@ -218,7 +218,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
 {
   clearOrbitals();
 
-  auto* gaussianBasis = dynamic_cast<const Core::GaussianSet*>(basis);
+  const auto* gaussianBasis = dynamic_cast<const Core::GaussianSet*>(basis);
 
   // Check if this is an open-shell calculation (UHF or ROHF)
   bool isOpenShell = false;
@@ -379,7 +379,7 @@ bool OrbitalTableModel::setOrbitals(const Core::BasisSet* basis)
 
 bool OrbitalTableModel::clearOrbitals()
 {
-  if (m_orbitals.size() > 0) {
+  if (!m_orbitals.empty()) {
     beginRemoveRows(QModelIndex(), 0, m_orbitals.size() - 1);
     m_orbitals.clear();
     endRemoveRows();

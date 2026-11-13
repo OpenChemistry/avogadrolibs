@@ -15,9 +15,9 @@
 
 #include <QtCore/QPoint>
 #include <QtCore/QPointer>
+#include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 class EditorToolWidget;
 
 /**
@@ -79,7 +79,11 @@ signals:
 private slots:
   void syncToolWidget() const;
   void updateDrawOptionsFromWidget();
-  void clearKeyPressBuffer() { m_keyPressBuffer.clear(); }
+  void clearKeyPressBuffer()
+  {
+    m_keyPressBuffer.clear();
+    m_keyPressTimer->stop();
+  }
 
 private:
   /**
@@ -140,12 +144,12 @@ private:
   // drops its undo entry.
   bool m_dragCancelled;
   QString m_keyPressBuffer;
+  QTimer* m_keyPressTimer;
   QtGui::PluginLayerManager m_layerManager;
 
   Real m_bondDistance;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_NAVIGATOR_H

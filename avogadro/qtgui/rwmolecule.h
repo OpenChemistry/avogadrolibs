@@ -24,8 +24,7 @@
 
 #include <QUndoStack>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
@@ -57,16 +56,16 @@ class AVOGADROQTGUI_EXPORT RWMolecule : public QObject
 
 public:
   /** Typedef for Atom class. */
-  typedef RWAtom AtomType;
+  using AtomType = RWAtom;
 
   /** Typedef for PersistentAtom class. */
-  typedef PersistentAtom<RWMolecule> PersistentAtomType;
+  using PersistentAtomType = PersistentAtom<RWMolecule>;
 
   /** Typedef for Bond class. */
-  typedef RWBond BondType;
+  using BondType = RWBond;
 
   /** Typedef for PersistentBond class. */
-  typedef PersistentBond<RWMolecule> PersistentBondType;
+  using PersistentBondType = PersistentBond<RWMolecule>;
 
   /** Construct a molecule with the atoms/bonds of mol. */
   explicit RWMolecule(Molecule& mol, QObject* parent = nullptr);
@@ -817,14 +816,14 @@ protected:
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>
 {
 public:
-  RWAtom() : Core::AtomTemplate<RWMolecule>() {}
+  RWAtom() {}
   RWAtom(RWMolecule* m, Index i) : Core::AtomTemplate<RWMolecule>(m, i) {}
 };
 
 class AVOGADROQTGUI_EXPORT RWBond : public Core::BondTemplate<RWMolecule>
 {
 public:
-  RWBond() : Core::BondTemplate<RWMolecule>() {}
+  RWBond() {}
   RWBond(RWMolecule* m, Index i) : Core::BondTemplate<RWMolecule>(m, i) {}
 };
 
@@ -1054,7 +1053,6 @@ inline const Core::Array<Vector3>& RWMolecule::forceVectors() const
   return m_molecule.forceVectors();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_RWMOLECULE_H

@@ -10,8 +10,7 @@
 
 #include <QtWidgets/QDialog>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 namespace Ui {
 class InsertFragmentDialog;
@@ -51,6 +50,6 @@ private:
   Private* m_implementation;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
+
 #endif // AVOGADRO_QTGUI_InsertFragmentDIALOG_H

@@ -11,8 +11,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 /**
  * @class QtTextRenderStrategy qttextrenderstrategy.h
@@ -51,7 +50,6 @@ private:
   bool m_preserveArgb;
 };
 
-} // namespace QtOpenGL
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL
 
 #endif // AVOGADRO_QTOPENGL_QTTEXTRENDERSTRATEGY_H

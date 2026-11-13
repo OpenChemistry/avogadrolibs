@@ -5,11 +5,37 @@
 
 #include "toolplugin.h"
 
+#include "commandregistry.h"
+
 namespace Avogadro::QtGui {
 
 ToolPlugin::ToolPlugin(QObject* parent_) : QObject(parent_) {}
 
 ToolPlugin::~ToolPlugin() {}
+
+void ToolPlugin::registerCommands()
+{
+  if (m_commandRegistry) {
+    m_commandRegistry->announce(
+      [this](const QString& name, const QString& description) {
+        emit registerCommand(name, description);
+      });
+  }
+}
+
+QJsonObject ToolPlugin::commandSchema(const QString& command) const
+{
+  return m_commandRegistry ? m_commandRegistry->schema(command) : QJsonObject();
+}
+
+CommandRegistry& ToolPlugin::commandRegistry()
+{
+  if (!m_commandRegistry) {
+    m_commandRegistry = std::make_unique<CommandRegistry>(
+      [this](const QString& message) { emit commandFailed(message); });
+  }
+  return *m_commandRegistry;
+}
 
 QUndoCommand* ToolPlugin::mousePressEvent(QMouseEvent*)
 {

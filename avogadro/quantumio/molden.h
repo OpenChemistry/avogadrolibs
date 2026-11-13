@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT MoldenFile : public Io::FileFormat
 {
@@ -51,6 +50,16 @@ private:
   void readAtom(const std::vector<std::string>& list);
   bool load(Core::GaussianSet* basis, size_t atomCount);
   unsigned int basisFunctionCount() const;
+
+  /**
+   * @return True if the s and p shells read show that the contraction
+   * coefficients include the normalization of x^l exp(-alpha r^2), as xtb
+   * and ORCA write them (GaussianSet::PrimitiveNormalization::RadialIncluded)
+   * rather than being the coefficients of normalized primitives.
+   * One-primitive shells are used only if no contracted s or p shell could
+   * be tested.
+   */
+  bool coefficientsIncludeRadialNormalization() const;
 
   // Write helper methods
   void writeAtoms(std::ostream& out, const Core::Molecule& molecule);
@@ -94,15 +103,18 @@ private:
     Frequencies,
     VibrationalModes,
     Intensities,
+    Title,
     Unrecognized
   };
   Mode m_mode;
+
+  // True if a [Title] line says the file was written by ORCA (orca_2mkl)
+  bool m_orcaTitle = false;
 
   bool m_openShell = false;
   bool m_currentSpinBeta = false; // Track current spin during MO parsing
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

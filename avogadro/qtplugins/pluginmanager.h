@@ -12,8 +12,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class ScenePluginFactory;
 class ExtensionPluginFactory;
@@ -38,6 +37,8 @@ class AVOGADROQTPLUGINS_EXPORT PluginManager : public QObject
   Q_OBJECT
 
 public:
+  ~PluginManager() override;
+
   /**
    * Get the singleton instance of the plugin manager. This instance should not
    * be deleted.
@@ -84,7 +85,6 @@ public:
 private:
   // Hide the constructor, destructor, copy and assignment operator.
   PluginManager(QObject* parent = nullptr);
-  ~PluginManager() override;
   PluginManager(const PluginManager&);            // Not implemented.
   PluginManager& operator=(const PluginManager&); // Not implemented.
 
@@ -113,14 +113,13 @@ template <typename T>
 T* PluginManager::pluginFactory(const QString& id) const
 {
   foreach (QObject* plugin, m_plugins) {
-    auto* factory = qobject_cast<T*>(plugin);
+    T* factory = qobject_cast<T*>(plugin);
     if (factory && factory->identifier() == id)
       return factory;
   }
   return nullptr;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTGUI_PLUGINMANAGER_H

@@ -17,9 +17,7 @@
 #include <QtCore/QObject>
 #include <list>
 
-namespace Avogadro {
-
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class Mesh;
 class RWMolecule;
@@ -35,16 +33,16 @@ class AVOGADROQTGUI_EXPORT Molecule : public QObject, public Core::Molecule
 
 public:
   /** Typedef for Atom class. */
-  typedef Core::Molecule::AtomType AtomType;
+  using AtomType = Core::Molecule::AtomType;
 
   /** Typedef for PersistentAtom class. */
-  typedef PersistentAtom<Molecule> PersistentAtomType;
+  using PersistentAtomType = PersistentAtom<Molecule>;
 
   /** Typedef for Bond class. */
-  typedef Core::Molecule::BondType BondType;
+  using BondType = Core::Molecule::BondType;
 
   /** Typedef for PersistentBond class. */
-  typedef PersistentBond<Molecule> PersistentBondType;
+  using PersistentBondType = PersistentBond<Molecule>;
 
   Molecule(QObject* parent_ = nullptr);
   ~Molecule() override;
@@ -102,21 +100,22 @@ public:
     /**
      * Indicates the molecule's contents were replaced wholesale by a molecule
      * built elsewhere (see RWMolecule::modifyMolecule). The derived data now
-     * present (vibrations, spectra, cubes, meshes, basis set) came with the
-     * replacement, so emitChanged() keeps it. Cached pointers into that data
-     * are still stale: invalidatesDerivedData() remains true.
+     * present (vibrations, spectra, cubes, meshes, basis set, partial
+     * charges) came with the replacement, so emitChanged() keeps it. Cached
+     * pointers into that data are still stale: invalidatesDerivedData()
+     * remains true.
      */
     Replaced = 32768
   };
   Q_DECLARE_FLAGS(MoleculeChanges, MoleculeChange)
 
   /**
-   * @return True if @p changes leaves the cubes, meshes, basis set and
-   * vibration data derived from this molecule stale: emitChanged() discards
-   * them, unless @p changes includes Replaced, in which case it keeps the
-   * replacement's own data but the objects are still new ones. Consumers that
-   * cache raw pointers to any of that must refresh them in step with this,
-   * rather than re-deriving the rule from the flags.
+   * @return True if @p changes leaves the cubes, meshes, basis set,
+   * vibration data and partial charges derived from this molecule stale:
+   * emitChanged() discards them, unless @p changes includes Replaced, in
+   * which case it keeps the replacement's own data but the objects are still
+   * new ones. Consumers that cache raw pointers to any of that must refresh
+   * them in step with this, rather than re-deriving the rule from the flags.
    */
   static bool invalidatesDerivedData(unsigned int changes);
 
@@ -329,7 +328,6 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_MOLECULE_H

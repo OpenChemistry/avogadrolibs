@@ -157,10 +157,10 @@ static void fillQuantityCombo(
 }
 
 PlotConformer::PlotConformer(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_displayDialogAction(new QAction(this)),
-    m_chartWidget(nullptr), m_yAxisCombo(nullptr), m_xAxisCombo(nullptr),
-    m_unitsCombo(nullptr), m_timeStepSpin(nullptr), m_targetUnitsCombo(nullptr),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_displayDialogAction(new QAction(this)), m_chartWidget(nullptr),
+    m_yAxisCombo(nullptr), m_xAxisCombo(nullptr), m_unitsCombo(nullptr),
+    m_timeStepSpin(nullptr), m_targetUnitsCombo(nullptr),
     m_unwrapDihedralsCheck(nullptr), m_timeStepLabel(nullptr),
     m_addSelectionButton(nullptr), m_frameLabel(nullptr)
 {
@@ -353,7 +353,7 @@ bool PlotConformer::eventFilter(QObject* object, QEvent* event)
   if (count < 2)
     return QtGui::ExtensionPlugin::eventFilter(object, event);
 
-  auto* keyEvent = static_cast<QKeyEvent*>(event);
+  auto* keyEvent = dynamic_cast<QKeyEvent*>(event);
   // Shift takes bigger strides through long trajectories.
   const int step = (keyEvent->modifiers() & Qt::ShiftModifier) ? 10 : 1;
 

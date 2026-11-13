@@ -1,30 +1,111 @@
-Checks: 'bugprone*,
-        clang-analyzer*,
-        cppcoreguidelines*,
-        misc-uniqueptr-reset-release,
-        misc-unused*,
-        misc-redundant-expression,
-        modernize-avoid-bind,modernize-concat-nested-namespaces,
-        modernize-loop-convert,modernize-macro-to-enum,modernize-use-bool-literals,
-        modernize-use-auto,modernize-use-nullptr,modernize-use-override,
-        modernize-raw-string-literal,modernize-use-emplace,modernize-pass-by-value,
-        modernize-use-using,
-        performance-avoid-endl,
-        performance-faster*,
-        performance-for-range-copy,
-        performance-inefficient*,performance-type-promotion*,
-        performance-unnecessary-copy-initialization,
-        performance-move-const-arg,
-        readability-const-return-type,
-        readability-container*,
-        readability-duplicate-include,
-        readability-delete-null-pointer,
-        readability-qualified-auto,
-        readability-redundant*,
-        readability-simplify*,
-        -cppcoreguidelines-avoid-magic-numbers,
-        -cppcoreguidelines-owning-memory,
-        -readability-else-after-return,
-        -portability-restrict-system-includes,
-        -modernize-use-trailing-return-type'
-FormatStyle:     file
+---
+# Families are enabled whole and then trimmed, so new checks in newer LLVM
+# releases show up automatically. Disabled checks fall into three groups:
+#  - they fight Qt (parent ownership, `public slots:`, Q_OBJECT macros),
+#  - they flag every Eigen / std::vector operator[] or the numeric C code
+#    (qtaim, gaussiansettools, binary readers), or
+#  - they are API-breaking style changes better done deliberately
+#    (enum class, narrowing) than as part of a survey.
+# Unknown check names are ignored, so this works with older clang-tidy too.
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -bugprone-signed-bitwise,
+  -bugprone-switch-missing-default-case,
+  -bugprone-throwing-static-initialization,
+  -bugprone-unhandled-code-paths,
+  clang-analyzer-*,
+  -clang-analyzer-optin.performance.Padding,
+  -clang-analyzer-osx.*,
+  -clang-analyzer-optin.osx.*,
+  -clang-analyzer-webkit.*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-const-or-ref-data-members,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-c-copy-assignment-signature,
+  -cppcoreguidelines-explicit-virtual-functions,
+  -cppcoreguidelines-init-variables,
+  -cppcoreguidelines-macro-to-enum,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-narrowing-conversions,
+  -cppcoreguidelines-noexcept-*,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-prefer-member-initializer,
+  -cppcoreguidelines-pro-bounds-*,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-union-access,
+  -cppcoreguidelines-pro-type-vararg,
+  -cppcoreguidelines-use-default-member-init,
+  -cppcoreguidelines-use-enum-class,
+  misc-confusable-identifiers,
+  misc-definitions-in-headers,
+  misc-misleading-bidirectional,
+  misc-misleading-identifier,
+  misc-misplaced-const,
+  misc-new-delete-overloads,
+  misc-non-copyable-objects,
+  misc-redundant-expression,
+  misc-static-assert,
+  misc-throw-by-value-catch-by-reference,
+  misc-unconventional-assign-operator,
+  misc-uniqueptr-reset-release,
+  misc-unused-*,
+  modernize-avoid-bind,
+  modernize-concat-nested-namespaces,
+  modernize-deprecated-headers,
+  modernize-loop-convert,
+  modernize-macro-to-enum,
+  modernize-make-shared,
+  modernize-make-unique,
+  modernize-pass-by-value,
+  modernize-raw-string-literal,
+  modernize-redundant-void-arg,
+  modernize-type-traits,
+  modernize-use-auto,
+  modernize-use-bool-literals,
+  modernize-use-emplace,
+  modernize-use-equals-default,
+  modernize-use-equals-delete,
+  modernize-use-nullptr,
+  modernize-use-override,
+  modernize-use-scoped-lock,
+  modernize-use-using,
+  performance-*,
+  -performance-enum-size,
+  readability-avoid-const-params-in-decls,
+  readability-const-return-type,
+  readability-container-*,
+  readability-delete-null-pointer,
+  readability-duplicate-include,
+  readability-inconsistent-declaration-parameter-name,
+  readability-misleading-indentation,
+  readability-misplaced-array-index,
+  readability-qualified-auto,
+  readability-redundant-*,
+  -readability-redundant-access-specifiers,
+  -readability-redundant-parentheses,
+  readability-simplify-*,
+  readability-static-accessed-through-instance,
+  readability-string-compare,
+  readability-suspicious-call-argument,
+  readability-uniqueptr-delete-release
+CheckOptions:
+  # A lone `virtual ~Foo() = default;` is the normal interface pattern.
+  cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
+  cppcoreguidelines-special-member-functions.AllowMissingMoveFunctionsWhenCopyIsDeleted: true
+  cppcoreguidelines-special-member-functions.AllowImplicitlyDeletedCopyOrMove: true
+  # Q_DISABLE_COPY and friends expand to `= delete` already.
+  modernize-use-equals-delete.IgnoreMacros: true
+  # GCC's -Wextra warns when a copy constructor omits the base initializer.
+  readability-redundant-member-init.IgnoreBaseInCopyConstructors: true
+  # Only add std::move to parameters already passed by value; never flip
+  # const& to by-value (changes exported signatures / ABI).
+  modernize-pass-by-value.ValuesOnly: true
+  # Implicitly shared / copy-on-write types are cheap to copy.
+  performance-unnecessary-value-param.AllowedTypes: 'QString;QByteArray;QStringList;QList;QVariant;QJsonObject;QJsonArray;Avogadro::Core::Array'
+FormatStyle: file

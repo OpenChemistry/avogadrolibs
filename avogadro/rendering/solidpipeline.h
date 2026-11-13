@@ -8,8 +8,7 @@
 
 #include "camera.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class SolidPipeline
 {
@@ -47,6 +46,11 @@ public:
    * @brief Resize buffers for width x height viewport.
    */
   void resize(int width, int height);
+
+  /**
+   * @brief Resize buffers to exactly deviceWidth x deviceHeight pixels.
+   */
+  void resizeDevice(int deviceWidth, int deviceHeight);
 
   /**
    * @brief Set pixel ratio (1.0 on standard displays, 2.0 on Retina, etc.).
@@ -146,7 +150,7 @@ private:
   Private* d;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

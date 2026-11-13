@@ -18,6 +18,7 @@
 #include <chrono>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <istream>
 #include <ostream>
 #include <sstream>
@@ -39,6 +40,22 @@ using std::istringstream;
 using std::setprecision;
 using std::setw;
 using std::string;
+
+namespace {
+// Element symbols are case-sensitive in the element table, but many files
+// (e.g. RCSB Chemical Component Dictionary SDFs) write them in upper case
+// ("FE", "CL"). Normalise to first upper, rest lower. This also makes "d" and
+// "t" match the deuterium / tritium checks. Only A-Z / a-z change, whatever
+// the C locale: std::tolower() under a Turkish LC_CTYPE turns the "I" of "SI"
+// into a dotless i, and the lookup then fails.
+std::string normalizeSymbol(const std::string& symbol)
+{
+  std::string result = toLower(symbol);
+  if (!result.empty() && result[0] >= 'a' && result[0] <= 'z')
+    result[0] = static_cast<char>(result[0] - 'a' + 'A');
+  return result;
+}
+} // namespace
 
 namespace Avogadro::Io {
 
@@ -178,9 +195,9 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
 
   // The counts line, and version identifier.
   Core::getLine(in, buffer);
-  // should be long enough, e.g.
+  // The atom and bond counts are required, e.g.
   //   5  4  0  0  0  0  0  0  0  0999 V2000
-  if (!in.good() || buffer.size() < 39) {
+  if (!in.good() || buffer.size() < 6) {
     appendError("Error reading counts line.");
     return false;
   }
@@ -202,13 +219,10 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     appendError("Negative atom or bond count in the counts line.");
     return false;
   }
-  string mdlVersion(trimmed(buffer.substr(33)));
+  // A missing version field means V2000 (e.g., GaussView writes none)
+  string mdlVersion(buffer.size() > 33 ? trimmed(buffer.substr(33)) : string());
   if (mdlVersion == "V3000")
     return readV3000(in, mol);
-  else if (mdlVersion != "V2000") {
-    appendError("Unsupported MDL version: " + mdlVersion);
-    return false;
-  }
 
   // Parse the atom block.
   std::vector<chargePair> chargeList;
@@ -239,7 +253,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       return false;
     }
 
-    string element(trimmed(buffer.substr(31, 3)));
+    string element(normalizeSymbol(trimmed(buffer.substr(31, 3))));
     auto charge(lexicalCast<int>(trimmed(buffer.substr(36, 3))).value_or(0));
     if (!buffer.empty()) {
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
@@ -440,7 +454,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
                       buffer.substr(14 + 8 * i, 3));
           return false;
         }
-        mol.setIsotope(index, isotope);
+        if (isotope < 0 ||
+            isotope > std::numeric_limits<unsigned short>::max()) {
+          appendError("Isotope out of range: " + buffer.substr(14 + 8 * i, 3));
+          return false;
+        }
+        mol.setIsotope(index, static_cast<unsigned short>(isotope));
       }
     } // isotope
 #ifndef NDEBUG
@@ -552,7 +571,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
     if (startsWith(pka, "tensor("))
       pka = pka.substr(7, pka.size() - 8);
     // find the decimal to only keep 2 decimal places
-    size_t decimal = pka.find(".");
+    size_t decimal = pka.find('.');
     if (decimal != std::string::npos)
       pka = pka.substr(0, decimal + 3);
     mol.setData("pka", pka);
@@ -599,12 +618,12 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       break;
 
     // Read counts line
-    if (!Core::getLine(in, buffer) || buffer.size() < 39)
+    if (!Core::getLine(in, buffer) || buffer.size() < 6)
       break;
 
     // Check if this is V3000 - skip if so
     // (that would be weird mixing V2000 and V3000)
-    string version(trimmed(buffer.substr(33)));
+    string version(buffer.size() > 33 ? trimmed(buffer.substr(33)) : string());
     if (version == "V3000") {
       // Restore stream position for potential future reading
       if (molPos != std::streampos(-1))
@@ -654,7 +673,7 @@ bool MdlFormat::read(std::istream& in, Core::Molecule& mol)
       }
 
       // Check element matches
-      string element(trimmed(buffer.substr(31, 3)));
+      string element(normalizeSymbol(trimmed(buffer.substr(31, 3))));
       unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
       if (element == "D" || element == "T")
         atomicNum = 1;
@@ -774,7 +793,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       return false;
     }
 
-    string element(trimmed(atomData[3]));
+    string element(normalizeSymbol(trimmed(atomData[3])));
     unsigned char atomicNum = Elements::atomicNumberFromSymbol(element);
     Atom newAtom = mol.addAtom(atomicNum);
     if (element == "D") {
@@ -807,7 +826,7 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
     if (atomData.size() > 8) {
       // loop through the key=value pairs
       for (size_t j = 8; j < atomData.size(); ++j) {
-        string key = atomData[j];
+        const string& key = atomData[j];
         if (startsWith(key, "CHG=")) {
           int charge = lexicalCast<int>(key.substr(4), ok);
           if (!ok) {
@@ -828,14 +847,19 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
             spinMultiplicity += 1;
           else if (radical == 3) // triplet
             spinMultiplicity += 2;
-        } else if (startsWith(key, "ISO=")) {
+        } else if (startsWith(key, "ISO=") || startsWith(key, "MASS=")) {
           // isotope
-          int isotope = lexicalCast<int>(key.substr(4), ok);
+          int isotope = lexicalCast<int>(key.substr(key.find('=') + 1), ok);
           if (!ok) {
             appendError("Failed to parse isotope type: " + key);
             return false;
           }
-          mol.setIsotope(newAtom.index(), isotope);
+          if (isotope < 0 ||
+              isotope > std::numeric_limits<unsigned short>::max()) {
+            appendError("Isotope out of range: " + key);
+            return false;
+          }
+          mol.setIsotope(newAtom.index(), static_cast<unsigned short>(isotope));
         } else if (startsWith(key, "VAL=")) {
           // explicit valence — map to hybridization
           int valence = lexicalCast<int>(key.substr(4), ok);
@@ -930,8 +954,17 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
       anyAromaticBond = true;
       bondOrder = 1;
     }
-    mol.addBond(mol.atom(atom1), mol.atom(atom2), bondOrder);
+    Bond newBond = mol.addBond(mol.atom(atom1), mol.atom(atom2), bondOrder);
     aromaticBonds.push_back(aromatic);
+    // CFG=2 is "either", as in the V2000 stereo column (3 / 4)
+    for (size_t j = 6; j < bondData.size(); ++j) {
+      if (bondData[j] != "CFG=2")
+        continue;
+      if (order == 2)
+        setBondStereoUnspecified(mol, newBond.index());
+      else if (order == 1)
+        setAtomStereoUnspecified(mol, static_cast<Index>(atom1));
+    }
   } // end of bond block
 
   // Unlike V2000, charges arrive with the atoms (CHG= in the atom block), so
@@ -945,21 +978,35 @@ bool MdlFormat::readV3000(std::istream& in, Core::Molecule& mol)
   }
 
   // look for M  END
+  bool atRecordEnd = false;
   while (Core::getLine(in, buffer)) {
     if (trimmed(buffer) == "M  END")
       break;
+    if (trimmed(buffer) == "$$$$") {
+      atRecordEnd = true;
+      break;
+    }
   }
-  // read in any properties
-  while (Core::getLine(in, buffer)) {
-    if (startsWith(buffer, "> <")) {
+  // read in any properties, stopping at the end of the SDF record
+  while (!atRecordEnd && Core::getLine(in, buffer)) {
+    if (trimmed(buffer) == "$$$$")
+      break;
+    if (startsWith(buffer, "> <") && buffer.length() >= 4) {
       string key = trimmed(buffer.substr(3, buffer.length() - 4));
       string value;
+      bool endOfRecord = false;
       while (Core::getLine(in, buffer)) {
+        if (trimmed(buffer) == "$$$$") {
+          endOfRecord = true;
+          break;
+        }
         if (trimmed(buffer).empty())
           break;
         value += buffer + "\n";
       }
       mol.setData(key, value);
+      if (endOfRecord)
+        break;
     }
   }
 
@@ -978,14 +1025,22 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
   out << "M  V30 COUNTS " << mol.atomCount() << ' ' << mol.bondCount()
       << " 0 0 0\n";
   // atom block
+  const std::ios_base::fmtflags oldFlags = out.flags();
+  const std::streamsize oldPrecision = out.precision();
   out << "M  V30 BEGIN ATOM\n";
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Atom atom = mol.atom(i);
+    // fixed notation: the default stream format keeps only six significant
+    // digits, which loses precision for coordinates in large systems
     out << "M  V30 " << i + 1 << ' ' << Elements::symbol(atom.atomicNumber())
-        << ' ' << atom.position3d().x() << ' ' << atom.position3d().y() << ' '
-        << atom.position3d().z() << " 0";
+        << std::fixed << std::setprecision(6) << ' ' << atom.position3d().x()
+        << ' ' << atom.position3d().y() << ' ' << atom.position3d().z() << " 0";
+    out.flags(oldFlags);
+    out.precision(oldPrecision);
     if (atom.formalCharge())
-      out << " CHG=" << atom.formalCharge();
+      out << " CHG=" << static_cast<int>(atom.formalCharge());
+    if (atom.isotope() > 0)
+      out << " MASS=" << atom.isotope();
     out << "\n";
   }
   out << "M  V30 END ATOM\n";
@@ -994,14 +1049,18 @@ bool MdlFormat::writeV3000(std::ostream& out, const Core::Molecule& mol)
   for (size_t i = 0; i < mol.bondCount(); ++i) {
     Bond bond = mol.bond(i);
     out << "M  V30 " << i + 1 << ' ' << static_cast<int>(bond.order()) << ' '
-        << (bond.atom1().index() + 1) << ' ' << (bond.atom2().index() + 1)
-        << " \n";
+        << (bond.atom1().index() + 1) << ' ' << (bond.atom2().index() + 1);
+    // same "either" markers as the V2000 bond block
+    if ((bond.order() == 2 && bondStereoUnspecified(mol, i)) ||
+        (bond.order() == 1 && atomStereoUnspecified(mol, bond.atom1().index())))
+      out << " CFG=2";
+    out << "\n";
   }
   out << "M  V30 END BOND\n";
   out << "M  V30 END CTAB\n";
   out << "M  END\n";
 
-  // TODO: isotopes, radicals, etc.
+  // TODO: radicals
   if (m_writeProperties) {
     writeDataBlocks(out, mol.dataMap());
   }
@@ -1035,8 +1094,12 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
   out << "  Avogadro" << std::put_time(local_time, "%m%d%y%H%M") << "3D\n\n";
 
   // Counts line.
-  if (mol.atomCount() > 999 || mol.bondCount() > 999) {
-    // we need V3000 support for big molecules
+  // The V3000 variants always write V3000; the plain formats honour the option
+  bool useV3000 = false;
+  boolOption("v3000", useV3000);
+  if (m_writeV3000 || useV3000 || mol.atomCount() > 999 ||
+      mol.bondCount() > 999) {
+    // V3000 was requested, or we need it for big molecules
     return writeV3000(out, mol);
   }
 
@@ -1084,7 +1147,21 @@ bool MdlFormat::write(std::ostream& out, const Core::Molecule& mol)
     out << "M  CHG  1 " << setw(3) << std::right << atomIndex + 1 << ' '
         << setw(3) << atomCharge << "\n";
   }
-  // TODO: isotopes, etc.
+  // Isotopes: up to eight "atom mass" pairs per line.
+  std::vector<std::pair<Index, unsigned short>> isotopeList;
+  for (size_t i = 0; i < mol.atomCount(); ++i) {
+    unsigned short isotope = mol.atom(i).isotope();
+    if (isotope > 0 && isotope <= 999)
+      isotopeList.emplace_back(i, isotope);
+  }
+  for (size_t i = 0; i < isotopeList.size(); i += 8) {
+    size_t count = std::min<size_t>(8, isotopeList.size() - i);
+    out << "M  ISO" << setw(3) << std::right << count;
+    for (size_t j = i; j < i + count; ++j)
+      out << ' ' << setw(3) << std::right << isotopeList[j].first + 1 << ' '
+          << setw(3) << std::right << isotopeList[j].second;
+    out << "\n";
+  }
   out << "M  END\n";
   // Data block
   if (m_writeProperties) {

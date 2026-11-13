@@ -12,8 +12,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class WideLineGeometry widelinegeometry.h
@@ -197,7 +196,7 @@ inline void swap(WideLineGeometry& lhs, WideLineGeometry& rhs)
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_WIDELINEGEOMETRY_H

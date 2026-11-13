@@ -9,9 +9,9 @@
 
 #include <QUndoCommand>
 #include <cassert>
+#include <utility>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
 using Core::AtomHybridization;
@@ -88,12 +88,14 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   Index m_atomUid;
   size_t m_layer;
   bool m_added = false;
+  Vector3 m_position3d;
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
-                 Index atomId, Index uid)
+                 Index atomId, Index uid,
+                 const Vector3& position3d = Vector3::Zero())
     : UndoCommand(m), m_atomicNumber(aN), m_usingPositions(usingPositions),
-      m_atomId(atomId), m_atomUid(uid)
+      m_atomId(atomId), m_atomUid(uid), m_position3d(position3d)
   {
     m_layer = m_molecule.layer().activeLayer();
   }
@@ -101,10 +103,9 @@ public:
   void redo() override
   {
     assert(m_molecule.atomCount() == m_atomId);
-    auto atom =
-      m_usingPositions
-        ? m_molecule.addAtom(m_atomicNumber, Vector3::Zero(), m_atomUid)
-        : m_molecule.addAtom(m_atomicNumber, m_atomUid);
+    auto atom = m_usingPositions
+                  ? m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid)
+                  : m_molecule.addAtom(m_atomicNumber, m_atomUid);
     // An add that was refused leaves the molecule as it was, and undoing it
     // must do the same -- removing m_atomId then takes whichever atom has
     // since come to sit at that index.
@@ -330,6 +331,11 @@ class SetAtomicNumberCommand : public RWMolecule::UndoCommand
   Index m_atomId;
   unsigned char m_oldAtomicNumber;
   unsigned char m_newAtomicNumber;
+  // Changing the element resets the atom's colour to the new element's, so
+  // a colour the user chose has to be put back by undo. As in
+  // RemoveAtomCommand, only an atom that had one is given one.
+  bool m_hasColor = false;
+  Vector3ub m_color = Vector3ub(0, 0, 0);
 
 public:
   SetAtomicNumberCommand(RWMolecule& m, Index atomId,
@@ -342,12 +348,17 @@ public:
 
   void redo() override
   {
+    m_hasColor = m_molecule.colors().size() > m_atomId;
+    if (m_hasColor)
+      m_color = m_molecule.color(m_atomId);
     m_molecule.setAtomicNumber(m_atomId, m_newAtomicNumber);
   }
 
   void undo() override
   {
     m_molecule.setAtomicNumber(m_atomId, m_oldAtomicNumber);
+    if (m_hasColor)
+      m_molecule.setColor(m_atomId, m_color);
   }
 };
 } // namespace
@@ -531,8 +542,8 @@ class SetAtomColorCommand : public RWMolecule::UndoCommand
 public:
   SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
                       Vector3ub newColor)
-    : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
-      m_newColor(newColor)
+    : UndoCommand(m), m_atomId(atomId), m_oldColor(std::move(oldColor)),
+      m_newColor(std::move(newColor))
   {
   }
 
@@ -550,8 +561,8 @@ class SetResidueColorCommand : public RWMolecule::UndoCommand
 public:
   SetResidueColorCommand(RWMolecule& m, Index residueId, Vector3ub oldColor,
                          Vector3ub newColor)
-    : UndoCommand(m), m_residueId(residueId), m_oldColor(oldColor),
-      m_newColor(newColor)
+    : UndoCommand(m), m_residueId(residueId), m_oldColor(std::move(oldColor)),
+      m_newColor(std::move(newColor))
   {
   }
 
@@ -635,6 +646,11 @@ class RemoveBondCommand : public RWMolecule::UndoCommand
   Index m_bondUid;
   std::pair<Index, Index> m_bondPair;
   unsigned char m_bondOrder;
+  // The label lives in an array that may be shorter than bondCount(), and
+  // setBondLabel() grows it to bondCount() on first write, so it is only
+  // restored when the bond had one (see RemoveAtomCommand).
+  bool m_hasLabel = false;
+  std::string m_label;
 
 public:
   RemoveBondCommand(RWMolecule& m, Index bondId, Index bondUid,
@@ -645,7 +661,13 @@ public:
   {
   }
 
-  void redo() override { m_molecule.removeBond(m_bondId); }
+  void redo() override
+  {
+    m_hasLabel = m_molecule.bondLabels().size() > m_bondId;
+    if (m_hasLabel)
+      m_label = m_molecule.bondLabel(m_bondId);
+    m_molecule.removeBond(m_bondId);
+  }
 
   void undo() override
   {
@@ -660,6 +682,9 @@ public:
 
     Index movedId = m_molecule.bondCount() - 1;
     m_molecule.swapBond(m_bondId, movedId);
+
+    if (m_hasLabel)
+      m_molecule.setBondLabel(m_bondId, m_label);
   }
 };
 } // namespace
@@ -1071,6 +1096,6 @@ public:
 } // namespace
 */
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
+
 #endif

@@ -190,8 +190,9 @@ TEST(PLYVisitorTest, binaryLayout)
   EXPECT_EQ(readF32(data, body + 4), -2.0f);
   EXPECT_EQ(readF32(data, body + 8), 3.25f);
   EXPECT_EQ(readF32(data, body + 12), 0.0f);
-  EXPECT_EQ(readF32(data, body + 16), 0.5f);
-  EXPECT_EQ(readF32(data, body + 20), -1.0f);
+  // The tessellator makes normals unit length.
+  EXPECT_NEAR(readF32(data, body + 16), 0.5f / std::sqrt(1.25f), 1e-6f);
+  EXPECT_NEAR(readF32(data, body + 20), -1.0f / std::sqrt(1.25f), 1e-6f);
   EXPECT_EQ(static_cast<unsigned char>(data[body + 24]), 10);
   EXPECT_EQ(static_cast<unsigned char>(data[body + 25]), 200);
   EXPECT_EQ(static_cast<unsigned char>(data[body + 26]), 255);

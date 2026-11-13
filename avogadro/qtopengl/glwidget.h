@@ -7,12 +7,18 @@
 #define AVOGADRO_QTOPENGL_GLWIDGET_H
 
 #include "avogadroqtopenglexport.h"
+#include "renderoptions.h"
 
 #include <avogadro/qtgui/scenepluginmodel.h>
 #include <avogadro/qtgui/toolplugin.h>
 #include <avogadro/rendering/glrenderer.h>
 
+#include <memory>
+
+#include <QImage>
 #include <QPointer>
+#include <QSize>
+#include <QString>
 
 #include <QtCore/QtGlobal>
 
@@ -26,8 +32,6 @@
 #include <QOpenGLWidget>
 #endif
 #endif
-
-class QTimer;
 
 namespace Avogadro {
 
@@ -133,6 +137,51 @@ public:
   Qt::KeyboardModifiers navigationModifier() const;
   void setNavigationModifier(Qt::KeyboardModifiers modifier);
 
+  /**
+   * Render the current scene into an offscreen framebuffer and return it.
+   *
+   * The output is exactly options.size pixels (the view size times the device
+   * pixel ratio if that is invalid), framed for its own aspect ratio rather
+   * than cropped or letterboxed from the on-screen view. The widget needs a
+   * current GL context, so it must have been shown at least once.
+   *
+   * The widget's on-screen state (renderer size, pixel ratio, projection and
+   * background) is left exactly as it was, and the window is not resized.
+   *
+   * The render size (size times supersample) is limited to 8192 pixels per
+   * side and to the GL implementation's texture, renderbuffer and viewport
+   * limits; larger requests fail rather than being clamped. Memory use is
+   * roughly 24 bytes per render pixel (8192 x 8192 needs about 1.5 GiB).
+   *
+   * @param options The size, framing and background to render with.
+   * @param error If not null, receives a message when a null image is
+   * returned.
+   * @return The image, or a null image on failure.
+   */
+  QImage renderImage(const RenderOptions& options, QString* error = nullptr);
+
+  /**
+   * @return The widget size in device pixels (the logical size times the
+   * device pixel ratio), which is what renderImage() uses by default.
+   */
+  QSize pixelSize() const;
+
+  /**
+   * @brief Show or hide the frame statistics overlay.
+   *
+   * The overlay reports the display rate, the cost of the last scene rebuild,
+   * the render CPU and GPU times and the buffer upload volume. Showing it
+   * switches on the renderer's (asynchronous) pass timing; hiding it switches
+   * the timing off again. It is also enabled at construction when the
+   * AVOGADRO_FRAME_STATS environment variable is set to anything but "0" or
+   * the empty string; the value "log" also prints a summary line to stderr
+   * once a second.
+   * @{
+   */
+  void setFrameStatsVisible(bool visible);
+  bool frameStatsVisible() const;
+  /** @} */
+
 signals:
   void rendererInvalid();
 
@@ -142,6 +191,14 @@ public slots:
    * the scene etc.
    */
   void updateScene();
+
+  /**
+   * Rebuild the scene now if changes are pending (see Molecule::changed).
+   * Changes are normally coalesced and built once in paintGL(); callers that
+   * read the scene outside a paint (hit testing, bounds, export) should call
+   * this first. Does nothing if no changes are pending.
+   */
+  void applyPendingSceneChanges();
 
   /**
    * Request update of molecule properties (e.g., dipole moment)
@@ -190,17 +247,10 @@ public slots:
   /**@}*/
 
   /**
-   * Request an update, this will by default initiate a timer that will trigger
-   * in a specified time, enabling us to compress multiple events such as
-   * camera moves to maintain interactivity.
+   * Request a repaint. Multiple requests before the next frame are
+   * compressed into one, so camera moves stay interactive.
    */
   void requestUpdate();
-
-protected slots:
-  /**
-   * Perform the update of the render, this should only be called by the timer.
-   */
-  void updateTimeout();
 
 protected:
   /** This is where the GL context is initialized. */
@@ -225,6 +275,7 @@ protected:
 #endif
 
   /** Reimplemented from QOpenGLWidget @{ */
+  bool event(QEvent*) override;
   void mouseDoubleClickEvent(QMouseEvent*) override;
   void mousePressEvent(QMouseEvent*) override;
   void mouseMoveEvent(QMouseEvent*) override;
@@ -234,10 +285,27 @@ protected:
   void keyReleaseEvent(QKeyEvent*) override;
   /** @} */
 
+private slots:
+  /** Record a molecule change; the scene is rebuilt at the next paint. */
+  void moleculeChanged(unsigned int changes);
+  /** Record a change that always needs a full rebuild (plugins, tools). */
+  void requestSceneRebuild();
+
 private:
 #ifdef Q_OS_WASM
   friend class WasmOpenGLWindow;
 #endif
+  /**
+   * Build the pending scene changes, if any, without scheduling a repaint.
+   * @return true if the scene was rebuilt.
+   */
+  bool applyPending();
+  /** Rebuild the whole scene without scheduling a repaint. @return false if
+   * deferred to the running build. */
+  bool rebuildScene();
+  /** Update the existing scene tree after a positions-only change. */
+  void rebuildCoordinates();
+  void scheduleRender();
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
   bool isNavigationKeyGesture(const QKeyEvent* event) const;
 
@@ -249,14 +317,29 @@ private:
   float m_pixelRatio = 0.0f;
   QtGui::ScenePluginModel m_scenePlugins;
 
-  QTimer* m_renderTimer;
 #ifdef Q_OS_WASM
-  QOpenGLWindow* m_glWindow;
+  void paintEvent(QPaintEvent*) override;
+  void makeCurrent();
+  void doneCurrent();
+  QOpenGLContext* context() const;
+  unsigned int defaultFramebufferObject() const;
+  QPointer<QOpenGLWindow> m_glWindow;
   QWidget* m_glContainer;
 #endif
+  // Frame statistics overlay, see setFrameStatsVisible().
+  /** @param windowRolled true if this frame completed a statistics window. */
+  void drawFrameStats(bool windowRolled);
 
   Qt::KeyboardModifiers m_navigationModifier;
   bool m_navigationDrag = false;
+  /** True while updateScene() is building; guards against re-entry. */
+  bool m_updatingScene = false;
+  /** A change arrived mid-build; the scene must be rebuilt afterwards. */
+  bool m_sceneUpdatePending = false;
+
+  // Frame statistics state; kept out of the header.
+  class Private;
+  std::unique_ptr<Private> d;
 };
 
 } // namespace QtOpenGL

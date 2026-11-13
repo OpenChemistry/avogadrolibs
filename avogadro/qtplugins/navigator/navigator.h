@@ -13,8 +13,7 @@
 #include <QtCore/QPoint>
 #include <QtCore/Qt> // for Qt:: namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @class Navigator navigator.h <avogadro/qtplugins/navigator/navigator.h>
@@ -106,7 +105,6 @@ private:
   ToolAction m_currentAction;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_NAVIGATOR_H

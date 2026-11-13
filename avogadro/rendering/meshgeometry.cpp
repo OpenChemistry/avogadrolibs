@@ -56,13 +56,17 @@ public:
 };
 
 MeshGeometry::MeshGeometry()
-  : m_color(255, 0, 0), m_opacity(255), m_dirty(false), d(new Private)
+  : m_color(255, 0, 0), m_opacity(255), m_boundsMin(Vector3f::Zero()),
+    m_boundsMax(Vector3f::Zero()), m_hasBounds(false), m_dirty(false),
+    d(new Private)
 {
 }
 
 MeshGeometry::MeshGeometry(const MeshGeometry& other)
   : Drawable(other), m_vertices(other.m_vertices), m_indices(other.m_indices),
     m_color(other.m_color), m_opacity(other.m_opacity),
+    m_boundsMin(other.m_boundsMin), m_boundsMax(other.m_boundsMax),
+    m_hasBounds(other.m_hasBounds),
     m_dirty(true), // Force rendering internals to be rebuilt
     d(new Private)
 {
@@ -96,16 +100,16 @@ void MeshGeometry::update()
     d->fragmentShader->setSource(mesh_fs);
 
     if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
+      cout << d->vertexShader->error() << '\n';
     if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
+      cout << d->fragmentShader->error() << '\n';
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
     d->program->attachShader(*d->vertexShader);
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
-      cout << d->program->error() << endl;
+      cout << d->program->error() << '\n';
   }
 
   // Check if the VBOs are ready, if not get them ready.
@@ -120,25 +124,25 @@ void MeshGeometry::update()
 
     ShaderProgram* program = d->program;
     if (!program->enableAttributeArray("vertex"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
                                     sizeof(PackedVertex), FloatType, 3,
                                     ShaderProgram::NoNormalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
     if (!program->enableAttributeArray("color"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
                                     sizeof(PackedVertex), UCharType, 4,
                                     ShaderProgram::Normalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
     if (!program->enableAttributeArray("normal"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("normal", PackedVertex::normalOffset(),
                                     sizeof(PackedVertex), FloatType, 3,
                                     ShaderProgram::NoNormalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
 
     d->vao.release();
@@ -160,21 +164,21 @@ void MeshGeometry::render(const Camera& camera)
   ShaderProgram* program = d->program;
 
   if (!program->bind())
-    cout << program->error() << endl;
+    cout << program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << program->error() << endl;
+    cout << program->error() << '\n';
   }
   if (!program->setUniformValue("projection", camera.projection().matrix())) {
-    cout << program->error() << endl;
+    cout << program->error() << '\n';
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
   if (!program->setUniformValue("normalMatrix", normalMatrix))
-    std::cout << program->error() << std::endl;
+    std::cout << program->error() << '\n';
 
   auto drawMesh = [&]() {
     glDrawRangeElements(GL_TRIANGLES, 0,
@@ -222,8 +226,10 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
   auto nIter = n.begin();
   auto cIter = c.begin();
 
-  while (vIter != vEnd)
+  while (vIter != vEnd) {
+    expandBounds(*vIter);
     m_vertices.push_back(PackedVertex(*(cIter++), *(nIter++), *(vIter++)));
+  }
 
   m_dirty = true;
 
@@ -247,6 +253,7 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
   Vector4ub tmpColor(0, 0, 0, m_opacity);
   while (vIter != vEnd) {
     tmpColor.head<3>() = *(cIter++);
+    expandBounds(*vIter);
     m_vertices.push_back(PackedVertex(tmpColor, *(nIter++), *(vIter++)));
   }
 
@@ -268,8 +275,10 @@ unsigned int MeshGeometry::addVertices(const Core::Array<Vector3f>& v,
   auto nIter = n.begin();
 
   const Vector4ub tmpColor(m_color[0], m_color[1], m_color[2], m_opacity);
-  while (vIter != vEnd)
+  while (vIter != vEnd) {
+    expandBounds(*vIter);
     m_vertices.push_back(PackedVertex(tmpColor, *(nIter++), *(vIter++)));
+  }
 
   m_dirty = true;
 
@@ -296,7 +305,37 @@ void MeshGeometry::clear()
 {
   m_vertices.clear();
   m_indices.clear();
+  resetBounds();
   m_dirty = true;
+}
+
+bool MeshGeometry::bounds(Vector3f& minimum, Vector3f& maximum) const
+{
+  if (!m_hasBounds)
+    return false;
+  minimum = m_boundsMin;
+  maximum = m_boundsMax;
+  return true;
+}
+
+void MeshGeometry::expandBounds(const Vector3f& point)
+{
+  if (!point.allFinite())
+    return;
+  if (!m_hasBounds) {
+    m_boundsMin = m_boundsMax = point;
+    m_hasBounds = true;
+  } else {
+    m_boundsMin = m_boundsMin.cwiseMin(point);
+    m_boundsMax = m_boundsMax.cwiseMax(point);
+  }
+}
+
+void MeshGeometry::resetBounds()
+{
+  m_boundsMin = Vector3f::Zero();
+  m_boundsMax = Vector3f::Zero();
+  m_hasBounds = false;
 }
 
 } // namespace Avogadro::Rendering

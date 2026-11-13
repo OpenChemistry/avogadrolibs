@@ -100,7 +100,10 @@ OverlayAxes::OverlayAxes(QObject* p) : ScenePlugin(p), m_render(new RenderImpl)
   m_layerManager = QtGui::PluginLayerManager(m_name);
 }
 
-OverlayAxes::~OverlayAxes() {}
+OverlayAxes::~OverlayAxes()
+{
+  delete m_render;
+}
 
 void OverlayAxes::process(const QtGui::Molecule&, Rendering::GroupNode& node)
 {

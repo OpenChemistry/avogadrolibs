@@ -18,7 +18,7 @@ class AVOGADROQTGUI_EXPORT SortFilterTreeProxyModel
   Q_OBJECT
 public:
   SortFilterTreeProxyModel(QObject* parent = nullptr)
-    : QSortFilterProxyModel(parent), m_sourceRoot()
+    : QSortFilterProxyModel(parent)
   {
   }
   // From http://kodeclutz.blogspot.com/2008/12/filtering-qtreeview.html

@@ -1590,3 +1590,172 @@ TEST_F(PackageManagerTest, loadRegisteredPackagesPrunesRenamedEntry)
   settings.endGroup();
   settings.sync();
 }
+
+// Regression: choosing a directory whose path ends in '/' gave an empty base
+// name, so the "install" destination was the plugins directory itself and
+// the whole directory was deleted.
+class LocalInstallTest : public testing::Test
+{
+protected:
+  void SetUp() override
+  {
+    ASSERT_TRUE(m_root.isValid());
+    m_plugins = m_root.path() + "/plugins";
+    m_source = m_root.path() + "/myplugin";
+    ASSERT_TRUE(QDir().mkpath(m_plugins));
+    ASSERT_TRUE(QDir().mkpath(m_source));
+    m_pluginsCanonical = QFileInfo(m_plugins).canonicalFilePath();
+  }
+
+  QTemporaryDir m_root;
+  QString m_plugins, m_source, m_pluginsCanonical;
+};
+
+TEST_F(LocalInstallTest, normalDirectory)
+{
+  EXPECT_EQ(PackageManager::localInstallDestination(m_plugins, m_source),
+            QDir::cleanPath(m_plugins + "/myplugin"));
+}
+
+TEST_F(LocalInstallTest, trailingSlashes)
+{
+  const QString expected = QDir::cleanPath(m_plugins + "/myplugin");
+  EXPECT_EQ(PackageManager::localInstallDestination(m_plugins, m_source + "/"),
+            expected);
+  EXPECT_EQ(
+    PackageManager::localInstallDestination(m_plugins, m_source + "///"),
+    expected);
+  // A trailing slash on the plugins directory must not matter either.
+  EXPECT_EQ(PackageManager::localInstallDestination(m_plugins + "/", m_source),
+            expected);
+}
+
+TEST_F(LocalInstallTest, dotComponents)
+{
+  const QString expected = QDir::cleanPath(m_plugins + "/myplugin");
+  EXPECT_EQ(PackageManager::localInstallDestination(m_plugins, m_source + "/."),
+            expected);
+  EXPECT_EQ(PackageManager::localInstallDestination(
+              m_plugins, m_root.path() + "/plugins/../myplugin/"),
+            expected);
+  // Names that resolve to the plugins directory or its parent are refused.
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/.")
+      .isEmpty());
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/..")
+      .isEmpty());
+}
+
+TEST_F(LocalInstallTest, sourceIsPluginsDirectory)
+{
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins).isEmpty());
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/")
+      .isEmpty());
+}
+
+TEST_F(LocalInstallTest, sourceInsidePluginsDirectory)
+{
+  ASSERT_TRUE(QDir().mkpath(m_plugins + "/installed/sub"));
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/installed")
+      .isEmpty());
+  EXPECT_TRUE(PackageManager::localInstallDestination(
+                m_plugins, m_plugins + "/installed/sub/")
+                .isEmpty());
+}
+
+TEST_F(LocalInstallTest, pluginsDirectoryInsideSource)
+{
+  // Copying the parent into its own child would recurse.
+  EXPECT_TRUE(PackageManager::localInstallDestination(m_plugins, m_root.path())
+                .isEmpty());
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_root.path() + "/")
+      .isEmpty());
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, "/").isEmpty());
+}
+
+TEST_F(LocalInstallTest, missingOrEmptyInput)
+{
+  EXPECT_TRUE(PackageManager::localInstallDestination(
+                m_plugins, m_root.path() + "/does-not-exist")
+                .isEmpty());
+  EXPECT_TRUE(PackageManager::localInstallDestination(m_plugins, "").isEmpty());
+  EXPECT_TRUE(PackageManager::localInstallDestination("", m_source).isEmpty());
+}
+
+TEST_F(LocalInstallTest, uninstallGuard)
+{
+  ASSERT_TRUE(QDir().mkpath(m_plugins + "/child/deeper"));
+
+  // The plugins directory itself, in any spelling, is never deletable.
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(m_plugins, m_plugins));
+  EXPECT_FALSE(
+    PackageManager::isManagedPackagePath(m_plugins, m_plugins + "/"));
+  EXPECT_FALSE(
+    PackageManager::isManagedPackagePath(m_plugins, m_plugins + "/."));
+  EXPECT_FALSE(
+    PackageManager::isManagedPackagePath(m_plugins, m_plugins + "/child/.."));
+  // Neither is its parent, a sibling, a grandchild, or an empty path.
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(m_plugins, m_root.path()));
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(m_plugins, m_source));
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(
+    m_plugins, m_plugins + "/child/deeper"));
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(m_plugins, ""));
+  EXPECT_FALSE(PackageManager::isManagedPackagePath("", m_plugins + "/child"));
+
+  // Direct children are allowed, with or without a trailing slash.
+  EXPECT_TRUE(
+    PackageManager::isManagedPackagePath(m_plugins, m_plugins + "/child"));
+  EXPECT_TRUE(
+    PackageManager::isManagedPackagePath(m_plugins, m_plugins + "/child/"));
+}
+
+TEST_F(LocalInstallTest, uninstallGuardAllowsSymlinkedPackage)
+{
+  const QString link = m_plugins + "/linked";
+  if (!QFile::link(m_source, link))
+    GTEST_SKIP() << "symlinks unavailable";
+  EXPECT_TRUE(PackageManager::isManagedPackagePath(m_plugins, link));
+}
+
+TEST_F(LocalInstallTest, symlinkThenDotDotUsesResolvedSource)
+{
+  // "<plugins>/link/.." cleans lexically to the plugins directory, but a
+  // POSIX OS resolves it to the link target's parent; name it after that.
+  // Windows resolves ".." lexically (and QFile::link makes a .lnk shortcut),
+  // so there it is the plugins directory itself and must be refused.
+  ASSERT_TRUE(QDir().mkpath(m_root.path() + "/outer/inner"));
+  if (!QFile::link(m_root.path() + "/outer/inner", m_plugins + "/link"))
+    GTEST_SKIP() << "symlinks unavailable";
+#ifdef Q_OS_WIN
+  EXPECT_TRUE(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/link/..")
+      .isEmpty());
+#else
+  EXPECT_EQ(
+    PackageManager::localInstallDestination(m_plugins, m_plugins + "/link/.."),
+    QDir::cleanPath(m_plugins + "/outer"));
+#endif
+}
+
+#ifdef Q_OS_WIN
+TEST_F(LocalInstallTest, overlapIgnoresCaseOnWindows)
+{
+  ASSERT_TRUE(QDir().mkpath(m_plugins + "/installed"));
+  EXPECT_TRUE(PackageManager::localInstallDestination(
+                m_plugins.toLower(), m_plugins.toUpper() + "/INSTALLED")
+                .isEmpty());
+  EXPECT_TRUE(PackageManager::localInstallDestination(m_plugins.toLower(),
+                                                      m_plugins.toUpper())
+                .isEmpty());
+  EXPECT_TRUE(PackageManager::isManagedPackagePath(
+    m_plugins.toLower(), m_plugins.toUpper() + "/installed"));
+  EXPECT_FALSE(PackageManager::isManagedPackagePath(m_plugins.toLower(),
+                                                    m_plugins.toUpper()));
+}
+#endif

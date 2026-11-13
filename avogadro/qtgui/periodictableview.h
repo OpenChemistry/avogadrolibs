@@ -10,8 +10,7 @@
 
 #include <QtWidgets/QGraphicsView>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class PeriodicTableView periodictableview.h
@@ -87,9 +86,9 @@ private:
   int m_element;
 
   QString m_keyPressBuffer;
+  QTimer* m_keyPressTimer;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif

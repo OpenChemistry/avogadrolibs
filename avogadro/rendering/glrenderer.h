@@ -20,12 +20,13 @@
 #include <avogadro/core/array.h>
 
 #include <map>
+#include <memory>
 #include <string> // For member variables.
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 class GeometryNode;
+struct RenderTimings;
 class TextRenderStrategy;
 
 /**
@@ -46,11 +47,59 @@ public:
   /** Resize the context in response to window management events. */
   void resize(int width, int height);
 
+  /**
+   * Resize with an explicit device (framebuffer) size. @p width and
+   * @p height are logical pixels, used by the cameras; the viewport and the
+   * pipeline buffers are exactly deviceWidth x deviceHeight. The two-argument
+   * overload derives the device size as the truncated product of the logical
+   * size and the pixel ratio. Offscreen rendering uses this to hit an exact
+   * output size whatever the pixel ratio.
+   */
+  void resize(int width, int height, int deviceWidth, int deviceHeight);
+
   /** Set the ratio of physical to logical pixels. */
   void setPixelRatio(float ratio);
 
+  /**
+   * Scale the projection frustum about the view axis. A scale above 1 shows
+   * more of the scene in both directions, so a wider-than-tall view can keep
+   * everything a taller one showed. The default is 1. The scale is applied
+   * whenever the projection is calculated; the stored frustum is untouched.
+   * @{
+   */
+  void setProjectionScale(float scale) { m_projectionScale = scale; }
+  float projectionScale() const { return m_projectionScale; }
+  /** @} */
+
+  /** The ratio of physical to logical pixels last set. */
+  float pixelRatio() const { return m_pixelRatio; }
+
   /** Take care of rendering the scene, requires that the context is current. */
   void render();
+
+  /**
+   * Enable or disable per-pass timing of render(). Disabled by default, in
+   * which case render() issues no extra GL calls. When enabled each section
+   * of render() ("solid", "post", "opaque", "translucent", "overlay3d",
+   * "overlay2d") is timed on the CPU, and on the GPU with GL_TIME_ELAPSED
+   * queries when the driver supports them. Needs a current context. Changing
+   * the state discards the timings collected so far, and once timing has
+   * rendered the renderer's context must be current to release its queries.
+   */
+  void setTimingEnabled(bool enable);
+  bool timingEnabled() const;
+
+  /**
+   * In synchronous mode render() blocks until the GPU results for the frame
+   * are in, and timings() describes that frame. Otherwise (the default) the
+   * results are collected a few frames later without stalling, and timings()
+   * lags the latest render() call.
+   */
+  void setTimingSynchronous(bool synchronous);
+  bool timingSynchronous() const;
+
+  /** The most recently published frame timings; always one whole frame. */
+  const RenderTimings& timings() const;
 
   /** Reset the view to fit the entire scene. */
   void resetCamera();
@@ -122,12 +171,14 @@ public:
   Eigen::Vector3f m_iconPosition;
 #endif
 
-private:
   /**
-   * Apply the projection matrix.
+   * Compute the camera's projection matrix from the viewport size, the
+   * projection scale and the scene bounds. render() does this every frame; it
+   * needs no GL context, so it is also public for use by tests.
    */
   void applyProjection();
 
+private:
   /**
    * @brief Detect hits in a group node.
    */
@@ -149,6 +200,7 @@ private:
 
   bool m_valid;
   float m_pixelRatio;
+  float m_projectionScale = 1.0f;
   std::string m_error;
   Camera m_camera;
   Camera m_overlayCamera;
@@ -159,6 +211,10 @@ private:
 
   Vector3f m_center;
   float m_radius;
+
+  // Render timing state; kept out of the header.
+  class Private;
+  std::unique_ptr<Private> d;
 };
 
 inline const Camera& GLRenderer::camera() const
@@ -194,12 +250,11 @@ inline TextRenderStrategy* GLRenderer::textRenderStrategy()
 inline Identifier GLRenderer::hit(int x, int y) const
 {
   std::multimap<float, Identifier> results = hits(x, y);
-  if (results.size())
+  if (!results.empty())
     return results.begin()->second;
   return Identifier();
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_GLRENDERER_H

@@ -12,11 +12,11 @@
 #include <avogadro/qtgui/extensionplugin.h>
 #include <avogadro/qtgui/molecule.h>
 #include <map>
+#include <utility>
 #include <vector>
 
-namespace Avogadro {
-namespace QtPlugins {
-typedef Avogadro::Core::Array<Avogadro::Core::Bond> NeighborListType;
+namespace Avogadro::QtPlugins {
+using NeighborListType = Avogadro::Core::Array<Avogadro::Core::Bond>;
 
 class SVG : public Avogadro::QtGui::ExtensionPlugin
 {
@@ -51,7 +51,7 @@ private:
     unsigned int id;
 
     SVGAtom(Vector3f m, Vector3f v, unsigned int i, unsigned int bonds)
-      : pos_model(m), pos_view(v), id(i)
+      : pos_model(std::move(m)), pos_view(std::move(v)), id(i)
     {
       radius = (bonds <= 0 ? 1 : bonds);
     }
@@ -86,6 +86,6 @@ private:
   bool frustrumCulling(const SVGAtom& atom);
   Eigen::Vector3f posToSVGImage(const SVGAtom& atom);
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_SVG_H

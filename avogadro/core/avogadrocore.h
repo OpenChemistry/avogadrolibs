@@ -20,14 +20,6 @@
  */
 #define AVO_UNUSED(variable) (void)variable
 
-/**
- * This macro marks a class as not copyable. It should be used in the private
- * section of a class's declaration.
- */
-#define AVO_DISABLE_COPY(Class)                                                \
-  Class(const Class&);                                                         \
-  Class& operator=(const Class&);
-
 namespace Avogadro {
 
 /** Typedef for a real number. */

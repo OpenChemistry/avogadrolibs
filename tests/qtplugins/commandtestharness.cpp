@@ -9,6 +9,7 @@
 #include <avogadro/core/layer.h>
 #include <avogadro/core/moleculeinfo.h>
 #include <avogadro/core/unitcell.h>
+#include <avogadro/io/fileformatmanager.h>
 #include <avogadro/qtgui/rwlayermanager.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -241,6 +242,15 @@ void CommandTestHarness::buildPeroxideChain()
 void CommandTestHarness::buildEmpty()
 {
   resetMolecule();
+}
+
+bool CommandTestHarness::loadFile(const std::string& fileName)
+{
+  resetMolecule();
+  if (Io::FileFormatManager::instance().readFile(*m_molecule, fileName))
+    return true;
+  resetMolecule();
+  return false;
 }
 
 void CommandTestHarness::setActiveLayerMolecule(const QtGui::Molecule* molecule)

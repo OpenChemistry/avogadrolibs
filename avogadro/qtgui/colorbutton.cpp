@@ -10,6 +10,8 @@
 
 #include <QColorDialog>
 #include <QPainter>
+#include <QPalette>
+#include <QPen>
 
 namespace Avogadro::QtGui {
 
@@ -86,6 +88,17 @@ void ColorButton::paintEvent(QPaintEvent*)
   // inner color
   painter.setBrush(m_color);
   painter.drawRect(4, 4, width() - 8, height() - 8);
+
+  // Keyboard focus indicator. Drawn by hand because some styles (e.g., macOS)
+  // draw nothing for PE_FrameFocusRect. The ring sits between the black outer
+  // border and the colour swatch, so neither is obscured.
+  if (hasFocus()) {
+    QPen focusPen(palette().color(QPalette::Highlight));
+    focusPen.setWidth(2);
+    painter.setPen(focusPen);
+    painter.setBrush(Qt::NoBrush);
+    painter.drawRect(2, 2, width() - 5, height() - 5);
+  }
 }
 
 bool ColorButton::event(QEvent* e)

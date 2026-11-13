@@ -6,6 +6,8 @@
 #ifndef AVOGADRO_QTPLUGINS_FORCEFIELD_H
 #define AVOGADRO_QTPLUGINS_FORCEFIELD_H
 
+#include "energywindow.h"
+
 #include <avogadro/qtgui/extensionplugin.h>
 
 #include <avogadro/calc/energyoptimizer.h>
@@ -124,7 +126,8 @@ private slots:
 
   // worker thread callbacks
   void onOptimizeChunkDone(Eigen::VectorXd positions, Eigen::VectorXd gradient,
-                           double energy, bool converged);
+                           double energy, bool converged, int iterationsRun,
+                           bool stalled);
   void onEnergyDone(Eigen::VectorXd gradient, double energy);
   void onForcesDone(Eigen::VectorXd gradient, double energy);
   void onBatchDone(std::vector<double> energies,
@@ -193,8 +196,11 @@ private:
   // own converged flag was set -- not a discovered minimum: CalcWorker only
   // sets it when it could not run the chunk at all (no calculator, or
   // cancelled), or (defensively) for a malformed chunk size, never on
-  // finding one. "gradient" and "energy" are converged: true; "maxSteps",
-  // "nonFinite" and "optimizerStopped" are converged: false.
+  // finding one. "stalled" means L-BFGS could no longer lower the energy
+  // (line search failing at the model's numerical noise floor) before either
+  // tolerance was met. "gradient" and "energy" are converged: true;
+  // "maxSteps", "nonFinite", "stalled" and "optimizerStopped" are
+  // converged: false.
   enum class ConvergenceReason
   {
     None,
@@ -202,7 +208,8 @@ private:
     Energy,
     OptimizerStopped,
     MaxSteps,
-    NonFinite
+    NonFinite,
+    Stalled
   };
   static QString convergenceReasonName(ConvergenceReason reason);
 
@@ -260,11 +267,8 @@ private:
   // size adapts per chunk.
   unsigned int m_iterationsDone = 0;
   Eigen::VectorXd m_lastPositions;
-  double m_lastEnergy = 0.0;
-  // Whether m_lastEnergy holds a value from a previous chunk. Distinguishes
-  // "no previous chunk yet" from "previous energy happened to be 0.0", which
-  // an equality check against 0.0 cannot.
-  bool m_hasPreviousEnergy = false;
+  // Energy-change convergence test, independent of the chunk size.
+  EnergyWindow m_energyWindow;
   Calc::OptimizationOptions m_optOptions;
   // Timer for chunk wall-clock measurement (round-trip from dispatch to
   // optimizeFinished, so dispatch overhead counts toward the frame budget).

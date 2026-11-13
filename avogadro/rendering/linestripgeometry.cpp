@@ -88,13 +88,13 @@ void LineStripGeometry::update()
     d->fragmentShader.setType(Shader::Fragment);
     d->fragmentShader.setSource(linestrip_fs);
     if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << endl;
+      cout << d->vertexShader.error() << '\n';
     if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << endl;
+      cout << d->fragmentShader.error() << '\n';
     d->program.attachShader(d->vertexShader);
     d->program.attachShader(d->fragmentShader);
     if (!d->program.link())
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
 
     d->program.detachShader(d->vertexShader);
     d->program.detachShader(d->fragmentShader);
@@ -111,18 +111,18 @@ void LineStripGeometry::update()
     d->vbo.bind();
 
     if (!d->program.enableAttributeArray("vertex"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
                                       sizeof(PackedVertex), FloatType, 3,
                                       ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
     if (!d->program.enableAttributeArray("color"))
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
                                       sizeof(PackedVertex), UCharType, 4,
                                       ShaderProgram::Normalize)) {
-      cout << d->program.error() << endl;
+      cout << d->program.error() << '\n';
     }
 
     d->vao.release();
@@ -141,17 +141,17 @@ void LineStripGeometry::render(const Camera& camera)
   update();
 
   if (!d->program.bind())
-    cout << d->program.error() << endl;
+    cout << d->program.error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << endl;
+    cout << d->program.error() << '\n';
   }
   if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << endl;
+    cout << d->program.error() << '\n';
   }
 
   // Render the linestrips using the shader and VAO.

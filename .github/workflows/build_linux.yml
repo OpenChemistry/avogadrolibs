@@ -18,6 +18,9 @@ on:
 
 env:
   QT_VERSION: 6.8.3
+  # Read from the environment by CMake (3.17+), so it reaches the
+  # avogadrolibs ExternalProject, which does not forward the cache variable.
+  CMAKE_EXPORT_COMPILE_COMMANDS: ON
   FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
 
 # Never cancel a master run: a cancelled run never saves its compiler cache,
@@ -50,6 +53,7 @@ jobs:
             build_type: "Release",
             cmake_flags: "-G Ninja -DUSE_SYSTEM_EIGEN=TRUE",
             sccache: true,
+            tidy: true,
           }
         - {
             name: "AppImage x86", artifact: "Avogadro2-x86_64.AppImage",
@@ -90,7 +94,7 @@ jobs:
         sudo apt-get -qq install libfuse2
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+      uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0
       with:
         cache: true
         version: ${{ env.QT_VERSION }}
@@ -117,6 +121,29 @@ jobs:
         CC=${{matrix.config.cc}} CXX=${{matrix.config.cxx}} cmake --build . --config ${{matrix.config.build_type}} ${{matrix.config.build_flags}}
       shell: bash
       working-directory: ${{ runner.workspace }}/build
+
+    # Matches the LLVM 23 used locally; pinned by hash.
+    - name: Install clang-tidy
+      if: matrix.config.tidy && github.event_name == 'pull_request'
+      shell: bash
+      run: |
+        python3 -m venv "$RUNNER_TEMP/clang-tidy"
+        echo 'clang-tidy==23.1.4 --hash=sha256:6bb31e4f319ecbe14acb75f23c3050d0f1d4b1d92ea1c66091bc76e4eac2c1ac' > "$RUNNER_TEMP/clang-tidy-requirements.txt"
+        "$RUNNER_TEMP/clang-tidy/bin/pip" install --quiet --require-hashes --only-binary=:all: -r "$RUNNER_TEMP/clang-tidy-requirements.txt"
+        "$RUNNER_TEMP/clang-tidy/bin/clang-tidy" --version
+
+    # The PR checkout is the merge commit, so diffing against the base SHA
+    # gives exactly the PR's changes. Advisory only for now.
+    - name: clang-tidy on changed lines
+      if: matrix.config.tidy && github.event_name == 'pull_request'
+      continue-on-error: true
+      shell: bash
+      working-directory: ${{ github.workspace }}/openchemistry/avogadrolibs
+      env:
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      run: |
+        git fetch --no-tags --depth=1 origin "$BASE_SHA"
+        python3 scripts/clang-tidy-pr.py --base "$BASE_SHA" --build-dir "${{ runner.workspace }}/build/avogadrolibs" --clang-tidy "$RUNNER_TEMP/clang-tidy/bin/clang-tidy" --github
 
     - name: Run tests
       if: (matrix.config.build_type != 'Release')

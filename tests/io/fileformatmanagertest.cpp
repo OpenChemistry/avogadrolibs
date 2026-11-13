@@ -278,3 +278,57 @@ TEST(FileFormatManagerTest, unregister)
   format = manager.newFormatFromIdentifier("testingFormat");
   ASSERT_TRUE(format == nullptr);
 }
+
+// Uninstalling a script file-format plugin unregisters its format, and the
+// next .out/.log file read lists every format through fileFormats(). The
+// removed format's slot must be skipped, not dereferenced.
+TEST(FileFormatManagerTest, fileFormatsSkipsUnregistered)
+{
+  Format testFormat("removedFormat", FileFormat::All);
+  ASSERT_TRUE(FileFormatManager::registerFormat(testFormat.newInstance()));
+  ASSERT_TRUE(FileFormatManager::unregisterFormat("removedFormat"));
+
+  FileFormatManager& manager = FileFormatManager::instance();
+  const std::vector<const FileFormat*> all = manager.fileFormats();
+  EXPECT_FALSE(all.empty());
+  for (const FileFormat* f : all) {
+    ASSERT_NE(f, nullptr);
+    EXPECT_NE(f->identifier(), "removedFormat"s);
+  }
+  for (const FileFormat* f :
+       manager.fileFormats(FileFormat::File | FileFormat::Read))
+    ASSERT_NE(f, nullptr);
+}
+
+// The write-only V3000 variants share the mol / sdf extensions; a plain
+// extension lookup has to keep returning the V2000 writers.
+TEST(FileFormatManagerTest, v3000VariantsDoNotShadowV2000)
+{
+  FileFormatManager& manager = FileFormatManager::instance();
+  const FileFormat::Operations write = FileFormat::File | FileFormat::Write;
+  FileFormat* format = manager.newFormatFromFileExtension("mol", write);
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "Avogadro: MDL"s);
+  delete format;
+
+  format = manager.newFormatFromFileExtension("sdf", write);
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "Avogadro: SDF"s);
+  delete format;
+
+  // reading never reaches the write-only variants
+  format = manager.newFormatFromFileExtension("sdf", FileFormat::File |
+                                                       FileFormat::Read);
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->identifier(), "Avogadro: SDF"s);
+  delete format;
+
+  format = manager.newFormatFromIdentifier("Avogadro: SDF V3000");
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->name(), "SDF V3000"s);
+  delete format;
+  format = manager.newFormatFromIdentifier("Avogadro: MDL V3000");
+  ASSERT_NE(format, nullptr);
+  EXPECT_EQ(format->name(), "MDL MOL V3000"s);
+  delete format;
+}

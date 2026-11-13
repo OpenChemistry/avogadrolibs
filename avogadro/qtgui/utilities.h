@@ -9,10 +9,9 @@
 #include "avogadroqtguiexport.h"
 
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtGui {
-namespace Utilities {
+namespace Avogadro::QtGui::Utilities {
 
 AVOGADROQTGUI_EXPORT QString libraryDirectory();
 AVOGADROQTGUI_EXPORT QString dataDirectory();
@@ -40,8 +39,12 @@ AVOGADROQTGUI_EXPORT bool dialogsSkipped();
 //! \sa dialogsSkipped()
 AVOGADROQTGUI_EXPORT void setDialogsSkipped(bool skipped);
 
-} // namespace Utilities
-} // namespace QtGui
-} // namespace Avogadro
+//! Run a video encoder (ffmpeg, else its old Libav fork avconv) with the given
+//! arguments and wait for it to finish.
+//! \return false only if neither program could be started; the encoder's own
+//! exit status is not checked.
+AVOGADROQTGUI_EXPORT bool runVideoEncoder(const QStringList& arguments);
+
+} // namespace Avogadro::QtGui::Utilities
 
 #endif // AVOGADRO_QTGUI_UTILITIES_H

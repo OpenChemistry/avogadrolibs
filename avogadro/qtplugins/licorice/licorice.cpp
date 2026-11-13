@@ -13,6 +13,7 @@
 #include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/spheregeometry.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSettings>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QSlider>
@@ -43,7 +44,8 @@ std::string commaToDot(std::string token)
 
 struct LayerLicorice : Core::LayerData
 {
-  QWidget* widget;
+  // The panel is parented elsewhere (a dock), which may delete it first.
+  QPointer<QWidget> widget;
   float opacity = 1.0f;
 
   LayerLicorice()
@@ -59,7 +61,14 @@ struct LayerLicorice : Core::LayerData
     deserialize(settings);
   }
 
-  LayerData* clone() final { return new LayerLicorice(*this); }
+  LayerData* clone() final
+  {
+    // The settings widget belongs to this layer, so the copy must not
+    // share it: the copy's destructor would delete it.
+    auto* copy = new LayerLicorice(*this);
+    copy->widget = nullptr;
+    return copy;
+  }
 
   ~LayerLicorice() override
   {
@@ -127,10 +136,10 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
   spheres->identifier().molecule = &molecule;
   spheres->identifier().type = Rendering::AtomType;
 
-  auto selectedSpheres = new SphereGeometry;
+  auto* selectedSpheres = new SphereGeometry;
   selectedSpheres->setOpacity(0.42);
 
-  auto translucentSpheres = new SphereGeometry;
+  auto* translucentSpheres = new SphereGeometry;
   translucentSpheres->setRenderPass(Rendering::TranslucentPass);
   translucentSpheres->identifier().molecule = &molecule;
   translucentSpheres->identifier().type = Rendering::AtomType;
@@ -141,15 +150,16 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
 
   float opacity = 1.0;
 
+  auto layers = m_layerManager.snapshot<LayerLicorice>();
   for (Index i = 0; i < molecule.atomCount(); ++i) {
     Core::Atom atom = molecule.atom(i);
-    if (!m_layerManager.atomEnabled(i)) {
+    size_t layer = layers.getLayerID(i);
+    if (!layers.layerEnabled(layer)) {
       continue;
     }
     Vector3ub color = atom.color();
 
-    auto* interface =
-      m_layerManager.getSetting<LayerLicorice>(m_layerManager.getLayerID(i));
+    auto* interface = layers.setting(layer);
     opacity = interface->opacity;
     if (opacity < 1.0f) {
       translucentSpheres->addSphere(atom.position3d().cast<float>(), color,
@@ -179,15 +189,16 @@ void Licorice::process(const Molecule& molecule, Rendering::GroupNode& node)
 
   for (Index i = 0; i < molecule.bondCount(); ++i) {
     Core::Bond bond = molecule.bond(i);
-    if (!m_layerManager.bondEnabled(bond.atom1().index(),
-                                    bond.atom2().index())) {
+    Index a1 = bond.atom1().index();
+    Index a2 = bond.atom2().index();
+    size_t layer1 = layers.getLayerID(a1);
+    size_t layer2 = layers.getLayerID(a2);
+    if (!layers.layerEnabled(layer1) && !layers.layerEnabled(layer2)) {
       continue;
     }
 
-    auto* interface1 = m_layerManager.getSetting<LayerLicorice>(
-      m_layerManager.getLayerID(bond.atom1().index()));
-    auto* interface2 = m_layerManager.getSetting<LayerLicorice>(
-      m_layerManager.getLayerID(bond.atom2().index()));
+    auto* interface1 = layers.setting(layer1);
+    auto* interface2 = layers.setting(layer2);
 
     bool doOpaque = true;
     if (interface1->opacity < 1.0f || interface2->opacity < 1.0f) {

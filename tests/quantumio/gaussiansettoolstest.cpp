@@ -884,3 +884,133 @@ TEST(GaussianSetToolsTest, hAndIShellsDoNotContribute)
       << "at cube index " << i;
   }
 }
+
+namespace {
+
+// Two atoms, one s shell on each, one occupied molecular orbital. The molecule
+// takes ownership of the returned basis set.
+GaussianSet* buildTwoShellBasis(Molecule& molecule)
+{
+  molecule.addAtom(1, Vector3(0.0, 0.0, 0.0));
+  molecule.addAtom(1, Vector3(0.74, 0.0, 0.0));
+
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&molecule);
+  unsigned int s = basis->addBasis(0, GaussianSet::S);
+  basis->addGto(s, 1.0, 1.3);
+  s = basis->addBasis(1, GaussianSet::S);
+  basis->addGto(s, 1.0, 1.3);
+
+  basis->setMolecularOrbitals({ 0.7, 0.7, 0.7, -0.7 }, BasisSet::Paired);
+  basis->setElectronCount(2);
+  molecule.setBasisSet(basis);
+  basis->initCalculation();
+  return basis;
+}
+
+// A tools object built on a deliberately inconsistent basis must refuse to
+// evaluate anything instead of reading out of bounds or returning zeros.
+void expectRejected(Molecule& molecule)
+{
+  GaussianSetTools tools(&molecule);
+  EXPECT_FALSE(tools.isValid());
+
+  Cube cube;
+  cube.setLimits(molecule, 0.5f, 2.0f);
+  ASSERT_GT(cube.data()->size(), 0u);
+  EXPECT_FALSE(tools.calculateMolecularOrbital(cube, 0));
+  EXPECT_FALSE(tools.calculateElectronDensity(cube));
+  EXPECT_FALSE(tools.calculateSpinDensity(cube));
+  EXPECT_EQ(tools.calculateMolecularOrbital(Vector3(0.1, 0.2, 0.3), 0), 0.0);
+  EXPECT_EQ(tools.calculateElectronDensity(Vector3(0.1, 0.2, 0.3)), 0.0);
+}
+
+} // anonymous namespace
+
+TEST(GaussianSetToolsTest, handBuiltBasisIsValid)
+{
+  Molecule molecule;
+  buildTwoShellBasis(molecule);
+
+  GaussianSetTools tools(&molecule);
+  ASSERT_TRUE(tools.isValid());
+  EXPECT_GT(std::abs(tools.calculateMolecularOrbital(Vector3(0, 0, 0), 0)),
+            1e-3);
+
+  Cube cube;
+  cube.setLimits(molecule, 0.5f, 2.0f);
+  EXPECT_TRUE(tools.calculateMolecularOrbital(cube, 0));
+  EXPECT_TRUE(tools.calculateElectronDensity(cube));
+}
+
+TEST(GaussianSetToolsTest, rejectsAtomIndexOutOfRange)
+{
+  Molecule molecule;
+  auto* basis = buildTwoShellBasis(molecule);
+  basis->atomIndices()[1] = 2; // only atoms 0 and 1 exist
+  expectRejected(molecule);
+}
+
+TEST(GaussianSetToolsTest, rejectsSymmetryOutOfRange)
+{
+  Molecule molecule;
+  auto* basis = buildTwoShellBasis(molecule);
+  basis->symmetry()[0] = 99;
+  expectRejected(molecule);
+}
+
+TEST(GaussianSetToolsTest, rejectsShortIndexArrays)
+{
+  Molecule molecule;
+  auto* basis = buildTwoShellBasis(molecule);
+  basis->cIndices().pop_back();
+  expectRejected(molecule);
+}
+
+TEST(GaussianSetToolsTest, rejectsPrimitiveRangeOutOfRange)
+{
+  Molecule molecule;
+  auto* basis = buildTwoShellBasis(molecule);
+  basis->gtoIndices()[2] = 50; // past the end of the exponent array
+  expectRejected(molecule);
+}
+
+TEST(GaussianSetToolsTest, rejectsCoefficientRangeOutOfRange)
+{
+  Molecule molecule;
+  auto* basis = buildTwoShellBasis(molecule);
+  basis->cIndices()[1] = 50; // past the end of the normalized coefficients
+  expectRejected(molecule);
+}
+
+TEST(GaussianSetToolsTest, rejectsMoMatrixTooSmallForShells)
+{
+  Molecule molecule;
+  auto* basis = buildTwoShellBasis(molecule);
+  basis->moIndices()[1] = 5; // the MO matrix only has two rows
+  GaussianSetTools tools(&molecule);
+
+  // The shells are self-consistent; it is the matrix that does not cover them.
+  Cube cube;
+  cube.setLimits(molecule, 0.5f, 2.0f);
+  EXPECT_FALSE(tools.calculateMolecularOrbital(cube, 0));
+  EXPECT_FALSE(tools.calculateElectronDensity(cube));
+  EXPECT_EQ(tools.calculateMolecularOrbital(Vector3(0.1, 0.2, 0.3), 0), 0.0);
+}
+
+TEST(GaussianSetToolsTest, rejectsOrbitalNumberOutOfRange)
+{
+  Molecule molecule;
+  buildTwoShellBasis(molecule);
+  GaussianSetTools tools(&molecule);
+  ASSERT_TRUE(tools.isValid());
+
+  Cube cube;
+  cube.setLimits(molecule, 0.5f, 2.0f);
+  const int count = static_cast<int>(
+    dynamic_cast<GaussianSet*>(molecule.basisSet())->molecularOrbitalCount());
+  EXPECT_FALSE(tools.calculateMolecularOrbital(cube, count));
+  EXPECT_FALSE(tools.calculateMolecularOrbital(cube, -1));
+  EXPECT_EQ(tools.calculateMolecularOrbital(Vector3(0.1, 0.2, 0.3), count),
+            0.0);
+}

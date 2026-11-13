@@ -16,8 +16,7 @@
 
 #include <map>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class Camera;
 class GeometryNode;
@@ -143,7 +142,7 @@ inline void swap(Drawable& lhs, Drawable& rhs)
   swap(lhs.m_identifier, rhs.m_identifier);
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_SPHERENODE_H

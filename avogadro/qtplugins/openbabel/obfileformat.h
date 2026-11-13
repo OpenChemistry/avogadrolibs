@@ -12,8 +12,7 @@
 #include <avogadro/io/cmlformat.h>
 #include <avogadro/io/pdbformat.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The OBFileFormat class implements the FileFormat API for using an
@@ -83,7 +82,6 @@ private:
   Io::PdbFormat m_pdbFormat;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_OBFILEFORMAT_H

@@ -183,20 +183,20 @@ void SolidPipeline::initialize()
   d->screenVertexShader.setSource(solid_vs);
   const bool vertexCompiled = d->screenVertexShader.compile();
   if (!vertexCompiled)
-    std::cout << d->screenVertexShader.error() << std::endl;
+    std::cout << d->screenVertexShader.error() << '\n';
 
   d->firstFragmentShader.setType(Shader::Fragment);
   d->firstFragmentShader.setSource(solid_first_fs);
   const bool fragmentCompiled = d->firstFragmentShader.compile();
   if (!fragmentCompiled)
-    std::cout << d->firstFragmentShader.error() << std::endl;
+    std::cout << d->firstFragmentShader.error() << '\n';
 
   d->firstStageShaders.attachShader(d->screenVertexShader);
   d->firstStageShaders.attachShader(d->firstFragmentShader);
   d->initialized =
     vertexCompiled && fragmentCompiled && d->firstStageShaders.link();
   if (!d->initialized)
-    std::cout << d->firstStageShaders.error() << std::endl;
+    std::cout << d->firstStageShaders.error() << '\n';
 
   if (d->aoSupported) {
     d->aoFragmentShader.setType(Shader::Fragment);
@@ -344,8 +344,14 @@ void SolidPipeline::adjustOffset(const Camera& cam)
 
 void SolidPipeline::resize(int width, int height)
 {
-  m_width = width * m_pixelRatio;
-  m_height = height * m_pixelRatio;
+  resizeDevice(static_cast<int>(width * m_pixelRatio),
+               static_cast<int>(height * m_pixelRatio));
+}
+
+void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
+{
+  m_width = deviceWidth;
+  m_height = deviceHeight;
 
   d->framebufferReady = false;
   d->aoReady = false;

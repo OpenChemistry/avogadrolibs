@@ -166,16 +166,23 @@ void Spectra::registerCommands()
 bool Spectra::handleCommand(const QString& command,
                             [[maybe_unused]] const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command
+  if (command != "showSpectra")
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   if (command == "showSpectra") {
     // Guard: Prevent Eigen crash by ensuring spectra data actually exists
     bool hasSpectra = !m_molecule->vibrationFrequencies().empty() ||
                       !m_molecule->spectraTypes().empty();
 
-    if (!hasSpectra)
-      return false;
+    if (!hasSpectra) {
+      emit commandFailed(tr("The molecule has no spectra data."));
+      return true;
+    }
 
     openDialog();
     return true;

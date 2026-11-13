@@ -56,8 +56,18 @@ void ResetView::registerCommands()
 bool ResetView::handleCommand(const QString& command,
                               [[maybe_unused]] const QVariantMap& options)
 {
-  if (m_molecule == nullptr || m_camera == nullptr)
-    return false; // Nothing to do
+  if (command != "alignView")
+    return false; // not one of our commands
+
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
+
+  if (m_camera == nullptr) {
+    emit commandFailed(tr("No camera"));
+    return true;
+  }
 
   if (command == "alignView") {
     animationCameraDefault(false);
@@ -126,7 +136,7 @@ inline float getZDistance(const Affine3f& projection, float x,
 }
 inline void getBB(const Array<Vector3>& mols, Vector3& min, Vector3& max)
 {
-  if (mols.size() > 0) {
+  if (!mols.empty()) {
     min = mols[0];
     max = mols[0];
     for (size_t i = 1; i < mols.size(); ++i) {

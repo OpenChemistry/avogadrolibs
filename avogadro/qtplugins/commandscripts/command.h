@@ -108,6 +108,16 @@ private slots:
 
 private:
   /**
+   * Translate one menu level so it matches the built-in (translated) menus.
+   */
+  QString translateMenuLabel(const QString& label) const;
+
+  /**
+   * Translate every level of a menu path with translateMenuLabel().
+   */
+  QStringList translateMenuPath(const QStringList& path) const;
+
+  /**
    * Tear down the progress dialog and running script after a command that
    * never started, reporting @p errors to the terminal and the user.
    */

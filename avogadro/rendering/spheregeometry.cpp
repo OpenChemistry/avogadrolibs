@@ -6,6 +6,7 @@
 #include "spheregeometry.h"
 
 #include "camera.h"
+#include "geometrytiming.h"
 #include "scene.h"
 
 #include "bufferobject.h"
@@ -87,9 +88,9 @@ void SphereGeometry::update()
     d->fragmentShader->setType(Shader::Fragment);
     d->fragmentShader->setSource(spheres_fs);
     if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << endl;
+      cout << d->vertexShader->error() << '\n';
     if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << endl;
+      cout << d->fragmentShader->error() << '\n';
 
     if (d->program == nullptr)
       d->program = new ShaderProgram;
@@ -97,91 +98,94 @@ void SphereGeometry::update()
     d->program->attachShader(*d->vertexShader);
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
-      cout << d->program->error() << endl;
+      cout << d->program->error() << '\n';
   }
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
     std::vector<unsigned int> sphereIndices;
     std::vector<ColorTextureVertex> sphereVertices;
-    sphereIndices.reserve(m_indices.size() * 4);
-    sphereVertices.reserve(m_spheres.size() * 4);
+    {
+      GeometryTiming::Scope timer;
+      sphereIndices.reserve(m_indices.size() * 4);
+      sphereVertices.reserve(m_spheres.size() * 4);
 
-    auto itIndex = m_indices.begin();
-    auto itSphere = m_spheres.begin();
+      auto itIndex = m_indices.begin();
+      auto itSphere = m_spheres.begin();
 
-    for (size_t i = 0;
-         itIndex != m_indices.end() && itSphere != m_spheres.end();
-         ++i, ++itIndex, ++itSphere) {
-      // Use our packed data structure...
-      float r = itSphere->radius;
-      unsigned int index = 4 * static_cast<unsigned int>(i);
-      ColorTextureVertex vert(itSphere->center, itSphere->color,
-                              Vector2f(-r, -r));
-      sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f(-r, r);
-      sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f(r, -r);
-      sphereVertices.push_back(vert);
-      vert.textureCoord = Vector2f(r, r);
-      sphereVertices.push_back(vert);
+      for (size_t i = 0;
+           itIndex != m_indices.end() && itSphere != m_spheres.end();
+           ++i, ++itIndex, ++itSphere) {
+        // Use our packed data structure...
+        float r = itSphere->radius;
+        unsigned int index = 4 * static_cast<unsigned int>(i);
+        ColorTextureVertex vert(itSphere->center, itSphere->color,
+                                Vector2f(-r, -r));
+        sphereVertices.push_back(vert);
+        vert.textureCoord = Vector2f(-r, r);
+        sphereVertices.push_back(vert);
+        vert.textureCoord = Vector2f(r, -r);
+        sphereVertices.push_back(vert);
+        vert.textureCoord = Vector2f(r, r);
+        sphereVertices.push_back(vert);
 
-      // 6 indexed vertices to draw a quad...
-      sphereIndices.push_back(index + 0);
-      sphereIndices.push_back(index + 1);
-      sphereIndices.push_back(index + 2);
-      sphereIndices.push_back(index + 3);
-      sphereIndices.push_back(index + 2);
-      sphereIndices.push_back(index + 1);
+        // 6 indexed vertices to draw a quad...
+        sphereIndices.push_back(index + 0);
+        sphereIndices.push_back(index + 1);
+        sphereIndices.push_back(index + 2);
+        sphereIndices.push_back(index + 3);
+        sphereIndices.push_back(index + 2);
+        sphereIndices.push_back(index + 1);
+      }
     }
 
     if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
-      cout << d->vbo.error() << endl;
+      cout << d->vbo.error() << '\n';
 
     if (!d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer))
-      cout << d->ibo.error() << endl;
+      cout << d->ibo.error() << '\n';
 
     // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
     // Check bind() return values - if binding fails (e.g., no GL context),
     // early-return without clearing m_dirty so geometry will be retried later.
     if (!d->vao.bind()) {
-      cout << "SphereGeometry: VAO bind failed" << endl;
+      cout << "SphereGeometry: VAO bind failed" << '\n';
       return;
     }
     if (!d->vbo.bind()) {
-      cout << "SphereGeometry: VBO bind failed" << endl;
+      cout << "SphereGeometry: VBO bind failed" << '\n';
       d->vao.release();
       return;
     }
     if (!d->ibo.bind()) {
-      cout << "SphereGeometry: IBO bind failed" << endl;
+      cout << "SphereGeometry: IBO bind failed" << '\n';
       d->vao.release();
       return;
     }
 
     ShaderProgram* program = d->program;
     if (!program->enableAttributeArray("vertex"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("vertex",
                                     ColorTextureVertex::vertexOffset(),
                                     sizeof(ColorTextureVertex), FloatType, 3,
                                     ShaderProgram::NoNormalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
     if (!program->enableAttributeArray("color"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
                                     sizeof(ColorTextureVertex), UCharType, 3,
                                     ShaderProgram::Normalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
     if (!program->enableAttributeArray("texCoordinate"))
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     if (!program->useAttributeArray("texCoordinate",
                                     ColorTextureVertex::textureCoordOffset(),
                                     sizeof(ColorTextureVertex), FloatType, 2,
                                     ShaderProgram::NoNormalize)) {
-      cout << program->error() << endl;
+      cout << program->error() << '\n';
     }
 
     d->vao.release();
@@ -202,7 +206,7 @@ void SphereGeometry::render(const Camera& camera)
   update();
 
   if (!d->program->bind())
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   // If bind fails (e.g., no GL context), skip rendering to avoid GL errors.
@@ -213,14 +217,14 @@ void SphereGeometry::render(const Camera& camera)
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
   }
   if (!d->program->setUniformValue("projection",
                                    camera.projection().matrix())) {
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
   }
   if (!d->program->setUniformValue("opacity", m_opacity)) {
-    cout << d->program->error() << endl;
+    cout << d->program->error() << '\n';
   }
 
   // Render the loaded spheres using the shader and VAO.

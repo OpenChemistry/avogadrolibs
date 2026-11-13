@@ -19,6 +19,7 @@ using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
 using Avogadro::QtPluginsTests::describe;
 using Avogadro::QtPluginsTests::MoleculeSnapshot;
+using Avogadro::QtPluginsTests::NoMoleculeMessage;
 using Avogadro::QtPluginsTests::recordKnownDeviation;
 using Avogadro::QtPluginsTests::recordUndecided;
 using Avogadro::Rendering::Camera;
@@ -127,20 +128,21 @@ TEST_F(FocusCommandTest, unknownCommandIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Contract (decision 1): no molecule -> true + commandFailed("No molecule").
-TEST_F(FocusCommandTest, knownDeviationNoMoleculeIsNotClaimed)
+// Contract (decision 1): with no molecule a recognized command returns true
+// and emits commandFailed("No molecule").
+TEST_F(FocusCommandTest, noMoleculeFails)
 {
-  recordKnownDeviation("with no molecule every command returns false");
-
+  const MoleculeSnapshot before = m_harness.snapshot();
   m_harness.setPluginMolecule(nullptr);
   for (const char* name : { "focusSelection", "unfocus" }) {
     const CommandOutcome out = m_harness.run(name);
-    // When this fails, expect claimed, Failed, NoMoleculeMessage.
-    EXPECT_FALSE(out.claimed) << name;
+    EXPECT_TRUE(out.claimed) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.message, QString(NoMoleculeMessage)) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
+  EXPECT_EQ(m_harness.snapshot(), before);
 }
-
 // Not settled by the decisions: with nothing selected, or no camera (no
 // view), focusSelection claims the command and silently does nothing.
 TEST_F(FocusCommandTest, undecidedFocusWithoutSelectionOrCameraIsSilentNoOp)

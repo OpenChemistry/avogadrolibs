@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT MopacAux : public Io::FileFormat
 {
@@ -56,9 +55,9 @@ private:
   std::vector<double> readArrayD(std::istream& in, unsigned int n);
   std::vector<int> readArraySym(std::istream& in, unsigned int n);
   std::vector<Vector3> readArrayVec(std::istream& in, unsigned int n);
-  bool readOverlapMatrix(std::istream& in, unsigned int n);
-  bool readEigenVectors(std::istream& in, unsigned int n);
-  bool readDensityMatrix(std::istream& in, unsigned int n);
+  bool readOverlapMatrix(std::istream& in);
+  bool readEigenVectors(std::istream& in);
+  bool readDensityMatrix(std::istream& in);
   bool readVibrationFrequencies(std::istream& in, unsigned int n);
   bool readVibrationIntensities(std::istream& in, unsigned int n);
   bool readNormalModes(std::istream& in, unsigned int n);
@@ -119,7 +118,7 @@ private:
   Eigen::MatrixXd m_density; /// Total density matrix
 };
 
-} // End namespace QuantumIO
-} // End namespace Avogadro
+} // namespace Avogadro::QuantumIO
+// End namespace Avogadro
 
 #endif

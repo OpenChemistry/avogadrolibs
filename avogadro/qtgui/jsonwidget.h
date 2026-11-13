@@ -17,8 +17,7 @@ class QJsonValue;
 class QTextEdit;
 class QWidget;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 class Molecule;
 
 /**
@@ -176,7 +175,6 @@ protected:
   QMap<QString, QTextEdit*> m_textEdits;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_JSONWIDGET_H

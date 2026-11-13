@@ -130,6 +130,14 @@ void EnergyCalculator::cleanGradients(Eigen::VectorXd& grad)
               << '\n';
 }
 
+void EnergyCalculator::setMaskFromMolecule(const Core::Molecule& molecule)
+{
+  const auto size = static_cast<Eigen::Index>(3 * molecule.atomCount());
+  m_mask = molecule.frozenAtomMask();
+  if (m_mask.rows() != size)
+    m_mask = Eigen::VectorXd::Ones(size);
+}
+
 void EnergyCalculator::appendError(const std::string& errorString,
                                    bool newLine) const
 {

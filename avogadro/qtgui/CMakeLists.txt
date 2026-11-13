@@ -39,6 +39,8 @@ avogadro_headers(QtGui
   backgroundfileformat.h
   calcworker.h
   colorbutton.h
+  colortheme.h
+  commandregistry.h
   containerwidget.h
   customelementdialog.h
   conformerquantitytranslator.h
@@ -53,7 +55,9 @@ avogadro_headers(QtGui
   fragmenttools.h
   hydrogentools.h
   insertfragmentdialog.h
-  # JsonWidget also supports the native force-field options without subprocesses.
+  iodevicestreambuf.h
+  interfacescript.h
+  interfacewidget.h
   jsonwidget.h
   layermodel.h
   rwlayermanager.h
@@ -83,6 +87,8 @@ target_sources(QtGui PRIVATE
   backgroundfileformat.cpp
   calcworker.cpp
   colorbutton.cpp
+  colortheme.cpp
+  commandregistry.cpp
   containerwidget.cpp
   customelementdialog.cpp
   elementdetail_p.cpp

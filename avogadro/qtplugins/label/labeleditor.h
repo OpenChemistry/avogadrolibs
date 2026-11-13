@@ -10,8 +10,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/qtgui/toolplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class LabelEditor : public QtGui::ToolPlugin
 {
@@ -62,6 +61,6 @@ private:
   QString m_text;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif

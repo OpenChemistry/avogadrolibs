@@ -6,6 +6,7 @@
 #include "curvegeometry.h"
 
 #include "camera.h"
+#include "geometrytiming.h"
 #include "scene.h"
 #include "visitor.h"
 
@@ -21,20 +22,47 @@ namespace {
 #include <vector>
 
 using std::cout;
-using std::endl;
 
 namespace Avogadro::Rendering {
 
 using Core::Array;
 
-const size_t CurveGeometry::SKIPPED = 1;
+namespace {
+// One program shared by every curve geometry (like SphereGeometry and
+// CylinderGeometry), compiled the first time any of them needs it.
+Shader* curveVertexShader = nullptr;
+Shader* curveFragmentShader = nullptr;
+ShaderProgram* curveProgram = nullptr;
 
-CurveGeometry::CurveGeometry() : m_dirty(true), m_canBeFlat(true)
+ShaderProgram& sharedProgram()
+{
+  if (curveProgram == nullptr) {
+    curveVertexShader = new Shader;
+    curveVertexShader->setType(Shader::Vertex);
+    curveVertexShader->setSource(cylinders_vs);
+    curveFragmentShader = new Shader;
+    curveFragmentShader->setType(Shader::Fragment);
+    curveFragmentShader->setSource(cylinders_fs);
+    if (!curveVertexShader->compile())
+      cout << curveVertexShader->error() << '\n';
+    if (!curveFragmentShader->compile())
+      cout << curveFragmentShader->error() << '\n';
+    curveProgram = new ShaderProgram;
+    curveProgram->attachShader(*curveVertexShader);
+    curveProgram->attachShader(*curveFragmentShader);
+    if (!curveProgram->link())
+      cout << curveProgram->error() << '\n';
+  }
+  return *curveProgram;
+}
+} // namespace
+
+CurveGeometry::CurveGeometry() : m_canBeFlat(true)
 {
   setRenderPass(SolidPass);
 }
 
-CurveGeometry::CurveGeometry(bool flat) : m_dirty(true), m_canBeFlat(flat)
+CurveGeometry::CurveGeometry(bool flat) : m_canBeFlat(flat)
 {
   setRenderPass(SolidPass);
 }
@@ -48,32 +76,20 @@ CurveGeometry::~CurveGeometry()
 
 size_t CurveGeometry::circleResolution(bool flat) const
 {
-  return flat ? 1u : 12u;
+  return flat ? 1u : sidesOr(kDefaultTubeSides);
 }
 
-void CurveGeometry::appendCirclePoints(std::vector<ColorNormalVertex>& result,
-                                       const Eigen::Affine3f& a,
-                                       const Eigen::Affine3f& b,
-                                       bool flat) const
+void CurveGeometry::fillRingTemplate(std::vector<Vector3f>& ring,
+                                     bool flat) const
 {
+  ring.clear();
   const size_t resolution = circleResolution(flat);
   const float resolutionRadians =
     2.0f * static_cast<float>(M_PI) / static_cast<float>(resolution);
 
   for (size_t i = 0; i < resolution; ++i) {
     float theta = i * resolutionRadians;
-    Vector3f circle = Vector3f(std::cos(theta), 0.0f, std::sin(theta));
-    ColorNormalVertex vert1;
-    vert1.normal = a.linear() * circle;
-    vert1.vertex = a * circle;
-    vert1.color = Vector3ub(0, 0, 0);
-    result.push_back(vert1);
-
-    ColorNormalVertex vert2;
-    vert2.normal = b.linear() * circle;
-    vert2.vertex = b * circle;
-    vert2.color = Vector3ub(0, 0, 0);
-    result.push_back(vert2);
+    ring.emplace_back(std::cos(theta), 0.0f, std::sin(theta));
   }
 }
 
@@ -87,6 +103,100 @@ bool CurveGeometry::isFlatLine(size_t lineIndex) const
   return lineIndex < m_lines.size() && m_lines[lineIndex]->flat && m_canBeFlat;
 }
 
+namespace {
+
+// What sample q is, for a line of n control points sampled `perSegment` times
+// per segment. See CurveGeometry::computeSegmentPoint() for who owns what.
+struct SamplePosition
+{
+  size_t segment;    // of the curve
+  float f;           // within it, [0, 1)
+  size_t owner;      // control point passed to computeScale()
+  float ownerT;      // position within that control point's stretch, [0, 1]
+  size_t colorOwner; // control point whose colour the strip ending here uses
+};
+
+SamplePosition samplePosition(size_t q, size_t perSegment, size_t n)
+{
+  SamplePosition s;
+  s.segment = q / perSegment;
+  const size_t j = q % perSegment;
+  s.f = static_cast<float>(j) / static_cast<float>(perSegment);
+  if (s.segment >= n) { // the end of the last segment
+    s.owner = s.colorOwner = n - 1;
+    s.ownerT = 1.0f;
+  } else {
+    s.owner = s.segment;
+    s.ownerT = s.f;
+    // the first sample of a segment ends the previous one
+    s.colorOwner = j > 0 || s.segment == 0 ? s.segment : s.segment - 1;
+  }
+  return s;
+}
+
+// A frame along the curve and the control point whose colour it carries.
+struct CurveFrame
+{
+  Eigen::Affine3f transform;
+  unsigned int colorIndex;
+};
+
+// The frame for a step along `tangent`: the columns are the broad axis, the
+// tangent and the third axis. The broad axis turns as little as possible from
+// that of the previous frame (which carries its scale), by flipping it if it
+// is more than 90 degrees away and by bisecting if it is still more than 25
+// degrees away. Returns false if the angle is not a number.
+bool nextFrame(const Eigen::Affine3f* previous, const Vector3f& tangent,
+               Eigen::Matrix3f& m)
+{
+  static const float cosMaxTurn = std::cos(25.0f * DEG_TO_RAD_F);
+  m.col(1) = tangent.normalized();
+  m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
+  if (previous != nullptr) {
+    const Vector3f previousAxis = previous->linear().col(0);
+    float angle = previousAxis.dot(m.col(0));
+    if (std::isnan(angle))
+      return false;
+    // if angle > 90 flip it
+    if (angle <= 0.0f)
+      m.col(0) *= -1.0f;
+    // the previous axis has the length of its scale; this one is a unit vector
+    const float scale = previousAxis.norm();
+    float cosAngle =
+      std::clamp(previousAxis.dot(m.col(0)) / scale, -1.0f, 1.0f);
+    // if the angle is > 25 degrees get the bisector
+    int maxIter = 10;
+    while (cosAngle < cosMaxTurn && --maxIter > 0) {
+      m.col(0) = (m.col(0) + previousAxis).normalized();
+      cosAngle = std::clamp(previousAxis.dot(m.col(0)) / scale, -1.0f, 1.0f);
+    }
+  }
+  m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
+  return true;
+}
+
+} // namespace
+
+float CurveGeometry::residueCoordinate(size_t segment, float f, size_t count)
+{
+  const size_t last = count > 0 ? count - 1 : 0;
+  if (segment >= count)
+    return static_cast<float>(last);
+  if (segment == 0)
+    return 0.5f * f;
+  if (segment == last)
+    return static_cast<float>(last) - 0.5f + 0.5f * f;
+  return static_cast<float>(segment) - 0.5f + f;
+}
+
+size_t CurveGeometry::segmentsFor(bool flat) const
+{
+  const size_t base =
+    m_segmentsPerResidue > 0 ? m_segmentsPerResidue : kDefaultSegments;
+  // flat lines have always been sampled 4/3 as finely
+  return flat ? flatSegmentsFor(base) : base;
+}
+
 void CurveGeometry::tessellate(size_t lineIndex,
                                std::vector<ColorNormalVertex>& vertices,
                                std::vector<unsigned int>& indices) const
@@ -96,131 +206,113 @@ void CurveGeometry::tessellate(size_t lineIndex,
   if (lineIndex >= m_lines.size())
     return;
 
-  // compute the middle points
   const Line* line = m_lines[lineIndex];
-  const size_t lineResolution = line->flat ? 20u : 15u;
+  const size_t lineResolution = segmentsFor(line->flat);
   const size_t qttyPoints = line->points.size();
 
-  const size_t qttySegments = lineResolution * qttyPoints;
-  Vector3f previous;
-  std::vector<Eigen::Affine3f> points;
-  points.reserve(qttySegments);
-  // B-spline valid parameter range requires a margin of ~n/6 at the end;
-  // for long chains (n >= 24), 4 points suffice
-  size_t margin = std::min<size_t>(4, (qttyPoints + 5) / 6);
-  size_t top = qttyPoints <= margin + 2 ? 0 : qttyPoints - margin;
-  bool nanDetected = false;
-  for (size_t i = SKIPPED; i < top && !nanDetected; ++i) {
-    for (size_t j = 0; j < lineResolution; ++j) {
-      float t = (i * lineResolution + j) / float(qttySegments);
-      auto p = computeCurvePoint(t, line->points);
-      if (i > SKIPPED) {
-        Vector3f tangent = p - previous;
-        if (tangent.squaredNorm() < 1e-10f) {
-          previous = p;
-          continue;
-        }
-        Eigen::Matrix3f m;
-        m.col(1) = tangent.normalized();
-        m.col(0) = m.col(1).unitOrthogonal() * -1.0f;
-        if (i > SKIPPED + 1) {
-          const auto& previousAngle = points.back().linear().col(0);
-          float angle = previousAngle.dot(m.col(0));
-          if (std::isnan(angle)) {
-            nanDetected = true;
-            break;
-          }
-          // if angle > 90 flip it
-          if (angle <= 0.0f)
-            m.col(0) *= -1.0f;
-          angle = previousAngle.dot(m.col(0));
-          float denom = m.col(0).norm() * previousAngle.norm();
-          float cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-          float degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
-          // if angle is > 25 degrees get the bisector
-          int maxIter = 10;
-          while (degrees > 25.0f && --maxIter > 0) {
-            m.col(0) = (m.col(0) + previousAngle).normalized();
-            angle = previousAngle.dot(m.col(0));
-            denom = m.col(0).norm() * previousAngle.norm();
-            cosAngle = std::clamp(angle / denom, -1.0f, 1.0f);
-            degrees = std::acos(cosAngle) * RAD_TO_DEG_F;
-          }
-        }
-        m.col(2) = m.col(0).cross(m.col(1)) * -1.0f;
-        Eigen::Affine3f affine;
-        affine.translation() = p;
-        affine.linear() = m;
-        float r = !m_canBeFlat || !line->flat
-                    ? computeScale(i, j / static_cast<float>(lineResolution),
-                                   line->radius)
-                    : 0.01f;
-        affine.scale(r);
-        points.push_back(affine);
-      }
-      previous = p;
-    }
-  }
-
-  if (points.empty())
-    return;
-
-  // Map spline sample index to control point color
-  const size_t numControlPoints = line->points.size();
-  size_t colorIndex = numControlPoints > 3 ? 3u : 0u;
-  auto advanceColor = [&](size_t i) {
-    if (i != 0 && i % lineResolution == 0 &&
-        colorIndex + 1 < numControlPoints) {
-      ++colorIndex;
-    }
+  // Sample q of the curve gets a frame; the strip between frames i - 1 and i
+  // takes the colour of frame i. The first frame looks towards the second
+  // sample.
+  const size_t totalSamples =
+    qttyPoints >= 2 ? qttyPoints * lineResolution + 1 : 0;
+  auto positionAt = [&](size_t q) {
+    const SamplePosition s = samplePosition(q, lineResolution, qttyPoints);
+    return computeSegmentPoint(s.segment, s.f, line->points);
   };
 
+  std::vector<CurveFrame> frames;
+  frames.reserve(totalSamples);
+  Vector3f previous = Vector3f::Zero();
+  const Vector3f first = totalSamples > 0 ? positionAt(0) : previous;
+  const Vector3f second = totalSamples > 1 ? positionAt(1) : previous;
+  bool nanDetected = false;
+  for (size_t q = 0; q < totalSamples && !nanDetected; ++q) {
+    const Vector3f p = q == 0 ? first : q == 1 ? second : positionAt(q);
+    const Vector3f tangent = q > 0 ? p - previous : second - p;
+    if (tangent.squaredNorm() < 1e-10f) {
+      previous = p;
+      continue;
+    }
+    Eigen::Matrix3f m;
+    if (!nextFrame(frames.empty() ? nullptr : &frames.back().transform, tangent,
+                   m)) {
+      nanDetected = true;
+      break;
+    }
+    const SamplePosition s = samplePosition(q, lineResolution, qttyPoints);
+    Eigen::Affine3f affine;
+    affine.translation() = p;
+    affine.linear() = m;
+    float r = !m_canBeFlat || !line->flat
+                ? computeScale(s.owner, s.ownerT, line->radius)
+                : 0.01f;
+    affine.scale(r);
+    frames.push_back({ affine, static_cast<unsigned int>(s.colorOwner) });
+    previous = p;
+  }
+
+  if (frames.empty())
+    return;
+
   if (line->flat && m_canBeFlat) {
-    vertices.reserve(points.size());
+    vertices.reserve(frames.size());
 
-    for (size_t i = 0; i < points.size(); ++i) {
-      advanceColor(i);
-
-      Vector3f normal = points[i].linear().col(0);
+    for (const auto& frame : frames) {
+      Vector3f normal = frame.transform.linear().col(0);
       if (normal.squaredNorm() < 1e-10f) {
         normal = Vector3f::UnitX();
       } else {
         normal.normalize();
       }
-      vertices.emplace_back(line->points[colorIndex].color, normal,
-                            points[i].translation());
+      vertices.emplace_back(line->points[frame.colorIndex].color, normal,
+                            frame.transform.translation());
     }
   } else {
     const size_t resolution = circleResolution(line->flat);
-    const size_t radialVertexCount = resolution * 2;
-    const size_t segmentCount = points.size() > 1 ? points.size() - 1 : 0;
-    vertices.reserve(segmentCount * radialVertexCount);
+    const size_t segmentCount = frames.size() > 1 ? frames.size() - 1 : 0;
+    // Each ring is shared by the two segments that meet there; it is only
+    // duplicated where the colour changes between consecutive segments.
+    vertices.reserve(ringVertices(qttyPoints, lineResolution, resolution) +
+                     resolution);
     indices.reserve(segmentCount * resolution * 6);
 
-    std::vector<ColorNormalVertex> radials;
-    radials.reserve(radialVertexCount);
+    // the cross-section in the local space of a frame, the same for every ring
+    std::vector<Vector3f> ringTemplate;
+    ringTemplate.reserve(resolution);
+    fillRingTemplate(ringTemplate, line->flat);
+    auto emitRing = [&](const Eigen::Affine3f& frame, const Vector3ub& color) {
+      const auto start = static_cast<unsigned int>(vertices.size());
+      for (const Vector3f& p : ringTemplate)
+        vertices.emplace_back(color, frame.linear() * p, frame * p);
+      return start;
+    };
 
-    for (size_t i = 1; i < points.size(); ++i) {
-      advanceColor(i);
-      radials.clear();
-      appendCirclePoints(radials, points[i], points[i - 1], line->flat);
-      for (auto& radial : radials) {
-        radial.color = line->points[colorIndex].color;
-        vertices.push_back(radial);
-      }
-      const auto tubeStart =
-        static_cast<unsigned int>(vertices.size() - radials.size());
+    unsigned int previousRing = 0;
+    Vector3ub previousColor(0, 0, 0);
+    for (size_t i = 1; i < frames.size(); ++i) {
+      const Vector3ub color = line->points[frames[i].colorIndex].color;
+      // ring of frames[i - 1] (the "b" ring of this segment)
+      unsigned int bStart;
+      if (i > 1 && color == previousColor)
+        bStart = previousRing;
+      else
+        bStart = emitRing(frames[i - 1].transform, color);
+      // ring of frames[i] (the "a" ring of this segment)
+      const unsigned int aStart = emitRing(frames[i].transform, color);
+      previousRing = aStart;
+      previousColor = color;
+
       for (size_t j = 0; j < resolution; ++j) {
-        unsigned int r1 = static_cast<unsigned int>(j * 2);
-        unsigned int r2 =
-          j != 0 ? r1 - 2 : static_cast<unsigned int>(radials.size() - 2);
-        indices.push_back(tubeStart + r1);
-        indices.push_back(tubeStart + r1 + 1);
-        indices.push_back(tubeStart + r2);
+        const auto r1 = static_cast<unsigned int>(j);
+        const auto r2 =
+          static_cast<unsigned int>(j != 0 ? j - 1 : resolution - 1);
+        indices.push_back(aStart + r1);
+        indices.push_back(bStart + r1);
+        indices.push_back(aStart + r2);
 
-        indices.push_back(tubeStart + r2);
-        indices.push_back(tubeStart + r1 + 1);
-        indices.push_back(tubeStart + r2 + 1);
+        indices.push_back(aStart + r2);
+        indices.push_back(bStart + r1);
+        indices.push_back(bStart + r2);
       }
     }
   }
@@ -235,7 +327,10 @@ void CurveGeometry::update(int index)
   // The pure-CPU geometry lives in tessellate(); only the GL upload is here.
   std::vector<ColorNormalVertex> vertices;
   std::vector<unsigned int> indices;
-  tessellate(static_cast<size_t>(index), vertices, indices);
+  {
+    GeometryTiming::Scope timer;
+    tessellate(static_cast<size_t>(index), vertices, indices);
+  }
 
   if (vertices.empty()) {
     line->dirty = false;
@@ -248,6 +343,7 @@ void CurveGeometry::update(int index)
   }
 
   // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
+  ShaderProgram& program = sharedProgram();
   line->vao.bind();
   line->vbo.bind();
   if (!indices.empty()) {
@@ -256,18 +352,18 @@ void CurveGeometry::update(int index)
     line->ibo.release();
   }
 
-  processShaderError(!m_shaderInfo.program.enableAttributeArray("vertex"));
-  processShaderError(!m_shaderInfo.program.useAttributeArray(
+  processShaderError(!program.enableAttributeArray("vertex"));
+  processShaderError(!program.useAttributeArray(
     "vertex", ColorNormalVertex::vertexOffset(), sizeof(ColorNormalVertex),
     FloatType, 3, ShaderProgram::NoNormalize));
 
-  processShaderError(!m_shaderInfo.program.enableAttributeArray("color"));
-  processShaderError(!m_shaderInfo.program.useAttributeArray(
+  processShaderError(!program.enableAttributeArray("color"));
+  processShaderError(!program.useAttributeArray(
     "color", ColorNormalVertex::colorOffset(), sizeof(ColorNormalVertex),
     UCharType, 3, ShaderProgram::Normalize));
 
-  processShaderError(!m_shaderInfo.program.enableAttributeArray("normal"));
-  processShaderError(!m_shaderInfo.program.useAttributeArray(
+  processShaderError(!program.enableAttributeArray("normal"));
+  processShaderError(!program.useAttributeArray(
     "normal", ColorNormalVertex::normalOffset(), sizeof(ColorNormalVertex),
     FloatType, 3, ShaderProgram::NoNormalize));
 
@@ -284,48 +380,25 @@ void CurveGeometry::accept(Visitor& visitor)
   visitor.visit(*this);
 }
 
-void checkShaderInfo(ShaderInfo& shaderInfo, const std::string& fs,
-                     const std::string& vs)
-{
-  if (shaderInfo.vertexShader.type() == Shader::Unknown) {
-    shaderInfo.vertexShader.setType(Shader::Vertex);
-    shaderInfo.vertexShader.setSource(vs);
-    shaderInfo.fragmentShader.setType(Shader::Fragment);
-    shaderInfo.fragmentShader.setSource(fs);
-    if (!shaderInfo.vertexShader.compile())
-      cout << shaderInfo.vertexShader.error() << endl;
-    if (!shaderInfo.fragmentShader.compile())
-      cout << shaderInfo.fragmentShader.error() << endl;
-    shaderInfo.program.attachShader(shaderInfo.vertexShader);
-    shaderInfo.program.attachShader(shaderInfo.fragmentShader);
-    if (!shaderInfo.program.link())
-      cout << shaderInfo.program.error() << endl;
-  }
-}
-
 void CurveGeometry::processShaderError(bool error)
 {
   if (error) {
-    cout << m_shaderInfo.program.error() << endl;
+    cout << sharedProgram().error() << '\n';
   }
 }
 
 void CurveGeometry::render(const Camera& camera)
 {
-  if (m_dirty) {
-    checkShaderInfo(m_shaderInfo, cylinders_fs, cylinders_vs);
-    m_dirty = false;
-  }
+  ShaderProgram& program = sharedProgram();
 
-  processShaderError(!m_shaderInfo.program.bind());
-  processShaderError(!m_shaderInfo.program.setUniformValue(
-    "modelView", camera.modelView().matrix()));
-  processShaderError(!m_shaderInfo.program.setUniformValue(
-    "projection", camera.projection().matrix()));
+  processShaderError(!program.bind());
+  processShaderError(
+    !program.setUniformValue("modelView", camera.modelView().matrix()));
+  processShaderError(
+    !program.setUniformValue("projection", camera.projection().matrix()));
   Eigen::Matrix3f normalMatrix =
     camera.modelView().linear().inverse().transpose();
-  processShaderError(
-    !m_shaderInfo.program.setUniformValue("normalMatrix", normalMatrix));
+  processShaderError(!program.setUniformValue("normalMatrix", normalMatrix));
 
   for (size_t i = 0; i < m_lines.size(); ++i) {
     Line* line = m_lines[i];
@@ -353,7 +426,7 @@ void CurveGeometry::render(const Camera& camera)
     }
     line->vao.release();
   }
-  m_shaderInfo.program.release();
+  program.release();
 }
 
 void CurveGeometry::addPoint(const Vector3f& pos, const Vector3ub& color,

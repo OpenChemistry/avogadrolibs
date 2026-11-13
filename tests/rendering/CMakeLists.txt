@@ -1,7 +1,16 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  BezierGeometry
+  BSplineGeometry
   Camera
+  CartoonDetail
+  CartoonProteins
   CurveGeometry
+  CurveTessellation
+  CylinderGeometry
+  GLRenderer
+  GeometryVisitor
+  GltfVisitor
   Node
   PLYVisitor
   SphereGeometry
@@ -25,7 +34,13 @@ message(STATUS "Test source files: ${testSrcs}")
 
 # Add a single executable for all of our tests.
 add_executable(AvogadroRenderingTests ${testSrcs})
-target_link_libraries(AvogadroRenderingTests Avogadro::Rendering
+# cartoondetail.h is a Qt-free header of the Cartoons plugin.
+target_include_directories(AvogadroRenderingTests PRIVATE
+  "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/cartoons")
+target_compile_definitions(AvogadroRenderingTests PRIVATE
+  AVOGADRO_DATA="${AVOGADRO_DATA_ROOT}")
+target_link_libraries(AvogadroRenderingTests Avogadro::Rendering Avogadro::IO
+  nlohmann_json::nlohmann_json
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 
 # Now add all of the tests, using the gtest_filter argument so that only those
@@ -41,9 +56,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   find_package(OpenGL QUIET COMPONENTS EGL)
   if(TARGET OpenGL::EGL)
     find_package(GLEW REQUIRED)
-    add_executable(AvogadroGLRendererTests glrenderertest.cpp)
-    target_link_libraries(AvogadroGLRendererTests PRIVATE Avogadro::Rendering
+    add_executable(AvogadroSolidPipelineTests solidpipelinetest.cpp)
+    target_link_libraries(AvogadroSolidPipelineTests PRIVATE Avogadro::Rendering
       OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
-    add_test(NAME Rendering-GLRenderer COMMAND AvogadroGLRendererTests)
+    add_test(NAME Rendering-SolidPipeline COMMAND AvogadroSolidPipelineTests)
   endif()
 endif()

@@ -7,8 +7,12 @@
 
 #include "avogadrogl.h"
 
+#include "bufferobject.h"
+
 #include "geometrynode.h"
+#include "geometrytiming.h"
 #include "glrendervisitor.h"
+#include "rendertimings.h"
 #include "shader.h"
 #include "shaderprogram.h"
 #include "textlabel2d.h"
@@ -18,11 +22,211 @@
 
 #include <avogadro/core/matrix.h>
 
+#include <array>
+#include <chrono>
 #include <iostream>
 
 namespace Avogadro::Rendering {
 
 using Core::Array;
+
+namespace {
+// The timed parts of render(), in order; TimedSections is their count.
+enum Section : int
+{
+  SolidSection,
+  PostSection,
+  OpaqueSection,
+  TranslucentSection,
+  Overlay3DSection,
+  Overlay2DSection,
+  TimedSections
+};
+constexpr int TimedSlots = 4;
+const char* const SectionNames[] = { "solid",       "post",      "opaque",
+                                     "translucent", "overlay3d", "overlay2d" };
+static_assert(sizeof(SectionNames) / sizeof(SectionNames[0]) == TimedSections,
+              "SectionNames must name every timed section");
+
+// Bookkeeping for GLRenderer::setTimingEnabled(). One slot holds the CPU
+// timings and the six GL_TIME_ELAPSED queries of a single frame; a ring of
+// them lets the GPU finish a frame while the next ones are being issued.
+struct TimingState
+{
+  using Clock = std::chrono::steady_clock;
+
+  struct Slot
+  {
+    std::array<GLuint, TimedSections> queries = {};
+    std::array<double, TimedSections> cpuMs = {};
+    std::uint64_t frame = 0;
+    std::uint64_t bytes = 0;
+    double tessellateMs = 0.0;
+    double uploadMs = 0.0;
+  };
+
+  std::array<Slot, TimedSlots> slots;
+  bool gpuAvailable = false;
+  int next = 0;    // slot the next frame is recorded in
+  int pending = 0; // frames issued but not yet published
+  std::uint64_t frameCounter = 0;
+
+  Slot* current = nullptr;
+  int section = -1;
+  Clock::time_point sectionStart;
+  std::uint64_t bytesAtStart = 0;
+  std::uint64_t tessellateNsAtStart = 0;
+  std::uint64_t uploadNsAtStart = 0;
+
+  // Only call with the owning context current. A TimingState destroyed
+  // without releaseQueries() leaves its names to be reclaimed with their
+  // context.
+  void releaseQueries()
+  {
+#ifndef __EMSCRIPTEN__
+    if (!gpuAvailable)
+      return;
+    for (Slot& slot : slots)
+      glDeleteQueries(TimedSections, slot.queries.data());
+#endif
+  }
+
+  void createQueries()
+  {
+#ifndef __EMSCRIPTEN__
+    gpuAvailable = GLEW_VERSION_3_3 || GLEW_ARB_timer_query;
+    if (gpuAvailable) {
+      for (Slot& slot : slots)
+        glGenQueries(TimedSections, slot.queries.data());
+    }
+#endif
+  }
+
+  Slot& oldest() { return slots[(next + TimedSlots - pending) % TimedSlots]; }
+
+  void publish(const Slot& slot, RenderTimings& out) const
+  {
+    out.frame = slot.frame;
+    out.bufferBytesUploaded = slot.bytes;
+    out.tessellateCpuMs = slot.tessellateMs;
+    out.uploadCpuMs = slot.uploadMs;
+    out.gpuTimingAvailable = gpuAvailable;
+    out.passes.resize(TimedSections);
+    for (int i = 0; i < TimedSections; ++i) {
+      PassTiming& pass = out.passes[i];
+      pass.name = SectionNames[i];
+      pass.cpuMs = slot.cpuMs[i];
+      pass.gpuMs = -1.0;
+#ifndef __EMSCRIPTEN__
+      if (gpuAvailable) {
+        GLuint64 ns = 0;
+        glGetQueryObjectui64v(slot.queries[i], GL_QUERY_RESULT, &ns);
+        pass.gpuMs = static_cast<double>(ns) * 1.0e-6;
+      }
+#endif
+    }
+  }
+
+  // Publish every finished frame (oldest first) without waiting on the GPU.
+  void collectFinished(RenderTimings& out)
+  {
+#ifdef __EMSCRIPTEN__
+    (void)out;
+#else
+    while (pending > 0) {
+      Slot& slot = oldest();
+      GLuint ready = 0;
+      glGetQueryObjectuiv(slot.queries[TimedSections - 1],
+                          GL_QUERY_RESULT_AVAILABLE, &ready);
+      if (!ready)
+        break;
+      publish(slot, out);
+      --pending;
+    }
+#endif
+  }
+
+  void beginFrame(RenderTimings& out, bool synchronous)
+  {
+    if (frameCounter == 0)
+      createQueries();
+    if (gpuAvailable && !synchronous)
+      collectFinished(out);
+    // The ring is full of unread frames: drop the oldest to reuse its slot.
+    if (pending == TimedSlots)
+      --pending;
+    current = &slots[next];
+    current->frame = ++frameCounter;
+    bytesAtStart = BufferObject::totalBytesUploaded();
+    tessellateNsAtStart =
+      GeometryTiming::totalNanoseconds(GeometryTiming::Counter::Tessellate);
+    uploadNsAtStart =
+      GeometryTiming::totalNanoseconds(GeometryTiming::Counter::Upload);
+    section = -1;
+  }
+
+  // Ends the open section, if any, and starts timing `index`.
+  void beginSection(int index)
+  {
+    endSection();
+    section = index;
+#ifndef __EMSCRIPTEN__
+    if (gpuAvailable)
+      glBeginQuery(GL_TIME_ELAPSED, current->queries[index]);
+#endif
+    sectionStart = Clock::now();
+  }
+
+  void endSection()
+  {
+    if (section < 0)
+      return;
+    const Clock::time_point stop = Clock::now();
+    current->cpuMs[section] =
+      std::chrono::duration<double, std::milli>(stop - sectionStart).count();
+#ifndef __EMSCRIPTEN__
+    if (gpuAvailable)
+      glEndQuery(GL_TIME_ELAPSED);
+#endif
+    section = -1;
+  }
+
+  void endFrame(RenderTimings& out, bool synchronous)
+  {
+    endSection();
+    current->bytes = BufferObject::totalBytesUploaded() - bytesAtStart;
+    current->tessellateMs =
+      1.0e-6 * static_cast<double>(GeometryTiming::totalNanoseconds(
+                                     GeometryTiming::Counter::Tessellate) -
+                                   tessellateNsAtStart);
+    current->uploadMs =
+      1.0e-6 * static_cast<double>(GeometryTiming::totalNanoseconds(
+                                     GeometryTiming::Counter::Upload) -
+                                   uploadNsAtStart);
+    if (!gpuAvailable) {
+      publish(*current, out);
+    } else if (synchronous) {
+      // Anything still in flight is older than this frame; discard it.
+      pending = 0;
+      publish(*current, out);
+    } else {
+      ++pending;
+    }
+    next = (next + 1) % TimedSlots;
+    current = nullptr;
+  }
+};
+
+} // namespace
+
+class GLRenderer::Private
+{
+public:
+  TimingState timing;
+  RenderTimings timings;
+  bool timingEnabled = false;
+  bool timingSync = false;
+};
 
 GLRenderer::GLRenderer()
   : m_valid(false), m_pixelRatio(1.0f), m_textRenderStrategy(nullptr),
@@ -32,6 +236,8 @@ GLRenderer::GLRenderer()
     m_drawIcon(false), m_iconData(nullptr), m_iconWidth(0u), m_iconHeight(0u),
     m_iconPosition(Eigen::Vector3f::Zero())
 #endif
+    ,
+    d(std::make_unique<Private>())
 {
   m_overlayCamera.setIdentity();
 
@@ -52,8 +258,42 @@ GLRenderer::~GLRenderer()
   delete m_textRenderStrategy;
 }
 
+void GLRenderer::setTimingEnabled(bool enable)
+{
+  if (enable == d->timingEnabled)
+    return;
+  d->timing.releaseQueries();
+  d->timing = TimingState();
+  d->timings = RenderTimings();
+  d->timingEnabled = enable;
+}
+
+bool GLRenderer::timingEnabled() const
+{
+  return d->timingEnabled;
+}
+
+void GLRenderer::setTimingSynchronous(bool synchronous)
+{
+  d->timingSync = synchronous;
+}
+
+bool GLRenderer::timingSynchronous() const
+{
+  return d->timingSync;
+}
+
+const RenderTimings& GLRenderer::timings() const
+{
+  return d->timings;
+}
+
 void GLRenderer::initialize()
 {
+  // A new context: the old query names went with the old one.
+  d->timing = TimingState();
+  d->timings = RenderTimings();
+
 #ifdef __EMSCRIPTEN__
   m_valid = true;
 #else
@@ -76,17 +316,24 @@ void GLRenderer::initialize()
 
 void GLRenderer::resize(int width, int height)
 {
+  resize(width, height, static_cast<int>(width * m_pixelRatio),
+         static_cast<int>(height * m_pixelRatio));
+}
+
+void GLRenderer::resize(int width, int height, int deviceWidth,
+                        int deviceHeight)
+{
   if (!m_valid)
     return;
 
   // m_volume.resize(width, height);
   // The viewport is in device pixels, while the cameras work in logical pixels
   // as they are used to project and unproject Qt mouse coordinates.
-  glViewport(0, 0, static_cast<GLsizei>(width * m_pixelRatio),
-             static_cast<GLsizei>(height * m_pixelRatio));
+  glViewport(0, 0, static_cast<GLsizei>(deviceWidth),
+             static_cast<GLsizei>(deviceHeight));
   m_camera.setViewport(width, height);
   m_overlayCamera.setViewport(width, height);
-  m_solidPipeline.resize(width, height);
+  m_solidPipeline.resizeDevice(deviceWidth, deviceHeight);
 }
 
 void GLRenderer::setPixelRatio(float ratio)
@@ -99,6 +346,12 @@ void GLRenderer::render()
 {
   if (!m_valid)
     return;
+
+  TimingState* timing = d->timingEnabled ? &d->timing : nullptr;
+  if (timing) {
+    timing->beginFrame(d->timings, d->timingSync);
+    timing->beginSection(SolidSection);
+  }
 
   Vector4ub c = m_scene.backgroundColor();
   glClearColor(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, c[3] / 255.0f);
@@ -114,34 +367,52 @@ void GLRenderer::render()
   glDisable(GL_BLEND);
   const bool useSolidPipeline = m_solidPipeline.begin();
   m_scene.rootNode().accept(visitor);
+  if (timing)
+    timing->beginSection(PostSection);
   if (useSolidPipeline) {
     // Use this frame's camera for the fog and depth-of-field offsets.
     m_solidPipeline.adjustOffset(m_camera);
     m_solidPipeline.end(m_camera);
   }
+  if (timing)
+    timing->beginSection(OpaqueSection);
 
   // Setup for opaque geometry
   visitor.setRenderPass(OpaquePass);
   m_scene.rootNode().accept(visitor);
+  if (timing)
+    timing->beginSection(TranslucentSection);
 
   // Setup for transparent geometry
   visitor.setRenderPass(TranslucentPass);
   glEnable(GL_BLEND);
   // Thanks to Giuseppe D'Angelo for a related comment:
   // https://bugreports.qt.io/browse/QTBUG-36739
-  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+  // The alpha channel uses "over" blending (GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+  // rather than adding, which saturated the alpha of any pixel a translucent
+  // surface touched. Over an opaque destination alpha stays 1, so the window
+  // is unaffected; over a transparent background (image export) the buffer
+  // holds a valid premultiplied image.
+  glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
   m_scene.rootNode().accept(visitor);
+  if (timing)
+    timing->beginSection(Overlay3DSection);
 
   // Setup for 3d overlay rendering
   visitor.setRenderPass(Overlay3DPass);
   glClear(GL_DEPTH_BUFFER_BIT);
   m_scene.rootNode().accept(visitor);
+  if (timing)
+    timing->beginSection(Overlay2DSection);
 
   // Setup for 2d overlay rendering
   visitor.setRenderPass(Overlay2DPass);
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
   m_scene.rootNode().accept(visitor);
+  if (timing)
+    timing->endFrame(d->timings, d->timingSync);
 
 #ifdef _3DCONNEXION
   if (m_drawIcon && (m_iconData != nullptr)) {
@@ -196,18 +467,18 @@ void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
     class ResetTextLabelVisitor : public Visitor
     {
     public:
-      void visit(Node&) override { return; }
-      void visit(GroupNode&) override { return; }
-      void visit(GeometryNode&) override { return; }
-      void visit(Drawable&) override { return; }
-      void visit(SphereGeometry&) override { return; }
-      void visit(CurveGeometry&) override { return; }
-      void visit(CylinderGeometry&) override { return; }
-      void visit(MeshGeometry&) override { return; }
+      void visit(Node&) override {}
+      void visit(GroupNode&) override {}
+      void visit(GeometryNode&) override {}
+      void visit(Drawable&) override {}
+      void visit(SphereGeometry&) override {}
+      void visit(CurveGeometry&) override {}
+      void visit(CylinderGeometry&) override {}
+      void visit(MeshGeometry&) override {}
       // void visit(Texture2D&) { return; }
       void visit(TextLabel2D& l) override { l.resetTexture(); }
       void visit(TextLabel3D& l) override { l.resetTexture(); }
-      void visit(LineStripGeometry&) override { return; }
+      void visit(LineStripGeometry&) override {}
     } labelResetter;
 
     m_scene.rootNode().accept(labelResetter);
@@ -222,26 +493,29 @@ void GLRenderer::applyProjection()
   float distance = m_camera.distance(m_center);
   float aspectRatio = static_cast<float>(m_camera.width()) /
                       static_cast<float>(m_camera.height());
+  // Applied to local copies only: the stored frustum is the base value that
+  // zooming edits, so scaling it in place would accumulate on every frame.
+  const float scale = m_projectionScale;
   if (m_camera.projectionType() == Perspective) {
     m_perspectiveFrustum[0] = m_perspectiveFrustum[2] * aspectRatio;
     m_perspectiveFrustum[1] = m_perspectiveFrustum[3] * aspectRatio;
     m_perspectiveFrustum[5] = distance + m_radius;
     m_camera.calculatePerspective(
-      m_perspectiveFrustum[0], m_perspectiveFrustum[1], m_perspectiveFrustum[2],
-      m_perspectiveFrustum[3], m_perspectiveFrustum[4],
-      m_perspectiveFrustum[5]);
+      m_perspectiveFrustum[0] * scale, m_perspectiveFrustum[1] * scale,
+      m_perspectiveFrustum[2] * scale, m_perspectiveFrustum[3] * scale,
+      m_perspectiveFrustum[4], m_perspectiveFrustum[5]);
   } else {
     // Renders the orthographic projection of the molecule
     m_orthographicFrustum[0] = m_orthographicFrustum[2] * aspectRatio;
     m_orthographicFrustum[1] = m_orthographicFrustum[3] * aspectRatio;
     m_orthographicFrustum[5] = distance + m_radius;
     m_orthographicFrustum[4] = -m_orthographicFrustum[5];
-    m_camera.calculateOrthographic(m_orthographicFrustum[0],  // L
-                                   m_orthographicFrustum[1],  // R
-                                   m_orthographicFrustum[2],  // B
-                                   m_orthographicFrustum[3],  // T
-                                   m_orthographicFrustum[4],  // N
-                                   m_orthographicFrustum[5]); // F
+    m_camera.calculateOrthographic(m_orthographicFrustum[0] * scale, // L
+                                   m_orthographicFrustum[1] * scale, // R
+                                   m_orthographicFrustum[2] * scale, // B
+                                   m_orthographicFrustum[3] * scale, // T
+                                   m_orthographicFrustum[4],         // N
+                                   m_orthographicFrustum[5]);        // F
   }
   m_overlayCamera.calculateOrthographic(
     0.f, static_cast<float>(m_overlayCamera.width()), 0.f,
@@ -310,7 +584,7 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
       result.insert(result.end(), loopHits.begin(), loopHits.end());
       continue;
     }
-    const auto childGeometry = itNode->cast<GeometryNode>();
+    const auto* const childGeometry = itNode->cast<GeometryNode>();
     if (childGeometry) {
       loopHits = childGeometry->areaHits(f);
       result.insert(result.end(), loopHits.begin(), loopHits.end());
@@ -326,7 +600,7 @@ float GLRenderer::hit(const Vector3f& rayOrigin, const Vector3f& rayEnd,
 {
   std::multimap<float, Identifier> results =
     hits(&m_scene.rootNode(), rayOrigin, rayEnd, rayDirection);
-  if (results.size())
+  if (!results.empty())
     return results.begin()->first;
   return std::numeric_limits<float>::max();
 }

@@ -8,8 +8,7 @@
 
 #include "groupnode.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class TransformNode transformnode.h <avogadro/rendering/transformnode.h>
@@ -26,7 +25,7 @@ public:
   ~TransformNode() override;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_TRANSFORMNODE_H

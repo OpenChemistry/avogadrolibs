@@ -374,7 +374,7 @@ void JsonWidget::buildOptionGui()
     }
 
     // Now loop over keys and add them
-    for (QString key : std::as_const(keys))
+    for (const QString& key : std::as_const(keys))
       addOptionRow(key, key, options.take(key));
 
     // Make connections for standard options:
@@ -514,7 +514,7 @@ void JsonWidget::addOptionRow(const QString& key, const QString& name,
   if (hide) {
     widget->hide();
     // find the label and hide that too
-    auto fLabel = form->labelForField(widget);
+    auto* fLabel = form->labelForField(widget);
     if (fLabel)
       fLabel->hide();
   }
@@ -869,7 +869,6 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
-  return;
 }
 
 void JsonWidget::setStringListOption(const QString& name,

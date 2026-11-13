@@ -3,13 +3,16 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
+#include "shadowmolecule.h"
 #include "utils.h"
 
 #include <gtest/gtest.h>
 
 #include <map>
+#include <memory>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 #include <limits>
 #include <random>
@@ -17,6 +20,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/color3f.h>
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/mesh.h>
@@ -32,10 +36,12 @@ using Avogadro::MatrixX;
 using Avogadro::Vector2;
 using Avogadro::Vector3;
 using Avogadro::Vector3f;
+using Avogadro::Vector3i;
 using Avogadro::Core::Array;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Color3f;
+using Avogadro::Core::Cube;
 using Avogadro::Core::Mesh;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::PropertyMap;
@@ -658,7 +664,8 @@ TEST_F(MoleculeTest, moveRepointsResidueAtoms)
 }
 
 // Copies must not point back at the original either: residue atoms and the
-// basis set both carry a molecule pointer.
+// basis set both carry a molecule pointer. A copy shares the basis set, so
+// its back-pointer is fixed up by the mutable basisSet().
 TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
 {
   Molecule original;
@@ -674,8 +681,8 @@ TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
   basis->addBasis(0, Avogadro::Core::GaussianSet::S);
   original.setBasisSet(basis);
 
-  auto expectOwnPointers = [](const Molecule& m) {
-    const auto ca = m.residue(0).atomByName("CA");
+  auto expectOwnPointers = [](Molecule& m) {
+    const auto ca = std::as_const(m).residue(0).atomByName("CA");
     EXPECT_EQ(ca.molecule(), &m);
     EXPECT_EQ(ca.index(), 2u);
     ASSERT_NE(m.basisSet(), nullptr);
@@ -753,10 +760,17 @@ TEST_F(MoleculeTest, readPropertiesFreesTheOldBasisSet)
 
     target.readProperties(source);
 
-    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+    // The old one is freed and the source's is shared, not copied.
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    EXPECT_EQ(std::as_const(target).basisSet(), b);
+
+    // Writing detaches the target's side only.
     ASSERT_NE(target.basisSet(), nullptr);
-    EXPECT_NE(target.basisSet(), source.basisSet());
+    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+    EXPECT_NE(target.basisSet(), b);
+    EXPECT_EQ(source.basisSet(), b);
     EXPECT_EQ(target.basisSet()->molecule(), &target);
+    EXPECT_EQ(b->molecule(), &source);
   }
   EXPECT_EQ(CountingBasisSet::liveCount, 0);
 }
@@ -1872,7 +1886,7 @@ TEST(PropertyMapTest, AddEntry)
   PropertyMap pm;
   pm.setDouble("charge", 0, 1.0);
   pm.setInt("type", 0, 5);
-  pm.addEntry();
+  pm.addEntry(2);
 
   // Column should now be size 2
   auto col = pm.doubles("charge");
@@ -2599,6 +2613,10 @@ TEST_F(MoleculeTest, estimateVelocitiesSingleGeometry)
   EXPECT_TRUE(molecule.velocities(0).empty());
   EXPECT_TRUE(molecule.data("velocities").toList().empty());
   EXPECT_TRUE(molecule.data("temperatures").toList().empty());
+  // Removed outright, not left as empty lists for a file writer to trip on.
+  EXPECT_FALSE(molecule.hasData("velocities"));
+  EXPECT_FALSE(molecule.hasData("velocityDeviations"));
+  EXPECT_FALSE(molecule.hasData("temperatures"));
 }
 
 // A labelled atom weighs what its isotope weighs, which is the difference
@@ -3159,6 +3177,662 @@ TEST_F(MoleculeTest, RandomMixedMutationsStayConsistent)
   }
 }
 
+// ---------------------------------------------------------------------------
+// Shadow-model test. RandomMixedMutationsStayConsistent above only proves the
+// arrays keep their sizes; this one proves every value is still on the atom
+// or bond it was given to. See shadowmolecule.h for the model. The molecule
+// has no unique ids of its own (QtGui::Molecule does, and
+// RWMoleculeTest.shadowModelSurvivesUndoRedo checks those), so identity is
+// tracked entirely in the shadow, which applies the documented swap-and-pop
+// rules to its own records.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+using ShadowModel::Model;
+
+class ShadowRunner
+{
+public:
+  explicit ShadowRunner(unsigned seed) : m_seed(seed), m_rng(seed)
+  {
+    m_mol = std::make_unique<Molecule>();
+  }
+
+  // Run one random operation, then check everything. Returns false (after
+  // reporting) on the first disagreement.
+  bool step(int stepNumber);
+
+private:
+  enum Op
+  {
+    AddAtom,
+    AddAtomAt,
+    RemoveAtom,
+    SwapAtom,
+    AddBond,
+    RemoveBond,
+    SwapBond,
+    SetBondOrder,
+    SetBondLabel,
+    SetBondProperties,
+    SetAtomicNumber,
+    SetPosition3d,
+    SetPosition2d,
+    SetLabel,
+    SetFormalCharge,
+    SetHybridization,
+    SetIsotope,
+    SetColor,
+    SetSelected,
+    SetFrozenAtom,
+    SetFrozenAxis,
+    SetLayer,
+    SetForce,
+    SetPartialCharges,
+    SetAtomProperties,
+    SetAllPositions3d,
+    SetAllLabels,
+    AddCoordinateSet,
+    ReplaceCoordinateSet,
+    ActivateCoordinateSet,
+    SetVelocities,
+    SetVibrations,
+    CopyConstruct,
+    CopyAssign,
+    MoveConstruct,
+    MoveAssign,
+    OpCount
+  };
+
+  static const char* name(int op)
+  {
+    static const char* names[] = {
+      "addAtom",
+      "addAtom(position)",
+      "removeAtom",
+      "swapAtom",
+      "addBond",
+      "removeBond",
+      "swapBond",
+      "setBondOrder",
+      "setBondLabel",
+      "bondProperties",
+      "setAtomicNumber",
+      "setAtomPosition3d",
+      "setAtomPosition2d",
+      "setAtomLabel",
+      "setFormalCharge",
+      "setHybridization",
+      "setIsotope",
+      "setColor",
+      "setAtomSelected",
+      "setFrozenAtom",
+      "setFrozenAtomAxis",
+      "setLayer",
+      "setForceVector",
+      "setPartialCharges",
+      "atomProperties",
+      "setAtomPositions3d",
+      "setAtomLabels",
+      "setCoordinate3d(new set)",
+      "setCoordinate3d(replace set)",
+      "setCoordinate3d(activate)",
+      "setVelocities",
+      "setVibrationData",
+      "copy construct",
+      "copy assign",
+      "move construct",
+      "move assign",
+    };
+    return names[op];
+  }
+
+  // Relative likelihood of each operation. Setters outweigh structural edits
+  // so that data is usually present when a swap or removal comes along, and
+  // addAtom is the only operation that needs no atoms.
+  static int weight(int op)
+  {
+    switch (op) {
+      case AddAtom:
+      case AddAtomAt:
+        return 6;
+      case RemoveAtom:
+      case SwapAtom:
+      case AddBond:
+        return 5;
+      case RemoveBond:
+      case SwapBond:
+        return 3;
+      case SetVelocities:
+      case SetVibrations:
+      case SetForce:
+      case SetPartialCharges:
+        return 2;
+      case AddCoordinateSet:
+      case ReplaceCoordinateSet:
+      case ActivateCoordinateSet:
+      case SetAllPositions3d:
+      case SetAllLabels:
+        return 1;
+      case CopyConstruct:
+      case CopyAssign:
+      case MoveConstruct:
+      case MoveAssign:
+        return 1;
+      default:
+        return 3;
+    }
+  }
+
+  Index pickIndex(Index count)
+  {
+    return std::uniform_int_distribution<Index>(0, count - 1)(m_rng);
+  }
+
+  int pickInt(int lo, int hi)
+  {
+    return std::uniform_int_distribution<int>(lo, hi)(m_rng);
+  }
+
+  bool chance(int percent) { return pickInt(0, 99) < percent; }
+
+  // Small integers keep the values exactly comparable and easy to read.
+  Vector3 pickVector()
+  {
+    return Vector3(pickInt(-50, 50), pickInt(-50, 50), pickInt(-50, 50));
+  }
+
+  unsigned char pickElement()
+  {
+    if (chance(4))
+      return Avogadro::CustomElementMin;
+    return static_cast<unsigned char>(pickInt(1, 10));
+  }
+
+  Array<Vector3> pickCoordinates(Index n)
+  {
+    // Usually one per atom; sometimes fewer, the way a short frame is read.
+    const Index length = chance(70) ? n : pickIndex(n + 1);
+    Array<Vector3> coords;
+    for (Index i = 0; i < length; ++i)
+      coords.push_back(pickVector());
+    return coords;
+  }
+
+  // A molecule with unrelated contents, to assign over.
+  std::unique_ptr<Molecule> junkMolecule()
+  {
+    auto junk = std::make_unique<Molecule>();
+    for (int i = 0; i < 4; ++i)
+      junk->addAtom(static_cast<unsigned char>(pickInt(1, 10)));
+    junk->addBond(0, 1, 2);
+    junk->addBond(2, 3, 1);
+    junk->setAtomLabel(2, "junk");
+    junk->setAtomPosition3d(3, pickVector());
+    junk->setFormalCharge(1, 1);
+    junk->setColor(0, Avogadro::Vector3ub(1, 2, 3));
+    junk->setFrozenAtomAxis(3, 1, true);
+    junk->setAtomSelected(1, true);
+    junk->setBondLabel(1, "junkbond");
+    junk->setCoordinate3d(pickCoordinates(4), 0);
+    junk->atomProperties().setDouble(ShadowModel::kAtomDoubleProperty, 1, 9.0);
+    return junk;
+  }
+
+  bool check(const Molecule& mol, const Model& model, const char* what)
+  {
+    const std::string error = ShadowModel::verify(mol, model);
+    if (error.empty())
+      return true;
+    ADD_FAILURE() << "seed " << m_seed << ", step " << m_step << ", op "
+                  << name(m_op) << " [" << what << "]: " << error;
+    return false;
+  }
+
+  bool checkAll(const char* what)
+  {
+    if (!check(*m_mol, m_model, what))
+      return false;
+    for (size_t i = 0; i < m_witnesses.size(); ++i) {
+      if (!check(*m_witnesses[i].first, m_witnesses[i].second,
+                 "earlier copy, which must not have changed"))
+        return false;
+    }
+    return true;
+  }
+
+  // The documented contract: a moved-from Molecule is a default-constructed
+  // one. It must also still be usable.
+  bool checkMovedFrom(Molecule& moved)
+  {
+    Model empty;
+    if (!check(moved, empty, "moved-from molecule"))
+      return false;
+    if (moved.vibrationData(0) != nullptr || moved.coordinate3d() != 0 ||
+        moved.hasData("shadow")) {
+      ADD_FAILURE() << "seed " << m_seed << ", step " << m_step << ", op "
+                    << name(m_op) << ": moved-from molecule is not empty";
+      return false;
+    }
+    Model usable;
+    usable.addAtom(8);
+    moved.addAtom(8);
+    return check(moved, usable, "moved-from molecule after addAtom");
+  }
+
+  void keepWitness(std::unique_ptr<Molecule> mol, const Model& model)
+  {
+    if (!chance(60))
+      return;
+    if (m_witnesses.size() >= 3)
+      m_witnesses.erase(m_witnesses.begin());
+    m_witnesses.emplace_back(std::move(mol), model);
+  }
+
+  unsigned m_seed;
+  std::mt19937 m_rng;
+  int m_step = 0;
+  int m_op = 0;
+  std::unique_ptr<Molecule> m_mol;
+  Model m_model;
+  // Earlier states of the molecule, kept after a copy so that the two copies
+  // keep being edited independently: a shared array that was not detached on
+  // write shows up as the witness changing.
+  std::vector<std::pair<std::unique_ptr<Molecule>, Model>> m_witnesses;
+};
+
+bool ShadowRunner::step(int stepNumber)
+{
+  m_step = stepNumber;
+  Molecule& mol = *m_mol;
+  Model& model = m_model;
+  Index n = mol.atomCount();
+  const Index bonds = mol.bondCount();
+
+  int total = 0;
+  for (int op = 0; op < OpCount; ++op)
+    total += weight(op);
+  int roll = pickInt(0, total - 1);
+  int op = 0;
+  for (; op < OpCount; ++op) {
+    if (roll < weight(op))
+      break;
+    roll -= weight(op);
+  }
+
+  // Keep the molecules small so that removals and swaps keep landing on
+  // index 0, the last atom, and an emptied molecule.
+  if ((op == AddAtom || op == AddAtomAt) && n >= 9)
+    op = RemoveAtom;
+  // Everything else needs an atom (or a bond, or a coordinate set) to act on.
+  const bool needsAtom = op != AddAtom && op != AddAtomAt && op < CopyConstruct;
+  if (needsAtom && n == 0)
+    op = AddAtom;
+  if ((op == AddBond || op == SwapAtom) && n < 2)
+    op = AddAtom;
+  if ((op == RemoveBond || op == SetBondOrder || op == SetBondLabel ||
+       op == SetBondProperties) &&
+      bonds == 0)
+    op = AddBond;
+  if (op == SwapBond && bonds < 2)
+    op = AddBond;
+  if (op == AddBond && n < 2)
+    op = AddAtom;
+  if (op == ActivateCoordinateSet && model.frameCount == 0)
+    op = AddCoordinateSet;
+  if (op == AddCoordinateSet && model.frameCount >= 4)
+    op = ReplaceCoordinateSet;
+  if (op == ReplaceCoordinateSet && model.frameCount == 0)
+    op = AddCoordinateSet;
+  m_op = op;
+  n = mol.atomCount();
+
+  switch (op) {
+    case AddAtom: {
+      const unsigned char z = pickElement();
+      mol.addAtom(z);
+      model.addAtom(z);
+      break;
+    }
+    case AddAtomAt: {
+      const unsigned char z = pickElement();
+      const Vector3 p = pickVector();
+      const bool covered = mol.atomPositions3d().size() == n;
+      std::vector<bool> fullFrames(model.frameCount);
+      for (size_t f = 0; f < model.frameCount; ++f)
+        fullFrames[f] = mol.coordinate3dRef(f).size() == n;
+      mol.addAtom(z, p);
+      model.addAtom(z, &p, covered, fullFrames);
+      break;
+    }
+    case RemoveAtom: {
+      const Index i = chance(25) ? n - 1 : (chance(25) ? 0 : pickIndex(n));
+      if (!mol.removeAtom(i)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": removeAtom(" << i << ") refused, count " << n;
+        return false;
+      }
+      model.removeAtom(i);
+      const std::string error = model.syncBondOrder(mol);
+      if (!error.empty()) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ", op removeAtom(" << i << "): " << error;
+        return false;
+      }
+      break;
+    }
+    case SwapAtom: {
+      const Index a = pickIndex(n);
+      const Index b = chance(10) ? a : pickIndex(n);
+      mol.swapAtom(a, b);
+      model.swapAtom(a, b);
+      break;
+    }
+    case AddBond: {
+      const Index a = pickIndex(n);
+      Index b = pickIndex(n);
+      if (a == b)
+        b = (a + 1) % n;
+      const unsigned char order = static_cast<unsigned char>(pickInt(1, 3));
+      mol.addBond(a, b, order);
+      model.addBond(a, b, order);
+      break;
+    }
+    case RemoveBond: {
+      const Index i = chance(25) ? bonds - 1 : pickIndex(bonds);
+      mol.removeBond(i);
+      model.removeBond(i);
+      break;
+    }
+    case SwapBond: {
+      const Index a = pickIndex(bonds);
+      const Index b = pickIndex(bonds);
+      mol.swapBond(a, b);
+      model.swapBond(a, b);
+      break;
+    }
+    case SetBondOrder: {
+      const Index i = pickIndex(bonds);
+      const auto order = static_cast<unsigned char>(pickInt(1, 3));
+      mol.setBondOrder(i, order);
+      model.bonds[i].order = order;
+      break;
+    }
+    case SetBondLabel: {
+      const Index i = pickIndex(bonds);
+      const std::string label = "b" + std::to_string(m_step);
+      mol.setBondLabel(i, label);
+      model.bonds[i].label = label;
+      break;
+    }
+    case SetBondProperties: {
+      const Index i = pickIndex(bonds);
+      const double d = pickInt(-1000, 1000) / 8.0;
+      const int v = pickInt(-1000, 1000);
+      mol.bondProperties().setDouble(ShadowModel::kBondDoubleProperty, i, d);
+      model.bonds[i].doubleProperty = d;
+      if (chance(50)) {
+        mol.bondProperties().setInt(ShadowModel::kBondIntProperty, i, v);
+        model.bonds[i].intProperty = v;
+      }
+      break;
+    }
+    case SetAtomicNumber: {
+      const Index i = pickIndex(n);
+      const unsigned char z = pickElement();
+      mol.setAtomicNumber(i, z);
+      model.atoms[i].atomicNumber = z;
+      // Resets an explicit colour to the new element's.
+      model.atoms[i].color.reset();
+      break;
+    }
+    case SetPosition3d: {
+      const Index i = pickIndex(n);
+      const Vector3 p = pickVector();
+      mol.setAtomPosition3d(i, p);
+      model.atoms[i].position3d = p;
+      break;
+    }
+    case SetPosition2d: {
+      const Index i = pickIndex(n);
+      const Vector2 p(pickInt(-50, 50), pickInt(-50, 50));
+      mol.setAtomPosition2d(i, p);
+      model.atoms[i].position2d = p;
+      break;
+    }
+    case SetLabel: {
+      const Index i = pickIndex(n);
+      const std::string label = "a" + std::to_string(m_step);
+      mol.setAtomLabel(i, label);
+      model.atoms[i].label = label;
+      break;
+    }
+    case SetFormalCharge: {
+      const Index i = pickIndex(n);
+      const auto charge = static_cast<signed char>(pickInt(-3, 3));
+      mol.setFormalCharge(i, charge);
+      model.atoms[i].formalCharge = charge;
+      break;
+    }
+    case SetHybridization: {
+      const Index i = pickIndex(n);
+      const auto hyb =
+        static_cast<Avogadro::Core::AtomHybridization>(pickInt(-6, 6));
+      mol.setHybridization(i, hyb);
+      model.atoms[i].hybridization = hyb;
+      break;
+    }
+    case SetIsotope: {
+      const Index i = pickIndex(n);
+      const auto isotope = static_cast<unsigned short>(pickInt(1, 300));
+      mol.setIsotope(i, isotope);
+      model.atoms[i].isotope = isotope;
+      break;
+    }
+    case SetColor: {
+      const Index i = pickIndex(n);
+      const Avogadro::Vector3ub c(pickInt(0, 255), pickInt(0, 255),
+                                  pickInt(0, 255));
+      mol.setColor(i, c);
+      model.atoms[i].color = c;
+      break;
+    }
+    case SetSelected: {
+      const Index i = pickIndex(n);
+      const bool selected = chance(50);
+      mol.setAtomSelected(i, selected);
+      model.atoms[i].selected = selected;
+      break;
+    }
+    case SetFrozenAtom: {
+      const Index i = pickIndex(n);
+      const bool frozen = chance(50);
+      mol.setFrozenAtom(i, frozen);
+      for (bool& flag : model.atoms[i].frozen)
+        flag = frozen;
+      break;
+    }
+    case SetFrozenAxis: {
+      const Index i = pickIndex(n);
+      const int axis = pickInt(0, 2);
+      const bool frozen = chance(60);
+      mol.setFrozenAtomAxis(i, axis, frozen);
+      model.atoms[i].frozen[axis] = frozen;
+      break;
+    }
+    case SetLayer: {
+      const Index i = pickIndex(n);
+      const size_t layer = static_cast<size_t>(pickInt(0, 2));
+      mol.setLayer(i, layer);
+      model.atoms[i].layer = layer;
+      break;
+    }
+    case SetForce: {
+      const Index i = pickIndex(n);
+      const Vector3 f = pickVector();
+      mol.setForceVector(i, f);
+      model.atoms[i].force = f;
+      break;
+    }
+    case SetPartialCharges: {
+      const std::string type = chance(50) ? "mmff94" : "gasteiger";
+      std::vector<double> values;
+      MatrixX charges(n, 1);
+      for (Index i = 0; i < n; ++i) {
+        values.push_back(pickInt(-100, 100) / 16.0);
+        charges(static_cast<Eigen::Index>(i), 0) = values.back();
+      }
+      mol.setPartialCharges(type, charges);
+      model.setPartialCharges(type, values);
+      break;
+    }
+    case SetAtomProperties: {
+      const Index i = pickIndex(n);
+      const double d = pickInt(-1000, 1000) / 8.0;
+      mol.atomProperties().setDouble(ShadowModel::kAtomDoubleProperty, i, d);
+      model.atoms[i].doubleProperty = d;
+      if (chance(50)) {
+        const std::string s = "p" + std::to_string(m_step);
+        mol.atomProperties().setString(ShadowModel::kAtomStringProperty, i, s);
+        model.atoms[i].stringProperty = s;
+      }
+      if (chance(50)) {
+        const double m = pickInt(-1000, 1000) / 8.0;
+        MatrixX matrix(1, 1);
+        matrix(0, 0) = m;
+        mol.atomProperties().setMatrix(ShadowModel::kAtomMatrixProperty, i,
+                                       matrix);
+        model.atoms[i].matrixProperty = m;
+      }
+      break;
+    }
+    case SetAllPositions3d: {
+      Array<Vector3> all;
+      for (Index i = 0; i < n; ++i)
+        all.push_back(pickVector());
+      mol.setAtomPositions3d(all);
+      for (Index i = 0; i < n; ++i)
+        model.atoms[i].position3d = all[i];
+      break;
+    }
+    case SetAllLabels: {
+      Array<std::string> all;
+      for (Index i = 0; i < n; ++i)
+        all.push_back("all" + std::to_string(i) + "." + std::to_string(m_step));
+      mol.setAtomLabels(all);
+      for (Index i = 0; i < n; ++i)
+        model.atoms[i].label = all[i];
+      break;
+    }
+    case AddCoordinateSet:
+    case ReplaceCoordinateSet: {
+      const size_t index = op == AddCoordinateSet
+                             ? model.frameCount
+                             : static_cast<size_t>(pickInt(
+                                 0, static_cast<int>(model.frameCount) - 1));
+      const Array<Vector3> coords = pickCoordinates(n);
+      mol.setCoordinate3d(coords, index);
+      model.setCoordinateSet(
+        index, std::vector<Vector3>(coords.begin(), coords.end()));
+      break;
+    }
+    case ActivateCoordinateSet: {
+      const int index = pickInt(0, static_cast<int>(model.frameCount) - 1);
+      mol.setCoordinate3d(index);
+      model.activateCoordinateSet(static_cast<size_t>(index));
+      break;
+    }
+    case SetVelocities: {
+      const size_t index = model.velocitySetCount < 3
+                             ? model.velocitySetCount
+                             : static_cast<size_t>(pickInt(0, 2));
+      const Array<Vector3> values = pickCoordinates(n);
+      mol.setVelocities(values, static_cast<int>(index));
+      model.setVelocitySet(index,
+                           std::vector<Vector3>(values.begin(), values.end()));
+      break;
+    }
+    case SetVibrations: {
+      Molecule::VibrationData data;
+      std::vector<std::vector<Vector3>> modes;
+      const int count = pickInt(1, 2);
+      for (int m = 0; m < count; ++m) {
+        data.frequencies.push_back(100.0 * (m + 1));
+        const Array<Vector3> mode = pickCoordinates(n);
+        data.lx.push_back(mode);
+        modes.emplace_back(mode.begin(), mode.end());
+      }
+      mol.setVibrationData(data, 0);
+      model.setVibrations(modes);
+      break;
+    }
+    case CopyConstruct: {
+      auto copy = std::make_unique<Molecule>(mol);
+      if (!check(*copy, model, "copy-constructed") ||
+          !check(mol, model, "source of a copy"))
+        return false;
+      // Either keep the source around to be compared later, or destroy it
+      // and carry on with the copy alone.
+      std::unique_ptr<Molecule> source = std::move(m_mol);
+      m_mol = std::move(copy);
+      keepWitness(std::move(source), model);
+      break;
+    }
+    case CopyAssign: {
+      auto target = junkMolecule();
+      *target = mol;
+      if (!check(*target, model, "copy-assigned") ||
+          !check(mol, model, "source of a copy assignment"))
+        return false;
+      std::unique_ptr<Molecule> source = std::move(m_mol);
+      m_mol = std::move(target);
+      keepWitness(std::move(source), model);
+      break;
+    }
+    case MoveConstruct: {
+      auto target = std::make_unique<Molecule>(std::move(mol));
+      if (!check(*target, model, "move-constructed"))
+        return false;
+      if (!checkMovedFrom(mol))
+        return false;
+      m_mol = std::move(target);
+      break;
+    }
+    case MoveAssign: {
+      auto target = junkMolecule();
+      *target = std::move(mol);
+      if (!check(*target, model, "move-assigned"))
+        return false;
+      if (!checkMovedFrom(mol))
+        return false;
+      m_mol = std::move(target);
+      break;
+    }
+    default:
+      break;
+  }
+
+  return checkAll("after the operation");
+}
+
+} // namespace
+
+// Six fixed seeds of 3000 steps each (AVOGADRO_SHADOW_SEEDS=N for more), on
+// molecules of at most nine atoms.
+TEST_F(MoleculeTest, ShadowModelAgreesAfterEveryStep)
+{
+  const unsigned seeds = ShadowModel::seedCount(6);
+  for (unsigned seed = 1; seed <= seeds; ++seed) {
+    SCOPED_TRACE("loop seed " + std::to_string(seed));
+    ShadowRunner runner(seed * 7919u);
+    for (int step = 0; step < 3000; ++step) {
+      if (!runner.step(step))
+        return; // the failure already names the seed and step
+    }
+  }
+}
+
 // Invariant: the "is there another atom of this element" scan in
 // removeAtom() must compare each remaining atom's element against the one
 // being removed, not the removed element against itself -- so the mask
@@ -3494,4 +4168,925 @@ TEST_F(MoleculeTest, hallNumberSupersedesInternationalNumber)
   // nothing to remove the second time
   molecule.setHallNumber(6);
   EXPECT_EQ(molecule.hallNumber(), 6);
+}
+
+// --- Custom property columns shorter than the entity count ---
+//
+// setDouble() and friends only grow a column as far as the entity they were
+// given, so a column can be shorter than atomCount()/bondCount(). Swapping or
+// removing entities must still move each value with its entity.
+
+TEST_F(MoleculeTest, swapAtomMovesValuesOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.5);
+  props.setInt("i", 0, 42);
+  props.setString("s", 0, "first");
+
+  m.swapAtom(0, 2);
+
+  // The values travel with the atom (now at index 2) ...
+  ASSERT_TRUE(props.getDouble("d", 2).has_value());
+  EXPECT_DOUBLE_EQ(1.5, *props.getDouble("d", 2));
+  ASSERT_TRUE(props.getInt("i", 2).has_value());
+  EXPECT_EQ(42, *props.getInt("i", 2));
+  ASSERT_TRUE(props.getString("s", 2).has_value());
+  EXPECT_EQ("first", *props.getString("s", 2));
+  // ... and the atom swapped into index 0 never had any.
+  EXPECT_FALSE(props.getDouble("d", 0).has_value());
+  EXPECT_FALSE(props.getInt("i", 0).has_value());
+  EXPECT_FALSE(props.getString("s", 0).has_value());
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+}
+
+TEST_F(MoleculeTest, swapAtomWithPartiallyCoveredPropertyColumn)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0); // column covers atoms 0 and 1, not 2
+
+  m.swapAtom(1, 2);
+
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  ASSERT_TRUE(props.getDouble("d", 2).has_value());
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 2));
+}
+
+TEST_F(MoleculeTest, removeAtomClearsStaleValueOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.5);
+  props.setInt("i", 0, 42);
+  props.setString("s", 0, "first");
+
+  // Atom 2 (no entries) is swapped into index 0, so atom 0's values must go.
+  ASSERT_TRUE(m.removeAtom(0));
+
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_FALSE(props.getDouble("d", 0).has_value());
+  EXPECT_FALSE(props.getInt("i", 0).has_value());
+  EXPECT_FALSE(props.getString("s", 0).has_value());
+}
+
+TEST_F(MoleculeTest, removeAtomBeyondShortPropertyColumnKeepsValues)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  m.atomProperties().setDouble("d", 0, 1.5);
+
+  ASSERT_TRUE(m.removeAtom(1));
+
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  ASSERT_TRUE(m.atomProperties().getDouble("d", 0).has_value());
+  EXPECT_DOUBLE_EQ(1.5, *m.atomProperties().getDouble("d", 0));
+  EXPECT_FALSE(m.atomProperties().getDouble("d", 1).has_value());
+}
+
+TEST_F(MoleculeTest, removeAtomFullPropertyColumnSwapsAndPops)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 2, 3.0);
+  props.setString("s", 2, "last");
+  props.setString("s", 0, "zero");
+  props.setString("s", 1, "one");
+
+  m.swapAtom(0, 1);
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 1));
+  EXPECT_EQ("one", *props.getString("s", 0));
+
+  ASSERT_TRUE(m.removeAtom(0));
+
+  // The former last atom took index 0 and the column shrank with it.
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(3.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 1));
+  EXPECT_EQ("last", *props.getString("s", 0));
+  EXPECT_EQ("zero", *props.getString("s", 1));
+}
+
+TEST_F(MoleculeTest, removeAtomOverlongPropertyColumnSwapsAndPops)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(7);
+  m.addAtom(8);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 2, 3.0);
+  // The setters don't check the index, so a column can outgrow the atoms.
+  props.setDouble("d", 5, 9.0);
+
+  ASSERT_TRUE(m.removeAtom(0));
+
+  // The entries past the old atom count are dropped, and the former last
+  // atom's value follows it to index 0.
+  ASSERT_EQ(static_cast<Index>(2), m.atomCount());
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(3.0, *props.getDouble("d", 0));
+  EXPECT_DOUBLE_EQ(2.0, *props.getDouble("d", 1));
+}
+
+TEST_F(MoleculeTest, addAtomDropsPropertyEntriesPastTheAtomCount)
+{
+  Molecule m;
+  m.addAtom(6);
+  PropertyMap& props = m.atomProperties();
+  props.setDouble("d", 0, 1.0);
+  // The setters don't check the index, so values can sit past the atoms.
+  props.setDouble("d", 1, 2.0);
+  props.setDouble("d", 3, 4.0);
+  props.setInt("i", 1, 5);
+  props.setString("s", 1, "stale");
+  MatrixX tensor(2, 2);
+  tensor << 1.0, 2.0, 3.0, 4.0;
+  props.setMatrix("m", 0, tensor);
+  props.setMatrix("m", 1, tensor);
+
+  m.addAtom(7);
+
+  // The new atom starts unset, and the existing atom keeps its values.
+  EXPECT_EQ(static_cast<size_t>(2), props.doubles("d").size());
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  EXPECT_FALSE(props.getInt("i", 1).has_value());
+  EXPECT_FALSE(props.getString("s", 1).has_value());
+  EXPECT_TRUE(props.getMatrix("m", 0).has_value());
+  EXPECT_FALSE(props.getMatrix("m", 1).has_value());
+
+  // Nothing stale is left for the next atom either.
+  m.addAtom(8);
+  EXPECT_FALSE(props.getDouble("d", 2).has_value());
+  EXPECT_FALSE(props.getDouble("d", 3).has_value());
+}
+
+TEST_F(MoleculeTest, addBondDropsPropertyEntriesPastTheBondCount)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(8);
+  m.addBond(0, 1, 1);
+  PropertyMap& props = m.bondProperties();
+  props.setDouble("d", 0, 1.0);
+  props.setDouble("d", 1, 2.0);
+  props.setString("s", 1, "stale");
+
+  m.addBond(1, 2, 1);
+
+  EXPECT_DOUBLE_EQ(1.0, *props.getDouble("d", 0));
+  EXPECT_FALSE(props.getDouble("d", 1).has_value());
+  EXPECT_FALSE(props.getString("s", 1).has_value());
+}
+
+TEST_F(MoleculeTest, swapBondMovesValuesOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addBond(0, 1);
+  m.addBond(1, 2);
+  m.addBond(2, 3);
+  m.bondProperties().setDouble("d", 0, 1.5);
+  m.bondProperties().setString("s", 0, "first");
+
+  m.swapBond(0, 2);
+
+  ASSERT_TRUE(m.bondProperties().getDouble("d", 2).has_value());
+  EXPECT_DOUBLE_EQ(1.5, *m.bondProperties().getDouble("d", 2));
+  EXPECT_EQ("first", *m.bondProperties().getString("s", 2));
+  EXPECT_FALSE(m.bondProperties().getDouble("d", 0).has_value());
+  EXPECT_FALSE(m.bondProperties().getString("s", 0).has_value());
+}
+
+TEST_F(MoleculeTest, removeBondClearsStaleValueOfShortPropertyColumns)
+{
+  Molecule m;
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addAtom(6);
+  m.addBond(0, 1);
+  m.addBond(1, 2);
+  m.addBond(2, 3);
+  m.bondProperties().setDouble("d", 0, 1.5);
+  m.bondProperties().setInt("i", 0, 7);
+
+  ASSERT_TRUE(m.removeBond(static_cast<Index>(0)));
+
+  ASSERT_EQ(static_cast<Index>(2), m.bondCount());
+  EXPECT_FALSE(m.bondProperties().getDouble("d", 0).has_value());
+  EXPECT_FALSE(m.bondProperties().getInt("i", 0).has_value());
+}
+
+TEST_F(MoleculeTest, removePartialCharges)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.addAtom(8);
+  MatrixX charges(2, 1);
+  charges << 0.25, -0.25;
+  molecule.setPartialCharges("a", charges);
+  molecule.setPartialCharges("b", charges);
+
+  molecule.removePartialCharges("a");
+  EXPECT_EQ(molecule.partialChargeTypes().count("a"), 0u);
+  EXPECT_EQ(molecule.partialChargeTypes().count("b"), 1u);
+  EXPECT_DOUBLE_EQ(molecule.partialCharges("b")(0, 0), 0.25);
+  EXPECT_TRUE(molecule.partialCharges("a").isZero());
+
+  // Removing a type that is not stored is harmless.
+  molecule.removePartialCharges("missing");
+  EXPECT_EQ(molecule.partialChargeTypes().size(), 1u);
+}
+
+TEST_F(MoleculeTest, unitCellCopyIsDeep)
+{
+  Molecule a;
+  a.setUnitCell(new UnitCell(5.0, 6.0, 7.0, M_PI / 2, M_PI / 2, M_PI / 2));
+
+  Molecule b(a);
+  ASSERT_NE(b.unitCell(), nullptr);
+  EXPECT_NE(b.unitCell(), a.unitCell());
+  EXPECT_DOUBLE_EQ(b.unitCell()->a(), 5.0);
+
+  Molecule c;
+  c.setUnitCell(new UnitCell(1.0, 1.0, 1.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  c = a;
+  ASSERT_NE(c.unitCell(), nullptr);
+  EXPECT_NE(c.unitCell(), a.unitCell());
+  EXPECT_DOUBLE_EQ(c.unitCell()->b(), 6.0);
+
+  // Assigning a molecule without a cell clears the target's cell.
+  Molecule empty;
+  c = empty;
+  EXPECT_EQ(c.unitCell(), nullptr);
+}
+
+TEST_F(MoleculeTest, unitCellMoveTransfersOwnership)
+{
+  Molecule a;
+  a.setUnitCell(new UnitCell(5.0, 6.0, 7.0, M_PI / 2, M_PI / 2, M_PI / 2));
+  const UnitCell* original = a.unitCell();
+
+  Molecule b(std::move(a));
+  EXPECT_EQ(b.unitCell(), original);
+  EXPECT_EQ(a.unitCell(), nullptr);
+
+  Molecule c;
+  c = std::move(b);
+  EXPECT_EQ(c.unitCell(), original);
+  EXPECT_EQ(b.unitCell(), nullptr);
+}
+
+TEST_F(MoleculeTest, setUnitCellSamePointerIsNoOp)
+{
+  Molecule m;
+  UnitCell* cell = new UnitCell(5.0, 5.0, 5.0, M_PI / 2, M_PI / 2, M_PI / 2);
+  m.setUnitCell(cell);
+  m.setUnitCell(cell); // must not free the cell it already owns
+  EXPECT_EQ(m.unitCell(), cell);
+  EXPECT_DOUBLE_EQ(m.unitCell()->a(), 5.0);
+
+  m.setUnitCell(nullptr);
+  EXPECT_EQ(m.unitCell(), nullptr);
+}
+
+// Every coordinate set (conformer, trajectory frame) holds one entry per atom,
+// so adding an atom has to extend them, as removing one shrinks them.
+TEST(MoleculeCoordinateSetTest, addAtomKeepsEveryCoordinateSetTheSize)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  Array<Vector3> frame0 = m.atomPositions3d();
+  Array<Vector3> frame1(2), frame2(2);
+  frame1[0] = Vector3(0.0, 0.0, 0.1);
+  frame1[1] = Vector3(1.0, 0.0, 0.1);
+  frame2[0] = Vector3(0.0, 0.0, 0.2);
+  frame2[1] = Vector3(1.0, 0.0, 0.2);
+  m.setCoordinate3d(frame0, 0);
+  m.setCoordinate3d(frame1, 1);
+  m.setCoordinate3d(frame2, 2);
+  ASSERT_EQ(3u, m.coordinate3dCount());
+
+  // With a position the atom stays put in every frame...
+  m.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  ASSERT_EQ(3u, m.atomCount());
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i) {
+    ASSERT_EQ(3u, m.coordinate3dRef(i).size()) << "frame " << i;
+    EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(i)[2]) << "frame " << i;
+  }
+  // ...and the frames still hold the other atoms where they were.
+  EXPECT_EQ(Vector3(1.0, 0.0, 0.2), m.coordinate3dRef(2)[1]);
+
+  // Without one it has no position yet: the origin, which is what
+  // atomPosition3d() says for an atom that has none.
+  m.addAtom(6);
+  ASSERT_EQ(4u, m.atomCount());
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i) {
+    ASSERT_EQ(4u, m.coordinate3dRef(i).size()) << "frame " << i;
+    EXPECT_EQ(Vector3::Zero(), m.coordinate3dRef(i)[3]) << "frame " << i;
+  }
+
+  // Removing them again gives back the frames exactly.
+  m.removeAtom(3);
+  m.removeAtom(2);
+  ASSERT_EQ(2u, m.atomCount());
+  EXPECT_EQ(frame0, m.coordinate3dRef(0));
+  EXPECT_EQ(frame1, m.coordinate3dRef(1));
+  EXPECT_EQ(frame2, m.coordinate3dRef(2));
+}
+
+// A frame that does not have an entry for each atom (not populated yet, say)
+// is not ours to extend: removeAtom() leaves such frames alone too.
+TEST(MoleculeCoordinateSetTest, addAtomLeavesOddlySizedCoordinateSetsAlone)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  m.setCoordinate3d(m.atomPositions3d(), 0);
+  m.setCoordinate3d(Array<Vector3>(), 1);
+  m.setCoordinate3d(Array<Vector3>(1, Vector3(5.0, 5.0, 5.0)), 2);
+
+  m.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  EXPECT_EQ(3u, m.coordinate3dRef(0).size());
+  EXPECT_EQ(0u, m.coordinate3dRef(1).size());
+  EXPECT_EQ(1u, m.coordinate3dRef(2).size());
+}
+
+// A set that is already one entry too long is not one addAtom() extended, and
+// the entry it has for the next atom is not ours to overwrite.
+TEST(MoleculeCoordinateSetTest, addAtomLeavesAnOverlongCoordinateSetUntouched)
+{
+  Molecule m;
+  m.addAtom(8, Vector3(0.0, 0.0, 0.0));
+  m.addAtom(1, Vector3(1.0, 0.0, 0.0));
+  Array<Vector3> full = m.atomPositions3d();
+  Array<Vector3> overlong(3);
+  overlong[0] = Vector3(0.0, 0.0, 0.1);
+  overlong[1] = Vector3(1.0, 0.0, 0.1);
+  overlong[2] = Vector3(7.0, 7.0, 7.0);
+  m.setCoordinate3d(full, 0);
+  m.setCoordinate3d(overlong, 1);
+
+  m.addAtom(1, Vector3(0.0, 1.0, 0.0));
+  EXPECT_EQ(3u, m.coordinate3dRef(0).size());
+  EXPECT_EQ(Vector3(0.0, 1.0, 0.0), m.coordinate3dRef(0)[2]);
+  EXPECT_EQ(overlong, m.coordinate3dRef(1));
+}
+
+namespace {
+// A molecule with two cubes and two meshes, the second cube active.
+void fillCubesAndMeshes(Molecule& m)
+{
+  for (int i = 0; i < 2; ++i) {
+    Cube* c = m.addCube();
+    c->setLimits(Vector3(0.0, 0.0, 0.0), Vector3i(2 + i, 2, 2), 0.5f);
+    std::vector<float> values(c->data()->size(), 1.0f + static_cast<float>(i));
+    c->setData(values);
+    Mesh* mesh = m.addMesh();
+    Array<Vector3f> verts(3 + i, Vector3f::Zero());
+    mesh->setVertices(verts);
+  }
+  m.setActiveCubeIndex(1);
+}
+
+// b is a copy of a: both share every cube and mesh until one is written.
+void expectSharedThenDetach(const Molecule& a, Molecule& b)
+{
+  const Molecule& ca = a;
+  const Molecule& cb = b;
+  ASSERT_EQ(cb.cubeCount(), ca.cubeCount());
+  ASSERT_EQ(cb.meshCount(), ca.meshCount());
+  for (Index i = 0; i < ca.cubeCount(); ++i)
+    EXPECT_EQ(cb.cube(i), ca.cube(i));
+  for (Index i = 0; i < ca.meshCount(); ++i)
+    EXPECT_EQ(cb.mesh(i), ca.mesh(i));
+
+  const Cube* aCube = ca.cube(0);
+  const Mesh* aMesh = ca.mesh(0);
+
+  // A mutable access detaches only the molecule that asked.
+  Cube* bCube = b.cube(0);
+  EXPECT_NE(bCube, aCube);
+  EXPECT_EQ(ca.cube(0), aCube);
+  EXPECT_EQ(bCube->dimensions(), aCube->dimensions());
+  EXPECT_EQ(*bCube->data(), *aCube->data());
+  (*bCube->data())[0] = 42.0f;
+  EXPECT_FLOAT_EQ((*aCube->data())[0], 1.0f);
+  EXPECT_EQ(cb.cube(1), ca.cube(1)); // the other cube is still shared
+
+  Mesh* bMesh = b.mesh(0);
+  EXPECT_NE(bMesh, aMesh);
+  EXPECT_EQ(ca.mesh(0), aMesh);
+  EXPECT_EQ(bMesh->numVertices(), aMesh->numVertices());
+  bMesh->setVertices(Array<Vector3f>(10, Vector3f::Zero()));
+  EXPECT_EQ(aMesh->numVertices(), 3u);
+  EXPECT_EQ(cb.mesh(1), ca.mesh(1));
+}
+} // namespace
+
+TEST_F(MoleculeTest, copyConstructSharesCubesMeshes)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b(a);
+  EXPECT_EQ(b.activeCubeIndex(), 1u);
+  expectSharedThenDetach(a, b);
+}
+
+TEST_F(MoleculeTest, copyAssignSharesCubesMeshes)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b;
+  b.addCube();
+  b.addMesh();
+  b = a;
+  EXPECT_EQ(b.activeCubeIndex(), 1u);
+  expectSharedThenDetach(a, b);
+}
+
+TEST_F(MoleculeTest, readPropertiesSharesCubesMeshes)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b;
+  b.readProperties(a);
+  expectSharedThenDetach(a, b);
+}
+
+TEST_F(MoleculeTest, activeCubeDetachesOnlyWhenShared)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b(a);
+  const Cube* shared = static_cast<const Molecule&>(a).activeCube();
+  ASSERT_EQ(static_cast<const Molecule&>(b).activeCube(), shared);
+
+  Cube* detached = b.activeCube();
+  EXPECT_NE(detached, shared);
+  EXPECT_EQ(static_cast<const Molecule&>(a).activeCube(), shared);
+  EXPECT_EQ(static_cast<const Molecule&>(b).cube(1), detached);
+  (*detached->data())[0] = 42.0f;
+  EXPECT_FLOAT_EQ((*shared->data())[0], 2.0f);
+
+  // Now b is the sole owner of that cube; a still owns its own copy.
+  EXPECT_EQ(b.activeCube(), detached);
+  EXPECT_EQ(a.activeCube(), shared);
+}
+
+TEST_F(MoleculeTest, cubesDetachesEveryCube)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  Molecule b(a);
+  const Molecule& ca = a;
+  std::vector<Cube*> mine = b.cubes();
+  ASSERT_EQ(mine.size(), 2u);
+  for (Index i = 0; i < 2; ++i) {
+    EXPECT_NE(mine[i], ca.cube(i));
+    EXPECT_EQ(static_cast<const Molecule&>(b).cube(i), mine[i]);
+  }
+  // The const overload never detaches.
+  Molecule c(a);
+  std::vector<const Cube*> peek = static_cast<const Molecule&>(c).cubes();
+  EXPECT_EQ(peek[0], ca.cube(0));
+  EXPECT_EQ(peek[1], ca.cube(1));
+}
+
+TEST_F(MoleculeTest, soleOwnerDoesNotDetach)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  const Cube* c0 = static_cast<const Molecule&>(a).cube(0);
+  const Mesh* m0 = static_cast<const Molecule&>(a).mesh(0);
+  EXPECT_EQ(a.cube(0), c0);
+  EXPECT_EQ(a.mesh(0), m0);
+  EXPECT_EQ(a.cube(0), c0);
+  EXPECT_EQ(a.cubes()[0], c0);
+
+  // Once the only other owner is gone, the survivor is sole again.
+  {
+    Molecule b(a);
+    EXPECT_NE(b.cube(0), c0);
+  }
+  EXPECT_EQ(a.cube(0), c0);
+  EXPECT_EQ(a.mesh(0), m0);
+}
+
+TEST_F(MoleculeTest, heldHandleMakesNextMutableAccessDetach)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  std::shared_ptr<const Cube> cubeHandle = a.sharedCube(0);
+  std::shared_ptr<const Mesh> meshHandle = a.sharedMesh(0);
+  // Taking a handle never detaches.
+  EXPECT_EQ(static_cast<const Molecule&>(a).cube(0), cubeHandle.get());
+
+  Cube* cube = a.cube(0);
+  Mesh* mesh = a.mesh(0);
+  EXPECT_NE(cube, cubeHandle.get());
+  EXPECT_NE(mesh, meshHandle.get());
+  (*cube->data())[0] = 42.0f;
+  mesh->setVertices(Array<Vector3f>(10, Vector3f::Zero()));
+  EXPECT_FLOAT_EQ(cubeHandle->data()->front(), 1.0f);
+  EXPECT_EQ(meshHandle->numVertices(), 3u);
+  EXPECT_FLOAT_EQ(a.sharedCube(0)->data()->front(), 42.0f);
+  EXPECT_EQ(a.sharedMesh(0)->numVertices(), 10u);
+}
+
+TEST_F(MoleculeTest, addCubeTakesOwnership)
+{
+  Molecule m;
+  EXPECT_EQ(m.addCube(std::unique_ptr<Cube>()), nullptr);
+  EXPECT_EQ(m.cubeCount(), 0u);
+
+  auto cube = std::make_unique<Cube>();
+  Cube* raw = cube.get();
+  EXPECT_EQ(m.addCube(std::move(cube)), raw);
+  EXPECT_EQ(m.cubeCount(), 1u);
+  EXPECT_EQ(m.cube(0), raw);
+}
+
+TEST_F(MoleculeTest, setCubeReplaces)
+{
+  Molecule m;
+  Cube* first = m.addCube();
+  m.addCube();
+  m.setActiveCubeIndex(1);
+
+  auto cube = std::make_unique<Cube>();
+  Cube* raw = cube.get();
+  EXPECT_TRUE(m.setCube(0, std::move(cube)));
+  EXPECT_EQ(m.cube(0), raw);
+  EXPECT_NE(m.cube(0), first);
+  EXPECT_EQ(m.cubeCount(), 2u);
+  EXPECT_EQ(m.activeCubeIndex(), 1u);
+
+  EXPECT_FALSE(m.setCube(2, std::make_unique<Cube>()));
+  EXPECT_FALSE(m.setCube(0, std::unique_ptr<Cube>()));
+  EXPECT_EQ(m.cube(0), raw);
+  EXPECT_EQ(m.cubeCount(), 2u);
+}
+
+TEST_F(MoleculeTest, addMeshTakesOwnership)
+{
+  Molecule m;
+  EXPECT_EQ(m.addMesh(std::unique_ptr<Mesh>()), nullptr);
+  EXPECT_EQ(m.meshCount(), 0u);
+
+  auto mesh = std::make_unique<Mesh>();
+  Mesh* raw = mesh.get();
+  EXPECT_EQ(m.addMesh(std::move(mesh)), raw);
+  EXPECT_EQ(m.meshCount(), 1u);
+  EXPECT_EQ(m.mesh(0), raw);
+}
+
+TEST_F(MoleculeTest, setMeshReplaces)
+{
+  Molecule m;
+  Mesh* first = m.addMesh();
+
+  auto mesh = std::make_unique<Mesh>();
+  Mesh* raw = mesh.get();
+  EXPECT_TRUE(m.setMesh(0, std::move(mesh)));
+  EXPECT_EQ(m.mesh(0), raw);
+  EXPECT_NE(m.mesh(0), first);
+  EXPECT_EQ(m.meshCount(), 1u);
+
+  EXPECT_FALSE(m.setMesh(1, std::make_unique<Mesh>()));
+  EXPECT_FALSE(m.setMesh(0, std::unique_ptr<Mesh>()));
+  EXPECT_EQ(m.mesh(0), raw);
+  EXPECT_EQ(m.meshCount(), 1u);
+}
+
+TEST_F(MoleculeTest, moveTransfersCubesAndMeshes)
+{
+  Molecule a;
+  fillCubesAndMeshes(a);
+  const Cube* c0 = a.cube(0);
+  const Cube* c1 = a.cube(1);
+  const Mesh* m0 = a.mesh(0);
+  const Mesh* m1 = a.mesh(1);
+
+  Molecule b(std::move(a));
+  EXPECT_EQ(b.cube(0), c0);
+  EXPECT_EQ(b.cube(1), c1);
+  EXPECT_EQ(b.mesh(0), m0);
+  EXPECT_EQ(b.mesh(1), m1);
+  EXPECT_EQ(a.cubeCount(), 0u);
+  EXPECT_EQ(a.meshCount(), 0u);
+
+  Molecule c;
+  c = std::move(b);
+  EXPECT_EQ(c.cube(0), c0);
+  EXPECT_EQ(c.cube(1), c1);
+  EXPECT_EQ(c.mesh(0), m0);
+  EXPECT_EQ(c.mesh(1), m1);
+  EXPECT_EQ(b.cubeCount(), 0u);
+  EXPECT_EQ(b.meshCount(), 0u);
+}
+
+TEST_F(MoleculeTest, clearCubesResetsActiveIndex)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  EXPECT_EQ(m.activeCubeIndex(), 1u);
+  m.clearCubes();
+  EXPECT_EQ(m.cubeCount(), 0u);
+  EXPECT_EQ(m.activeCubeIndex(), 0u);
+  EXPECT_EQ(m.activeCube(), nullptr);
+}
+
+TEST_F(MoleculeTest, sharedCubeSurvivesClearAndReplace)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  const Cube* raw = m.cube(1);
+  std::shared_ptr<const Cube> handle = m.sharedCube(1);
+  ASSERT_EQ(handle.get(), raw);
+  EXPECT_EQ(m.sharedCube(2), nullptr);
+  EXPECT_EQ(m.sharedCube(Avogadro::MaxIndex), nullptr);
+
+  // Replaced in place: the handle still holds the old cube and its data.
+  EXPECT_TRUE(m.setCube(1, std::make_unique<Cube>()));
+  EXPECT_NE(m.cube(1), raw);
+  EXPECT_EQ(handle->dimensions(), Vector3i(3, 2, 2));
+  EXPECT_EQ(handle->data()->front(), 2.0f);
+
+  // Cleared: still alive, and a handle taken before the clear outlives it.
+  std::shared_ptr<const Cube> first = m.sharedCube(0);
+  m.clearCubes();
+  EXPECT_EQ(m.sharedCube(0), nullptr);
+  ASSERT_NE(first, nullptr);
+  EXPECT_EQ(first->dimensions(), Vector3i(2, 2, 2));
+  EXPECT_EQ(first->data()->front(), 1.0f);
+  EXPECT_EQ(handle->data()->size(), 12u);
+}
+
+TEST_F(MoleculeTest, sharedMeshSurvivesClearAndReplace)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  const Mesh* raw = m.mesh(1);
+  std::shared_ptr<const Mesh> handle = m.sharedMesh(1);
+  ASSERT_EQ(handle.get(), raw);
+  EXPECT_EQ(m.sharedMesh(2), nullptr);
+  EXPECT_EQ(m.sharedMesh(Avogadro::MaxIndex), nullptr);
+
+  EXPECT_TRUE(m.setMesh(1, std::make_unique<Mesh>()));
+  EXPECT_NE(m.mesh(1), raw);
+  EXPECT_EQ(handle->numVertices(), 4u);
+
+  std::shared_ptr<const Mesh> first = m.sharedMesh(0);
+  m.clearMeshes();
+  EXPECT_EQ(m.sharedMesh(0), nullptr);
+  ASSERT_NE(first, nullptr);
+  EXPECT_EQ(first->numVertices(), 3u);
+  EXPECT_EQ(handle->numVertices(), 4u);
+}
+
+TEST_F(MoleculeTest, sharedHandlesFromConstMolecule)
+{
+  Molecule m;
+  fillCubesAndMeshes(m);
+  const Molecule& cm = m;
+  std::shared_ptr<const Cube> cube = cm.sharedCube(0);
+  std::shared_ptr<const Mesh> mesh = cm.sharedMesh(1);
+  EXPECT_EQ(cube.get(), cm.cube(0));
+  EXPECT_EQ(mesh.get(), cm.mesh(1));
+
+  // The handles keep the objects alive past the molecule itself.
+  auto owner = std::make_unique<Molecule>(m);
+  cube = static_cast<const Molecule&>(*owner).sharedCube(1);
+  mesh = static_cast<const Molecule&>(*owner).sharedMesh(0);
+  owner.reset();
+  ASSERT_NE(cube, nullptr);
+  ASSERT_NE(mesh, nullptr);
+  EXPECT_EQ(cube->data()->front(), 2.0f);
+  EXPECT_EQ(mesh->numVertices(), 3u);
+
+  const Molecule empty;
+  EXPECT_EQ(empty.sharedCube(0), nullptr);
+  EXPECT_EQ(empty.sharedMesh(0), nullptr);
+}
+
+namespace {
+using Avogadro::Core::BasisSet;
+using Avogadro::Core::GaussianSet;
+
+// Three atoms with two coordinate sets, and a two-function Gaussian basis set
+// whose MO set has one matrix per coordinate set.
+void fillBasisSet(Molecule& m)
+{
+  for (int i = 0; i < 3; ++i)
+    m.addAtom(6);
+  Array<Vector3> first(3, Vector3::Zero());
+  Array<Vector3> second(3, Vector3(1.0, 2.0, 3.0));
+  m.setCoordinate3d(first, 0);
+  m.setCoordinate3d(second, 1);
+  m.setCoordinate3d(0);
+
+  auto* basis = new GaussianSet;
+  basis->setMolecule(&m);
+  basis->addBasis(0, GaussianSet::S);
+  basis->addBasis(2, GaussianSet::S);
+  const std::vector<double> identity = { 1.0, 0.0, 0.0, 1.0 };
+  const std::vector<double> swapped = { 0.0, 1.0, 1.0, 0.0 };
+  basis->setMolecularOrbitals(identity);
+  for (auto type : { BasisSet::Alpha, BasisSet::Beta }) {
+    basis->setMolecularOrbitals(identity, type, 0);
+    basis->setMolecularOrbitals(swapped, type, 1);
+  }
+  m.setBasisSet(basis);
+}
+
+const GaussianSet* constGaussian(const Molecule& m)
+{
+  return dynamic_cast<const GaussianSet*>(m.basisSet());
+}
+
+GaussianSet* mutableGaussian(Molecule& m)
+{
+  return dynamic_cast<GaussianSet*>(m.basisSet());
+}
+} // namespace
+
+TEST_F(MoleculeTest, copySharesBasisSetAndMutableAccessDetaches)
+{
+  Molecule a;
+  fillBasisSet(a);
+  const GaussianSet* shared = constGaussian(a);
+  ASSERT_NE(shared, nullptr);
+
+  Molecule b(a);
+  EXPECT_EQ(constGaussian(b), shared);
+
+  GaussianSet* mine = mutableGaussian(b);
+  ASSERT_NE(mine, nullptr);
+  EXPECT_NE(mine, shared);
+  EXPECT_EQ(mine->molecule(), &b);
+  EXPECT_EQ(constGaussian(a), shared);
+  EXPECT_EQ(shared->molecule(), &a);
+
+  // Stepping b's MO set changes b's matrix and b's geometry, not a's.
+  ASSERT_TRUE(mine->setActiveSetStep(1));
+  EXPECT_DOUBLE_EQ(mine->moMatrix()(0, 0), 0.0);
+  EXPECT_DOUBLE_EQ(shared->moMatrix()(0, 0), 1.0);
+  EXPECT_EQ(b.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+  EXPECT_EQ(a.atomPosition3d(0), Vector3::Zero());
+
+  // b is now the sole owner of its copy, and a of the original.
+  EXPECT_EQ(mutableGaussian(b), mine);
+  EXPECT_EQ(mutableGaussian(a), shared);
+}
+
+TEST_F(MoleculeTest, copyAssignAndReadPropertiesShareBasisSet)
+{
+  Molecule a;
+  fillBasisSet(a);
+  const BasisSet* shared = std::as_const(a).basisSet();
+
+  Molecule assigned;
+  assigned.setBasisSet(new GaussianSet);
+  assigned = a;
+  EXPECT_EQ(std::as_const(assigned).basisSet(), shared);
+
+  Molecule read;
+  read.readProperties(a);
+  EXPECT_EQ(std::as_const(read).basisSet(), shared);
+
+  // Each writer detaches only its own side.
+  EXPECT_NE(assigned.basisSet(), shared);
+  EXPECT_NE(read.basisSet(), shared);
+  EXPECT_NE(std::as_const(read).basisSet(), std::as_const(assigned).basisSet());
+  EXPECT_EQ(std::as_const(a).basisSet(), shared);
+}
+
+// The source of a copy can go away while the copy still shares (and then
+// solely owns) the basis set. Its molecule() would dangle; the mutable
+// accessor has to repoint it before anything dereferences it.
+TEST_F(MoleculeTest, basisSetBackPointerSurvivesTheSourceGoingAway)
+{
+  Molecule assigned;
+  {
+    Molecule temporary;
+    fillBasisSet(temporary);
+    assigned = temporary;
+  }
+  GaussianSet* basis = mutableGaussian(assigned);
+  ASSERT_NE(basis, nullptr);
+  EXPECT_EQ(basis->molecule(), &assigned);
+  EXPECT_TRUE(basis->setActiveSetStep(1));
+  EXPECT_EQ(assigned.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+
+  auto source = std::make_unique<Molecule>();
+  fillBasisSet(*source);
+  Molecule copied(*source);
+  source.reset();
+  basis = mutableGaussian(copied);
+  ASSERT_NE(basis, nullptr);
+  EXPECT_EQ(basis->molecule(), &copied);
+  EXPECT_TRUE(basis->setActiveSetStep(1));
+  EXPECT_EQ(copied.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+}
+
+TEST_F(MoleculeTest, basisSetSoleOwnerDoesNotDetach)
+{
+  Molecule a;
+  fillBasisSet(a);
+  const BasisSet* own = std::as_const(a).basisSet();
+  EXPECT_EQ(a.basisSet(), own);
+  EXPECT_EQ(a.basisSet(), own);
+
+  {
+    Molecule b(a);
+    EXPECT_NE(b.basisSet(), own);
+  }
+  EXPECT_EQ(a.basisSet(), own);
+}
+
+TEST_F(MoleculeTest, sharedBasisSetHandleMakesNextMutableAccessDetach)
+{
+  Molecule a;
+  fillBasisSet(a);
+  std::shared_ptr<const BasisSet> handle = a.sharedBasisSet();
+  // Taking a handle never detaches.
+  EXPECT_EQ(std::as_const(a).basisSet(), handle.get());
+
+  GaussianSet* mine = mutableGaussian(a);
+  ASSERT_NE(mine, nullptr);
+  EXPECT_NE(mine, handle.get());
+  ASSERT_TRUE(mine->setActiveSetStep(1));
+  const auto* held = dynamic_cast<const GaussianSet*>(handle.get());
+  ASSERT_NE(held, nullptr);
+  EXPECT_DOUBLE_EQ(held->moMatrix()(0, 0), 1.0);
+  EXPECT_DOUBLE_EQ(mine->moMatrix()(0, 0), 0.0);
+
+  // The handle keeps the old basis set alive past its molecule.
+  auto owner = std::make_unique<Molecule>(a);
+  handle = std::as_const(*owner).sharedBasisSet();
+  owner.reset();
+  ASSERT_NE(handle, nullptr);
+  EXPECT_EQ(handle->molecularOrbitalCount(), 2u);
+
+  const Molecule empty;
+  EXPECT_EQ(empty.sharedBasisSet(), nullptr);
+}
+
+TEST_F(MoleculeTest, swapAtomDetachesASharedBasisSet)
+{
+  Molecule a;
+  fillBasisSet(a);
+  Molecule b(a);
+  b.swapAtom(0, 2);
+
+  const std::vector<unsigned int> original = { 0, 2 };
+  const std::vector<unsigned int> swappedIndices = { 2, 0 };
+  EXPECT_EQ(constGaussian(a)->atomIndices(), original);
+  EXPECT_EQ(constGaussian(b)->atomIndices(), swappedIndices);
+  EXPECT_NE(constGaussian(a), constGaussian(b));
+}
+
+TEST_F(MoleculeTest, copiesShareBasisSetWithoutCloning)
+{
+  ASSERT_EQ(CountingBasisSet::liveCount, 0);
+  {
+    Molecule a;
+    a.setBasisSet(new CountingBasisSet);
+    Molecule b(a);
+    Molecule c;
+    c = b;
+    EXPECT_EQ(CountingBasisSet::liveCount, 1);
+    ASSERT_NE(c.basisSet(), nullptr);
+    EXPECT_EQ(CountingBasisSet::liveCount, 2);
+  }
+  EXPECT_EQ(CountingBasisSet::liveCount, 0);
 }

@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/cartoongeometry.h>
@@ -166,6 +167,83 @@ TEST(TessellatingVisitorTest, twoColourCylinder)
   EXPECT_GT(atEnd1, static_cast<size_t>(0));
 }
 
+namespace {
+
+size_t countMixedTriangles(const TessellatedMesh& mesh)
+{
+  size_t mixed = 0;
+  for (size_t i = 0; i + 2 < mesh.indices.size(); i += 3) {
+    const Vector4ub& c = mesh.colors[mesh.indices[i]];
+    if (c != mesh.colors[mesh.indices[i + 1]] ||
+        c != mesh.colors[mesh.indices[i + 2]])
+      ++mixed;
+  }
+  return mixed;
+}
+
+} // namespace
+
+TEST(TessellatingVisitorTest, splitCylinderHasUniformTriangles)
+{
+  CylinderGeometry cylinders;
+  const Vector3ub red(255, 0, 0), blue(0, 0, 255);
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 2), 0.5f, red, blue);
+
+  TessellatingVisitor gradient;
+  gradient.setCylinderSides(12);
+  EXPECT_EQ(gradient.cylinderColoring(),
+            TessellatingVisitor::CylinderColoring::Gradient);
+  cylinders.accept(gradient);
+  ASSERT_EQ(gradient.meshes().size(), static_cast<size_t>(1));
+  const auto& g = gradient.meshes()[0];
+  EXPECT_GT(countMixedTriangles(g), static_cast<size_t>(0));
+
+  TessellatingVisitor split;
+  split.setCylinderSides(12);
+  split.setCylinderColoring(TessellatingVisitor::CylinderColoring::Split);
+  cylinders.accept(split);
+  ASSERT_EQ(split.meshes().size(), static_cast<size_t>(1));
+  const auto& mesh = split.meshes()[0];
+  expectWellFormed(mesh);
+  expectOutwardWinding(mesh);
+  EXPECT_TRUE(mesh.closed);
+  EXPECT_EQ(countMixedTriangles(mesh), static_cast<size_t>(0));
+
+  // Same extent along the axis; the colour changes at the midpoint.
+  Vector3f lo, hi, glo, ghi;
+  ASSERT_TRUE(split.bounds(lo, hi));
+  ASSERT_TRUE(gradient.bounds(glo, ghi));
+  EXPECT_EQ(lo, glo);
+  EXPECT_EQ(hi, ghi);
+  size_t atMiddle = 0;
+  for (size_t i = 0; i < mesh.positions.size(); ++i) {
+    const float z = mesh.positions[i][2];
+    if (std::abs(z - 1.0f) < 1e-6f)
+      ++atMiddle;
+    else
+      EXPECT_EQ(mesh.colors[i], z < 1.0f ? Vector4ub(255, 0, 0, 255)
+                                         : Vector4ub(0, 0, 255, 255));
+  }
+  // Two rings at the midpoint (one per half), and no cap there.
+  EXPECT_EQ(atMiddle, static_cast<size_t>(24));
+  // The gradient version has the same triangle count minus nothing but the
+  // second half's rings: 2 * 12 side triangles per half.
+  EXPECT_EQ(mesh.indices.size(), g.indices.size() + 12 * 2 * 3);
+
+  // A single-colour cylinder is unaffected by the setting.
+  CylinderGeometry same;
+  same.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 2), 0.5f, red, red);
+  TessellatingVisitor a, b;
+  a.setCylinderSides(12);
+  b.setCylinderSides(12);
+  b.setCylinderColoring(TessellatingVisitor::CylinderColoring::Split);
+  same.accept(a);
+  same.accept(b);
+  ASSERT_EQ(a.meshes().size(), static_cast<size_t>(1));
+  EXPECT_EQ(a.meshes()[0].positions, b.meshes()[0].positions);
+  EXPECT_EQ(a.meshes()[0].indices, b.meshes()[0].indices);
+}
+
 TEST(TessellatingVisitorTest, cylinderAnyAxis)
 {
   // Axes along and against each coordinate axis, and diagonal.
@@ -264,6 +342,158 @@ TEST(TessellatingVisitorTest, meshOutOfRangeTrianglesDropped)
   mesh.accept(visitor);
   ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
   EXPECT_EQ(visitor.meshes()[0].indices.size(), static_cast<size_t>(3));
+}
+
+TEST(TessellatingVisitorTest, meshDataIsSanitised)
+{
+  const float nan = std::nanf("");
+  Array<Vector3f> vertices, normals;
+  vertices.push_back(Vector3f(0, 0, 0));
+  vertices.push_back(Vector3f(1, 0, 0));
+  vertices.push_back(Vector3f(0, 1, 0));
+  vertices.push_back(Vector3f(nan, 1, 1)); // not finite
+  normals.push_back(Vector3f(0, 0, 3));    // not unit length
+  normals.push_back(Vector3f(0, 0, 0));    // degenerate
+  normals.push_back(Vector3f(nan, 0, 1));  // not finite
+  normals.push_back(Vector3f(0, 0, 1));
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 1, 2);
+  mesh.addTriangle(0, 2, 3); // uses the vertex with a NaN position
+  mesh.addTriangle(0, 1, 9); // out of range
+
+  TessellatingVisitor visitor;
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  const TessellatedMesh& result = visitor.meshes()[0];
+  expectWellFormed(result);
+  EXPECT_EQ(result.indices.size(), static_cast<size_t>(3));
+  for (const auto& n : result.normals)
+    EXPECT_NEAR(n.norm(), 1.0f, 1e-6f);
+  EXPECT_TRUE(result.normals[0].isApprox(Vector3f(0, 0, 1)));
+  EXPECT_TRUE(result.normals[1].isApprox(Vector3f(0, 0, 1)));
+  EXPECT_TRUE(result.normals[2].isApprox(Vector3f(0, 0, 1)));
+  // Dropping triangles also drops the vertices only they used (the bad one),
+  // and the surface can no longer be called closed.
+  EXPECT_EQ(result.positions.size(), static_cast<size_t>(3));
+  EXPECT_FALSE(result.closed);
+  Vector3f minimum, maximum;
+  ASSERT_TRUE(visitor.bounds(minimum, maximum));
+  EXPECT_EQ(minimum, Vector3f(0, 0, 0));
+  EXPECT_EQ(maximum, Vector3f(1, 1, 0));
+}
+
+TEST(TessellatingVisitorTest, sanitizeCompactsAndRemaps)
+{
+  // Vertex 1 is only used by a dropped triangle; the others keep their order.
+  Array<Vector3f> vertices, normals;
+  for (int i = 0; i < 4; ++i) {
+    vertices.push_back(Vector3f(static_cast<float>(i), 0, 0));
+    normals.push_back(Vector3f(0, 0, 1));
+  }
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 2, 3);
+  mesh.addTriangle(0, 1, 7); // out of range
+  TessellatingVisitor visitor;
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  const TessellatedMesh& result = visitor.meshes()[0];
+  ASSERT_EQ(result.positions.size(), static_cast<size_t>(3));
+  EXPECT_EQ(result.positions[0], Vector3f(0, 0, 0));
+  EXPECT_EQ(result.positions[1], Vector3f(2, 0, 0));
+  EXPECT_EQ(result.positions[2], Vector3f(3, 0, 0));
+  ASSERT_EQ(result.indices.size(), static_cast<size_t>(3));
+  EXPECT_EQ(result.indices[0], 0u);
+  EXPECT_EQ(result.indices[1], 1u);
+  EXPECT_EQ(result.indices[2], 2u);
+
+  // Nothing dropped: unreferenced vertices stay, nothing is renumbered.
+  MeshGeometry whole;
+  whole.addVertices(vertices, normals);
+  whole.addTriangle(0, 2, 3);
+  TessellatingVisitor other;
+  whole.accept(other);
+  ASSERT_EQ(other.meshes().size(), static_cast<size_t>(1));
+  EXPECT_EQ(other.meshes()[0].positions.size(), static_cast<size_t>(4));
+  EXPECT_EQ(other.meshes()[0].indices[2], 3u);
+}
+
+TEST(TessellatingVisitorTest, splitShortCylinderFallsBackToGradient)
+{
+  // About 1.5 * the minimum length: each half is too short for a tube, but
+  // the cylinder itself is not.
+  CylinderGeometry cylinders;
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 1.5e-6f), 0.5f,
+                        Vector3ub(255, 0, 0), Vector3ub(0, 0, 255));
+  TessellatingVisitor visitor;
+  visitor.setCylinderColoring(TessellatingVisitor::CylinderColoring::Split);
+  cylinders.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(1));
+  expectWellFormed(visitor.meshes()[0]);
+}
+
+TEST(TessellatingVisitorTest, closedMeshes)
+{
+  SphereGeometry spheres;
+  spheres.addSphere(Vector3f(0, 0, 0), Vector3ub(1, 2, 3), 1.0f);
+  CylinderGeometry cylinders;
+  cylinders.addCylinder(Vector3f(0, 0, 0), Vector3f(2, 0, 0), 0.2f,
+                        Vector3ub(1, 2, 3), Vector3ub(1, 2, 3));
+  Array<Vector3f> vertices, normals;
+  for (int i = 0; i < 3; ++i) {
+    vertices.push_back(Vector3f(i, 0, 0));
+    normals.push_back(Vector3f(0, 0, 1));
+  }
+  MeshGeometry mesh;
+  mesh.addVertices(vertices, normals);
+  mesh.addTriangle(0, 1, 2);
+
+  TessellatingVisitor visitor;
+  spheres.accept(visitor);
+  cylinders.accept(visitor);
+  mesh.accept(visitor);
+  ASSERT_EQ(visitor.meshes().size(), static_cast<size_t>(3));
+  EXPECT_TRUE(visitor.meshes()[0].closed);
+  EXPECT_TRUE(visitor.meshes()[1].closed);
+  EXPECT_FALSE(visitor.meshes()[2].closed);
+}
+
+TEST(TessellatingVisitorTest, exportTransform)
+{
+  TessellatingVisitor visitor;
+  EXPECT_EQ(visitor.offset(), Vector3f::Zero());
+  EXPECT_EQ(visitor.scale(), 1.0f);
+  visitor.setOffset(Vector3f(1, std::nanf(""), 3));
+  EXPECT_EQ(visitor.offset(), Vector3f(1, 0, 3));
+  visitor.setScale(TessellatingVisitor::MolecularNodesScale);
+  EXPECT_EQ(visitor.scale(), 0.1f);
+  for (float bad : { 0.0f, -1.0f, std::nanf(""), INFINITY }) {
+    visitor.setScale(bad);
+    EXPECT_EQ(visitor.scale(), 0.1f);
+  }
+}
+
+TEST(TessellatingVisitorTest, centerOnMolecule)
+{
+  SphereGeometry spheres;
+  spheres.addSphere(Vector3f(10, 0, 0), Vector3ub(1, 2, 3), 1.0f);
+  TessellatingVisitor visitor;
+  spheres.accept(visitor);
+
+  // Without atoms: the middle of the bounding box.
+  Avogadro::Core::Molecule empty;
+  visitor.centerOn(&empty);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(10, 0, 0), 1e-5f));
+  visitor.centerOn(nullptr);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(10, 0, 0), 1e-5f));
+
+  // With atoms: their center of geometry, wherever the geometry is.
+  Avogadro::Core::Molecule molecule;
+  molecule.addAtom(1).setPosition3d(Avogadro::Vector3(0, 0, 0));
+  molecule.addAtom(1).setPosition3d(Avogadro::Vector3(2, 4, 6));
+  visitor.centerOn(&molecule);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(1, 2, 3), 1e-6f));
 }
 
 TEST(TessellatingVisitorTest, dashedLinesOneTubePerDash)
@@ -496,4 +726,19 @@ TEST(TessellatingVisitorTest, adaptiveCylinderSides)
   EXPECT_EQ(visitor.cylinderSidesForRadius(5.0f), 6u);
   visitor.useAdaptiveCylinders();
   EXPECT_EQ(visitor.cylinderSidesForRadius(5.0f), 23u);
+}
+
+TEST(TessellatingVisitorTest, centerOnWithoutPositions)
+{
+  SphereGeometry spheres;
+  spheres.addSphere(Vector3f(10, 0, 0), Vector3ub(1, 2, 3), 1.0f);
+  TessellatingVisitor visitor;
+  spheres.accept(visitor);
+
+  // Atoms but no coordinates: fall back to the bounds, not the origin.
+  Avogadro::Core::Molecule molecule;
+  molecule.addAtom(1);
+  molecule.atomPositions3d().clear();
+  visitor.centerOn(&molecule);
+  EXPECT_TRUE(visitor.offset().isApprox(Vector3f(10, 0, 0), 1e-5f));
 }

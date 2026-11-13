@@ -16,8 +16,7 @@
 #include <map>
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class Camera;
 class Drawable;
@@ -99,7 +98,7 @@ protected:
   std::vector<Drawable*> m_drawables;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_GEOMETRYNODE_H

@@ -71,6 +71,10 @@ public:
    * Threads can call this concurrently with non-overlapping i ranges; each
    * slab maps to a contiguous region of the cube buffer so writes never
    * conflict. Out-of-range bounds are clamped to [0, nx).
+   *
+   * The slab functions read only the basis set the tools were built from,
+   * not the molecule's current one, so the caller must keep that basis set
+   * alive (e.g. with Molecule::sharedBasisSet()) and check isValid() first.
    * @return True on success, false on failure.
    */
   bool calculateMolecularOrbitalSlab(Cube& cube, int molecularOrbitalNumber,
@@ -138,7 +142,7 @@ public:
 
 private:
   Molecule* m_molecule;
-  GaussianSet* m_basis;
+  GaussianSet* m_basis = nullptr;
   BasisSet::ElectronType m_type = BasisSet::Paired;
 
   // Pre-packed shell data built once in the constructor
@@ -146,9 +150,16 @@ private:
   // Local contiguous copies of exponents and normalized coefficients
   std::vector<double> m_gtoA;
   std::vector<double> m_gtoCN;
+  // False if buildShellData() rejected the basis set as inconsistent
+  bool m_valid = true;
+  // Rows an MO or density matrix needs to cover every evaluated shell
+  size_t m_requiredRows = 0;
 
   // Build m_shells and local coefficient copies from GaussianSet
   void buildShellData();
+
+  // True if the matrix has a row for every basis function the shells use
+  bool moMatrixFits(const MatrixX& moMat) const;
 
   // Calculate cutoff distance for a single shell
   double calculateShellCutoff(const ShellInfo& shell) const;
@@ -159,10 +170,11 @@ private:
   bool calculateMolecularOrbitalGrid(Cube& cube, int moNumber) const;
   bool calculateElectronDensityGrid(Cube& cube) const;
 
+  // Returns false (writing nothing) if moMat or moIndex do not fit the shells.
   // Evaluate a single MO into an x-slab [iStart, iEnd) of a double-precision
   // grid buffer. The buffer is sized (iEnd - iStart) * ny * nz and indexed
   // via (i - iStart) * ny * nz + j * nz + k inside the shell evaluators.
-  void evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
+  bool evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
                       const Vector3& spBohr, const std::vector<double>& gridX,
                       const std::vector<double>& gridY,
                       const std::vector<double>& gridZ, int nx, int ny, int nz,
@@ -170,7 +182,7 @@ private:
 
   // Backwards-compatible overload of evaluateMOGrid: equivalent to passing
   // iStart=0, iEnd=nx (full grid).
-  void evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
+  bool evaluateMOGrid(int moIndex, const MatrixX& moMat, const Vector3& minBohr,
                       const Vector3& spBohr, const std::vector<double>& gridX,
                       const std::vector<double>& gridY,
                       const std::vector<double>& gridZ, int nx, int ny, int nz,

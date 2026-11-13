@@ -8,6 +8,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QProcess>
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QStringList>
 #include <QtCore/QVersionNumber>
@@ -190,6 +191,15 @@ void setDialogsSkipped(bool skipped)
 {
   if (QCoreApplication* app = QCoreApplication::instance())
     app->setProperty(skipDialogsProperty, skipped);
+}
+
+bool runVideoEncoder(const QStringList& arguments)
+{
+  // QProcess::execute() returns -2 when the program cannot be started.
+  int result = QProcess::execute("ffmpeg", arguments);
+  if (result == -2)
+    result = QProcess::execute("avconv", arguments);
+  return result != -2;
 }
 
 } // namespace Avogadro::QtGui::Utilities

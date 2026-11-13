@@ -278,7 +278,7 @@ QWidget* AutoOpt::toolWidget() const
     // check the methods for this molecule
     auto mol = m_molecule->molecule();
     auto list = Calc::EnergyManager::instance().identifiersForMolecule(mol);
-    for (auto option : list) {
+    for (const auto& option : list) {
       methodComboBox->addItem(option.c_str());
     }
 
@@ -341,9 +341,9 @@ void AutoOpt::taskChanged(int index)
 {
   m_task = index;
 
-  auto temperatureSpinBox =
+  auto* temperatureSpinBox =
     m_toolWidget->findChild<QDoubleSpinBox*>("temperatureSpinBox");
-  auto timeStepSpinBox =
+  auto* timeStepSpinBox =
     m_toolWidget->findChild<QDoubleSpinBox*>("timeStepSpinBox");
 
   bool enabled = (index == 1);
@@ -394,7 +394,7 @@ void AutoOpt::start()
 
   // make sure method is set
   if (m_toolWidget) {
-    auto comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
+    auto* comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
     QString currentMethod = comboBox->currentText();
     m_currentMethod = currentMethod.toStdString();
   }
@@ -820,35 +820,43 @@ QUndoCommand* AutoOpt::keyPressEvent(QKeyEvent* e)
   if (m_molecule == nullptr)
     return nullptr;
 
+  // Translation step in Angstroms
+  double transStep = 0.1;
+  if (e->modifiers() & Qt::AltModifier)
+    transStep = 0.5;
+
+  bool moved = true;
   switch (e->key()) {
     case Qt::Key_Left:
     case Qt::Key_H:
     case Qt::Key_A:
-      translate(Vector3(-0.1, 0.0, 0.0));
-      e->accept();
+      translate(Vector3(-transStep, 0.0, 0.0));
       break;
     case Qt::Key_Right:
     case Qt::Key_L:
     case Qt::Key_D:
-      translate(Vector3(+0.1, 0.0, 0.0));
-      e->accept();
+      translate(Vector3(+transStep, 0.0, 0.0));
       break;
     case Qt::Key_Up:
     case Qt::Key_K:
     case Qt::Key_W:
-      translate(Vector3(0.0, +0.1, 0.0));
-      e->accept();
+      translate(Vector3(0.0, +transStep, 0.0));
       break;
     case Qt::Key_Down:
     case Qt::Key_J:
     case Qt::Key_S:
-      translate(Vector3(0.0, -0.1, 0.0));
-      e->accept();
+      translate(Vector3(0.0, -transStep, 0.0));
       break;
     default:
-      e->ignore();
+      moved = false;
   }
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+
+  if (moved) {
+    e->accept();
+    m_molecule->emitChanged(Molecule::Atoms | Molecule::Modified);
+  } else {
+    e->ignore();
+  }
   return nullptr;
 }
 

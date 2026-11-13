@@ -3,7 +3,7 @@ avogadro_plugin(CopyPaste
   ExtensionPlugin
   copypaste.h
   CopyPaste
-  "copypaste.cpp"
+  "copypaste.cpp;copyasdialog.cpp"
   ""
 )
 

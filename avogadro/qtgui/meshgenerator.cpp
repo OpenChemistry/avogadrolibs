@@ -45,7 +45,7 @@ MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
     m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
   liveGenerators().insert(this);
-  initialize(cube_, mesh_, iso, passes);
+  initialize(cube_, mesh_, iso, passes, reverse);
 }
 
 MeshGenerator::~MeshGenerator()
@@ -549,10 +549,17 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
   }
 }
 
+bool MeshGenerator::isDone() const noexcept
+{
+  return m_done.load(std::memory_order_acquire);
+}
+
 void MeshGenerator::run()
 {
+  m_done.store(false, std::memory_order_relaxed);
   if (!m_cube || !m_mesh) {
     qDebug() << "No mesh or cube set - nothing to find isosurface of…";
+    m_done.store(true, std::memory_order_release);
     return;
   }
 
@@ -564,6 +571,14 @@ void MeshGenerator::run()
   FlyingEdgesAlgorithmPass2();
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
+
+  // The triangle winding (and so the face normals that smoothing computes)
+  // flips when the winding is reversed, so the gradient normals must flip
+  // with it to give the same lighting for any number of smoothing passes.
+  if (m_reverseWinding) {
+    for (auto& normal : m_normals)
+      normal = -normal;
+  }
 
   m_mesh->setVertices(m_vertices);
   m_mesh->setNormals(m_normals);
@@ -579,6 +594,9 @@ void MeshGenerator::run()
   cubeCases.resize(0);
   gridEdges.resize(0);
   triCounter.resize(0);
+
+  // Last, so the writes above are ordered before isDone() returns true.
+  m_done.store(true, std::memory_order_release);
 }
 
 void MeshGenerator::clear()
@@ -740,6 +758,8 @@ const unsigned char MeshGenerator::m_numTris[256] = {
   // clang-format on
 };
 
+// 0/1 keeps the 256x12 table readable.
+// NOLINTBEGIN(modernize-use-bool-literals)
 const bool MeshGenerator::m_isCut[256][12] = {
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0 },
@@ -998,6 +1018,7 @@ const bool MeshGenerator::m_isCut[256][12] = {
   { 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0 },
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
+// NOLINTEND(modernize-use-bool-literals)
 
 const signed char MeshGenerator::m_caseTriangles[256][16]{
   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },

@@ -62,6 +62,12 @@ runs:
   # CMake >= 3.17 initialises CMAKE_<LANG>_COMPILER_LAUNCHER from the
   # environment, so every subproject picks the launcher up. That is also why
   # restore mode must run before the Configure step.
+  #
+  # SCCACHE_IDLE_TIMEOUT=0: sccache's server exits after 600 s idle by
+  # default. In the fuzz job the build is followed by ~47 minutes of fuzzing,
+  # so "Show sccache statistics" started a fresh server and printed zeros. 0
+  # keeps the server (and its stats) alive until the save step's
+  # --stop-server.
   - name: Configure sccache
     if: inputs.mode == 'restore'
     shell: bash
@@ -72,6 +78,7 @@ runs:
       {
         echo "SCCACHE_DIR=${WORKSPACE}/.sccache"
         echo "SCCACHE_CACHE_SIZE=${CACHE_SIZE}"
+        echo "SCCACHE_IDLE_TIMEOUT=0"
         echo "CMAKE_C_COMPILER_LAUNCHER=sccache"
         echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache"
       } >> "$GITHUB_ENV"

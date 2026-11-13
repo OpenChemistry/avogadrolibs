@@ -76,7 +76,7 @@ jobs:
     # windows_arm64 host and the native win64_msvc2022_arm64 build, rather
     # than the cross-compiled one whose host tools are x86_64.
     - name: Install Qt
-      uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+      uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0
       with:
         cache: true
         version: ${{ env.QT_VERSION }}
