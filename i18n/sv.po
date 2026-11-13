@@ -4,13 +4,15 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 # Eisuke Kawashima <e.kawaschima+weblate@gmail.com>, 2024, 2025, 2026.
 # Daniel Nylander <yeagersthlm@gmail.com>, 2026.
+# Daniel Nylander <yeagersthlm2@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-09-19 17:37+0000\n"
-"Last-Translator: Daniel Nylander <yeagersthlm@gmail.com>\n"
+"PO-Revision-Date: 2026-11-12 08:53+0000\n"
+"Last-Translator: Daniel Nylander "
+"<yeagersthlm2@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/sv/>\n"
 "Language: sv\n"
@@ -18,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.10.dev0\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -165,6 +167,8 @@ msgid ""
 "The z-matrix lists the atoms in a different order from the molecule, so atom "
 "numbers in this file do not match the ones shown in Avogadro."
 msgstr ""
+"Z-matrisen listar atomerna i en annan ordning än molekylen, så atomnumren i "
+"den här filen stämmer inte överens med dem som visas i Avogadro."
 
 #: molequeue/inputgenerator.cpp:477 qtgui/interfacescript.cpp:795
 #, qt-format, qt-plural-format
@@ -182,7 +186,17 @@ msgid_plural ""
 "them may not reproduce this structure exactly. Adding a dummy atom off the "
 "axis avoids this."
 msgstr[0] ""
+"Ett linjärt fragment lämnar vinkeln eller torsionen på Z-matrisrad(er) %1 "
+"obestämd. Geometrin skrivs korrekt, men dessa koordinater kan inte varieras "
+"och ett program som bygger om kartesiska koordinater utifrån dem kanske inte "
+"återskapar denna struktur exakt. Om du lägger till en dummyatom utanför "
+"axeln undviks detta."
 msgstr[1] ""
+"Ett linjärt fragment lämnar vinkeln eller torsionen på Z-matrisrad(er) %1 "
+"obestämd. Geometrin skrivs korrekt, men dessa koordinater kan inte varieras "
+"och ett program som bygger om kartesiska koordinater utifrån dem kanske inte "
+"återskapar denna struktur exakt. Om du lägger till en dummyatom utanför "
+"axeln undviks detta."
 
 #: molequeue/inputgeneratordialog.cpp:47
 msgid "Input Generator (error)"
@@ -544,67 +558,67 @@ msgstr "Inget filnamn angavs i BackgroundFileFormat!"
 #: qtplugins/plotpdf/plotpdf.cpp:221 qtplugins/plotxrd/plotxrd.cpp:322
 #: qtplugins/spectra/spectra.cpp:173
 msgid "No molecule"
-msgstr ""
+msgstr "Ingen molekyl"
 
 #: qtgui/commandregistry.cpp:77
 #, qt-format
 msgid "atom index #%1 in %2 must be a whole number."
-msgstr ""
+msgstr "atomindex #%1 i %2 måste vara ett heltal."
 
 #: qtgui/commandregistry.cpp:80
 #, qt-format
 msgid "%1 must be a whole number (an atom index)."
-msgstr ""
+msgstr "%1 måste vara ett heltal (ett atomindex)."
 
 #: qtgui/commandregistry.cpp:92
 #, qt-format
 msgid "atom index #%1 in %2 is negative; atom indices must be zero or greater."
-msgstr ""
+msgstr "atomindex #%1 i %2 är negativt; atomindex måste vara noll eller större."
 
 #: qtgui/commandregistry.cpp:96
 #, qt-format
 msgid "%1 is negative; atom indices must be zero or greater."
-msgstr ""
+msgstr "%1 är negativt; atomindex måste vara noll eller större."
 
 #: qtgui/commandregistry.cpp:152
 #, qt-format
 msgid "%1 must list between %2 and %3 atom indices."
-msgstr ""
+msgstr "%1 måste innehålla mellan %2 och %3 atomindex."
 
 #: qtgui/commandregistry.cpp:173
 #, qt-format
 msgid "%1 must be at least %2."
-msgstr ""
+msgstr "%1 måste vara minst %2."
 
 #: qtgui/commandregistry.cpp:179
 #, qt-format
 msgid "%1 must be at most %2."
-msgstr ""
+msgstr "%1 får vara högst %2."
 
 #: qtgui/commandregistry.cpp:191
 #, qt-format
 msgid "%1 must be a whole number."
-msgstr ""
+msgstr "%1 måste vara ett heltal."
 
 #: qtgui/commandregistry.cpp:207 qtgui/commandregistry.cpp:218
 #, qt-format
 msgid "%1 is too large."
-msgstr ""
+msgstr "%1 är för stort."
 
 #: qtgui/commandregistry.cpp:239
 #, qt-format
 msgid "%1 must be a finite number."
-msgstr ""
+msgstr "%1 måste vara ett ändligt tal."
 
 #: qtgui/commandregistry.cpp:266
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "%1 måste vara en lista med tre ändliga tal [x, y, z]."
 
 #: qtgui/commandregistry.cpp:269
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z] in %2."
-msgstr ""
+msgstr "%1 måste vara en lista med tre ändliga tal [x, y, z] i %2."
 
 #: qtgui/commandregistry.cpp:284
 #, qt-format
@@ -612,6 +626,8 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b, a] with values "
 "0-255."
 msgstr ""
+"%1 måste vara en färg: \"#RRGGBB\", ett färgnamn eller [r, g, b, a] med "
+"värden 0–255."
 
 #: qtgui/commandregistry.cpp:287
 #, qt-format
@@ -619,85 +635,87 @@ msgid ""
 "%1 must be a color: \"#RRGGBB\", a color name, or [r, g, b] with values "
 "0-255."
 msgstr ""
+"%1 måste vara en färg: \"#RRGGBB\", ett färgnamn eller [r, g, b] med värden 0"
+"–255."
 
 #: qtgui/commandregistry.cpp:313
 #, qt-format
 msgid "%1 does not take an alpha channel; give \"#RRGGBB\" or [r, g, b]."
-msgstr ""
+msgstr "%1 kan inte ha en alfakanal. Ange \"#RRGGBB\" eller [r, g, b]."
 
 #: qtgui/commandregistry.cpp:435
 #, qt-format
 msgid "%1 must be a string."
-msgstr ""
+msgstr "%1 måste vara en sträng."
 
 #: qtgui/commandregistry.cpp:444
 #, qt-format
 msgid "%1 must be one of: %2."
-msgstr ""
+msgstr "%1 måste vara ett av följande: %2."
 
 #: qtgui/commandregistry.cpp:454
 #, qt-format
 msgid "%1 must be true or false."
-msgstr ""
+msgstr "%1 måste vara sant eller falskt."
 
 #: qtgui/commandregistry.cpp:915
 #, qt-format
 msgid "unknown option \"%1\" for command \"%2\"."
-msgstr ""
+msgstr "Okänt alternativ \"%1\" för kommandot \"%2\"."
 
 #: qtgui/commandregistry.cpp:940
 #, qt-format
 msgid "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
-msgstr ""
+msgstr "Alternativen \"%1\" och \"%2\" är samma alternativ; ange bara \"%1\"."
 
 #: qtgui/commandregistry.cpp:971
 #, qt-format
 msgid "missing required option \"%1\"."
-msgstr ""
+msgstr "Obligatoriskt alternativ \"%1\" saknas."
 
 #: qtgui/commandregistry.cpp:997
 #, qt-format
 msgid "%1 must be a list of zero-based atom indices."
-msgstr ""
+msgstr "%1 måste vara en lista med nollbaserade atomindex."
 
 #: qtgui/commandregistry.cpp:1022
 #, qt-format
 msgid "atom index %1 is repeated in %2; each atom must be different."
-msgstr ""
+msgstr "Atomindex %1 upprepas i %2; varje atom måste vara unik."
 
 #: qtgui/commandregistry.cpp:1049 qtplugins/editor/editor.cpp:1106
 #, qt-format
 msgid "Unknown element \"%1\"."
-msgstr ""
+msgstr "Okänt grundämne \"%1\"."
 
 #: qtgui/commandregistry.cpp:1078 qtplugins/editor/editor.cpp:1110
 #, qt-format
 msgid "Atomic number %1 is out of range (1 to %2)."
-msgstr ""
+msgstr "Atomnumret %1 ligger utanför intervallet (1 till %2)."
 
 #: qtgui/conformerquantitytranslator.cpp:30
 #, qt-format
 msgid "Distance %1-%2"
-msgstr ""
+msgstr "Avstånd %1-%2"
 
 #: qtgui/conformerquantitytranslator.cpp:32
 #, qt-format
 msgid "Angle %1-%2-%3"
-msgstr ""
+msgstr "Vinkel %1-%2-%3"
 
 #: qtgui/conformerquantitytranslator.cpp:35
 #, qt-format
 msgid "Dihedral %1-%2-%3-%4"
-msgstr ""
+msgstr "Torsionsvinkel %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "Begränsning"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "Bild"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:858
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -708,11 +726,11 @@ msgstr "Tid"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
-msgstr ""
+msgstr "Relativ energi"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
@@ -721,7 +739,7 @@ msgstr "RMS-gradient"
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
 msgid "Mean Speed"
-msgstr ""
+msgstr "Medelhastighet"
 
 #. i18n: file: qtplugins/lammpsinput/lammpsinputdialog.ui:327
 #. i18n: ectx: property (text), widget (QLabel, label_temp)
@@ -737,7 +755,7 @@ msgstr "Temperatur"
 #, qt-format
 msgctxt "quantity name, then its unit"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: qtgui/containerwidget.cpp:27
 msgid "Split Horizontal"
@@ -1229,20 +1247,22 @@ msgstr "Oganesson"
 
 #: qtgui/energyunitsdialog.cpp:25
 msgid "Convert Energy Units"
-msgstr ""
+msgstr "Konvertera energienheter"
 
 #: qtgui/energyunitsdialog.cpp:40 qtplugins/plotconformer/plotconformer.cpp:896
 msgid "This file records the units its energies are in."
-msgstr ""
+msgstr "Den här filen anger enheterna för sina energivärden."
 
 #: qtgui/energyunitsdialog.cpp:41
 msgid ""
 "Energies are read in the units the file used, which may not be recorded."
 msgstr ""
+"Energivärden läses in i de enheter som filen använde, vilket kanske inte "
+"anges."
 
 #: qtgui/energyunitsdialog.cpp:49
 msgid "Convert energies from:"
-msgstr ""
+msgstr "Konvertera energivärden från:"
 
 #: qtgui/energyunitsdialog.cpp:51 qtplugins/plotconformer/plotconformer.cpp:568
 msgid "to"
@@ -1434,7 +1454,7 @@ msgstr "Multiplicitet"
 
 #: qtgui/jsonwidget.cpp:344
 msgid "Coordinates"
-msgstr ""
+msgstr "Koordinater"
 
 #: qtgui/jsonwidget.cpp:350
 msgid "Solvent"
@@ -1589,11 +1609,11 @@ msgstr "Skapa en ny vy"
 
 #: qtgui/packagemanager.cpp:674
 msgid "pixi: the package declares no pixi workspace"
-msgstr ""
+msgstr "pixi: paketet deklarerar ingen pixi-arbetsyta"
 
 #: qtgui/packagemanager.cpp:694
 msgid "pixi install timed out"
-msgstr ""
+msgstr "pixi-installationen fick en tidsgräns"
 
 #: qtgui/packagemanager.cpp:702
 #, qt-format
@@ -1601,15 +1621,17 @@ msgid ""
 "pixi install failed:\n"
 "%1"
 msgstr ""
+"pixi-installationen misslyckades:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:714
 #, qt-format
 msgid "pixi install did not provide %1"
-msgstr ""
+msgstr "pixi-installationen tillhandahöll inte %1"
 
 #: qtgui/packagemanager.cpp:743
 msgid "pip: creating the virtual environment timed out"
-msgstr ""
+msgstr "pip: skapandet av den virtuella miljön fick en tidsgräns"
 
 #: qtgui/packagemanager.cpp:752
 #, qt-format
@@ -1617,10 +1639,12 @@ msgid ""
 "pip: creating the virtual environment failed:\n"
 "%1"
 msgstr ""
+"pip: skapandet av den virtuella miljön misslyckades:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:770
 msgid "pip install timed out"
-msgstr ""
+msgstr "pip-installationen fick en tidsgräns"
 
 #: qtgui/packagemanager.cpp:778
 #, qt-format
@@ -1628,15 +1652,17 @@ msgid ""
 "pip install failed:\n"
 "%1"
 msgstr ""
+"pip-installationen misslyckades:\n"
+"%1"
 
 #: qtgui/packagemanager.cpp:790
 #, qt-format
 msgid "pip install did not provide %1"
-msgstr ""
+msgstr "pip-installationen tillhandahöll inte %1"
 
 #: qtgui/packagemanager.cpp:853
 msgid "neither pixi nor Python was found"
-msgstr ""
+msgstr "varken pixi eller Python hittades"
 
 #: qtgui/periodictableview.cpp:38
 msgid "Periodic Table"
@@ -1704,11 +1730,11 @@ msgstr ""
 #: qtgui/pythonscript.cpp:456
 #, qt-format
 msgid "The script exited with error code %1."
-msgstr ""
+msgstr "Skriptet avslutades med felkoden %1."
 
 #: qtgui/pythonscript.cpp:457
 msgid "The script crashed."
-msgstr ""
+msgstr "Skriptet kraschade."
 
 #: qtgui/pythonscript.cpp:466
 #, qt-format
@@ -1718,6 +1744,10 @@ msgid ""
 "Script standard error:\n"
 "%1"
 msgstr ""
+"\n"
+"\n"
+"Skriptets standardfel:\n"
+"%1"
 
 #: qtgui/pythonscript.cpp:575
 #, qt-format
@@ -1987,20 +2017,20 @@ msgstr[1] "%n timmar återstår"
 
 #: qtopengl/glwidget.cpp:310
 msgid "The image size must be positive."
-msgstr ""
+msgstr "Bildstorleken måste vara positiv."
 
 #: qtopengl/glwidget.cpp:313
 msgid "Supersampling must be between 1 and 4."
-msgstr ""
+msgstr "Supersampling måste vara mellan 1 och 4."
 
 #: qtopengl/glwidget.cpp:315
 msgid "The scene is being rebuilt; try again in a moment."
-msgstr ""
+msgstr "Scenen byggs om. Försök igen om en stund."
 
 #: qtopengl/glwidget.cpp:317
 #, qt-format
 msgid "The renderer is not valid: %1"
-msgstr ""
+msgstr "Renderaren är inte giltig: %1"
 
 #: qtopengl/glwidget.cpp:325
 #, qt-format
@@ -2008,11 +2038,13 @@ msgid ""
 "The image is too large: %1 x %2 pixels (including supersampling) exceeds the "
 "maximum of %3."
 msgstr ""
+"Bilden är för stor: %1 x %2 bildpunkter (inklusive supersampling) "
+"överskrider gränsen på %3."
 
 #: qtopengl/glwidget.cpp:335
 msgid ""
 "There is no OpenGL context. The view must have been shown at least once."
-msgstr ""
+msgstr "Det finns ingen OpenGL-kontext. Vyn måste ha visats minst en gång."
 
 #: qtopengl/glwidget.cpp:384
 #, qt-format
@@ -2020,62 +2052,66 @@ msgid ""
 "The image is too large for this graphics driver: %1 x %2 pixels exceeds its "
 "limit of %3."
 msgstr ""
+"Bilden är för stor för den här grafikdrivrutinen: %1 x %2 bildpunkter "
+"överskrider dess gräns på %3."
 
 #: qtopengl/glwidget.cpp:425
 msgid ""
 "The offscreen framebuffer could not be created. The image may be too large "
 "for the available memory."
 msgstr ""
+"Bildbufferten utanför skärmen kunde inte skapas. Bilden kan vara för stor "
+"för det tillgängliga minnet."
 
 #: qtopengl/glwidget.cpp:447
 msgid "The offscreen framebuffer could not be bound."
-msgstr ""
+msgstr "Bildbufferten utanför skärmen kunde inte bindas."
 
 #: qtopengl/glwidget.cpp:453
 msgid "Reading back the rendered image failed."
-msgstr ""
+msgstr "Det gick inte att läsa tillbaka den renderade bilden."
 
 #: qtopengl/imagesizedialog.cpp:36
 msgid "Image Size"
-msgstr ""
+msgstr "Bildstorlek"
 
 #: qtopengl/imagesizedialog.cpp:40 qtopengl/imagesizedialog.cpp:43
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #: qtopengl/imagesizedialog.cpp:49
 msgid "&Lock aspect ratio"
-msgstr ""
+msgstr "&Lås proportioner"
 
 #: qtopengl/imagesizedialog.cpp:51
 msgid "&Transparent background"
-msgstr ""
+msgstr "&Genomskinlig bakgrund"
 
 #: qtopengl/imagesizedialog.cpp:53
 msgid "&Width:"
-msgstr ""
+msgstr "&Bredd:"
 
 #: qtopengl/imagesizedialog.cpp:55
 msgid "&Height:"
-msgstr ""
+msgstr "&Höjd:"
 
 #: qtopengl/imagesizedialog.cpp:61
 #, qt-format
 msgid "%1×"
-msgstr ""
+msgstr "%1×"
 
 #: qtopengl/imagesizedialog.cpp:63
 #, qt-format
 msgid "Set the size to %1× the size of the view"
-msgstr ""
+msgstr "Ange storleken till %1× vyns storlek"
 
 #: qtopengl/imagesizedialog.cpp:75
 msgid "Size of view:"
-msgstr ""
+msgstr "Vyns storlek:"
 
 #: qtplugins/3dmol/3dmol.cpp:31
 msgid "&3DMol HTML Snippet…"
-msgstr ""
+msgstr "&3DMol HTML-kodstycke…"
 
 #: qtplugins/3dmol/3dmol.cpp:37
 msgid "3DMol HTML Block."
@@ -2240,11 +2276,11 @@ msgstr "Fel vid läsning av OpenDX-filen: ingen kub hittades"
 
 #: qtplugins/apbs/apbs.cpp:154
 msgid "Generating Positive Potential Mesh"
-msgstr ""
+msgstr "Skapar nät med positiv potential"
 
 #: qtplugins/apbs/apbs.cpp:172
 msgid "Generating Negative Potential Mesh"
-msgstr ""
+msgstr "Skapar nät med negativ potential"
 
 #. i18n: file: qtplugins/apbs/apbsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, ApbsDialog)
@@ -2588,49 +2624,53 @@ msgstr "Använd Shapely-färger"
 
 #: qtplugins/applycolors/applycolors.cpp:613
 msgid "Apply a custom color to atoms."
-msgstr ""
+msgstr "Använd en anpassad färg för atomer."
 
 #: qtplugins/applycolors/applycolors.cpp:616
 msgid "Reset atom colors to their default element colors."
-msgstr ""
+msgstr "Återställ atomernas färger till grundämnenas standardfärger."
 
 #: qtplugins/applycolors/applycolors.cpp:618
 msgid "Apply a custom color to residues."
-msgstr ""
+msgstr "Använd en anpassad färg för rester."
 
 #: qtplugins/applycolors/applycolors.cpp:620
 msgid "Color residues by their amino acid type."
-msgstr ""
+msgstr "Färglägg rester efter aminosyratyp."
 
 #: qtplugins/applycolors/applycolors.cpp:622
 msgid "Color residues using the Shapely color scheme."
-msgstr ""
+msgstr "Färglägg rester med färgschemat Shapely."
 
 #: qtplugins/applycolors/applycolors.cpp:624
 msgid "Color residues by secondary structure."
-msgstr ""
+msgstr "Färglägg rester efter sekundärstruktur."
 
 #: qtplugins/applycolors/applycolors.cpp:626
 msgid "Reset residue colors to default chain colors."
-msgstr ""
+msgstr "Återställ resternas färger till standardfärger för kedjor."
 
 #: qtplugins/applycolors/applycolors.cpp:649
 msgid ""
 "colorAtomsCustom requires a \"color\" option (a color name or \"#rrggbb\" "
 "value)."
 msgstr ""
+"colorAtomsCustom kräver alternativet \"color\" (ett färgnamn eller värdet "
+"\"#rrggbb\")."
 
 #: qtplugins/applycolors/applycolors.cpp:656
 #: qtplugins/applycolors/applycolors.cpp:677
 #, qt-format
 msgid "Unknown color \"%1\"."
-msgstr ""
+msgstr "Okänd färg \"%1\"."
 
 #: qtplugins/applycolors/applycolors.cpp:670
 msgid ""
 "colorResiduesCustom requires a \"color\" option (a color name or \"#rrggbb\" "
 "value)."
 msgstr ""
+"colorResiduesCustom kräver alternativet \"color\" (ett färgnamn eller värdet "
+"\"#rrggbb\")."
 
 #: qtplugins/applycolors/applycolors.h:29
 msgid "ApplyColors"
@@ -2674,7 +2714,7 @@ msgstr ""
 
 #: qtplugins/autoopt/autoopt.cpp:261
 msgid "AutoOptimization"
-msgstr ""
+msgstr "Automatisk optimering"
 
 #: qtplugins/autoopt/autoopt.cpp:268
 msgid "Optimize"
@@ -2929,17 +2969,22 @@ msgid ""
 "Add a dummy atom at the geometric center of the molecule or the selected "
 "atoms."
 msgstr ""
+"Lägg till en dummyatom i molekylens eller de markerade atomernas geometriska "
+"centrum."
 
 #: qtplugins/centroid/centroid.cpp:141
 msgid ""
 "Add a dummy atom at the center of mass of the molecule or the selected atoms."
 msgstr ""
+"Lägg till en dummyatom i molekylens eller de markerade atomernas masscentrum."
 
 #: qtplugins/centroid/centroid.cpp:145
 msgid ""
 "Add a dummy atom perpendicular to the plane of the molecule or the selected "
 "atoms."
 msgstr ""
+"Lägg till en dummyatom vinkelrätt mot molekylens eller de markerade "
+"atomernas plan."
 
 #: qtplugins/centroid/centroid.h:24
 msgid "Centroid"
@@ -3118,11 +3163,17 @@ msgid ""
 "[i, j, (k, (l))], \"value\": v}, …]}, with zero-based atom indices and value "
 "in Å for a distance or degrees for an angle or torsion."
 msgstr ""
+"Lista den aktuella molekylens geometriska begränsningar. Inga alternativ. "
+"Returnerar {\"constraints\": [{\"type\": \"distance\"|\"angle\"|\"torsion\", "
+"\"atoms\": [i, j, (k, (l))], \"value\": v}, …]}, med nollbaserade atomindex "
+"och värdet i Å för ett avstånd eller i grader för en vinkel eller torsion."
 
 #: qtplugins/constraints/constraintsextension.cpp:166
 msgid ""
 "Zero-based atom indices: 2 for a distance, 3 for an angle or 4 for a torsion."
 msgstr ""
+"Nollbaserade atomindex: 2 för ett avstånd, 3 för en vinkel eller 4 för en "
+"torsion."
 
 #: qtplugins/constraints/constraintsextension.cpp:174
 msgid ""
@@ -3135,40 +3186,55 @@ msgid ""
 "updated instead of adding a duplicate. Returns {\"type\": …, \"atoms\": […], "
 "\"value\": …, \"updated\": bool}."
 msgstr ""
+"Lägg till eller uppdatera en geometrisk begränsning, angiven med "
+"nollbaserade atomindex: {\"atoms\": [i, j]} för ett avstånd, {\"atoms\": [i, "
+"j, k]} för en vinkel eller {\"atoms\": [i, j, k, l]} för en torsion, plus "
+"ett valfritt {\"value\": …} i Å för ett avstånd eller i grader för en vinkel "
+"eller torsion. Om \"value\" utelämnas mäts och används den aktuella "
+"geometrin för atomerna. Om en begränsning redan finns för samma atomer (i "
+"valfri ordning) uppdateras dess värde i stället för att en dubblett läggs "
+"till. Returnerar {\"type\": …, \"atoms\": […], \"value\": …, \"updated\": "
+"bool}."
 
 #: qtplugins/constraints/constraintsextension.cpp:187
 msgid ""
 "Target in Å for a distance or degrees for an angle or torsion. Defaults to "
 "the current geometry."
 msgstr ""
+"Målvärde i Å för ett avstånd eller i grader för en vinkel eller torsion. "
+"Standardvärdet är den aktuella geometrin."
 
 #: qtplugins/constraints/constraintsextension.cpp:198
 msgid ""
 "Remove the constraint on the given zero-based atom indices (in either "
 "order): {\"atoms\": [i, j, (k, (l))]}. Returns {\"removed\": count}."
 msgstr ""
+"Ta bort begränsningen för de angivna nollbaserade atomindexen (i valfri "
+"ordning): {\"atoms\": [i, j, (k, (l))]}. Returnerar {\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:210
 msgid ""
 "Remove all geometry constraints from the current molecule. No options. "
 "Returns {\"removed\": count}."
 msgstr ""
+"Ta bort alla geometriska begränsningar från den aktuella molekylen. Inga "
+"alternativ. Returnerar {\"removed\": count}."
 
 #: qtplugins/constraints/constraintsextension.cpp:263
 msgid "No constraint matches these atoms."
-msgstr ""
+msgstr "Ingen begränsning matchar dessa atomer."
 
 #: qtplugins/constraints/constraintsextension.cpp:311
 msgid "Could not measure the current geometry for these atoms."
-msgstr ""
+msgstr "Det gick inte att mäta den aktuella geometrin för dessa atomer."
 
 #: qtplugins/constraints/constraintsextension.cpp:321
 msgid "value must be a distance greater than 0 Å."
-msgstr ""
+msgstr "value måste vara ett avstånd större än 0 Å."
 
 #: qtplugins/constraints/constraintsextension.cpp:326
 msgid "value must be an angle from 0 to 180 degrees."
-msgstr ""
+msgstr "value måste vara en vinkel från 0 till 180 grader."
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
@@ -3794,20 +3860,20 @@ msgstr "Återge molekylens dipolmoment."
 
 #: qtplugins/editor/editor.cpp:94
 msgid "atoms must list exactly 2 atom indices."
-msgstr ""
+msgstr "atoms måste innehålla exakt två atomindex."
 
 #: qtplugins/editor/editor.cpp:101
 msgid "atoms must be whole-number atom indices within the molecule."
-msgstr ""
+msgstr "atoms måste vara heltalsindex för atomer inom molekylen."
 
 #: qtplugins/editor/editor.cpp:106
 msgid "atoms must be two different atoms."
-msgstr ""
+msgstr "atoms måste innehålla två olika atomer."
 
 #: qtplugins/editor/editor.cpp:122
 #, qt-format
 msgid "%1 must be 1, 2 or 3."
-msgstr ""
+msgstr "%1 måste vara 1, 2 eller 3."
 
 #: qtplugins/editor/editor.cpp:152
 msgctxt "control-key 2"
@@ -3855,60 +3921,71 @@ msgid ""
 "([x, y, z] in Angstroms), optional \"bondTo\" (atom index) and \"bondOrder\" "
 "(1-3). Returns the new atom \"index\"."
 msgstr ""
+"Lägg till en atom. Alternativ: \"element\" (symbol eller atomnummer), "
+"\"position\" ([x, y, z] i ångström), valfria \"bondTo\" (atomindex) och "
+"\"bondOrder\" (1-3). Returnerar den nya atomens \"index\"."
 
 #: qtplugins/editor/editor.cpp:1044
 msgid ""
 "Add a bond between two unbonded atoms. Options: \"atoms\" ([i, j]) and "
 "optional \"order\" (1-3). Returns the bond \"index\"."
 msgstr ""
+"Lägg till en bindning mellan två obundna atomer. Alternativ: \"atoms\" ([i, "
+"j]) och valfri \"order\" (1-3). Returnerar bindningens \"index\"."
 
 #: qtplugins/editor/editor.cpp:1047
 msgid "Remove the bond between two atoms. Options: \"atoms\" ([i, j])."
-msgstr ""
+msgstr "Ta bort bindningen mellan två atomer. Alternativ: \"atoms\" ([i, j])."
 
 #: qtplugins/editor/editor.cpp:1051
 msgid ""
 "Remove the selected atoms and their bonds. Returns the number \"removed\"."
 msgstr ""
+"Ta bort de markerade atomerna och deras bindningar. Returnerar antalet "
+"\"removed\"."
 
 #: qtplugins/editor/editor.cpp:1073
 msgid "The active layer is locked; unlock it to edit."
-msgstr ""
+msgstr "Det aktiva lagret är låst. Lås upp det för att redigera."
 
 #: qtplugins/editor/editor.cpp:1081
 #, qt-format
 msgid "Atom %1 is in a locked layer; unlock it to edit."
-msgstr ""
+msgstr "Atom %1 finns i ett låst lager. Lås upp det för att redigera."
 
 #: qtplugins/editor/editor.cpp:1092
 msgid ""
 "addAtom requires an \"element\" option (an element symbol or atomic number)."
 msgstr ""
+"addAtom kräver alternativet \"element\" (en grundämnessymbol eller ett "
+"atomnummer)."
 
 #: qtplugins/editor/editor.cpp:1122
 msgid "position must be a list of 3 numbers [x, y, z] in Angstroms."
-msgstr ""
+msgstr "position måste vara en lista med tre tal [x, y, z] i ångström."
 
 #: qtplugins/editor/editor.cpp:1130
 msgid "position must be a list of 3 finite numbers [x, y, z]."
-msgstr ""
+msgstr "position måste vara en lista med tre ändliga tal [x, y, z]."
 
 #: qtplugins/editor/editor.cpp:1143
 msgid "bondTo must be the index of an atom in the molecule."
-msgstr ""
+msgstr "bondTo måste vara indexet för en atom i molekylen."
 
 #: qtplugins/editor/editor.cpp:1190
 msgid "There is no bond between those atoms."
-msgstr ""
+msgstr "Det finns ingen bindning mellan dessa atomer."
 
 #: qtplugins/editor/editor.cpp:1209
 msgid "Those atoms are already bonded."
-msgstr ""
+msgstr "Dessa atomer är redan bundna."
 
 #: qtplugins/editor/editor.cpp:1238
 #, qt-format
 msgid "Atom %1 or a bonded atom is in a locked layer; unlock it to edit."
 msgstr ""
+"Atom %1 eller en bunden atom finns i ett låst lager. Lås upp det för att "
+"redigera."
 
 #: qtplugins/editor/editor.h:36 qtplugins/editor/editor.h:37
 msgid "Editor tool"
@@ -3936,7 +4013,7 @@ msgstr "Trippel"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:40
 msgid "Fetch from &PDB…"
-msgstr ""
+msgstr "Hämta från &PDB…"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:54 qtplugins/importpqr/importpqr.cpp:59
 #: qtplugins/insertfragment/insertfragment.cpp:58
@@ -3955,11 +4032,11 @@ msgstr "Kunde inte läsa PDB-molekylen: %1"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:87
 msgid "Download a structure from the Protein Data Bank."
-msgstr ""
+msgstr "Hämta en struktur från Protein Data Bank."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:114
 msgid "fetchPDB requires a non-empty 'code' parameter."
-msgstr ""
+msgstr "fetchPDB kräver en icke-tom parameter 'code'."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:116
 msgid "The PDB code must be exactly 4 characters long."
@@ -3971,7 +4048,7 @@ msgstr "PDB-kodens första tecken måste vara 1–9."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:128
 msgid "The PDB code must contain only letters and digits."
-msgstr ""
+msgstr "PDB-koden får bara innehålla bokstäver och siffror."
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:204
 #: qtplugins/networkdatabases/networkdatabases.cpp:226
@@ -4033,11 +4110,11 @@ msgstr "Ta bort fokus"
 
 #: qtplugins/focus/focus.cpp:138
 msgid "Focus a selection"
-msgstr ""
+msgstr "Fokusera en markering"
 
 #: qtplugins/focus/focus.cpp:139
 msgid "Unfocus a focused selection"
-msgstr ""
+msgstr "Ta bort fokus från en fokuserad markering"
 
 #: qtplugins/focus/focus.h:27
 msgid "Focus"
@@ -4105,39 +4182,39 @@ msgstr "Dela upp markerade atomer"
 
 #: qtplugins/forcefield/forcefield.cpp:278
 msgid "List the force fields available for the current molecule."
-msgstr ""
+msgstr "Lista de kraftfält som är tillgängliga för den aktuella molekylen."
 
 #: qtplugins/forcefield/forcefield.cpp:280
 msgid "Compute the force field energy of the current molecule."
-msgstr ""
+msgstr "Beräkna kraftfältets energi för den aktuella molekylen."
 
 #: qtplugins/forcefield/forcefield.cpp:282
 msgid "Compute the force field forces on the current molecule."
-msgstr ""
+msgstr "Beräkna kraftfältets krafter på den aktuella molekylen."
 
 #: qtplugins/forcefield/forcefield.cpp:284
 msgid "Optimize the geometry of the current molecule."
-msgstr ""
+msgstr "Optimera den aktuella molekylens geometri."
 
 #: qtplugins/forcefield/forcefield.cpp:287
 msgid "Freeze selected atoms during force field optimization."
-msgstr ""
+msgstr "Frys markerade atomer under kraftfältsoptimering."
 
 #: qtplugins/forcefield/forcefield.cpp:288
 msgid "Unfreeze selected atoms."
-msgstr ""
+msgstr "Tina markerade atomer."
 
 #: qtplugins/forcefield/forcefield.cpp:290
 msgid "Freeze a specific axis (X, Y, or Z) of selected atoms."
-msgstr ""
+msgstr "Frys en viss axel (X, Y eller Z) för markerade atomer."
 
 #: qtplugins/forcefield/forcefield.cpp:385
 #, qt-plural-format
 msgctxt ""
 msgid "%n force field(s) available."
 msgid_plural "%n force field(s) available."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n kraftfält tillgängligt."
+msgstr[1] "%n kraftfält tillgängliga."
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #: qtplugins/forcefield/forcefield.cpp:418
@@ -4146,43 +4223,43 @@ msgstr[1] ""
 #: qtplugins/forcefield/forcefield.cpp:530
 #: qtplugins/forcefield/forcefield.cpp:555
 msgid "No molecule is open."
-msgstr ""
+msgstr "Ingen molekyl är öppen."
 
 #: qtplugins/forcefield/forcefield.cpp:396
 #: qtplugins/forcefield/forcefield.cpp:422
 #: qtplugins/forcefield/forcefield.cpp:448
 msgid "A force field calculation is already running."
-msgstr ""
+msgstr "En kraftfältsberäkning körs redan."
 
 #: qtplugins/forcefield/forcefield.cpp:400
 msgid "No atoms provided for energy calculation."
-msgstr ""
+msgstr "Inga atomer angavs för energiberäkning."
 
 #: qtplugins/forcefield/forcefield.cpp:426
 msgid "No atoms provided for force calculation."
-msgstr ""
+msgstr "Inga atomer angavs för kraftberäkning."
 
 #: qtplugins/forcefield/forcefield.cpp:452
 msgid "No atoms provided for optimization."
-msgstr ""
+msgstr "Inga atomer angavs för optimering."
 
 #: qtplugins/forcefield/forcefield.cpp:472
 msgid "\"steps\" must be a positive integer."
-msgstr ""
+msgstr "\"steps\" måste vara ett positivt heltal."
 
 #: qtplugins/forcefield/forcefield.cpp:482
 msgid "\"gradientTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"gradientTolerance\" måste vara ett ändligt, icke-negativt tal."
 
 #: qtplugins/forcefield/forcefield.cpp:492
 msgid "\"energyTolerance\" must be a finite, non-negative number."
-msgstr ""
+msgstr "\"energyTolerance\" måste vara ett ändligt, icke-negativt tal."
 
 #: qtplugins/forcefield/forcefield.cpp:509
 #: qtplugins/forcefield/forcefield.cpp:534
 #: qtplugins/forcefield/forcefield.cpp:559
 msgid "No atoms are selected."
-msgstr ""
+msgstr "Inga atomer är markerade."
 
 #: qtplugins/forcefield/forcefield.cpp:524
 #: qtplugins/forcefield/forcefield.cpp:606
@@ -4190,42 +4267,42 @@ msgstr ""
 msgctxt ""
 msgid "Froze %n atom(s)."
 msgid_plural "Froze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Frös %n atom."
+msgstr[1] "Frös %n atomer."
 
 #: qtplugins/forcefield/forcefield.cpp:549
 #, qt-plural-format
 msgctxt ""
 msgid "Unfroze %n atom(s)."
 msgid_plural "Unfroze %n atom(s)."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tinade %n atom."
+msgstr[1] "Tinade %n atomer."
 
 #: qtplugins/forcefield/forcefield.cpp:563
 msgid "No axis was given."
-msgstr ""
+msgstr "Ingen axel angavs."
 
 #: qtplugins/forcefield/forcefield.cpp:590
 msgid "Axis must be x, y, z or 0, 1, 2."
-msgstr ""
+msgstr "Axeln måste vara x, y, z eller 0, 1, 2."
 
 #: qtplugins/forcefield/forcefield.cpp:828
 msgid "The force field calculation was interrupted."
-msgstr ""
+msgstr "Kraftfältsberäkningen avbröts."
 
 #: qtplugins/forcefield/forcefield.cpp:898
 msgid "No force field is available for this molecule."
-msgstr ""
+msgstr "Inget kraftfält är tillgängligt för den här molekylen."
 
 #: qtplugins/forcefield/forcefield.cpp:919
 #, qt-format
 msgid "Force field \"%1\" is not compatible with this molecule."
-msgstr ""
+msgstr "Kraftfältet \"%1\" är inte kompatibelt med den här molekylen."
 
 #: qtplugins/forcefield/forcefield.cpp:922
 #, qt-format
 msgid "Unknown force field \"%1\"."
-msgstr ""
+msgstr "Okänt kraftfält \"%1\"."
 
 #: qtplugins/forcefield/forcefield.cpp:938
 #: qtplugins/forcefield/forcefield.cpp:1221
@@ -4253,7 +4330,7 @@ msgstr "Inga atomer angavs för optimering"
 #: qtplugins/forcefield/forcefield.cpp:1329
 #, qt-format
 msgid "Could not create a calculator for \"%1\"."
-msgstr ""
+msgstr "Det gick inte att skapa en beräknare för \"%1\"."
 
 #: qtplugins/forcefield/forcefield.cpp:1060
 #, qt-format
@@ -4263,7 +4340,7 @@ msgstr "Energi: %L1"
 
 #: qtplugins/forcefield/forcefield.cpp:1167
 msgid "The optimizer stopped without producing a result."
-msgstr ""
+msgstr "Optimeraren stoppade utan att ge ett resultat."
 
 #: qtplugins/forcefield/forcefield.cpp:1184
 #: qtplugins/forcefield/forcefield.cpp:1279
@@ -4278,7 +4355,7 @@ msgstr "Inga atomer angavs för energiberäkning"
 #: qtplugins/forcefield/forcefield.cpp:1283
 #, qt-format
 msgid "%1 returned a non-finite energy."
-msgstr ""
+msgstr "%1 returnerade en oändlig energi."
 
 #: qtplugins/forcefield/forcefield.cpp:1310
 msgid "No atoms provided for force calculation"
@@ -4286,12 +4363,12 @@ msgstr "Inga atomer angavs för kraftberäkning"
 
 #: qtplugins/forcefield/forcefield.cpp:1365
 msgid "The molecule changed during the calculation."
-msgstr ""
+msgstr "Molekylen ändrades under beräkningen."
 
 #: qtplugins/forcefield/forcefield.cpp:1378
 #, qt-format
 msgid "%1 returned a non-finite or incomplete result."
-msgstr ""
+msgstr "%1 returnerade ett oändligt eller ofullständigt resultat."
 
 #: qtplugins/forcefield/forcefield.cpp:1400
 #, qt-format
@@ -4487,25 +4564,27 @@ msgstr "&Väteatomer"
 
 #: qtplugins/hydrogens/hydrogens.cpp:114
 msgid "Add any missing hydrogen atoms on atoms that have incomplete octets."
-msgstr ""
+msgstr "Lägg till saknade väteatomer på atomer med ofullständiga oktetter."
 
 #: qtplugins/hydrogens/hydrogens.cpp:118
 msgid "Remove any extra hydrogen atoms on atoms with overfull octets."
-msgstr ""
+msgstr "Ta bort extra väteatomer på atomer med överfulla oktetter."
 
 #: qtplugins/hydrogens/hydrogens.cpp:122
 msgid ""
 "Add any missing hydrogen atoms, and remove any extra hydrogen atoms on any "
 "atoms that violate the octet rule."
 msgstr ""
+"Lägg till saknade väteatomer och ta bort extra väteatomer på alla atomer som "
+"bryter mot oktettregeln."
 
 #: qtplugins/hydrogens/hydrogens.cpp:126
 msgid "Remove all hydrogen atoms in the molecule."
-msgstr ""
+msgstr "Ta bort alla väteatomer i molekylen."
 
 #: qtplugins/hydrogens/hydrogens.cpp:133
 msgid "No molecule."
-msgstr ""
+msgstr "Ingen molekyl."
 
 #: qtplugins/hydrogens/hydrogens.h:24
 msgid "Hydrogens"
@@ -4531,11 +4610,11 @@ msgstr "Namn"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Formula"
-msgstr ""
+msgstr "Formel"
 
 #: qtplugins/importpqr/pqrwidget.cpp:16
 msgid "Mass (g/mol)"
-msgstr ""
+msgstr "Massa (g/mol)"
 
 #: qtplugins/insertdna/insertdna.cpp:43
 msgid "DNA/RNA…"
@@ -4934,6 +5013,15 @@ msgid ""
 "\n"
 "Values can also be typed into the tool panel to move the atoms."
 msgstr ""
+"Mätverktyg\t(%1)\n"
+"\n"
+"Vänster musknapp:\tMarkera upp till fyra atomer.\n"
+"\tAvstånd mäts mellan 1-2 och 2-3\n"
+"\tVinkeln mäts mellan 1-3 med 2 som gemensam punkt\n"
+"\tTorsionsvinkeln mäts mellan 1-2-3-4\n"
+"Höger musknapp:\tÅterställ mätningarna.\n"
+"\n"
+"Värden kan också skrivas in på verktygspanelen för att flytta atomerna."
 
 #: qtplugins/measuretool/measuretool.cpp:425
 #: qtplugins/measuretool/measuretool.cpp:435
@@ -4948,27 +5036,29 @@ msgstr "Vinkel:"
 #: qtplugins/measuretool/measuretool.cpp:601
 #: qtplugins/measuretool/measuretool.cpp:908
 msgid "One of these atoms no longer exists."
-msgstr ""
+msgstr "En av dessa atomer finns inte längre."
 
 #: qtplugins/measuretool/measuretool.cpp:603
 msgid "That's not a value this can be set to."
-msgstr ""
+msgstr "Det är inte ett värde som detta kan ställas in på."
 
 #: qtplugins/measuretool/measuretool.cpp:609
 #: qtplugins/measuretool/measuretool.cpp:921
 msgid "These atoms are in the same place, so this distance isn't defined."
-msgstr ""
+msgstr "Dessa atomer är på samma plats, så avståndet är inte definierat."
 
 #: qtplugins/measuretool/measuretool.cpp:612
 #: qtplugins/measuretool/measuretool.cpp:926
 msgid ""
 "Three of these atoms are in a straight line, so this dihedral isn't defined."
 msgstr ""
+"Tre av dessa atomer ligger på en rak linje, så torsionsvinkeln är inte "
+"definierad."
 
 #: qtplugins/measuretool/measuretool.cpp:615
 #: qtplugins/measuretool/measuretool.cpp:924
 msgid "These atoms are in a straight line, so this angle isn't defined."
-msgstr ""
+msgstr "Dessa atomer ligger på en rak linje, så vinkeln är inte definierad."
 
 #: qtplugins/measuretool/measuretool.cpp:640
 #, qt-format
@@ -4976,6 +5066,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this dihedral can't change "
 "without distorting the ring."
 msgstr ""
+"Bindningen mellan #%1 och #%2 ligger i en ring, så torsionsvinkeln kan inte "
+"ändras utan att ringen förvrängs."
 
 #: qtplugins/measuretool/measuretool.cpp:644
 #, qt-format
@@ -4983,6 +5075,8 @@ msgid ""
 "The bond between #%1 and #%2 is in a ring, so this angle can't change "
 "without distorting the ring."
 msgstr ""
+"Bindningen mellan #%1 och #%2 ligger i en ring, så vinkeln kan inte ändras "
+"utan att ringen förvrängs."
 
 #: qtplugins/measuretool/measuretool.cpp:679
 #, qt-format
@@ -4990,20 +5084,24 @@ msgid ""
 "#%1 and #%2 are connected through the molecule, so this can't change without "
 "distorting it. Try the Manipulate tool."
 msgstr ""
+"#%1 och #%2 är sammanbundna genom molekylen, så detta kan inte ändras utan "
+"att den förvrängs. Prova manipuleringsverktyget."
 
 #: qtplugins/measuretool/measuretool.cpp:704
 msgid "The new distance in Å."
-msgstr ""
+msgstr "Det nya avståndet i Å."
 
 #: qtplugins/measuretool/measuretool.cpp:705
 msgid "The new angle in degrees."
-msgstr ""
+msgstr "Den nya vinkeln i grader."
 
 #: qtplugins/measuretool/measuretool.cpp:733
 msgid ""
 "Measure the distance in Å between two atoms, given as zero-based indices: "
 "{\"atoms\": [i, j]}. Returns {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Mät avståndet i Å mellan två atomer, angivna med nollbaserade index: "
+"{\"atoms\": [i, j]}. Returnerar {\"distance\": …, \"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:738
 msgid ""
@@ -5011,6 +5109,9 @@ msgid ""
 "based indices: {\"atoms\": [i, j, k]}. Returns {\"angle\": …, \"atoms\": [i, "
 "j, k]}."
 msgstr ""
+"Mät vinkeln i grader vid den mittersta av tre atomer, angivna med "
+"nollbaserade index: {\"atoms\": [i, j, k]}. Returnerar {\"angle\": …, "
+"\"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:743
 msgid ""
@@ -5018,6 +5119,9 @@ msgid ""
 "zero-based indices: {\"atoms\": [i, j, k, l]}. Returns {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Mät den dihedrala vinkeln i grader (-180 till 180) hos fyra atomer, angivna "
+"med nollbaserade index: {\"atoms\": [i, j, k, l]}. Returnerar {\"dihedral\": "
+"…, \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:748
 msgid ""
@@ -5025,6 +5129,10 @@ msgid ""
 "{\"atoms\": [i, j], \"value\": …}; the second atom and everything bonded to "
 "it on that side move. Returns the new {\"distance\": …, \"atoms\": [i, j]}."
 msgstr ""
+"Ange avståndet i Å mellan två atomer, angivna med nollbaserade index: "
+"{\"atoms\": [i, j], \"value\": …}; den andra atomen och allt som är bundet "
+"till den på den sidan flyttas. Returnerar det nya {\"distance\": …, "
+"\"atoms\": [i, j]}."
 
 #: qtplugins/measuretool/measuretool.cpp:754
 msgid ""
@@ -5033,6 +5141,10 @@ msgid ""
 "bonded to it on that side move. Returns the new {\"angle\": …, \"atoms\": "
 "[i, j, k]}."
 msgstr ""
+"Ange vinkeln i grader vid den mittersta av tre atomer, angivna med "
+"nollbaserade index: {\"atoms\": [i, j, k], \"value\": …}; den sista atomen "
+"och allt som är bundet till den på den sidan flyttas. Returnerar det nya "
+"{\"angle\": …, \"atoms\": [i, j, k]}."
 
 #: qtplugins/measuretool/measuretool.cpp:760
 msgid ""
@@ -5041,22 +5153,26 @@ msgid ""
 "everything bonded to it on that side move. Returns the new {\"dihedral\": …, "
 "\"atoms\": [i, j, k, l]}."
 msgstr ""
+"Ange den dihedrala vinkeln i grader hos fyra atomer, angivna med "
+"nollbaserade index: {\"atoms\": [i, j, k, l], \"value\": …}; den sista "
+"atomen och allt som är bundet till den på den sidan flyttas. Returnerar det "
+"nya {\"dihedral\": …, \"atoms\": [i, j, k, l]}."
 
 #: qtplugins/measuretool/measuretool.cpp:772
 msgid "Zero-based atom indices, in chain order."
-msgstr ""
+msgstr "Nollbaserade atomindex i kedjeordning."
 
 #: qtplugins/measuretool/measuretool.cpp:912
 msgid "That's not a value this distance can be set to."
-msgstr ""
+msgstr "Det är inte ett värde som avståndet kan ställas in på."
 
 #: qtplugins/measuretool/measuretool.cpp:914
 msgid "That's not a value this angle can be set to."
-msgstr ""
+msgstr "Det är inte ett värde som vinkeln kan ställas in på."
 
 #: qtplugins/measuretool/measuretool.cpp:916
 msgid "That's not a value this dihedral can be set to."
-msgstr ""
+msgstr "Det är inte ett värde som torsionsvinkeln kan ställas in på."
 
 #: qtplugins/measuretool/measuretool.cpp:937
 #, qt-format
@@ -5064,6 +5180,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this angle can't change "
 "without distorting it."
 msgstr ""
+"Bindningen mellan atomerna %1 och %2 ligger i en ring, så vinkeln kan inte "
+"ändras utan att den förvrängs."
 
 #: qtplugins/measuretool/measuretool.cpp:941
 #, qt-format
@@ -5071,6 +5189,8 @@ msgid ""
 "The bond between atoms %1 and %2 is in a ring, so this dihedral can't change "
 "without distorting it."
 msgstr ""
+"Bindningen mellan atomerna %1 och %2 ligger i en ring, så torsionsvinkeln "
+"kan inte ändras utan att den förvrängs."
 
 #: qtplugins/measuretool/measuretool.cpp:955
 #, qt-format
@@ -5078,6 +5198,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this distance can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomerna %1 och %2 är sammanbundna genom molekylen, så avståndet kan inte "
+"ändras utan att den förvrängs. Prova manipuleringsverktyget."
 
 #: qtplugins/measuretool/measuretool.cpp:961
 #, qt-format
@@ -5085,6 +5207,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this angle can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomerna %1 och %2 är sammanbundna genom molekylen, så vinkeln kan inte "
+"ändras utan att den förvrängs. Prova manipuleringsverktyget."
 
 #: qtplugins/measuretool/measuretool.cpp:967
 #, qt-format
@@ -5092,6 +5216,8 @@ msgid ""
 "Atoms %1 and %2 are connected through the molecule, so this dihedral can't "
 "change without distorting it. Try the Manipulate tool."
 msgstr ""
+"Atomerna %1 och %2 är sammanbundna genom molekylen, så torsionsvinkeln kan "
+"inte ändras utan att den förvrängs. Prova manipuleringsverktyget."
 
 #: qtplugins/measuretool/measuretool.h:42
 #: qtplugins/measuretool/measuretool.h:43
@@ -5103,47 +5229,49 @@ msgid ""
 "Click up to four atoms to measure them.\n"
 "Type a new value to move the atoms."
 msgstr ""
+"Klicka på upp till fyra atomer för att mäta dem.\n"
+"Skriv ett nytt värde för att flytta atomerna."
 
 #: qtplugins/measuretool/measurewidget.cpp:39
 msgid "Distance 1–2"
-msgstr ""
+msgstr "Avstånd 1–2"
 
 #: qtplugins/measuretool/measurewidget.cpp:39
 #: qtplugins/measuretool/measurewidget.cpp:42
 #: qtplugins/measuretool/measurewidget.cpp:45
 msgid " Å"
-msgstr ""
+msgstr " Å"
 
 #: qtplugins/measuretool/measurewidget.cpp:42
 msgid "Distance 2–3"
-msgstr ""
+msgstr "Avstånd 2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:45
 msgid "Distance 3–4"
-msgstr ""
+msgstr "Avstånd 3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:48
 msgid "Angle 1–2–3"
-msgstr ""
+msgstr "Vinkel 1–2–3"
 
 #: qtplugins/measuretool/measurewidget.cpp:48
 #: qtplugins/measuretool/measurewidget.cpp:50
 #: qtplugins/measuretool/measurewidget.cpp:52
 msgid "°"
-msgstr ""
+msgstr "°"
 
 #: qtplugins/measuretool/measurewidget.cpp:50
 msgid "Angle 2–3–4"
-msgstr ""
+msgstr "Vinkel 2–3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:52
 msgid "Dihedral 1–2–3–4"
-msgstr ""
+msgstr "Torsionsvinkel 1–2–3–4"
 
 #: qtplugins/measuretool/measurewidget.cpp:155
 #, qt-format
 msgid "#1 stays fixed; edits move toward #%1."
-msgstr ""
+msgstr "#1 förblir fast. Ändringar flyttas mot #%1."
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:62
 msgid "(pending)"
@@ -5268,7 +5396,7 @@ msgstr "&Egenskaper"
 
 #: qtplugins/molecularproperties/molecularproperties.cpp:226
 msgid "Show molecular properties."
-msgstr ""
+msgstr "Visa molekylära egenskaper."
 
 #: qtplugins/molecularproperties/molecularproperties.h:36
 msgid "Molecular Properties"
@@ -5326,6 +5454,15 @@ msgid ""
 "Alt(Option)+Drag:\tRotate/zoom/pan from within any tool.\n"
 "Alt(Option)+Left:\tUses the virtual trackball."
 msgstr ""
+"Navigeringsverktyg\t(%1)\n"
+"\n"
+"Vänster musknapp:\tKlicka och dra för att rotera vyn.\n"
+"\tOm du börjar dra på en atom roterar vyn runt den atomen.\n"
+"Mellersta musknappen:\tKlicka och dra för att zooma in eller ut.\n"
+"Höger musknapp:\tKlicka och dra för att flytta vyn.\n"
+"\n"
+"Alt(Alternativ)+dra:\tRotera/zooma/flytta från valfritt verktyg.\n"
+"Alt(Alternativ)+vänster:\tAnvänder den virtuella styrkulan."
 
 #: qtplugins/navigator/navigator.cpp:74
 msgid "Rotate the scene along the x, y, or z axes."
@@ -5364,7 +5501,7 @@ msgstr "Navigeringsverktyg"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:28
 msgid "Download by &Name…"
-msgstr ""
+msgstr "Hämta efter &namn…"
 
 #: qtplugins/networkdatabases/networkdatabases.cpp:66
 msgid "Download a structure by name from an online database."
@@ -5743,19 +5880,19 @@ msgstr "Fel: tomt svar från servern."
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:308
 #, qt-format
 msgid "Authors: %1"
-msgstr ""
+msgstr "Upphovspersoner: %1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:308
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:315
 #, qt-format, qt-plural-format
 msgctxt ""
 msgid "%n download(s) in the last %1 days"
 msgid_plural "%n download(s) in the last %1 days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%n hämtning under de senaste %1 dagarna"
+msgstr[1] "%n hämtningar under de senaste %1 dagarna"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:364
 #, qt-format
@@ -5810,7 +5947,13 @@ msgid_plural ""
 "\n"
 "%1"
 msgstr[0] ""
+"Det markerade insticksprogrammet erbjuder ingen nedladdningsbar källadress:\n"
+"\n"
+"%1"
 msgstr[1] ""
+"De markerade insticksprogrammen erbjuder ingen nedladdningsbar källadress:\n"
+"\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:495
 #, qt-format
@@ -5859,12 +6002,12 @@ msgstr "Extraheringen gav inga filer.\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:638
 #, qt-format
 msgid "Installation complete for %1.\n"
-msgstr ""
+msgstr "Installationen av %1 är klar.\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:646
 #, qt-format
 msgid "Installation failed for %1: %2\n"
-msgstr ""
+msgstr "Installationen av %1 misslyckades: %2\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:687
 msgid "Nothing to Remove"
@@ -5978,7 +6121,7 @@ msgstr "Beskrivning"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:183
 msgid "Keywords"
-msgstr ""
+msgstr "Nyckelord"
 
 #: qtplugins/packageinstaller/packagemodel.cpp:610
 msgid "Electrostatics"
@@ -6099,12 +6242,12 @@ msgstr "Film (*.mp4);;Film (*.avi);;GIF (*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:455 qtplugins/surfaces/surfaces.cpp:1420
 msgid "Movie Size"
-msgstr ""
+msgstr "Filmstorlek"
 
 #: qtplugins/playertool/playertool.cpp:481
 #, qt-format
 msgid "Cannot render frame %1: %2"
-msgstr ""
+msgstr "Kan inte rendera bildruta %1: %2"
 
 #: qtplugins/playertool/playertool.cpp:487 qtplugins/surfaces/surfaces.cpp:1436
 msgid "GIF (*.gif)"
@@ -6124,7 +6267,7 @@ msgstr "Film (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:519
 msgid "Cannot create the video file."
-msgstr ""
+msgstr "Det gick inte att skapa videofilen."
 
 #: qtplugins/playertool/playertool.cpp:536 qtplugins/surfaces/surfaces.cpp:1515
 msgid "Error: cannot add frame to video."
@@ -6135,47 +6278,57 @@ msgid ""
 "Cannot run ffmpeg or avconv to encode the movie. The frames were saved as "
 "PNG files."
 msgstr ""
+"Det går inte att köra ffmpeg eller avconv för att koda filmen. Bildrutorna "
+"sparades som PNG-filer."
 
 #: qtplugins/playertool/playertool.cpp:668
 msgid ""
 "Advance one coordinate set, looping to the first frame after the last. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Gå fram en koordinatuppsättning och återgå till den första bildrutan efter "
+"den sista. Returnerar {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:672
 msgid ""
 "Step back one coordinate set, looping to the last frame before the first. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Gå tillbaka en koordinatuppsättning och återgå till den sista bildrutan före "
+"den första. Returnerar {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:676
 msgid ""
 "Jump to a coordinate set, given as a zero-based index: {\"index\": n}. "
 "Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Gå till en koordinatuppsättning med nollbaserat index: {\"index\": n}. "
+"Returnerar {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:680
 msgid ""
 "Report the current frame and the number of coordinate sets, without changing "
 "anything. Returns {\"frame\": …, \"count\": …}."
 msgstr ""
+"Rapportera den aktuella bildrutan och antalet koordinatuppsättningar utan "
+"att ändra något. Returnerar {\"frame\": …, \"count\": …}."
 
 #: qtplugins/playertool/playertool.cpp:696
 msgid "There is no molecule."
-msgstr ""
+msgstr "Det finns ingen molekyl."
 
 #: qtplugins/playertool/playertool.cpp:700
 msgid "The molecule has no coordinate sets."
-msgstr ""
+msgstr "Molekylen har inga koordinatuppsättningar."
 
 #: qtplugins/playertool/playertool.cpp:710
 msgid "index is required."
-msgstr ""
+msgstr "index krävs."
 
 #: qtplugins/playertool/playertool.cpp:719
 #, qt-format
 msgid "index must be a whole number from 0 to %1."
-msgstr ""
+msgstr "index måste vara ett heltal från 0 till %1."
 
 #: qtplugins/playertool/playertool.h:36
 msgid "Player tool"
@@ -6194,6 +6347,8 @@ msgid ""
 "Select 2, 3 or 4 atoms to follow a distance, angle or dihedral across the "
 "conformers."
 msgstr ""
+"Välj 2, 3 eller 4 atomer för att följa ett avstånd, en vinkel eller en "
+"torsionsvinkel mellan konformererna."
 
 #: qtplugins/plotconformer/plotconformer.cpp:519
 msgid "Conformer Analysis"
@@ -6201,19 +6356,19 @@ msgstr "Konformeranalys"
 
 #: qtplugins/plotconformer/plotconformer.cpp:541
 msgid "Plot:"
-msgstr ""
+msgstr "Rita:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:543
 msgid "vs"
-msgstr ""
+msgstr "mot"
 
 #: qtplugins/plotconformer/plotconformer.cpp:554
 msgid "Add from Selection"
-msgstr ""
+msgstr "Lägg till från markering"
 
 #: qtplugins/plotconformer/plotconformer.cpp:558
 msgid "Unwrap dihedral scans"
-msgstr ""
+msgstr "Veckla ut torsionsskanningar"
 
 #: qtplugins/plotconformer/plotconformer.cpp:566
 msgid "Energy Units:"
@@ -6221,11 +6376,11 @@ msgstr "Energienheter:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:586
 msgid "Time between frames:"
-msgstr ""
+msgstr "Tid mellan bildrutor:"
 
 #: qtplugins/plotconformer/plotconformer.cpp:592
 msgid " ps"
-msgstr ""
+msgstr " ps"
 
 #: qtplugins/plotconformer/plotconformer.cpp:594
 msgid ""
@@ -6233,6 +6388,9 @@ msgid ""
 "velocities and a temperature. Most trajectory files do not record it, so it "
 "starts at the value from the file where there is one and at 1 ps otherwise."
 msgstr ""
+"Intervallet mellan sparade bildrutor används för att omvandla banan till "
+"hastigheter och en temperatur. De flesta banfiler anger inte intervallet, så "
+"värdet från filen används när det finns, annars 1 ps."
 
 #: qtplugins/plotconformer/plotconformer.cpp:844
 #, qt-format
@@ -6244,6 +6402,7 @@ msgid ""
 "The units the energies in this file are in, which the file itself does not "
 "record."
 msgstr ""
+"Enheterna för energivärdena i den här filen, vilka filen själv inte anger."
 
 #: qtplugins/plotconformer/plotconformer.h:46
 msgid "PlotConformer"
@@ -6252,6 +6411,8 @@ msgstr "PlotConformer"
 #: qtplugins/plotconformer/plotconformer.h:176
 msgid "Generate and plot conformer data (RMSD, energy or scan coordinates)."
 msgstr ""
+"Skapa och rita data för konformationer (RMSD, energi eller "
+"skanningskoordinater)."
 
 #: qtplugins/plotpdf/plotpdf.cpp:36
 msgid "Plot Pair Distribution Function…"
@@ -6267,12 +6428,12 @@ msgstr "Felmeddelande: "
 
 #: qtplugins/plotpdf/plotpdf.cpp:211
 msgid "Show PDF plot."
-msgstr ""
+msgstr "Visa PDF-diagram."
 
 #: qtplugins/plotpdf/plotpdf.cpp:226 qtplugins/plotxrd/plotxrd.cpp:327
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "The molecule has no unit cell."
-msgstr ""
+msgstr "Molekylen saknar enhetscell."
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -6310,7 +6471,7 @@ msgstr "Fel: "
 
 #: qtplugins/plotxrd/plotxrd.cpp:312
 msgid "Show XRD plot."
-msgstr ""
+msgstr "Visa XRD-diagram."
 
 #: qtplugins/plotxrd/plotxrd.h:39
 msgid "PlotXrd"
@@ -6332,21 +6493,21 @@ msgstr "Spara fil"
 
 #: qtplugins/ply/ply.cpp:113
 msgid "PLY (*.ply)"
-msgstr ""
+msgstr "PLY (*.ply)"
 
 #: qtplugins/ply/ply.cpp:122 qtplugins/ply/ply.cpp:155
 msgid "PLY Export"
-msgstr ""
+msgstr "PLY-export"
 
 #: qtplugins/ply/ply.cpp:123
 #, qt-format
 msgid "Cannot open %1 for writing: %2"
-msgstr ""
+msgstr "Kan inte öppna %1 för skrivning: %2"
 
 #: qtplugins/ply/ply.cpp:156
 #, qt-format
 msgid "Writing %1 failed: %2"
-msgstr ""
+msgstr "Det gick inte att skriva %1: %2"
 
 #: qtplugins/ply/ply.h:25
 msgid "PLY"
@@ -6624,7 +6785,7 @@ msgstr "Lägg till egenskap…"
 
 #: qtplugins/propertytables/propertyview.cpp:974
 msgid "Convert Energy Units…"
-msgstr ""
+msgstr "Konvertera energienheter…"
 
 #: qtplugins/propertytables/propertyview.cpp:981
 msgid "Change Charge Type…"
@@ -6676,7 +6837,7 @@ msgstr "Kan inte läsa filen %1."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:396
 msgid "Nuclear Critical Points Search"
-msgstr ""
+msgstr "Sökning efter nukleära kritiska punkter"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:451
 msgid "Failed to create a temporary file."
@@ -6684,21 +6845,21 @@ msgstr "Kunde inte skapa en temporär fil."
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:497
 msgid "Bond Critical Points Search"
-msgstr ""
+msgstr "Sökning efter kritiska bindningspunkter"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:644
 msgid "Electron Density Sources Search"
-msgstr ""
+msgstr "Sökning efter källor för elektrondensitet"
 
 #: qtplugins/qtaim/qtaimcriticalpointlocator.cpp:789
 msgid "Electron Density Sinks Search"
-msgstr ""
+msgstr "Sökning efter sänkor för elektrondensitet"
 
 #: qtplugins/qtaim/qtaimcubature.cpp:1412
 #: qtplugins/qtaim/qtaimcubature.cpp:1692
 #: qtplugins/qtaim/qtaimcubature.cpp:2168
 msgid "Atomic Basin Integration"
-msgstr ""
+msgstr "Integration av atomära bassänger"
 
 #: qtplugins/qtaim/qtaimengine.h:25 qtplugins/qtaim/qtaimextension.cpp:68
 #: qtplugins/qtaim/qtaimextension.h:22
@@ -6871,37 +7032,39 @@ msgstr "Markera rest"
 
 #: qtplugins/select/select.cpp:630
 msgid "Select all atoms."
-msgstr ""
+msgstr "Markera alla atomer."
 
 #: qtplugins/select/select.cpp:631
 msgid "Deselect all atoms"
-msgstr ""
+msgstr "Avmarkera alla atomer"
 
 #: qtplugins/select/select.cpp:633
 msgid ""
 "Select all atoms which are not currently selected, and deselect all "
 "currently selected atoms."
 msgstr ""
+"Markera alla atomer som inte är markerade och avmarkera alla markerade "
+"atomer."
 
 #: qtplugins/select/select.cpp:639
 msgid "Select all atoms of a certain element type."
-msgstr ""
+msgstr "Markera alla atomer av en viss grundämnestyp."
 
 #: qtplugins/select/select.cpp:641
 msgid "An element symbol or atomic number."
-msgstr ""
+msgstr "En grundämnessymbol eller ett atomnummer."
 
 #: qtplugins/select/select.cpp:650
 msgid "Select all atoms that belong to amino acid backbones"
-msgstr ""
+msgstr "Markera alla atomer som tillhör aminosyraryggrader"
 
 #: qtplugins/select/select.cpp:653
 msgid "Select all atoms that belong to amino acid sidechains"
-msgstr ""
+msgstr "Markera alla atomer som tillhör aminosyrasidokedjor"
 
 #: qtplugins/select/select.cpp:655
 msgid "Select all water molecules"
-msgstr ""
+msgstr "Markera alla vattenmolekyler"
 
 #: qtplugins/select/select.cpp:659
 msgid ""
@@ -6909,14 +7072,17 @@ msgid ""
 "all atoms next to a selected atom, and additionally all atoms that are next "
 "to those atoms."
 msgstr ""
+"Markera alla atomer högst två atomer från en markerad atom. Med andra ord "
+"markeras alla atomer intill en markerad atom, samt alla atomer intill dessa "
+"atomer."
 
 #: qtplugins/select/select.cpp:665
 msgid "Shrink selection. Note: One shrink is equivalent to two enlarges!"
-msgstr ""
+msgstr "Minska markeringen. Observera: en minskning motsvarar två utvidgningar!"
 
 #: qtplugins/select/select.cpp:668
 msgid "Separate the selected atoms into a new layer."
-msgstr ""
+msgstr "Separera de markerade atomerna till ett nytt lager."
 
 #: qtplugins/select/select.cpp:674
 msgid ""
@@ -6924,14 +7090,17 @@ msgid ""
 "\"indices\" is a deprecated alias) and optional \"mode\": \"replace\" "
 "(default), \"add\" or \"remove\"."
 msgstr ""
+"Markera atomer efter index. Alternativ: \"atoms\" (lista med nollbaserade "
+"atomindex; \"indices\" är ett föråldrat alias) och valfritt \"mode\": "
+"\"replace\" (standard), \"add\" eller \"remove\"."
 
 #: qtplugins/select/select.cpp:680
 msgid "Zero-based indices of the atoms to select."
-msgstr ""
+msgstr "Nollbaserade index för atomerna som ska markeras."
 
 #: qtplugins/select/select.cpp:685
 msgid "How to combine the atoms with the current selection."
-msgstr ""
+msgstr "Hur atomerna ska kombineras med den aktuella markeringen."
 
 #. i18n: file: qtplugins/symmetry/symmetrywidget.ui:186
 #. i18n: ectx: property (text), widget (QPushButton, selectSubgroupButton)
@@ -6984,16 +7153,16 @@ msgstr "Nytt lager"
 
 #: qtplugins/spacegroup/spacegroup.cpp:82
 msgid "Give either hallNumber or spaceGroup, not both."
-msgstr ""
+msgstr "Ange antingen hallNumber eller spaceGroup, inte båda."
 
 #: qtplugins/spacegroup/spacegroup.cpp:97
 #, qt-format
 msgid "hallNumber must be an integer from 1 to %1."
-msgstr ""
+msgstr "hallNumber måste vara ett heltal från 1 till %1."
 
 #: qtplugins/spacegroup/spacegroup.cpp:106
 msgid "spaceGroup must be a space group symbol (a string)."
-msgstr ""
+msgstr "spaceGroup måste vara en rymdgruppssymbol (en sträng)."
 
 #: qtplugins/spacegroup/spacegroup.cpp:113
 #, qt-format
@@ -7001,6 +7170,9 @@ msgid ""
 "spaceGroup \"%1\" does not name a single space group setting; use hallNumber "
 "(1 to %2) or a symbol that includes the setting, e.g. \"F d -3 m :2\"."
 msgstr ""
+"spaceGroup \"%1\" anger inte en enskild rymdgruppsinställning. Använd "
+"hallNumber (1 till %2) eller en symbol som innehåller inställningen, till "
+"exempel \"F d -3 m :2\"."
 
 #: qtplugins/spacegroup/spacegroup.cpp:139
 msgid "Perceive Space Group…"
@@ -7128,6 +7300,8 @@ msgid ""
 "The space group of the molecule is not known: give the hallNumber (1 to %1) "
 "or spaceGroup parameter."
 msgstr ""
+"Molekylens rymdgrupp är okänd: ange parametern hallNumber (1 till %1) eller "
+"spaceGroup."
 
 #: qtplugins/spacegroup/spacegroup.cpp:685
 #, qt-format
@@ -7254,11 +7428,11 @@ msgstr "Rita upp spektra…"
 
 #: qtplugins/spectra/spectra.cpp:163
 msgid "Open spectra dialog."
-msgstr ""
+msgstr "Öppna dialogrutan för spektra."
 
 #: qtplugins/spectra/spectra.cpp:183
 msgid "The molecule has no spectra data."
-msgstr ""
+msgstr "Molekylen saknar spektraldata."
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -7651,7 +7825,7 @@ msgstr "Kunde inte hitta den aktiva återgivningswidgeten."
 #: qtplugins/surfaces/surfaces.cpp:1486
 #, qt-format
 msgid "Cannot render the movie frame: %1"
-msgstr ""
+msgstr "Det gick inte att rendera filmens bildruta: %1"
 
 #: qtplugins/surfaces/surfaces.h:79
 msgid "Read and render surfaces."
@@ -7668,7 +7842,7 @@ msgstr "SVG (*.svg)"
 #: qtplugins/svg/svg.cpp:284
 #, qt-format
 msgid "Ball-and-stick view of %1, %2 atoms"
-msgstr ""
+msgstr "Kul- och stavmodell av %1, %2 atomer"
 
 #: qtplugins/svg/svg.h:27
 msgid "SVG"
@@ -7688,51 +7862,51 @@ msgstr "Symmetri…"
 
 #: qtplugins/symmetry/symmetry.cpp:216
 msgid "There is no molecule to analyze."
-msgstr ""
+msgstr "Det finns ingen molekyl att analysera."
 
 #: qtplugins/symmetry/symmetry.cpp:223 qtplugins/symmetry/symmetry.cpp:391
 msgid "The molecule has no 3D coordinates."
-msgstr ""
+msgstr "Molekylen har inga 3D-koordinater."
 
 #: qtplugins/symmetry/symmetry.cpp:228
 msgid "The molecule has no atoms."
-msgstr ""
+msgstr "Molekylen har inga atomer."
 
 #: qtplugins/symmetry/symmetry.cpp:386
 msgid "There is no molecule to symmetrize."
-msgstr ""
+msgstr "Det finns ingen molekyl att symmetrisera."
 
 #: qtplugins/symmetry/symmetry.cpp:394
 msgid "A single atom is already symmetric."
-msgstr ""
+msgstr "En ensam atom är redan symmetrisk."
 
 #: qtplugins/symmetry/symmetry.cpp:415
 #, qt-format
 msgid "libmsym returned %1 atoms for a molecule of %2."
-msgstr ""
+msgstr "libmsym returnerade %1 atomer för en molekyl med %2 atomer."
 
 #: qtplugins/symmetry/symmetry.cpp:438
 msgid "Detect the point group of the molecule."
-msgstr ""
+msgstr "Identifiera molekylens punktgrupp."
 
 #: qtplugins/symmetry/symmetry.cpp:440
 msgid "Snap the molecule onto its detected point group."
-msgstr ""
+msgstr "Fäst molekylen vid dess identifierade punktgrupp."
 
 #: qtplugins/symmetry/symmetry.cpp:457
 #, qt-format
 msgid "Unknown tolerance \"%1\": expected tight, normal, loose or veryloose."
-msgstr ""
+msgstr "Okänd tolerans \"%1\": förväntade tight, normal, loose eller veryloose."
 
 #: qtplugins/symmetry/symmetry.cpp:479
 #, qt-format
 msgid "Detected %1"
-msgstr ""
+msgstr "Identifierade %1"
 
 #: qtplugins/symmetry/symmetry.cpp:490
 #, qt-format
 msgid "Symmetrized to %1"
-msgstr ""
+msgstr "Symmetriserad till %1"
 
 #: qtplugins/symmetry/symmetry.h:97
 msgid "Provide symmetry functionality."
@@ -7995,7 +8169,7 @@ msgstr "Z-matrisredigerare"
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:59
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:703
 msgid "Add Dummy Atoms"
-msgstr ""
+msgstr "Lägg till dummyatomer"
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:67
 msgid "Rebuild Geometry"
@@ -8026,10 +8200,12 @@ msgid ""
 "Dummy atoms added beside the linear fragments. They are ordinary atoms of "
 "element Xx: delete them, or undo, when you are done with the matrix."
 msgstr ""
+"Dummyatomer lades till bredvid de linjära fragmenten. De är vanliga atomer "
+"av grundämnet Xx. Ta bort dem eller ångra när du är klar med matrisen."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:152
 msgid "Nothing here needs a dummy atom."
-msgstr ""
+msgstr "Inget här behöver en dummyatom."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:163
 msgid "Geometry rebuilt from the table."
@@ -8064,6 +8240,8 @@ msgid ""
 "Nothing here is straight enough to need one: every row already has real "
 "atoms off the axis to be measured against."
 msgstr ""
+"Inget här är tillräckligt rakt för att behöva en dummyatom. Varje rad har "
+"redan verkliga atomer utanför axeln att mäta mot."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.cpp:211
 msgid ""
@@ -8072,6 +8250,10 @@ msgid ""
 "atoms of the molecule: they are saved and exported with it until you delete "
 "them."
 msgstr ""
+"Lägg till en atom av grundämnet Xx bredvid varje linjärt fragment, utanför "
+"axeln, så att dess vinklar och torsionsvinklar kan mätas och redigeras. "
+"Dummyatomer är verkliga atomer i molekylen. De sparas och exporteras med den "
+"tills du tar bort dem."
 
 #: qtplugins/zmatrixeditor/zmatrixeditor.h:37
 msgid "Edit bond lengths, angles and torsions in a table."
@@ -8088,12 +8270,12 @@ msgstr "Dihedralvinkel (°)"
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:174
 #, qt-format
 msgid "Constrained to %1 Å"
-msgstr ""
+msgstr "Begränsad till %1 Å"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:176
 #, qt-format
 msgid "Constrained to %1°"
-msgstr ""
+msgstr "Begränsad till %1°"
 
 #: qtplugins/zmatrixeditor/zmatrixmodel.cpp:364
 #, qt-format
@@ -8124,11 +8306,11 @@ msgstr "Bygg om från Z-matris"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:117
 msgid "Constrain Distance"
-msgstr ""
+msgstr "Begränsa avstånd"
 
 #: qtplugins/zmatrixeditor/zmatrixview.cpp:123
 msgid "Constrain Dihedral"
-msgstr ""
+msgstr "Begränsa torsionsvinkel"
 
 #. i18n: file: molequeue/inputgeneratordialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::MoleQueue::InputGeneratorDialog)
@@ -8925,11 +9107,13 @@ msgstr "Bindningsordning:"
 #. i18n: ectx: property (toolTip), widget (QCheckBox, adjustBondLengths)
 msgid "When possible, adjust bond lengths when changing atoms or bond orders"
 msgstr ""
+"Justera om möjligt bindningslängder när atomer eller bindningsordningar "
+"ändras"
 
 #. i18n: file: qtplugins/editor/editortoolwidget.ui:56
 #. i18n: ectx: property (text), widget (QCheckBox, adjustBondLengths)
 msgid "Adjust Bond Lengths"
-msgstr ""
+msgstr "Justera bindningslängder"
 
 #. i18n: file: qtplugins/forcefield/forcefielddialog.ui:20
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ForceFieldDialog)
@@ -10660,17 +10844,17 @@ msgstr "Sök insticksmoduler…"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
 msgid "Plugin Information"
-msgstr ""
+msgstr "Information om insticksmodul"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:122
 #. i18n: ectx: property (text), widget (QPushButton, bugTrackerButton)
 msgid "Report an Issue"
-msgstr ""
+msgstr "Rapportera ett fel"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:125
 #. i18n: ectx: property (toolTip), widget (QPushButton, bugTrackerButton)
 msgid "Open this plugin's bug tracker in your browser"
-msgstr ""
+msgstr "Öppna insticksmodulens felhanterare i webbläsaren"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:144
 #. i18n: ectx: property (text), widget (QPushButton, installLocalButton)
