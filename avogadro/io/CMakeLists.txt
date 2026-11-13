@@ -63,8 +63,9 @@ if(USE_LIBARCHIVE)
   find_package(LibArchive)
   find_package(ZLIB)
   if(LibArchive_FOUND AND ZLIB_FOUND)
+    set_property(GLOBAL PROPERTY AvogadroLibs_LINKS_LIBARCHIVE ON)
     target_compile_definitions(IO PRIVATE AVO_USE_LIBARCHIVE)
-    target_link_libraries(IO PRIVATE LibArchive::LibArchive ${ZLIB_LIBRARIES})
+    target_link_libraries(IO PRIVATE LibArchive::LibArchive ZLIB::ZLIB)
 
     # Do not inherit zlib's include directory blindly. On Unix it is the
     # platform's own header directory, and adding that to the search path

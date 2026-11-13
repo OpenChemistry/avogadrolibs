@@ -238,6 +238,7 @@ get_property(AvogadroLibs_STATIC_PLUGINS GLOBAL
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
   ${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
 
+get_property(AvogadroLibs_LINKS_LIBARCHIVE GLOBAL PROPERTY AvogadroLibs_LINKS_LIBARCHIVE)
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake" @ONLY)
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"
