@@ -8,10 +8,11 @@
 
 #include "avogadrocoreexport.h"
 
+#include "matrix.h"
 #include "vector.h"
 
-#include <vector>
 #include <array>
+#include <vector>
 
 namespace Avogadro::Core {
 
@@ -49,19 +50,55 @@ public:
   };
 
   /**
-   * @return The minimum point in the cube.
+   * @return The position of grid point (0, 0, 0), the origin of the grid.
+   * For a skewed grid this is one corner of the cell, not the minimum
+   * coordinate of the cube; see boundingBox().
    */
   Vector3 min() const { return m_min; }
 
   /**
-   * @return The maximum point in the cube.
+   * @return The position of the far corner of the grid, grid point
+   * (nx - 1, ny - 1, nz - 1). For a skewed grid this is not the maximum
+   * coordinate of the cube; see boundingBox().
    */
   Vector3 max() const { return m_max; }
 
   /**
-   * @return The spacing of the grid.
+   * @return The length of the step along each grid axis. For a grid whose
+   * steps lie along x, y and z (isAxisAligned()) this is the diagonal of the
+   * step matrix, including any negative sign. For a skewed grid it is the
+   * norm of each step vector (always positive).
    */
   Vector3 spacing() const { return m_spacing; }
+
+  /**
+   * The step matrix S: its columns are the step vectors along the grid
+   * indices i, j and k, in the same units as min(). The position of grid
+   * point (i, j, k) is min() + S * (i, j, k)^T. The data is stored with k
+   * (the third axis) changing fastest, as ever.
+   * @return The step matrix; diag(spacing) for a grid set with an
+   * axis-aligned setLimits() overload.
+   */
+  Matrix3 steps() const { return m_steps; }
+
+  /**
+   * @return True if the step matrix has exactly zero off-diagonal elements,
+   * i.e., every grid axis runs along x, y or z. No tolerance is applied, so
+   * the axis-aligned code paths give bit-identical results to a diagonal
+   * spacing; a file that writes a tiny nonzero off-diagonal element is
+   * treated as skewed.
+   */
+  bool isAxisAligned() const { return m_axisAligned; }
+
+  /**
+   * Computes the axis-aligned bounding box of the eight corners of the grid.
+   * Use this rather than min() and max() whenever a coordinate range is
+   * needed, as those are only the extremes of an axis-aligned, positively
+   * stepped grid.
+   * @param lo Receives the lowest x, y and z of any corner.
+   * @param hi Receives the highest x, y and z of any corner.
+   */
+  void boundingBox(Vector3& lo, Vector3& hi) const;
 
   /**
    * @return The x, y and z dimensions of the cube.
@@ -112,6 +149,29 @@ public:
    */
   bool setLimits(const Vector3& min, const Vector3i& dim,
                  const Vector3& spacing);
+
+  /**
+   * Set the limits of the cube from a full step matrix, which allows skewed
+   * (triclinic or hexagonal) grids.
+   * @param origin The position of grid point (0, 0, 0).
+   * @param dim The integer dimensions of the cube along i, j and k.
+   * @param steps The step matrix; its columns are the step vectors along i, j
+   * and k. The grid point (i, j, k) is at origin + steps * (i, j, k)^T.
+   * @return False, leaving the cube unchanged, if any dimension is below one,
+   * the total point count exceeds INT_MAX, origin or steps is not finite, or
+   * steps is singular (|det| no larger than 1e-9 times the product of the
+   * three column lengths).
+   */
+  bool setStepLimits(const Vector3& origin, const Vector3i& dim,
+                     const Matrix3& steps);
+
+  /**
+   * @return True if @p steps can be used as a step matrix: it is finite and
+   * its columns are linearly independent (|det| larger than 1e-9 times the
+   * product of the three column lengths, so the test does not depend on the
+   * unit or the grid spacing). This is the test setStepLimits() applies.
+   */
+  static bool validSteps(const Matrix3& steps);
 
   /**
    * Set the limits of the cube - copy the limits of an existing Cube.
@@ -254,7 +314,10 @@ public:
   /**
    * Compute the gradient of the cube's values at a specific point, using
    * central differences (one-sided differences at the edges of the cube).
-   * The vector points toward increasing values, i.e., it is +grad f.
+   * The vector points toward increasing values, i.e., it is +grad f, in
+   * world coordinates (per unit length, not per grid step). Differences are
+   * taken along the grid indices and mapped through S^{-T}, so skewed grids
+   * give the true gradient.
    * @param i x index
    * @param j y index
    * @param k z index
@@ -284,7 +347,11 @@ public:
   std::array<std::array<float, 3>, 8> getGradCube(int i, int j, int k) const;
 
   /**
-   * Get the data value at the specified indices.
+   * Get the data value at the specified indices. This is called for every
+   * voxel, so it makes a single memory-safety check: an index that lies
+   * outside the data gives zero. It does not check each axis, so an index
+   * just past one axis may alias a point of the grid; use value() for
+   * interpolation at the edges.
    * @param i x index
    * @param j y index
    * @param k z index
@@ -304,8 +371,9 @@ public:
    *
    * The indices (i, j, k) are converted to real-space positions (xpos, ypos,
    * zpos), mapping grid indices to physical coordinates. The method returns a
-   * cube that spans one step in each of the x, y, and z directions, with step
-   * sizes defined by `m_spacing`.
+   * cell that spans one step along each of the i, j and k grid axes (a
+   * parallelepiped for a skewed grid), with the step vectors given by
+   * steps().
    *
    * @param i X-index.
    * @param j Y-index.
@@ -324,6 +392,20 @@ protected:
   std::string m_name;
   Type m_cubeType;
   Mutex* m_lock;
+  /** Columns are the step vectors along i, j, k. */
+  Matrix3 m_steps;
+  /** The inverse of m_steps; only set (and used) for a skewed grid. */
+  Matrix3 m_stepsInverse;
+  /** True when m_steps has exactly zero off-diagonal elements. */
+  bool m_axisAligned;
+
+  /** Set every geometry member from an origin, dimensions and steps. */
+  void applyLimits(const Vector3& origin, const Vector3i& dim,
+                   const Matrix3& steps);
+  /** Fractional grid index of a position, or false if not finite. */
+  bool fractionalIndex(const Vector3& pos, Vector3& index) const;
+  /** computeGradient() without the check that the data matches the grid. */
+  std::array<float, 3> gradientAt(int i, int j, int k) const;
 };
 
 inline bool Cube::setValue(unsigned int i, float value_)

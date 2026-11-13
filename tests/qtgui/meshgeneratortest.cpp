@@ -18,6 +18,7 @@
 #include <cstring>
 #include <vector>
 
+using Avogadro::Matrix3;
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
 using Avogadro::Core::Cube;
@@ -324,4 +325,85 @@ TEST(MeshGeneratorTest, parallelMatchesSingleThread)
     }
   }
   pool->setMaxThreadCount(savedThreads);
+}
+
+namespace {
+
+// Samples f = |x - center| on a grid with the given steps that is centered on
+// the point, and extracts the isosurface at radius.
+void checkSphereOnGrid(const Matrix3& steps, int smoothingPasses)
+{
+  const Vector3 center(0.3, -0.2, 0.1);
+  const double radius = 1.2;
+  const Vector3i dim(22, 22, 22);
+  const Vector3 half = 0.5 * Vector3(dim.x() - 1, dim.y() - 1, dim.z() - 1);
+
+  Cube cube;
+  ASSERT_TRUE(cube.setStepLimits(center - steps * half, dim, steps));
+  for (unsigned int i = 0; i < cube.data()->size(); ++i)
+    cube.setValue(i, static_cast<float>((cube.position(i) - center).norm()));
+
+  Mesh mesh;
+  MeshGenerator gen;
+  ASSERT_TRUE(
+    gen.initialize(&cube, &mesh, static_cast<float>(radius), smoothingPasses));
+  gen.run();
+  ASSERT_GT(mesh.vertices().size(), static_cast<size_t>(100));
+  ASSERT_EQ(mesh.vertices().size(), mesh.normals().size());
+
+  const double shortest =
+    std::min({ steps.col(0).norm(), steps.col(1).norm(), steps.col(2).norm() });
+  double meanRadial = 0.0;
+  double worstRadial = 1.0;
+  for (size_t v = 0; v < mesh.vertices().size(); ++v) {
+    const Vector3 r = mesh.vertices()[v].cast<double>() - center;
+    // The surface is where it should be (smoothing shrinks it a little).
+    const double tolerance = (smoothingPasses > 0 ? 0.3 : 0.1) * shortest;
+    EXPECT_NEAR(r.norm(), radius, tolerance + 0.05 * shortest);
+    const Vector3 n = mesh.normals()[v].cast<double>();
+    ASSERT_GT(n.norm(), 0.0);
+    // The normals point away from the center, f growing outward.
+    const double radial = n.normalized().dot(r.normalized());
+    meanRadial += radial;
+    worstRadial = std::min(worstRadial, radial);
+  }
+  meanRadial /= static_cast<double>(mesh.vertices().size());
+  EXPECT_GT(meanRadial, 0.95) << "passes " << smoothingPasses;
+  EXPECT_GT(worstRadial, 0.5) << "passes " << smoothingPasses;
+}
+
+Matrix3 skewedMeshSteps()
+{
+  Matrix3 steps;
+  steps << 0.26, 0.08, -0.05, //
+    0.02, 0.24, 0.06,         //
+    -0.03, 0.04, 0.25;
+  return steps;
+}
+
+} // namespace
+
+TEST(MeshGeneratorTest, skewedGridSphere)
+{
+  const Matrix3 steps = skewedMeshSteps();
+  ASSERT_GT(steps.determinant(), 0.0);
+  for (int passes : { 0, 1 })
+    checkSphereOnGrid(steps, passes);
+}
+
+// A step matrix with a negative determinant mirrors the grid, which must not
+// turn the surface inside out.
+TEST(MeshGeneratorTest, leftHandedGridSphere)
+{
+  Matrix3 steps = skewedMeshSteps();
+  steps.col(1) *= -1.0;
+  ASSERT_LT(steps.determinant(), 0.0);
+  for (int passes : { 0, 1 })
+    checkSphereOnGrid(steps, passes);
+
+  // An axis-aligned grid with a backwards axis, too.
+  Matrix3 diagonal = Matrix3::Zero();
+  diagonal.diagonal() = Vector3(-0.25, 0.25, 0.25);
+  for (int passes : { 0, 1 })
+    checkSphereOnGrid(diagonal, passes);
 }

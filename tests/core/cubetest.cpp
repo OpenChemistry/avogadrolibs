@@ -12,6 +12,7 @@
 #include <limits>
 #include <vector>
 
+using Avogadro::Matrix3;
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
 using Avogadro::Core::Cube;
@@ -292,4 +293,212 @@ TEST(CubeTest, computeGradientLinearField)
     EXPECT_NEAR(g[1], b, 1.0e-3) << p[0] << " " << p[1] << " " << p[2];
     EXPECT_NEAR(g[2], c, 1.0e-3) << p[0] << " " << p[1] << " " << p[2];
   }
+}
+
+namespace {
+
+// Step vectors (columns) of a triclinic-looking grid.
+Matrix3 skewedSteps()
+{
+  Matrix3 steps;
+  steps << 0.30, 0.11, -0.07, //
+    0.02, 0.25, 0.05,         //
+    -0.03, 0.04, 0.28;
+  return steps;
+}
+
+float linearFunction(const Vector3& r)
+{
+  return static_cast<float>(1.5 * r.x() - 0.75 * r.y() + 2.0 * r.z() + 0.25);
+}
+
+} // namespace
+
+TEST(CubeTest, stepsOfAxisAlignedGrid)
+{
+  Cube cube;
+  ASSERT_TRUE(cube.setLimits(Vector3(1.0, 2.0, 3.0), Vector3i(3, 4, 5),
+                             Vector3(0.5, 0.25, 0.125)));
+  EXPECT_TRUE(cube.isAxisAligned());
+  EXPECT_EQ(cube.steps(), Matrix3(Vector3(0.5, 0.25, 0.125).asDiagonal()));
+  EXPECT_EQ(cube.spacing(), Vector3(0.5, 0.25, 0.125));
+  EXPECT_EQ(cube.max(), Vector3(2.0, 2.75, 3.5));
+  Vector3 lo, hi;
+  cube.boundingBox(lo, hi);
+  EXPECT_EQ(lo, cube.min());
+  EXPECT_EQ(hi, cube.max());
+}
+
+TEST(CubeTest, skewedPositionAndIndexRoundTrip)
+{
+  const Matrix3 steps = skewedSteps();
+  const Vector3 origin(-1.0, 0.5, 2.0);
+  const Vector3i dim(5, 6, 7);
+  Cube cube;
+  ASSERT_TRUE(cube.setStepLimits(origin, dim, steps));
+  EXPECT_FALSE(cube.isAxisAligned());
+  EXPECT_EQ(cube.steps(), steps);
+  EXPECT_EQ(cube.min(), origin);
+  EXPECT_TRUE(cube.max().isApprox(origin + steps * Vector3(4, 5, 6), 1e-12));
+  for (int d = 0; d < 3; ++d)
+    EXPECT_NEAR(cube.spacing()(d), steps.col(d).norm(), 1e-14);
+  EXPECT_EQ(cube.data()->size(), static_cast<size_t>(5 * 6 * 7));
+
+  // Bounding box encloses all eight corners and touches them.
+  Vector3 lo, hi;
+  cube.boundingBox(lo, hi);
+  Vector3 expectLo = origin, expectHi = origin;
+  for (int c = 0; c < 8; ++c) {
+    const Vector3 corner =
+      origin +
+      steps * Vector3((c & 1) ? 4 : 0, (c & 2) ? 5 : 0, (c & 4) ? 6 : 0);
+    expectLo = expectLo.cwiseMin(corner);
+    expectHi = expectHi.cwiseMax(corner);
+  }
+  EXPECT_TRUE(lo.isApprox(expectLo, 1e-12));
+  EXPECT_TRUE(hi.isApprox(expectHi, 1e-12));
+
+  for (int i = 0; i < dim.x(); ++i)
+    for (int j = 0; j < dim.y(); ++j)
+      for (int k = 0; k < dim.z(); ++k) {
+        const unsigned int index =
+          static_cast<unsigned int>(i * dim.y() * dim.z() + j * dim.z() + k);
+        const Vector3 pos = cube.position(index);
+        EXPECT_TRUE(pos.isApprox(origin + steps * Vector3(i, j, k), 1e-12));
+        // A little inside the cell the index is the cell's own.
+        const Vector3 inCell = pos + steps * Vector3(0.3, 0.3, 0.3);
+        EXPECT_EQ(cube.indexVector(inCell), Vector3i(i, j, k));
+      }
+  // Positions outside the grid never give an index outside it.
+  const unsigned int far = cube.closestIndex(Vector3(1.0e6, -1.0e6, 1.0e6));
+  EXPECT_LT(far, cube.data()->size());
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  EXPECT_LT(cube.closestIndex(Vector3(nan, 0, 0)), cube.data()->size());
+}
+
+TEST(CubeTest, skewedValueReproducesLinearFunction)
+{
+  Cube cube;
+  const Vector3 origin(0.3, -0.2, 0.1);
+  const Vector3i dim(6, 7, 8);
+  ASSERT_TRUE(cube.setStepLimits(origin, dim, skewedSteps()));
+  for (unsigned int i = 0; i < cube.data()->size(); ++i)
+    cube.setValue(i, linearFunction(cube.position(i)));
+
+  // Trilinear interpolation is exact for a linear function.
+  const Vector3 fractions[] = { { 0.4, 0.7, 0.2 },
+                                { 3.5, 1.25, 4.75 },
+                                { 4.99, 5.01, 6.5 },
+                                { 0.0, 0.0, 0.0 } };
+  for (const Vector3& u : fractions) {
+    const Vector3 pos = origin + skewedSteps() * u;
+    EXPECT_NEAR(cube.value(pos), linearFunction(pos), 2.0e-5);
+    EXPECT_NEAR(cube.valuef(pos.cast<float>()), linearFunction(pos), 2.0e-4);
+  }
+  // Well outside the grid there is nothing, and nothing odd happens.
+  EXPECT_EQ(cube.value(Vector3(100.0, 100.0, 100.0)), 0.0f);
+  EXPECT_EQ(cube.value(Vector3(std::numeric_limits<double>::quiet_NaN(), 0, 0)),
+            0.0f);
+}
+
+// computeGradient() is +grad f (toward increasing values).
+TEST(CubeTest, closestIndexRoundTripsGridPoints)
+{
+  const Vector3i dim(5, 6, 7);
+  Cube skewed;
+  ASSERT_TRUE(
+    skewed.setStepLimits(Vector3(0.3, -0.2, 0.1), dim, skewedSteps()));
+  Cube aligned;
+  Matrix3 diag = Vector3(0.1, 0.3, 0.7).asDiagonal();
+  ASSERT_TRUE(aligned.setStepLimits(Vector3(-1.0, 2.0, 0.5), dim, diag));
+  for (const Cube* cube : { &skewed, &aligned }) {
+    const unsigned int count = static_cast<unsigned int>(dim.prod());
+    for (unsigned int i = 0; i < count; ++i)
+      EXPECT_EQ(cube->closestIndex(cube->position(i)), i);
+  }
+}
+
+TEST(CubeTest, skewedGradientOfLinearFunction)
+{
+  Cube cube;
+  ASSERT_TRUE(cube.setStepLimits(Vector3(0.3, -0.2, 0.1), Vector3i(6, 7, 8),
+                                 skewedSteps()));
+  for (unsigned int i = 0; i < cube.data()->size(); ++i)
+    cube.setValue(i, linearFunction(cube.position(i)));
+
+  // Corners, edges, faces and interior all use different differences.
+  const int pts[][3] = { { 0, 0, 0 }, { 5, 6, 7 }, { 2, 3, 4 }, { 0, 3, 7 },
+                         { 5, 0, 4 }, { 2, 6, 0 }, { 3, 3, 3 } };
+  for (const auto& p : pts) {
+    const auto g = cube.computeGradient(p[0], p[1], p[2]);
+    EXPECT_NEAR(g[0], 1.5, 2.0e-3) << p[0] << " " << p[1] << " " << p[2];
+    EXPECT_NEAR(g[1], -0.75, 2.0e-3) << p[0] << " " << p[1] << " " << p[2];
+    EXPECT_NEAR(g[2], 2.0, 2.0e-3) << p[0] << " " << p[1] << " " << p[2];
+  }
+  // Out-of-range points have no gradient rather than a wild read.
+  const auto none = cube.computeGradient(-1, 0, 0);
+  EXPECT_EQ(none[0], 0.0f);
+}
+
+TEST(CubeTest, leftHandedStepsAreAccepted)
+{
+  Matrix3 steps = skewedSteps();
+  steps.col(0) *= -1.0;
+  ASSERT_LT(steps.determinant(), 0.0);
+  Cube cube;
+  ASSERT_TRUE(cube.setStepLimits(Vector3(0, 0, 0), Vector3i(4, 4, 4), steps));
+  for (unsigned int i = 0; i < cube.data()->size(); ++i)
+    cube.setValue(i, linearFunction(cube.position(i)));
+  const auto g = cube.computeGradient(1, 2, 1);
+  EXPECT_NEAR(g[0], 1.5, 2.0e-3);
+  EXPECT_NEAR(g[1], -0.75, 2.0e-3);
+  EXPECT_NEAR(g[2], 2.0, 2.0e-3);
+}
+
+TEST(CubeTest, invalidStepsAreRejected)
+{
+  Cube cube;
+  const Vector3 origin(1.0, 2.0, 3.0);
+  ASSERT_TRUE(cube.setStepLimits(origin, Vector3i(2, 2, 2), skewedSteps()));
+  const Matrix3 good = cube.steps();
+
+  // Singular: two parallel columns, and a zero column.
+  Matrix3 parallel = skewedSteps();
+  parallel.col(1) = 2.0 * parallel.col(0);
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), parallel));
+  Matrix3 zero = skewedSteps();
+  zero.col(2).setZero();
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), zero));
+  // Nearly singular for its size, whatever the unit.
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), parallel * 1.0e6));
+  // Not finite.
+  Matrix3 bad = skewedSteps();
+  bad(1, 1) = std::numeric_limits<double>::quiet_NaN();
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), bad));
+  bad = skewedSteps();
+  bad(0, 2) = std::numeric_limits<double>::infinity();
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(3, 3, 3), bad));
+  EXPECT_FALSE(
+    cube.setStepLimits(Vector3(std::numeric_limits<double>::quiet_NaN(), 0, 0),
+                       Vector3i(3, 3, 3), skewedSteps()));
+  // Too few points.
+  EXPECT_FALSE(cube.setStepLimits(origin, Vector3i(0, 3, 3), skewedSteps()));
+
+  // The cube is as it was.
+  EXPECT_EQ(cube.dimensions(), Vector3i(2, 2, 2));
+  EXPECT_EQ(cube.steps(), good);
+  EXPECT_EQ(cube.min(), origin);
+}
+
+TEST(CubeTest, copyingLimitsKeepsSteps)
+{
+  Cube a;
+  ASSERT_TRUE(
+    a.setStepLimits(Vector3(1, 2, 3), Vector3i(3, 3, 3), skewedSteps()));
+  Cube b;
+  ASSERT_TRUE(b.setLimits(a));
+  EXPECT_FALSE(b.isAxisAligned());
+  EXPECT_EQ(b.steps(), a.steps());
+  EXPECT_EQ(b.max(), a.max());
+  EXPECT_EQ(b.position(13), a.position(13));
 }

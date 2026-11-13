@@ -46,8 +46,12 @@ inline double square(double x)
 }
 
 // True if the cube has a grid that matches its data, with a positive spacing.
+// The distance transforms run along x, y and z, so a skewed grid (one read
+// from a file; the grids made here never are) is not usable.
 bool usableGrid(const Core::Cube& cube)
 {
+  if (!cube.isAxisAligned())
+    return false;
   const Vector3i dims = cube.dimensions();
   const Vector3 spacing = cube.spacing();
   if (dims.minCoeff() < 1 || !spacing.allFinite() ||

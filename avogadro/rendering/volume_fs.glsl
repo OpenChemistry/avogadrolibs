@@ -10,9 +10,12 @@ uniform vec3 negativeColor;
 // Our 3D volume (wavefunction):
 uniform sampler3D uVolumeData;
 
-// Cube bounds in world space:
-uniform vec3 uBoxMin;
-uniform vec3 uBoxMax;
+// The box in world space: uBoxMatrix maps the unit cube [0,1]^3 (the texture
+// coordinates of the volume) to the world, uBoxInverse maps back. The box is
+// a parallelepiped for a skewed grid. uBoxDiagonal is its longest diagonal.
+uniform mat4 uBoxMatrix;
+uniform mat4 uBoxInverse;
+uniform float uBoxDiagonal;
 
 // Camera position for ray computation when back faces are clipped
 uniform vec3 uCameraPos;
@@ -33,24 +36,22 @@ uniform float alphaScale;  // overall alpha multiplier
 
 out vec4 colorOut;
 
-// Ray-box intersection: returns exit t value for ray origin + t * dir
-float rayBoxExit(vec3 origin, vec3 dir, vec3 boxMin, vec3 boxMax)
-{
-    vec3 invDir = 1.0 / dir;
-    vec3 t1 = (boxMin - origin) * invDir;
-    vec3 t2 = (boxMax - origin) * invDir;
-    vec3 tMax = max(t1, t2);
-    return min(min(tMax.x, tMax.y), tMax.z);
-}
+// Ray-box intersection with the unit cube in volume (texture) space. An
+// affine map keeps the ray parameter t, so the ray is transformed into that
+// space and the t values are the world-space ones.
 
-// Ray-box intersection: returns entry t value for ray origin + t * dir
-float rayBoxEntry(vec3 origin, vec3 dir, vec3 boxMin, vec3 boxMax)
+// Returns (entry, exit) t values for ray origin + t * dir
+vec2 rayBox(vec3 origin, vec3 dir)
 {
-    vec3 invDir = 1.0 / dir;
-    vec3 t1 = (boxMin - origin) * invDir;
-    vec3 t2 = (boxMax - origin) * invDir;
+    vec3 o = (uBoxInverse * vec4(origin, 1.0)).xyz;
+    vec3 d = (uBoxInverse * vec4(dir, 0.0)).xyz;
+    vec3 invDir = 1.0 / d;
+    vec3 t1 = (vec3(0.0) - o) * invDir;
+    vec3 t2 = (vec3(1.0) - o) * invDir;
     vec3 tMin = min(t1, t2);
-    return max(max(tMin.x, tMin.y), tMin.z);
+    vec3 tMax = max(t1, t2);
+    return vec2(max(max(tMin.x, tMin.y), tMin.z),
+                min(min(tMax.x, tMax.y), tMax.z));
 }
 
 void main()
@@ -60,9 +61,8 @@ void main()
     vec3 entryPos = texture(inFrontPosTex, UV).xyz;
     vec3 exitPos  = texture(inBackPosTex,  UV).xyz;
 
-    // Get the expected diagonal length of the box
-    vec3 boxSize = uBoxMax - uBoxMin;
-    float boxDiagonal = length(boxSize);
+    // The longest diagonal of the box
+    float boxDiagonal = uBoxDiagonal;
 
     // Check for sentinel values (positions set to -1e6 when no hit)
     bool entryIsSentinel = entryPos.x < -1e5;
@@ -98,8 +98,9 @@ void main()
             // Trace ray through reference point to find both entry and exit
             // Move reference point back along ray to ensure we're outside the box
             vec3 rayOrigin = refPoint - rayDir * boxDiagonal * 2.0;
-            float tEntry = rayBoxEntry(rayOrigin, rayDir, uBoxMin, uBoxMax);
-            float tExit = rayBoxExit(rayOrigin, rayDir, uBoxMin, uBoxMax);
+            vec2 tBox = rayBox(rayOrigin, rayDir);
+            float tEntry = tBox.x;
+            float tExit = tBox.y;
 
             if (tExit <= tEntry) {
                 discard; // Ray misses box
@@ -109,8 +110,9 @@ void main()
             exitPos = rayOrigin + rayDir * tExit;
         } else {
             // Perspective: use camera position as ray origin
-            float tEntry = rayBoxEntry(uCameraPos, rayDir, uBoxMin, uBoxMax);
-            float tExit = rayBoxExit(uCameraPos, rayDir, uBoxMin, uBoxMax);
+            vec2 tBox = rayBox(uCameraPos, rayDir);
+            float tEntry = tBox.x;
+            float tExit = tBox.y;
 
             if (tExit <= tEntry || tExit <= 0.0) {
                 discard; // Ray misses box or is behind camera
@@ -152,7 +154,7 @@ void main()
             break;
 
         // Map world position to texture coordinates [0, 1]
-        vec3 volumeUV = (currentPosition - uBoxMin) / boxSize;
+        vec3 volumeUV = (uBoxInverse * vec4(currentPosition, 1.0)).xyz;
 
         // Skip samples that are clearly outside (with small tolerance for edge precision)
         if (any(lessThan(volumeUV, vec3(-0.01))) ||
