@@ -293,3 +293,14 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
       "missing.")
   endif()
 endif()
+
+if(TARGET Editor)
+  get_target_property(editor_source_dir Editor SOURCE_DIR)
+  add_executable(AvogadroEditorTests editordrawoptionstest.cpp)
+  target_include_directories(AvogadroEditorTests PRIVATE "${editor_source_dir}")
+  target_link_libraries(AvogadroEditorTests PRIVATE Editor Avogadro::QtOpenGL
+    Qt${QT_VERSION}::Test ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  add_test(NAME QtPlugins-EditorDrawOptions COMMAND AvogadroEditorTests)
+  set_tests_properties(QtPlugins-EditorDrawOptions PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+endif()

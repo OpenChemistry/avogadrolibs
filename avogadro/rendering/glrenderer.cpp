@@ -83,19 +83,23 @@ struct TimingState
   // context.
   void releaseQueries()
   {
+#ifndef __EMSCRIPTEN__
     if (!gpuAvailable)
       return;
     for (Slot& slot : slots)
       glDeleteQueries(TimedSections, slot.queries.data());
+#endif
   }
 
   void createQueries()
   {
+#ifndef __EMSCRIPTEN__
     gpuAvailable = GLEW_VERSION_3_3 || GLEW_ARB_timer_query;
     if (gpuAvailable) {
       for (Slot& slot : slots)
         glGenQueries(TimedSections, slot.queries.data());
     }
+#endif
   }
 
   Slot& oldest() { return slots[(next + TimedSlots - pending) % TimedSlots]; }
@@ -113,17 +117,22 @@ struct TimingState
       pass.name = SectionNames[i];
       pass.cpuMs = slot.cpuMs[i];
       pass.gpuMs = -1.0;
+#ifndef __EMSCRIPTEN__
       if (gpuAvailable) {
         GLuint64 ns = 0;
         glGetQueryObjectui64v(slot.queries[i], GL_QUERY_RESULT, &ns);
         pass.gpuMs = static_cast<double>(ns) * 1.0e-6;
       }
+#endif
     }
   }
 
   // Publish every finished frame (oldest first) without waiting on the GPU.
   void collectFinished(RenderTimings& out)
   {
+#ifdef __EMSCRIPTEN__
+    (void)out;
+#else
     while (pending > 0) {
       Slot& slot = oldest();
       GLuint ready = 0;
@@ -134,6 +143,7 @@ struct TimingState
       publish(slot, out);
       --pending;
     }
+#endif
   }
 
   void beginFrame(RenderTimings& out, bool synchronous)
@@ -160,8 +170,10 @@ struct TimingState
   {
     endSection();
     section = index;
+#ifndef __EMSCRIPTEN__
     if (gpuAvailable)
       glBeginQuery(GL_TIME_ELAPSED, current->queries[index]);
+#endif
     sectionStart = Clock::now();
   }
 
@@ -172,8 +184,10 @@ struct TimingState
     const Clock::time_point stop = Clock::now();
     current->cpuMs[section] =
       std::chrono::duration<double, std::milli>(stop - sectionStart).count();
+#ifndef __EMSCRIPTEN__
     if (gpuAvailable)
       glEndQuery(GL_TIME_ELAPSED);
+#endif
     section = -1;
   }
 
@@ -280,6 +294,9 @@ void GLRenderer::initialize()
   d->timing = TimingState();
   d->timings = RenderTimings();
 
+#ifdef __EMSCRIPTEN__
+  m_valid = true;
+#else
   GLenum result = glewInit();
   m_valid = (result == GLEW_OK || result == GLEW_ERROR_NO_GLX_DISPLAY);
   if (!m_valid) {
@@ -292,6 +309,7 @@ void GLRenderer::initialize()
     m_valid = false;
     return;
   }
+#endif
 
   m_solidPipeline.initialize();
 }
@@ -344,17 +362,18 @@ void GLRenderer::render()
   visitor.setPixelRatio(m_pixelRatio);
   // Setup for solid geometry
   // m_volume.begin()
-  m_solidPipeline.begin();
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
+  const bool useSolidPipeline = m_solidPipeline.begin();
   m_scene.rootNode().accept(visitor);
   if (timing)
     timing->beginSection(PostSection);
-  // Before end(), so the offset the fog and depth-of-field are sized by
-  // belongs to the camera this frame is drawn with rather than the last one.
-  m_solidPipeline.adjustOffset(m_camera);
-  m_solidPipeline.end(m_camera);
+  if (useSolidPipeline) {
+    // Use this frame's camera for the fog and depth-of-field offsets.
+    m_solidPipeline.adjustOffset(m_camera);
+    m_solidPipeline.end(m_camera);
+  }
   if (timing)
     timing->beginSection(OpaqueSection);
 

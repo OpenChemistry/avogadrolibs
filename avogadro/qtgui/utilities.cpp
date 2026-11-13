@@ -195,11 +195,16 @@ void setDialogsSkipped(bool skipped)
 
 bool runVideoEncoder(const QStringList& arguments)
 {
+#ifdef AVOGADRO_USE_SUBPROCESS
   // QProcess::execute() returns -2 when the program cannot be started.
   int result = QProcess::execute("ffmpeg", arguments);
   if (result == -2)
     result = QProcess::execute("avconv", arguments);
   return result != -2;
+#else
+  Q_UNUSED(arguments);
+  return false;
+#endif
 }
 
 } // namespace Avogadro::QtGui::Utilities

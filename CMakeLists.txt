@@ -34,7 +34,28 @@ determine_version(${AvogadroLibs_SOURCE_DIR} ${GIT_EXECUTABLE} "AvogadroLibs")
 # .. this is used by the fragment library, molecules, crystals, etc.
 set(AvogadroLibs_SOURCEDATA_DIR "${AvogadroLibs_SOURCE_DIR}/..")
 
-option(BUILD_SHARED_LIBS "Build with shared libraries" ON)
+# Subprocess execution is distinct from Python API bindings (USE_PYTHON).
+set(_subprocess_default ON)
+if(EMSCRIPTEN)
+  set(_subprocess_default OFF)
+endif()
+option(USE_SUBPROCESS "Enable external processes and Python script plugins" ${_subprocess_default})
+option(BUILD_STATIC_PLUGINS "Build static plugins by default" ON)
+set(_desktop_features_default ON)
+if(EMSCRIPTEN OR NOT USE_SUBPROCESS)
+  set(_desktop_features_default OFF)
+endif()
+
+set(_shared_default ON)
+if(EMSCRIPTEN)
+  set(_shared_default OFF)
+endif()
+option(BUILD_SHARED_LIBS "Build with shared libraries" ${_shared_default})
+if(EMSCRIPTEN)
+  if(BUILD_SHARED_LIBS)
+    message(FATAL_ERROR "WASM requires BUILD_SHARED_LIBS=OFF")
+  endif()
+endif()
 
 # Before any plugins are defined, and before any add_subdirectory calls:
 set_property(GLOBAL PROPERTY AvogadroLibs_PLUGINS)
@@ -59,10 +80,10 @@ option(ENABLE_TESTING "Enable testing and building the tests." OFF)
 option(USE_OPENGL "Enable libraries that use OpenGL" ON)
 option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 6" ON)
-option(USE_LIBARCHIVE "Enable optional Libarchive features" ON)
+option(USE_LIBARCHIVE "Enable optional Libarchive features" ${_desktop_features_default})
 option(USE_LIBMSYM "Enable optional features using libmsym" ON)
 option(USE_SPGLIB "Enable optional features using spglib" ON)
-option(USE_PLOTTER "Enable JKQTPlotter for charts and spectra" ON)
+option(USE_PLOTTER "Enable JKQTPlotter for charts and spectra" ${_desktop_features_default})
 option(USE_MMTF "Enable optional features using mmtf" OFF) # MMTF is no longer maintained
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
 option(USE_EXTERNAL_FASTFLOAT "Use an externally-provided version of the fast_float library" OFF)
@@ -170,6 +191,23 @@ if(NOT QT_VERSION IN_LIST QT_VERSIONS_SUPPORTED)
   message(FATAL_ERROR "Qt version must be one of ${QT_VERSIONS_SUPPORTED}")
 endif()
 
+if(EMSCRIPTEN AND (USE_SUBPROCESS OR USE_LIBARCHIVE OR USE_PYTHON OR USE_PLOTTER))
+  message(FATAL_ERROR "WASM requires USE_SUBPROCESS=OFF, USE_LIBARCHIVE=OFF, USE_PYTHON=OFF and USE_PLOTTER=OFF. Configure a fresh build directory with these options.")
+endif()
+
+if(EMSCRIPTEN AND (NOT USE_QT OR NOT USE_OPENGL))
+  message(FATAL_ERROR "EMSCRIPTEN requires USE_QT=ON and USE_OPENGL=ON for its viewport")
+endif()
+
+if(EMSCRIPTEN)
+  find_package(Qt6 REQUIRED COMPONENTS Core)
+  # Non-Qt libraries and host-run WASM tools also need to match the Qt ABI.
+  if(QT_FEATURE_thread)
+    add_compile_options(-pthread)
+    add_link_options(-pthread)
+  endif()
+endif()
+
 add_subdirectory(thirdparty)
 add_subdirectory(utilities)
 add_subdirectory(avogadro)
@@ -210,6 +248,8 @@ get_property(AvogadroLibs_STATIC_PLUGINS GLOBAL
 configure_file(${AvogadroLibs_SOURCE_DIR}/cmake/CTestCustom.cmake.in
   ${AvogadroLibs_BINARY_DIR}/CTestCustom.cmake)
 
+get_property(AvogadroLibs_LINKS_LIBARCHIVE GLOBAL PROPERTY AvogadroLibs_LINKS_LIBARCHIVE)
+get_property(AvogadroLibs_MSYM_CONFIG GLOBAL PROPERTY AvogadroLibs_MSYM_CONFIG)
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfig.cmake.in"
   "${AvogadroLibs_BINARY_DIR}/AvogadroLibsConfig.cmake" @ONLY)
 configure_file("${AvogadroLibs_SOURCE_DIR}/cmake/AvogadroLibsConfigVersion.cmake.in"

@@ -5,6 +5,10 @@
 
 #include "glwidget.h"
 
+#ifdef Q_OS_WASM
+#include "wasmopenglwindow_p.h"
+#endif
+
 #include "qttextrenderstrategy.h"
 
 #include <avogadro/qtgui/molecule.h>
@@ -23,6 +27,7 @@
 #include <QOpenGLFunctions>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
+#include <QtGui/QImage>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QWheelEvent>
@@ -33,6 +38,7 @@
 #include <QtGui/QOpenGLExtraFunctions>
 #include <QtGui/QPainter>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QVBoxLayout>
 
 #include <algorithm>
 #include <array>
@@ -210,9 +216,20 @@ public:
 };
 
 GLWidget::GLWidget(QWidget* p)
-  : QOpenGLWidget(p), m_activeTool(nullptr), m_defaultTool(nullptr),
+  : GLWidgetBase(p), m_activeTool(nullptr), m_defaultTool(nullptr),
+#ifdef Q_OS_WASM
+    m_glWindow(new WasmOpenGLWindow(this)), m_glContainer(nullptr),
+#endif
     d(std::make_unique<Private>())
 {
+#ifdef Q_OS_WASM
+  auto* layout = new QVBoxLayout(this);
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+  m_glContainer = QWidget::createWindowContainer(m_glWindow, this);
+  m_glContainer->setFocusPolicy(Qt::ClickFocus);
+  layout->addWidget(m_glContainer);
+#endif
   setFocusPolicy(Qt::ClickFocus);
   connect(&m_scenePlugins, &QtGui::ScenePluginModel::pluginStateChanged, this,
           &GLWidget::requestSceneRebuild);
@@ -235,13 +252,25 @@ GLWidget::GLWidget(QWidget* p)
 
 GLWidget::~GLWidget()
 {
+#ifdef Q_OS_WASM
+  delete m_glContainer;
+  m_glContainer = nullptr;
+#else
   // Release the timing queries while this widget's context is current.
   if (m_renderer.timingEnabled()) {
     makeCurrent();
     m_renderer.setTimingEnabled(false);
     doneCurrent();
   }
+#endif
 }
+
+#ifdef Q_OS_WASM
+QImage GLWidget::grabFramebuffer()
+{
+  return m_glWindow ? m_glWindow->grabFramebuffer() : QImage();
+}
+#endif
 
 void GLWidget::setMolecule(QtGui::Molecule* mol)
 {
@@ -261,9 +290,6 @@ void GLWidget::setMolecule(QtGui::Molecule* mol)
   if (m_molecule != nullptr) {
     // update properties like dipole rendering
     QTimer::singleShot(500, m_molecule, &QtGui::Molecule::update);
-  }
-
-  if (m_molecule != nullptr) {
     connect(m_molecule, &QtGui::Molecule::changed, this,
             &GLWidget::moleculeChanged);
   }
@@ -291,14 +317,14 @@ void GLWidget::moleculeChanged(unsigned int changes)
 {
   d->scenePending = true;
   d->pendingChanges |= changes;
-  update();
+  scheduleRender();
 }
 
 void GLWidget::requestSceneRebuild()
 {
   d->scenePending = true;
   d->sceneFullRebuild = true;
-  update();
+  scheduleRender();
 }
 
 bool GLWidget::applyPending()
@@ -326,7 +352,7 @@ bool GLWidget::applyPending()
 void GLWidget::applyPendingSceneChanges()
 {
   if (applyPending())
-    update();
+    scheduleRender();
 }
 
 void GLWidget::rebuildCoordinates()
@@ -393,7 +419,7 @@ void GLWidget::rebuildCoordinates()
 void GLWidget::updateScene()
 {
   if (rebuildScene())
-    update();
+    scheduleRender();
 }
 
 bool GLWidget::rebuildScene()
@@ -496,7 +522,7 @@ void GLWidget::resetCamera()
 {
   applyPendingSceneChanges();
   m_renderer.resetCamera();
-  update();
+  scheduleRender();
 }
 
 void GLWidget::resetGeometry()
@@ -591,11 +617,50 @@ void GLWidget::setDefaultTool(QtGui::ToolPlugin* tool)
   }
 }
 
+void GLWidget::scheduleRender()
+{
+#ifdef Q_OS_WASM
+  if (m_glWindow)
+    m_glWindow->requestUpdate();
+#else
+  update();
+#endif
+}
+
+#ifdef Q_OS_WASM
+void GLWidget::paintEvent(QPaintEvent*)
+{
+  scheduleRender();
+}
+
+void GLWidget::makeCurrent()
+{
+  if (m_glWindow && m_glWindow->context())
+    m_glWindow->makeCurrent();
+}
+
+void GLWidget::doneCurrent()
+{
+  if (m_glWindow && m_glWindow->context())
+    m_glWindow->doneCurrent();
+}
+
+QOpenGLContext* GLWidget::context() const
+{
+  return m_glWindow ? m_glWindow->context() : nullptr;
+}
+
+GLuint GLWidget::defaultFramebufferObject() const
+{
+  return context() ? m_glWindow->defaultFramebufferObject() : 0;
+}
+#endif
+
 void GLWidget::requestUpdate()
 {
   // update() only schedules a repaint, so bursts of requests (e.g. mouse
   // moves while navigating) coalesce into one frame paced by the display.
-  update();
+  scheduleRender();
 }
 
 void GLWidget::initializeGL()
@@ -669,7 +734,9 @@ void GLWidget::paintGL()
   }
 
   m_renderer.render();
+#ifndef Q_OS_WASM
   drawFrameStats(windowRolled);
+#endif
 }
 
 void GLWidget::drawFrameStats(bool windowRolled)
@@ -815,7 +882,7 @@ void GLWidget::setFrameStatsVisible(bool visible)
   makeCurrent();
   m_renderer.setTimingEnabled(visible);
   doneCurrent();
-  update();
+  scheduleRender();
 }
 
 QSize GLWidget::pixelSize() const
@@ -1060,7 +1127,7 @@ bool GLWidget::event(QEvent* e)
     default:
       break;
   }
-  return QOpenGLWidget::event(e);
+  return GLWidgetBase::event(e);
 }
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
@@ -1073,8 +1140,9 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mouseDoubleClickEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::mouseDoubleClickEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::mouseDoubleClickEvent(e);
+  }
 }
 
 void GLWidget::mousePressEvent(QMouseEvent* e)
@@ -1092,8 +1160,9 @@ void GLWidget::mousePressEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mousePressEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::mousePressEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::mousePressEvent(e);
+  }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* e)
@@ -1106,8 +1175,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mouseMoveEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::mouseMoveEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::mouseMoveEvent(e);
+  }
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* e)
@@ -1120,11 +1190,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->mouseReleaseEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::mouseReleaseEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::mouseReleaseEvent(e);
+  }
 
-  // Release the latch now that the drag sequence this press started has
-  // finished being dispatched.
+  // Release the latch after dispatching the completed drag sequence.
   m_navigationDrag = false;
 }
 
@@ -1138,8 +1208,9 @@ void GLWidget::wheelEvent(QWheelEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->wheelEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::wheelEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::wheelEvent(e);
+  }
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* e)
@@ -1152,8 +1223,9 @@ void GLWidget::keyPressEvent(QKeyEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->keyPressEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::keyPressEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::keyPressEvent(e);
+  }
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent* e)
@@ -1166,8 +1238,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent* e)
   if (m_defaultTool && !e->isAccepted())
     m_defaultTool->keyReleaseEvent(e);
 
-  if (!e->isAccepted())
-    QOpenGLWidget::keyReleaseEvent(e);
+  if (!e->isAccepted()) {
+    GLWidgetBase::keyReleaseEvent(e);
+  }
 }
 
 } // namespace Avogadro::QtOpenGL
