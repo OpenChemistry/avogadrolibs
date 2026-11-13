@@ -49,3 +49,14 @@ foreach(TestName ${tests})
   add_test(NAME "Rendering-${TestName}"
     COMMAND AvogadroRenderingTests "--gtest_filter=${TestName}Test.*")
 endforeach()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  find_package(OpenGL QUIET COMPONENTS EGL)
+  if(TARGET OpenGL::EGL)
+    find_package(GLEW REQUIRED)
+    add_executable(AvogadroShaderLinkTests shaderlinktest.cpp)
+    target_link_libraries(AvogadroShaderLinkTests PRIVATE Avogadro::Rendering
+      OpenGL::EGL GLEW::GLEW ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+    add_test(NAME Rendering-ShaderLink COMMAND AvogadroShaderLinkTests)
+  endif()
+endif()
