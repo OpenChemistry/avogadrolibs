@@ -84,3 +84,13 @@ race:Avogadro::Core::Mesh::~Mesh
 # chain rewrites the vptr, but that join is a futex inside Qt. Run()'s own
 # writes are ordered by MeshGenerator::isDone(), so match only metaObject().
 race:Avogadro::QtGui::MeshGenerator::metaObject
+# MeshGenerator's Flying Edges passes run through parallelForSlabs()
+# (meshgenerator.cpp), whose atomic hand-offs order the pass buffers, so TSan
+# sees no races in the passes themselves. Qt's own map-kernel state (built on
+# the caller, read by pool threads) and the copied task are still ordered only
+# inside the uninstrumented Qt, as for edtfill.cpp above. Every such stack
+# has a parallelForSlabs frame. Trade-off: a real race between slabs is
+# hidden too. Slabs write disjoint rows by construction, and
+# MeshGeneratorTest.parallelMatchesSingleThread checks the mesh is identical
+# with one thread and with several.
+race:parallelForSlabs
