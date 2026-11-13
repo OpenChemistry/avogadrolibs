@@ -31,6 +31,7 @@ set(AvogadroLibs_USE_LIBARCHIVE       "@USE_LIBARCHIVE@")
 set(AvogadroLibs_USE_LIBMSYM          "@USE_LIBMSYM@")
 
 include(CMakeFindDependencyMacro)
+find_dependency(Eigen3)
 
 if (@QT_VERSION@ EQUAL 6)
   find_dependency(Qt6OpenGLWidgets)
