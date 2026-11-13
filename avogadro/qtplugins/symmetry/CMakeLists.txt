@@ -1,4 +1,7 @@
 find_package(libmsym NO_MODULE)
+if(libmsym_FOUND)
+  set_property(GLOBAL PROPERTY AvogadroLibs_MSYM_CONFIG ON)
+endif()
 if(NOT DEFINED LIBMSYM_INCLUDE_DIRS)
   find_package(libmsym REQUIRED)
 endif()
