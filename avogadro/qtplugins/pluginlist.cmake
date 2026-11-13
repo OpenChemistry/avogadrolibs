@@ -136,4 +136,3 @@ if(BUILD_GPL_PLUGINS)
   # qtaimcurvature.h/cpp contains GPL licensed code:
   add_subdirectory(qtaim)
 endif()
-
