@@ -5,6 +5,8 @@
 
 #include "coordinatetextedit.h"
 
+#include <avogadro/qtgui/colortheme.h>
+
 #include <QtGui/QColor>
 #include <QtGui/QHelpEvent>
 #include <QtGui/QPalette>
@@ -29,10 +31,10 @@ CoordinateTextEdit::CoordinateTextEdit(QWidget* p)
 
 void CoordinateTextEdit::updateFormatColors()
 {
-  // Pick shades by the editor's background, so marked text keeps at least
-  // 4.5:1 contrast in both light and dark themes.
+  // Pick shades for the light or dark theme, so marked text keeps at least
+  // 4.5:1 contrast in both.
   const QPalette& pal = palette();
-  const bool darkMode = pal.color(QPalette::Base).lightness() < 128;
+  const bool darkMode = QtGui::colorTheme() == QtGui::ColorTheme::Dark;
 
   m_unmarkedFormat.setForeground(pal.color(QPalette::Text));
   m_unmarkedFormat.setBackground(pal.color(QPalette::Base));
