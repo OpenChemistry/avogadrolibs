@@ -13,6 +13,10 @@
 #include <QReadWriteLock>
 
 #include <QtCore/QSet>
+#include <QtConcurrent/QtConcurrent>
+
+#include <numeric>
+#include <vector>
 
 namespace Avogadro::QtGui {
 
@@ -27,6 +31,15 @@ QSet<MeshGenerator*>& liveGenerators()
 {
   static QSet<MeshGenerator*> instances;
   return instances;
+}
+
+/// The indices 0 .. count - 1, the z slabs handed to QtConcurrent::blockingMap.
+/// An empty vector (count <= 0) makes blockingMap return immediately.
+std::vector<int> slabIndices(int count)
+{
+  std::vector<int> indices(count > 0 ? static_cast<size_t>(count) : 0);
+  std::iota(indices.begin(), indices.end(), 0);
+  return indices;
 }
 } // namespace
 
@@ -115,7 +128,12 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
-  for (int k = 0; k != m_dim.z(); ++k) {
+  // Each pass runs in parallel over z slabs. Every slab only writes the
+  // buffer entries of its own (j, k) rows; see the notes on each pass.
+  const std::vector<int> slabs = slabIndices(m_dim.z());
+
+  // Writes edgeCases for the rows of slab k only.
+  QtConcurrent::blockingMap(slabs, [&](int k) {
     for (int j = 0; j != m_dim.y(); ++j) {
 
       auto curEdgeCases =
@@ -128,9 +146,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
         curEdgeCases[i - 1] = calcCaseEdge(isGE[(i + 1) % 2], isGE[i % 2]);
       }
     }
-  }
+  });
 
-  for (int k = 0; k != m_dim.z(); ++k) {
+  // isCutEdge() reads edgeCases of the neighboring rows j + 1 and k + 1, so
+  // this has to wait until every slab has finished the loop above.
+  QtConcurrent::blockingMap(slabs, [&](int k) {
     for (int j = 0; j != m_dim.y(); ++j) {
       gridEdge& curGridEdge = gridEdges[k * m_dim.y() + j];
       curGridEdge.xl = m_dim.x();
@@ -145,12 +165,16 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
         }
       }
     }
-  }
+  });
 }
 
 void MeshGenerator::FlyingEdgesAlgorithmPass2()
 {
-  for (int k = 0; k != m_dim.z() - 1; ++k) {
+  // A (j, k) row writes its own cubeCases and triCounter entries and, through
+  // ge0..ge3, gridEdges rows j / j + 1 and k / k + 1. The j + 1 and k + 1 rows
+  // are only written at the last j or k, and those rows are never the "own"
+  // row of any slab, so every gridEdge has exactly one writer.
+  QtConcurrent::blockingMap(slabIndices(m_dim.z() - 1), [&](int k) {
     for (int j = 0; j != m_dim.y() - 1; ++j) {
       int xl, xr;
       calcTrimValues(xl, xr, j, k); // xl, xr set in this function
@@ -221,7 +245,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
         }
       }
     }
-  }
+  });
 }
 
 void MeshGenerator::FlyingEdgesAlgorithmPass3()
@@ -264,8 +288,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass4()
 {
-
-  for (int k = 0; k != m_dim.z() - 1; ++k) {
+  // The prefix sums of pass 3 give every row its own range of m_vertices,
+  // m_normals and m_triangles, so slabs write disjoint elements.
+  QtConcurrent::blockingMap(slabIndices(m_dim.z() - 1), [&](int k) {
     for (int j = 0; j != m_dim.y() - 1; ++j) {
       // find adjusted trim values
       int xl, xr;
@@ -546,7 +571,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         }
       }
     }
-  }
+  });
 }
 
 bool MeshGenerator::isDone() const noexcept

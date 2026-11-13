@@ -10,7 +10,13 @@
 #include <avogadro/core/vector.h>
 #include <avogadro/qtgui/meshgenerator.h>
 
+#include <QtCore/QThreadPool>
+
+#include <algorithm>
 #include <cmath>
+#include <cstdint>
+#include <cstring>
+#include <vector>
 
 using Avogadro::Vector3;
 using Avogadro::Vector3i;
@@ -33,6 +39,55 @@ void fillSphereFunction(Cube& cube)
         float val = static_cast<float>(pos.norm());
         cube.setValue(i, j, k, val);
       }
+}
+
+// A non-trivial field: overlapping Gaussian blobs on an odd-sized grid, cut
+// off at the cube faces, so the isosurface crosses every slab boundary and the
+// x/y/z "end" cells.
+void fillBlobs(Cube& cube)
+{
+  struct Blob
+  {
+    double x, y, z, width, amplitude;
+  };
+  const Blob blobs[] = { { -1.1, -0.4, 0.3, 1.0, 0.9 },
+                         { 0.9, 0.7, -0.5, 0.8, 1.2 },
+                         { 0.1, -1.3, 1.0, 1.1, 0.7 },
+                         { 1.2, -0.9, 0.9, 0.6, 1.0 },
+                         { -0.3, 1.1, 1.2, 0.9, 0.8 } };
+  const Vector3i dim = cube.dimensions();
+  for (int i = 0; i < dim.x(); ++i)
+    for (int j = 0; j < dim.y(); ++j)
+      for (int k = 0; k < dim.z(); ++k) {
+        const Vector3 pos =
+          cube.position(i * dim.y() * dim.z() + j * dim.z() + k);
+        double value = 0.0;
+        for (const Blob& b : blobs) {
+          const double r2 = (pos - Vector3(b.x, b.y, b.z)).squaredNorm();
+          value += b.amplitude * std::exp(-r2 / (b.width * b.width));
+        }
+        cube.setValue(i, j, k, static_cast<float>(value));
+      }
+}
+
+std::uint64_t hashArray(const Avogadro::Core::Array<Avogadro::Vector3f>& a,
+                        std::uint64_t h)
+{
+  for (size_t n = 0; n < a.size(); ++n) {
+    unsigned char bytes[sizeof(float) * 3];
+    std::memcpy(bytes, a[n].data(), sizeof(bytes));
+    for (unsigned char c : bytes)
+      h = (h ^ c) * 1099511628211ull;
+  }
+  return h;
+}
+
+std::uint64_t hashMesh(const Mesh& mesh)
+{
+  std::uint64_t h = 14695981039346656037ull;
+  h = hashArray(mesh.vertices(), h);
+  h = hashArray(mesh.normals(), h);
+  return hashArray(mesh.triangles(), h);
 }
 
 } // namespace
@@ -223,4 +278,50 @@ TEST(MeshGeneratorTest, normalsAgreeAcrossSmoothingPasses)
     EXPECT_LT(d0, -0.9) << "negated=" << negated;
     EXPECT_LT(d1, -0.9) << "negated=" << negated;
   }
+}
+
+// The Flying Edges passes run in parallel over z slabs. The result must not
+// depend on how many threads the pool has, nor vary from run to run.
+TEST(MeshGeneratorTest, parallelMatchesSingleThread)
+{
+  Cube cube;
+  ASSERT_TRUE(cube.setLimits(Vector3(-1.8, -2.0, -1.4), Vector3i(37, 41, 29),
+                             Vector3(0.1, 0.1, 0.1)));
+  fillBlobs(cube);
+
+  QThreadPool* pool = QThreadPool::globalInstance();
+  const int savedThreads = pool->maxThreadCount();
+
+  for (bool reverse : { false, true }) {
+    for (int passes : { 0, 1 }) {
+      Mesh reference;
+      pool->setMaxThreadCount(1);
+      MeshGenerator serial;
+      ASSERT_TRUE(serial.initialize(&cube, &reference, 0.6f, passes, reverse));
+      serial.run();
+      pool->setMaxThreadCount(std::max(4, savedThreads));
+
+      ASSERT_GT(reference.triangles().size(), static_cast<size_t>(100));
+      const std::uint64_t expected = hashMesh(reference);
+
+      for (int repeat = 0; repeat < 5; ++repeat) {
+        Mesh mesh;
+        MeshGenerator gen;
+        ASSERT_TRUE(gen.initialize(&cube, &mesh, 0.6f, passes, reverse));
+        gen.run();
+        ASSERT_EQ(mesh.vertices().size(), reference.vertices().size());
+        ASSERT_EQ(mesh.normals().size(), reference.normals().size());
+        ASSERT_EQ(mesh.triangles().size(), reference.triangles().size());
+        EXPECT_EQ(hashMesh(mesh), expected)
+          << "reverse=" << reverse << " passes=" << passes;
+        EXPECT_TRUE(std::equal(mesh.vertices().begin(), mesh.vertices().end(),
+                               reference.vertices().begin()));
+        EXPECT_TRUE(std::equal(mesh.normals().begin(), mesh.normals().end(),
+                               reference.normals().begin()));
+        EXPECT_TRUE(std::equal(mesh.triangles().begin(), mesh.triangles().end(),
+                               reference.triangles().begin()));
+      }
+    }
+  }
+  pool->setMaxThreadCount(savedThreads);
 }
