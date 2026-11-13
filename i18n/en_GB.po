@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-11-08 18:51+0000\n"
+"PO-Revision-Date: 2026-11-13 20:06+0000\n"
 "Last-Translator: Andi Chandler <andibing@users.noreply.hosted.weblate.org>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.11.2.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2028,7 +2028,7 @@ msgstr "The scene is being rebuilt; try again in a moment."
 #: qtopengl/glwidget.cpp:317
 #, qt-format
 msgid "The renderer is not valid: %1"
-msgstr ""
+msgstr "The renderer is not valid: %1"
 
 #: qtopengl/glwidget.cpp:325
 #, qt-format
@@ -2036,11 +2036,14 @@ msgid ""
 "The image is too large: %1 x %2 pixels (including supersampling) exceeds the "
 "maximum of %3."
 msgstr ""
+"The image is too large: %1 x %2 pixels (including supersampling) exceeds the "
+"maximum of %3."
 
 #: qtopengl/glwidget.cpp:335
 msgid ""
 "There is no OpenGL context. The view must have been shown at least once."
 msgstr ""
+"There is no OpenGL context. The view must have been shown at least once."
 
 #: qtopengl/glwidget.cpp:384
 #, qt-format
@@ -2048,12 +2051,16 @@ msgid ""
 "The image is too large for this graphics driver: %1 x %2 pixels exceeds its "
 "limit of %3."
 msgstr ""
+"The image is too large for this graphics driver: %1 x %2 pixels exceeds its "
+"limit of %3."
 
 #: qtopengl/glwidget.cpp:425
 msgid ""
 "The offscreen framebuffer could not be created. The image may be too large "
 "for the available memory."
 msgstr ""
+"The offscreen framebuffer could not be created. The image may be too large "
+"for the available memory."
 
 #: qtopengl/glwidget.cpp:447
 msgid "The offscreen framebuffer could not be bound."
