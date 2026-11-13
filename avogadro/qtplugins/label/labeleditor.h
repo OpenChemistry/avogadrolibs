@@ -15,7 +15,8 @@ namespace Avogadro::QtPlugins {
 class LabelEditor : public QtGui::ToolPlugin
 {
   Q_OBJECT
-  Q_PROPERTY(qsizetype pickedAtomIndex READ pickedAtomIndex NOTIFY atomPickedChanged)
+  Q_PROPERTY(
+    qsizetype pickedAtomIndex READ pickedAtomIndex NOTIFY atomPickedChanged)
   Q_PROPERTY(QString pickedLabel READ pickedLabel NOTIFY atomPickedChanged)
 public:
   explicit LabelEditor(QObject* parent_ = nullptr);

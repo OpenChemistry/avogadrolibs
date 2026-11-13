@@ -319,7 +319,8 @@ void AlignTool::registerCommands()
 bool AlignTool::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  static const QStringList knownCommands = { "centerAtom", "alignAtom", "alignPickedAtoms" };
+  static const QStringList knownCommands = { "centerAtom", "alignAtom",
+                                             "alignPickedAtoms" };
 
   if (!knownCommands.contains(command))
     return false; // not one of our commands
@@ -330,8 +331,8 @@ bool AlignTool::handleCommand(const QString& command,
   }
 
   if (command == "alignPickedAtoms") {
-    const auto axis = QStringList{ "x", "y", "z" }.indexOf(
-      options.value("axis").toString());
+    const auto axis =
+      QStringList{ "x", "y", "z" }.indexOf(options.value("axis").toString());
     if (axis < 0)
       return false;
     axisChanged(static_cast<int>(axis));
