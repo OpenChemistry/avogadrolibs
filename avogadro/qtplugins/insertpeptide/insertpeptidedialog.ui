@@ -269,6 +269,9 @@
         <property name="text">
          <string>Sequence (N to C):</string>
         </property>
+        <property name="buddy">
+         <cstring>sequenceText</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
@@ -309,12 +312,18 @@
           <property name="text">
            <string>N Terminus:</string>
           </property>
+          <property name="buddy">
+           <cstring>nGroupCombo</cstring>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_8">
           <property name="text">
            <string>C Terminus:</string>
+          </property>
+          <property name="buddy">
+           <cstring>cGroupCombo</cstring>
           </property>
          </widget>
         </item>
@@ -359,6 +368,9 @@
         <property name="text">
          <string>Structure:</string>
         </property>
+        <property name="buddy">
+         <cstring>structureCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="4" column="0">
@@ -402,6 +414,9 @@
           <property name="text">
            <string notr="true">Phi:</string>
           </property>
+          <property name="buddy">
+           <cstring>phiSpin</cstring>
+          </property>
          </widget>
         </item>
         <item row="0" column="1">
@@ -441,6 +456,9 @@
           <property name="text">
            <string notr="true">Psi:</string>
           </property>
+          <property name="buddy">
+           <cstring>psiSpin</cstring>
+          </property>
          </widget>
         </item>
        </layout>
@@ -454,6 +472,9 @@
       <widget class="QLabel" name="label_9">
        <property name="text">
         <string>Chain Number:</string>
+       </property>
+       <property name="buddy">
+        <cstring>chainNumberCombo</cstring>
        </property>
       </widget>
      </item>
