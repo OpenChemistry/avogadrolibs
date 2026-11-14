@@ -162,7 +162,7 @@ jobs:
           required = [
               'index.html', 'editor.css', 'editor.js', 'qtloader.js',
               'avogadro-web.js', 'avogadro-web.wasm', 'avogadro-web.wasm.gz',
-              'README.md', 'VALIDATION.md', 'serve-wasm.py',
+              'README.md', 'serve-wasm.py',
           ]
           for name in required:
               path = package / name

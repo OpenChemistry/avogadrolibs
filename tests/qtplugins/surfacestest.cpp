@@ -9,6 +9,8 @@
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/elements.h>
+#include <avogadro/core/mesh.h>
+#include <avogadro/qtgui/meshgenerator.h>
 
 #include <QtCore/QVariantMap>
 
@@ -259,6 +261,39 @@ TEST_F(SurfacesCommandTest, registersSurfaceCommands)
   EXPECT_TRUE(registered.contains("renderVDW"));
   EXPECT_TRUE(registered.contains("renderSolventAccessible"));
   EXPECT_TRUE(registered.contains("renderSolventExcluded"));
+}
+
+TEST_F(SurfacesCommandTest, geometricCommandsSmoothVoxelSteps)
+{
+  for (const char* command :
+       { "renderVDW", "renderSolventAccessible", "renderSolventExcluded" }) {
+    SCOPED_TRACE(command);
+    CommandOutcome out;
+    const Cube* cube = runSurface(command, out);
+    ASSERT_NE(cube, nullptr);
+    ASSERT_EQ(m_harness.molecule()->meshCount(), 1u);
+    const auto* mesh = m_harness.molecule()->mesh(0);
+
+    Avogadro::Core::Mesh raw;
+    Avogadro::QtGui::MeshGenerator generator(
+      cube, &raw, out.result.value("isovalue").toFloat(), 0);
+    generator.run();
+    ASSERT_FALSE(mesh->vertices().empty());
+    ASSERT_EQ(mesh->vertices().size(), raw.vertices().size());
+    ASSERT_EQ(mesh->normals().size(), mesh->vertices().size());
+    EXPECT_EQ(mesh->triangles().size(), raw.triangles().size());
+    double displacement = 0.0;
+    for (size_t i = 0; i < mesh->vertices().size(); ++i) {
+      const double delta = (mesh->vertices()[i] - raw.vertices()[i]).norm();
+      displacement += delta;
+      EXPECT_LT(delta, 2.0 * Resolution);
+      EXPECT_TRUE(mesh->normals()[i].allFinite());
+      EXPECT_NEAR(mesh->normals()[i].norm(), 1.0f, 1e-5f);
+    }
+    // Smoothing must move vertices off the binary mask's stair steps,
+    // while staying within the grid's geometric uncertainty.
+    EXPECT_GT(displacement / mesh->vertices().size(), 0.01 * Resolution);
+  }
 }
 
 TEST_F(SurfacesCommandTest, vanDerWaalsMatchesSerialReference)

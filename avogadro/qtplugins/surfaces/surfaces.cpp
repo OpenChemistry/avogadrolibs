@@ -918,8 +918,17 @@ void Surfaces::displayMesh()
 
   if (m_dialog != nullptr)
     m_smoothingPasses = m_dialog->smoothingPassesValue();
-  else
-    m_smoothingPasses = 0;
+  else {
+    // Geometric surfaces are extracted from a binary voxel mask. Without
+    // smoothing, command callers (including the web editor) expose the grid
+    // steps and discontinuous mask gradients in the surface lighting.
+    const auto type = m_cube->cubeType();
+    m_smoothingPasses =
+      (type == Cube::Type::VdW || type == Cube::Type::SolventAccessible ||
+       type == Cube::Type::SolventExcluded)
+        ? 5 // Match the desktop dialog's medium smoothing level.
+        : 0;
+  }
 
   if (!m_mesh1)
     m_mesh1 = m_molecule->addMesh();
