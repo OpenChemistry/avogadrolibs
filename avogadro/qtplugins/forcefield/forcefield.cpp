@@ -696,7 +696,8 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
 
   // Refresh action enable-state (e.g. batch actions) when the molecule
   // changes - conformers may be added or removed.
-  connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+  if (m_molecule)
+    connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
   updateActions();
 }
 
