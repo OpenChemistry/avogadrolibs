@@ -8,6 +8,7 @@ set(tests
   Dcd
   FileFormatGuard
   FileFormatManager
+  GemmiCif
   Gromacs
   Lammps
   Mdl
@@ -44,7 +45,7 @@ message(STATUS "Test source files: ${testSrcs}")
 # Add a single executable for all of our tests.
 add_executable(AvogadroIOTests ${testSrcs})
 target_link_libraries(AvogadroIOTests Avogadro::IO
-  nlohmann_json::nlohmann_json ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  nlohmann_json::nlohmann_json gemmi::cif ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 # Helpers shared between the core and io bond order tests.
 target_include_directories(AvogadroIOTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
