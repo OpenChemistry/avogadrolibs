@@ -6,13 +6,14 @@
 # Chiyu Liang <532117255@qq.com>, 2023.
 # LibreTranslate <noreply-mt-libretranslate@weblate.org>, 2024, 2025.
 # Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2024, 2025.
+# Eisuke Kawashima <e-kwsm@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-10-04 02:51+0000\n"
-"Last-Translator: Eisuke Kawashima <e.kawaschima+weblate@gmail.com>\n"
+"PO-Revision-Date: 2026-11-15 19:04+0000\n"
+"Last-Translator: Eisuke Kawashima <e-kwsm@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/ja/>\n"
 "Language: ja\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.10.1.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:02+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -551,9 +552,9 @@ msgid "atom index #%1 in %2 is negative; atom indices must be zero or greater."
 msgstr ""
 
 #: qtgui/commandregistry.cpp:96
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 is negative; atom indices must be zero or greater."
-msgstr ""
+msgstr "%1 は負です; 原子のインデックスは0以上でなければなりません。"
 
 #: qtgui/commandregistry.cpp:152
 #, qt-format
@@ -578,12 +579,12 @@ msgstr ""
 #: qtgui/commandregistry.cpp:207 qtgui/commandregistry.cpp:218
 #, qt-format
 msgid "%1 is too large."
-msgstr ""
+msgstr "%1 が大きすぎます。"
 
 #: qtgui/commandregistry.cpp:239
-#, qt-format
+#, fuzzy, qt-format
 msgid "%1 must be a finite number."
-msgstr ""
+msgstr "%1 は有限の数でなければなりません。"
 
 #: qtgui/commandregistry.cpp:266
 #, qt-format
@@ -640,9 +641,9 @@ msgid "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
 msgstr ""
 
 #: qtgui/commandregistry.cpp:971
-#, qt-format
+#, fuzzy, qt-format
 msgid "missing required option \"%1\"."
-msgstr ""
+msgstr "必要なオプション 「%1」 が指定されていません。"
 
 #: qtgui/commandregistry.cpp:997
 #, qt-format
@@ -1956,8 +1957,9 @@ msgid_plural "%n hour(s) remaining"
 msgstr[0] "残り%n時間"
 
 #: qtopengl/glwidget.cpp:310
+#, fuzzy
 msgid "The image size must be positive."
-msgstr ""
+msgstr "画像の大きさは正でなければいけません。"
 
 #: qtopengl/glwidget.cpp:313
 msgid "Supersampling must be between 1 and 4."
@@ -2006,20 +2008,22 @@ msgid "Reading back the rendered image failed."
 msgstr ""
 
 #: qtopengl/imagesizedialog.cpp:36
+#, fuzzy
 msgid "Image Size"
-msgstr ""
+msgstr "画像の大きさ"
 
 #: qtopengl/imagesizedialog.cpp:40 qtopengl/imagesizedialog.cpp:43
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #: qtopengl/imagesizedialog.cpp:49
 msgid "&Lock aspect ratio"
-msgstr ""
+msgstr "アスペクト比を固定(&L)"
 
 #: qtopengl/imagesizedialog.cpp:51
+#, fuzzy
 msgid "&Transparent background"
-msgstr ""
+msgstr "透明な背景(&T)"
 
 #: qtopengl/imagesizedialog.cpp:53
 msgid "&Width:"
@@ -2027,12 +2031,12 @@ msgstr "幅(&W):"
 
 #: qtopengl/imagesizedialog.cpp:55
 msgid "&Height:"
-msgstr ""
+msgstr "高さ(&H):"
 
 #: qtopengl/imagesizedialog.cpp:61
 #, qt-format
 msgid "%1×"
-msgstr ""
+msgstr "%1×"
 
 #: qtopengl/imagesizedialog.cpp:63
 #, qt-format
@@ -2616,7 +2620,7 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:677
 #, qt-format
 msgid "Unknown color \"%1\"."
-msgstr ""
+msgstr "不明な色 「%1」"
 
 #: qtplugins/applycolors/applycolors.cpp:670
 msgid ""
@@ -4122,7 +4126,7 @@ msgstr ""
 msgctxt ""
 msgid "%n force field(s) available."
 msgid_plural "%n force field(s) available."
-msgstr[0] ""
+msgstr[0] "%n 種の力場が利用可能"
 
 #: qtplugins/forcefield/forcefield.cpp:392
 #: qtplugins/forcefield/forcefield.cpp:418
@@ -6105,13 +6109,14 @@ msgid "Movie (*.mp4);;Movie (*.avi);;GIF (*.gif)"
 msgstr "動画 (*.mp4);;動画 (*.avi);;GIF(*.gif)"
 
 #: qtplugins/playertool/playertool.cpp:455 qtplugins/surfaces/surfaces.cpp:1420
+#, fuzzy
 msgid "Movie Size"
-msgstr ""
+msgstr "動画のサイズ"
 
 #: qtplugins/playertool/playertool.cpp:481
 #, qt-format
 msgid "Cannot render frame %1: %2"
-msgstr ""
+msgstr "フレーム %1 を描画できません: %2"
 
 #: qtplugins/playertool/playertool.cpp:487 qtplugins/surfaces/surfaces.cpp:1436
 msgid "GIF (*.gif)"
@@ -6131,8 +6136,9 @@ msgid "Movie (*.avi)"
 msgstr "動画 (*.avi)"
 
 #: qtplugins/playertool/playertool.cpp:519
+#, fuzzy
 msgid "Cannot create the video file."
-msgstr ""
+msgstr "ビデオファイルを作成できません。"
 
 #: qtplugins/playertool/playertool.cpp:536 qtplugins/surfaces/surfaces.cpp:1515
 msgid "Error: cannot add frame to video."
@@ -6282,7 +6288,7 @@ msgstr "PDFプロットを表示"
 #: qtplugins/plotpdf/plotpdf.cpp:226 qtplugins/plotxrd/plotxrd.cpp:327
 #: qtplugins/spacegroup/spacegroup.cpp:616
 msgid "The molecule has no unit cell."
-msgstr ""
+msgstr "分子にはユニットセルがありません。"
 
 #: qtplugins/plotpdf/plotpdf.h:34
 msgid "PlotPdf"
@@ -6914,7 +6920,7 @@ msgstr "特定の元素タイプの原子を全て選択"
 
 #: qtplugins/select/select.cpp:641
 msgid "An element symbol or atomic number."
-msgstr ""
+msgstr "元素記号または原子番号"
 
 #: qtplugins/select/select.cpp:650
 msgid "Select all atoms that belong to amino acid backbones"
@@ -6951,8 +6957,9 @@ msgid ""
 msgstr ""
 
 #: qtplugins/select/select.cpp:680
+#, fuzzy
 msgid "Zero-based indices of the atoms to select."
-msgstr ""
+msgstr "選択する原子のインデックス（0から始まる）"
 
 #: qtplugins/select/select.cpp:685
 msgid "How to combine the atoms with the current selection."
@@ -7276,7 +7283,7 @@ msgstr "スペクトルのダイアログを開く"
 
 #: qtplugins/spectra/spectra.cpp:183
 msgid "The molecule has no spectra data."
-msgstr ""
+msgstr "分子にはスペクトルのデータがありません。"
 
 #. i18n: file: qtplugins/spectra/spectradialog.ui:39
 #. i18n: ectx: attribute (title), widget (QWidget, tab_spectra)
@@ -7675,7 +7682,7 @@ msgstr ""
 #: qtplugins/surfaces/surfaces.cpp:1486
 #, qt-format
 msgid "Cannot render the movie frame: %1"
-msgstr ""
+msgstr "動画のフレームを描画できません: %1"
 
 #: qtplugins/surfaces/surfaces.h:79
 #, fuzzy
