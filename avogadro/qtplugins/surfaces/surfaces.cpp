@@ -380,11 +380,11 @@ void Surfaces::setMolecule(QtGui::Molecule* mol)
   }
 
   m_basis = std::as_const(*mol).basisSet();
-  if (m_basis == nullptr && mol->cubeCount() != 0) {
-    m_fileCubeCount = mol->cubeCount();
-    // calculate the mesh for the first cube
+  m_fileCubeCount = mol->cubeCount();
+#ifndef Q_OS_WASM
+  if (!m_basis && m_fileCubeCount > 0)
     calculateCube(0, m_isoValue);
-  }
+#endif
 
   if (m_molecule != nullptr) {
     connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
@@ -1406,7 +1406,12 @@ void Surfaces::recordMovie()
   QString selectedFilter = tr("Movie AVI (*.avi)");
   QString baseName = QFileDialog::getSaveFileName(
     qobject_cast<QWidget*>(parent()), tr("Export Movie"), "",
-    tr("Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"), &selectedFilter);
+#ifdef AVOGADRO_USE_SUBPROCESS
+    tr("Movie MP4 (*.mp4);;Movie AVI (*.avi);;GIF (*.gif)"),
+#else
+    tr("Movie AVI (*.avi);;GIF (*.gif)"),
+#endif
+    &selectedFilter);
 
   if (baseName.isEmpty()) {
     m_dialog->enableRecord();
@@ -1545,6 +1550,7 @@ void Surfaces::movieFrame()
     if (d->gifWriter || d->gwaviWriter) {
       closeMovieWriters(d->gifWriter, d->gwaviWriter);
     } else {
+#ifdef AVOGADRO_USE_SUBPROCESS
       QStringList args;
       args << "-y"
            << "-r" << QString::number(10) << "-i"
@@ -1561,6 +1567,7 @@ void Surfaces::movieFrame()
           tr("Cannot run ffmpeg or avconv to encode the movie. The frames "
              "were saved as PNG files."));
       }
+#endif
     }
     /*
     args.clear();

@@ -14,6 +14,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets Test REQUIRED)
 # through avogadroapp's RPC harness instead.
 set(plugins
   AlignTool
+  AutoOpt
   ApplyColors
   Bonding
   ConstraintsExtension
