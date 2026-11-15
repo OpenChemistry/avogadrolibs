@@ -410,8 +410,13 @@ void AutoOpt::startStop()
 {
   if (m_running)
     stop();
-  else
+  else {
+    if (m_toolWidget) {
+      auto* comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
+      m_currentMethod = comboBox->currentText().toStdString();
+    }
     start();
+  }
 }
 
 void AutoOpt::start()
@@ -420,11 +425,6 @@ void AutoOpt::start()
       m_molecule->atomPositions3d().size() != m_molecule->atomCount())
     return;
 
-  if (m_toolWidget) {
-    auto* comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
-    QString currentMethod = comboBox->currentText();
-    m_currentMethod = currentMethod.toStdString();
-  }
   m_running = true;
 
   m_molecule->beginMergeMode("AutoOpt");
