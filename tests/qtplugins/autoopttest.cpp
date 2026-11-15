@@ -5,7 +5,11 @@
 
 #include "autoopt.h"
 
+#include <avogadro/calc/energymanager.h>
+#include <avogadro/calc/lennardjones.h>
 #include <avogadro/qtgui/molecule.h>
+
+#include <atomic>
 
 #include <QComboBox>
 #include <QPushButton>
@@ -17,6 +21,20 @@ using Avogadro::QtGui::Molecule;
 using Avogadro::QtPlugins::AutoOpt;
 
 namespace {
+std::atomic<int> liveCalculators{ 0 };
+
+class TrackedCalculator : public Avogadro::Calc::LennardJones
+{
+public:
+  TrackedCalculator() { ++liveCalculators; }
+  ~TrackedCalculator() override { --liveCalculators; }
+  TrackedCalculator* newInstance() const override
+  {
+    return new TrackedCalculator;
+  }
+  std::string identifier() const override { return "AutoOptLifetimeTest"; }
+};
+
 class AutoOptCommandTest : public ::testing::Test
 {
 protected:
@@ -71,4 +89,20 @@ TEST_F(AutoOptCommandTest, rejectedStartLeavesButtonStopped)
   tool.start();
   EXPECT_FALSE(tool.running());
   EXPECT_EQ(button->text(), "Start");
+}
+
+TEST_F(AutoOptCommandTest, immediateStopReleasesCalculator)
+{
+  ASSERT_TRUE(
+    Avogadro::Calc::EnergyManager::registerModel(new TrackedCalculator));
+  for (int i = 0; i < 50; ++i) {
+    EXPECT_TRUE(tool.handleCommand("startAutoOptimize",
+                                   { { "method", "AutoOptLifetimeTest" } }));
+    // Do not wait for the worker's initialization event before stopping it.
+    tool.stop();
+    EXPECT_EQ(liveCalculators.load(), 1) << "restart " << i;
+  }
+  EXPECT_TRUE(
+    Avogadro::Calc::EnergyManager::unregisterModel("AutoOptLifetimeTest"));
+  EXPECT_EQ(liveCalculators.load(), 0);
 }

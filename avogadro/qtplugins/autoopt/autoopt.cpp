@@ -44,6 +44,8 @@
 
 #include <QDebug>
 
+#include <memory>
+
 using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -151,7 +153,8 @@ void AutoOpt::startWorker()
 
   auto constraints = m_molecule->molecule().constraints();
 
-  auto* calc = Calc::EnergyManager::instance().model(m_currentMethod);
+  std::unique_ptr<Calc::EnergyCalculator> calc(
+    Calc::EnergyManager::instance().model(m_currentMethod));
   if (calc == nullptr)
     return;
 
@@ -201,12 +204,15 @@ void AutoOpt::startWorker()
             onWorkerReady();
           });
 
-  // Now invoke initCalculator after connections are established
+  // Keep ownership in the queued call until the worker accepts the calculator.
+  // An immediate stop can destroy this event before initialization runs.
   QMetaObject::invokeMethod(
-    m_worker, "initCalculator", Qt::QueuedConnection,
-    Q_ARG(Avogadro::Calc::EnergyCalculator*, calc),
-    Q_ARG(Avogadro::Core::Molecule, snapshot), Q_ARG(Eigen::VectorXd, mask),
-    Q_ARG(std::vector<Avogadro::Core::Constraint>, constraints));
+    m_worker,
+    [worker = m_worker, calc = std::move(calc), snapshot, mask,
+     constraints]() mutable {
+      worker->initCalculator(calc.release(), snapshot, mask, constraints);
+    },
+    Qt::QueuedConnection);
 }
 
 void AutoOpt::setIcon(bool darkTheme)
