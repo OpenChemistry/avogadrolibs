@@ -153,6 +153,8 @@ private:
 
   QString m_output;
   bool m_dirty;
+  /** True while the overwrite prompt is open (blocks nested prompts). */
+  bool m_promptingOverwrite = false;
   bool m_warned;
   bool readData;
 
