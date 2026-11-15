@@ -486,6 +486,8 @@ bool GLWidget::rebuildScene()
         lap.reset();
       foreach (QtGui::ToolPlugin* tool, m_tools) {
 #ifdef Q_OS_WASM
+        // Web tool overlays are temporary: switching tools clears measurement
+        // labels and alignment markers to keep the compact canvas uncluttered.
         if (tool != m_activeTool)
           continue;
 #endif
