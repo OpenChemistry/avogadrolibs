@@ -355,9 +355,15 @@ QWidget* AutoOpt::toolWidget() const
     timeStepSpinBox->setEnabled(false);
 
     // start stop button
-    QPushButton* startStopButton = new QPushButton(tr("Start"));
+    QPushButton* startStopButton = new QPushButton();
     startStopButton->setObjectName("startStopButton");
-    startStopButton->setIcon(QIcon::fromTheme("go-down"));
+    auto updateButton = [this, startStopButton]() {
+      startStopButton->setText(m_running ? tr("Stop") : tr("Start"));
+      startStopButton->setIcon(
+        QIcon::fromTheme(m_running ? "process-stop" : "go-down"));
+    };
+    connect(this, &AutoOpt::runningChanged, startStopButton, updateButton);
+    updateButton();
     connect(startStopButton, &QPushButton::clicked, this, &AutoOpt::startStop);
     form->addRow(startStopButton);
 
@@ -490,16 +496,6 @@ void AutoOpt::stop()
   m_running = false;
 
   cleanupWorker();
-
-  // get the button from the widget
-  if (m_toolWidget) {
-    auto* startStopButton =
-      m_toolWidget->findChild<QPushButton*>("startStopButton");
-    if (startStopButton) {
-      startStopButton->setText(tr("Start"));
-      startStopButton->setIcon(QIcon::fromTheme("go-down"));
-    }
-  }
 
   if (m_molecule)
     m_molecule->endMergeMode();
