@@ -1,0 +1,11 @@
+This directory contains files from PEGTL 2.8.3:
+ LICENSE and include/tao/pegtl* except contrib/ and file_mapper_win32.hpp
+with minor modifications (in position.hpp, input_error.hpp, file_input.hpp):
+- changed formatting of error messages,
+- using std::system_error instead of pegtl::input_error.
+- avoiding mmap on Windows (until we upgrade to PEGTL v3),
+  because PEGTL v2 API doesn't support Unicode filenames
+  (and also, including <windows.h> has side-effects)
+
+PEGTL can be updated to v3 only when gemmi drops support for C++11/14.
+https://github.com/project-gemmi/gemmi/issues/212

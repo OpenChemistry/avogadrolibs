@@ -52,6 +52,23 @@ else()
   add_library(FastFloat::fast_float ALIAS fast_float)
 endif(USE_EXTERNAL_FASTFLOAT)
 
+if(USE_EXTERNAL_GEMMI)
+  # Untested: relies on upstream's exported gemmi::headers target.
+  find_package(gemmi CONFIG REQUIRED GLOBAL)
+  add_library(gemmi_cif INTERFACE)
+  target_link_libraries(gemmi_cif INTERFACE gemmi::headers)
+  add_library(gemmi::cif ALIAS gemmi_cif)
+else()
+  # Header-only CIF tokenizer, see gemmi/README.md
+  add_library(gemmi_cif INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS gemmi_cif EXPORT AvogadroLibsTargets)
+  endif()
+  target_include_directories(gemmi_cif SYSTEM
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gemmi/include>)
+  add_library(gemmi::cif ALIAS gemmi_cif)
+endif(USE_EXTERNAL_GEMMI)
+
 if(USE_EXTERNAL_PUGIXML)
   find_package(pugixml 1.12 REQUIRED GLOBAL)
 else()
