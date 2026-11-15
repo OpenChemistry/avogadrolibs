@@ -166,7 +166,6 @@ void AutoOpt::startWorker()
   m_worker->moveToThread(m_workerThread);
 
   connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
-  m_workerThread->start();
 
   // Everything this worker emits is stamped with its generation. Results it
   // had already emitted when an edit retired it are still queued for us, and
@@ -213,6 +212,11 @@ void AutoOpt::startWorker()
       worker->initCalculator(calc.release(), snapshot, mask, constraints);
     },
     Qt::QueuedConnection);
+
+  // Start the thread only after everything above is set up. Thread creation
+  // orders these writes before the worker runs in a way TSan can see; the
+  // queued event alone is ordered inside uninstrumented Qt.
+  m_workerThread->start();
 }
 
 void AutoOpt::setIcon(bool darkTheme)
