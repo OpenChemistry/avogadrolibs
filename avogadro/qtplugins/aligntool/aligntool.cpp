@@ -133,12 +133,7 @@ void AlignTool::alignChanged(int align)
   m_alignType = align;
 }
 
-void AlignTool::align()
-{
-  alignPickedAtoms();
-}
-
-bool AlignTool::alignPickedAtoms()
+bool AlignTool::align()
 {
   if (!m_molecule || m_atomIds.isEmpty())
     return false;
@@ -336,7 +331,7 @@ bool AlignTool::handleCommand(const QString& command,
     if (axis < 0)
       return false;
     axisChanged(static_cast<int>(axis));
-    return alignPickedAtoms();
+    return align();
   }
   if (command == "centerAtom") {
     if (options.contains("id")) {

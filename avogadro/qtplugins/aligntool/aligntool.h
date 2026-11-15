@@ -77,15 +77,13 @@ public:
 public Q_SLOTS:
   void axisChanged(int axis);
   void alignChanged(int align);
-  void align();
+  bool align();
 
 private:
   QAction* m_activateAction;
   QtGui::RWMolecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
   QVector<Index> m_atomIds;
-
-  bool alignPickedAtoms();
 
   int m_axis;
   int m_alignType;
