@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-en_GB\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-01 07:36+0000\n"
-"PO-Revision-Date: 2026-11-13 20:06+0000\n"
+"PO-Revision-Date: 2026-11-15 19:04+0000\n"
 "Last-Translator: Andi Chandler <andibing@users.noreply.hosted.weblate.org>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "avogadro/avogadrolibs/en_GB/>\n"
@@ -2064,27 +2064,27 @@ msgstr ""
 
 #: qtopengl/glwidget.cpp:447
 msgid "The offscreen framebuffer could not be bound."
-msgstr ""
+msgstr "The offscreen framebuffer could not be bound."
 
 #: qtopengl/glwidget.cpp:453
 msgid "Reading back the rendered image failed."
-msgstr ""
+msgstr "Reading back the rendered image failed."
 
 #: qtopengl/imagesizedialog.cpp:36
 msgid "Image Size"
-msgstr ""
+msgstr "Image Size"
 
 #: qtopengl/imagesizedialog.cpp:40 qtopengl/imagesizedialog.cpp:43
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #: qtopengl/imagesizedialog.cpp:49
 msgid "&Lock aspect ratio"
-msgstr ""
+msgstr "&Lock aspect ratio"
 
 #: qtopengl/imagesizedialog.cpp:51
 msgid "&Transparent background"
-msgstr ""
+msgstr "&Transparent background"
 
 #: qtopengl/imagesizedialog.cpp:53
 msgid "&Width:"
@@ -2092,17 +2092,17 @@ msgstr "&Width:"
 
 #: qtopengl/imagesizedialog.cpp:55
 msgid "&Height:"
-msgstr ""
+msgstr "&Height:"
 
 #: qtopengl/imagesizedialog.cpp:61
 #, qt-format
 msgid "%1×"
-msgstr ""
+msgstr "%1×"
 
 #: qtopengl/imagesizedialog.cpp:63
 #, qt-format
 msgid "Set the size to %1× the size of the view"
-msgstr ""
+msgstr "Set the size to %1× the size of the view"
 
 #: qtopengl/imagesizedialog.cpp:75
 msgid "Size of view:"
