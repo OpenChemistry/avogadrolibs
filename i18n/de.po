@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-15 07:54+0000\n"
-"PO-Revision-Date: 2026-11-12 08:53+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-11-17 17:13+0000\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.11.2.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -4335,7 +4335,7 @@ msgstr[1] "%n Atome wieder freigeben."
 
 #: qtplugins/forcefield/forcefield.cpp:565
 msgid "No axis was given."
-msgstr ""
+msgstr "Es wurde keine Achse gegeben."
 
 #: qtplugins/forcefield/forcefield.cpp:592
 msgid "Axis must be x, y, z or 0, 1, 2."
