@@ -649,8 +649,11 @@ void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 void Molecule::setHallNumber(unsigned short hallNumber)
 {
   m_hallNumber = hallNumber;
-  if (hallNumber != 0)
+  if (hallNumber != 0) {
     m_data.remove(SpaceGroups::internationalNumberKey());
+    m_data.remove(SpaceGroups::operationsKey());
+    m_data.remove(SpaceGroups::fileNameKey());
+  }
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)

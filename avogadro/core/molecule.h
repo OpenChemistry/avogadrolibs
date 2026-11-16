@@ -813,7 +813,10 @@ public:
    * Setting a Hall number other than 0 removes the entry that file readers
    * keep in the data map when they only know the international table number
    * of the space group (SpaceGroups::internationalNumberKey()): it is
-   * superseded. Setting 0 leaves the data map alone.
+   * superseded. It also removes the symmetry operations and the space group
+   * name that a reader keeps there for a file whose operations match no table
+   * entry (SpaceGroups::operationsKey(), SpaceGroups::fileNameKey()). Setting
+   * 0 leaves the data map alone.
    * @{
    */
   void setHallNumber(unsigned short hallNumber);

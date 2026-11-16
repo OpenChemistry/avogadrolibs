@@ -565,6 +565,16 @@ const char* SpaceGroups::internationalNumberKey()
   return "spaceGroup.internationalNumber";
 }
 
+const char* SpaceGroups::operationsKey()
+{
+  return "spaceGroup.operations";
+}
+
+const char* SpaceGroups::fileNameKey()
+{
+  return "spaceGroup.fileName";
+}
+
 bool SpaceGroups::cellLooksPrimitive(unsigned short hallNumber,
                                      const UnitCell& cell)
 {
@@ -947,6 +957,95 @@ const std::vector<std::vector<SymmetryOperation>>& tableOperations()
   return table;
 }
 
+// Parse a list of operations; false if the list has a bad entry. The result
+// is normalized (sorted, without repeats).
+bool parseOperations(const std::vector<std::string>& operations,
+                     std::vector<SymmetryOperation>& ops)
+{
+  ops.clear();
+  ops.reserve(operations.size());
+  for (const std::string& text : operations) {
+    SymmetryOperation op;
+    if (!parseSymmetryOperation(text, op))
+      return false;
+    ops.push_back(op);
+  }
+  normalizeOperations(ops);
+  return true;
+}
+
+// The images of a fractional position under operations, one per operation.
+Array<Vector3> imagesOf(const std::vector<SymmetryOperation>& ops,
+                        const Vector3& pos)
+{
+  Array<Vector3> images;
+  images.reserve(ops.size());
+  for (const SymmetryOperation& op : ops) {
+    Vector3 image;
+    for (int row = 0; row < 3; ++row) {
+      image[row] = op.rotation[row * 3] * pos[0] +
+                   op.rotation[row * 3 + 1] * pos[1] +
+                   op.rotation[row * 3 + 2] * pos[2] +
+                   static_cast<Real>(op.translation[row]) / 12.0;
+    }
+    images.push_back(image);
+  }
+  return images;
+}
+
+void removeIdentity(std::vector<SymmetryOperation>& ops)
+{
+  SymmetryOperation identity;
+  identity.rotation = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+  ops.erase(std::remove(ops.begin(), ops.end(), identity), ops.end());
+}
+
+// Remove every atom that is the image of an earlier atom of the same element
+// under one of the transforms. @p transformsOf is as for fillWithTransforms(),
+// and the first @p firstTransform of its results are skipped (the identity).
+void reduceWithTransforms(
+  Molecule& mol,
+  const std::function<Array<Vector3>(const Vector3&)>& transformsOf,
+  Index firstTransform, double cartTol)
+{
+  UnitCell* uc = mol.unitCell();
+  if (!uc)
+    return;
+
+  // The number of atoms may change as we remove atoms, so don't cache
+  // the number of atoms, atomic positions, or atomic numbers
+  // There's no point in looking at the last atom
+  for (Index i = 0; i + 1 < mol.atomCount(); ++i) {
+    unsigned char atomicNum = mol.atomicNumber(i);
+    Vector3 pos = uc->toFractional(mol.atomPosition3d(i));
+    Array<Vector3> transformAtoms = transformsOf(pos);
+
+    // Loop through the rest of the atoms in this crystal and see if any match
+    // up with a transform
+    for (Index j = i + 1; j < mol.atomCount(); ++j) {
+      // If the atomic number does not match, skip over it
+      if (mol.atomicNumber(j) != atomicNum)
+        continue;
+
+      Vector3 trialPos = mol.atomPosition3d(j);
+      // Loop through the transform atoms, skipping the original atom
+      for (Index k = firstTransform; k < transformAtoms.size(); ++k) {
+        // The transform atoms are in fractional coordinates. Convert to
+        // cartesian.
+        Vector3 transformPos = uc->toCartesian(transformAtoms[k]);
+        Real distance = uc->distance(trialPos, transformPos);
+        // Is the atom within the cartesian tolerance distance?
+        if (distance <= cartTol) {
+          // Remove this atom and adjust the index
+          mol.removeAtom(j);
+          --j;
+          break;
+        }
+      }
+    }
+  }
+}
+
 // Add the images of every atom under a set of transforms. @p transformsOf
 // returns the transformed fractional coordinates of a fractional position, one
 // per transform, and the first @p firstTransform of them are skipped (they are
@@ -1091,6 +1190,53 @@ unsigned short SpaceGroups::hallNumberFromTransforms(
   return 0;
 }
 
+bool SpaceGroups::operationsAreValid(const std::vector<std::string>& operations)
+{
+  std::vector<SymmetryOperation> ops;
+  return !operations.empty() && parseOperations(operations, ops);
+}
+
+std::vector<std::string> SpaceGroups::storedOperations(const Molecule& molecule)
+{
+  std::vector<std::string> result;
+  if (!molecule.hasData(operationsKey()))
+    return result;
+  const std::string text = molecule.data(operationsKey()).toString();
+  std::string line;
+  for (char c : text) {
+    if (c == '\n') {
+      if (!line.empty())
+        result.push_back(line);
+      line.clear();
+    } else {
+      line += c;
+    }
+  }
+  if (!line.empty())
+    result.push_back(line);
+  return result;
+}
+
+bool SpaceGroups::setStoredOperations(
+  Molecule& molecule, const std::vector<std::string>& operations,
+  const std::string& name)
+{
+  if (!operationsAreValid(operations))
+    return false;
+  std::string joined;
+  for (const std::string& op : operations) {
+    // An operation with a newline would not read back as one operation.
+    if (op.find('\n') != std::string::npos)
+      return false;
+    if (!joined.empty())
+      joined += '\n';
+    joined += op;
+  }
+  molecule.setData(operationsKey(), joined);
+  molecule.setData(fileNameKey(), name);
+  return true;
+}
+
 Array<Vector3> SpaceGroups::getTransforms(unsigned short hallNumber,
                                           const Vector3& v)
 {
@@ -1131,38 +1277,15 @@ bool SpaceGroups::fillUnitCellFromOperations(
 
   // Parse everything first so that nothing is changed if any operation is bad.
   std::vector<SymmetryOperation> ops;
-  ops.reserve(operations.size());
-  for (const std::string& text : operations) {
-    SymmetryOperation op;
-    if (!parseSymmetryOperation(text, op))
-      return false;
-    ops.push_back(op);
-  }
-  normalizeOperations(ops);
+  if (!parseOperations(operations, ops))
+    return false;
 
   // The atoms are already present, so the identity has nothing to add.
-  SymmetryOperation identity;
-  identity.rotation = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
-  ops.erase(std::remove(ops.begin(), ops.end(), identity), ops.end());
+  removeIdentity(ops);
 
   fillWithTransforms(
-    mol,
-    [&ops](const Vector3& pos) {
-      Array<Vector3> images;
-      images.reserve(ops.size());
-      for (const SymmetryOperation& op : ops) {
-        Vector3 image;
-        for (int row = 0; row < 3; ++row) {
-          image[row] = op.rotation[row * 3] * pos[0] +
-                       op.rotation[row * 3 + 1] * pos[1] +
-                       op.rotation[row * 3 + 2] * pos[2] +
-                       static_cast<Real>(op.translation[row]) / 12.0;
-        }
-        images.push_back(image);
-      }
-      return images;
-    },
-    0, cartTol, wrapToCell, allCopies);
+    mol, [&ops](const Vector3& pos) { return imagesOf(ops, pos); }, 0, cartTol,
+    wrapToCell, allCopies);
   return true;
 }
 
@@ -1252,41 +1375,28 @@ void SpaceGroups::reduceToAsymmetricUnit(Molecule& mol,
 {
   if (!mol.unitCell())
     return;
-  UnitCell* uc = mol.unitCell();
 
-  // The number of atoms may change as we remove atoms, so don't cache
-  // the number of atoms, atomic positions, or atomic numbers
-  // There's no point in looking at the last atom
-  for (Index i = 0; i + 1 < mol.atomCount(); ++i) {
-    unsigned char atomicNum = mol.atomicNumber(i);
-    Vector3 pos = uc->toFractional(mol.atomPosition3d(i));
-    Array<Vector3> transformAtoms = getTransforms(hallNumber, pos);
+  // The first transform of a table entry is the identity: the original atom.
+  reduceWithTransforms(
+    mol,
+    [hallNumber](const Vector3& pos) { return getTransforms(hallNumber, pos); },
+    1, cartTol);
+}
 
-    // Loop through the rest of the atoms in this crystal and see if any match
-    // up with a transform
-    for (Index j = i + 1; j < mol.atomCount(); ++j) {
-      // If the atomic number does not match, skip over it
-      if (mol.atomicNumber(j) != atomicNum)
-        continue;
+bool SpaceGroups::reduceToAsymmetricUnitFromOperations(
+  Molecule& mol, const std::vector<std::string>& operations, double cartTol)
+{
+  if (!mol.unitCell())
+    return false;
 
-      Vector3 trialPos = mol.atomPosition3d(j);
-      // Loop through the transform atoms
-      // We skip 0 because it is the original atom.
-      for (Index k = 1; k < transformAtoms.size(); ++k) {
-        // The transform atoms are in fractional coordinates. Convert to
-        // cartesian.
-        Vector3 transformPos = uc->toCartesian(transformAtoms[k]);
-        Real distance = uc->distance(trialPos, transformPos);
-        // Is the atom within the cartesian tolerance distance?
-        if (distance <= cartTol) {
-          // Remove this atom and adjust the index
-          mol.removeAtom(j);
-          --j;
-          break;
-        }
-      }
-    }
-  }
+  std::vector<SymmetryOperation> ops;
+  if (!parseOperations(operations, ops))
+    return false;
+  removeIdentity(ops);
+
+  reduceWithTransforms(
+    mol, [&ops](const Vector3& pos) { return imagesOf(ops, pos); }, 0, cartTol);
+  return true;
 }
 
 Array<Index> SpaceGroups::translationalUniqueAtoms(const Molecule& mol,
