@@ -600,8 +600,12 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
       unchanged = mol.atomicNumber(i) == numbersRead[i] &&
                   (mol.atomPosition3d(i) - positionsRead[i]).norm() <= 1e-8;
     }
-    if (perceiveBonds && unchanged && removeAlternativeBonds())
+    if (perceiveBonds && unchanged && removeAlternativeBonds()) {
+      // The orders were assigned with the alternative bonds present, and
+      // perceiveBondOrders() starts from the existing orders: reset them.
+      mol.setBondOrders(Core::Array<unsigned char>(mol.bondCount(), 1));
       mol.perceiveBondOrders();
+    }
     return true;
   }
 
