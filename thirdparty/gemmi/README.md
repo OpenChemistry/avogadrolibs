@@ -1,17 +1,19 @@
-# gemmi (CIF tokenizer only, header-only)
+# gemmi (CIF reader and writer only, header-only)
 
 Upstream: https://github.com/project-gemmi/gemmi
 Commit: 97c8082 (2026-09-22)
 
-This is the header-only CIF tokenizer of gemmi, a library for macromolecular
-and small-molecule crystallography. It reads CIF, small-molecule CIF and mmCIF
-files into a generic block/loop/pair document (`gemmi/cif.hpp`). There are no
-compiled sources, no zlib, and nothing for mmCIF models, MTZ or CCP4 maps.
-It keeps gemmi's layout so `#include <gemmi/cif.hpp>` works.
+This is the header-only CIF reader and writer of gemmi, a library for
+macromolecular and small-molecule crystallography. It reads CIF,
+small-molecule CIF and mmCIF files into a generic block/loop/pair document
+(`gemmi/cif.hpp`) and writes such a document back (`gemmi/to_cif.hpp`).
+There are no compiled sources, no zlib, and nothing for mmCIF models, MTZ or
+CCP4 maps. It keeps gemmi's layout so `#include <gemmi/cif.hpp>` works.
 
 ## Contents
 
-- `include/gemmi/`: `cif.hpp`, `cifdoc.hpp`, `atox.hpp`, `fail.hpp`,
+- `include/gemmi/`: `cif.hpp` (reader), `cifdoc.hpp` (document), `to_cif.hpp`
+  (writer), `atox.hpp`, `fail.hpp`,
   `fileutil.hpp`, `iterator.hpp`, `util.hpp`, and `utf.hpp` (included by
   `fileutil.hpp` only under `_WIN32`).
 - `include/gemmi/third_party/tao/`: the whole PEGTL 2.8.3 tree as shipped by
