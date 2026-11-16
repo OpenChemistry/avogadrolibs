@@ -14,8 +14,10 @@
 #include <string>
 
 using Avogadro::Core::SpaceGroups;
+using Avogadro::Io::applyCifSymmetry;
 using Avogadro::Io::CifSymmetry;
 using Avogadro::Io::expandCifAtoms;
+using Avogadro::Io::makeCifSymmetry;
 using Avogadro::Io::readCifSymmetry;
 
 namespace {
@@ -664,4 +666,54 @@ _symmetry_equiv_pos_as_xyz
   noCell.addAtom(6);
   EXPECT_FALSE(expandCifAtoms(readCifSymmetry(untabulated), noCell));
   EXPECT_EQ(noCell.atomCount(), 1u);
+}
+
+TEST(CifSymmetryTest, makeCifSymmetry)
+{
+  const std::vector<std::string> ops = { "x,y,z", "-x,-y,-z" };
+  CifSymmetry symmetry = makeCifSymmetry(ops, "-P  1");
+  EXPECT_EQ(symmetry.operations, ops);
+  EXPECT_EQ(symmetry.hallSymbol, "-P 1");
+  EXPECT_EQ(symmetry.hallFromOperations, 2);
+  EXPECT_EQ(symmetry.hallFromSymbol, 2);
+
+  // both parts are optional
+  symmetry = makeCifSymmetry({}, "");
+  EXPECT_EQ(symmetry.hallNumber(), 0);
+  EXPECT_TRUE(symmetry.hallSymbol.empty());
+  symmetry = makeCifSymmetry({}, "-P 2ybc");
+  EXPECT_EQ(symmetry.hallNumber(), SpaceGroups::hallNumber("-P 2ybc"));
+}
+
+TEST(CifSymmetryTest, applyCifSymmetry)
+{
+  using Avogadro::Core::Molecule;
+  using Avogadro::Core::UnitCell;
+
+  // no cell: nothing happens
+  Molecule noCell;
+  applyCifSymmetry(makeCifSymmetry({ "x,y,z", "-x,-y,-z" }, ""), noCell);
+  EXPECT_EQ(noCell.hallNumber(), 0);
+
+  Molecule molecule;
+  molecule.setUnitCell(
+    new UnitCell(5.0, 6.0, 7.0, 1.5707963, 1.5707963, 1.5707963));
+  molecule.addAtom(6, Avogadro::Vector3(0.5, 0.6, 0.7));
+
+  // tabulated operations set the group
+  applyCifSymmetry(makeCifSymmetry({ "x,y,z", "-x,-y,-z" }, ""), molecule);
+  EXPECT_EQ(molecule.hallNumber(), 2);
+
+  // a file that lists only the identity does not demote a larger group
+  applyCifSymmetry(makeCifSymmetry({ "x,y,z" }, ""), molecule);
+  EXPECT_EQ(molecule.hallNumber(), 2);
+
+  // untabulated operations (A-1) expand the atoms and leave P1
+  const std::vector<std::string> a1 = { "x,y,z", "-x,-y,-z", "x,y+1/2,z+1/2",
+                                        "-x,-y+1/2,-z+1/2" };
+  CifSymmetry symmetry = makeCifSymmetry(a1, "");
+  ASSERT_TRUE(symmetry.hasUntabulatedOperations());
+  applyCifSymmetry(symmetry, molecule);
+  EXPECT_EQ(molecule.hallNumber(), 1);
+  EXPECT_GT(molecule.atomCount(), 1u);
 }

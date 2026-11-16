@@ -84,6 +84,15 @@ struct CifSymmetry
 AVOGADROIO_EXPORT CifSymmetry readCifSymmetry(std::string_view cifText);
 
 /**
+ * Build a CifSymmetry from the symmetry operations and the Hall symbol that a
+ * file gives, looking both up in the table of Core::SpaceGroups. Either may be
+ * empty. readCifSymmetry() uses this too, so every reader resolves them the
+ * same way.
+ */
+AVOGADROIO_EXPORT CifSymmetry makeCifSymmetry(
+  const std::vector<std::string>& operations, const std::string& hallSymbol);
+
+/**
  * Fill the unit cell of @p molecule, which holds the asymmetric unit of a CIF
  * file, by applying the symmetry operations of the file, for a file whose
  * operations match no entry of the space group table
@@ -100,6 +109,21 @@ AVOGADROIO_EXPORT CifSymmetry readCifSymmetry(std::string_view cifText);
  */
 AVOGADROIO_EXPORT bool expandCifAtoms(const CifSymmetry& symmetry,
                                       Core::Molecule& molecule);
+
+/**
+ * Set the space group of @p molecule, which holds the asymmetric unit read
+ * from a CIF file, from what the file spells out itself. Does nothing if the
+ * molecule has no unit cell.
+ *
+ * Operations that match no table entry expand the atoms (expandCifAtoms()) and
+ * leave P1. Otherwise the Hall number is that of the operations, else that of
+ * the Hall symbol, and a molecule keeps the group a reader already found if
+ * the file lists only the identity (the operations were stripped, or every
+ * atom is already present) while the reader named a larger group. Nothing is
+ * changed if the file identifies no group.
+ */
+AVOGADROIO_EXPORT void applyCifSymmetry(const CifSymmetry& symmetry,
+                                        Core::Molecule& molecule);
 
 } // namespace Avogadro::Io
 

@@ -226,6 +226,7 @@ void addSingleColumnOperations(const std::vector<Token>& values,
 CifSymmetry readCifSymmetry(std::string_view cifText)
 {
   CifSymmetry result;
+  std::string hallSymbol;
   CifTokenizer tokenizer(cifText);
 
   bool haveOperations = false;
@@ -257,9 +258,7 @@ CifSymmetry readCifSymmetry(std::string_view cifText)
         result.operations.push_back(token.text);
         haveOperations = true;
       } else if (isHallTag(tag) && !haveHall) {
-        result.hallSymbol = cifHallSymbol(token.text);
-        result.hallFromSymbol =
-          Core::SpaceGroups::hallNumberFromHallSymbol(token.text);
+        hallSymbol = token.text;
         haveHall = true;
       }
       token = tokenizer.next();
@@ -312,6 +311,17 @@ CifSymmetry readCifSymmetry(std::string_view cifText)
     token = tokenizer.next();
   }
 
+  return makeCifSymmetry(result.operations, hallSymbol);
+}
+
+CifSymmetry makeCifSymmetry(const std::vector<std::string>& operations,
+                            const std::string& hallSymbol)
+{
+  CifSymmetry result;
+  result.operations = operations;
+  result.hallSymbol = cifHallSymbol(hallSymbol);
+  result.hallFromSymbol =
+    Core::SpaceGroups::hallNumberFromHallSymbol(hallSymbol);
   result.hallFromOperations =
     Core::SpaceGroups::hallNumberFromTransforms(result.operations);
   return result;
@@ -347,6 +357,39 @@ bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule)
   // Every atom is present now: nothing is left for a space group to expand
   molecule.setHallNumber(1);
   return true;
+}
+
+void applyCifSymmetry(const CifSymmetry& symmetry, Core::Molecule& molecule)
+{
+  if (molecule.unitCell() == nullptr)
+    return;
+
+  // The operations of the file are in no table entry (a non-standard setting
+  // such as I-1, or an origin that a reader's symbol does not carry), so no
+  // Hall number can describe the structure. The file's own operations beat
+  // the reader's guess of the group: expand the atoms with them, like reading
+  // a calculation where all the atoms are there, and call the result P1.
+  if (symmetry.hasUntabulatedOperations() && expandCifAtoms(symmetry, molecule))
+    return;
+
+  const unsigned short found = symmetry.hallNumber();
+  if (found == 0)
+    return;
+
+  const char* key = Core::SpaceGroups::internationalNumberKey();
+  const unsigned short previous = molecule.hallNumber();
+  // read before setHallNumber() below, which removes the key
+  const bool hadNumber = molecule.hasData(key);
+
+  // Only the identity is listed (or the Hall symbol is "P 1"), yet the reader
+  // found a larger group. Either every atom is already in the file, so
+  // expanding with that group adds nothing, or the operations were stripped
+  // from the file, and P1 would drop the symmetry-related atoms. The group
+  // that the file names is right, or harmless, in both cases.
+  if (found == 1 && ((previous != 0 && previous != 1) || hadNumber))
+    return;
+
+  molecule.setHallNumber(found);
 }
 
 } // namespace Avogadro::Io
