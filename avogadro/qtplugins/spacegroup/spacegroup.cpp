@@ -714,7 +714,7 @@ void SpaceGroup::reduceToAsymmetricUnit()
                             QMessageBox::Yes | QMessageBox::No);
     if (answer == QMessageBox::Yes) {
       m_molecule->undoMolecule()->reduceCellToAsymmetricUnitFromOperations(
-        operations, 0.25);
+        operations, m_spgTol);
       return;
     }
   }
