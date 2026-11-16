@@ -37,6 +37,9 @@ This will make a copy of your base environment.
        <property name="text">
         <string>Environment name:</string>
        </property>
+       <property name="buddy">
+        <cstring>environmentName</cstring>
+       </property>
       </widget>
      </item>
      <item>
