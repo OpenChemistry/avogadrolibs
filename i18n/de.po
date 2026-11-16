@@ -23,7 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-15 07:54+0000\n"
 "PO-Revision-Date: 2026-11-17 17:13+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: matterhorn103 "
+"<83813148+matterhorn103@users.noreply.github.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -3662,7 +3663,7 @@ msgstr "Molekulare Mechanik"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:339
 msgid "Hybrid quantum classical (Not yet supported)"
-msgstr "Hybrid quantenklassisch (noch nicht unterstützt)"
+msgstr "Hybrid quantenmechanisch-klassisch (noch nicht unterstützt)"
 
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:354
 msgid "EWALD"
