@@ -35,6 +35,9 @@ Avogadro must be restarted for any changes to take effect.</string>
        <property name="text">
         <string>Environment:</string>
        </property>
+       <property name="buddy">
+        <cstring>environmentCombo</cstring>
+       </property>
       </widget>
      </item>
      <item>
