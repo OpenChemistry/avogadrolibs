@@ -165,8 +165,9 @@ struct LayerLabel : Core::LayerData
     std::stringstream output;
     output.imbue(std::locale::classic());
     output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
-           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2]
-           << " " << bondOptions << " " << labelScale;
+           << static_cast<int>(color[0]) << " " << static_cast<int>(color[1])
+           << " " << static_cast<int>(color[2]) << " " << bondOptions << " "
+           << labelScale;
     return output.str();
   }
 
