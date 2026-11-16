@@ -193,11 +193,9 @@ MatrixX ChargeManager::partialCharges(const std::string& identifier,
 
   // otherwise go through our list
   const ChargeModel* model = registeredModel(identifier);
-  if (model == nullptr) {
-    MatrixX charges(molecule.atomCount(),
-                    1); // we have to return something, so zeros
-    return charges;
-  }
+  // No rows means failure: callers compare the row count with the atom count
+  if (model == nullptr)
+    return MatrixX(0, 1);
 
   return model->partialCharges(molecule);
 }
