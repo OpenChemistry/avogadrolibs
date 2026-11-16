@@ -926,6 +926,30 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
   return true;
 }
 
+bool RWMolecule::fillUnitCellFromOperations(
+  const std::vector<std::string>& operations, double cartTol, bool allCopies)
+{
+  if (!m_molecule.unitCell())
+    return false;
+
+  // Check the operations before touching anything
+  if (!Core::SpaceGroups::operationsAreValid(operations))
+    return false;
+
+  cancelBackgroundCalculations();
+  Molecule newMolecule = m_molecule;
+
+  if (!Core::SpaceGroups::fillUnitCellFromOperations(newMolecule, operations,
+                                                     cartTol, true, allCopies))
+    return false;
+
+  Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
+  QString undoText = tr("Fill Unit Cell");
+
+  modifyMolecule(newMolecule, changes, undoText);
+  return true;
+}
+
 bool RWMolecule::fillTranslationalCopies(double cartTol)
 {
   if (!m_molecule.unitCell())
@@ -956,6 +980,34 @@ bool RWMolecule::reduceCellToAsymmetricUnit(unsigned short hallNumber,
   Molecule newMolecule = m_molecule;
 
   Core::SpaceGroups::reduceToAsymmetricUnit(newMolecule, hallNumber, cartTol);
+
+  Molecule::MoleculeChanges changes = Molecule::Removed | Molecule::Atoms;
+  QString undoText = tr("Reduce Cell to Asymmetric Unit");
+
+  modifyMolecule(newMolecule, changes, undoText);
+
+  // Resize layer info to match the new atom count
+  Core::LayerManager::getMoleculeInfo(&m_molecule)
+    ->layer.resize(m_molecule.atomCount());
+
+  return true;
+}
+
+bool RWMolecule::reduceCellToAsymmetricUnitFromOperations(
+  const std::vector<std::string>& operations, double cartTol)
+{
+  if (!m_molecule.unitCell())
+    return false;
+
+  if (!Core::SpaceGroups::operationsAreValid(operations))
+    return false;
+
+  cancelBackgroundCalculations();
+  Molecule newMolecule = m_molecule;
+
+  if (!Core::SpaceGroups::reduceToAsymmetricUnitFromOperations(
+        newMolecule, operations, cartTol))
+    return false;
 
   Molecule::MoleculeChanges changes = Molecule::Removed | Molecule::Atoms;
   QString undoText = tr("Reduce Cell to Asymmetric Unit");

@@ -22,6 +22,9 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
+#include <string>
+#include <vector>
+
 #include <QUndoStack>
 
 namespace Avogadro::QtGui {
@@ -700,6 +703,22 @@ public:
                     bool allCopies = false);
 
   /**
+   * Fill unit cell using a list of symmetry operations (as stored by a file
+   * reader, see Core::SpaceGroups::storedOperations()) instead of a Hall
+   * number. The Hall number and the stored operations are kept, so the cell
+   * can be reduced again. Changes are emitted.
+   * @param operations Operations like "x,y,z" or "-x+1/2,y,-z".
+   * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @param allCopies If true, all copies will be filled (i.e. edges and
+   * corners)
+   * @return True if the algorithm succeeded, and false if it failed (no unit
+   * cell, or an operation that cannot be parsed).
+   */
+  bool fillUnitCellFromOperations(const std::vector<std::string>& operations,
+                                  double cartTol = 1e-5,
+                                  bool allCopies = false);
+
+  /**
    * Add translational copies of atoms on the unit cell boundary without
    * applying symmetry operations. Changes are emitted.
    * @param cartTol Cartesian tolerance for comparing atom positions.
@@ -716,6 +735,16 @@ public:
    */
   bool reduceCellToAsymmetricUnit(unsigned short hallNumber,
                                   double cartTol = 1e-5);
+
+  /**
+   * Reduce a cell to its asymmetric unit with a list of symmetry operations
+   * instead of a Hall number. Changes are emitted.
+   * @param operations Operations like "x,y,z" or "-x+1/2,y,-z".
+   * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool reduceCellToAsymmetricUnitFromOperations(
+    const std::vector<std::string>& operations, double cartTol = 1e-5);
 
   /**
    * Call this function when you wish to merge all undo commands.
