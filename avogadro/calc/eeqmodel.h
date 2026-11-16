@@ -39,8 +39,9 @@ namespace Avogadro::Calc {
  * WebAssembly builds) long before it is useful.
  *
  * On failure (unsupported element, too many atoms, a non-finite solution) an
- * error is recorded with appendError() and a zero charge for each atom is
- * returned.
+ * error is recorded with appendError() and a matrix with no rows is returned,
+ * so callers that compare the row count with the atom count can tell a
+ * failure from real charges.
  *
  * Internally the model works in Bohr, Hartree and elementary charges;
  * positions are converted from Angstrom.

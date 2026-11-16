@@ -283,10 +283,9 @@ TEST(EEQModelTest, UnsupportedElementFailsCleanly)
     Molecule mol;
     mol.addAtom(8).setPosition3d(Vector3(0.0, 0.0, 0.0));
     mol.addAtom(z).setPosition3d(Vector3(1.5, 0.0, 0.0));
+    // a failure has fewer rows than atoms, so it is never taken as charges
     const MatrixX charges = model.partialCharges(mol);
-    ASSERT_EQ(charges.rows(), 2);
-    EXPECT_TRUE(charges.isZero()) << static_cast<int>(z);
-    EXPECT_TRUE(charges.allFinite());
+    EXPECT_EQ(charges.rows(), 0) << static_cast<int>(z);
   }
 }
 
@@ -298,8 +297,7 @@ TEST(EEQModelTest, TooManyAtomsRejected)
   for (std::size_t i = 0; i <= EEQModel::maxAtoms(); ++i)
     mol.addAtom(1);
   const MatrixX charges = model.partialCharges(mol);
-  ASSERT_EQ(charges.rows(), static_cast<Eigen::Index>(mol.atomCount()));
-  EXPECT_TRUE(charges.isZero());
+  EXPECT_EQ(charges.rows(), 0);
 }
 
 TEST(EEQModelTest, CoincidentAtomsAreFinite)

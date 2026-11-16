@@ -255,6 +255,26 @@ TEST_F(LabelChargeTest, failedCalculationIsNotRetried)
   Avogadro::Calc::ChargeManager::registerModel(new Avogadro::Calc::EEQModel);
 }
 
+TEST_F(LabelChargeTest, failedEEQChargesAreNotStored)
+{
+  // Leave only the built-in EEQ model, and make it fail through its atom cap.
+  Avogadro::Calc::ChargeManager::unregisterModel(kModelId);
+  m_registered = false;
+  auto* mol = m_harness.molecule();
+  while (mol->atomCount() <= Avogadro::Calc::EEQModel::maxAtoms())
+    mol->addAtom(1, Vector3(static_cast<double>(mol->atomCount()), 0, 0));
+
+  Label label;
+  label.setEnabled(true);
+  QSignalSpy changed(&label, &Label::drawablesChanged);
+  for (int i = 0; i < 2; ++i) {
+    process(label);
+    QTest::qWait(kSettle);
+  }
+  EXPECT_TRUE(mol->partialChargeTypes().empty());
+  EXPECT_EQ(changed.count(), 0);
+}
+
 TEST_F(LabelChargeTest, shortStoredChargesAreSafe)
 {
   // setPartialCharges() only checks the matrix size, so a 1x3 matrix is

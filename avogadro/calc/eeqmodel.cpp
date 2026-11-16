@@ -97,21 +97,23 @@ MatrixX EEQModel::partialCharges(const Core::Molecule& mol) const
 {
   const std::size_t atomCount = mol.atomCount();
   const auto count = static_cast<Eigen::Index>(atomCount);
-  MatrixX charges = MatrixX::Zero(count, 1);
+  // Failures return no rows (not zeros), so callers that compare the row
+  // count with the atom count never store them as charges.
+  const MatrixX failure(0, 1);
   if (atomCount == 0)
-    return charges;
+    return failure;
 
   if (atomCount > maxAtoms()) {
     appendError("EEQ charges are limited to " + std::to_string(maxAtoms()) +
                 " atoms; this molecule has " + std::to_string(atomCount) + ".");
-    return charges;
+    return failure;
   }
 
   const Core::Array<unsigned char>& numbers = mol.atomicNumbers();
   const Core::Array<Vector3>& positions = mol.atomPositions3d();
   if (numbers.size() != atomCount || positions.size() != atomCount) {
     appendError("EEQ: inconsistent atom data.");
-    return charges;
+    return failure;
   }
 
   std::vector<Vector3> xyz(atomCount);
@@ -119,7 +121,7 @@ MatrixX EEQModel::partialCharges(const Core::Molecule& mol) const
   for (std::size_t i = 0; i < atomCount; ++i) {
     if (!supported(numbers[i])) {
       appendError("EEQ charges are only parameterized for elements 1-103.");
-      return charges;
+      return failure;
     }
     xyz[i] = positions[i] * ANGSTROM_TO_BOHR_EEQ;
     rcov[i] = COVALENT_SCALE * EEQData::covalentRadius[numbers[i]] *
@@ -162,10 +164,10 @@ MatrixX EEQModel::partialCharges(const Core::Molecule& mol) const
   const Eigen::VectorXd solution = lu.solve(x);
   if (!solution.allFinite()) {
     appendError("EEQ: the charge equations could not be solved.");
-    return charges;
+    return failure;
   }
 
-  charges = solution.head(count);
+  MatrixX charges = solution.head(count);
   return charges;
 }
 
