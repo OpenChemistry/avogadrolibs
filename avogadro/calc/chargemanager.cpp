@@ -154,8 +154,10 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
 }
 
 // order of preference for the built-in methods
+// (EEQ is always available, so it is the last resort and never displaces
+// a model read from a file or installed by a user)
 const std::vector<std::string> METHOD_TIER_LIST = { "eem", "mmff94",
-                                                    "gasteiger" };
+                                                    "gasteiger", "eeq" };
 
 std::string ChargeManager::recommendedModel(
   const Core::Molecule& molecule) const
@@ -172,7 +174,7 @@ std::string ChargeManager::recommendedModel(
   }
 
   // if not, we look through the built-in list in order
-  // of preference (e.g., eem > mmff94 > gasteiger)
+  // of preference (e.g., eem > mmff94 > gasteiger > eeq)
   for (auto option : METHOD_TIER_LIST) {
     if (identifiers.find(option) != identifiers.end()) {
       return option;

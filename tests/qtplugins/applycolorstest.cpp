@@ -9,6 +9,9 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/calc/chargemanager.h>
+#include <avogadro/calc/eeqmodel.h>
+
 using Avogadro::QtPlugins::ApplyColors;
 using Avogadro::QtPluginsTests::CommandOutcome;
 using Avogadro::QtPluginsTests::CommandStatus;
@@ -198,8 +201,11 @@ TEST_F(ApplyColorsCommandTest, colorAtomsByDistanceInvalidColormap)
 
 TEST_F(ApplyColorsCommandTest, colorAtomsByChargeNoChargesAvailable)
 {
+  // The built-in EEQ model would otherwise always supply charges
+  Avogadro::Calc::ChargeManager::unregisterModel("eeq");
   const CommandOutcome out =
     m_harness.run("colorAtomsByCharge", { { "colormap", "Coolwarm" } });
+  Avogadro::Calc::ChargeManager::registerModel(new Avogadro::Calc::EEQModel);
   EXPECT_TRUE(out.claimed);
   EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
   EXPECT_TRUE(out.clean()) << describe(out);

@@ -17,6 +17,7 @@
 
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/calc/chargemodel.h>
+#include <avogadro/calc/eeqmodel.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -236,8 +237,10 @@ TEST_F(LabelChargeTest, chargesAreRecalculatedAfterAnEditKeepingAtomCount)
 
 TEST_F(LabelChargeTest, failedCalculationIsNotRetried)
 {
-  // An unregistered model: nothing can calculate charges.
+  // No registered models (including the built-in EEQ): nothing can
+  // calculate charges.
   Avogadro::Calc::ChargeManager::unregisterModel(kModelId);
+  Avogadro::Calc::ChargeManager::unregisterModel("eeq");
   m_registered = false;
 
   Label label;
@@ -249,6 +252,7 @@ TEST_F(LabelChargeTest, failedCalculationIsNotRetried)
   }
   EXPECT_EQ(CountingModel::calls, 0);
   EXPECT_EQ(changed.count(), 0);
+  Avogadro::Calc::ChargeManager::registerModel(new Avogadro::Calc::EEQModel);
 }
 
 TEST_F(LabelChargeTest, shortStoredChargesAreSafe)
