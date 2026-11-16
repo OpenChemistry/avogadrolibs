@@ -536,7 +536,7 @@ jobs:
         # add it here too -- except the qtplugins suite (fuzz_qtplugin_commands),
         # which is Linux-only: it links the Qt plugins and the Qt GUI libraries.
         suites=(
-          "io|fuzz_||cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr dcd=dcd-small smiles decompress=compressed compress-roundtrip=compressed"
+          "io|fuzz_||cif cjson cml sdf pdb xyz tmol=turbomole POSCAR=vasp OUTCAR=vasp dump=lammps gro trr dcd=dcd-small smiles decompress=compressed compress-roundtrip=compressed"
           "quantumio|fuzz_||aux=mopac cube fchk gamess molden nwchem orca qcjson=qcschema"
           "core|fuzz_core_|core|array bond coordinateblockgenerator crystal graph layer molecule neighbor residue ring secondarystructure utilities variant variantmap"
         )
@@ -623,11 +623,17 @@ jobs:
             seed_args=()
             seed_count=0
             rm -rf "${seed_dir}" && mkdir -p "${seed_dir}"
+            # data/cif also holds an 11.6 MB structure and the CSD statistics
+            # PDFs, which would inflate max_len: seed only the small CIFs.
+            find_extra=()
+            case "${name}" in
+              io/cif) find_extra=(-name '*.cif' -size -64k) ;;
+            esac
             for root in "${seed_root}" "${local_fuzz}/${seed_name}"; do
               [ -d "${root}" ] || continue
               while IFS= read -r -d '' f; do
                 cp "${f}" "${seed_dir}/$(sha1sum "${f}" | cut -c1-40)"
-              done < <(find "${root}" -type f ! -name 'README*' -print0)
+              done < <(find "${root}" -type f ! -name 'README*' ${find_extra[@]+"${find_extra[@]}"} -print0)
             done
             seed_count=$(find "${seed_dir}" -type f | wc -l)
             [ "${seed_count}" -gt 0 ] && seed_args=("${seed_dir}")
