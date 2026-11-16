@@ -2,6 +2,7 @@
 set(tests
   ChargeManager
   ChargeModel
+  EEQModel
   EnergyManager
   EnergyCalculator
   EnergyOptimizer

@@ -4,6 +4,8 @@ avogadro_headers(Calc
   chargemodel.h
   chargemanager.h
   defaultmodel.h
+  eeqdata.h
+  eeqmodel.h
   energycalculator.h
   energyoptimizer.h
   energymanager.h
@@ -17,6 +19,7 @@ target_sources(Calc PRIVATE
   chargemodel.cpp
   chargemanager.cpp
   defaultmodel.cpp
+  eeqmodel.cpp
   energycalculator.cpp
   energyoptimizer.cpp
   energymanager.cpp

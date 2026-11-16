@@ -6,6 +6,7 @@
 #include "chargemanager.h"
 #include "chargemodel.h"
 #include "defaultmodel.h"
+#include "eeqmodel.h"
 
 #include <avogadro/core/utilities.h>
 
@@ -119,7 +120,8 @@ std::string ChargeManager::nameForModel(const std::string& identifier) const
 
 ChargeManager::ChargeManager()
 {
-  // add any default models here (EEM maybe?)
+  // built-in models, always available (including headless and WASM builds)
+  addModel(new EEQModel);
 }
 
 ChargeManager::~ChargeManager()
