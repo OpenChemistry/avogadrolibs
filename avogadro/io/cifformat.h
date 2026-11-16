@@ -15,14 +15,15 @@ namespace Avogadro::Io {
  * @brief Reader and P1 writer for small-molecule CIF files.
  *
  * The reader keeps the asymmetric unit of the file and records the space
- * group of the molecule (see applyCifSymmetry()); it does not fill the cell.
+ * group of the molecule (see applyCifSymmetry()), or the operations of the
+ * file when they match no table entry; it does not fill the cell.
  * A file without fractional coordinates (a macromolecular mmCIF) or one this
  * reader cannot make sense of is handed to another reader registered for
  * "cif", normally the Open Babel plugin.
  *
- * The writer makes a P1 file: a molecule with a space group other than P1 is
- * filled out to all the atoms of its cell first, and no bonds are written
- * (a bond across a cell face needs a symmetry code).
+ * The writer makes a P1 file: a molecule with a space group other than P1 (or
+ * with stored operations) is filled out to all the atoms of its cell first, and
+ * no bonds are written (a bond across a cell face needs a symmetry code).
  *
  * Occupancies and displacement parameters are not stored.
  */

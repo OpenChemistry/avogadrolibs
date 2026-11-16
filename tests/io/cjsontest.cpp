@@ -1239,6 +1239,27 @@ TEST(CjsonTest, spaceGroupFromOpenBabel)
   EXPECT_EQ(roundTrip.hallNumber(), 0);
 }
 
+TEST(CjsonTest, storedSpaceGroupOperationsRoundTrip)
+{
+  // A file whose operations match no table entry keeps them, with Hall 0.
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(crystalWithSpaceGroup("\"74\""), molecule));
+  const std::vector<std::string> operations = { "x,y,z", "-x,-y,-z",
+                                                "x,y+1/2,z+1/2",
+                                                "-x,-y+1/2,-z+1/2" };
+  ASSERT_TRUE(SpaceGroups::setStoredOperations(molecule, operations, "B -1"));
+  molecule.setHallNumber(0);
+
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  Molecule roundTrip;
+  ASSERT_TRUE(cjson.readString(output, roundTrip));
+  EXPECT_EQ(roundTrip.hallNumber(), 0);
+  EXPECT_EQ(SpaceGroups::storedOperations(roundTrip), operations);
+  EXPECT_EQ(roundTrip.data(SpaceGroups::fileNameKey()).toString(), "B -1");
+}
+
 namespace {
 
 // A small basis: s (2 primitives), p (1), s (3) on two atoms.

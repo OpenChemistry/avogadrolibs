@@ -270,38 +270,59 @@ TEST(CifTest, moleculeName)
   EXPECT_EQ(unnamed.data("name").toString(), "test");
 }
 
-TEST(CifTest, untabulatedOperationsExpandToP1)
+TEST(CifTest, untabulatedOperationsAreKeptOnTheMolecule)
 {
-  // A-1, I-1 and F-1 settings are in no table entry; the atoms are expanded
-  // with the operations of the file, exactly as expandCifAtoms() does.
-  for (const char* id : { "7006564", "7011106", "2019269" }) {
+  // A-1, I-1 and F-1 settings are in no table entry: the reader keeps the
+  // asymmetric unit and the operations of the file instead of a Hall number.
+  for (const char* id : { "7006564", "7011106", "2019269", "2311997" }) {
     SCOPED_TRACE(id);
     Molecule molecule;
     CifFormat format;
     ASSERT_TRUE(format.readFile(codFile(id), molecule)) << format.error();
-    EXPECT_EQ(molecule.hallNumber(), 1);
+    EXPECT_EQ(molecule.hallNumber(), 0);
+    EXPECT_FALSE(molecule.hasData(SpaceGroups::internationalNumberKey()));
 
     const auto symmetry = Avogadro::Io::readCifSymmetry(readText(codFile(id)));
     ASSERT_TRUE(symmetry.hasUntabulatedOperations());
+    EXPECT_FALSE(symmetry.name.empty());
+    EXPECT_EQ(SpaceGroups::storedOperations(molecule), symmetry.operations);
+    EXPECT_EQ(molecule.data(SpaceGroups::fileNameKey()).toString(),
+              symmetry.name);
 
-    // the asymmetric unit, expanded by hand
+    // the atoms read are the atoms of the asymmetric unit
     cif::Document doc = cif::read_file(codFile(id));
     cif::Table rows = doc.sole_block().find(
       "_atom_site_", { "label", "fract_x", "fract_y", "fract_z" });
     ASSERT_TRUE(rows.ok());
-    Molecule reference;
-    reference.setUnitCell(new UnitCell(*molecule.unitCell()));
+    std::size_t sites = 0;
     for (auto row : rows) {
-      Avogadro::Core::Atom atom = reference.addAtom(6);
-      atom.setPosition3d(molecule.unitCell()->toCartesian(
-        Vector3(std::stod(row[1]), std::stod(row[2]), std::stod(row[3]))));
+      (void)row;
+      ++sites;
     }
-    const std::size_t asymmetric = reference.atomCount();
-    ASSERT_TRUE(Avogadro::Io::expandCifAtoms(symmetry, reference));
-    EXPECT_GT(reference.atomCount(), asymmetric);
-    EXPECT_EQ(molecule.atomCount(), reference.atomCount());
-    EXPECT_EQ(reference.hallNumber(), 1);
+    EXPECT_EQ(molecule.atomCount(), sites);
+
+    // and the operations expand them
+    Molecule filled(molecule);
+    ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+      filled, SpaceGroups::storedOperations(molecule), 0.25));
+    EXPECT_GT(filled.atomCount(), molecule.atomCount());
+    EXPECT_EQ(filled.hallNumber(), 0);
+    EXPECT_FALSE(SpaceGroups::storedOperations(filled).empty());
   }
+}
+
+TEST(CifTest, bCenteredTriclinicKeepsTheMolecule)
+{
+  // 2311997 is '-B 1': 148 atoms in the file, 592 once the cell is filled
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(format.readFile(codFile("2311997"), molecule)) << format.error();
+  EXPECT_EQ(molecule.atomCount(), 148u);
+  EXPECT_EQ(molecule.hallNumber(), 0);
+  EXPECT_EQ(SpaceGroups::storedOperations(molecule).size(), 4u);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    molecule, SpaceGroups::storedOperations(molecule), 0.25));
+  EXPECT_EQ(molecule.atomCount(), 592u);
 }
 
 TEST(CifTest, disorderGroupsOfTheSameAssemblyAreNotBonded)
@@ -866,12 +887,12 @@ TEST(CifTest, writeNeedsACellAndAtoms)
   EXPECT_FALSE(other.error().empty());
 }
 
-TEST(CifTest, independentExpansionOfAnOriginShiftedInversion)
+TEST(CifTest, independentFillOfAnOriginShiftedInversion)
 {
   // P-1 with the inversion center at (1/8, 1/8, 1/8) is in no table entry, so
-  // the file's own operations expand the atoms. The images are worked out by
-  // hand, not with the library: x' = 1/4 - x for each fractional coordinate,
-  // then wrapped into [0, 1).
+  // the molecule keeps the operations of the file, which fill the cell. The
+  // images are worked out by hand, not with the library: x' = 1/4 - x for each
+  // fractional coordinate, then wrapped into [0, 1).
   //
   // The cell is orthorhombic, a = 5, b = 6, c = 7 angstrom.
   //  C1 (0.10, 0.20, 0.30) -> (0.15, 0.05, -0.05) -> (0.15, 0.05, 0.95)
@@ -896,7 +917,12 @@ TEST(CifTest, independentExpansionOfAnOriginShiftedInversion)
   Molecule molecule;
   CifFormat format;
   ASSERT_TRUE(format.readString(text, molecule)) << format.error();
-  EXPECT_EQ(molecule.hallNumber(), 1);
+  EXPECT_EQ(molecule.hallNumber(), 0);
+  ASSERT_EQ(molecule.atomCount(), 2u);
+  const auto operations = SpaceGroups::storedOperations(molecule);
+  ASSERT_EQ(operations.size(), 2u);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(molecule, operations,
+                                                      0.25, true, false));
   ASSERT_EQ(molecule.atomCount(), 4u);
 
   struct Expected
@@ -929,11 +955,11 @@ TEST(CifTest, independentExpansionOfAnOriginShiftedInversion)
     EXPECT_TRUE(u);
 }
 
-TEST(CifTest, disorderRuleAfterExpansion)
+TEST(CifTest, disorderRuleWithStoredOperations)
 {
-  // The same origin-shifted P-1, so the atoms are expanded. C1 and C2 are
+  // The same origin-shifted P-1, so the operations are kept. C1 and C2 are
   // alternatives 1.4 angstrom apart, in the middle of the cell, and must not be
-  // bonded; their images are 1.4 angstrom apart too.
+  // bonded.
   const std::string text =
     "data_alt\n_cell_length_a 20.0\n_cell_length_b 20.0\n"
     "_cell_length_c 20.0\n_cell_angle_alpha 90\n_cell_angle_beta 90\n"
@@ -953,36 +979,40 @@ TEST(CifTest, disorderRuleAfterExpansion)
   };
 
   Molecule molecule = read("{ \"perceiveBonds\": true }");
-  EXPECT_EQ(molecule.hallNumber(), 1);
-  ASSERT_EQ(molecule.atomCount(), 4u);
+  EXPECT_EQ(molecule.hallNumber(), 0);
+  ASSERT_EQ(molecule.atomCount(), 2u);
   EXPECT_FALSE(bonded(molecule, "C1", "C2"));
-  // the images of the alternatives are not in the file, so they are bonded
-  // by distance
-  EXPECT_GT(molecule.bondCount(), 0u);
+  EXPECT_EQ(molecule.bondCount(), 0u);
 }
 
-TEST(CifTest, expansionRespectsPerceiveBonds)
+TEST(CifTest, writeFillsTheCellWithStoredOperations)
 {
-  const std::string text =
-    "data_nobonds\n_cell_length_a 20.0\n_cell_length_b 20.0\n"
-    "_cell_length_c 20.0\n_cell_angle_alpha 90\n_cell_angle_beta 90\n"
-    "_cell_angle_gamma 90\n"
-    "loop_\n_space_group_symop_operation_xyz\n'x,y,z'\n"
-    "'-x+1/4,-y+1/4,-z+1/4'\n"
-    "loop_\n_atom_site_label\n_atom_site_type_symbol\n_atom_site_fract_x\n"
-    "_atom_site_fract_y\n_atom_site_fract_z\n"
-    "C1 C 0.40 0.40 0.40\nC2 C 0.47 0.40 0.40\n";
   Molecule molecule;
   CifFormat format;
-  format.setOptions("{ \"perceiveBonds\": false }");
-  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
-  EXPECT_EQ(molecule.atomCount(), 4u);
-  EXPECT_EQ(molecule.bondCount(), 0u);
+  ASSERT_TRUE(format.readFile(codFile("7006564"), molecule)) << format.error();
+  ASSERT_EQ(molecule.hallNumber(), 0);
+  const auto operations = SpaceGroups::storedOperations(molecule);
+  ASSERT_FALSE(operations.empty());
 
-  Molecule withBonds;
-  CifFormat other;
-  ASSERT_TRUE(other.readString(text, withBonds)) << other.error();
-  EXPECT_GT(withBonds.bondCount(), 0u);
+  Molecule reference(molecule);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(reference, operations));
+  ASSERT_GT(reference.atomCount(), molecule.atomCount());
+  const std::size_t atomCount = molecule.atomCount();
+
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, molecule)) << writer.error();
+  // the molecule is not changed
+  EXPECT_EQ(molecule.atomCount(), atomCount);
+  EXPECT_EQ(SpaceGroups::storedOperations(molecule), operations);
+
+  Molecule readBack;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+  EXPECT_EQ(readBack.hallNumber(), 1);
+  EXPECT_EQ(readBack.atomCount(), reference.atomCount());
+  expectSameCell(*molecule.unitCell(), *readBack.unitCell());
+  expectSameAtoms(reference, readBack);
 }
 
 TEST(CifTest, unquotedOperationsAreBounded)

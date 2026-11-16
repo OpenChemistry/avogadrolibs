@@ -566,11 +566,9 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
   bool perceiveBonds = true;
   boolOption("perceiveBonds", perceiveBonds);
 
-  const std::size_t atomsRead = mol.atomCount();
-  const Core::Array<Vector3> positionsRead = mol.atomPositions3d();
-  const Core::Array<unsigned char> numbersRead = mol.atomicNumbers();
-  applyCifSymmetry(makeCifSymmetry(data.operations, data.hallSymbol), mol,
-                   perceiveBonds);
+  applyCifSymmetry(
+    makeCifSymmetry(data.operations, data.hallSymbol, data.hermannMauguin),
+    mol);
 
   // The alternatives of a disordered site are never bonded.
   auto removeAlternativeBonds = [&]() {
@@ -584,30 +582,6 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
       mol.removeBond(pair.first, pair.second);
     return !alternatives.empty();
   };
-
-  // A file whose operations are in no table was expanded, and its bonds were
-  // perceived from the expanded coordinates. The atoms that were added have
-  // no disorder group to look up, so the bonds of the file are not applied to
-  // it, and the disorder rule only to the bonds between the atoms read.
-  // Filling can remove an atom that was read (a duplicate on the cell
-  // boundary), move one (wrapped into the cell) and then let another atom take
-  // its index, so an index below the number of sites is an atom that was read
-  // only if every one of them is still where it was. If one is not, the
-  // indices cannot be trusted and the bonds are left as perceived.
-  if (mol.atomCount() != atomsRead) {
-    bool unchanged = mol.atomCount() > atomsRead;
-    for (std::size_t i = 0; unchanged && i < atomsRead; ++i) {
-      unchanged = mol.atomicNumber(i) == numbersRead[i] &&
-                  (mol.atomPosition3d(i) - positionsRead[i]).norm() <= 1e-8;
-    }
-    if (perceiveBonds && unchanged && removeAlternativeBonds()) {
-      // The orders were assigned with the alternative bonds present, and
-      // perceiveBondOrders() starts from the existing orders: reset them.
-      mol.setBondOrders(Core::Array<unsigned char>(mol.bondCount(), 1));
-      mol.perceiveBondOrders();
-    }
-    return true;
-  }
 
   if (perceiveBonds) {
     mol.perceiveBondsSimple();
@@ -723,6 +697,16 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
       filled = std::make_unique<Core::Molecule>(molecule);
       Core::SpaceGroups::fillUnitCell(*filled, molecule.hallNumber());
       source = filled.get();
+    } else if (molecule.hallNumber() == 0) {
+      // A file whose operations are in no table entry: its molecule keeps the
+      // operations instead of a Hall number.
+      const std::vector<std::string> operations =
+        Core::SpaceGroups::storedOperations(molecule);
+      if (!operations.empty()) {
+        filled = std::make_unique<Core::Molecule>(molecule);
+        if (Core::SpaceGroups::fillUnitCellFromOperations(*filled, operations))
+          source = filled.get();
+      }
     }
     const Core::UnitCell* cell = source->unitCell();
     if (cell == nullptr)

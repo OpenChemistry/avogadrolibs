@@ -116,7 +116,9 @@ void writeDataBlocks(std::ostream& out, const Core::VariantMap& dataMap)
   for (const auto& key : dataMap.names()) {
     // skip some keys
     if (key == "modelView" || key == "projection" ||
-        key == Core::SpaceGroups::internationalNumberKey())
+        key == Core::SpaceGroups::internationalNumberKey() ||
+        key == Core::SpaceGroups::operationsKey() ||
+        key == Core::SpaceGroups::fileNameKey())
       continue;
 
     out << "> <" << key << ">\n";

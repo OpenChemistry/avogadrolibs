@@ -9,6 +9,7 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
 
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/io/sdfformat.h>
@@ -119,6 +120,19 @@ TEST(MdlTest, saveFile)
   EXPECT_EQ(bond.atom1().index(), static_cast<size_t>(0));
   EXPECT_EQ(bond.atom2().index(), static_cast<size_t>(1));
   EXPECT_EQ(bond.order(), static_cast<unsigned char>(1));
+}
+
+TEST(MdlTest, storedSpaceGroupOperationsAreNotWritten)
+{
+  MdlFormat mdl;
+  Molecule molecule;
+  ASSERT_TRUE(mdl.readFile(std::string(AVOGADRO_DATA) + "/data/sdf/ethane.mol",
+                           molecule));
+  ASSERT_TRUE(Avogadro::Core::SpaceGroups::setStoredOperations(
+    molecule, { "x,y,z", "-x,-y,-z" }, "-P 1"));
+  std::string output;
+  ASSERT_TRUE(mdl.writeString(output, molecule));
+  EXPECT_EQ(output.find("spaceGroup"), std::string::npos) << output;
 }
 
 TEST(MdlTest, readMulti)
