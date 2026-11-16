@@ -24,24 +24,6 @@ namespace Avogadro::QtPlugins {
 
 namespace {
 
-// Open Babel reduces the space group of a CIF file to a symbol, which often
-// leaves out the origin choice or the axes (the IZA zeolites write 'F d 3 m'
-// for origin choice 2) and sometimes disagrees with the file's own symmetry
-// operations. Resolve the setting from the operations, which are not
-// ambiguous, and then from an exact Hall symbol. Whatever the reader found is
-// kept if neither of them identifies an entry of the table.
-//
-// This re-scan of the file is needed because Open Babel's CJSON writer emits
-// only the space group symbol; it can go once Open Babel writes the hall
-// number.
-void resolveCifSpaceGroup(std::string_view cifText, Core::Molecule& molecule)
-{
-  if (molecule.unitCell() == nullptr)
-    return;
-
-  Io::applyCifSymmetry(Io::readCifSymmetry(cifText), molecule);
-}
-
 bool isCifFormat(const std::vector<std::string>& extensions)
 {
   for (const std::string& extension : extensions) {
@@ -254,9 +236,19 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   }
 
   if (!cifText.isEmpty()) {
-    resolveCifSpaceGroup(
-      std::string_view(cifText.constData(),
-                       static_cast<std::size_t>(cifText.size())),
+    // Open Babel reduces the space group of a CIF file to a symbol, which
+    // often leaves out the origin choice or the axes (the IZA zeolites write
+    // 'F d 3 m' for origin choice 2) and sometimes disagrees with the file's
+    // own symmetry operations. Resolve the setting from the operations, which
+    // are not ambiguous, and then from an exact Hall symbol. Whatever the
+    // reader found is kept if neither identifies an entry of the table.
+    //
+    // This re-scan of the file is needed because Open Babel's CJSON writer
+    // emits only the space group symbol; it can go once Open Babel writes the
+    // hall number.
+    Io::applyCifSymmetry(
+      Io::readCifSymmetry(std::string_view(
+        cifText.constData(), static_cast<std::size_t>(cifText.size()))),
       molecule);
   }
 

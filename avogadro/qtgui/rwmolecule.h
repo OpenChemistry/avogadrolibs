@@ -22,6 +22,7 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -840,6 +841,20 @@ protected:
   QUndoStack m_undoStack;
 
   friend class Molecule;
+
+private:
+  /**
+   * Edit a copy of the molecule with @p edit and make it the current molecule
+   * as one undo step. Does nothing and returns false if there is no unit
+   * cell or @p edit returns false.
+   * @param edit Changes the copy it is given; returns false if it failed.
+   * @param changes The changes to be emitted.
+   * @param undoText The text description for the undo command.
+   * @param resizeLayers If true, resize the layer info to the new atom count.
+   */
+  bool editUnitCell(const std::function<bool(Molecule&)>& edit,
+                    Molecule::MoleculeChanges changes, const QString& undoText,
+                    bool resizeLayers);
 };
 
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>

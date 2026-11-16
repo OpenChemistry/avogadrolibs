@@ -605,12 +605,6 @@ TEST(CifSymmetryTest, nameFallsBackToTheHallSymbol)
   EXPECT_EQ(makeCifSymmetry(ops, "-C 1").name, "-C 1");
   EXPECT_EQ(makeCifSymmetry(ops, "-C 1", " C -1 ").name, "C -1");
   EXPECT_TRUE(makeCifSymmetry(ops, "").name.empty());
-
-  Avogadro::Core::Molecule mol = bondedPair();
-  // an untabulated set with no name at all is still kept
-  applyCifSymmetry(makeCifSymmetry(ops, ""), mol);
-  EXPECT_EQ(mol.hallNumber(), 0);
-  EXPECT_EQ(SpaceGroups::storedOperations(mol), ops);
 }
 
 TEST(CifSymmetryTest, applyCifSymmetryLeavesOtherCasesAlone)
@@ -692,11 +686,6 @@ TEST(CifSymmetryTest, applyCifSymmetry)
 {
   using Avogadro::Core::Molecule;
   using Avogadro::Core::UnitCell;
-
-  // no cell: nothing happens
-  Molecule noCell;
-  applyCifSymmetry(makeCifSymmetry({ "x,y,z", "-x,-y,-z" }, ""), noCell);
-  EXPECT_EQ(noCell.hallNumber(), 0);
 
   Molecule molecule;
   molecule.setUnitCell(

@@ -72,26 +72,14 @@ char asciiUpper(char c)
 {
   return isAsciiLower(c) ? static_cast<char>(c - 'a' + 'A') : c;
 }
-char asciiLower(char c)
-{
-  return (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
-}
-
-// One uppercase letter followed by lowercase ones, the spelling of Elements.
-std::string capitalized(const std::string& letters)
-{
-  std::string result;
-  for (std::size_t i = 0; i < letters.size(); ++i)
-    result += (i == 0) ? asciiUpper(letters[i]) : asciiLower(letters[i]);
-  return result;
-}
 
 unsigned char elementFromSymbol(const std::string& symbol)
 {
-  const unsigned char number =
-    Core::Elements::atomicNumberFromSymbol(capitalized(symbol));
-  // 0 is the dummy atom "Xx"
-  return number == InvalidElement ? InvalidElement : number;
+  // The spelling of Elements: one uppercase letter, then lowercase ones.
+  std::string name = Core::toLower(symbol);
+  if (!name.empty())
+    name[0] = asciiUpper(name[0]);
+  return Core::Elements::atomicNumberFromSymbol(name);
 }
 
 bool isValidElement(unsigned char number)
@@ -166,18 +154,9 @@ unsigned char elementFromTypeSymbol(const std::string& type,
 
   // "Fe", "Cl"; a longer run of letters is read as its first two, then its
   // first letter.
-  if (letters.size() <= 2) {
-    const unsigned char number = elementFromSymbol(letters);
-    if (isValidElement(number))
-      return number;
-  }
-  if (letters.size() > 2) {
-    const unsigned char number = elementFromSymbol(letters.substr(0, 2));
-    if (isValidElement(number))
-      return number;
-  }
-  if (letters.size() > 1) {
-    const unsigned char number = elementFromSymbol(letters.substr(0, 1));
+  for (std::size_t length = std::min<std::size_t>(2, letters.size());
+       length >= 1; --length) {
+    const unsigned char number = elementFromSymbol(letters.substr(0, length));
     if (isValidElement(number))
       return number;
   }
@@ -448,8 +427,10 @@ std::vector<std::string> CifFormat::mimeTypes() const
 
 bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
 {
-  const std::string text((std::istreambuf_iterator<char>(inStream)),
-                         std::istreambuf_iterator<char>());
+  // An empty stream sets the failbit of the buffer, which is not an error.
+  std::ostringstream buffer;
+  buffer << inStream.rdbuf();
+  std::string text = std::move(buffer).str();
 
   CifData data;
   std::string reason;
@@ -498,7 +479,7 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     reader->setOptions(options());
     bool success = false;
     if (candidate->supportedOperations() & FileFormat::Stream) {
-      std::istringstream stream(text);
+      std::istringstream stream(std::move(text));
       success = reader->read(stream, molecule);
     } else if (!fileName().empty()) {
       success = reader->readFile(fileName(), molecule);
@@ -570,8 +551,10 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     makeCifSymmetry(data.operations, data.hallSymbol, data.hermannMauguin),
     mol);
 
-  // The alternatives of a disordered site are never bonded.
-  auto removeAlternativeBonds = [&]() {
+  if (perceiveBonds) {
+    mol.perceiveBondsSimple();
+
+    // The alternatives of a disordered site are never bonded.
     std::vector<std::pair<Index, Index>> alternatives;
     for (const auto& pair : mol.bondPairs()) {
       if (pair.first < sites.size() && pair.second < sites.size() &&
@@ -580,12 +563,6 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     }
     for (const auto& pair : alternatives)
       mol.removeBond(pair.first, pair.second);
-    return !alternatives.empty();
-  };
-
-  if (perceiveBonds) {
-    mol.perceiveBondsSimple();
-    removeAlternativeBonds();
   }
 
   for (const auto& labels : data.bondedLabels) {

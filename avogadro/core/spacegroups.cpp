@@ -570,6 +570,12 @@ const char* SpaceGroups::operationsKey()
   return "spaceGroup.operations";
 }
 
+bool SpaceGroups::isSpaceGroupDataKey(const std::string& key)
+{
+  return key == internationalNumberKey() || key == operationsKey() ||
+         key == fileNameKey();
+}
+
 const char* SpaceGroups::fileNameKey()
 {
   return "spaceGroup.fileName";
@@ -1000,6 +1006,17 @@ void removeIdentity(std::vector<SymmetryOperation>& ops)
   ops.erase(std::remove(ops.begin(), ops.end(), identity), ops.end());
 }
 
+// Add an atom of the given element at a cartesian position, with its isotope
+// (0 for the default).
+void addImage(Molecule& mol, unsigned char atomicNum, unsigned short isotope,
+              const Vector3& position)
+{
+  Atom newAtom = mol.addAtom(atomicNum);
+  newAtom.setPosition3d(position);
+  if (isotope != 0)
+    newAtom.setIsotope(isotope);
+}
+
 // Remove every atom that is the image of an earlier atom of the same element
 // under one of the transforms. @p transformsOf is as for fillWithTransforms(),
 // and the first @p firstTransform of its results are skipped (the identity).
@@ -1008,9 +1025,8 @@ void reduceWithTransforms(
   const std::function<Array<Vector3>(const Vector3&)>& transformsOf,
   Index firstTransform, double cartTol)
 {
+  // The caller has checked that there is a unit cell.
   UnitCell* uc = mol.unitCell();
-  if (!uc)
-    return;
 
   // The number of atoms may change as we remove atoms, so don't cache
   // the number of atoms, atomic positions, or atomic numbers
@@ -1018,7 +1034,13 @@ void reduceWithTransforms(
   for (Index i = 0; i + 1 < mol.atomCount(); ++i) {
     unsigned char atomicNum = mol.atomicNumber(i);
     Vector3 pos = uc->toFractional(mol.atomPosition3d(i));
+    // The transform atoms are in fractional coordinates. Convert to cartesian
+    // once for all the atoms j.
     Array<Vector3> transformAtoms = transformsOf(pos);
+    Array<Vector3> cart;
+    cart.reserve(transformAtoms.size());
+    for (const Vector3& frac : transformAtoms)
+      cart.push_back(uc->toCartesian(frac));
 
     // Loop through the rest of the atoms in this crystal and see if any match
     // up with a transform
@@ -1029,13 +1051,9 @@ void reduceWithTransforms(
 
       Vector3 trialPos = mol.atomPosition3d(j);
       // Loop through the transform atoms, skipping the original atom
-      for (Index k = firstTransform; k < transformAtoms.size(); ++k) {
-        // The transform atoms are in fractional coordinates. Convert to
-        // cartesian.
-        Vector3 transformPos = uc->toCartesian(transformAtoms[k]);
-        Real distance = uc->distance(trialPos, transformPos);
+      for (Index k = firstTransform; k < cart.size(); ++k) {
         // Is the atom within the cartesian tolerance distance?
-        if (distance <= cartTol) {
+        if (uc->distance(trialPos, cart[k]) <= cartTol) {
           // Remove this atom and adjust the index
           mol.removeAtom(j);
           --j;
@@ -1098,10 +1116,7 @@ void fillWithTransforms(
         continue;
 
       // If we got this far, add the atom!
-      Atom newAtom = mol.addAtom(atomicNum);
-      newAtom.setPosition3d(newCandidate);
-      if (isotope != 0)
-        newAtom.setIsotope(isotope);
+      addImage(mol, atomicNum, isotope, newCandidate);
     }
   }
 
@@ -1198,23 +1213,9 @@ bool SpaceGroups::operationsAreValid(const std::vector<std::string>& operations)
 
 std::vector<std::string> SpaceGroups::storedOperations(const Molecule& molecule)
 {
-  std::vector<std::string> result;
   if (!molecule.hasData(operationsKey()))
-    return result;
-  const std::string text = molecule.data(operationsKey()).toString();
-  std::string line;
-  for (char c : text) {
-    if (c == '\n') {
-      if (!line.empty())
-        result.push_back(line);
-      line.clear();
-    } else {
-      line += c;
-    }
-  }
-  if (!line.empty())
-    result.push_back(line);
-  return result;
+    return std::vector<std::string>();
+  return split(molecule.data(operationsKey()).toString(), '\n');
 }
 
 bool SpaceGroups::setStoredOperations(
@@ -1232,6 +1233,10 @@ bool SpaceGroups::setStoredOperations(
       joined += '\n';
     joined += op;
   }
+  // No table entry describes these operations. Set the Hall number first:
+  // setHallNumber(0) leaves the data map alone, and the keys are set after.
+  molecule.setHallNumber(0);
+  molecule.dataMap().remove(internationalNumberKey());
   molecule.setData(operationsKey(), joined);
   molecule.setData(fileNameKey(), name);
   return true;
@@ -1361,10 +1366,7 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
         continue;
 
       // If we got this far, add the atom!
-      Atom newAtom = mol.addAtom(atomicNum);
-      newAtom.setPosition3d(newCandidate);
-      if (isotope != 0)
-        newAtom.setIsotope(isotope);
+      addImage(mol, atomicNum, isotope, newCandidate);
     }
   }
 }

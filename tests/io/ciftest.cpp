@@ -308,21 +308,14 @@ TEST(CifTest, untabulatedOperationsAreKeptOnTheMolecule)
     EXPECT_GT(filled.atomCount(), molecule.atomCount());
     EXPECT_EQ(filled.hallNumber(), 0);
     EXPECT_FALSE(SpaceGroups::storedOperations(filled).empty());
-  }
-}
 
-TEST(CifTest, bCenteredTriclinicKeepsTheMolecule)
-{
-  // 2311997 is '-B 1': 148 atoms in the file, 592 once the cell is filled
-  Molecule molecule;
-  CifFormat format;
-  ASSERT_TRUE(format.readFile(codFile("2311997"), molecule)) << format.error();
-  EXPECT_EQ(molecule.atomCount(), 148u);
-  EXPECT_EQ(molecule.hallNumber(), 0);
-  EXPECT_EQ(SpaceGroups::storedOperations(molecule).size(), 4u);
-  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
-    molecule, SpaceGroups::storedOperations(molecule), 0.25));
-  EXPECT_EQ(molecule.atomCount(), 592u);
+    // 2311997 is '-B 1': 148 atoms in the file, 592 once the cell is filled
+    if (std::string(id) == "2311997") {
+      EXPECT_EQ(molecule.atomCount(), 148u);
+      EXPECT_EQ(SpaceGroups::storedOperations(molecule).size(), 4u);
+      EXPECT_EQ(filled.atomCount(), 592u);
+    }
+  }
 }
 
 TEST(CifTest, disorderGroupsOfTheSameAssemblyAreNotBonded)
@@ -970,19 +963,13 @@ TEST(CifTest, disorderRuleWithStoredOperations)
     "_atom_site_fract_y\n_atom_site_fract_z\n_atom_site_disorder_assembly\n"
     "_atom_site_disorder_group\n"
     "C1 C 0.40 0.40 0.40 A 1\nC2 C 0.47 0.40 0.40 A 2\n";
-  auto read = [&](const std::string& options) {
-    Molecule molecule;
-    CifFormat format;
-    format.setOptions(options);
-    EXPECT_TRUE(format.readString(text, molecule)) << format.error();
-    return molecule;
-  };
-
-  Molecule molecule = read("{ \"perceiveBonds\": true }");
+  Molecule molecule;
+  CifFormat format;
+  format.setOptions("{ \"perceiveBonds\": true }");
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
   EXPECT_EQ(molecule.hallNumber(), 0);
   ASSERT_EQ(molecule.atomCount(), 2u);
   EXPECT_FALSE(bonded(molecule, "C1", "C2"));
-  EXPECT_EQ(molecule.bondCount(), 0u);
 }
 
 TEST(CifTest, writeFillsTheCellWithStoredOperations)

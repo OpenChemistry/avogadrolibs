@@ -357,8 +357,6 @@ void applyCifSymmetry(const CifSymmetry& symmetry, Core::Molecule& molecule)
   if (symmetry.hasUntabulatedOperations() &&
       Core::SpaceGroups::setStoredOperations(molecule, symmetry.operations,
                                              symmetry.name)) {
-    molecule.setHallNumber(0);
-    molecule.dataMap().remove(Core::SpaceGroups::internationalNumberKey());
     return;
   }
 

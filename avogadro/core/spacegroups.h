@@ -165,6 +165,13 @@ public:
   static const char* fileNameKey();
 
   /**
+   * @return true if @p key is one of the keys SpaceGroups keeps in a
+   * molecule's data map (internationalNumberKey(), operationsKey() and
+   * fileNameKey()), which generic property writers should skip.
+   */
+  static bool isSpaceGroupDataKey(const std::string& key);
+
+  /**
    * @return true if every operation can be parsed (the grammar of
    * hallNumberFromTransforms()) and the list is not empty.
    */
@@ -179,7 +186,9 @@ public:
   /**
    * Store the symmetry operations of a file in @p molecule (under
    * operationsKey()) and the name of its space group (under fileNameKey()).
-   * Nothing is stored unless every operation can be parsed.
+   * Nothing is stored unless every operation can be parsed. On success the
+   * Hall number of the molecule is set to 0 and internationalNumberKey() is
+   * removed, since no table entry describes the structure.
    *
    * @return true if the operations were stored.
    */
