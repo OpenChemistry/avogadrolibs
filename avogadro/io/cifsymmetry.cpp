@@ -334,7 +334,8 @@ namespace {
 constexpr double expandTolerance = 0.25;
 } // namespace
 
-bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule)
+bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule,
+                    bool perceiveBonds)
 {
   if (!symmetry.hasUntabulatedOperations() || molecule.unitCell() == nullptr)
     return false;
@@ -344,7 +345,7 @@ bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule)
         molecule, symmetry.operations, expandTolerance, true, false))
     return false;
 
-  if (molecule.atomCount() > before) {
+  if (perceiveBonds && molecule.atomCount() > before) {
     // The bonds were perceived for the asymmetric unit only; the new atoms
     // have none. Bond them like CrystalTools::wrapAtomsToUnitCell() does.
     // Bonds across the cell boundary are found when they are needed
@@ -359,7 +360,8 @@ bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule)
   return true;
 }
 
-void applyCifSymmetry(const CifSymmetry& symmetry, Core::Molecule& molecule)
+void applyCifSymmetry(const CifSymmetry& symmetry, Core::Molecule& molecule,
+                      bool perceiveBonds)
 {
   if (molecule.unitCell() == nullptr)
     return;
@@ -369,7 +371,8 @@ void applyCifSymmetry(const CifSymmetry& symmetry, Core::Molecule& molecule)
   // Hall number can describe the structure. The file's own operations beat
   // the reader's guess of the group: expand the atoms with them, like reading
   // a calculation where all the atoms are there, and call the result P1.
-  if (symmetry.hasUntabulatedOperations() && expandCifAtoms(symmetry, molecule))
+  if (symmetry.hasUntabulatedOperations() &&
+      expandCifAtoms(symmetry, molecule, perceiveBonds))
     return;
 
   const unsigned short found = symmetry.hallNumber();

@@ -252,6 +252,11 @@ struct CifData
   std::vector<std::pair<std::string, std::string>> bondedLabels;
 };
 
+// The longest operation that is re-joined from unquoted values. A real
+// operation is a few dozen characters, so a longer run of values is not one
+// (and joining it would cost time and memory for nothing).
+constexpr std::size_t maxOperationLength = 256;
+
 // The operations of the file. Unquoted operations written with spaces
 // ("x, y, z") are split into several values by the tokenizer, so join values
 // until there are three coordinates.
@@ -263,10 +268,15 @@ std::vector<std::string> readOperations(cif::Block& block)
     if (column.item() == nullptr)
       continue;
     std::string pending;
+    int commas = 0; // the commas in pending
     auto flush = [&]() {
+      // An incomplete operation is kept on purpose: a malformed entry then
+      // matches no table entry, and the reader falls back to the name or the
+      // Hall symbol instead of silently matching a smaller group.
       if (!pending.empty())
         operations.push_back(pending);
       pending.clear();
+      commas = 0;
     };
     for (const std::string& value : column) {
       const bool quoted =
@@ -277,9 +287,13 @@ std::vector<std::string> readOperations(cif::Block& block)
         operations.push_back(cif::as_string(value));
         continue;
       }
+      if (!pending.empty() &&
+          pending.size() + value.size() > maxOperationLength)
+        flush();
       pending += value;
-      if (std::count(pending.begin(), pending.end(), ',') >= 2 &&
-          pending.back() != ',')
+      commas += static_cast<int>(std::count(value.begin(), value.end(), ','));
+      if ((commas >= 2 && pending.back() != ',') ||
+          pending.size() > maxOperationLength)
         flush();
     }
     flush();
@@ -374,7 +388,8 @@ void readBonds(cif::Block& block, CifData& data)
 
   auto isIdentity = [](const std::string& code) {
     const std::string text = Core::trimmed(cif::as_string(code));
-    return text.empty() || text == "1_555";
+    return text.empty() || text == "." || text == "?" || text == "1_555" ||
+           text == "1";
   };
   for (auto row : table) {
     if ((row.has(2) && !isIdentity(row[2])) ||
@@ -548,21 +563,17 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     Core::SpaceGroups::setSpaceGroup(mol, data.hermannMauguin);
   if (mol.hallNumber() == 0 && !data.tableNumber.empty())
     Core::SpaceGroups::setSpaceGroup(mol, data.tableNumber);
-  const std::size_t atomsRead = mol.atomCount();
-  applyCifSymmetry(makeCifSymmetry(data.operations, data.hallSymbol), mol);
-
-  // A file whose operations are in no table was expanded, and its bonds were
-  // perceived from the expanded coordinates. The atoms that were added have
-  // no disorder group to look up, so the disorder rule and the bonds of the
-  // file are not applied to it.
-  if (mol.atomCount() != atomsRead)
-    return true;
-
   bool perceiveBonds = true;
   boolOption("perceiveBonds", perceiveBonds);
-  if (perceiveBonds) {
-    mol.perceiveBondsSimple();
 
+  const std::size_t atomsRead = mol.atomCount();
+  const Core::Array<Vector3> positionsRead = mol.atomPositions3d();
+  const Core::Array<unsigned char> numbersRead = mol.atomicNumbers();
+  applyCifSymmetry(makeCifSymmetry(data.operations, data.hallSymbol), mol,
+                   perceiveBonds);
+
+  // The alternatives of a disordered site are never bonded.
+  auto removeAlternativeBonds = [&]() {
     std::vector<std::pair<Index, Index>> alternatives;
     for (const auto& pair : mol.bondPairs()) {
       if (pair.first < sites.size() && pair.second < sites.size() &&
@@ -571,6 +582,32 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     }
     for (const auto& pair : alternatives)
       mol.removeBond(pair.first, pair.second);
+    return !alternatives.empty();
+  };
+
+  // A file whose operations are in no table was expanded, and its bonds were
+  // perceived from the expanded coordinates. The atoms that were added have
+  // no disorder group to look up, so the bonds of the file are not applied to
+  // it, and the disorder rule only to the bonds between the atoms read.
+  // Filling can remove an atom that was read (a duplicate on the cell
+  // boundary), move one (wrapped into the cell) and then let another atom take
+  // its index, so an index below the number of sites is an atom that was read
+  // only if every one of them is still where it was. If one is not, the
+  // indices cannot be trusted and the bonds are left as perceived.
+  if (mol.atomCount() != atomsRead) {
+    bool unchanged = mol.atomCount() > atomsRead;
+    for (std::size_t i = 0; unchanged && i < atomsRead; ++i) {
+      unchanged = mol.atomicNumber(i) == numbersRead[i] &&
+                  (mol.atomPosition3d(i) - positionsRead[i]).norm() <= 1e-8;
+    }
+    if (perceiveBonds && unchanged && removeAlternativeBonds())
+      mol.perceiveBondOrders();
+    return true;
+  }
+
+  if (perceiveBonds) {
+    mol.perceiveBondsSimple();
+    removeAlternativeBonds();
   }
 
   for (const auto& labels : data.bondedLabels) {
@@ -720,11 +757,17 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
     const std::vector<std::string> labels = uniqueLabels(*source);
     for (std::size_t i = 0; i < source->atomCount(); ++i) {
       const Vector3 fractional = cell->toFractional(source->atomPosition3d(i));
-      sites.add_row(
-        { cif::quote(labels[i]),
-          cif::quote(Core::Elements::symbol(source->atomicNumber(i))),
-          formatNumber(fractional.x(), 8), formatNumber(fractional.y(), 8),
-          formatNumber(fractional.z(), 8) });
+      // D and T are the symbols of the hydrogen isotopes, which the reader
+      // understands
+      std::string symbol = Core::Elements::symbol(source->atomicNumber(i));
+      if (source->atomicNumber(i) == 1 && source->isotope(i) == 2)
+        symbol = "D";
+      else if (source->atomicNumber(i) == 1 && source->isotope(i) == 3)
+        symbol = "T";
+      sites.add_row({ cif::quote(labels[i]), cif::quote(symbol),
+                      formatNumber(fractional.x(), 8),
+                      formatNumber(fractional.y(), 8),
+                      formatNumber(fractional.z(), 8) });
     }
 
     cif::write_cif_to_stream(outStream, document);

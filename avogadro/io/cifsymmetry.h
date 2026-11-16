@@ -100,15 +100,18 @@ AVOGADROIO_EXPORT CifSymmetry makeCifSymmetry(
  * another are not added, so a molecule that was already expanded is left as it
  * is. Afterwards the molecule has Hall number 1 (P1), as if it had been read
  * from a calculation: every atom is present and no further symmetry applies.
- * If atoms were added, the bonds are perceived again from the coordinates (the
- * original bonds only cover the asymmetric unit).
+ * If atoms were added and @p perceiveBonds is true, the bonds are perceived
+ * again from the coordinates (the original bonds only cover the asymmetric
+ * unit). If @p perceiveBonds is false the bonds are left exactly as they are,
+ * so the new atoms have none.
  *
  * @return true if the operations were applied. Nothing is changed, and false
  * is returned, if the file has no untabulated operations, the molecule has no
  * unit cell, or any operation cannot be parsed.
  */
 AVOGADROIO_EXPORT bool expandCifAtoms(const CifSymmetry& symmetry,
-                                      Core::Molecule& molecule);
+                                      Core::Molecule& molecule,
+                                      bool perceiveBonds = true);
 
 /**
  * Set the space group of @p molecule, which holds the asymmetric unit read
@@ -120,10 +123,12 @@ AVOGADROIO_EXPORT bool expandCifAtoms(const CifSymmetry& symmetry,
  * the Hall symbol, and a molecule keeps the group a reader already found if
  * the file lists only the identity (the operations were stripped, or every
  * atom is already present) while the reader named a larger group. Nothing is
- * changed if the file identifies no group.
+ * changed if the file identifies no group. @p perceiveBonds is passed to
+ * expandCifAtoms(); the bonds are not touched by the other cases.
  */
 AVOGADROIO_EXPORT void applyCifSymmetry(const CifSymmetry& symmetry,
-                                        Core::Molecule& molecule);
+                                        Core::Molecule& molecule,
+                                        bool perceiveBonds = true);
 
 } // namespace Avogadro::Io
 

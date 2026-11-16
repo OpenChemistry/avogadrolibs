@@ -29,6 +29,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
+#include <vector>
 
 using Avogadro::Vector3;
 using Avogadro::Core::Molecule;
@@ -810,12 +811,35 @@ TEST(CifTest, writeFillsTheCellOfASpaceGroup)
   SpaceGroups::fillUnitCell(reference, molecule.hallNumber());
   ASSERT_GT(reference.atomCount(), molecule.atomCount());
 
+  // the molecule as the caller has it
+  const std::size_t atomCount = molecule.atomCount();
+  const auto numbers = molecule.atomicNumbers();
+  const auto positions = molecule.atomPositions3d();
+  const double a = molecule.unitCell()->a(), b = molecule.unitCell()->b(),
+               c = molecule.unitCell()->c(),
+               alpha = molecule.unitCell()->alpha(),
+               beta = molecule.unitCell()->beta(),
+               gamma = molecule.unitCell()->gamma();
+  const auto hall = molecule.hallNumber();
+
   std::string text;
   CifFormat writer;
   ASSERT_TRUE(writer.writeString(text, molecule)) << writer.error();
 
   // the molecule itself is not changed
+  EXPECT_EQ(molecule.hallNumber(), hall);
   EXPECT_EQ(molecule.hallNumber(), reference.hallNumber());
+  ASSERT_EQ(molecule.atomCount(), atomCount);
+  for (std::size_t i = 0; i < atomCount; ++i) {
+    EXPECT_EQ(molecule.atomicNumber(i), numbers[i]);
+    EXPECT_EQ(molecule.atomPosition3d(i), positions[i]);
+  }
+  EXPECT_EQ(molecule.unitCell()->a(), a);
+  EXPECT_EQ(molecule.unitCell()->b(), b);
+  EXPECT_EQ(molecule.unitCell()->c(), c);
+  EXPECT_EQ(molecule.unitCell()->alpha(), alpha);
+  EXPECT_EQ(molecule.unitCell()->beta(), beta);
+  EXPECT_EQ(molecule.unitCell()->gamma(), gamma);
 
   Molecule readBack;
   CifFormat reader;
@@ -840,6 +864,217 @@ TEST(CifTest, writeNeedsACellAndAtoms)
   CifFormat other;
   EXPECT_FALSE(other.writeString(text, noAtoms));
   EXPECT_FALSE(other.error().empty());
+}
+
+TEST(CifTest, independentExpansionOfAnOriginShiftedInversion)
+{
+  // P-1 with the inversion center at (1/8, 1/8, 1/8) is in no table entry, so
+  // the file's own operations expand the atoms. The images are worked out by
+  // hand, not with the library: x' = 1/4 - x for each fractional coordinate,
+  // then wrapped into [0, 1).
+  //
+  // The cell is orthorhombic, a = 5, b = 6, c = 7 angstrom.
+  //  C1 (0.10, 0.20, 0.30) -> (0.15, 0.05, -0.05) -> (0.15, 0.05, 0.95)
+  //     -> (0.15 * 5, 0.05 * 6, 0.95 * 7) = (0.75, 0.30, 6.65)
+  //  O1 (0.40, 0.35, 0.15) -> (-0.15, -0.10, 0.10) -> (0.85, 0.90, 0.10)
+  //     -> (0.85 * 5, 0.90 * 6, 0.10 * 7) = (4.25, 5.40, 0.70)
+  // and the atoms themselves are at (0.5, 1.2, 2.1) and (2.0, 2.1, 1.05).
+  const std::string text =
+    "data_shifted\n_cell_length_a 5.0\n_cell_length_b 6.0\n"
+    "_cell_length_c 7.0\n_cell_angle_alpha 90\n_cell_angle_beta 90\n"
+    "_cell_angle_gamma 90\n"
+    "loop_\n_space_group_symop_operation_xyz\n'x,y,z'\n"
+    "'-x+1/4,-y+1/4,-z+1/4'\n"
+    "loop_\n_atom_site_label\n_atom_site_type_symbol\n_atom_site_fract_x\n"
+    "_atom_site_fract_y\n_atom_site_fract_z\n"
+    "C1 C 0.10 0.20 0.30\nO1 O 0.40 0.35 0.15\n";
+
+  ASSERT_EQ(
+    SpaceGroups::hallNumberFromTransforms({ "x,y,z", "-x+1/4,-y+1/4,-z+1/4" }),
+    0);
+
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
+  EXPECT_EQ(molecule.hallNumber(), 1);
+  ASSERT_EQ(molecule.atomCount(), 4u);
+
+  struct Expected
+  {
+    unsigned char element;
+    Vector3 position;
+  };
+  const Expected expected[] = { { 6, Vector3(0.5, 1.2, 2.1) },
+                                { 8, Vector3(2.0, 2.1, 1.05) },
+                                { 6, Vector3(0.75, 0.30, 6.65) },
+                                { 8, Vector3(4.25, 5.40, 0.70) } };
+  const double lengths[] = { 5.0, 6.0, 7.0 };
+  std::vector<bool> used(molecule.atomCount(), false);
+  for (const Expected& want : expected) {
+    int matches = 0;
+    for (std::size_t i = 0; i < molecule.atomCount(); ++i) {
+      if (molecule.atomicNumber(i) != want.element)
+        continue;
+      Vector3 delta = molecule.atomPosition3d(i) - want.position;
+      for (int k = 0; k < 3; ++k) // minimum image, the cell is orthorhombic
+        delta[k] -= lengths[k] * std::round(delta[k] / lengths[k]);
+      if (delta.norm() < 1e-4) {
+        ++matches;
+        used[i] = true;
+      }
+    }
+    EXPECT_EQ(matches, 1) << "element " << int(want.element);
+  }
+  for (bool u : used)
+    EXPECT_TRUE(u);
+}
+
+TEST(CifTest, disorderRuleAfterExpansion)
+{
+  // The same origin-shifted P-1, so the atoms are expanded. C1 and C2 are
+  // alternatives 1.4 angstrom apart, in the middle of the cell, and must not be
+  // bonded; their images are 1.4 angstrom apart too.
+  const std::string text =
+    "data_alt\n_cell_length_a 20.0\n_cell_length_b 20.0\n"
+    "_cell_length_c 20.0\n_cell_angle_alpha 90\n_cell_angle_beta 90\n"
+    "_cell_angle_gamma 90\n"
+    "loop_\n_space_group_symop_operation_xyz\n'x,y,z'\n"
+    "'-x+1/4,-y+1/4,-z+1/4'\n"
+    "loop_\n_atom_site_label\n_atom_site_type_symbol\n_atom_site_fract_x\n"
+    "_atom_site_fract_y\n_atom_site_fract_z\n_atom_site_disorder_assembly\n"
+    "_atom_site_disorder_group\n"
+    "C1 C 0.40 0.40 0.40 A 1\nC2 C 0.47 0.40 0.40 A 2\n";
+  auto read = [&](const std::string& options) {
+    Molecule molecule;
+    CifFormat format;
+    format.setOptions(options);
+    EXPECT_TRUE(format.readString(text, molecule)) << format.error();
+    return molecule;
+  };
+
+  Molecule molecule = read("{ \"perceiveBonds\": true }");
+  EXPECT_EQ(molecule.hallNumber(), 1);
+  ASSERT_EQ(molecule.atomCount(), 4u);
+  EXPECT_FALSE(bonded(molecule, "C1", "C2"));
+  // the images of the alternatives are not in the file, so they are bonded
+  // by distance
+  EXPECT_GT(molecule.bondCount(), 0u);
+}
+
+TEST(CifTest, expansionRespectsPerceiveBonds)
+{
+  const std::string text =
+    "data_nobonds\n_cell_length_a 20.0\n_cell_length_b 20.0\n"
+    "_cell_length_c 20.0\n_cell_angle_alpha 90\n_cell_angle_beta 90\n"
+    "_cell_angle_gamma 90\n"
+    "loop_\n_space_group_symop_operation_xyz\n'x,y,z'\n"
+    "'-x+1/4,-y+1/4,-z+1/4'\n"
+    "loop_\n_atom_site_label\n_atom_site_type_symbol\n_atom_site_fract_x\n"
+    "_atom_site_fract_y\n_atom_site_fract_z\n"
+    "C1 C 0.40 0.40 0.40\nC2 C 0.47 0.40 0.40\n";
+  Molecule molecule;
+  CifFormat format;
+  format.setOptions("{ \"perceiveBonds\": false }");
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
+  EXPECT_EQ(molecule.atomCount(), 4u);
+  EXPECT_EQ(molecule.bondCount(), 0u);
+
+  Molecule withBonds;
+  CifFormat other;
+  ASSERT_TRUE(other.readString(text, withBonds)) << other.error();
+  EXPECT_GT(withBonds.bondCount(), 0u);
+}
+
+TEST(CifTest, unquotedOperationsAreBounded)
+{
+  // many values without a comma, as valid CIF syntax: no hang, and no group
+  // is made from them
+  std::string rows;
+  for (int i = 0; i < 20000; ++i)
+    rows += "xyz\n";
+  const std::string text =
+    "data_many\n_cell_length_a 5.0\n_cell_length_b 5.0\n"
+    "_cell_length_c 5.0\n_cell_angle_alpha 90\n_cell_angle_beta 90\n"
+    "_cell_angle_gamma 90\n"
+    "loop_\n_space_group_symop_operation_xyz\n" +
+    rows +
+    "loop_\n_atom_site_label\n_atom_site_type_symbol\n_atom_site_fract_x\n"
+    "_atom_site_fract_y\n_atom_site_fract_z\nC1 C 0.1 0.2 0.3\n";
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
+  EXPECT_EQ(molecule.atomCount(), 1u);
+  EXPECT_LE(molecule.hallNumber(), 1);
+  EXPECT_FALSE(Avogadro::Io::readCifSymmetry(text).hallNumber() > 1);
+}
+
+TEST(CifTest, bondSymmetryCodeOneIsTheIdentity)
+{
+  // the atoms are 10 angstrom apart, so only the file bonds them
+  const std::string columns = std::string(siteColumns);
+  const std::string text =
+    cubicCif(columns, "C1 C 0.1 0.1 0.1\nC2 C 0.6 0.1 0.1\n") +
+    "loop_\n_geom_bond_atom_site_label_1\n_geom_bond_atom_site_label_2\n"
+    "_geom_bond_site_symmetry_1\n_geom_bond_site_symmetry_2\n"
+    "C1 C2 1 1\n";
+  Molecule molecule;
+  CifFormat format;
+  format.setOptions("{ \"perceiveBonds\": false }");
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
+  EXPECT_EQ(molecule.atomCount(), 2u);
+  EXPECT_TRUE(bonded(molecule, "C1", "C2"));
+}
+
+TEST(CifTest, writeKeepsDeuteriumAndTritium)
+{
+  for (unsigned short isotope : { 2, 3 }) {
+    SCOPED_TRACE(isotope);
+    Molecule original;
+    original.setUnitCell(new UnitCell(8.0, 9.0, 10.0, 1.5707963267948966,
+                                      1.5707963267948966, 1.5707963267948966));
+    original.addAtom(6).setPosition3d(Vector3(1.0, 2.0, 3.0));
+    Avogadro::Core::Atom h = original.addAtom(1);
+    h.setPosition3d(Vector3(4.0, 5.0, 6.0));
+    h.setIsotope(isotope);
+    original.setHallNumber(1);
+
+    std::string text;
+    CifFormat writer;
+    ASSERT_TRUE(writer.writeString(text, original)) << writer.error();
+    Molecule readBack;
+    CifFormat reader;
+    ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+    ASSERT_EQ(readBack.atomCount(), 2u);
+    EXPECT_EQ(readBack.atomicNumber(1), 1);
+    EXPECT_EQ(readBack.isotope(1), isotope);
+    EXPECT_EQ(readBack.isotope(0), 0);
+  }
+}
+
+TEST(CifTest, writeKeepsDeuteriumOfASpaceGroup)
+{
+  // P -1: the images of a deuterium atom are deuterium atoms
+  const unsigned short hall = SpaceGroups::hallNumberFromHallSymbol("-P 1");
+  ASSERT_GT(hall, 1);
+  Molecule original;
+  original.setUnitCell(new UnitCell(8.0, 9.0, 10.0, 1.5707963267948966,
+                                    1.5707963267948966, 1.5707963267948966));
+  Avogadro::Core::Atom d = original.addAtom(1);
+  d.setPosition3d(Vector3(1.0, 2.0, 3.0));
+  d.setIsotope(2);
+  original.setHallNumber(hall);
+
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, original)) << writer.error();
+  Molecule readBack;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+  ASSERT_EQ(readBack.atomCount(), 2u);
+  for (std::size_t i = 0; i < readBack.atomCount(); ++i) {
+    EXPECT_EQ(readBack.atomicNumber(i), 1);
+    EXPECT_EQ(readBack.isotope(i), 2);
+  }
 }
 
 #if !AVOGADRO_MSAN_BUILD
