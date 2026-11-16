@@ -1602,3 +1602,35 @@ TEST(SpaceGroupTest, fillUnitCellFromOperationsMatchesTable)
     EXPECT_TRUE(found);
   }
 }
+
+TEST(SpaceGroupTest, fillKeepsIsotopes)
+{
+  // Every image of a deuterium atom is a deuterium atom, in the fill of a
+  // table entry and in the boundary copies
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3, 1);
+  mol.setIsotope(0, 2);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  ASSERT_EQ(mol.atomCount(), 4);
+  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i) {
+    EXPECT_EQ(mol.atomicNumber(i), 1);
+    EXPECT_EQ(mol.isotope(i), 2);
+  }
+
+  // An atom on the cell origin gets boundary copies
+  Molecule edge = triclinicWithAtom(0.0, 0.0, 0.0, 1);
+  edge.setIsotope(0, 2);
+  SpaceGroups::fillTranslationalCopies(edge, 0.25);
+  ASSERT_GT(edge.atomCount(), 1);
+  for (Avogadro::Index i = 0; i < edge.atomCount(); ++i) {
+    EXPECT_EQ(edge.atomicNumber(i), 1);
+    EXPECT_EQ(edge.isotope(i), 2);
+  }
+
+  // No isotope array at all stays that way
+  Molecule plain = triclinicWithAtom(0.1, 0.2, 0.3, 1);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    plain, bodyCentredInversion, 0.25, true, false));
+  for (Avogadro::Index i = 0; i < plain.atomCount(); ++i)
+    EXPECT_EQ(plain.isotope(i), 0);
+}

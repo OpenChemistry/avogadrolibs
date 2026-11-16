@@ -962,6 +962,7 @@ void fillWithTransforms(
     return;
 
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  Array<unsigned short> isotopes = mol.isotopes(); // may be empty
   Array<Vector3> positions = mol.atomPositions3d();
   Index numAtoms = mol.atomCount();
 
@@ -969,6 +970,7 @@ void fillWithTransforms(
   // we have numAtoms cached instead of using atomCount().
   for (Index i = 0; i < numAtoms; ++i) {
     unsigned char atomicNum = atomicNumbers[i];
+    unsigned short isotope = i < isotopes.size() ? isotopes[i] : 0;
     Vector3 pos = uc->toFractional(positions[i]);
 
     Array<Vector3> newAtoms = transformsOf(pos);
@@ -999,6 +1001,8 @@ void fillWithTransforms(
       // If we got this far, add the atom!
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(newCandidate);
+      if (isotope != 0)
+        newAtom.setIsotope(isotope);
     }
   }
 
@@ -1169,10 +1173,12 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
   UnitCell* uc = mol.unitCell();
 
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
+  Array<unsigned short> isotopes = mol.isotopes(); // may be empty
   Array<Vector3> positions = mol.atomPositions3d();
   Index numAtoms = mol.atomCount();
   for (Index i = 0; i < numAtoms; ++i) {
     unsigned char atomicNum = atomicNumbers[i];
+    unsigned short isotope = i < isotopes.size() ? isotopes[i] : 0;
     Vector3 pos = uc->toFractional(positions[i]);
 
     Array<Vector3> newAtoms;
@@ -1234,6 +1240,8 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
       // If we got this far, add the atom!
       Atom newAtom = mol.addAtom(atomicNum);
       newAtom.setPosition3d(newCandidate);
+      if (isotope != 0)
+        newAtom.setIsotope(isotope);
     }
   }
 }
