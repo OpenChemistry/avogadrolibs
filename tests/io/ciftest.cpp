@@ -21,6 +21,8 @@
 
 #include <gemmi/cif.hpp>
 
+#include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <map>
 #include <memory>
@@ -173,6 +175,7 @@ bool bonded(const Molecule& molecule, const std::string& a,
 
 TEST(CifTest, identity)
 {
+  EXPECT_TRUE(CifFormat().supportedOperations() & FileFormat::Write);
   CifFormat format;
   EXPECT_EQ(format.identifier(), "Avogadro: CIF");
   EXPECT_EQ(format.name(), "CIF");
@@ -673,6 +676,170 @@ TEST(CifTest, noOtherReaderIsAnError)
   EXPECT_FALSE(format.readFile(path, molecule));
   EXPECT_FALSE(format.error().empty());
   EXPECT_EQ(molecule.atomCount(), 0u);
+}
+
+namespace {
+
+// The atoms of @p b match those of @p a: the same element within 1e-4
+// angstrom, up to lattice translations.
+void expectSameAtoms(const Molecule& a, const Molecule& b)
+{
+  ASSERT_EQ(a.atomCount(), b.atomCount());
+  const UnitCell* cell = a.unitCell();
+  ASSERT_NE(cell, nullptr);
+  std::vector<bool> used(b.atomCount(), false);
+  for (std::size_t i = 0; i < a.atomCount(); ++i) {
+    bool found = false;
+    for (std::size_t j = 0; j < b.atomCount() && !found; ++j) {
+      if (used[j] || a.atomicNumber(i) != b.atomicNumber(j))
+        continue;
+      Vector3 delta =
+        cell->toFractional(a.atomPosition3d(i) - b.atomPosition3d(j));
+      delta -= delta.array().round().matrix();
+      if (cell->toCartesian(delta).norm() < 1e-4) {
+        used[j] = found = true;
+      }
+    }
+    EXPECT_TRUE(found) << "atom " << i << " has no match";
+  }
+}
+
+Molecule triclinicMolecule()
+{
+  Molecule molecule;
+  molecule.setUnitCell(new UnitCell(7.1, 8.3, 9.7, 80.0 * Avogadro::DEG_TO_RAD,
+                                    95.0 * Avogadro::DEG_TO_RAD,
+                                    105.0 * Avogadro::DEG_TO_RAD));
+  const UnitCell* cell = molecule.unitCell();
+  struct Entry
+  {
+    unsigned char element;
+    Vector3 fractional;
+    const char* label;
+  };
+  const Entry entries[] = { { 6, Vector3(0.10, 0.20, 0.30), "C1" },
+                            { 6, Vector3(1.25, -0.30, 0.50), "C1" }, // outside
+                            { 8, Vector3(0.40, 0.45, 0.55), "" },
+                            { 8, Vector3(0.75, 0.65, 0.05), "Ow" },
+                            { 6, Vector3(0.90, 0.85, 0.95), "" } };
+  for (const Entry& entry : entries) {
+    Avogadro::Core::Atom atom = molecule.addAtom(entry.element);
+    atom.setPosition3d(cell->toCartesian(entry.fractional));
+    if (entry.label[0] != '\0')
+      molecule.setAtomLabel(atom.index(), entry.label);
+  }
+  molecule.setHallNumber(1);
+  molecule.setData("name", "a test molecule");
+  return molecule;
+}
+
+void expectSameCell(const UnitCell& a, const UnitCell& b)
+{
+  EXPECT_NEAR(a.a(), b.a(), 1e-5);
+  EXPECT_NEAR(a.b(), b.b(), 1e-5);
+  EXPECT_NEAR(a.c(), b.c(), 1e-5);
+  EXPECT_NEAR(a.alpha(), b.alpha(), 1e-5);
+  EXPECT_NEAR(a.beta(), b.beta(), 1e-5);
+  EXPECT_NEAR(a.gamma(), b.gamma(), 1e-5);
+}
+
+} // namespace
+
+TEST(CifTest, writeP1RoundTrip)
+{
+  const Molecule original = triclinicMolecule();
+
+  // through a string
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, original)) << writer.error();
+  EXPECT_NE(text.find("data_a_test_molecule"), std::string::npos);
+  EXPECT_NE(text.find("_space_group_name_H-M_alt"), std::string::npos);
+  EXPECT_NE(text.find("_cell_volume"), std::string::npos);
+  EXPECT_EQ(text.find("_geom_bond"), std::string::npos);
+
+  Molecule fromString;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, fromString)) << reader.error();
+  ASSERT_NE(fromString.unitCell(), nullptr);
+  expectSameCell(*original.unitCell(), *fromString.unitCell());
+  EXPECT_EQ(fromString.hallNumber(), 1);
+  EXPECT_EQ(fromString.data("name").toString(), "a_test_molecule");
+
+  // positions are kept as they were, not wrapped into the cell
+  ASSERT_EQ(fromString.atomCount(), original.atomCount());
+  for (std::size_t i = 0; i < original.atomCount(); ++i) {
+    EXPECT_EQ(fromString.atomicNumber(i), original.atomicNumber(i));
+    EXPECT_LT(
+      (fromString.atomPosition3d(i) - original.atomPosition3d(i)).norm(), 1e-4);
+  }
+
+  // the label of an atom is kept unless it is empty or already taken
+  EXPECT_EQ(fromString.atomLabel(0), "C1");
+  EXPECT_EQ(fromString.atomLabel(1), "C2");
+  EXPECT_EQ(fromString.atomLabel(2), "O1");
+  EXPECT_EQ(fromString.atomLabel(3), "Ow");
+  EXPECT_EQ(fromString.atomLabel(4), "C3");
+
+  // and through a file
+  const std::filesystem::path path =
+    std::filesystem::temp_directory_path() / "avogadro_ciftest_roundtrip.cif";
+  CifFormat fileWriter;
+  ASSERT_TRUE(fileWriter.writeFile(path.string(), original))
+    << fileWriter.error();
+  Molecule fromFile;
+  CifFormat fileReader;
+  const bool read = fileReader.readFile(path.string(), fromFile);
+  std::error_code ignored;
+  std::filesystem::remove(path, ignored);
+  ASSERT_TRUE(read) << fileReader.error();
+  expectSameCell(*original.unitCell(), *fromFile.unitCell());
+  expectSameAtoms(original, fromFile);
+  EXPECT_EQ(fromFile.hallNumber(), 1);
+}
+
+TEST(CifTest, writeFillsTheCellOfASpaceGroup)
+{
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(format.readFile(codFile("1100686"), molecule)) << format.error();
+  ASSERT_GT(molecule.hallNumber(), 1);
+
+  // what the Fill Unit Cell action makes of it
+  Molecule reference(molecule);
+  SpaceGroups::fillUnitCell(reference, molecule.hallNumber());
+  ASSERT_GT(reference.atomCount(), molecule.atomCount());
+
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, molecule)) << writer.error();
+
+  // the molecule itself is not changed
+  EXPECT_EQ(molecule.hallNumber(), reference.hallNumber());
+
+  Molecule readBack;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+  EXPECT_EQ(readBack.hallNumber(), 1);
+  expectSameCell(*molecule.unitCell(), *readBack.unitCell());
+  expectSameAtoms(reference, readBack);
+}
+
+TEST(CifTest, writeNeedsACellAndAtoms)
+{
+  Molecule noCell;
+  noCell.addAtom(6);
+  std::string text;
+  CifFormat format;
+  EXPECT_FALSE(format.writeString(text, noCell));
+  EXPECT_NE(format.error().find("unit cell"), std::string::npos);
+
+  Molecule noAtoms;
+  noAtoms.setUnitCell(
+    new UnitCell(5.0, 5.0, 5.0, 1.5707963, 1.5707963, 1.5707963));
+  CifFormat other;
+  EXPECT_FALSE(other.writeString(text, noAtoms));
+  EXPECT_FALSE(other.error().empty());
 }
 
 #if !AVOGADRO_MSAN_BUILD
