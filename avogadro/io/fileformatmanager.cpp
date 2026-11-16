@@ -9,6 +9,7 @@
 #include "compression.h"
 #include "fileformat.h"
 
+#include "cifformat.h"
 #include "cjsonformat.h"
 #include "cmlformat.h"
 #include "dcdformat.h"
@@ -366,6 +367,7 @@ std::string FileFormatManager::error() const
 
 FileFormatManager::FileFormatManager()
 {
+  addFormat(new CifFormat);
   addFormat(new CmlFormat);
   addFormat(new CjsonFormat);
   addFormat(new DcdFormat);

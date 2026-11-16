@@ -1,0 +1,595 @@
+/******************************************************************************
+  This source file is part of the Avogadro project.
+  This source code is released under the 3-Clause BSD License, (see "LICENSE").
+******************************************************************************/
+
+#include "cifformat.h"
+
+#include "cifsymmetry.h"
+#include "fileformatmanager.h"
+
+#include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/elements.h>
+#include <avogadro/core/molecule.h>
+#include <avogadro/core/spacegroups.h>
+#include <avogadro/core/unitcell.h>
+#include <avogadro/core/utilities.h>
+#include <avogadro/core/vector.h>
+
+#include <gemmi/cif.hpp>
+
+#include <algorithm>
+#include <cmath>
+#include <iterator>
+#include <map>
+#include <memory>
+#include <optional>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace Avogadro::Io {
+
+namespace cif = gemmi::cif;
+
+namespace {
+
+// The tag spellings of CIF 1 (underscores) and of DDLm / CIF 2 (dotted).
+const char* const cellTags[6][2] = {
+  { "_cell_length_a", "_cell.length_a" },
+  { "_cell_length_b", "_cell.length_b" },
+  { "_cell_length_c", "_cell.length_c" },
+  { "_cell_angle_alpha", "_cell.angle_alpha" },
+  { "_cell_angle_beta", "_cell.angle_beta" },
+  { "_cell_angle_gamma", "_cell.angle_gamma" }
+};
+const char* const operationTags[] = { "_space_group_symop_operation_xyz",
+                                      "_symmetry_equiv_pos_as_xyz",
+                                      "_space_group_symop.operation_xyz" };
+const char* const hallTags[] = { "_space_group_name_Hall",
+                                 "_symmetry_space_group_name_Hall",
+                                 "_space_group.name_Hall" };
+const char* const hermannMauguinTags[] = { "_space_group_name_H-M_alt",
+                                           "_symmetry_space_group_name_H-M",
+                                           "_space_group.name_H-M_alt" };
+const char* const tableNumberTags[] = { "_space_group_IT_number",
+                                        "_symmetry_Int_Tables_number",
+                                        "_space_group.IT_number" };
+
+bool isAsciiAlpha(char c)
+{
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+bool isAsciiLower(char c)
+{
+  return c >= 'a' && c <= 'z';
+}
+char asciiUpper(char c)
+{
+  return isAsciiLower(c) ? static_cast<char>(c - 'a' + 'A') : c;
+}
+char asciiLower(char c)
+{
+  return (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
+}
+
+// One uppercase letter followed by lowercase ones, the spelling of Elements.
+std::string capitalized(const std::string& letters)
+{
+  std::string result;
+  for (std::size_t i = 0; i < letters.size(); ++i)
+    result += (i == 0) ? asciiUpper(letters[i]) : asciiLower(letters[i]);
+  return result;
+}
+
+unsigned char elementFromSymbol(const std::string& symbol)
+{
+  const unsigned char number =
+    Core::Elements::atomicNumberFromSymbol(capitalized(symbol));
+  // 0 is the dummy atom "Xx"
+  return number == InvalidElement ? InvalidElement : number;
+}
+
+bool isValidElement(unsigned char number)
+{
+  return number != InvalidElement && number > 0;
+}
+
+// The first of the tags that the block has, as a plain (unquoted) string.
+// Empty if none has a value, or the value is "?" or ".".
+template <std::size_t N>
+std::string firstValue(const cif::Block& block, const char* const (&tags)[N])
+{
+  for (const char* tag : tags) {
+    if (const std::string* value = block.find_value(tag)) {
+      std::string text = Core::trimmed(cif::as_string(*value));
+      if (!text.empty())
+        return text;
+    }
+  }
+  return std::string();
+}
+
+// A CIF number: "4.7855(4)" is 4.7855 with a standard uncertainty. "?" and "."
+// mean unknown.
+std::optional<double> parseCifNumber(const std::string& raw)
+{
+  std::string text = Core::trimmed(cif::as_string(raw));
+  const std::size_t paren = text.find('(');
+  if (paren != std::string::npos)
+    text.erase(paren);
+  text = Core::trimmed(text);
+  if (text.empty())
+    return std::nullopt;
+  const std::optional<double> value = Core::lexicalCast<double>(text);
+  if (!value || !std::isfinite(*value))
+    return std::nullopt;
+  return value;
+}
+
+// The element of a _atom_site_type_symbol: "O2-", "Fe3+" and "Cu1+" are O, Fe
+// and Cu. D and T are hydrogen isotopes. Dummy atoms ("Q", "X", "Du") give
+// 0, which is neither an element nor InvalidElement.
+constexpr unsigned char dummyAtom = 0;
+
+const char* const dummyFlag = "dum"; // codespell:ignore dum
+
+unsigned char elementFromTypeSymbol(const std::string& type,
+                                    unsigned short& isotope)
+{
+  std::string letters;
+  for (char c : Core::trimmed(type)) {
+    if (!isAsciiAlpha(c))
+      break;
+    letters += c;
+  }
+  if (letters.empty())
+    return InvalidElement;
+
+  std::string upper;
+  for (char c : letters)
+    upper += asciiUpper(c);
+  if (upper == "Q" || upper == "X" || upper == "DU")
+    return dummyAtom;
+  if (upper == "D") {
+    isotope = 2;
+    return 1;
+  }
+  if (upper == "T") {
+    isotope = 3;
+    return 1;
+  }
+
+  // "Fe", "Cl"; a longer run of letters is read as its first two, then its
+  // first letter.
+  if (letters.size() <= 2) {
+    const unsigned char number = elementFromSymbol(letters);
+    if (isValidElement(number))
+      return number;
+  }
+  if (letters.size() > 2) {
+    const unsigned char number = elementFromSymbol(letters.substr(0, 2));
+    if (isValidElement(number))
+      return number;
+  }
+  if (letters.size() > 1) {
+    const unsigned char number = elementFromSymbol(letters.substr(0, 1));
+    if (isValidElement(number))
+      return number;
+  }
+  return InvalidElement;
+}
+
+// The element from an atom label ("Cl1", "C12", "O1W"), for a file without
+// type symbols. A lower case second letter that makes a two-letter symbol wins
+// ("Cl1" is chlorine), then the first letter alone ("C12", "CL1"), then the
+// two letters in any case.
+unsigned char elementFromLabel(const std::string& rawLabel)
+{
+  const std::string label = Core::trimmed(rawLabel);
+  if (label.empty() || !isAsciiAlpha(label[0]))
+    return InvalidElement;
+
+  const bool secondIsLetter = label.size() > 1 && isAsciiAlpha(label[1]);
+  if (secondIsLetter && isAsciiLower(label[1])) {
+    const unsigned char number = elementFromSymbol(label.substr(0, 2));
+    if (isValidElement(number))
+      return number;
+  }
+  const unsigned char one = elementFromSymbol(label.substr(0, 1));
+  if (isValidElement(one))
+    return one;
+  if (secondIsLetter) {
+    const unsigned char number = elementFromSymbol(label.substr(0, 2));
+    if (isValidElement(number))
+      return number;
+  }
+  return InvalidElement;
+}
+
+// A table whose tags share a prefix, spelled with underscores (CIF 1) or with
+// a dot (DDLm). Tags that start with '?' are optional.
+cif::Table findTable(cif::Block& block, const std::string& category,
+                     const std::vector<std::string>& tags)
+{
+  cif::Table table = block.find("_" + category + "_", tags);
+  if (table.ok())
+    return table;
+  return block.find("_" + category + ".", tags);
+}
+
+bool hasFractionalCoordinates(cif::Block& block)
+{
+  return block.find_values("_atom_site_fract_x").item() != nullptr ||
+         block.find_values("_atom_site.fract_x").item() != nullptr;
+}
+
+// An atom of the asymmetric unit.
+struct Site
+{
+  std::string label;
+  unsigned char atomicNumber = 0;
+  unsigned short isotope = 0;
+  Vector3 fractional = Vector3::Zero();
+  std::string disorderGroup;    // empty if the atom is not disordered
+  std::string disorderAssembly; // empty is the one implicit assembly
+};
+
+// Everything a block says that the reader uses.
+struct CifData
+{
+  double cell[6] = { 0, 0, 0, 0, 0, 0 }; // angstrom and degrees
+  std::vector<Site> sites;
+  std::vector<std::string> operations;
+  std::string hallSymbol;
+  std::string hermannMauguin;
+  std::string tableNumber;
+  std::string name;
+  std::vector<std::pair<std::string, std::string>> bondedLabels;
+};
+
+// The operations of the file. Unquoted operations written with spaces
+// ("x, y, z") are split into several values by the tokenizer, so join values
+// until there are three coordinates.
+std::vector<std::string> readOperations(cif::Block& block)
+{
+  std::vector<std::string> operations;
+  for (const char* tag : operationTags) {
+    cif::Column column = block.find_values(tag);
+    if (column.item() == nullptr)
+      continue;
+    std::string pending;
+    auto flush = [&]() {
+      if (!pending.empty())
+        operations.push_back(pending);
+      pending.clear();
+    };
+    for (const std::string& value : column) {
+      const bool quoted =
+        !value.empty() &&
+        (value[0] == '\'' || value[0] == '"' || value[0] == ';');
+      if (quoted) {
+        flush();
+        operations.push_back(cif::as_string(value));
+        continue;
+      }
+      pending += value;
+      if (std::count(pending.begin(), pending.end(), ',') >= 2 &&
+          pending.back() != ',')
+        flush();
+    }
+    flush();
+    if (!operations.empty())
+      break;
+  }
+  return operations;
+}
+
+bool readCell(cif::Block& block, CifData& data)
+{
+  for (int i = 0; i < 3; ++i) {
+    const std::optional<double> l =
+      parseCifNumber(firstValue(block, cellTags[i]));
+    const std::optional<double> a =
+      parseCifNumber(firstValue(block, cellTags[3 + i]));
+    if (!l || !a || *l <= 0.0 || *a <= 0.0 || *a >= 180.0)
+      return false;
+    data.cell[i] = *l;
+    data.cell[3 + i] = *a;
+  }
+  return true;
+}
+
+void readSites(cif::Block& block, CifData& data)
+{
+  cif::Table table =
+    findTable(block, "atom_site",
+              { "label", "fract_x", "fract_y", "fract_z", "?type_symbol",
+                "?calc_flag", "?disorder_assembly", "?disorder_group" });
+  if (!table.ok())
+    return;
+
+  for (auto row : table) {
+    Site site;
+    site.label = Core::trimmed(cif::as_string(row[0]));
+
+    // dummy atoms: type symbol Q, X or Du, or the calc_flag for dummy atoms
+    if (row.has(5) && Core::caseInsensitiveEquals(
+                        Core::trimmed(cif::as_string(row[5])), dummyFlag))
+      continue;
+
+    unsigned char number = InvalidElement;
+    if (row.has(4)) {
+      number = elementFromTypeSymbol(cif::as_string(row[4]), site.isotope);
+      if (number == dummyAtom)
+        continue;
+    }
+    if (!isValidElement(number)) {
+      site.isotope = 0;
+      number = elementFromLabel(site.label);
+    }
+    if (!isValidElement(number))
+      continue;
+    site.atomicNumber = number;
+
+    // atoms without coordinates cannot be placed
+    bool placed = true;
+    for (int i = 0; i < 3; ++i) {
+      const std::optional<double> value = parseCifNumber(row[1 + i]);
+      if (!value) {
+        placed = false;
+        break;
+      }
+      site.fractional[i] = *value;
+    }
+    if (!placed)
+      continue;
+
+    // "0", ".", "?" and an absent column all mean not disordered
+    if (row.has(7)) {
+      const std::string group = Core::trimmed(cif::as_string(row[7]));
+      if (group != "0")
+        site.disorderGroup = group;
+    }
+    if (row.has(6))
+      site.disorderAssembly = Core::trimmed(cif::as_string(row[6]));
+
+    data.sites.push_back(site);
+  }
+}
+
+// The bonds of the file between atoms of the asymmetric unit: those without a
+// symmetry code, or with the identity.
+void readBonds(cif::Block& block, CifData& data)
+{
+  cif::Table table = findTable(block, "geom_bond",
+                               { "atom_site_label_1", "atom_site_label_2",
+                                 "?site_symmetry_1", "?site_symmetry_2" });
+  if (!table.ok())
+    return;
+
+  auto isIdentity = [](const std::string& code) {
+    const std::string text = Core::trimmed(cif::as_string(code));
+    return text.empty() || text == "1_555";
+  };
+  for (auto row : table) {
+    if ((row.has(2) && !isIdentity(row[2])) ||
+        (row.has(3) && !isIdentity(row[3])))
+      continue;
+    data.bondedLabels.emplace_back(Core::trimmed(cif::as_string(row[0])),
+                                   Core::trimmed(cif::as_string(row[1])));
+  }
+}
+
+bool readBlock(cif::Block& block, CifData& data)
+{
+  if (!readCell(block, data))
+    return false;
+  readSites(block, data);
+  if (data.sites.empty())
+    return false;
+
+  data.operations = readOperations(block);
+  data.hallSymbol = firstValue(block, hallTags);
+  data.hermannMauguin = firstValue(block, hermannMauguinTags);
+  data.tableNumber = firstValue(block, tableNumberTags);
+
+  const char* const commonName[] = { "_chemical_name_common" };
+  const char* const systematicName[] = { "_chemical_name_systematic" };
+  data.name = firstValue(block, commonName);
+  if (data.name.empty())
+    data.name = firstValue(block, systematicName);
+  if (data.name.empty())
+    data.name = block.name;
+
+  readBonds(block, data);
+  return true;
+}
+
+// Atoms of different disorder groups of the same assembly are alternatives to
+// each other, never bonded.
+bool areAlternatives(const Site& a, const Site& b)
+{
+  return !a.disorderGroup.empty() && !b.disorderGroup.empty() &&
+         a.disorderGroup != b.disorderGroup &&
+         a.disorderAssembly == b.disorderAssembly;
+}
+
+} // namespace
+
+std::vector<std::string> CifFormat::fileExtensions() const
+{
+  return { "cif" };
+}
+
+std::vector<std::string> CifFormat::mimeTypes() const
+{
+  return { "chemical/x-cif" };
+}
+
+bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
+{
+  const std::string text((std::istreambuf_iterator<char>(inStream)),
+                         std::istreambuf_iterator<char>());
+
+  CifData data;
+  std::string reason;
+  bool found = false;
+  try {
+    cif::Document document = cif::read_memory(text.data(), text.size(), "cif");
+    for (cif::Block& block : document.blocks) {
+      if (!hasFractionalCoordinates(block))
+        continue;
+      found = readBlock(block, data);
+      if (!found)
+        reason = "the first data block with fractional coordinates has no "
+                 "valid unit cell or no usable atoms";
+      break;
+    }
+    if (!found && reason.empty())
+      reason = "no data block has fractional coordinates";
+  } catch (const std::exception& e) {
+    reason = e.what();
+    found = false;
+  } catch (...) {
+    reason = "unknown error";
+    found = false;
+  }
+
+  if (!found) {
+    // A macromolecular CIF, or a file we cannot make sense of: hand it to
+    // whatever else reads CIF (normally Open Babel), which reads mmCIF
+    // residues and is more lenient.
+    const FileFormat* candidate = nullptr;
+    for (const FileFormat* format :
+         FileFormatManager::instance().fileFormatsFromFileExtension(
+           "cif", FileFormat::Read)) {
+      if (Core::startsWith(format->identifier(), "OpenBabel")) {
+        candidate = format;
+        break;
+      }
+    }
+    if (candidate == nullptr) {
+      appendError("This CIF file could not be read (" + reason +
+                  "), and no other CIF reader (Open Babel) is available.");
+      return false;
+    }
+
+    std::unique_ptr<FileFormat> reader(candidate->newInstance());
+    reader->setOptions(options());
+    bool success = false;
+    if (candidate->supportedOperations() & FileFormat::Stream) {
+      std::istringstream stream(text);
+      success = reader->read(stream, molecule);
+    } else if (!fileName().empty()) {
+      success = reader->readFile(fileName(), molecule);
+    } else {
+      appendError("This CIF file needs another reader (" +
+                  candidate->identifier() + ") that can only read files.");
+      return false;
+    }
+    if (!success) {
+      appendError("The CIF file was not read natively (" + reason + ") and " +
+                  candidate->identifier() + " failed too.");
+      const std::string delegateError = reader->error();
+      if (!delegateError.empty())
+        appendError(delegateError, false);
+    }
+    return success;
+  }
+
+  // Build the unit cell first: its parameters may still be impossible.
+  constexpr double degreesToRadians = DEG_TO_RAD_D;
+  auto cell = std::make_unique<Core::UnitCell>(
+    data.cell[0], data.cell[1], data.cell[2], data.cell[3] * degreesToRadians,
+    data.cell[4] * degreesToRadians, data.cell[5] * degreesToRadians);
+  if (!cell->isRegular() || !std::isfinite(cell->volume()) ||
+      cell->volume() <= 0.0) {
+    appendError("The unit cell of this CIF file is not valid.");
+    return false;
+  }
+
+  std::vector<Site> sites;
+  std::vector<Vector3> positions;
+  for (const Site& site : data.sites) {
+    const Vector3 position = cell->toCartesian(site.fractional);
+    if (!position.allFinite())
+      continue;
+    sites.push_back(site);
+    positions.push_back(position);
+  }
+  if (sites.empty()) {
+    appendError("This CIF file has no atoms with usable coordinates.");
+    return false;
+  }
+
+  Core::Molecule& mol = molecule;
+  mol.setUnitCell(cell.release());
+  std::map<std::string, Index> indexOfLabel;
+  for (std::size_t i = 0; i < sites.size(); ++i) {
+    Core::Atom atom = mol.addAtom(sites[i].atomicNumber);
+    atom.setPosition3d(positions[i]);
+    if (sites[i].isotope != 0)
+      atom.setIsotope(sites[i].isotope);
+    mol.setAtomLabel(atom.index(), sites[i].label);
+    indexOfLabel.emplace(sites[i].label, atom.index());
+  }
+  if (!data.name.empty())
+    mol.setData("name", data.name);
+
+  // The space group. The name of the group first, so that applyCifSymmetry()
+  // can keep it when the file lists only the identity; the operations and the
+  // Hall symbol are exact and replace it.
+  if (!data.hermannMauguin.empty())
+    Core::SpaceGroups::setSpaceGroup(mol, data.hermannMauguin);
+  if (mol.hallNumber() == 0 && !data.tableNumber.empty())
+    Core::SpaceGroups::setSpaceGroup(mol, data.tableNumber);
+  const std::size_t atomsRead = mol.atomCount();
+  applyCifSymmetry(makeCifSymmetry(data.operations, data.hallSymbol), mol);
+
+  // A file whose operations are in no table was expanded, and its bonds were
+  // perceived from the expanded coordinates. The atoms that were added have
+  // no disorder group to look up, so the disorder rule and the bonds of the
+  // file are not applied to it.
+  if (mol.atomCount() != atomsRead)
+    return true;
+
+  bool perceiveBonds = true;
+  boolOption("perceiveBonds", perceiveBonds);
+  if (perceiveBonds) {
+    mol.perceiveBondsSimple();
+
+    std::vector<std::pair<Index, Index>> alternatives;
+    for (const auto& pair : mol.bondPairs()) {
+      if (pair.first < sites.size() && pair.second < sites.size() &&
+          areAlternatives(sites[pair.first], sites[pair.second]))
+        alternatives.push_back(pair);
+    }
+    for (const auto& pair : alternatives)
+      mol.removeBond(pair.first, pair.second);
+  }
+
+  for (const auto& labels : data.bondedLabels) {
+    const auto first = indexOfLabel.find(labels.first);
+    const auto second = indexOfLabel.find(labels.second);
+    if (first == indexOfLabel.end() || second == indexOfLabel.end() ||
+        first->second == second->second)
+      continue;
+    if (!mol.bond(first->second, second->second).isValid())
+      mol.addBond(first->second, second->second, 1);
+  }
+
+  if (perceiveBonds)
+    mol.perceiveBondOrders();
+
+  return true;
+}
+
+bool CifFormat::write(std::ostream&, const Core::Molecule&)
+{
+  appendError("Writing CIF files is not supported.");
+  return false;
+}
+
+} // namespace Avogadro::Io

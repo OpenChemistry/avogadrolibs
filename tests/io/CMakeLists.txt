@@ -1,5 +1,6 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  Cif
   CifSymmetry
   BondOrdersCorpus
   Cjson
@@ -69,6 +70,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
   # produces a target that does nothing, so check supportedOperations() first.
   # The lookup is case-sensitive, hence POSCAR and OUTCAR.
   set(fuzz
+    cif
     cjson
     cml
     sdf
