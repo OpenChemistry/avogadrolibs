@@ -164,6 +164,15 @@ TEST_F(ChargeManagerTest, RemovingUnknownModelFailsSafely)
   EXPECT_TRUE(m_chargeManager->removeModel("constant_test"));
 }
 
+TEST_F(ChargeManagerTest, UnknownModelReturnsNoCharges)
+{
+  // Used to return an uninitialized atomCount x 1 matrix, which callers could
+  // not tell apart from real charges.
+  const MatrixX charges =
+    m_chargeManager->partialCharges("not_registered", m_testMolecule);
+  EXPECT_EQ(charges.rows(), 0);
+}
+
 TEST_F(ChargeManagerTest, MismatchedPartialChargesAreBoundedByAtomCount)
 {
   MismatchedChargeModel model;

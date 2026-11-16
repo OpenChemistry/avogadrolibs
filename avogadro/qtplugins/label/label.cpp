@@ -477,7 +477,8 @@ void Label::processResidue(const Core::Molecule& molecule,
 
 namespace {
 // Choose a charge type: GFN2 or AM1BCC, then MMFF94, then Gasteiger, else
-// whatever comes first. Returns an empty string for an empty set.
+// whatever comes first, keeping the always-available EEQ model as the last
+// resort. Returns an empty string for an empty set.
 std::string preferredChargeType(const std::set<std::string>& types)
 {
   if (types.empty())
@@ -485,6 +486,10 @@ std::string preferredChargeType(const std::set<std::string>& types)
   for (const char* preferred : { "GFN2", "am1bcc", "mmff94", "gasteiger" }) {
     if (types.find(preferred) != types.end())
       return preferred;
+  }
+  for (const std::string& type : types) {
+    if (type != "eeq")
+      return type;
   }
   return *types.begin();
 }

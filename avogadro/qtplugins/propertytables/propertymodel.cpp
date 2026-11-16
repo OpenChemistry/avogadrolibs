@@ -327,14 +327,14 @@ QString partialCharge(Molecule* molecule, int atom, const QString& overrideType)
   // (e.g., read from a file like Mulliken charges)
   // we need to use the original case from the molecule
   std::set<std::string> types = molecule->partialChargeTypes();
-  if (types.find(type) != types.end()) {
-    MatrixX charges = molecule->partialCharges(type);
-    charge = charges(atom, 0);
-  } else {
-    MatrixX charges =
-      Calc::ChargeManager::instance().partialCharges(type, *molecule);
-    charge = charges(atom, 0);
-  }
+  const MatrixX charges =
+    types.find(type) != types.end()
+      ? molecule->partialCharges(type)
+      : Calc::ChargeManager::instance().partialCharges(type, *molecule);
+  // a failed calculation returns fewer rows than atoms
+  if (atom < 0 || atom >= charges.rows() || charges.cols() < 1)
+    return QString();
+  charge = charges(atom, 0);
 
   return QString("%L1").arg(charge, 0, 'f', 3);
 }

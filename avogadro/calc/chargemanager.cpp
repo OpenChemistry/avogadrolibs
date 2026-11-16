@@ -6,6 +6,7 @@
 #include "chargemanager.h"
 #include "chargemodel.h"
 #include "defaultmodel.h"
+#include "eeqmodel.h"
 
 #include <avogadro/core/utilities.h>
 
@@ -119,7 +120,8 @@ std::string ChargeManager::nameForModel(const std::string& identifier) const
 
 ChargeManager::ChargeManager()
 {
-  // add any default models here (EEM maybe?)
+  // built-in models, always available (including headless and WASM builds)
+  addModel(new EEQModel);
 }
 
 ChargeManager::~ChargeManager()
@@ -152,8 +154,10 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
 }
 
 // order of preference for the built-in methods
+// (EEQ is always available, so it is the last resort and never displaces
+// a model read from a file or installed by a user)
 const std::vector<std::string> METHOD_TIER_LIST = { "eem", "mmff94",
-                                                    "gasteiger" };
+                                                    "gasteiger", "eeq" };
 
 std::string ChargeManager::recommendedModel(
   const Core::Molecule& molecule) const
@@ -170,7 +174,7 @@ std::string ChargeManager::recommendedModel(
   }
 
   // if not, we look through the built-in list in order
-  // of preference (e.g., eem > mmff94 > gasteiger)
+  // of preference (e.g., eem > mmff94 > gasteiger > eeq)
   for (auto option : METHOD_TIER_LIST) {
     if (identifiers.find(option) != identifiers.end()) {
       return option;
@@ -189,11 +193,9 @@ MatrixX ChargeManager::partialCharges(const std::string& identifier,
 
   // otherwise go through our list
   const ChargeModel* model = registeredModel(identifier);
-  if (model == nullptr) {
-    MatrixX charges(molecule.atomCount(),
-                    1); // we have to return something, so zeros
-    return charges;
-  }
+  // No rows means failure: callers compare the row count with the atom count
+  if (model == nullptr)
+    return MatrixX(0, 1);
 
   return model->partialCharges(molecule);
 }
