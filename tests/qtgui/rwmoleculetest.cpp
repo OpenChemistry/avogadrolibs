@@ -2264,7 +2264,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       // snapshot has them (see compareWithShadow()), so line the shadow up
       // with the molecule before picking a bond by index.
       model.syncBondOrder(mol.molecule());
-      pick = pickInt(0, 16);
+      pick = pickInt(0, 17);
       // 13 would be setIsotope(), which is not left out by accident:
       // RWMolecule::setIsotope() has no undo command (it says so in a TODO)
       // and edits the molecule silently, so there is no undo state to
@@ -2276,6 +2276,8 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       if ((pick == 2 || pick == 3) && (n < 2 || (pick == 3 && bonds == 0)))
         pick = 0;
       if ((pick == 4 || pick == 5) && bonds == 0)
+        pick = 0;
+      if (pick == 17 && (n < 2 || bonds == 0))
         pick = 0;
 
       switch (pick) {
@@ -2344,6 +2346,50 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           const auto order = static_cast<unsigned char>(pickInt(1, 3));
           mol.setBondOrder(i, order);
           model.bonds[i].order = order;
+          break;
+        }
+        case 17: {
+          // Includes self-bonds, out-of-range atoms and pairs another bond
+          // already joins; those are refused without an undo command.
+          op = "setBondPair";
+          const Index i = pickIndex(bonds);
+          Index a = pickIndex(n);
+          Index b = pickIndex(n);
+          if (chance(10))
+            b = a;
+          else if (chance(10))
+            b = n + pickIndex(3);
+          else if (chance(15)) {
+            const auto existing = mol.bondPair(pickIndex(bonds));
+            a = existing.first;
+            b = existing.second;
+          }
+          if (chance(50))
+            std::swap(a, b);
+          bool expected = a != b && a < n && b < n;
+          if (expected) {
+            const Index ida = model.atoms[a].id;
+            const Index idb = model.atoms[b].id;
+            for (size_t k = 0; k < model.bonds.size(); ++k) {
+              const auto& bond = model.bonds[k];
+              const bool sameAtoms = (bond.atomA == ida && bond.atomB == idb) ||
+                                     (bond.atomA == idb && bond.atomB == ida);
+              if (sameAtoms && k != i)
+                expected = false;
+            }
+          }
+          const bool accepted = mol.setBondPair(i, std::make_pair(a, b));
+          if (accepted != expected) {
+            ADD_FAILURE() << "seed " << seed << ", step " << step
+                          << ": setBondPair(" << i << ", " << a << ", " << b
+                          << ") returned " << accepted << ", expected "
+                          << expected;
+            return;
+          }
+          if (expected) {
+            model.bonds[i].atomA = model.atoms[a].id;
+            model.bonds[i].atomB = model.atoms[b].id;
+          }
           break;
         }
         case 6: {

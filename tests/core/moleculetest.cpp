@@ -3217,6 +3217,7 @@ private:
     SetBondOrder,
     SetBondLabel,
     SetBondProperties,
+    SetBondPair,
     SetAtomicNumber,
     SetPosition3d,
     SetPosition2d,
@@ -3259,6 +3260,7 @@ private:
       "setBondOrder",
       "setBondLabel",
       "bondProperties",
+      "setBondPair",
       "setAtomicNumber",
       "setAtomPosition3d",
       "setAtomPosition2d",
@@ -3473,7 +3475,7 @@ bool ShadowRunner::step(int stepNumber)
   if ((op == AddBond || op == SwapAtom) && n < 2)
     op = AddAtom;
   if ((op == RemoveBond || op == SetBondOrder || op == SetBondLabel ||
-       op == SetBondProperties) &&
+       op == SetBondProperties || op == SetBondPair) &&
       bonds == 0)
     op = AddBond;
   if (op == SwapBond && bonds < 2)
@@ -3565,6 +3567,50 @@ bool ShadowRunner::step(int stepNumber)
       const std::string label = "b" + std::to_string(m_step);
       mol.setBondLabel(i, label);
       model.bonds[i].label = label;
+      break;
+    }
+    case SetBondPair: {
+      // Mostly valid targets, but also self-bonds, out-of-range atoms and
+      // pairs another bond already joins: those must be refused and change
+      // nothing. A valid edit moves only the bond's endpoints; its identity,
+      // order, label and properties stay.
+      const Index i = pickIndex(bonds);
+      Index a = pickIndex(n);
+      Index b = pickIndex(n);
+      if (chance(10))
+        b = a;
+      else if (chance(10))
+        b = n + pickIndex(3);
+      else if (chance(15)) {
+        const auto existing = mol.bondPair(pickIndex(bonds));
+        a = existing.first;
+        b = existing.second;
+      }
+      if (chance(50))
+        std::swap(a, b);
+      bool expected = a != b && a < n && b < n;
+      if (expected) {
+        const Index ida = model.atoms[a].id;
+        const Index idb = model.atoms[b].id;
+        for (size_t k = 0; k < model.bonds.size(); ++k) {
+          const auto& bond = model.bonds[k];
+          const bool sameAtoms = (bond.atomA == ida && bond.atomB == idb) ||
+                                 (bond.atomA == idb && bond.atomB == ida);
+          if (sameAtoms && k != i)
+            expected = false;
+        }
+      }
+      const bool accepted = mol.setBondPair(i, std::make_pair(a, b));
+      if (accepted != expected) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": setBondPair(" << i << ", " << a << ", " << b
+                      << ") returned " << accepted << ", expected " << expected;
+        return false;
+      }
+      if (expected) {
+        model.bonds[i].atomA = model.atoms[a].id;
+        model.bonds[i].atomB = model.atoms[b].id;
+      }
       break;
     }
     case SetBondProperties: {
