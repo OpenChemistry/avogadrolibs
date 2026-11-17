@@ -50,6 +50,7 @@ avogadro_headers(Core
   bondorderperception.h
   basisset.h
   bond.h
+  bondstate.h
   conformerquantity.h
   coordinateblockgenerator.h
   crystaltools.h
