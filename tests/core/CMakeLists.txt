@@ -10,6 +10,7 @@ set(tests
   BasisSet
   Bond
   BondOrderPerception
+  Column
   Constraint
   ContrastColor
   ConformerQuantity

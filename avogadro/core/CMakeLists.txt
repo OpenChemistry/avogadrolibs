@@ -21,6 +21,7 @@ target_sources(Headers PUBLIC
     array.h
     avogadrocore.h
     color3f.h
+  column.h
     constraint.h
     contrastcolor.h
     coordinateset.h
