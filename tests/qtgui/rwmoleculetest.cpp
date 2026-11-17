@@ -10,6 +10,8 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/core/residue.h>
+#include <avogadro/core/spacegroups.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -3099,4 +3101,85 @@ TEST(RWMoleculeTest, modifyMoleculeUndoRedoBasisSet)
   mol.undoStack().undo();
   EXPECT_DOUBLE_EQ(1.0, coefficient());
   EXPECT_EQ(Vector3::Zero(), m.atomPosition3d(0));
+}
+
+namespace {
+// B -1: a centered triclinic setting that is in no space group table entry
+const std::vector<std::string> bCenteredOperations = { "x,y,z", "-x,-y,-z",
+                                                       "x,y+1/2,z+1/2",
+                                                       "-x,-y+1/2,-z+1/2" };
+
+Molecule storedOperationsCrystal()
+{
+  using Avogadro::Core::SpaceGroups;
+  using Avogadro::Core::UnitCell;
+  Molecule m;
+  m.setUnitCell(new UnitCell(10.0, 11.0, 12.0, 1.4, 1.5, 1.6));
+  m.addAtom(6, Vector3(1.0, 2.0, 3.0));
+  SpaceGroups::setStoredOperations(m, bCenteredOperations, "B -1");
+  m.setHallNumber(0);
+  return m;
+}
+} // namespace
+
+TEST(RWMoleculeTest, fillUnitCellFromOperationsUndoRedo)
+{
+  using Avogadro::Core::SpaceGroups;
+  Molecule m = storedOperationsCrystal();
+  RWMolecule mol(m);
+
+  ASSERT_TRUE(mol.fillUnitCellFromOperations(bCenteredOperations, 0.25));
+  EXPECT_EQ(m.atomCount(), 4u);
+  // Hall 0 and the operations stay, so the cell can be reduced later
+  EXPECT_EQ(m.hallNumber(), 0);
+  EXPECT_EQ(SpaceGroups::storedOperations(m), bCenteredOperations);
+
+  mol.undoStack().undo();
+  EXPECT_EQ(m.atomCount(), 1u);
+  EXPECT_EQ(m.atomPosition3d(0), Vector3(1.0, 2.0, 3.0));
+  EXPECT_EQ(SpaceGroups::storedOperations(m), bCenteredOperations);
+
+  mol.undoStack().redo();
+  EXPECT_EQ(m.atomCount(), 4u);
+}
+
+TEST(RWMoleculeTest, reduceCellToAsymmetricUnitFromOperationsUndoRedo)
+{
+  using Avogadro::Core::SpaceGroups;
+  Molecule m = storedOperationsCrystal();
+  RWMolecule mol(m);
+  ASSERT_TRUE(mol.fillUnitCellFromOperations(bCenteredOperations, 0.25));
+  ASSERT_EQ(m.atomCount(), 4u);
+
+  ASSERT_TRUE(
+    mol.reduceCellToAsymmetricUnitFromOperations(bCenteredOperations, 0.25));
+  EXPECT_EQ(m.atomCount(), 1u);
+  EXPECT_LT(m.unitCell()->distance(m.atomPosition3d(0), Vector3(1.0, 2.0, 3.0)),
+            1e-4);
+  EXPECT_EQ(SpaceGroups::storedOperations(m), bCenteredOperations);
+
+  mol.undoStack().undo();
+  EXPECT_EQ(m.atomCount(), 4u);
+  mol.undoStack().redo();
+  EXPECT_EQ(m.atomCount(), 1u);
+}
+
+TEST(RWMoleculeTest, operationsFillAndReduceRejectBadInput)
+{
+  Molecule m = storedOperationsCrystal();
+  RWMolecule mol(m);
+  const auto undoCount = mol.undoStack().count();
+
+  EXPECT_FALSE(mol.fillUnitCellFromOperations({ "x,y,z", "x+1/7,y,z" }));
+  EXPECT_FALSE(
+    mol.reduceCellToAsymmetricUnitFromOperations({ "x,y,z", "bad" }));
+  EXPECT_EQ(m.atomCount(), 1u);
+  EXPECT_EQ(mol.undoStack().count(), undoCount);
+
+  Molecule noCell;
+  noCell.addAtom(6);
+  RWMolecule other(noCell);
+  EXPECT_FALSE(other.fillUnitCellFromOperations(bCenteredOperations));
+  EXPECT_FALSE(
+    other.reduceCellToAsymmetricUnitFromOperations(bCenteredOperations));
 }

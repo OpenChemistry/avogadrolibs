@@ -394,7 +394,7 @@ void MolecularModel::updateTable(unsigned int flags)
     if (key == "formula" || key == "name" || key == "fileName" ||
         key == "energies" || key == "markup_name" || key == "totalCharge" ||
         key == "totalSpinMultiplicity" ||
-        key == Core::SpaceGroups::internationalNumberKey())
+        Core::SpaceGroups::isSpaceGroupDataKey(key))
       continue; // skip these
 
     if (properties.value(key).toString().empty())

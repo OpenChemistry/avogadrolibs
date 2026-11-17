@@ -483,3 +483,16 @@ TEST(CmlTest, spaceGroupSpellings)
   ASSERT_TRUE(cml.writeString(output, ambiguous));
   EXPECT_EQ(output.find("internationalNumber"), std::string::npos) << output;
 }
+
+TEST(CmlTest, storedSpaceGroupOperationsAreNotWritten)
+{
+  CmlFormat cml;
+  Molecule molecule;
+  ASSERT_TRUE(cml.readString(cmlCrystal("P 1"), molecule));
+  ASSERT_TRUE(SpaceGroups::setStoredOperations(
+    molecule, { "x,y,z", "-x,-y,-z" }, "-P 1"));
+  std::string output;
+  ASSERT_TRUE(cml.writeString(output, molecule));
+  EXPECT_EQ(output.find("spaceGroup.operations"), std::string::npos) << output;
+  EXPECT_EQ(output.find("spaceGroup.fileName"), std::string::npos) << output;
+}

@@ -755,8 +755,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     const std::string& name_ = (*it).first;
 
     // Skip names that are handled elsewhere:
-    if (name_ == "inchi" ||
-        name_ == Core::SpaceGroups::internationalNumberKey())
+    if (name_ == "inchi" || Core::SpaceGroups::isSpaceGroupDataKey(name_))
       continue;
 
     const Variant& var = (*it).second;

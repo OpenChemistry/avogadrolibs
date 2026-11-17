@@ -1787,6 +1787,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   // loop through all other properties
   const auto& map = molecule.dataMap();
   for (const auto& element : map) {
+    // The operations and name of a space group that is in no table are kept
+    // (as strings in the properties) so that a saved file keeps its symmetry.
+    // Only internationalNumberKey() is skipped here, unlike other writers that
+    // skip every space group key (isSpaceGroupDataKey()): CJSON round-trips
+    // the operations and the name.
     if (element.first == "name" || element.first == "inchi" ||
         element.first == Core::SpaceGroups::internationalNumberKey())
       continue;

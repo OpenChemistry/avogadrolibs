@@ -1575,6 +1575,94 @@ TEST(SpaceGroupTest, fillUnitCellFromOperationsBadInput)
   EXPECT_EQ(mol.atomCount(), 1);
 }
 
+TEST(SpaceGroupTest, storedOperations)
+{
+  Molecule mol;
+  EXPECT_TRUE(SpaceGroups::storedOperations(mol).empty());
+
+  ASSERT_TRUE(
+    SpaceGroups::setStoredOperations(mol, bodyCentredInversion, "I -1"));
+  EXPECT_EQ(SpaceGroups::storedOperations(mol), bodyCentredInversion);
+  EXPECT_EQ(mol.data(SpaceGroups::fileNameKey()).toString(), "I -1");
+  EXPECT_EQ(mol.hallNumber(), 0);
+
+  // a real Hall number supersedes the operations, setting 0 does not
+  mol.setHallNumber(0);
+  EXPECT_EQ(SpaceGroups::storedOperations(mol), bodyCentredInversion);
+  mol.setHallNumber(2);
+  EXPECT_TRUE(SpaceGroups::storedOperations(mol).empty());
+  EXPECT_FALSE(mol.hasData(SpaceGroups::operationsKey()));
+  EXPECT_FALSE(mol.hasData(SpaceGroups::fileNameKey()));
+}
+
+TEST(SpaceGroupTest, storedOperationsInvalidStoreNothing)
+{
+  Molecule mol;
+  EXPECT_FALSE(SpaceGroups::setStoredOperations(
+    mol, { "x,y,z", "-x,-y,-z", "x+1/7,y,z" }, "bad"));
+  EXPECT_FALSE(SpaceGroups::setStoredOperations(mol, {}, "empty"));
+  EXPECT_FALSE(SpaceGroups::setStoredOperations(mol, { "x,y\n,z" }, "newline"));
+  EXPECT_FALSE(mol.hasData(SpaceGroups::operationsKey()));
+  EXPECT_FALSE(mol.hasData(SpaceGroups::fileNameKey()));
+  EXPECT_TRUE(SpaceGroups::storedOperations(mol).empty());
+  EXPECT_TRUE(SpaceGroups::operationsAreValid(bodyCentredInversion));
+  EXPECT_FALSE(SpaceGroups::operationsAreValid({ "x,y" }));
+}
+
+TEST(SpaceGroupTest, reduceFromOperationsUndoesFill)
+{
+  // B -1 (centered triclinic) with a general position and a special one
+  const std::vector<std::string> ops = { "x,y,z", "-x,-y,-z", "x,y+1/2,z+1/2",
+                                         "-x,-y+1/2,-z+1/2" };
+  EXPECT_EQ(SpaceGroups::hallNumberFromTransforms(ops), 0);
+
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3);
+  mol.addAtom(8).setPosition3d(mol.unitCell()->toCartesian(Vector3(0, 0, 0)));
+  const Avogadro::Core::Array<Vector3> original = mol.atomPositions3d();
+
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, ops, 0.25));
+  ASSERT_EQ(mol.atomCount(), 6);
+
+  ASSERT_TRUE(
+    SpaceGroups::reduceToAsymmetricUnitFromOperations(mol, ops, 0.25));
+  ASSERT_EQ(mol.atomCount(), 2);
+  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i) {
+    EXPECT_LT(mol.unitCell()->distance(mol.atomPosition3d(i), original[i]),
+              1e-4);
+  }
+
+  // an origin-shifted P -1 (inversion at 1/4,1/4,1/4)
+  const std::vector<std::string> shifted = { "x,y,z", "-x+1/2,-y+1/2,-z+1/2" };
+  Molecule p1 = triclinicWithAtom(0.1, 0.2, 0.3);
+  const Vector3 start = p1.atomPosition3d(0);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(p1, shifted, 0.25));
+  ASSERT_EQ(p1.atomCount(), 2);
+  ASSERT_TRUE(SpaceGroups::reduceToAsymmetricUnitFromOperations(p1, shifted));
+  ASSERT_EQ(p1.atomCount(), 1);
+  EXPECT_LT(p1.unitCell()->distance(p1.atomPosition3d(0), start), 1e-4);
+}
+
+TEST(SpaceGroupTest, reduceFromOperationsBadInput)
+{
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3);
+  mol.addAtom(6).setPosition3d(
+    mol.unitCell()->toCartesian(Vector3(0.9, 0.8, 0.7)));
+  EXPECT_FALSE(SpaceGroups::reduceToAsymmetricUnitFromOperations(
+    mol, { "-x,-y,-z", "x+1/7,y,z" }, 0.25));
+  EXPECT_EQ(mol.atomCount(), 2);
+
+  Molecule noCell;
+  noCell.addAtom(6);
+  EXPECT_FALSE(SpaceGroups::reduceToAsymmetricUnitFromOperations(
+    noCell, bodyCentredInversion));
+  EXPECT_EQ(noCell.atomCount(), 1);
+
+  // the identity alone removes nothing
+  EXPECT_TRUE(
+    SpaceGroups::reduceToAsymmetricUnitFromOperations(mol, { "x,y,z" }, 0.25));
+  EXPECT_EQ(mol.atomCount(), 2);
+}
+
 TEST(SpaceGroupTest, fillUnitCellFromOperationsMatchesTable)
 {
   // With the operations of a table entry the result must be the same as with
@@ -1601,4 +1689,36 @@ TEST(SpaceGroupTest, fillUnitCellFromOperationsMatchesTable)
     }
     EXPECT_TRUE(found);
   }
+}
+
+TEST(SpaceGroupTest, fillKeepsIsotopes)
+{
+  // Every image of a deuterium atom is a deuterium atom, in the fill of a
+  // table entry and in the boundary copies
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3, 1);
+  mol.setIsotope(0, 2);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  ASSERT_EQ(mol.atomCount(), 4);
+  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i) {
+    EXPECT_EQ(mol.atomicNumber(i), 1);
+    EXPECT_EQ(mol.isotope(i), 2);
+  }
+
+  // An atom on the cell origin gets boundary copies
+  Molecule edge = triclinicWithAtom(0.0, 0.0, 0.0, 1);
+  edge.setIsotope(0, 2);
+  SpaceGroups::fillTranslationalCopies(edge, 0.25);
+  ASSERT_GT(edge.atomCount(), 1);
+  for (Avogadro::Index i = 0; i < edge.atomCount(); ++i) {
+    EXPECT_EQ(edge.atomicNumber(i), 1);
+    EXPECT_EQ(edge.isotope(i), 2);
+  }
+
+  // No isotope array at all stays that way
+  Molecule plain = triclinicWithAtom(0.1, 0.2, 0.3, 1);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    plain, bodyCentredInversion, 0.25, true, false));
+  for (Avogadro::Index i = 0; i < plain.atomCount(); ++i)
+    EXPECT_EQ(plain.isotope(i), 0);
 }

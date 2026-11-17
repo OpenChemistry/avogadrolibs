@@ -903,8 +903,9 @@ bool RWMolecule::symmetrizeCell(double cartTol, double copyTol)
   return true;
 }
 
-bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
-                              bool allCopies)
+bool RWMolecule::editUnitCell(const std::function<bool(Molecule&)>& edit,
+                              Molecule::MoleculeChanges changes,
+                              const QString& undoText, bool resizeLayers)
 {
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
@@ -914,16 +915,46 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
   // The atom positions and numbers of atoms may change
   cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
-  newMolecule.setHallNumber(hallNumber);
 
-  Core::SpaceGroups::fillUnitCell(newMolecule, hallNumber, cartTol, true,
-                                  allCopies);
-
-  Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
-  QString undoText = tr("Fill Unit Cell");
+  if (!edit(newMolecule))
+    return false;
 
   modifyMolecule(newMolecule, changes, undoText);
+
+  if (resizeLayers) {
+    // Resize layer info to match the new atom count
+    Core::LayerManager::getMoleculeInfo(&m_molecule)
+      ->layer.resize(m_molecule.atomCount());
+  }
   return true;
+}
+
+bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
+                              bool allCopies)
+{
+  return editUnitCell(
+    [=](Molecule& mol) {
+      mol.setHallNumber(hallNumber);
+      Core::SpaceGroups::fillUnitCell(mol, hallNumber, cartTol, true,
+                                      allCopies);
+      return true;
+    },
+    Molecule::Added | Molecule::Atoms, tr("Fill Unit Cell"), false);
+}
+
+bool RWMolecule::fillUnitCellFromOperations(
+  const std::vector<std::string>& operations, double cartTol, bool allCopies)
+{
+  // An empty list is not a symmetry; the core call would accept it
+  if (operations.empty())
+    return false;
+
+  return editUnitCell(
+    [&](Molecule& mol) {
+      return Core::SpaceGroups::fillUnitCellFromOperations(
+        mol, operations, cartTol, true, allCopies);
+    },
+    Molecule::Added | Molecule::Atoms, tr("Fill Unit Cell"), false);
 }
 
 bool RWMolecule::fillTranslationalCopies(double cartTol)
@@ -946,27 +977,29 @@ bool RWMolecule::fillTranslationalCopies(double cartTol)
 bool RWMolecule::reduceCellToAsymmetricUnit(unsigned short hallNumber,
                                             double cartTol)
 {
-  // If there is no unit cell, there is nothing to do
-  if (!m_molecule.unitCell())
+  return editUnitCell(
+    [=](Molecule& mol) {
+      Core::SpaceGroups::reduceToAsymmetricUnit(mol, hallNumber, cartTol);
+      return true;
+    },
+    Molecule::Removed | Molecule::Atoms, tr("Reduce Cell to Asymmetric Unit"),
+    true);
+}
+
+bool RWMolecule::reduceCellToAsymmetricUnitFromOperations(
+  const std::vector<std::string>& operations, double cartTol)
+{
+  // An empty list is not a symmetry; the core call would accept it
+  if (operations.empty())
     return false;
 
-  // Make a copy of the molecule to edit so we can store the old one
-  // The atom positions and numbers of atoms may change
-  cancelBackgroundCalculations();
-  Molecule newMolecule = m_molecule;
-
-  Core::SpaceGroups::reduceToAsymmetricUnit(newMolecule, hallNumber, cartTol);
-
-  Molecule::MoleculeChanges changes = Molecule::Removed | Molecule::Atoms;
-  QString undoText = tr("Reduce Cell to Asymmetric Unit");
-
-  modifyMolecule(newMolecule, changes, undoText);
-
-  // Resize layer info to match the new atom count
-  Core::LayerManager::getMoleculeInfo(&m_molecule)
-    ->layer.resize(m_molecule.atomCount());
-
-  return true;
+  return editUnitCell(
+    [&](Molecule& mol) {
+      return Core::SpaceGroups::reduceToAsymmetricUnitFromOperations(
+        mol, operations, cartTol);
+    },
+    Molecule::Removed | Molecule::Atoms, tr("Reduce Cell to Asymmetric Unit"),
+    true);
 }
 
 void RWMolecule::emitChanged(unsigned int change)

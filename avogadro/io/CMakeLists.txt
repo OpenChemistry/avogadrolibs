@@ -1,6 +1,7 @@
 add_library(IO)
 
 avogadro_headers(IO
+  cifformat.h
   cifsymmetry.h
   cjsonformat.h
   cmlformat.h
@@ -25,6 +26,7 @@ avogadro_headers(IO
 
 target_sources(IO PRIVATE
   binaryblock_p.h
+  cifformat.cpp
   cifsymmetry.cpp
   cjsonformat.cpp
   cmlformat.cpp
@@ -109,6 +111,9 @@ avogadro_add_library(IO)
 target_link_libraries(IO
   PUBLIC Avogadro::Core
   PRIVATE struct pugixml::pugixml nlohmann_json::nlohmann_json)
+# gemmi's CIF tokenizer is header-only and used only in cifformat.cpp. Keep it
+# out of the exported link interface, like fast_float in Core.
+target_link_libraries(IO PRIVATE "$<BUILD_INTERFACE:gemmi::cif>")
 if(WIN32)
   target_link_libraries(IO PRIVATE ws2_32)
 endif()

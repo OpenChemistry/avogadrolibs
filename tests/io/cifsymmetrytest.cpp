@@ -14,8 +14,9 @@
 #include <string>
 
 using Avogadro::Core::SpaceGroups;
+using Avogadro::Io::applyCifSymmetry;
 using Avogadro::Io::CifSymmetry;
-using Avogadro::Io::expandCifAtoms;
+using Avogadro::Io::makeCifSymmetry;
 using Avogadro::Io::readCifSymmetry;
 
 namespace {
@@ -561,10 +562,11 @@ Avogadro::Core::Molecule bondedPair()
 }
 } // namespace
 
-TEST(CifSymmetryTest, expandCifAtomsUntabulatedSetting)
+TEST(CifSymmetryTest, untabulatedSettingKeepsTheOperations)
 {
   // I -1 is not in the table
   const char* cif = R"CIF(data_test
+_symmetry_space_group_name_H-M 'I -1'
 loop_
 _symmetry_equiv_pos_as_xyz
 'x,y,z'
@@ -575,49 +577,39 @@ _symmetry_equiv_pos_as_xyz
   const CifSymmetry symmetry = readCifSymmetry(cif);
   EXPECT_EQ(symmetry.hallFromOperations, 0);
   EXPECT_TRUE(symmetry.hasUntabulatedOperations());
+  EXPECT_EQ(symmetry.name, "I -1");
 
   Avogadro::Core::Molecule mol = bondedPair();
-  ASSERT_TRUE(expandCifAtoms(symmetry, mol));
-  EXPECT_EQ(mol.atomCount(), 8u);
-  EXPECT_EQ(mol.hallNumber(), 1);
-  // every atom has its partner: four pairs, so four bonds
-  EXPECT_EQ(mol.bondCount(), 4u);
-  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i)
-    EXPECT_EQ(mol.bonds(i).size(), 1u);
+  // what a reader may have guessed from the name
+  mol.setData(SpaceGroups::internationalNumberKey(), 2);
+  applyCifSymmetry(symmetry, mol);
 
-  // expanding again changes nothing
-  ASSERT_TRUE(expandCifAtoms(symmetry, mol));
+  // the atoms and bonds are untouched
+  EXPECT_EQ(mol.atomCount(), 2u);
+  EXPECT_EQ(mol.bondCount(), 1u);
+  // no wrong Hall number, no international number
+  EXPECT_EQ(mol.hallNumber(), 0);
+  EXPECT_FALSE(mol.hasData(SpaceGroups::internationalNumberKey()));
+  EXPECT_EQ(SpaceGroups::storedOperations(mol), symmetry.operations);
+  EXPECT_EQ(mol.data(SpaceGroups::fileNameKey()).toString(), "I -1");
+
+  // the stored operations fill the cell
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    mol, SpaceGroups::storedOperations(mol), 0.25));
   EXPECT_EQ(mol.atomCount(), 8u);
-  EXPECT_EQ(mol.bondCount(), 4u);
 }
 
-TEST(CifSymmetryTest, expandCifAtomsAlreadyExpandedKeepsBonds)
+TEST(CifSymmetryTest, nameFallsBackToTheHallSymbol)
 {
-  const char* cif = R"CIF(data_test
-loop_
-_symmetry_equiv_pos_as_xyz
-'x,y,z'
-'x+1/2,y+1/2,z'
-)CIF";
-  const CifSymmetry symmetry = readCifSymmetry(cif);
-  ASSERT_TRUE(symmetry.hasUntabulatedOperations());
-
-  // C 1: a centred triclinic cell. Once all the atoms are there, expanding
-  // again adds nothing, so the bonds stay.
-  Avogadro::Core::Molecule mol = bondedPair();
-  ASSERT_TRUE(expandCifAtoms(symmetry, mol));
-  const auto count = mol.atomCount();
-  EXPECT_EQ(count, 4u);
-  Avogadro::Core::Molecule again = mol;
-  ASSERT_TRUE(expandCifAtoms(symmetry, again));
-  EXPECT_EQ(again.atomCount(), count);
-  EXPECT_EQ(again.bondCount(), mol.bondCount());
-  EXPECT_EQ(again.hallNumber(), 1);
+  const std::vector<std::string> ops = { "x,y,z", "x+1/2,y+1/2,z" };
+  EXPECT_EQ(makeCifSymmetry(ops, "-C 1").name, "-C 1");
+  EXPECT_EQ(makeCifSymmetry(ops, "-C 1", " C -1 ").name, "C -1");
+  EXPECT_TRUE(makeCifSymmetry(ops, "").name.empty());
 }
 
-TEST(CifSymmetryTest, expandCifAtomsLeavesOtherCasesAlone)
+TEST(CifSymmetryTest, applyCifSymmetryLeavesOtherCasesAlone)
 {
-  // a tabulated group (P -1): no expansion
+  // a tabulated group (P -1) sets the Hall number and stores nothing
   const char* tabulated = R"CIF(data_test
 loop_
 _symmetry_equiv_pos_as_xyz
@@ -625,18 +617,22 @@ _symmetry_equiv_pos_as_xyz
 '-x,-y,-z'
 )CIF";
   Avogadro::Core::Molecule mol = bondedPair();
-  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(tabulated), mol));
+  mol.setHallNumber(5);
+  applyCifSymmetry(readCifSymmetry(tabulated), mol);
   EXPECT_EQ(mol.atomCount(), 2u);
   EXPECT_EQ(mol.hallNumber(), 2);
+  EXPECT_TRUE(SpaceGroups::storedOperations(mol).empty());
 
-  // one operation, or none
+  // one operation, or none: nothing is stored
   const char* single = R"CIF(data_test
 loop_
 _symmetry_equiv_pos_as_xyz
 'x+1/12,y,z'
 )CIF";
-  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(single), mol));
-  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(""), mol));
+  applyCifSymmetry(readCifSymmetry(single), mol);
+  applyCifSymmetry(readCifSymmetry(""), mol);
+  EXPECT_EQ(mol.hallNumber(), 2);
+  EXPECT_TRUE(SpaceGroups::storedOperations(mol).empty());
 
   // an operation that cannot be parsed keeps the reader's result
   const char* bad = R"CIF(data_test
@@ -648,10 +644,12 @@ _symmetry_equiv_pos_as_xyz
 )CIF";
   const CifSymmetry badSymmetry = readCifSymmetry(bad);
   EXPECT_EQ(badSymmetry.hallFromOperations, 0);
-  EXPECT_FALSE(expandCifAtoms(badSymmetry, mol));
-  EXPECT_EQ(mol.atomCount(), 2u);
-  EXPECT_EQ(mol.bondCount(), 1u);
-  EXPECT_EQ(mol.hallNumber(), 2);
+  Avogadro::Core::Molecule guessed = bondedPair();
+  applyCifSymmetry(badSymmetry, guessed);
+  EXPECT_EQ(guessed.atomCount(), 2u);
+  EXPECT_EQ(guessed.bondCount(), 1u);
+  EXPECT_EQ(guessed.hallNumber(), 2);
+  EXPECT_TRUE(SpaceGroups::storedOperations(guessed).empty());
 
   // no unit cell
   const char* untabulated = R"CIF(data_test
@@ -662,6 +660,57 @@ _symmetry_equiv_pos_as_xyz
 )CIF";
   Avogadro::Core::Molecule noCell;
   noCell.addAtom(6);
-  EXPECT_FALSE(expandCifAtoms(readCifSymmetry(untabulated), noCell));
+  applyCifSymmetry(readCifSymmetry(untabulated), noCell);
   EXPECT_EQ(noCell.atomCount(), 1u);
+  EXPECT_TRUE(SpaceGroups::storedOperations(noCell).empty());
+}
+
+TEST(CifSymmetryTest, makeCifSymmetry)
+{
+  const std::vector<std::string> ops = { "x,y,z", "-x,-y,-z" };
+  CifSymmetry symmetry = makeCifSymmetry(ops, "-P  1");
+  EXPECT_EQ(symmetry.operations, ops);
+  EXPECT_EQ(symmetry.hallSymbol, "-P 1");
+  EXPECT_EQ(symmetry.hallFromOperations, 2);
+  EXPECT_EQ(symmetry.hallFromSymbol, 2);
+
+  // both parts are optional
+  symmetry = makeCifSymmetry({}, "");
+  EXPECT_EQ(symmetry.hallNumber(), 0);
+  EXPECT_TRUE(symmetry.hallSymbol.empty());
+  symmetry = makeCifSymmetry({}, "-P 2ybc");
+  EXPECT_EQ(symmetry.hallNumber(), SpaceGroups::hallNumber("-P 2ybc"));
+}
+
+TEST(CifSymmetryTest, applyCifSymmetry)
+{
+  using Avogadro::Core::Molecule;
+  using Avogadro::Core::UnitCell;
+
+  Molecule molecule;
+  molecule.setUnitCell(
+    new UnitCell(5.0, 6.0, 7.0, 1.5707963, 1.5707963, 1.5707963));
+  molecule.addAtom(6, Avogadro::Vector3(0.5, 0.6, 0.7));
+
+  // tabulated operations set the group
+  applyCifSymmetry(makeCifSymmetry({ "x,y,z", "-x,-y,-z" }, ""), molecule);
+  EXPECT_EQ(molecule.hallNumber(), 2);
+
+  // a file that lists only the identity does not demote a larger group
+  applyCifSymmetry(makeCifSymmetry({ "x,y,z" }, ""), molecule);
+  EXPECT_EQ(molecule.hallNumber(), 2);
+
+  // untabulated operations (A-1) are kept, with Hall number 0
+  const std::vector<std::string> a1 = { "x,y,z", "-x,-y,-z", "x,y+1/2,z+1/2",
+                                        "-x,-y+1/2,-z+1/2" };
+  CifSymmetry symmetry = makeCifSymmetry(a1, "");
+  ASSERT_TRUE(symmetry.hasUntabulatedOperations());
+  applyCifSymmetry(symmetry, molecule);
+  EXPECT_EQ(molecule.hallNumber(), 0);
+  EXPECT_EQ(molecule.atomCount(), 1u);
+  EXPECT_EQ(SpaceGroups::storedOperations(molecule), a1);
+
+  // a real Hall number found later (another file, say) supersedes them
+  molecule.setHallNumber(2);
+  EXPECT_TRUE(SpaceGroups::storedOperations(molecule).empty());
 }
