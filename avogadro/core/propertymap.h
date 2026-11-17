@@ -19,6 +19,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 namespace Avogadro::Core {
 
@@ -168,8 +169,39 @@ public:
    */
   void swapEntries(Index a, Index b, Index entityCount);
 
+  /**
+   * Save what removeEntry(@p index, @p entityCount) is about to change, so
+   * that restore() can undo it. Same name and meaning as Column::slice().
+   * The result is a PropertyMap holding, for each column that reaches
+   * @p index, the value at @p index; a dense column that covers every
+   * entity also gets the value at the last entity, which the removal moves
+   * into @p index (see Column::slice()). A sparse matrix column holds the
+   * matrix at @p index, if there is one. @p entityCount is the count before
+   * the removal. Call this before removeEntry().
+   */
+  PropertyMap slice(Index index, Index entityCount) const;
+
+  /**
+   * Undo removeEntry(@p index, ...) given @p saved = slice(@p index, ...)
+   * taken just before it. @p entityCount is the count after the
+   * restoration. Assumes the map is exactly as the removal left it, as
+   * Column::restore() does. Values past entityCount, which the removal
+   * discards as belonging to no entity, are not brought back.
+   */
+  void restore(Index index, const PropertyMap& saved, Index entityCount);
+
   /** Clear all columns and data. */
   void clear();
+
+  /**
+   * Take @p other's contents, leaving it empty. Same name and meaning as
+   * Column::takeFrom().
+   */
+  void takeFrom(PropertyMap& other)
+  {
+    *this = std::move(other);
+    other.clear();
+  }
 
   /** @return true if no columns exist. */
   bool empty() const;
