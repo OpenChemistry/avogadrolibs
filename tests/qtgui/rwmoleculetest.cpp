@@ -805,6 +805,66 @@ TEST(RWMoleculeTest, setBondPairs)
                          mol.bondPairs().end()));
 }
 
+TEST(RWMoleculeTest, setBondPairsPermutationUndoRedo)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+  mol.addBond(2, 3, 3);
+  mol.undoStack().clear();
+
+  typedef std::pair<Index, Index> BondPair;
+  const Array<BondPair> old(mol.bondPairs());
+  Array<BondPair> rotated;
+  rotated.push_back(Molecule::makeBondPair(1, 2));
+  rotated.push_back(Molecule::makeBondPair(2, 3));
+  rotated.push_back(Molecule::makeBondPair(0, 1));
+  ASSERT_TRUE(mol.setBondPairs(rotated));
+  EXPECT_EQ(mol.undoStack().count(), 1);
+  EXPECT_EQ(mol.bondOrder(0), 1);
+  EXPECT_EQ(mol.bondPair(0), Molecule::makeBondPair(1, 2));
+  mol.undoStack().undo();
+  EXPECT_TRUE(std::equal(old.begin(), old.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
+  mol.undoStack().redo();
+  EXPECT_TRUE(std::equal(rotated.begin(), rotated.end(),
+                         mol.bondPairs().begin(), mol.bondPairs().end()));
+  ASSERT_TRUE(mol.removeAtom(1)); // must terminate with consistent bonds
+}
+
+TEST(RWMoleculeTest, setBondPairRefusalsPushNothing)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+  mol.undoStack().clear();
+
+  EXPECT_FALSE(mol.setBondPair(0, Molecule::makeBondPair(2, 2)));
+  EXPECT_FALSE(mol.setBondPair(0, std::make_pair(Index(0), Index(9))));
+  EXPECT_FALSE(mol.setBondPair(0, std::make_pair(Index(2), Index(1))));
+  EXPECT_FALSE(mol.setBondPair(7, Molecule::makeBondPair(0, 3)));
+  // Setting a bond to the pair it already has succeeds without an undo step.
+  EXPECT_TRUE(mol.setBondPair(0, std::make_pair(Index(1), Index(0))));
+
+  typedef std::pair<Index, Index> BondPair;
+  Array<BondPair> dup(mol.bondPairs());
+  dup[0] = dup[1];
+  EXPECT_FALSE(mol.setBondPairs(dup));
+  Array<BondPair> bad(mol.bondPairs());
+  bad[0] = std::make_pair(Index(0), Index(9));
+  EXPECT_FALSE(mol.setBondPairs(bad));
+
+  EXPECT_EQ(mol.undoStack().count(), 0);
+  EXPECT_EQ(mol.bondPair(0), Molecule::makeBondPair(0, 1));
+  EXPECT_EQ(mol.bondPair(1), Molecule::makeBondPair(1, 2));
+}
+
 TEST(RWMoleculeTest, setBondPair)
 {
   Molecule m;

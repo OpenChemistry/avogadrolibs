@@ -7,6 +7,7 @@
 #include "utils.h"
 
 #include <gtest/gtest.h>
+#include <algorithm>
 
 #include <map>
 #include <memory>
@@ -5089,4 +5090,116 @@ TEST_F(MoleculeTest, copiesShareBasisSetWithoutCloning)
     EXPECT_EQ(CountingBasisSet::liveCount, 2);
   }
   EXPECT_EQ(CountingBasisSet::liveCount, 0);
+}
+
+namespace {
+// Every bond must be listed once at each of its atoms, and removing atoms
+// must terminate.
+void expectBondsConsistent(const Molecule& mol)
+{
+  size_t total = 0;
+  for (Index a = 0; a < mol.atomCount(); ++a)
+    total += mol.graph().edges(a).size();
+  EXPECT_EQ(total, 2 * static_cast<size_t>(mol.bondCount()));
+  for (Index b = 0; b < mol.bondCount(); ++b) {
+    const auto pair = mol.bondPair(b);
+    // (removeAtom() renumbers atoms without re-sorting pairs, so the order of
+    // an endpoint pair is not checked here.)
+    for (Index atom : { pair.first, pair.second }) {
+      const auto edges = mol.graph().edges(atom);
+      EXPECT_NE(std::find(edges.begin(), edges.end(), b), edges.end());
+    }
+  }
+}
+} // namespace
+
+TEST_F(MoleculeTest, setBondPairThenRemoveAtom)
+{
+  Molecule mol;
+  for (int i = 0; i < 6; ++i)
+    mol.addAtom(i == 0 ? 6 : 1);
+  mol.addBond(0, 1, 1); // 0
+  mol.addBond(0, 2, 2); // 1
+  mol.addBond(0, 3, 1); // 2
+  mol.addBond(0, 4, 1); // 3
+  mol.addBond(4, 5, 3); // 4
+
+  // Move bond 3 (0-4) to 1-5; atom 0 and 4 both keep other bonds.
+  ASSERT_TRUE(mol.setBondPair(3, Molecule::makeBondPair(5, 1)));
+  EXPECT_EQ(mol.bondPair(3), Molecule::makeBondPair(1, 5));
+  EXPECT_EQ(mol.bondOrder(3), 1);
+  EXPECT_EQ(mol.bondOrder(4), 3);
+  EXPECT_EQ(mol.bondCount(), 5);
+  expectBondsConsistent(mol);
+  EXPECT_EQ(mol.graph().edges(0).size(), 3u);
+  EXPECT_EQ(mol.graph().edges(4).size(), 1u);
+
+  // The old code lost incidence entries and this never returned.
+  ASSERT_TRUE(mol.removeAtom(0));
+  EXPECT_EQ(mol.bondCount(), 2);
+  expectBondsConsistent(mol);
+}
+
+TEST_F(MoleculeTest, setBondPairRefusesInvalid)
+{
+  Molecule mol;
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+
+  EXPECT_FALSE(mol.setBondPair(5, Molecule::makeBondPair(0, 3)));
+  EXPECT_FALSE(mol.setBondPair(0, Molecule::makeBondPair(0, 9)));
+  EXPECT_FALSE(mol.setBondPair(0, Molecule::makeBondPair(2, 2)));
+  EXPECT_FALSE(mol.setBondPair(0, Molecule::makeBondPair(1, 2)));
+  EXPECT_EQ(mol.bondPair(0), Molecule::makeBondPair(0, 1));
+  EXPECT_EQ(mol.bondPair(1), Molecule::makeBondPair(1, 2));
+  EXPECT_TRUE(mol.setBondPair(0, Molecule::makeBondPair(1, 0)));
+  expectBondsConsistent(mol);
+}
+
+TEST_F(MoleculeTest, setBondPairsPermutationAndRefusal)
+{
+  Molecule mol;
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+  mol.addBond(2, 3, 3);
+
+  // A rotation of the existing pairs is valid as a whole even though each
+  // single edit would momentarily duplicate a bond.
+  Array<std::pair<Index, Index>> rotated;
+  rotated.push_back(Molecule::makeBondPair(1, 2));
+  rotated.push_back(Molecule::makeBondPair(3, 2));
+  rotated.push_back(Molecule::makeBondPair(0, 1));
+  ASSERT_TRUE(mol.setBondPairs(rotated));
+  EXPECT_EQ(mol.bondPair(0), Molecule::makeBondPair(1, 2));
+  EXPECT_EQ(mol.bondPair(1), Molecule::makeBondPair(2, 3));
+  EXPECT_EQ(mol.bondPair(2), Molecule::makeBondPair(0, 1));
+  EXPECT_EQ(mol.bondOrder(0), 1);
+  EXPECT_EQ(mol.bondOrder(1), 2);
+  EXPECT_EQ(mol.bondOrder(2), 3);
+  expectBondsConsistent(mol);
+  EXPECT_EQ(mol.graph().connectedComponents().size(), 1u);
+
+  // Refused sets leave everything untouched.
+  const Array<std::pair<Index, Index>> before(mol.bondPairs());
+  Array<std::pair<Index, Index>> dup(before);
+  dup[0] = dup[1];
+  EXPECT_FALSE(mol.setBondPairs(dup));
+  Array<std::pair<Index, Index>> bad(before);
+  bad[2] = Molecule::makeBondPair(0, 7);
+  EXPECT_FALSE(mol.setBondPairs(bad));
+  Array<std::pair<Index, Index>> loop(before);
+  loop[1] = std::make_pair(Index(2), Index(2));
+  EXPECT_FALSE(mol.setBondPairs(loop));
+  Array<std::pair<Index, Index>> wrongSize;
+  wrongSize.push_back(before[0]);
+  EXPECT_FALSE(mol.setBondPairs(wrongSize));
+  EXPECT_TRUE(std::equal(before.begin(), before.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
+  expectBondsConsistent(mol);
+  ASSERT_TRUE(mol.removeAtom(1));
+  expectBondsConsistent(mol);
 }

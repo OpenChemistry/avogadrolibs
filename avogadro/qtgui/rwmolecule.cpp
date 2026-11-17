@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <set>
 
 #ifdef USE_SPGLIB
 #include <avogadro/core/avospglib.h>
@@ -469,14 +470,20 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
   if (pairs.size() != m_molecule.bondCount())
     return false;
 
-  // Correct any pairs that are ordered improperly:
+  // Correct any pairs that are ordered improperly, and refuse the whole set
+  // (without touching the undo stack) if the core would: out of range
+  // vertices, self-bonds or duplicate pairs.
   using BondPair = std::pair<Index, Index>;
   Array<BondPair> p(pairs);
-  // Use for reading to prevent copies unless needed (Array is copy-on-write):
-  const Array<BondPair>& p_const = p;
-  for (size_t i = 0; i < p.size(); ++i)
-    if (p_const[i].first > p_const[i].second)
-      swap(p[i].first, p[i].second);
+  std::set<BondPair> seen;
+  for (size_t i = 0; i < p.size(); ++i) {
+    BondPair& pair = p[i];
+    if (pair.first > pair.second)
+      swap(pair.first, pair.second);
+    if (pair.second >= m_molecule.atomCount() || pair.first == pair.second ||
+        !seen.insert(pair).second)
+      return false;
+  }
 
   auto* comm = new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
   comm->setText(tr("Update Bonds"));
@@ -486,18 +493,22 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
 
 bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
 {
-  if (bondId >= bondCount() || pair.first == pair.second)
+  if (bondId >= bondCount() || pair.first == pair.second ||
+      pair.first >= atomCount() || pair.second >= atomCount())
     return false;
 
-  SetBondPairCommand* comm = nullptr;
-  if (pair.first < pair.second) {
-    comm =
-      new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId), pair);
-  } else {
-    comm =
-      new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId),
-                             Molecule::makeBondPair(pair.first, pair.second));
-  }
+  const std::pair<Index, Index> newPair =
+    Molecule::makeBondPair(pair.first, pair.second);
+  const std::pair<Index, Index> oldPair = m_molecule.bondPair(bondId);
+  // The stored pair is not always ordered (removeAtom() renumbers atoms
+  // without re-sorting), so compare the endpoints as an unordered pair.
+  if (newPair == Molecule::makeBondPair(oldPair.first, oldPair.second))
+    return true; // nothing to change
+  // Another bond already joins these atoms: the core would refuse.
+  if (m_molecule.graph().containsEdge(newPair.first, newPair.second))
+    return false;
+
+  auto* comm = new SetBondPairCommand(*this, bondId, oldPair, newPair);
   comm->setText(tr("Update Bond"));
   m_undoStack.push(comm);
   return true;

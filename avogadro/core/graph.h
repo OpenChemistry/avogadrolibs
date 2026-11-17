@@ -126,11 +126,26 @@ public:
   void removeEdges(size_t index);
 
   /**
-   * Removes the edge at @p edgeIndex, and creates a new one between vertices
-   * @p a and @p b, with the same index as the removed edge. All other edges and
-   * vertices keep their current indices.
+   * Moves the edge at @p edgeIndex so it joins vertices @p a and @p b, keeping
+   * its index (the endpoints are stored with the smaller index first). All
+   * other edges and vertices keep their current indices.
+   * @return true on success (including when the edge already joins @p a and
+   * @p b); false, leaving the graph unchanged, if @p edgeIndex, @p a or @p b
+   * is out of range, @p a == @p b, or @p a and @p b are already joined by a
+   * different edge.
    */
-  void editEdgeInPlace(size_t edgeIndex, size_t a, size_t b);
+  bool editEdgeInPlace(size_t edgeIndex, size_t a, size_t b);
+
+  /**
+   * Replaces the endpoints of every edge at once, keeping all edge indices.
+   * @p pairs must hold exactly edgeCount() pairs. Unlike calling
+   * editEdgeInPlace() repeatedly, only the final set of pairs is validated, so
+   * a permutation of the existing pairs is accepted.
+   * @return true on success; false, leaving the graph unchanged, if the size
+   * differs, a vertex is out of range, a pair joins a vertex to itself, or two
+   * pairs are the same edge.
+   */
+  bool editEdgesInPlace(const Array<std::pair<size_t, size_t>>& pairs);
 
   /**
    * Swaps two edges' indices, without affecting connectivity.
@@ -209,6 +224,12 @@ private:
   std::vector<std::vector<size_t>> m_adjacencyList;
   std::vector<std::vector<size_t>> m_edgeMap;
   Array<std::pair<size_t, size_t>> m_edgePairs;
+
+  /**
+   * Update the component bookkeeping for a new connection between @p a and
+   * @p b (merging their subgraphs as needed).
+   */
+  void joinSubgraphs(size_t a, size_t b) const;
 
   /** @return the (new or reused) index of a newly created empty subgraph. */
   int createNewSubgraph() const;
