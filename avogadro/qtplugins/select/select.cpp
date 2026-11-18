@@ -537,21 +537,28 @@ void Select::selectResidue()
       } // index makes sense
     } else {
       // standard residue name
-      for (const auto& residue : m_molecule->residues()) {
-        if (label == residue.residueName().c_str()) {
-          // select the atoms of the residue
-          for (auto atom : residue.residueAtoms()) {
-            Index i = atom.index();
-            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
-                                                        undoText);
-          }
-        } // residue matches label
-      } // for(residues)
+      selectResidueName(label);
       continue;
     } // 3-character labels
   }
 
   m_molecule->emitChanged(Molecule::Selection);
+}
+
+bool Select::selectResidueName(const QString& name)
+{
+  bool found = false;
+  for (const auto& residue : m_molecule->residues()) {
+    if (name != QString::fromStdString(residue.residueName()))
+      continue;
+    found = true;
+    for (const auto atom : residue.residueAtoms()) {
+      const auto i = atom.index();
+      m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                  tr("Select Residue"));
+    }
+  }
+  return found;
 }
 
 void Select::invertSelection()
@@ -645,6 +652,22 @@ void Select::registerSelectCommands()
     emitSelection();
   };
   commandRegistry().add(std::move(element));
+
+  QtGui::CommandSpec residue;
+  residue.name = "selectResidue";
+  residue.description = tr("Select atoms by residue name.");
+  residue.arguments = {
+    CommandArgumentSpec::string("residue", tr("Residue name.")).withRequired()
+  };
+  residue.handler = [this](const QtGui::CommandArguments& args) {
+    if (!selectResidueName(args.string("residue"))) {
+      emit commandFailed(tr("No matching residue."));
+      return;
+    }
+    m_molecule->emitChanged(Molecule::Selection);
+    emitSelection();
+  };
+  commandRegistry().add(std::move(residue));
 
   addCommand("selectBackbone",
              tr("Select all atoms that belong to amino acid backbones"),

@@ -60,6 +60,7 @@ private slots:
   void createLayerFromSelection();
 
 private:
+  bool selectResidueName(const QString& name);
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   QtGui::PeriodicTableView* m_elements;
