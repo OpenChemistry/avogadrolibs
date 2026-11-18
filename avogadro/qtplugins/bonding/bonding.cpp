@@ -77,6 +77,7 @@ void Bonding::registerCommands()
                        tr("Remove bonds from all or selected atoms."));
   emit registerCommand("createBonds",
                        tr("Create bonds between all or selected atoms."));
+  emit registerCommand("bondSelectedAtoms", tr("Bond selected atoms."));
   emit registerCommand("addBondOrders", tr("Perceive bond orders."));
 }
 
@@ -84,7 +85,8 @@ bool Bonding::handleCommand(const QString& command,
                             [[maybe_unused]] const QVariantMap& options)
 {
   static const QStringList knownCommands = { "removeBonds", "createBonds",
-                                             "addBondOrders" };
+                                             "addBondOrders",
+                                             "bondSelectedAtoms" };
 
   if (!knownCommands.contains(command))
     return false; // not one of our commands
@@ -94,6 +96,10 @@ bool Bonding::handleCommand(const QString& command,
     return true;
   }
 
+  if (command == "bondSelectedAtoms") {
+    createBond();
+    return true;
+  }
   if (command == "removeBonds") {
     clearBonds();
     return true;

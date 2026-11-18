@@ -75,12 +75,16 @@ namespace Avogadro::QtGui {
 void HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
 {
   const Array<unsigned char> atomicNums(molecule.atomicNumbers());
+  if (std::find(atomicNums.begin(), atomicNums.end(), 1) == atomicNums.end())
+    return;
+  molecule.undoStack().beginMacro(molecule.tr("Remove All Hydrogens"));
   size_t atomIndex = molecule.atomCount() - 1;
   for (auto it = atomicNums.rbegin(), itEnd = atomicNums.rend(); it != itEnd;
        ++it, --atomIndex) {
     if (*it == 1)
       molecule.removeAtom(atomIndex);
   }
+  molecule.undoStack().endMacro();
 }
 
 void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
@@ -96,6 +100,14 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
   bool doAdd(adjustment == Add || adjustment == AddAndRemove);
   bool doRemove(adjustment == Remove || adjustment == AddAndRemove);
 
+  bool undoStarted = false;
+  auto startUndo = [&]() {
+    if (!undoStarted) {
+      molecule.undoStack().beginMacro(molecule.tr("Adjust Hydrogens"));
+      undoStarted = true;
+    }
+  };
+
   // Limit to only the original atoms:
   const size_t numAtoms = molecule.atomCount();
 
@@ -109,6 +121,7 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
       newHPos.clear();
       generateNewHydrogenPositions(atom, hDiff, newHPos);
       for (auto& newHPo : newHPos) {
+        startUndo();
         RWAtom newH(molecule.addAtom(1));
         newH.setPosition3d(newHPo);
         molecule.addBond(atom, newH, 1);
@@ -123,6 +136,7 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
   // Remove dead hydrogens now. Remove them in reverse-index order to keep
   // indexing sane.
   if (doRemove && !badHIndices.empty()) {
+    startUndo();
     std::sort(badHIndices.begin(), badHIndices.end());
     auto newEnd(std::unique(badHIndices.begin(), badHIndices.end()));
     badHIndices.resize(std::distance(badHIndices.begin(), newEnd));
@@ -131,6 +145,8 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
       molecule.removeAtom(*it);
     }
   }
+  if (undoStarted)
+    molecule.undoStack().endMacro();
 }
 
 void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)
