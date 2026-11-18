@@ -50,6 +50,10 @@ TEST(HydrogenToolsTest, removeAllHydrogens)
 
   HydrogenTools::removeAllHydrogens(mol);
   EXPECT_EQ("C3"s, mol.molecule().formula());
+  mol.undoStack().undo();
+  EXPECT_EQ("C3H8"s, mol.molecule().formula());
+  mol.undoStack().redo();
+  EXPECT_EQ("C3"s, mol.molecule().formula());
 }
 
 TEST(HydrogenToolsTest, adjustHydrogens_C3H8)
