@@ -268,18 +268,15 @@ void PropertyMap::addEntry(Index entityCount)
 namespace {
 
 // The dense columns follow the rules of Column, with the unset sentinel of
-// the type as the fill. The one addition is that entries past the entity
-// count belong to no entity (the setters don't check the index), so a removal
-// drops them first and treats the column as full.
+// the type as the fill. Entries past the entity count belong to no entity
+// (the setters don't check the index); Column drops them on removal.
 
 template <typename T>
 void removeDense(std::map<std::string, Column<T>>& columns, Index index,
                  Index entityCount, const T& sentinel)
 {
-  for (auto& kv : columns) {
-    kv.second.trimTo(entityCount);
+  for (auto& kv : columns)
     kv.second.removeEntry(index, entityCount, sentinel);
-  }
 }
 
 template <typename T>
@@ -290,22 +287,14 @@ void swapDense(std::map<std::string, Column<T>>& columns, Index a, Index b,
     kv.second.swapEntries(a, b, sentinel);
 }
 
-// Mirrors removeDense(): a column longer than the count is sliced as if
-// trimmed. Columns with nothing to save are left out of @p out.
+// Columns with nothing to save are left out of @p out.
 template <typename T>
 void sliceDense(const std::map<std::string, Column<T>>& columns,
                 std::map<std::string, Column<T>>& out, Index index,
                 Index entityCount)
 {
   for (const auto& kv : columns) {
-    Column<T> saved;
-    if (kv.second.size() > entityCount) {
-      Column<T> trimmed = kv.second;
-      trimmed.trimTo(entityCount);
-      saved = trimmed.slice(index, entityCount);
-    } else {
-      saved = kv.second.slice(index, entityCount);
-    }
+    Column<T> saved = kv.second.slice(index, entityCount);
     if (!saved.empty())
       out[kv.first] = saved;
   }

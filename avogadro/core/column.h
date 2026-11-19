@@ -151,8 +151,10 @@ public:
 
   /**
    * Remove the entry of entity @p index by swap-and-pop. @p count is the
-   * number of entities before the removal. If the column covers every entity
-   * it reindexes exactly as the entities do. If it is shorter but reaches
+   * number of entities before the removal. Entries past @p count belong to no
+   * entity (array() can leave them), so they are dropped first. If the column
+   * then covers every entity it reindexes exactly as the entities do. If it is
+   * shorter but reaches
    * @p index, the entity moved into @p index (the former last one) has no
    * entry of its own, so the stale value is reset to fill(count - 1). If it
    * does not reach @p index nothing changes.
@@ -160,6 +162,7 @@ public:
   template <typename Fill>
   void removeEntry(Index index, Index count, Fill fill)
   {
+    trimTo(count);
     if (m_values.size() == count) {
       m_values.swapAndPop(index);
     } else if (index < m_values.size()) {
@@ -191,7 +194,8 @@ public:
 
   /**
    * Save what removeEntry(@p index, @p count, ...) is about to change, for
-   * restore(). Call it before removeEntry(). The result has 0 entries if the
+   * restore(). Call it before removeEntry(). Entries past @p count are
+   * ignored, as removeEntry() drops them. The result has 0 entries if the
    * column does not reach @p index; 1 (the value at @p index) if it is
    * shorter than @p count; 2 (that, then the value at count - 1, which the
    * removal moves into @p index) if it covers every entity.
@@ -199,10 +203,11 @@ public:
   Column slice(Index index, Index count) const
   {
     Column result;
-    if (index >= m_values.size())
+    const Index length = m_values.size() < count ? m_values.size() : count;
+    if (index >= length)
       return result;
     result.m_values.push_back(m_values[index]);
-    if (m_values.size() == count)
+    if (length == count)
       result.m_values.push_back(m_values[count - 1]);
     return result;
   }

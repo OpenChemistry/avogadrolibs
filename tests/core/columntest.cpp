@@ -250,3 +250,24 @@ TEST(ColumnTest, addEntryAppendsAndDropsStaleEntries)
   empty.addEntry(1, "z");
   EXPECT_EQ(toVector(empty), (std::vector<std::string>{ "z" }));
 }
+
+TEST(ColumnTest, removeEntryDropsEntriesPastTheCount)
+{
+  // Four entries for three entities: the extra one belongs to no entity.
+  auto column = makeLabels({ "a", "b", "c", "x" });
+  column.removeEntry(0, 3, "?");
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c", "b" }));
+}
+
+TEST(ColumnTest, sliceAndRestoreOnAnOverLongColumn)
+{
+  auto column = makeLabels({ "a", "b", "c", "x" });
+  const auto original = toVector(column);
+  const auto saved = column.slice(0, 3);
+  EXPECT_EQ(toVector(saved), (std::vector<std::string>{ "a", "c" }));
+  column.removeEntry(0, 3, "?");
+  column.restore(0, saved, 3);
+  // The entry past the count is gone; the rest is as it was.
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
+  EXPECT_EQ(original.size(), static_cast<size_t>(4));
+}
