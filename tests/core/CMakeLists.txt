@@ -21,6 +21,7 @@ set(tests
   Cube
   DihedralIterator
   Eigen
+  FrozenMaskColumn
   Element
   GaussianPrimitiveNormalization
   GaussianSet
@@ -36,6 +37,7 @@ set(tests
   NeighborPerceiver
   PropertyMap
   Residue
+  SelectionColumn
   RingPerceiver
   SecondaryStructure
   Utilities

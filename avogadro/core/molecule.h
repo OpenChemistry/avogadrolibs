@@ -16,10 +16,12 @@
 #include "bondorderperception.h"
 #include "constraint.h"
 #include "elements.h"
+#include "frozenmaskcolumn.h"
 #include "graph.h"
 #include "layer.h"
 #include "moleculeinfo.h"
 #include "propertymap.h"
+#include "selectioncolumn.h"
 #include "variantmap.h"
 #include "vector.h"
 
@@ -1314,7 +1316,7 @@ public:
    * 0.0 means the atom is frozen, 1.0 means the atom is not frozen.
    * (i.e., multiply this mask with gradients to freeze atoms)
    */
-  Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
+  Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask.storage(); }
   ///@} end of constraint methods
 
   /** @name Scan coordinates
@@ -1462,7 +1464,7 @@ protected:
   std::map<size_t, VibrationData> m_vibrations;
 
   // Array declaring whether atoms are selected or not.
-  std::vector<bool> m_selectedAtoms;
+  SelectionColumn m_selectedAtoms;
 
   // Shared between copies of the molecule; the non-const accessors detach a
   // shared element before handing it out (copy on write).
@@ -1480,7 +1482,7 @@ protected:
   unsigned short m_hallNumber = 0;
 
   std::vector<Core::Constraint> m_constraints;
-  Eigen::VectorXd m_frozenAtomMask;
+  FrozenMaskColumn m_frozenAtomMask;
 
 private:
   /**
@@ -1785,21 +1787,24 @@ inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 inline void Molecule::setAtomSelected(Index atomId, bool selected)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_selectedAtoms.size())
-      m_selectedAtoms.resize(atomCount(), false);
-    m_selectedAtoms[atomId] = selected;
+    auto& flags = m_selectedAtoms.storage();
+    if (atomId >= flags.size())
+      flags.resize(atomCount(), false);
+    flags[atomId] = selected;
   }
 }
 
 inline bool Molecule::atomSelected(Index atomId) const
 {
-  return atomId < m_selectedAtoms.size() ? m_selectedAtoms[atomId] : false;
+  return m_selectedAtoms.hasEntry(atomId) ? m_selectedAtoms.storage()[atomId]
+                                          : false;
 }
 
 inline bool Molecule::isSelectionEmpty() const
 {
-  for (Index i = 0; i < m_selectedAtoms.size(); ++i) {
-    if (m_selectedAtoms[i])
+  const auto& flags = m_selectedAtoms.storage();
+  for (Index i = 0; i < flags.size(); ++i) {
+    if (flags[i])
       return false;
   }
   return true;

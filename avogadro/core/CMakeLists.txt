@@ -52,6 +52,8 @@ avogadro_headers(Core
   bond.h
   bondstate.h
   conformerquantity.h
+  frozenmaskcolumn.h
+  selectioncolumn.h
   coordinateblockgenerator.h
   crystaltools.h
   cube.h

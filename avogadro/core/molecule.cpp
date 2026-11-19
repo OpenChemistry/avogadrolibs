@@ -291,8 +291,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
 
   m_vibrations = std::move(other.m_vibrations);
   other.m_vibrations.clear();
-  m_selectedAtoms = std::move(other.m_selectedAtoms);
-  other.m_selectedAtoms.clear();
+  m_selectedAtoms.takeFrom(other.m_selectedAtoms);
 
   m_meshes = std::move(other.m_meshes);
   other.m_meshes.clear();
@@ -312,9 +311,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_hallNumber = std::exchange(other.m_hallNumber, 0);
   m_constraints = std::move(other.m_constraints);
   other.m_constraints.clear();
-  // Eigen's move assignment swaps, so empty the source explicitly.
-  m_frozenAtomMask = std::move(other.m_frozenAtomMask);
-  other.m_frozenAtomMask.resize(0);
+  m_frozenAtomMask.takeFrom(other.m_frozenAtomMask);
 
   // Graph has no swap, and its defaulted moves copy its edge Array; resetting
   // the source afterwards leaves it empty and unshared.
@@ -564,61 +561,64 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
   if (atomId >= m_atomicNumbers.size())
     return;
 
-  Eigen::Index size = m_frozenAtomMask.rows();
+  auto& mask = m_frozenAtomMask.storage();
+  Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
-  if (m_frozenAtomMask.rows() != newSize)
-    m_frozenAtomMask.conservativeResize(newSize);
+  if (mask.rows() != newSize)
+    mask.conservativeResize(newSize);
 
-  if (m_frozenAtomMask.rows() > size)
-    for (Eigen::Index i = size; i < m_frozenAtomMask.rows(); ++i)
-      m_frozenAtomMask[i] = 1.0f;
+  if (mask.rows() > size)
+    for (Eigen::Index i = size; i < mask.rows(); ++i)
+      mask[i] = 1.0f;
 
   float value = frozen ? 0.0f : 1.0f;
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (base <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[base] = value;
-    m_frozenAtomMask[base + 1] = value;
-    m_frozenAtomMask[base + 2] = value;
+  if (base <= mask.rows() - 3) {
+    mask[base] = value;
+    mask[base + 1] = value;
+    mask[base + 2] = value;
   }
 }
 
 bool Molecule::frozenAtom(Index atomId) const
 {
+  const auto& mask = m_frozenAtomMask.storage();
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (base <= m_frozenAtomMask.rows() - 3) {
-    return (m_frozenAtomMask[base] == 0.0 &&
-            m_frozenAtomMask[base + 1] == 0.0 &&
-            m_frozenAtomMask[base + 2] == 0.0);
+  if (base <= mask.rows() - 3) {
+    return (mask[base] == 0.0 && mask[base + 1] == 0.0 &&
+            mask[base + 2] == 0.0);
   }
   return false;
 }
 
 bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 {
+  const auto& mask = m_frozenAtomMask.storage();
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (base <= m_frozenAtomMask.rows() - 3) {
-    return (m_frozenAtomMask[base + axis] == 0.0);
+  if (base <= mask.rows() - 3) {
+    return (mask[base + axis] == 0.0);
   }
   return false;
 }
 
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
-  Eigen::Index size = m_frozenAtomMask.rows();
+  auto& mask = m_frozenAtomMask.storage();
+  Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
-  if (m_frozenAtomMask.rows() != newSize)
-    m_frozenAtomMask.conservativeResize(newSize);
+  if (mask.rows() != newSize)
+    mask.conservativeResize(newSize);
 
-  if (m_frozenAtomMask.rows() > size)
-    for (Eigen::Index i = size; i < m_frozenAtomMask.rows(); ++i)
-      m_frozenAtomMask[i] = 1.0f;
+  if (mask.rows() > size)
+    for (Eigen::Index i = size; i < mask.rows(); ++i)
+      mask[i] = 1.0f;
 
   float value = frozen ? 0.0f : 1.0f;
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (axis >= 0 && axis < 3 && base <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[base + axis] = value;
+  if (axis >= 0 && axis < 3 && base <= mask.rows() - 3) {
+    mask[base + axis] = value;
   }
 }
 
@@ -963,62 +963,6 @@ void removeAtomEntryFrames(Array<Array<T>>& frames, Index index,
   removeAtomEntryFrames(frames, index, atomCount, [](Index) { return T(); });
 }
 
-// std::vector<bool>, one entry per atom. std::swap() on the vector<bool>
-// proxy reference is a well-known trap, so swap the two values explicitly.
-void swapAtomEntry(std::vector<bool>& values, Index a, Index b, Index max)
-{
-  // Same three cases as the Array<T> overload above.
-  const Index lo = a < b ? a : b;
-  if (values.size() <= lo)
-    return;
-  if (values.size() <= max)
-    values.resize(max + 1, false);
-  bool temp = values[a];
-  values[a] = values[b];
-  values[b] = temp;
-}
-
-// Eigen::VectorXd storing 3 entries (x, y, z) per atom, as used by
-// m_frozenAtomMask. Same three-way split as swapAtomEntry(): rows() is
-// tracked in atom units (rows()/3) since each atom occupies 3 rows.
-void swapAtomMaskEntry(Eigen::VectorXd& values, Index a, Index b, Index max)
-{
-  auto ea = static_cast<Eigen::Index>(a);
-  auto eb = static_cast<Eigen::Index>(b);
-  auto lo = static_cast<Eigen::Index>(a < b ? a : b);
-  if (values.rows() >= static_cast<Eigen::Index>(3 * (max + 1))) {
-    for (Eigen::Index i = 0; i < 3; ++i)
-      std::swap(values[3 * ea + i], values[3 * eb + i]);
-  } else if (values.rows() > 3 * lo) {
-    // The atom at lo has a mask entry; the one at hi does not yet. Grow so
-    // the mask travels with its atom, filling the new rows with "not
-    // frozen" -- the same default setFrozenAtom() gives a newly-covered
-    // atom -- then swap.
-    const Eigen::Index oldRows = values.rows();
-    values.conservativeResize(static_cast<Eigen::Index>(3 * (max + 1)));
-    for (Eigen::Index i = oldRows; i < values.rows(); ++i)
-      values[i] = 1.0;
-    for (Eigen::Index i = 0; i < 3; ++i)
-      std::swap(values[3 * ea + i], values[3 * eb + i]);
-  }
-}
-
-void removeAtomMaskEntry(Eigen::VectorXd& values, Index index, Index atomCount)
-{
-  auto eIndex = static_cast<Eigen::Index>(index);
-  if (values.rows() == static_cast<Eigen::Index>(3 * atomCount)) {
-    Eigen::Index last = values.rows() - 3;
-    for (Eigen::Index i = 0; i < 3; ++i)
-      values[3 * eIndex + i] = values[last + i];
-    values.conservativeResize(values.rows() - 3);
-  } else if (values.rows() > 3 * eIndex) {
-    // The atom swapped into index (the former last atom) has no mask entry
-    // of its own, i.e. it is not frozen -- see the growth case above.
-    for (Eigen::Index i = 0; i < 3; ++i)
-      values[3 * eIndex + i] = 1.0;
-  }
-}
-
 // Normal mode displacements, keyed by conformer. Each conformer holds one
 // Array<Vector3> per mode, and those inner arrays are indexed by atom.
 void swapAtomEntryVibrations(std::map<size_t, Molecule::VibrationData>& vibs,
@@ -1132,13 +1076,13 @@ void Molecule::swapAtom(Index a, Index b)
   swapAtomEntry(m_colors, a, b, max, [this](Index i) {
     return Vector3ub(Elements::color(m_atomicNumbers[i]));
   });
-  swapAtomEntry(m_selectedAtoms, a, b, max);
+  m_selectedAtoms.swapEntries(a, b);
   swapAtomEntryFrames(m_coordinates3d, a, b, max,
                       [](Index) { return Vector3::Zero(); });
   swapAtomEntryFrames(m_velocities, a, b, max,
                       [](Index) { return Vector3::Zero(); });
   swapAtomEntryVibrations(m_vibrations, a, b, max);
-  swapAtomMaskEntry(m_frozenAtomMask, a, b, max);
+  m_frozenAtomMask.swapEntries(a, b);
   swapAtomEntry(m_partialCharges, a, b, max);
 
   // Allow Argument Dependent Lookup for swap
@@ -1208,18 +1152,9 @@ bool Molecule::removeAtom(Index index)
   });
   removeAtomEntryFrames(m_coordinates3d, index, atomCount(),
                         [](Index) { return Vector3::Zero(); });
-  removeAtomMaskEntry(m_frozenAtomMask, index, atomCount());
+  m_frozenAtomMask.removeEntry(index, atomCount());
 
-  if (m_selectedAtoms.size() == atomCount()) {
-    // swap and pop on std::vector<bool>
-    if (index != m_selectedAtoms.size() - 1) {
-      m_selectedAtoms[index] = m_selectedAtoms.back();
-    }
-    m_selectedAtoms.pop_back();
-  } else if (index < m_selectedAtoms.size()) {
-    // The former last atom has no entry, so it is not selected.
-    m_selectedAtoms[index] = false;
-  }
+  m_selectedAtoms.removeEntry(index, atomCount());
 
   // Constraints and scan coordinates name atoms by index without being
   // atom-indexed themselves, so neither the helpers above nor atomCount()
@@ -1304,7 +1239,7 @@ void Molecule::clearAtoms()
   m_colors.clear();
   m_selectedAtoms.clear();
   m_coordinates3d.clear();
-  m_frozenAtomMask.resize(0);
+  m_frozenAtomMask.clear();
 
   // With no atoms left there is nothing for any calculated result to be about,
   // nor for a scan coordinate to name.
