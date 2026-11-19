@@ -44,8 +44,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -75,6 +73,9 @@ private:
 
   QDialog* m_dialog;
   Ui::BondingDialog* m_ui;
+
+  /// Add every scripting command to the command registry.
+  void registerBondingCommands();
 };
 
 } // namespace Avogadro::QtPlugins
