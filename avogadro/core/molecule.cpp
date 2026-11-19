@@ -238,23 +238,6 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
   return *this;
 }
 
-namespace {
-
-// Give @p to the contents of @p from and leave @p from empty and unshared.
-// Core::Array has no move operations, and copying one would either share its
-// container with the source (copy construction) or deep-copy it (assignment).
-template <typename T>
-void takeArray(Array<T>& to, Array<T>& from)
-{
-  Array<T> empty;
-  to.swap(from);
-  // The source takes the fresh container; this one's old data is released
-  // when empty goes out of scope.
-  from.swap(empty);
-}
-
-} // namespace
-
 void Molecule::repointResidueAtoms(const Molecule& source)
 {
   // Residues sharing their container with the source detach on this first
@@ -292,19 +275,19 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_elements = other.m_elements;
   other.m_elements.reset();
 
-  takeArray(m_positions2d, other.m_positions2d);
-  takeArray(m_positions3d, other.m_positions3d);
-  takeArray(m_atomLabels, other.m_atomLabels);
-  takeArray(m_residueLabels, other.m_residueLabels);
-  takeArray(m_coordinates3d, other.m_coordinates3d);
+  m_positions2d.takeFrom(other.m_positions2d);
+  m_positions3d.takeFrom(other.m_positions3d);
+  m_atomLabels.takeFrom(other.m_atomLabels);
+  m_residueLabels.takeFrom(other.m_residueLabels);
+  m_coordinates3d.takeFrom(other.m_coordinates3d);
   m_coordinate3dIndex = std::exchange(other.m_coordinate3dIndex, 0);
-  takeArray(m_velocities, other.m_velocities);
-  takeArray(m_timesteps, other.m_timesteps);
-  takeArray(m_hybridizations, other.m_hybridizations);
-  takeArray(m_formalCharges, other.m_formalCharges);
-  takeArray(m_isotopes, other.m_isotopes);
-  takeArray(m_forceVectors, other.m_forceVectors);
-  takeArray(m_colors, other.m_colors);
+  m_velocities.takeFrom(other.m_velocities);
+  m_timesteps.takeFrom(other.m_timesteps);
+  m_hybridizations.takeFrom(other.m_hybridizations);
+  m_formalCharges.takeFrom(other.m_formalCharges);
+  m_isotopes.takeFrom(other.m_isotopes);
+  m_forceVectors.takeFrom(other.m_forceVectors);
+  m_colors.takeFrom(other.m_colors);
 
   m_vibrations = std::move(other.m_vibrations);
   other.m_vibrations.clear();
@@ -324,7 +307,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
     m_basisSet->setMolecule(this);
   m_unitCell = std::move(other.m_unitCell);
 
-  takeArray(m_residues, other.m_residues);
+  m_residues.takeFrom(other.m_residues);
   repointResidueAtoms(other);
   m_hallNumber = std::exchange(other.m_hallNumber, 0);
   m_constraints = std::move(other.m_constraints);
@@ -338,7 +321,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_graph = std::move(other.m_graph);
   other.m_graph = Graph();
   m_bondState.takeFrom(other.m_bondState);
-  takeArray(m_atomicNumbers, other.m_atomicNumbers);
+  m_atomicNumbers.takeFrom(other.m_atomicNumbers);
 }
 
 Molecule::~Molecule()

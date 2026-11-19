@@ -155,12 +155,7 @@ public:
    * Give @p other's data to this column and leave @p other empty and
    * unshared, as the move operations of Molecule need.
    */
-  void takeFrom(Column& other)
-  {
-    Array<T> empty;
-    m_values.swap(other.m_values);
-    other.m_values.swap(empty);
-  }
+  void takeFrom(Column& other) { m_values.takeFrom(other.m_values); }
 
   /**
    * Save what removeEntry(@p index, @p count, ...) is about to change, for

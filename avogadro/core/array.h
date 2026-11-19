@@ -356,6 +356,24 @@ public:
   }
 
   /**
+   * Take @p other's contents, leaving @p other empty and not sharing storage
+   * with this array. Array has no move operations: copy construction would
+   * share the container with @p other (so it would not be empty or
+   * independent), and copy assignment deep-copies. This is the cheap
+   * equivalent of a move.
+   */
+  void takeFrom(Array& other)
+  {
+    if (this == &other)
+      return;
+    Array empty;
+    swap(other);
+    // other now holds this array's old data; give it the fresh container, and
+    // the old data is released when empty goes out of scope.
+    other.swap(empty);
+  }
+
+  /**
    * @param index array position to delete
    * if the index is valid swap it with the last position and pop back.
    * This function does not preserve the elements order.
