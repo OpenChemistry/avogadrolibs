@@ -148,6 +148,17 @@ public:
 
   void removeEntry(Index index, Index count) { removeEntry(index, count, T()); }
 
+  /**
+   * Drop every entry for an entity at or past @p count. A Column never holds
+   * such entries through its own functions, but a caller that writes to
+   * array() directly can leave them.
+   */
+  void trimTo(Index count)
+  {
+    if (m_values.size() > count)
+      m_values.resize(count);
+  }
+
   /** Remove every entry. */
   void clear() { m_values.clear(); }
 

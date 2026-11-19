@@ -10,6 +10,7 @@
 
 #include "avogadrocore.h"
 #include "array.h"
+#include "column.h"
 #include "matrix.h"
 
 #include <climits>
@@ -206,9 +207,10 @@ public:
   bool empty() const;
 
 private:
-  std::map<std::string, Array<double>> m_doubles;
-  std::map<std::string, Array<int>> m_ints;
-  std::map<std::string, Array<std::string>> m_strings;
+  // Dense columns; the unset sentinel of each type is the Column fill.
+  std::map<std::string, Column<double>> m_doubles;
+  std::map<std::string, Column<int>> m_ints;
+  std::map<std::string, Column<std::string>> m_strings;
   std::map<std::string, std::unordered_map<Index, MatrixX>> m_matrices;
 };
 
