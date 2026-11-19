@@ -24,17 +24,33 @@
 // tests make the arrays ragged on purpose by setting a property and then
 // adding atoms without setting it.
 //
+// Constraints, scan coordinates and residues name atoms by index without being
+// atom-indexed themselves, so they are modelled by atom identity as well (see
+// Reference and ResidueRecord). Constraints and scan coordinates follow the
+// rules in remapAtomReferences(): swapAtom() relabels them, removeAtom() drops
+// any that names the removed atom and moves the former last atom's references
+// into the hole, clearAtoms() drops them all. Residues repoint on swapAtom(),
+// copy and move, but removeAtom() does NOT repoint them today, which the plan
+// (plans/molecule-refactor-plan.md, section 4.6) schedules to become "remove
+// the whole residue". Rather than encode the stale indices as correct, the
+// model marks a residue unverified once a removal touches it and stops checking
+// its membership.
+//
 // Not modelled, on purpose (see the report accompanying this test):
-//   residues, basis sets (atom centres), unit cells, meshes, cubes, spectra,
-//   constraints and scan coordinates, layer ids as such (only each atom's
-//   layer), conformer properties, the custom element map.
+//   basis sets (atom centres), unit cells, meshes, cubes, spectra, layer ids
+//   as such (only each atom's layer), conformer properties, the custom
+//   element map, per-residue colors and the residue label / property arrays.
 
+#include <avogadro/core/atom.h>
+#include <avogadro/core/constraint.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/propertymap.h>
+#include <avogadro/core/residue.h>
 #include <avogadro/core/vector.h>
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <map>
 #include <optional>
@@ -97,6 +113,36 @@ struct Bond
   std::optional<int> intProperty;
 };
 
+// A constraint or scan coordinate: up to four atom identities, the unused ones
+// MaxIndex. Scan coordinates carry no value, so theirs stays zero.
+struct Reference
+{
+  std::array<Index, 4> atoms = { Avogadro::MaxIndex, Avogadro::MaxIndex,
+                                 Avogadro::MaxIndex, Avogadro::MaxIndex };
+  double value = 0.0;
+
+  bool names(Index atomId) const
+  {
+    return std::find(atoms.begin(), atoms.end(), atomId) != atoms.end();
+  }
+};
+
+// A residue: its own fields and which atom each atom name refers to, by
+// identity.
+struct ResidueRecord
+{
+  std::string name;
+  Index number = 0;
+  char chain = 'A';
+  bool heterogen = false;
+  Avogadro::Core::Residue::SecondaryStructure secondary =
+    Avogadro::Core::Residue::undefined;
+  std::map<std::string, Index> members; // atom name -> atom identity
+  // False once the library's removeAtom() has left this residue's proxies
+  // stale (see the header comment); its membership is then not checked.
+  bool verified = true;
+};
+
 inline std::string str(const Vector3& v)
 {
   std::ostringstream out;
@@ -156,6 +202,9 @@ public:
   size_t velocitySetCount = 0;
   size_t modeCount = 0;
   std::set<std::string> chargeTypes;
+  std::vector<Reference> constraints;
+  std::vector<Reference> scanCoordinates;
+  std::vector<ResidueRecord> residues;
 
   Index atomCount() const { return static_cast<Index>(atoms.size()); }
   Index bondCount() const { return static_cast<Index>(bonds.size()); }
@@ -202,6 +251,24 @@ public:
   {
     clearCalculated();
     const Index id = atoms[index].id;
+    // The atom that moves into the hole, whose references must follow it. By
+    // identity they do so without any work; only the residues need care.
+    const Index movedId = atoms.back().id;
+    // An entry that loses an atom is dropped, not shortened.
+    auto loses = [id](const Reference& r) { return r.names(id); };
+    constraints.erase(
+      std::remove_if(constraints.begin(), constraints.end(), loses),
+      constraints.end());
+    scanCoordinates.erase(
+      std::remove_if(scanCoordinates.begin(), scanCoordinates.end(), loses),
+      scanCoordinates.end());
+    // Plan section 4.6: removeAtom() does not repoint residue proxies today.
+    for (auto& residue : residues) {
+      for (const auto& member : residue.members) {
+        if (member.second == id || member.second == movedId)
+          residue.verified = false;
+      }
+    }
     bonds.erase(std::remove_if(bonds.begin(), bonds.end(),
                                [id](const Bond& b) {
                                  return b.atomA == id || b.atomB == id;
@@ -218,6 +285,153 @@ public:
   {
     if (a != b)
       std::swap(atoms[a], atoms[b]);
+  }
+
+  // Molecule::clearAtoms(): no atoms, bonds, coordinate sets, calculated
+  // results, constraints, scan coordinates or residues are left.
+  void clearAtoms()
+  {
+    clearCalculated();
+    atoms.clear();
+    bonds.clear();
+    frameCount = 0;
+    constraints.clear();
+    scanCoordinates.clear();
+    residues.clear();
+  }
+
+  // --- constraints, scan coordinates, residues (arguments are atom indices,
+  // MaxIndex for "none") -------------------------------------------------
+
+  Reference reference(const std::array<Index, 4>& indices,
+                      double value = 0.0) const
+  {
+    Reference r;
+    r.value = value;
+    for (size_t k = 0; k < 4; ++k)
+      r.atoms[k] = indices[k] == Avogadro::MaxIndex ? Avogadro::MaxIndex
+                                                    : atoms[indices[k]].id;
+    return r;
+  }
+
+  // The current indices of a reference's atoms.
+  std::array<Index, 4> indicesOf(const Reference& r) const
+  {
+    std::array<Index, 4> out;
+    for (size_t k = 0; k < 4; ++k)
+      out[k] = indexOf(r.atoms[k]);
+    return out;
+  }
+
+  void addConstraint(double value, const std::array<Index, 4>& indices)
+  {
+    constraints.push_back(reference(indices, value));
+  }
+
+  // Constraint::matches(): the same atoms in the same order, or in the
+  // reverse order with the unused ones kept at the end. Only plain distance,
+  // angle and torsion constraints are generated, so there is no out-of-plane
+  // exception.
+  void removeConstraint(const std::array<Index, 4>& indices)
+  {
+    const Reference wanted = reference(indices);
+    Reference reversed;
+    size_t used = 0;
+    while (used < 4 && wanted.atoms[used] != Avogadro::MaxIndex)
+      ++used;
+    for (size_t k = 0; k < used; ++k)
+      reversed.atoms[k] = wanted.atoms[used - 1 - k];
+    constraints.erase(std::remove_if(constraints.begin(), constraints.end(),
+                                     [&](const Reference& r) {
+                                       return r.atoms == wanted.atoms ||
+                                              r.atoms == reversed.atoms;
+                                     }),
+                      constraints.end());
+  }
+
+  void setScanCoordinates(const std::vector<std::array<Index, 4>>& coordinates)
+  {
+    scanCoordinates.clear();
+    for (const auto& c : coordinates)
+      scanCoordinates.push_back(reference(c));
+  }
+
+  // Molecule::addScanCoordinate() skips one that is already there.
+  void addScanCoordinate(const std::array<Index, 4>& indices)
+  {
+    const Reference wanted = reference(indices);
+    for (const auto& r : scanCoordinates)
+      if (r.atoms == wanted.atoms)
+        return;
+    scanCoordinates.push_back(wanted);
+  }
+
+  void addResidue(const ResidueRecord& residue) { residues.push_back(residue); }
+
+  // For tests where the molecule itself decides what is left (RWMolecule undo
+  // and redo drop constraints and leave residue proxies stale, and nothing
+  // puts them back): take the constraints, scan coordinates and residue
+  // membership the molecule has now, naming atoms by this model's identities.
+  // Residues that @p previous had given up on stay unverified, as do ones
+  // whose proxies are out of range. Returns an error if a constraint names an
+  // atom that does not exist.
+  std::string adoptReferences(const Avogadro::Core::Molecule& mol,
+                              const Model& previous)
+  {
+    auto convert = [this](const Avogadro::Core::Constraint& c, Reference& out,
+                          std::string& error) {
+      const Index in[4] = { c.aIndex(), c.bIndex(), c.cIndex(), c.dIndex() };
+      for (size_t k = 0; k < 4; ++k) {
+        if (in[k] == Avogadro::MaxIndex) {
+          out.atoms[k] = Avogadro::MaxIndex;
+        } else if (in[k] >= atomCount()) {
+          error = "a constraint or scan coordinate names atom " +
+                  std::to_string(in[k]) + ", which does not exist";
+          return;
+        } else {
+          out.atoms[k] = atoms[in[k]].id;
+        }
+      }
+      out.value = c.value();
+    };
+    std::string error;
+    constraints.clear();
+    for (const auto& c : mol.constraints()) {
+      Reference r;
+      convert(c, r, error);
+      if (!error.empty())
+        return error;
+      constraints.push_back(r);
+    }
+    scanCoordinates.clear();
+    for (const auto& c : mol.scanCoordinates()) {
+      Reference r;
+      convert(c, r, error);
+      if (!error.empty())
+        return error;
+      r.value = 0.0;
+      scanCoordinates.push_back(r);
+    }
+    residues.clear();
+    for (Index i = 0; i < mol.residueCount(); ++i) {
+      const auto& residue = mol.residue(i);
+      ResidueRecord record;
+      record.name = residue.residueName();
+      record.number = residue.residueId();
+      record.chain = residue.chainId();
+      record.heterogen = residue.isHeterogen();
+      record.secondary = residue.secondaryStructure();
+      record.verified =
+        i >= previous.residues.size() || previous.residues[i].verified;
+      for (const auto& atom : residue.residueAtoms()) {
+        if (atom.index() >= atomCount())
+          record.verified = false;
+        else
+          record.members[residue.atomName(atom)] = atoms[atom.index()].id;
+      }
+      residues.push_back(record);
+    }
+    return std::string();
   }
 
   void addBond(Index a, Index b, unsigned char order)
@@ -386,9 +600,13 @@ private:
 // @p checkCalculated says whether to compare the calculated results (forces,
 // partial charges, velocities, normal modes), which the library drops when
 // the structure changes and which undo therefore cannot be expected to bring
-// back.
+// back. @p checkReferences says whether to compare constraints, scan
+// coordinates and residues, which undo and redo do not restore (removing an
+// atom drops the constraints that name it, and undoing the removal does not
+// bring them back).
 inline std::string verify(const Avogadro::Core::Molecule& mol,
-                          const Model& model, bool checkCalculated = true)
+                          const Model& model, bool checkCalculated = true,
+                          bool checkReferences = true)
 {
   using Avogadro::Core::Elements;
   std::ostringstream out;
@@ -606,6 +824,83 @@ inline std::string verify(const Avogadro::Core::Molecule& mol,
 #undef SHADOW_EXPECT_EQ
 #undef SHADOW_NUM
 #undef SHADOW_INT
+
+  if (checkReferences) {
+    auto compare = [&](const char* what, const std::vector<Reference>& expected,
+                       const std::vector<Avogadro::Core::Constraint>& actual,
+                       bool withValue) -> std::string {
+      std::ostringstream err;
+      if (expected.size() != actual.size()) {
+        err << what << " count: expected " << expected.size() << " got "
+            << actual.size();
+        return err.str();
+      }
+      for (size_t i = 0; i < expected.size(); ++i) {
+        const auto want = model.indicesOf(expected[i]);
+        const std::array<Index, 4> got = { actual[i].aIndex(),
+                                           actual[i].bIndex(),
+                                           actual[i].cIndex(),
+                                           actual[i].dIndex() };
+        if (want != got) {
+          err << what << " " << i << ": expected atom indices (" << want[0]
+              << ", " << want[1] << ", " << want[2] << ", " << want[3]
+              << ") got (" << got[0] << ", " << got[1] << ", " << got[2] << ", "
+              << got[3] << ")";
+          return err.str();
+        }
+        if (withValue && actual[i].value() != expected[i].value) {
+          err << what << " " << i << " value: expected " << expected[i].value
+              << " got " << actual[i].value();
+          return err.str();
+        }
+      }
+      return std::string();
+    };
+    std::string error =
+      compare("constraint", model.constraints, mol.constraints(), true);
+    if (error.empty())
+      error = compare("scan coordinate", model.scanCoordinates,
+                      mol.scanCoordinates(), false);
+    if (!error.empty())
+      return error;
+
+    if (mol.residueCount() != model.residues.size()) {
+      out << "residueCount: expected " << model.residues.size() << " got "
+          << mol.residueCount();
+      return out.str();
+    }
+    for (size_t r = 0; r < model.residues.size(); ++r) {
+      const ResidueRecord& want = model.residues[r];
+      if (!want.verified)
+        continue; // stale proxies, see the header comment
+      const auto& residue = mol.residue(static_cast<Index>(r));
+      out << "residue " << r << " ";
+      if (residue.residueName() != want.name ||
+          residue.residueId() != want.number ||
+          residue.chainId() != want.chain ||
+          residue.isHeterogen() != want.heterogen ||
+          residue.secondaryStructure() != want.secondary) {
+        out << "fields differ";
+        return out.str();
+      }
+      if (residue.residueAtoms().size() != want.members.size()) {
+        out << "has " << residue.residueAtoms().size() << " atoms, expected "
+            << want.members.size();
+        return out.str();
+      }
+      for (const auto& member : want.members) {
+        const Index index = model.indexOf(member.second);
+        const auto proxy = residue.atomByName(member.first);
+        if (proxy.molecule() != &mol || proxy.index() != index) {
+          out << "atom '" << member.first << "': expected index " << index
+              << " in this molecule, got index " << proxy.index()
+              << (proxy.molecule() == &mol ? "" : " in another molecule");
+          return out.str();
+        }
+      }
+      out.str(std::string());
+    }
+  }
   return std::string();
 }
 

@@ -3241,6 +3241,11 @@ private:
     ActivateCoordinateSet,
     SetVelocities,
     SetVibrations,
+    AddConstraint,
+    RemoveConstraint,
+    SetScanCoordinates,
+    AddResidue,
+    ClearAtoms,
     CopyConstruct,
     CopyAssign,
     MoveConstruct,
@@ -3286,6 +3291,11 @@ private:
       "setCoordinate3d(activate)",
       "setVelocities",
       "setVibrationData",
+      "addConstraint",
+      "removeConstraint",
+      "setScanCoordinates",
+      "addResidue",
+      "clearAtoms",
       "copy construct",
       "copy assign",
       "move construct",
@@ -3314,6 +3324,10 @@ private:
       case SetVibrations:
       case SetForce:
       case SetPartialCharges:
+      case AddConstraint:
+      case RemoveConstraint:
+      case SetScanCoordinates:
+      case AddResidue:
         return 2;
       case AddCoordinateSet:
       case ReplaceCoordinateSet:
@@ -3323,6 +3337,7 @@ private:
       case ClearBonds:
       case SetAllBondOrders:
       case SetAllBondLabels:
+      case ClearAtoms:
         return 1;
       case CopyConstruct:
       case CopyAssign:
@@ -3345,6 +3360,22 @@ private:
   }
 
   bool chance(int percent) { return pickInt(0, 99) < percent; }
+
+  // @p count distinct atom indices (between @p fewest and @p most of them),
+  // the rest MaxIndex, as a constraint or scan coordinate names them.
+  std::array<Index, 4> pickAtoms(Index n, int fewest, int most)
+  {
+    std::array<Index, 4> atoms = { Avogadro::MaxIndex, Avogadro::MaxIndex,
+                                   Avogadro::MaxIndex, Avogadro::MaxIndex };
+    const int count = std::min<int>(pickInt(fewest, most), static_cast<int>(n));
+    for (int k = 0; k < count; ++k) {
+      Index index = pickIndex(n);
+      while (std::find(atoms.begin(), atoms.end(), index) != atoms.end())
+        index = (index + 1) % n;
+      atoms[static_cast<size_t>(k)] = index;
+    }
+    return atoms;
+  }
 
   // Small integers keep the values exactly comparable and easy to read.
   Vector3 pickVector()
@@ -3386,6 +3417,18 @@ private:
     junk->setBondLabel(1, "junkbond");
     junk->setCoordinate3d(pickCoordinates(4), 0);
     junk->atomProperties().setDouble(ShadowModel::kAtomDoubleProperty, 1, 9.0);
+    // Constraints, scan coordinates and residues that an assignment must
+    // replace rather than add to.
+    junk->addConstraint(1.5, 0, 1);
+    junk->addConstraint(90.0, 1, 2, 3);
+    junk->setScanCoordinates({ Avogadro::Core::Constraint(2, 3) });
+    std::string residueName = "JNK";
+    Index residueNumber = 7;
+    char chain = 'Z';
+    Avogadro::Core::Residue& residue =
+      junk->addResidue(residueName, residueNumber, chain);
+    residue.addResidueAtom("J0", junk->atom(2));
+    residue.addResidueAtom("J1", junk->atom(3));
     return junk;
   }
 
@@ -3487,6 +3530,15 @@ bool ShadowRunner::step(int stepNumber)
   if (op == SwapBond && bonds < 2)
     op = AddBond;
   if (op == AddBond && n < 2)
+    op = AddAtom;
+  // Keep the lists short so that removals keep hitting them.
+  if (op == AddConstraint && model.constraints.size() >= 6)
+    op = RemoveConstraint;
+  if (op == RemoveConstraint && model.constraints.empty())
+    op = AddConstraint;
+  if (op == AddResidue && model.residues.size() >= 4)
+    op = SwapAtom;
+  if ((op == AddConstraint || op == SetScanCoordinates) && n < 2)
     op = AddAtom;
   if (op == ActivateCoordinateSet && model.frameCount == 0)
     op = AddCoordinateSet;
@@ -3590,6 +3642,83 @@ bool ShadowRunner::step(int stepNumber)
     // setBondPair() is not here: Graph::editEdgeInPlace() corrupts the edge
     // lists (the loops that drop the old endpoints' entries pop the wrong
     // ones), after which removeAtom() never finishes.
+    case AddConstraint: {
+      const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
+      const double value = pickInt(1, 180);
+      mol.addConstraint(value, atoms[0], atoms[1], atoms[2], atoms[3]);
+      model.addConstraint(value, atoms);
+      break;
+    }
+    case RemoveConstraint: {
+      // Usually one that exists, named in either direction; sometimes a pair
+      // that probably does not.
+      std::array<Index, 4> atoms = pickAtoms(n, 2, 2);
+      if (chance(85)) {
+        const auto& r = model.constraints[pickIndex(
+          static_cast<Index>(model.constraints.size()))];
+        atoms = model.indicesOf(r);
+        if (chance(50)) {
+          size_t used = 0;
+          while (used < 4 && atoms[used] != Avogadro::MaxIndex)
+            ++used;
+          std::reverse(atoms.begin(), atoms.begin() + used);
+        }
+      }
+      mol.removeConstraint(atoms[0], atoms[1], atoms[2], atoms[3]);
+      model.removeConstraint(atoms);
+      break;
+    }
+    case SetScanCoordinates: {
+      if (chance(30)) {
+        const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
+        mol.addScanCoordinate(
+          Avogadro::Core::Constraint(atoms[0], atoms[1], atoms[2], atoms[3]));
+        model.addScanCoordinate(atoms);
+        break;
+      }
+      std::vector<std::array<Index, 4>> coordinates;
+      std::vector<Avogadro::Core::Constraint> constraints;
+      const int count = pickInt(0, 3);
+      for (int i = 0; i < count; ++i) {
+        const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
+        coordinates.push_back(atoms);
+        constraints.emplace_back(atoms[0], atoms[1], atoms[2], atoms[3]);
+      }
+      mol.setScanCoordinates(constraints);
+      model.setScanCoordinates(coordinates);
+      break;
+    }
+    case AddResidue: {
+      std::string name = "R" + std::to_string(m_step);
+      Index number = static_cast<Index>(pickInt(1, 99));
+      char chain = static_cast<char>('A' + pickInt(0, 2));
+      Avogadro::Core::Residue& residue = mol.addResidue(name, number, chain);
+      ShadowModel::ResidueRecord record;
+      record.name = name;
+      record.number = number;
+      record.chain = chain;
+      record.heterogen = chance(50);
+      record.secondary = chance(50) ? Avogadro::Core::Residue::alphaHelix
+                                    : Avogadro::Core::Residue::coil;
+      residue.setHeterogen(record.heterogen);
+      residue.setSecondaryStructure(record.secondary);
+      // A few distinct atoms, each under its own name; an atom may be in
+      // several residues.
+      const std::array<Index, 4> chosen = pickAtoms(n, 1, 4);
+      for (size_t i = 0; i < chosen.size() && chosen[i] != Avogadro::MaxIndex;
+           ++i) {
+        const std::string atomName = "A" + std::to_string(i);
+        residue.addResidueAtom(atomName, mol.atom(chosen[i]));
+        record.members[atomName] = model.atoms[chosen[i]].id;
+      }
+      model.addResidue(record);
+      break;
+    }
+    case ClearAtoms: {
+      mol.clearAtoms();
+      model.clearAtoms();
+      break;
+    }
     case ClearBonds: {
       mol.clearBonds();
       model.clearBonds();
