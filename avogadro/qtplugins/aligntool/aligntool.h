@@ -68,12 +68,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  /**
-   * Called by the app to tell the tool to register commands.
-   * If the tool has commands, it should emit the registerCommand signals.
-   */
-  void registerCommands() override;
-
 public Q_SLOTS:
   void axisChanged(int axis);
   void alignChanged(int align);
@@ -89,6 +83,9 @@ private:
   int m_alignType;
 
   mutable QWidget* m_toolWidget;
+
+  /// Add every scripting command to the command registry.
+  void registerAlignToolCommands();
 
 private Q_SLOTS:
   void toolWidgetDestroyed();

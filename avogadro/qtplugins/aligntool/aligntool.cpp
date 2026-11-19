@@ -34,6 +34,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 
+#include <avogadro/qtgui/commandregistry.h>
+
 using Avogadro::Core::contrastColor;
 using Avogadro::Core::Elements;
 using Avogadro::Rendering::GeometryNode;
@@ -48,6 +50,8 @@ AlignTool::AlignTool(QObject* parent_)
     m_molecule(nullptr), m_renderer(nullptr), m_axis(0), m_alignType(0),
     m_toolWidget(nullptr)
 {
+  registerAlignToolCommands();
+
   m_activateAction->setText(tr("Align"));
   m_activateAction->setToolTip(
     tr("Align Molecules\n\n"
@@ -303,88 +307,93 @@ void AlignTool::draw(Rendering::GroupNode& node)
   }
 }
 
-void AlignTool::registerCommands()
+void AlignTool::registerAlignToolCommands()
 {
-  emit registerCommand("centerAtom", tr("Center the atom at the origin."));
-  emit registerCommand(
-    "alignAtom",
-    tr("Rotate the molecule to align the atom to the specified axis."));
+  using QtGui::CommandArgumentSpec;
+
+  // Center Atom Command
+  QtGui::CommandSpec CenterAtom;
+  CenterAtom.name = "centerAtom";
+  CenterAtom.description = tr("Center the atom at the origin.");
+  CenterAtom.needsMolecule = true;
+  CenterAtom.arguments = {
+    CommandArgumentSpec::atomIndex("index", tr("Index of an atom"))
+      .withAliases(QStringList({ "id" }))
+      .withRequired(),
+  };
+  CenterAtom.handler = [this](const QtGui::CommandArguments& args) {
+    shiftAtomToOrigin(args.atom("index"));
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(CenterAtom));
+
+  // Align Picked Atoms Command
+  QtGui::CommandSpec AlignPickedAtoms;
+  AlignPickedAtoms.name = "alignPickedAtoms";
+  AlignPickedAtoms.description = tr("Align picked atoms.");
+  AlignPickedAtoms.needsMolecule = true;
+  AlignPickedAtoms.arguments = {
+    CommandArgumentSpec::enumeration("axis", tr("Target Cartesian axis."),
+                                     { "x", "y", "z" })
+      .withRequired()
+
+  };
+  AlignPickedAtoms.handler = [this](const QtGui::CommandArguments& args) {
+    const auto axis = QStringList{ "x", "y", "z" }.indexOf(args.string("axis"));
+    axisChanged(axis);
+    if (m_atomIds.isEmpty()) {
+      emit commandFailed(tr(
+        "No atoms have been picked for alignment. Pick 1 or 2 atoms first."));
+      return;
+    }
+    if (!align()) {
+      emit commandFailed(tr("Failed to align picked atoms."));
+      return;
+    }
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(AlignPickedAtoms));
+
+  // Align Atom Command
+  QtGui::CommandSpec AlignAtom;
+  AlignAtom.name = "alignAtom";
+  AlignAtom.description =
+    tr("Rotate the molecule to align the atom to the specified axis.");
+  AlignAtom.needsMolecule = true;
+  AlignAtom.arguments = {
+    CommandArgumentSpec::enumeration("axis", tr("Target Cartesian axis."),
+                                     { "x", "y", "z" })
+      .withRequired(),
+    CommandArgumentSpec::atomIndex("index", tr("Index of atom to be aligned."))
+      .withAliases(QStringList({ "id" }))
+      .withRequired(),
+  };
+  AlignAtom.handler = [this](const QtGui::CommandArguments& args) {
+    const auto axis = QStringList{ "x", "y", "z" }.indexOf(args.string("axis"));
+    Index atomIndex = args.atom("index");
+    if (m_molecule) {
+      Vector3 pos = m_molecule->atom(atomIndex).position3d();
+      if (pos.norm() < 1e-8) {
+        emit commandFailed(
+          tr("Atom %1 is at the origin and cannot define an alignment axis.")
+            .arg(atomIndex));
+        return;
+      }
+    }
+    alignAtomToAxis(atomIndex, axis);
+    emit commandFinished();
+  };
+  // NOTE: The original implementation allowed the axis to be either 'x', 'y',
+  // 'z' or 0, 1, 2. This implementation removes numeric axes in favor of
+  // simplicity, only accepting 'x', 'y', or 'z'.
+  commandRegistry().add(std::move(AlignAtom));
 }
 
 bool AlignTool::handleCommand(const QString& command,
                               const QVariantMap& options)
 {
-  static const QStringList knownCommands = { "centerAtom", "alignAtom",
-                                             "alignPickedAtoms" };
-
-  if (!knownCommands.contains(command))
-    return false; // not one of our commands
-
-  if (m_molecule == nullptr) {
-    emit commandFailed(tr("No molecule"));
-    return true;
-  }
-
-  if (command == "alignPickedAtoms") {
-    const auto axis =
-      QStringList{ "x", "y", "z" }.indexOf(options.value("axis").toString());
-    if (axis < 0)
-      return false;
-    axisChanged(static_cast<int>(axis));
-    return align();
-  }
-  if (command == "centerAtom") {
-    if (options.contains("id")) {
-      Index atomIndex = options["id"].toInt();
-      if (atomIndex < m_molecule->atomCount())
-        shiftAtomToOrigin(atomIndex);
-      return true;
-    } else if (options.contains("index")) {
-      Index atomIndex = options["index"].toInt();
-      if (atomIndex < m_molecule->atomCount())
-        shiftAtomToOrigin(atomIndex);
-      return true;
-    }
-    return false;
-  } else if (command == "alignAtom") {
-    int axis = -1;
-    if (options.contains("axis")) {
-      QVariant axisData = options["axis"];
-      if (axisData.typeId() == QMetaType::QString) {
-        QString axisString = axisData.toString();
-        if (axisString == "x")
-          axis = 0;
-        else if (axisString == "y")
-          axis = 1;
-        else if (axisString == "z")
-          axis = 2;
-      } else {
-        // JSON numbers arrive as qlonglong or double, never Int
-        bool ok = false;
-        axis = axisData.toInt(&ok);
-        if (!ok)
-          axis = -1;
-      }
-    }
-
-    if (axis >= 0 && axis < 3) {
-      if (options.contains("id")) {
-        Index atomIndex = options["id"].toInt();
-        if (atomIndex < m_molecule->atomCount())
-          alignAtomToAxis(atomIndex, axis);
-        return true;
-      } else if (options.contains("index")) {
-        Index atomIndex = options["index"].toInt();
-        if (atomIndex < m_molecule->atomCount())
-          alignAtomToAxis(atomIndex, axis);
-        return true;
-      }
-    }
-
-    return false; // invalid options
-  }
-
-  return true; // nothing to handle
+  return commandRegistry().handle(
+    command, options, m_molecule ? &m_molecule->molecule() : nullptr);
 }
 
 } // namespace Avogadro::QtPlugins

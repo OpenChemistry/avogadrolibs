@@ -84,7 +84,8 @@ TEST_F(AlignToolCommandTest, registersDocumentedCommands)
   const auto registered = m_harness.registerCommands();
   EXPECT_TRUE(m_harness.registrationViolations().isEmpty())
     << m_harness.registrationViolations().join("; ").toStdString();
-  EXPECT_EQ(registered.keys(), QStringList({ "alignAtom", "centerAtom" }));
+  EXPECT_EQ(registered.keys(),
+            QStringList({ "alignAtom", "alignPickedAtoms", "centerAtom" }));
 }
 
 // Translate everything by -O2 = (-1.5, 0, 0).
@@ -120,17 +121,13 @@ TEST_F(AlignToolCommandTest, alignAtomToXUndoRedo)
     });
 }
 
-// A numeric axis (JSON numbers arrive as qlonglong): 1 is y. Rotating O2's
-// direction (1, 0, 0) onto +y is +90 degrees about +z: (x, y, z) -> (-y, x, z).
-TEST_F(AlignToolCommandTest, alignAtomToNumericAxis)
+TEST_F(AlignToolCommandTest, alignAtomToNumericAxisIsRejected)
 {
-  expectOneUndoableMove(
-    "alignAtom", { { "id", qlonglong(2) }, { "axis", qlonglong(1) } },
-    [this]() {
-      expectNear(position(0), Vector3(-1.0, 0.0, 0.0), RotTol, "H0");
-      expectNear(position(2), Vector3(0.0, 1.5, 0.0), RotTol, "O2");
-      expectNear(position(3), Vector3(0.0, 1.5, 1.0), RotTol, "H3");
-    });
+  const CommandOutcome out = m_harness.run(
+    "alignAtom", { { "id", qlonglong(2) }, { "axis", qlonglong(1) } });
+  EXPECT_TRUE(out.claimed);
+  EXPECT_EQ(out.status, CommandStatus::Failed);
+  EXPECT_EQ(out.failedCount, 1);
 }
 
 // Contract: unknown -> false.
@@ -145,12 +142,9 @@ TEST_F(AlignToolCommandTest, unknownCommandIsNotClaimed)
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Contract (decision 4): missing/invalid options -> true + commandFailed().
-// AlignTool returns false with no signal.
-TEST_F(AlignToolCommandTest, knownDeviationMissingOptionsAreNotClaimed)
+// Missing or invalid options are claimed and fail via commandFailed().
+TEST_F(AlignToolCommandTest, missingOrInvalidOptionsFail)
 {
-  recordKnownDeviation("missing id, or missing/unknown axis, returns false");
-
   const MoleculeSnapshot before = m_harness.snapshot();
   const std::vector<std::pair<const char*, QVariantMap>> cases = {
     { "centerAtom", {} },
@@ -160,24 +154,22 @@ TEST_F(AlignToolCommandTest, knownDeviationMissingOptionsAreNotClaimed)
     { "alignAtom", { { "id", qlonglong(0) }, { "axis", "X" } } },
     { "alignAtom", { { "id", qlonglong(0) }, { "axis", qlonglong(3) } } },
     { "alignAtom", { { "id", qlonglong(0) }, { "axis", qlonglong(-1) } } },
+    { "alignPickedAtoms", {} },
+    { "alignPickedAtoms", { { "axis", "invalid" } } },
   };
   for (const auto& [name, options] : cases) {
     const CommandOutcome out = m_harness.run(name, options);
-    // When these fail, expect claimed and status == Failed.
-    EXPECT_FALSE(out.claimed) << name;
-    EXPECT_EQ(out.failedCount, 0) << name;
+    EXPECT_TRUE(out.claimed) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.failedCount, 1) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Contract (decision 4): out-of-range ids are invalid options. AlignTool
-// claims them and silently does nothing.
-TEST_F(AlignToolCommandTest, knownDeviationOutOfRangeIdIsSilentNoOp)
+// Out-of-range or negative IDs are invalid and fail.
+TEST_F(AlignToolCommandTest, outOfRangeIdFails)
 {
-  recordKnownDeviation("out-of-range or negative id returns true and does "
-                       "nothing, with no commandFailed()");
-
   const MoleculeSnapshot before = m_harness.snapshot();
   const std::vector<std::pair<const char*, QVariantMap>> cases = {
     { "centerAtom", { { "id", qlonglong(4) } } }, // == atomCount
@@ -189,28 +181,22 @@ TEST_F(AlignToolCommandTest, knownDeviationOutOfRangeIdIsSilentNoOp)
   for (const auto& [name, options] : cases) {
     const CommandOutcome out = m_harness.run(name, options);
     EXPECT_TRUE(out.claimed) << name;
-    // When this fails, expect status == Failed.
-    EXPECT_EQ(out.status, CommandStatus::Finished) << name;
-    EXPECT_EQ(out.failedCount, 0) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.failedCount, 1) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
   EXPECT_EQ(m_harness.snapshot(), before);
 }
 
-// Contract (decision 4): a wrong-typed id is an invalid option. AlignTool
-// converts it with QVariant::toInt(), so "abc" becomes atom 0 and the
-// command moves the molecule.
-TEST_F(AlignToolCommandTest, knownDeviationNonNumericIdActsOnAtomZero)
+// Non-numeric ID fails validation.
+TEST_F(AlignToolCommandTest, nonNumericIdFails)
 {
-  recordKnownDeviation("a non-numeric id is read as 0 and moves the molecule");
-
+  const MoleculeSnapshot before = m_harness.snapshot();
   const CommandOutcome out = m_harness.run("centerAtom", { { "id", "abc" } });
   EXPECT_TRUE(out.claimed);
-  // When these fail, expect status == Failed and nothing moved.
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
-  // Everything shifted by -H0 = (0, -1, 0).
-  EXPECT_EQ(position(0), Vector3(0.0, 0.0, 0.0));
-  EXPECT_EQ(position(2), Vector3(1.5, -1.0, 0.0));
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(out.failedCount, 1);
+  EXPECT_EQ(m_harness.snapshot(), before);
 }
 
 // Contract (decision 2): a command that changes nothing must not push an
@@ -283,18 +269,35 @@ TEST_F(AlignToolCommandTest, setMoleculeNullDetachesTool)
   EXPECT_EQ(position(2), Vector3(0.0, 0.0, 0.0));
 }
 
-// Not settled by the decisions: aligning an atom that sits at the origin has
-// no direction to rotate, and AlignTool claims the command and does nothing.
-TEST_F(AlignToolCommandTest, undecidedAlignAtomAtOriginIsSilentNoOp)
+// Aligning an atom that sits at the origin has no direction to rotate,
+// and AlignTool fails with a descriptive error.
+TEST_F(AlignToolCommandTest, alignAtomAtOriginFails)
 {
-  recordUndecided("alignAtom on an atom at the origin returns true and "
-                  "does nothing");
-
   const MoleculeSnapshot before = m_harness.snapshot();
   const CommandOutcome out =
     m_harness.run("alignAtom", { { "id", qlonglong(1) }, { "axis", "x" } });
   EXPECT_TRUE(out.claimed);
-  EXPECT_EQ(out.status, CommandStatus::Finished) << describe(out);
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(out.failedCount, 1);
+  EXPECT_EQ(out.message,
+            "Atom 1 is at the origin and cannot define an alignment axis.");
+  EXPECT_TRUE(out.clean()) << describe(out);
+  EXPECT_EQ(m_harness.snapshot(), before);
+}
+
+// Aligning picked atoms when none have been picked fails with a descriptive
+// error.
+TEST_F(AlignToolCommandTest, alignPickedAtomsWithNoPickedAtomsFails)
+{
+  const MoleculeSnapshot before = m_harness.snapshot();
+  const CommandOutcome out =
+    m_harness.run("alignPickedAtoms", { { "axis", "z" } });
+  EXPECT_TRUE(out.claimed);
+  EXPECT_EQ(out.status, CommandStatus::Failed) << describe(out);
+  EXPECT_EQ(out.failedCount, 1);
+  EXPECT_EQ(
+    out.message,
+    "No atoms have been picked for alignment. Pick 1 or 2 atoms first.");
   EXPECT_TRUE(out.clean()) << describe(out);
   EXPECT_EQ(m_harness.snapshot(), before);
 }
