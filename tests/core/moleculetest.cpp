@@ -1939,7 +1939,7 @@ TEST(PropertyMapTest, SwapEntries)
   pm.setDouble("charge", 0, 1.0);
   pm.setDouble("charge", 1, 2.0);
 
-  pm.swapEntries(0, 1, 2);
+  pm.swapEntries(0, 1);
   EXPECT_DOUBLE_EQ(*pm.getDouble("charge", 0), 2.0);
   EXPECT_DOUBLE_EQ(*pm.getDouble("charge", 1), 1.0);
 }

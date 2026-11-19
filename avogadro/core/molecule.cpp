@@ -1121,7 +1121,7 @@ void Molecule::swapBond(Index a, Index b)
   using std::swap;
 
   m_graph.swapEdgeIndices(a, b);
-  m_bondState.swapEntries(a, b, bondCount());
+  m_bondState.swapEntries(a, b);
 }
 
 void Molecule::swapAtom(Index a, Index b)
@@ -1163,7 +1163,7 @@ void Molecule::swapAtom(Index a, Index b)
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
   ensureLayerInfo().layer.swapLayer(a, b);
-  m_atomProperties.swapEntries(a, b, atomCount());
+  m_atomProperties.swapEntries(a, b);
 
   // Residues are not an atom-indexed member and so are reached by none of the
   // helpers above: the array is residue-indexed, and it is the Atom proxies

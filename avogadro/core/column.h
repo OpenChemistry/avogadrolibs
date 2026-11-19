@@ -108,11 +108,10 @@ public:
    * Exchange the entries of entities @p a and @p b. Three cases: both have
    * an entry (plain swap); only the lower index has one (grow to cover the
    * higher, new entries being fill(i), then swap, so the value travels with
-   * its entity); neither does (nothing to do). @p count is unused and is
-   * accepted so that a Column and a PropertyMap take the same call.
+   * its entity); neither does (nothing to do).
    */
   template <typename Fill>
-  void swapEntries(Index a, Index b, Index /*count*/, Fill fill)
+  void swapEntries(Index a, Index b, Fill fill)
   {
     using std::swap;
     const Index lo = a < b ? a : b;
@@ -127,10 +126,7 @@ public:
     }
   }
 
-  void swapEntries(Index a, Index b, Index count)
-  {
-    swapEntries(a, b, count, T());
-  }
+  void swapEntries(Index a, Index b) { swapEntries(a, b, T()); }
 
   /**
    * Remove the entry of entity @p index by swap-and-pop. @p count is the

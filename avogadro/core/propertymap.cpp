@@ -423,7 +423,7 @@ void PropertyMap::restore(Index index, const PropertyMap& saved,
   }
 }
 
-void PropertyMap::swapEntries(Index a, Index b, Index /*entityCount*/)
+void PropertyMap::swapEntries(Index a, Index b)
 {
   for (auto& kv : m_doubles)
     swapColumnEntries(kv.second, a, b, doubleSentinel);

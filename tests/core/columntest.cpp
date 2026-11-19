@@ -87,9 +87,9 @@ TEST(ColumnTest, setAll)
 TEST(ColumnTest, swapFullLength)
 {
   auto column = makeLabels({ "a", "b", "c" });
-  column.swapEntries(0, 2, 3);
+  column.swapEntries(0, 2);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c", "b", "a" }));
-  column.swapEntries(1, 1, 3);
+  column.swapEntries(1, 1);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c", "b", "a" }));
 }
 
@@ -98,18 +98,18 @@ TEST(ColumnTest, swapRagged)
   // Two entries for four entities.
   auto column = makeLabels({ "a", "b" });
   // Only the lower index has an entry: the value travels to the higher one.
-  column.swapEntries(1, 3, 4);
+  column.swapEntries(1, 3);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "", "", "b" }));
   // Argument order does not matter.
   column = makeLabels({ "a", "b" });
-  column.swapEntries(3, 0, 4);
+  column.swapEntries(3, 0);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "", "b", "", "a" }));
   // Neither has an entry: nothing to do.
   column = makeLabels({ "a", "b" });
-  column.swapEntries(2, 3, 4);
+  column.swapEntries(2, 3);
   EXPECT_EQ(column.size(), static_cast<Index>(2));
   // Both do.
-  column.swapEntries(0, 1, 4);
+  column.swapEntries(0, 1);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "b", "a" }));
 }
 
@@ -146,7 +146,7 @@ TEST(ColumnTest, fillCallableAndValue)
   // A plain value fills the same way.
   Column<Vector3> other;
   other.set(0, Vector3(1, 1, 1), 1);
-  other.swapEntries(0, 2, 3, Vector3(9, 9, 9));
+  other.swapEntries(0, 2, Vector3(9, 9, 9));
   EXPECT_EQ(other.size(), static_cast<Index>(3));
   EXPECT_EQ(other.value(0, Vector3::Zero()), Vector3(9, 9, 9));
   EXPECT_EQ(other.value(1, Vector3::Zero()), Vector3(9, 9, 9));

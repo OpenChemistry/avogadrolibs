@@ -165,9 +165,8 @@ public:
 
   /**
    * Swap entries at indices @p a and @p b.
-   * @p entityCount is the current entity count (used to check column sizes).
    */
-  void swapEntries(Index a, Index b, Index entityCount);
+  void swapEntries(Index a, Index b);
 
   /**
    * Save what removeEntry(@p index, @p entityCount) is about to change, so

@@ -55,9 +55,9 @@ struct BondState
   }
 
   /** Exchange everything stored for bonds @p a and @p b. */
-  void swapEntries(Index a, Index b, Index count)
+  void swapEntries(Index a, Index b)
   {
-    forEachColumn([&](auto& column) { column.swapEntries(a, b, count); });
+    forEachColumn([&](auto& column) { column.swapEntries(a, b); });
   }
 
   /** Remove bond @p index by swap-and-pop. @p count is before the removal. */
