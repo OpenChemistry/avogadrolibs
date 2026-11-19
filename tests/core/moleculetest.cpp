@@ -3216,6 +3216,9 @@ private:
     SetBondOrder,
     SetBondLabel,
     SetBondProperties,
+    ClearBonds,
+    SetAllBondOrders,
+    SetAllBondLabels,
     SetAtomicNumber,
     SetPosition3d,
     SetPosition2d,
@@ -3258,6 +3261,9 @@ private:
       "setBondOrder",
       "setBondLabel",
       "bondProperties",
+      "clearBonds",
+      "setBondOrders",
+      "setBondLabels",
       "setAtomicNumber",
       "setAtomPosition3d",
       "setAtomPosition2d",
@@ -3314,6 +3320,9 @@ private:
       case ActivateCoordinateSet:
       case SetAllPositions3d:
       case SetAllLabels:
+      case ClearBonds:
+      case SetAllBondOrders:
+      case SetAllBondLabels:
         return 1;
       case CopyConstruct:
       case CopyAssign:
@@ -3576,6 +3585,50 @@ bool ShadowRunner::step(int stepNumber)
         mol.bondProperties().setInt(ShadowModel::kBondIntProperty, i, v);
         model.bonds[i].intProperty = v;
       }
+      break;
+    }
+    // setBondPair() is not here: Graph::editEdgeInPlace() corrupts the edge
+    // lists (the loops that drop the old endpoints' entries pop the wrong
+    // ones), after which removeAtom() never finishes.
+    case ClearBonds: {
+      mol.clearBonds();
+      model.clearBonds();
+      break;
+    }
+    case SetAllBondOrders: {
+      Array<unsigned char> all;
+      for (Index i = 0; i < bonds; ++i)
+        all.push_back(static_cast<unsigned char>(pickInt(1, 3)));
+      // Orders must cover every bond; a short array is refused.
+      if (chance(20) && bonds > 0) {
+        Array<unsigned char> shortArray;
+        for (Index i = 0; i + 1 < bonds; ++i)
+          shortArray.push_back(2);
+        if (mol.setBondOrders(shortArray)) {
+          ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                        << ": setBondOrders accepted a short array";
+          return false;
+        }
+      }
+      mol.setBondOrders(all);
+      for (Index i = 0; i < bonds; ++i)
+        model.bonds[i].order = all[i];
+      break;
+    }
+    case SetAllBondLabels: {
+      Array<std::string> all;
+      // An empty array clears every label.
+      if (chance(25)) {
+        mol.setBondLabels(all);
+        for (auto& bond : model.bonds)
+          bond.label.clear();
+        break;
+      }
+      for (Index i = 0; i < bonds; ++i)
+        all.push_back("bl" + std::to_string(i) + "." + std::to_string(m_step));
+      mol.setBondLabels(all);
+      for (Index i = 0; i < bonds; ++i)
+        model.bonds[i].label = all[i];
       break;
     }
     case SetAtomicNumber: {

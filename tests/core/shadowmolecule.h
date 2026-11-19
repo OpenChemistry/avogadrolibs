@@ -247,6 +247,13 @@ public:
     bonds.pop_back();
   }
 
+  // Keeps vibrations and the like on purpose; only partial charges go.
+  void clearBonds()
+  {
+    partialChargesGone();
+    bonds.clear();
+  }
+
   void swapBond(Index a, Index b)
   {
     if (a != b)

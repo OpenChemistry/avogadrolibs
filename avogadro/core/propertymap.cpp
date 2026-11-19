@@ -312,6 +312,49 @@ void removeColumnEntry(Array<T>& column, Index index, Index entityCount,
   }
 }
 
+// The slice of a dense column. This mirrors Column::slice(), except that a
+// column at least entityCount long counts as full, because
+// removeColumnEntry() first trims entries past the count (a Column never
+// holds such entries).
+template <typename T>
+void sliceColumn(const std::map<std::string, Array<T>>& columns,
+                 std::map<std::string, Array<T>>& out, Index index,
+                 Index entityCount)
+{
+  for (const auto& kv : columns) {
+    const Array<T>& column = kv.second;
+    if (index >= column.size())
+      continue;
+    Array<T> saved;
+    saved.push_back(column[index]);
+    if (column.size() >= entityCount && entityCount > 0)
+      saved.push_back(column[entityCount - 1]);
+    out[kv.first] = std::move(saved);
+  }
+}
+
+template <typename T>
+void restoreColumn(std::map<std::string, Array<T>>& columns,
+                   const std::map<std::string, Array<T>>& saved, Index index,
+                   Index entityCount)
+{
+  for (const auto& kv : saved) {
+    auto it = columns.find(kv.first);
+    if (it == columns.end())
+      continue;
+    Array<T>& column = it->second;
+    const Array<T>& values = kv.second;
+    if (values.size() == 2) {
+      if (index >= entityCount || column.size() != entityCount - 1)
+        continue;
+      column.push_back(values[1]);
+      column[index] = values[0];
+    } else if (index < column.size()) {
+      column[index] = values[0];
+    }
+  }
+}
+
 } // namespace
 
 void PropertyMap::removeEntry(Index index, Index entityCount)
@@ -335,6 +378,48 @@ void PropertyMap::removeEntry(Index index, Index entityCount)
         col.erase(it);
       }
     }
+  }
+}
+
+PropertyMap PropertyMap::slice(Index index, Index entityCount) const
+{
+  PropertyMap result;
+  sliceColumn(m_doubles, result.m_doubles, index, entityCount);
+  sliceColumn(m_ints, result.m_ints, index, entityCount);
+  sliceColumn(m_strings, result.m_strings, index, entityCount);
+  for (const auto& kv : m_matrices) {
+    auto it = kv.second.find(index);
+    if (it != kv.second.end())
+      result.m_matrices[kv.first][index] = it->second;
+  }
+  return result;
+}
+
+void PropertyMap::restore(Index index, const PropertyMap& saved,
+                          Index entityCount)
+{
+  restoreColumn(m_doubles, saved.m_doubles, index, entityCount);
+  restoreColumn(m_ints, saved.m_ints, index, entityCount);
+  restoreColumn(m_strings, saved.m_strings, index, entityCount);
+
+  if (entityCount == 0)
+    return;
+  const Index lastIndex = entityCount - 1;
+  for (auto& kv : m_matrices) {
+    auto& col = kv.second;
+    // removeEntry() erased index and then moved the last entity's matrix
+    // there, so any matrix at index now belongs to the last entity.
+    if (index != lastIndex) {
+      auto it = col.find(index);
+      if (it != col.end()) {
+        col[lastIndex] = std::move(it->second);
+        col.erase(index);
+      }
+    }
+  }
+  for (const auto& kv : saved.m_matrices) {
+    for (const auto& entry : kv.second)
+      m_matrices[kv.first][entry.first] = entry.second;
   }
 }
 
