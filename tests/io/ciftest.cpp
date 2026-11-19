@@ -26,6 +26,7 @@
 #include <fstream>
 #include <map>
 #include <memory>
+#include <set>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -323,6 +324,7 @@ TEST(CifTest, disorderGroupsOfTheSameAssemblyAreNotBonded)
   const std::string path = codFile("2017715");
   Molecule molecule;
   CifFormat format;
+  format.setOptions(R"({"disorder": "all"})");
   ASSERT_TRUE(format.readFile(path, molecule)) << format.error();
   ASSERT_GT(molecule.bondCount(), 0u);
 
@@ -385,6 +387,7 @@ TEST(CifTest, disorderRule)
     }
     Molecule molecule;
     CifFormat format;
+    format.setOptions(R"({"disorder": "all"})");
     EXPECT_TRUE(format.readString(result, molecule)) << format.error();
     return molecule;
   };
@@ -432,6 +435,7 @@ TEST(CifTest, geomBondLoop)
   auto read = [&](const std::string& bondRows) {
     Molecule molecule;
     CifFormat format;
+    format.setOptions(R"({"disorder": "all"})");
     EXPECT_TRUE(format.readString(
       cubicCif(columns, rows, "") +
         "loop_\n_geom_bond_atom_site_label_1\n"
@@ -452,6 +456,7 @@ TEST(CifTest, geomBondLoop)
   // without a symmetry column
   Molecule plain;
   CifFormat format;
+  format.setOptions(R"({"disorder": "all"})");
   ASSERT_TRUE(format.readString(
     cubicCif(columns, rows) +
       "loop_\n_geom_bond_atom_site_label_1\n_geom_bond_atom_site_label_2\n"
@@ -965,11 +970,235 @@ TEST(CifTest, disorderRuleWithStoredOperations)
     "C1 C 0.40 0.40 0.40 A 1\nC2 C 0.47 0.40 0.40 A 2\n";
   Molecule molecule;
   CifFormat format;
-  format.setOptions("{ \"perceiveBonds\": true }");
+  format.setOptions(R"({"perceiveBonds": true, "disorder": "all"})");
   ASSERT_TRUE(format.readString(text, molecule)) << format.error();
   EXPECT_EQ(molecule.hallNumber(), 0);
   ASSERT_EQ(molecule.atomCount(), 2u);
   EXPECT_FALSE(bonded(molecule, "C1", "C2"));
+}
+
+namespace {
+
+// Reads text with the given options and returns the labels of the atoms.
+std::set<std::string> labelsOf(const std::string& text,
+                               const std::string& options = std::string())
+{
+  Molecule molecule;
+  CifFormat format;
+  if (!options.empty())
+    format.setOptions(options);
+  EXPECT_TRUE(format.readString(text, molecule)) << format.error();
+  std::set<std::string> labels;
+  for (std::size_t i = 0; i < molecule.atomCount(); ++i)
+    labels.insert(molecule.atomLabel(i));
+  return labels;
+}
+
+// Atoms far apart, one per row: label, assembly, group, occupancy.
+std::string disorderedCif(const std::string& rows)
+{
+  return cubicCif(std::string(siteColumns) +
+                    "_atom_site_disorder_assembly\n"
+                    "_atom_site_disorder_group\n_atom_site_occupancy\n",
+                  rows);
+}
+
+std::size_t countOf(const std::set<std::string>& labels,
+                    const std::string& label)
+{
+  return labels.count(label);
+}
+
+// The labels of a COD file that belong to the given disorder group, in the
+// assemblies that also have the other group (a lone group is always kept).
+std::vector<std::string> labelsInGroup(const std::string& path,
+                                       const std::string& group,
+                                       const std::string& other)
+{
+  const auto disorder = disorderOf(path);
+  std::set<std::string> assemblies;
+  for (const auto& entry : disorder) {
+    if (entry.second.second == other)
+      assemblies.insert(entry.second.first);
+  }
+  std::vector<std::string> result;
+  for (const auto& entry : disorder) {
+    if (entry.second.second == group && assemblies.count(entry.second.first))
+      result.push_back(entry.first);
+  }
+  return result;
+}
+
+} // namespace
+
+TEST(CifTest, majorDisorderGroupOfTheIssueFile)
+{
+  const std::string path = codFile("issue2437");
+  Molecule major;
+  CifFormat format;
+  ASSERT_TRUE(format.readFile(path, major)) << format.error();
+  for (const char* label : { "Cl1A", "Cl2A", "Cl3A", "H4AA" }) {
+    for (std::size_t i = 0; i < major.atomCount(); ++i)
+      EXPECT_NE(major.atomLabel(i), label);
+  }
+  EXPECT_TRUE(bonded(major, "C4A", "Cl1"));
+  EXPECT_TRUE(bonded(major, "C4A", "Cl2"));
+  EXPECT_TRUE(bonded(major, "C4A", "Cl3"));
+  EXPECT_TRUE(bonded(major, "C4A", "H4A"));
+  std::size_t carbon = major.atomCount();
+  for (std::size_t i = 0; i < major.atomCount(); ++i) {
+    if (major.atomLabel(i) == "C4A")
+      carbon = i;
+  }
+  ASSERT_LT(carbon, major.atomCount());
+  EXPECT_EQ(major.bonds(carbon).size(), 4u);
+
+  Molecule all;
+  CifFormat allFormat;
+  allFormat.setOptions(R"({"disorder": "all"})");
+  ASSERT_TRUE(allFormat.readFile(path, all)) << allFormat.error();
+  EXPECT_GT(all.atomCount(), major.atomCount());
+  std::set<std::string> labels;
+  for (std::size_t i = 0; i < all.atomCount(); ++i)
+    labels.insert(all.atomLabel(i));
+  for (const char* label : { "Cl1A", "Cl2A", "Cl3A", "H4AA" })
+    EXPECT_EQ(countOf(labels, label), 1u) << label;
+}
+
+TEST(CifTest, majorDisorderGroupOfCodFiles)
+{
+  for (const char* id : { "2017715", "1543858" }) {
+    const std::string path = codFile(id);
+    // every group-2 atom goes, lone groups of low occupancy included
+    std::vector<std::string> minor;
+    for (const auto& entry : disorderOf(path)) {
+      if (entry.second.second == "2")
+        minor.push_back(entry.first);
+    }
+    const auto major = labelsInGroup(path, "1", "2");
+    ASSERT_FALSE(minor.empty()) << id;
+    ASSERT_FALSE(major.empty()) << id;
+
+    Molecule molecule;
+    CifFormat format;
+    ASSERT_TRUE(format.readFile(path, molecule)) << format.error();
+    std::set<std::string> labels;
+    for (std::size_t i = 0; i < molecule.atomCount(); ++i)
+      labels.insert(molecule.atomLabel(i));
+    for (const auto& label : minor)
+      EXPECT_EQ(countOf(labels, label), 0u) << id << " " << label;
+    for (const auto& label : major)
+      EXPECT_EQ(countOf(labels, label), 1u) << id << " " << label;
+  }
+}
+
+TEST(CifTest, majorDisorderGroupIsChosenByOccupancy)
+{
+  // the minor group comes first in the file
+  const std::string text = disorderedCif("C1 C 0.1 0.1 0.1 . 1 0.3\n"
+                                         "C2 C 0.3 0.1 0.1 . 2 0.7\n"
+                                         "C3 C 0.5 0.5 0.5 . . 1.0\n");
+  auto labels = labelsOf(text);
+  EXPECT_EQ(countOf(labels, "C1"), 0u);
+  EXPECT_EQ(countOf(labels, "C2"), 1u);
+  EXPECT_EQ(countOf(labels, "C3"), 1u);
+
+  // the mean over the sites of a group decides
+  labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 . 1 0.9\n"
+                                  "C2 C 0.3 0.1 0.1 . 1 0.1\n"
+                                  "C3 C 0.5 0.1 0.1 . 2 0.6\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 0u);
+  EXPECT_EQ(countOf(labels, "C2"), 0u);
+  EXPECT_EQ(countOf(labels, "C3"), 1u);
+}
+
+TEST(CifTest, loneDisorderGroupNeedsHalfOccupancy)
+{
+  auto labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 . 1 0.3\n"
+                                       "C2 C 0.5 0.5 0.5 . . 1.0\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 0u);
+  EXPECT_EQ(countOf(labels, "C2"), 1u);
+
+  labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 . 1 0.5\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 1u);
+
+  // no occupancy column counts as 1.0
+  labels = labelsOf(cubicCif(std::string(siteColumns) +
+                               "_atom_site_disorder_assembly\n"
+                               "_atom_site_disorder_group\n",
+                             "C1 C 0.1 0.1 0.1 . 1\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 1u);
+}
+
+TEST(CifTest, majorDisorderGroupTieKeepsTheFirst)
+{
+  const auto labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 . 2 0.5\n"
+                                             "C2 C 0.3 0.1 0.1 . 1 0.5\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 1u);
+  EXPECT_EQ(countOf(labels, "C2"), 0u);
+}
+
+TEST(CifTest, majorDisorderGroupWithoutOccupancyKeepsTheFirst)
+{
+  const std::string text = cubicCif(
+    std::string(siteColumns) +
+      "_atom_site_disorder_assembly\n_atom_site_disorder_group\n",
+    "C1 C 0.1 0.1 0.1 . 2\nC2 C 0.3 0.1 0.1 . 1\nC3 C 0.5 0.5 0.5 . .\n");
+  const auto labels = labelsOf(text);
+  EXPECT_EQ(countOf(labels, "C1"), 1u);
+  EXPECT_EQ(countOf(labels, "C2"), 0u);
+  EXPECT_EQ(countOf(labels, "C3"), 1u);
+
+  // an unreadable occupancy counts as one
+  const auto unreadable = labelsOf(
+    disorderedCif("C1 C 0.1 0.1 0.1 . 1 ?\nC2 C 0.3 0.1 0.1 . 2 0.9\n"));
+  EXPECT_EQ(countOf(unreadable, "C1"), 1u);
+  EXPECT_EQ(countOf(unreadable, "C2"), 0u);
+}
+
+TEST(CifTest, majorDisorderAssembliesAreIndependent)
+{
+  const auto labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 A 1 0.3\n"
+                                             "C2 C 0.2 0.1 0.1 A 2 0.7\n"
+                                             "C3 C 0.5 0.5 0.5 B 1 0.8(2)\n"
+                                             "C4 C 0.7 0.5 0.5 B 2 0.2(2)\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 0u);
+  EXPECT_EQ(countOf(labels, "C2"), 1u);
+  EXPECT_EQ(countOf(labels, "C3"), 1u);
+  EXPECT_EQ(countOf(labels, "C4"), 0u);
+}
+
+TEST(CifTest, negativeDisorderGroupsAreNeverDropped)
+{
+  const auto labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 . -1 0.3\n"
+                                             "C2 C 0.3 0.1 0.1 . -2 0.2\n"
+                                             "C3 C 0.5 0.5 0.5 . 1 0.4\n"
+                                             "C4 C 0.7 0.5 0.5 . 2 0.6\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 1u);
+  EXPECT_EQ(countOf(labels, "C2"), 1u);
+  EXPECT_EQ(countOf(labels, "C3"), 0u);
+  EXPECT_EQ(countOf(labels, "C4"), 1u);
+}
+
+TEST(CifTest, majorDisorderGroupsWithTextLabels)
+{
+  const auto labels = labelsOf(disorderedCif("C1 C 0.1 0.1 0.1 . a 0.4\n"
+                                             "C2 C 0.3 0.1 0.1 . b 0.6\n"));
+  EXPECT_EQ(countOf(labels, "C1"), 0u);
+  EXPECT_EQ(countOf(labels, "C2"), 1u);
+}
+
+TEST(CifTest, disorderOptionAllKeepsEverything)
+{
+  const std::string text = disorderedCif("C1 C 0.1 0.1 0.1 . 1 0.3\n"
+                                         "C2 C 0.3 0.1 0.1 . 2 0.7\n");
+  for (const char* value : { "all", "ALL", "All" }) {
+    const auto labels =
+      labelsOf(text, std::string(R"({"disorder": ")") + value + R"("})");
+    EXPECT_EQ(labels.size(), 2u) << value;
+  }
+  // any other value means the default
+  EXPECT_EQ(labelsOf(text, R"({"disorder": "bogus"})").size(), 1u);
 }
 
 TEST(CifTest, writeFillsTheCellWithStoredOperations)
