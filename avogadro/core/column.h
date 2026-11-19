@@ -105,6 +105,27 @@ public:
   const Array<T>& array() const { return m_values; }
 
   /**
+   * Append the entry of a newly added entity. @p count is the number of
+   * entities after the addition, so the new entity's index is count - 1.
+   * Entries at or past that index belong to no entity (array() can leave
+   * them), so they are dropped first; the new entity then gets @p value.
+   * For a required column this is a plain append. An optional column that
+   * should stay short for new entities is simply not passed here.
+   *
+   * A column shorter than count - 1 gets @p value at its end, not at the new
+   * entity's index. That is harmless only when @p value is the column's
+   * "unset" value (as for PropertyMap's sentinels): the entity at the end had
+   * no entry, and now reads as unset either way. Pass a real value only to a
+   * column that covers every entity. (PropertyMap relies on the extra entry,
+   * since the CJSON writer serializes the raw array length.)
+   */
+  void addEntry(Index count, const T& value)
+  {
+    trimTo(count > 0 ? count - 1 : 0);
+    m_values.push_back(value);
+  }
+
+  /**
    * Exchange the entries of entities @p a and @p b. Three cases: both have
    * an entry (plain swap); only the lower index has one (grow to cover the
    * higher, new entries being fill(i), then swap, so the value travels with

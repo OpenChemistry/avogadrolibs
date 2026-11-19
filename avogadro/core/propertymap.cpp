@@ -246,20 +246,14 @@ void PropertyMap::addEntry(Index entityCount)
 {
   // Entries at or past the new entity's index belong to no entity (the
   // setters don't check the index), so drop them before appending.
-  const Index index = entityCount > 0 ? entityCount - 1 : 0;
-  for (auto& kv : m_doubles) {
-    kv.second.trimTo(index);
-    kv.second.array().push_back(doubleSentinel);
-  }
-  for (auto& kv : m_ints) {
-    kv.second.trimTo(index);
-    kv.second.array().push_back(intSentinel);
-  }
-  for (auto& kv : m_strings) {
-    kv.second.trimTo(index);
-    kv.second.array().push_back(std::string());
-  }
+  for (auto& kv : m_doubles)
+    kv.second.addEntry(entityCount, doubleSentinel);
+  for (auto& kv : m_ints)
+    kv.second.addEntry(entityCount, intSentinel);
+  for (auto& kv : m_strings)
+    kv.second.addEntry(entityCount, std::string());
   // Sparse matrices: the new entity has no entry.
+  const Index index = entityCount > 0 ? entityCount - 1 : 0;
   for (auto& kv : m_matrices) {
     auto& col = kv.second;
     for (auto it = col.begin(); it != col.end();) {

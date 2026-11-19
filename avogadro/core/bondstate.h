@@ -54,6 +54,17 @@ struct BondState
     f(properties, others.properties...);
   }
 
+  /**
+   * Add the entries of a new bond. @p count is the number of bonds after the
+   * addition. The orders column gets @p order and the properties get their
+   * unset values; labels are optional, so the new bond has none.
+   */
+  void addEntry(Index count, unsigned char order)
+  {
+    orders.addEntry(count, order);
+    properties.addEntry(count);
+  }
+
   /** Exchange everything stored for bonds @p a and @p b. */
   void swapEntries(Index a, Index b)
   {

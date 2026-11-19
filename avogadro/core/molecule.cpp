@@ -1344,8 +1344,7 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   Index index = bond(atom1, atom2).index();
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
-    m_bondState.orders.array().push_back(order);
-    m_bondState.properties.addEntry(bondCount());
+    m_bondState.addEntry(bondCount(), order);
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
     m_bondState.orders.array()[index] = order;

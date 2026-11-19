@@ -234,3 +234,19 @@ TEST(ColumnTest, takeFromLeavesSourceEmpty)
   source.set(0, "n", 1);
   EXPECT_EQ(source.size(), static_cast<Index>(1));
 }
+
+TEST(ColumnTest, addEntryAppendsAndDropsStaleEntries)
+{
+  auto column = makeLabels({ "a", "b" });
+  column.addEntry(3, "c");
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
+
+  // Entries past the new entity's index belong to no entity.
+  auto stale = makeLabels({ "a", "b", "x", "y" });
+  stale.addEntry(3, "c");
+  EXPECT_EQ(toVector(stale), (std::vector<std::string>{ "a", "b", "c" }));
+
+  Column<std::string> empty;
+  empty.addEntry(1, "z");
+  EXPECT_EQ(toVector(empty), (std::vector<std::string>{ "z" }));
+}
