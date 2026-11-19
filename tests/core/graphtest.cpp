@@ -202,6 +202,25 @@ TEST(GraphTest, connectedComponents)
   EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(4));
 }
 
+TEST(GraphTest, subgraphLookupOfLoneVertexKeepsComponentsUnique)
+{
+  Graph graph(3);
+  graph.addEdge(0, 1);
+
+  // Looking up a lone vertex gives it a component; a later rebuild must not
+  // create a second one for it.
+  graph.getConnectedID(2);
+  const auto components = graph.connectedComponents();
+  EXPECT_EQ(components.size(), static_cast<size_t>(2));
+  int containing = 0;
+  for (const auto& component : components) {
+    if (component.find(2) != component.end())
+      ++containing;
+  }
+  EXPECT_EQ(containing, 1);
+  EXPECT_EQ(graph.subgraphsCount(), static_cast<size_t>(2));
+}
+
 namespace {
 
 // Every edge must be findable from both of its endpoints, and no vertex may

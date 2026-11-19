@@ -719,6 +719,7 @@ size_t Graph::subgraph(size_t element) const
     int newSubgraph = createNewSubgraph();
     m_vertexToSubgraph[element] = newSubgraph;
     m_subgraphToVertices[newSubgraph].insert(element);
+    m_loneVertices.erase(element);
     return newSubgraph;
   }
   if (m_subgraphDirty[r]) {
