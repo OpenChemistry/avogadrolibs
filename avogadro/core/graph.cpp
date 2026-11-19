@@ -502,12 +502,40 @@ bool Graph::editEdgesInPlace(const Array<std::pair<size_t, size_t>>& pairs)
   for (size_t i = 0; i < normalized.size(); ++i) {
     const size_t a = normalized[i].first;
     const size_t b = normalized[i].second;
-    joinSubgraphs(a, b);
     m_adjacencyList[a].push_back(b);
     m_adjacencyList[b].push_back(a);
     m_edgeMap[a].push_back(i);
     m_edgeMap[b].push_back(i);
     m_edgePairs.push_back(normalized[i]);
+  }
+
+  // Assign components in one pass. Calling joinSubgraphs() per edge would
+  // make each disjoint pair scan every slot in createNewSubgraph(), which is
+  // O(edges * components). removeEdges() left every vertex lone with no
+  // component, so a depth-first search from each unassigned vertex suffices.
+  std::vector<size_t> stack;
+  for (size_t v = 0; v < m_adjacencyList.size(); ++v) {
+    if (m_adjacencyList[v].empty() || m_vertexToSubgraph[v] >= 0)
+      continue;
+    const int slot = static_cast<int>(m_subgraphToVertices.size());
+    m_subgraphToVertices.emplace_back();
+    m_subgraphDirty.push_back(false);
+    m_vertexToSubgraph[v] = slot;
+    m_subgraphToVertices[slot].insert(v);
+    m_loneVertices.erase(v);
+    stack.push_back(v);
+    while (!stack.empty()) {
+      const size_t current = stack.back();
+      stack.pop_back();
+      for (size_t neighbor : m_adjacencyList[current]) {
+        if (m_vertexToSubgraph[neighbor] >= 0)
+          continue;
+        m_vertexToSubgraph[neighbor] = slot;
+        m_subgraphToVertices[slot].insert(neighbor);
+        m_loneVertices.erase(neighbor);
+        stack.push_back(neighbor);
+      }
+    }
   }
   return true;
 }

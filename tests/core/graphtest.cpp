@@ -515,6 +515,79 @@ TEST(GraphTest, editEdgesInPlacePermutation)
   expectIncidenceConsistent(graph);
 }
 
+TEST(GraphTest, editEdgesInPlaceRebuildsComponents)
+{
+  Graph graph(8);
+  graph.addEdge(0, 1);
+  graph.addEdge(2, 3);
+  graph.addEdge(4, 5);
+  graph.addEdge(6, 7);
+  graph.addEdge(0, 2);
+
+  Avogadro::Core::Array<std::pair<size_t, size_t>> pairs;
+  pairs.push_back({ 1, 2 });
+  pairs.push_back({ 0, 3 });
+  pairs.push_back({ 0, 1 });
+  pairs.push_back({ 4, 5 });
+  pairs.push_back({ 7, 6 });
+  ASSERT_TRUE(graph.editEdgesInPlace(pairs));
+  expectIncidenceConsistent(graph);
+
+  const auto components = graph.connectedComponents();
+  ASSERT_EQ(components.size(), static_cast<size_t>(3));
+  for (size_t v = 0; v < 8; ++v) {
+    int containing = 0;
+    for (const auto& component : components) {
+      if (component.find(v) != component.end())
+        ++containing;
+    }
+    EXPECT_EQ(containing, 1);
+  }
+  EXPECT_EQ(graph.subgraphsCount(), static_cast<size_t>(3));
+  EXPECT_EQ(graph.getConnectedID(0), graph.getConnectedID(3));
+  EXPECT_EQ(graph.getConnectedID(0), graph.getConnectedID(1));
+  EXPECT_NE(graph.getConnectedID(4), graph.getConnectedID(6));
+  EXPECT_NE(graph.getConnectedID(0), graph.getConnectedID(4));
+}
+
+TEST(GraphTest, editEdgesInPlaceKeepsIsolatedVertexSeparate)
+{
+  Graph graph(9);
+  graph.addEdge(0, 1);
+  graph.addEdge(2, 3);
+  graph.addEdge(4, 5);
+  graph.addEdge(6, 7);
+  graph.addEdge(0, 2);
+
+  Avogadro::Core::Array<std::pair<size_t, size_t>> pairs;
+  pairs.push_back({ 1, 2 });
+  pairs.push_back({ 0, 3 });
+  pairs.push_back({ 0, 1 });
+  pairs.push_back({ 4, 5 });
+  pairs.push_back({ 7, 6 });
+  ASSERT_TRUE(graph.editEdgesInPlace(pairs));
+
+  // Three bonded components plus the never-bonded vertex 8.
+  EXPECT_EQ(graph.subgraphsCount(), static_cast<size_t>(4));
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(4));
+  EXPECT_EQ(graph.subgraphCount(8), static_cast<size_t>(1));
+
+  // Joining two components later merges them correctly.
+  graph.addEdge(5, 6);
+  EXPECT_EQ(graph.subgraphsCount(), static_cast<size_t>(3));
+  const auto components = graph.connectedComponents();
+  ASSERT_EQ(components.size(), static_cast<size_t>(3));
+  EXPECT_EQ(graph.getConnectedID(4), graph.getConnectedID(7));
+  EXPECT_NE(graph.getConnectedID(0), graph.getConnectedID(4));
+  EXPECT_EQ(graph.subgraphCount(8), static_cast<size_t>(1));
+  int containing = 0;
+  for (const auto& component : components) {
+    if (component.find(8) != component.end())
+      ++containing;
+  }
+  EXPECT_EQ(containing, 1);
+}
+
 TEST(GraphTest, editEdgeInPlaceSamePairAfterVertexRemoval)
 {
   // removeVertex() moves the last vertex into the hole without re-sorting the
