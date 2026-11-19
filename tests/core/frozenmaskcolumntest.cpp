@@ -129,13 +129,9 @@ TEST(FrozenMaskColumnTest, raggedRowsDoNotOverrun)
   EXPECT_TRUE(saved.empty());
 }
 
-TEST(FrozenMaskColumnTest, trimClearTakeFrom)
+TEST(FrozenMaskColumnTest, clearTakeFrom)
 {
-  FrozenMaskColumn column = make({ 0.0, 0.0, 0.0 });
-  column.trimTo(5);
-  EXPECT_EQ(column.size(), static_cast<Index>(3));
-  column.trimTo(1);
-  EXPECT_EQ(column.size(), static_cast<Index>(1));
+  FrozenMaskColumn column = make({ 0.0 });
 
   FrozenMaskColumn target = make({ 1.0, 1.0 });
   target.takeFrom(column);

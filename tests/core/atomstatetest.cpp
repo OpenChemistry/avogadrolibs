@@ -247,7 +247,6 @@ TEST(AtomStateTest, forEachColumnVisitsEveryColumn)
 {
   AtomState state = makeState();
   int visited = 0;
-  state.forEachColumn(AtomState::Fills{},
-                      [&](auto&, const auto&) { ++visited; });
+  state.forEachColumn(nullptr, [&](auto&, const auto&) { ++visited; });
   EXPECT_EQ(visited, 9);
 }

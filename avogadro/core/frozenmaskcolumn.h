@@ -89,14 +89,6 @@ public:
     }
   }
 
-  /** Drop every entry for an atom at or past @p count. */
-  void trimTo(Index count)
-  {
-    const auto rows = static_cast<Eigen::Index>(3 * count);
-    if (m_values.rows() > rows)
-      m_values.conservativeResize(rows);
-  }
-
   /** Remove every entry. */
   void clear() { m_values.resize(0); }
 

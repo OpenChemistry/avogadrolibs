@@ -677,9 +677,10 @@ signed char Molecule::totalCharge() const
   // check the data map first
   if (m_data.hasValue("totalCharge")) {
     charge = m_data.value("totalCharge").toInt();
-  } else if (!m_atomState.formalCharges.array().empty()) {
-    for (Index i = 0; i < m_atomState.formalCharges.array().size(); ++i)
-      charge += m_atomState.formalCharges.array()[i];
+  } else if (!m_atomState.formalCharges.empty()) {
+    const auto& charges = m_atomState.formalCharges.array();
+    for (Index i = 0; i < charges.size(); ++i)
+      charge += charges[i];
     return charge;
   }
   return charge; // should be zero
@@ -2658,10 +2659,10 @@ bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
         m_elements.set(element_count - 1);
     }
     // update colors too
-    if (nums.size() == m_atomState.colors.array().size()) {
+    auto& colors = m_atomState.colors.array();
+    if (nums.size() == colors.size()) {
       for (Index i = 0; i < nums.size(); ++i)
-        m_atomState.colors.array()[i] =
-          Vector3ub(Elements::color(m_atomicNumbers[i]));
+        colors[i] = Vector3ub(Elements::color(m_atomicNumbers[i]));
     }
 
     return true;
@@ -2687,8 +2688,9 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
     }
 
     // update colors too
-    if (atomId < m_atomState.colors.array().size())
-      m_atomState.colors.array()[atomId] = Vector3ub(Elements::color(number));
+    auto& colors = m_atomState.colors.array();
+    if (atomId < colors.size())
+      colors[atomId] = Vector3ub(Elements::color(number));
 
     return true;
   }

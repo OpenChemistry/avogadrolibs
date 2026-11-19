@@ -4125,10 +4125,11 @@ TEST_F(MoleculeTest, RemoveAtomInRaggedOptionalArrayClearsStaleEntry)
   molecule.addAtom(6);
   molecule.setAtomLabel(0, "zero");
   molecule.setAtomLabel(1, "one");
-  molecule.setAtomLabel(2, "two"); // m_atomLabels is now exactly atomCount().
+  molecule.setAtomLabel(2,
+                        "two"); // the labels column is now exactly atomCount().
 
-  // Added after the labels were set, so it has none: m_atomLabels stays at
-  // 3 while atomCount() becomes 4.
+  // Added after the labels were set, so it has none: the labels column
+  // stays at 3 while atomCount() becomes 4.
   molecule.addAtom(6);
 
   ASSERT_TRUE(molecule.removeAtom(static_cast<Index>(1)));
@@ -4184,9 +4185,10 @@ TEST_F(MoleculeTest, SwapAtomInRaggedOptionalArrayMovesLabelToNewIndex)
   molecule.addAtom(6);
   molecule.addAtom(6);
   molecule.setAtomLabel(0, "zero");
-  molecule.setAtomLabel(1, "one"); // m_atomLabels is now exactly atomCount().
+  molecule.setAtomLabel(1,
+                        "one"); // the labels column is now exactly atomCount().
 
-  // Added after the labels were set: m_atomLabels stays at 2 while
+  // Added after the labels were set: the labels column stays at 2 while
   // atomCount() becomes 3.
   molecule.addAtom(6);
 
@@ -4271,7 +4273,7 @@ TEST_F(MoleculeTest, SwapAndRemoveAtomInRaggedSelection)
   Molecule molecule;
   molecule.addAtom(6);
   molecule.addAtom(6);
-  molecule.setAtomSelected(1, true); // m_selectedAtoms is now 2 long.
+  molecule.setAtomSelected(1, true); // the selection column is now 2 long.
   molecule.addAtom(6);
   molecule.addAtom(6);
 

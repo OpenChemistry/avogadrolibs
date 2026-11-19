@@ -54,15 +54,6 @@ namespace Avogadro::Core {
  */
 struct AtomState
 {
-  /**
-   * What forEachColumn() needs to build the fills. Null @p atomicNumbers is
-   * for the operations that need no fill.
-   */
-  struct Fills
-  {
-    const Array<unsigned char>* atomicNumbers = nullptr;
-  };
-
   /** Marks a column whose operations take no fill (see the helpers below). */
   struct NoFill
   {};
@@ -98,21 +89,24 @@ struct AtomState
   PropertyMap properties;
 
   /**
-   * Call @p f(column, fill, other column...) for every column. @p fill is
+   * Call @p f(column, fill, other column...) for every column. The color fill
+   * reads @p atomicNumbers, which may be null for the operations that need no
+   * fill (clear, slice, restore, takeFrom). @p fill is
    * what the column's swapEntries() and removeEntry() take: a value, a
    * callable, or NoFill for a column that takes none. Each extra AtomState in
    * @p others is visited alongside, so that slice(), restore() and takeFrom()
    * can walk two states in step.
    */
   template <typename F, typename... Others>
-  void forEachColumn(const Fills& fills, F&& f, Others&... others)
+  void forEachColumn(const Array<unsigned char>* atomicNumbers, F&& f,
+                     Others&... others)
   {
     f(positions2d, Vector2(Vector2::Zero()), others.positions2d...);
     f(labels, NoFill(), others.labels...);
     f(hybridizations, NoFill(), others.hybridizations...);
     f(formalCharges, NoFill(), others.formalCharges...);
     f(isotopes, NoFill(), others.isotopes...);
-    f(colors, ColorFill{ fills.atomicNumbers }, others.colors...);
+    f(colors, ColorFill{ atomicNumbers }, others.colors...);
     f(selection, NoFill(), others.selection...);
     f(frozenMask, NoFill(), others.frozenMask...);
     f(properties, NoFill(), others.properties...);
@@ -131,7 +125,7 @@ struct AtomState
    */
   void swapEntries(Index a, Index b, const Array<unsigned char>& atomicNumbers)
   {
-    forEachColumn(Fills{ &atomicNumbers }, [&](auto& column, const auto& fill) {
+    forEachColumn(&atomicNumbers, [&](auto& column, const auto& fill) {
       swapColumn(column, a, b, fill);
     });
   }
@@ -143,7 +137,7 @@ struct AtomState
   void removeEntry(Index index, Index count,
                    const Array<unsigned char>& atomicNumbers)
   {
-    forEachColumn(Fills{ &atomicNumbers }, [&](auto& column, const auto& fill) {
+    forEachColumn(&atomicNumbers, [&](auto& column, const auto& fill) {
       removeColumn(column, index, count, fill);
     });
   }
@@ -151,7 +145,7 @@ struct AtomState
   /** Remove everything stored for every atom. */
   void clear()
   {
-    forEachColumn(Fills{}, [](auto& column, const auto&) { column.clear(); });
+    forEachColumn(nullptr, [](auto& column, const auto&) { column.clear(); });
   }
 
   /**
@@ -162,7 +156,7 @@ struct AtomState
   {
     AtomState result;
     result.forEachColumn(
-      Fills{},
+      nullptr,
       [&](auto& saved, const auto&, const auto& column) {
         saved = column.slice(index, count);
       },
@@ -178,7 +172,7 @@ struct AtomState
   void restore(Index index, const AtomState& saved, Index count)
   {
     forEachColumn(
-      Fills{},
+      nullptr,
       [&](auto& column, const auto&, const auto& part) {
         column.restore(index, part, count);
       },
@@ -193,7 +187,7 @@ struct AtomState
   void takeFrom(AtomState& other)
   {
     forEachColumn(
-      Fills{},
+      nullptr,
       [](auto& column, const auto&, auto& source) { column.takeFrom(source); },
       other);
   }

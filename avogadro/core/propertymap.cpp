@@ -244,8 +244,6 @@ std::set<std::string> PropertyMap::matrixNames() const
 
 void PropertyMap::addEntry(Index entityCount)
 {
-  // Entries at or past the new entity's index belong to no entity (the
-  // setters don't check the index), so drop them before appending.
   for (auto& kv : m_doubles)
     kv.second.addEntry(entityCount, doubleSentinel);
   for (auto& kv : m_ints)
