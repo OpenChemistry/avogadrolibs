@@ -5,6 +5,7 @@ set(tests
   Aromaticity
   Array
   Atom
+  AtomState
   AtomTyper
   AtomUtilities
   BasisSet

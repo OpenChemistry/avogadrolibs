@@ -37,25 +37,20 @@ Molecule::Molecule()
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
-    m_spectra(other.m_spectra), m_atomProperties(other.m_atomProperties),
-    m_residueProperties(other.m_residueProperties),
+    m_spectra(other.m_spectra), m_residueProperties(other.m_residueProperties),
     m_conformerProperties(other.m_conformerProperties),
     m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
-    m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_atomLabels(other.m_atomLabels), m_residueLabels(other.m_residueLabels),
+    m_atomState(other.m_atomState), m_positions3d(other.m_positions3d),
+    m_residueLabels(other.m_residueLabels),
     m_coordinates3d(other.m_coordinates3d),
     m_coordinate3dIndex(other.m_coordinate3dIndex),
     m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
-    m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
-    m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
+    m_forceVectors(other.m_forceVectors), m_vibrations(other.m_vibrations),
     m_basisSet(other.m_basisSet),
     m_unitCell(other.m_unitCell ? std::make_unique<UnitCell>(*other.m_unitCell)
                                 : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_constraints(other.m_constraints),
-    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
+    m_constraints(other.m_constraints), m_graph(other.m_graph),
     m_bondState(other.m_bondState), m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::make_shared<MoleculeInfo>(other.ensureLayerInfo()))
 {
@@ -77,10 +72,10 @@ Molecule::Molecule(const Molecule& other)
 
 void Molecule::readProperties(const Molecule& other)
 {
-  m_atomLabels = other.m_atomLabels;
+  m_atomState.labels = other.m_atomState.labels;
   m_bondState.labels = other.m_bondState.labels;
   m_residueLabels = other.m_residueLabels;
-  m_colors = other.m_colors;
+  m_atomState.colors = other.m_atomState.colors;
   // merge data maps by iterating through other's map
   for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
        ++it) {
@@ -97,7 +92,7 @@ void Molecule::readProperties(const Molecule& other)
   m_spectra = other.m_spectra;
 
   // merge custom property maps
-  m_atomProperties = other.m_atomProperties;
+  m_atomState.properties = other.m_atomState.properties;
   m_bondState.properties = other.m_bondState.properties;
   m_residueProperties = other.m_residueProperties;
   m_conformerProperties = other.m_conformerProperties;
@@ -134,26 +129,19 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_data = other.m_data;
     m_partialCharges = other.m_partialCharges;
     m_spectra = other.m_spectra;
-    m_atomProperties = other.m_atomProperties;
+    m_atomState = other.m_atomState;
     m_residueProperties = other.m_residueProperties;
     m_conformerProperties = other.m_conformerProperties;
     m_customElementMap = other.m_customElementMap;
     m_elements = other.m_elements;
-    m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
-    m_atomLabels = other.m_atomLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_coordinate3dIndex = other.m_coordinate3dIndex;
     m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
-    m_hybridizations = other.m_hybridizations;
-    m_formalCharges = other.m_formalCharges;
-    m_isotopes = other.m_isotopes;
     m_forceVectors = other.m_forceVectors;
-    m_colors = other.m_colors;
     m_vibrations = other.m_vibrations;
-    m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
     repointResidueAtoms(other);
     m_graph = other.m_graph;
@@ -161,7 +149,6 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
     m_constraints = other.m_constraints;
-    m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
 
@@ -264,8 +251,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   other.m_partialCharges.clear();
   m_spectra = std::move(other.m_spectra);
   other.m_spectra.clear();
-  m_atomProperties = std::move(other.m_atomProperties);
-  other.m_atomProperties.clear();
+  m_atomState.takeFrom(other.m_atomState);
   m_residueProperties = std::move(other.m_residueProperties);
   other.m_residueProperties.clear();
   m_conformerProperties = std::move(other.m_conformerProperties);
@@ -275,23 +261,16 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_elements = other.m_elements;
   other.m_elements.reset();
 
-  m_positions2d.takeFrom(other.m_positions2d);
   m_positions3d.takeFrom(other.m_positions3d);
-  m_atomLabels.takeFrom(other.m_atomLabels);
   m_residueLabels.takeFrom(other.m_residueLabels);
   m_coordinates3d.takeFrom(other.m_coordinates3d);
   m_coordinate3dIndex = std::exchange(other.m_coordinate3dIndex, 0);
   m_velocities.takeFrom(other.m_velocities);
   m_timesteps.takeFrom(other.m_timesteps);
-  m_hybridizations.takeFrom(other.m_hybridizations);
-  m_formalCharges.takeFrom(other.m_formalCharges);
-  m_isotopes.takeFrom(other.m_isotopes);
   m_forceVectors.takeFrom(other.m_forceVectors);
-  m_colors.takeFrom(other.m_colors);
 
   m_vibrations = std::move(other.m_vibrations);
   other.m_vibrations.clear();
-  m_selectedAtoms.takeFrom(other.m_selectedAtoms);
 
   m_meshes = std::move(other.m_meshes);
   other.m_meshes.clear();
@@ -311,7 +290,6 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_hallNumber = std::exchange(other.m_hallNumber, 0);
   m_constraints = std::move(other.m_constraints);
   other.m_constraints.clear();
-  m_frozenAtomMask.takeFrom(other.m_frozenAtomMask);
 
   // Graph has no swap, and its defaulted moves copy its edge Array; resetting
   // the source afterwards leaves it empty and unshared.
@@ -372,12 +350,12 @@ std::set<std::string> Molecule::partialChargeTypes() const
 
 PropertyMap& Molecule::atomProperties()
 {
-  return m_atomProperties;
+  return m_atomState.properties;
 }
 
 const PropertyMap& Molecule::atomProperties() const
 {
-  return m_atomProperties;
+  return m_atomState.properties;
 }
 
 PropertyMap& Molecule::bondProperties()
@@ -561,7 +539,7 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
   if (atomId >= m_atomicNumbers.size())
     return;
 
-  auto& mask = m_frozenAtomMask.storage();
+  auto& mask = m_atomState.frozenMask.storage();
   Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
@@ -583,7 +561,7 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
 
 bool Molecule::frozenAtom(Index atomId) const
 {
-  const auto& mask = m_frozenAtomMask.storage();
+  const auto& mask = m_atomState.frozenMask.storage();
   auto base = static_cast<Eigen::Index>(atomId * 3);
   if (base <= mask.rows() - 3) {
     return (mask[base] == 0.0 && mask[base + 1] == 0.0 &&
@@ -594,7 +572,7 @@ bool Molecule::frozenAtom(Index atomId) const
 
 bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 {
-  const auto& mask = m_frozenAtomMask.storage();
+  const auto& mask = m_atomState.frozenMask.storage();
   auto base = static_cast<Eigen::Index>(atomId * 3);
   if (base <= mask.rows() - 3) {
     return (mask[base + axis] == 0.0);
@@ -604,7 +582,7 @@ bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
-  auto& mask = m_frozenAtomMask.storage();
+  auto& mask = m_atomState.frozenMask.storage();
   Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
@@ -664,32 +642,32 @@ VariantMap& Molecule::dataMap()
 
 Array<AtomHybridization>& Molecule::hybridizations()
 {
-  return m_hybridizations;
+  return m_atomState.hybridizations.array();
 }
 
 const Array<AtomHybridization>& Molecule::hybridizations() const
 {
-  return m_hybridizations;
+  return m_atomState.hybridizations.array();
 }
 
 Array<unsigned short>& Molecule::isotopes()
 {
-  return m_isotopes;
+  return m_atomState.isotopes.array();
 }
 
 const Array<unsigned short>& Molecule::isotopes() const
 {
-  return m_isotopes;
+  return m_atomState.isotopes.array();
 }
 
 Array<signed char>& Molecule::formalCharges()
 {
-  return m_formalCharges;
+  return m_atomState.formalCharges.array();
 }
 
 const Array<signed char>& Molecule::formalCharges() const
 {
-  return m_formalCharges;
+  return m_atomState.formalCharges.array();
 }
 
 signed char Molecule::totalCharge() const
@@ -699,9 +677,9 @@ signed char Molecule::totalCharge() const
   // check the data map first
   if (m_data.hasValue("totalCharge")) {
     charge = m_data.value("totalCharge").toInt();
-  } else if (!m_formalCharges.empty()) {
-    for (Index i = 0; i < m_formalCharges.size(); ++i)
-      charge += m_formalCharges[i];
+  } else if (!m_atomState.formalCharges.array().empty()) {
+    for (Index i = 0; i < m_atomState.formalCharges.array().size(); ++i)
+      charge += m_atomState.formalCharges.array()[i];
     return charge;
   }
   return charge; // should be zero
@@ -738,22 +716,22 @@ char Molecule::totalSpinMultiplicity() const
 
 Array<Vector3ub>& Molecule::colors()
 {
-  return m_colors;
+  return m_atomState.colors.array();
 }
 
 const Array<Vector3ub>& Molecule::colors() const
 {
-  return m_colors;
+  return m_atomState.colors.array();
 }
 
 Array<Vector2>& Molecule::atomPositions2d()
 {
-  return m_positions2d;
+  return m_atomState.positions2d.array();
 }
 
 const Array<Vector2>& Molecule::atomPositions2d() const
 {
-  return m_positions2d;
+  return m_atomState.positions2d.array();
 }
 
 Array<Vector3>& Molecule::atomPositions3d()
@@ -813,7 +791,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   // The calculated results are per-atom, so a new atom invalidates them just
   // as a removed atom does (see removeAtom()).
   clearCalculatedResults();
-  m_atomProperties.addEntry(atomCount());
+  m_atomState.addEntry(atomCount());
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -835,7 +813,9 @@ namespace {
 // removal). The helpers below let each member cost one line per function,
 // so the three function bodies can be written as parallel lists and a
 // member missing from one of them is visible by inspection. When a new
-// atom-indexed member is added to Molecule, add it to all three.
+// atom-indexed member is added to Molecule, add it to all three. The
+// optional columns in m_atomState are the exception: each goes into
+// AtomState::forEachColumn() alone, which the three functions call once.
 //
 // "Handle" is not always "reindex". swapAtom() reindexes everything, since
 // swapping two indices relabels the same structure. removeAtom() changes the
@@ -1062,27 +1042,19 @@ void Molecule::swapAtom(Index a, Index b)
 
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with removeAtom() and clearAtoms().
-  swapAtomEntry(m_positions2d, a, b, max,
-                [](Index) { return Vector2::Zero(); });
+  // with removeAtom() and clearAtoms(). m_atomState holds the rest of the
+  // optional per-atom columns and handles them all in one call. It reads
+  // m_atomicNumbers for the color fill, so it runs before they are swapped.
+  m_atomState.swapEntries(a, b, m_atomicNumbers);
   swapAtomEntry(m_positions3d, a, b, max,
                 [](Index) { return Vector3::Zero(); });
-  swapAtomEntry(m_atomLabels, a, b, max);
-  swapAtomEntry(m_hybridizations, a, b, max);
-  swapAtomEntry(m_formalCharges, a, b, max);
-  swapAtomEntry(m_isotopes, a, b, max);
   swapAtomEntry(m_forceVectors, a, b, max,
                 [](Index) { return Vector3::Zero(); });
-  swapAtomEntry(m_colors, a, b, max, [this](Index i) {
-    return Vector3ub(Elements::color(m_atomicNumbers[i]));
-  });
-  m_selectedAtoms.swapEntries(a, b);
   swapAtomEntryFrames(m_coordinates3d, a, b, max,
                       [](Index) { return Vector3::Zero(); });
   swapAtomEntryFrames(m_velocities, a, b, max,
                       [](Index) { return Vector3::Zero(); });
   swapAtomEntryVibrations(m_vibrations, a, b, max);
-  m_frozenAtomMask.swapEntries(a, b);
   swapAtomEntry(m_partialCharges, a, b, max);
 
   // Allow Argument Dependent Lookup for swap
@@ -1090,7 +1062,6 @@ void Molecule::swapAtom(Index a, Index b)
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
   ensureLayerInfo().layer.swapLayer(a, b);
-  m_atomProperties.swapEntries(a, b);
 
   // Residues are not an atom-indexed member and so are reached by none of the
   // helpers above: the array is residue-indexed, and it is the Atom proxies
@@ -1137,24 +1108,15 @@ bool Molecule::removeAtom(Index index)
 
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with swapAtom() and clearAtoms(). These must all run before
-  // m_atomicNumbers (and therefore atomCount()) is updated below.
-  removeAtomEntry(m_positions2d, index, atomCount(),
-                  [](Index) { return Vector2::Zero(); });
+  // with swapAtom() and clearAtoms(). m_atomState holds the rest of the
+  // optional per-atom columns and handles them all in one call. These must
+  // all run before m_atomicNumbers (and therefore atomCount()) is updated
+  // below; the color fill reads it.
+  m_atomState.removeEntry(index, atomCount(), m_atomicNumbers);
   removeAtomEntry(m_positions3d, index, atomCount(),
                   [](Index) { return Vector3::Zero(); });
-  removeAtomEntry(m_atomLabels, index, atomCount());
-  removeAtomEntry(m_hybridizations, index, atomCount());
-  removeAtomEntry(m_formalCharges, index, atomCount());
-  removeAtomEntry(m_isotopes, index, atomCount());
-  removeAtomEntry(m_colors, index, atomCount(), [this](Index i) {
-    return Vector3ub(Elements::color(m_atomicNumbers[i]));
-  });
   removeAtomEntryFrames(m_coordinates3d, index, atomCount(),
                         [](Index) { return Vector3::Zero(); });
-  m_frozenAtomMask.removeEntry(index, atomCount());
-
-  m_selectedAtoms.removeEntry(index, atomCount());
 
   // Constraints and scan coordinates name atoms by index without being
   // atom-indexed themselves, so neither the helpers above nor atomCount()
@@ -1182,7 +1144,6 @@ bool Molecule::removeAtom(Index index)
   // swapAtom() reindexes instead, and is right to: swapping two indices
   // relabels the same structure rather than changing it.
   clearCalculatedResults();
-  m_atomProperties.removeEntry(index, atomCount());
   removeBonds(index);
 
   // before we remove, check if there's any other atom of this element
@@ -1229,17 +1190,10 @@ void Molecule::clearAtoms()
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
   // with swapAtom() and removeAtom().
-  m_positions2d.clear();
+  m_atomState.clear();
   m_positions3d.clear();
-  m_atomLabels.clear();
-  m_hybridizations.clear();
-  m_formalCharges.clear();
-  m_isotopes.clear();
   m_forceVectors.clear();
-  m_colors.clear();
-  m_selectedAtoms.clear();
   m_coordinates3d.clear();
-  m_frozenAtomMask.clear();
 
   // With no atoms left there is nothing for any calculated result to be about,
   // nor for a scan coordinate to name.
@@ -1251,7 +1205,6 @@ void Molecule::clearAtoms()
   m_bondState.clear();
   m_residueLabels.clear();
   m_graph.clear();
-  m_atomProperties.clear();
   m_residues.clear();
   m_residueProperties.clear();
   m_conformerProperties.clear();
@@ -2705,9 +2658,10 @@ bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
         m_elements.set(element_count - 1);
     }
     // update colors too
-    if (nums.size() == m_colors.size()) {
+    if (nums.size() == m_atomState.colors.array().size()) {
       for (Index i = 0; i < nums.size(); ++i)
-        m_colors[i] = Vector3ub(Elements::color(m_atomicNumbers[i]));
+        m_atomState.colors.array()[i] =
+          Vector3ub(Elements::color(m_atomicNumbers[i]));
     }
 
     return true;
@@ -2733,8 +2687,8 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
     }
 
     // update colors too
-    if (atomId < m_colors.size())
-      m_colors[atomId] = Vector3ub(Elements::color(number));
+    if (atomId < m_atomState.colors.array().size())
+      m_atomState.colors.array()[atomId] = Vector3ub(Elements::color(number));
 
     return true;
   }

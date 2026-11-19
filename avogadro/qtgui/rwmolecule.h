@@ -321,7 +321,7 @@ public:
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
   const Core::Array<Vector2>& atomPositions2d() const
   {
-    return m_molecule.m_positions2d;
+    return m_molecule.m_atomState.positions2d.array();
   }
 
   /**

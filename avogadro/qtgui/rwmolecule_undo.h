@@ -42,7 +42,7 @@ protected:
   // RWMolecule, which QtGui::Molecule befriends.
   bool hasSelectionEntry(Index atomId)
   {
-    return atomId < m_molecule.m_selectedAtoms.size();
+    return atomId < m_molecule.m_atomState.selection.size();
   }
 
   RWMolecule& m_mol;

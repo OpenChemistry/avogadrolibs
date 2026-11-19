@@ -11,6 +11,7 @@
 #include "avogadrocore.h"
 
 #include "array.h"
+#include "atomstate.h"
 #include "bond.h"
 #include "bondstate.h"
 #include "bondorderperception.h"
@@ -379,7 +380,10 @@ public:
    */
   bool setAtomLabel(Index atomId, const std::string& label);
 
-  const Core::Array<std::string> atomLabels() const { return m_atomLabels; }
+  const Core::Array<std::string> atomLabels() const
+  {
+    return m_atomState.labels.array();
+  }
 
   /**
    * Set all the atom labels in the molecule.
@@ -1316,7 +1320,10 @@ public:
    * 0.0 means the atom is frozen, 1.0 means the atom is not frozen.
    * (i.e., multiply this mask with gradients to freeze atoms)
    */
-  Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask.storage(); }
+  Eigen::VectorXd frozenAtomMask() const
+  {
+    return m_atomState.frozenMask.storage();
+  }
   ///@} end of constraint methods
 
   /** @name Scan coordinates
@@ -1438,33 +1445,27 @@ protected:
     m_partialCharges; //!< Sets of atomic partial charges
 
   std::map<std::string, MatrixX> m_spectra; //!< Sets of spectra
-  PropertyMap m_atomProperties;             //!< Custom per-atom properties
   PropertyMap m_residueProperties;          //!< Custom per-residue properties
   PropertyMap m_conformerProperties;        //!< Custom per-conformer properties
   CustomElementMap m_customElementMap;
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)
-  Array<Vector2> m_positions2d;
+  // The optional per-atom columns that Molecule never indexes directly: 2D
+  // positions, labels, hybridizations, formal charges, isotopes, colors,
+  // selection, the frozen mask and the custom properties. See atomstate.h.
+  AtomState m_atomState;
   Array<Vector3> m_positions3d;
-  Array<std::string> m_atomLabels;
   Array<std::string> m_residueLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
   int m_coordinate3dIndex = 0;           //!< Active coordinate set index.
   Array<Array<Vector3>> m_velocities;    //!< Store velocities.
   Array<double> m_timesteps;
-  Array<AtomHybridization> m_hybridizations;
-  Array<signed char> m_formalCharges;
-  Array<unsigned short> m_isotopes; //!< Store isotopes of the atoms
   Array<Vector3> m_forceVectors;
-  Array<Vector3ub> m_colors;
   // Vibration data if available, keyed by conformer index. Sparse: a
   // trajectory usually has a Hessian at one geometry, if any. A molecule with
   // no coordinate sets keys its vibrations at 0, which is also the default
   // active index, so the single-geometry case is unchanged.
   std::map<size_t, VibrationData> m_vibrations;
-
-  // Array declaring whether atoms are selected or not.
-  SelectionColumn m_selectedAtoms;
 
   // Shared between copies of the molecule; the non-const accessors detach a
   // shared element before handing it out (copy on write).
@@ -1482,7 +1483,6 @@ protected:
   unsigned short m_hallNumber = 0;
 
   std::vector<Core::Constraint> m_constraints;
-  FrozenMaskColumn m_frozenAtomMask;
 
 private:
   /**
@@ -1577,8 +1577,8 @@ public:
 inline AtomHybridization Molecule::hybridization(Index atomId) const
 {
   AtomHybridization hyb = HybridizationUnknown;
-  if (atomId < m_hybridizations.size())
-    return m_hybridizations[atomId];
+  if (atomId < m_atomState.hybridizations.array().size())
+    return m_atomState.hybridizations.array()[atomId];
 
   return hyb;
 }
@@ -1587,7 +1587,7 @@ inline bool Molecule::setHybridizations(
   const Core::Array<AtomHybridization>& hybs)
 {
   if (hybs.size() == atomCount()) {
-    m_hybridizations = hybs;
+    m_atomState.hybridizations.array() = hybs;
     return true;
   }
   return false;
@@ -1596,9 +1596,10 @@ inline bool Molecule::setHybridizations(
 inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_hybridizations.size())
-      m_hybridizations.resize(atomCount(), HybridizationUnknown);
-    m_hybridizations[atomId] = hyb;
+    if (atomId >= m_atomState.hybridizations.array().size())
+      m_atomState.hybridizations.array().resize(atomCount(),
+                                                HybridizationUnknown);
+    m_atomState.hybridizations.array()[atomId] = hyb;
     return true;
   }
   return false;
@@ -1606,13 +1607,15 @@ inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 
 inline signed char Molecule::formalCharge(Index atomId) const
 {
-  return atomId < m_formalCharges.size() ? m_formalCharges[atomId] : 0;
+  return atomId < m_atomState.formalCharges.array().size()
+           ? m_atomState.formalCharges.array()[atomId]
+           : 0;
 }
 
 inline bool Molecule::setFormalCharges(const Core::Array<signed char>& charges)
 {
   if (charges.size() == atomCount()) {
-    m_formalCharges = charges;
+    m_atomState.formalCharges.array() = charges;
     return true;
   }
   return false;
@@ -1621,9 +1624,9 @@ inline bool Molecule::setFormalCharges(const Core::Array<signed char>& charges)
 inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_formalCharges.size())
-      m_formalCharges.resize(atomCount(), 0);
-    m_formalCharges[atomId] = charge;
+    if (atomId >= m_atomState.formalCharges.array().size())
+      m_atomState.formalCharges.array().resize(atomCount(), 0);
+    m_atomState.formalCharges.array()[atomId] = charge;
     return true;
   }
   return false;
@@ -1631,13 +1634,15 @@ inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
 
 inline unsigned short Molecule::isotope(Index atomId) const
 {
-  return atomId < m_isotopes.size() ? m_isotopes[atomId] : 0;
+  return atomId < m_atomState.isotopes.array().size()
+           ? m_atomState.isotopes.array()[atomId]
+           : 0;
 }
 
 inline bool Molecule::setIsotopes(const Core::Array<unsigned short>& isotopes)
 {
   if (isotopes.size() == atomCount()) {
-    m_isotopes = isotopes;
+    m_atomState.isotopes.array() = isotopes;
     return true;
   }
   return false;
@@ -1646,9 +1651,9 @@ inline bool Molecule::setIsotopes(const Core::Array<unsigned short>& isotopes)
 inline bool Molecule::setIsotope(Index atomId, unsigned short isotope)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_isotopes.size())
-      m_isotopes.resize(atomCount(), 0);
-    m_isotopes[atomId] = isotope;
+    if (atomId >= m_atomState.isotopes.array().size())
+      m_atomState.isotopes.array().resize(atomCount(), 0);
+    m_atomState.isotopes.array()[atomId] = isotope;
     return true;
   }
   return false;
@@ -1664,8 +1669,8 @@ inline Vector3ub Molecule::color(Index atomId) const
   if (atomId >= atomCount())
     return Vector3ub(0, 0, 0);
 
-  if (atomId < m_colors.size())
-    return m_colors[atomId];
+  if (atomId < m_atomState.colors.array().size())
+    return m_atomState.colors.array()[atomId];
 
   return Vector3ub(Elements::color(atomicNumber(atomId)));
 }
@@ -1673,7 +1678,7 @@ inline Vector3ub Molecule::color(Index atomId) const
 inline bool Molecule::setColors(const Core::Array<Vector3ub>& colors)
 {
   if (colors.size() == atomCount()) {
-    m_colors = colors;
+    m_atomState.colors.array() = colors;
     return true;
   }
   return false;
@@ -1682,12 +1687,13 @@ inline bool Molecule::setColors(const Core::Array<Vector3ub>& colors)
 inline bool Molecule::setColor(Index atomId, Vector3ub color)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_colors.size()) {
-      for (Index i = m_colors.size(); i < atomCount(); ++i) {
-        m_colors.push_back(Vector3ub(Elements::color(atomicNumber(i))));
+    if (atomId >= m_atomState.colors.array().size()) {
+      for (Index i = m_atomState.colors.array().size(); i < atomCount(); ++i) {
+        m_atomState.colors.array().push_back(
+          Vector3ub(Elements::color(atomicNumber(i))));
       }
     }
-    m_colors[atomId] = color;
+    m_atomState.colors.array()[atomId] = color;
     return true;
   }
   return false;
@@ -1709,14 +1715,15 @@ inline bool Molecule::setLayer(Index atomId, size_t layer)
 
 inline Vector2 Molecule::atomPosition2d(Index atomId) const
 {
-  return atomId < m_positions2d.size() ? m_positions2d[atomId]
-                                       : Vector2::Zero();
+  return atomId < m_atomState.positions2d.array().size()
+           ? m_atomState.positions2d.array()[atomId]
+           : Vector2::Zero();
 }
 
 inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2>& pos)
 {
   if (pos.size() == atomCount() || pos.empty()) {
-    m_positions2d = pos;
+    m_atomState.positions2d.array() = pos;
     return true;
   }
   return false;
@@ -1725,9 +1732,9 @@ inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2>& pos)
 inline bool Molecule::setAtomPosition2d(Index atomId, const Vector2& pos)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_positions2d.size())
-      m_positions2d.resize(atomCount(), Vector2::Zero());
-    m_positions2d[atomId] = pos;
+    if (atomId >= m_atomState.positions2d.array().size())
+      m_atomState.positions2d.array().resize(atomCount(), Vector2::Zero());
+    m_atomState.positions2d.array()[atomId] = pos;
     return true;
   }
   return false;
@@ -1761,13 +1768,15 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
 
 inline std::string Molecule::atomLabel(Index atomId) const
 {
-  return atomId < m_atomLabels.size() ? m_atomLabels[atomId] : "";
+  return atomId < m_atomState.labels.array().size()
+           ? m_atomState.labels.array()[atomId]
+           : "";
 }
 
 inline bool Molecule::setAtomLabels(const Core::Array<std::string>& labels)
 {
   if (labels.size() == atomCount() || labels.empty()) {
-    m_atomLabels = labels;
+    m_atomState.labels.array() = labels;
     return true;
   }
   return false;
@@ -1776,9 +1785,9 @@ inline bool Molecule::setAtomLabels(const Core::Array<std::string>& labels)
 inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 {
   if (atomId < atomCount()) {
-    if (atomId >= m_atomLabels.size())
-      m_atomLabels.resize(atomCount(), "");
-    m_atomLabels[atomId] = label;
+    if (atomId >= m_atomState.labels.array().size())
+      m_atomState.labels.array().resize(atomCount(), "");
+    m_atomState.labels.array()[atomId] = label;
     return true;
   }
   return false;
@@ -1787,7 +1796,7 @@ inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 inline void Molecule::setAtomSelected(Index atomId, bool selected)
 {
   if (atomId < atomCount()) {
-    auto& flags = m_selectedAtoms.storage();
+    auto& flags = m_atomState.selection.storage();
     if (atomId >= flags.size())
       flags.resize(atomCount(), false);
     flags[atomId] = selected;
@@ -1796,13 +1805,14 @@ inline void Molecule::setAtomSelected(Index atomId, bool selected)
 
 inline bool Molecule::atomSelected(Index atomId) const
 {
-  return m_selectedAtoms.hasEntry(atomId) ? m_selectedAtoms.storage()[atomId]
-                                          : false;
+  return m_atomState.selection.hasEntry(atomId)
+           ? m_atomState.selection.storage()[atomId]
+           : false;
 }
 
 inline bool Molecule::isSelectionEmpty() const
 {
-  const auto& flags = m_selectedAtoms.storage();
+  const auto& flags = m_atomState.selection.storage();
   for (Index i = 0; i < flags.size(); ++i) {
     if (flags[i])
       return false;

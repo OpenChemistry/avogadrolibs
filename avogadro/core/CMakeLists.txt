@@ -44,6 +44,7 @@ add_library(Core)
 
 avogadro_headers(Core
   atom.h
+  atomstate.h
   atomtyper.h
   atomtyper-inline.h
   atomutilities.h
