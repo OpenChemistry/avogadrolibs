@@ -22,7 +22,6 @@
 #include "layer.h"
 #include "moleculeinfo.h"
 #include "propertymap.h"
-#include "selectioncolumn.h"
 #include "variantmap.h"
 #include "vector.h"
 
@@ -1795,26 +1794,19 @@ inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 
 inline void Molecule::setAtomSelected(Index atomId, bool selected)
 {
-  if (atomId < atomCount()) {
-    auto& flags = m_atomState.selection.storage();
-    if (atomId >= flags.size())
-      flags.resize(atomCount(), false);
-    flags[atomId] = selected;
-  }
+  m_atomState.selection.set(atomId, selected ? 1 : 0, atomCount());
 }
 
 inline bool Molecule::atomSelected(Index atomId) const
 {
-  return m_atomState.selection.hasEntry(atomId)
-           ? m_atomState.selection.storage()[atomId]
-           : false;
+  return m_atomState.selection.value(atomId, 0) != 0;
 }
 
 inline bool Molecule::isSelectionEmpty() const
 {
-  const auto& flags = m_atomState.selection.storage();
+  const auto& flags = m_atomState.selection.array();
   for (Index i = 0; i < flags.size(); ++i) {
-    if (flags[i])
+    if (flags[i] != 0)
       return false;
   }
   return true;

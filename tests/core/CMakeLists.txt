@@ -38,7 +38,6 @@ set(tests
   NeighborPerceiver
   PropertyMap
   Residue
-  SelectionColumn
   RingPerceiver
   SecondaryStructure
   Utilities

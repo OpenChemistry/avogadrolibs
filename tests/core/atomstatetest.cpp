@@ -50,7 +50,7 @@ AtomState makeState()
   }
   for (Index i = 0; i < 4; ++i) {
     state.hybridizations.array().push_back(Avogadro::Core::SP3);
-    state.selection.storage().push_back(i % 2 == 0);
+    state.selection.array().push_back(i % 2 == 0 ? 1 : 0);
     state.properties.setDouble("d", i, 0.5 * static_cast<double>(i));
     state.properties.setString("s", i, "s" + std::to_string(i));
   }
@@ -93,8 +93,7 @@ void expectSame(const AtomState& expected, const AtomState& actual, Index count)
     EXPECT_EQ(expected.colors.value(i, Vector3ub(9, 9, 9)),
               actual.colors.value(i, Vector3ub(9, 9, 9)))
       << i;
-    EXPECT_EQ(expected.selection.hasEntry(i) && expected.selection.storage()[i],
-              actual.selection.hasEntry(i) && actual.selection.storage()[i])
+    EXPECT_EQ(expected.selection.value(i, 0), actual.selection.value(i, 0))
       << i;
     if (expected.frozenMask.hasEntry(i) && actual.frozenMask.hasEntry(i)) {
       EXPECT_TRUE(expected.frozenMask.storage().segment<3>(3 * i).isApprox(
@@ -123,8 +122,8 @@ TEST(AtomStateTest, swapMovesEveryColumn)
   EXPECT_EQ(state.formalCharges.value(3, 99), -2);
   EXPECT_EQ(state.labels.value(3, "?"), "label0");
   EXPECT_EQ(state.labels.value(0, "?"), "");
-  EXPECT_TRUE(state.selection.storage()[0] == false);
-  EXPECT_TRUE(state.selection.storage()[3] == true);
+  EXPECT_EQ(state.selection.array()[0], 0);
+  EXPECT_EQ(state.selection.array()[3], 1);
   EXPECT_DOUBLE_EQ(state.properties.getDouble("d", 0).value(), 1.5);
   EXPECT_DOUBLE_EQ(state.properties.getDouble("d", 3).value(), 0.0);
 }

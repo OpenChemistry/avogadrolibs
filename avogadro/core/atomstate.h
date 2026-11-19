@@ -13,7 +13,6 @@
 #include "elements.h"
 #include "frozenmaskcolumn.h"
 #include "propertymap.h"
-#include "selectioncolumn.h"
 #include "vector.h"
 
 #include <string>
@@ -94,7 +93,7 @@ struct AtomState
   Column<signed char> formalCharges;
   Column<unsigned short> isotopes;
   Column<Vector3ub> colors;
-  SelectionColumn selection;
+  Column<unsigned char> selection; // 0 = not selected, 1 = selected
   FrozenMaskColumn frozenMask;
   PropertyMap properties;
 
