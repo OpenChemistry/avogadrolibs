@@ -390,7 +390,9 @@ void PlayerTool::sourcesChanged()
       if (total != m_publishedTotal)
         limitsChanged = true;
       m_publishedTotal = total;
-      if (m_showingDisplaced)
+      // A pending conformer change means the displaced frame is already gone
+      // from screen; the Conformer branch of moleculeChanged() takes over.
+      if (m_showingDisplaced && m_molecule->coordinate3d() == m_restConformer)
         displayPublishedFrame();
     }
   }

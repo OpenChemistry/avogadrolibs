@@ -423,3 +423,45 @@ TEST_F(PlayerToolSourceTest, KeepFrameStoresRestAsSetZero)
   EXPECT_EQ(m_result.value("source").toString(), QString("vibration"));
   EXPECT_EQ(m_molecule.atomPositions3d(), displayed);
 }
+
+TEST_F(PlayerToolSourceTest, ReplacingFramesKeepsUserPickedSource)
+{
+  build(3);
+  m_tool.setMolecule(&m_molecule);
+  m_molecule.setAnimationFrames("vibration", "V", frames(4));
+  ASSERT_TRUE(useSource("vibration"));
+
+  // The set is replaced in place when the conformer moves between two frames
+  // that both have modes.
+  m_molecule.setCoordinate3d(1);
+  m_molecule.setAnimationFrames("vibration", "V2", frames(5));
+  m_molecule.emitChanged(Molecule::Atoms | Molecule::Moved |
+                         Molecule::Conformer);
+  ASSERT_TRUE(run("coordinateSetCount"));
+  EXPECT_EQ(m_result.value("source").toString(), QString("vibration"));
+  EXPECT_EQ(m_result.value("count").toInt(), 5);
+  EXPECT_EQ(m_molecule.atomPositions3d(), m_molecule.coordinate3d(1));
+}
+
+TEST_F(PlayerToolSourceTest, RepublishBeforeConformerSignalDoesNotDisplace)
+{
+  build(3);
+  m_tool.setMolecule(&m_molecule);
+  m_molecule.setAnimationFrames("vibration", "V", frames(4));
+  ASSERT_TRUE(useSource("vibration"));
+  ASSERT_TRUE(run("nextFrame")); // a displaced frame is on screen
+
+  // The plugin that owns the frames republishes before the Player hears
+  // about the conformer change.
+  m_molecule.setCoordinate3d(2);
+  m_molecule.setAnimationFrames("vibration", "V2", frames(4, 50.0));
+  EXPECT_EQ(m_molecule.atomPositions3d(), m_molecule.coordinate3d(2));
+  m_molecule.emitChanged(Molecule::Atoms | Molecule::Moved |
+                         Molecule::Conformer);
+  EXPECT_EQ(m_molecule.atomPositions3d(), m_molecule.coordinate3d(2));
+  ASSERT_TRUE(run("coordinateSetCount"));
+  EXPECT_EQ(m_result.value("frame").toInt(), 0);
+
+  ASSERT_TRUE(useSource("trajectory"));
+  EXPECT_EQ(m_molecule.atomPositions3d(), m_molecule.coordinate3d(2));
+}

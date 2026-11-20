@@ -308,3 +308,34 @@ TEST_F(VibrationsPluginTest, HiddenDialogCatchesUpWhenOpened)
   ASSERT_NE(start, nullptr);
   EXPECT_TRUE(start->isEnabled()); // the modes page is up to date
 }
+
+TEST_F(VibrationsPluginTest, ConformerChangeNeverWithdrawsFramesBetweenModes)
+{
+  // Give set 2 modes as well, so moving 1 -> 2 republishes.
+  Array<double> freqs;
+  freqs.push_back(900.0);
+  Array<Array<Vector3>> lx;
+  lx.push_back(pair(Vector3(0.0, 0.0, 0.5), Vector3(0.0, 0.0, -0.25)));
+  m_molecule.setVibrationFrequencies(freqs, 2);
+  m_molecule.setVibrationLx(lx, 2);
+  goTo(1);
+  ASSERT_FALSE(m_molecule.animationFrameIds().isEmpty());
+
+  int emissions = 0;
+  bool everMissing = false;
+  QObject::connect(&m_molecule,
+                   &Avogadro::QtGui::Molecule::animationFramesChanged, [&]() {
+                     ++emissions;
+                     if (m_molecule.animationFrameIds().isEmpty())
+                       everMissing = true;
+                   });
+  goTo(2);
+  EXPECT_GT(emissions, 0);
+  EXPECT_FALSE(everMissing);
+  EXPECT_EQ(m_molecule.animationFrameLabel("vibration"),
+            QString::fromUtf8("Vibration: mode 1, 900.0 cm⁻¹"));
+
+  // Moving to a frame without modes still withdraws them.
+  goTo(0);
+  EXPECT_TRUE(m_molecule.animationFrameIds().isEmpty());
+}

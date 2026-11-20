@@ -74,7 +74,7 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
     openDialog();
 }
 
-void Vibrations::resetAnimation()
+void Vibrations::resetAnimation(bool unpublish)
 {
   if (m_timer && m_timer->isActive()) {
     m_timer->stop();
@@ -83,7 +83,7 @@ void Vibrations::resetAnimation()
   }
   m_animationFrames.clear();
   m_currentFrame = 0;
-  if (m_molecule)
+  if (m_molecule && unpublish)
     m_molecule->removeAnimationFrames(QStringLiteral("vibration"));
 }
 
@@ -107,14 +107,19 @@ void Vibrations::refreshModes()
 
   // The frames were built from the previous conformer's geometry and modes.
   // Drop them rather than restoring that geometry: whoever changed the
-  // conformer meant to move away from it.
-  resetAnimation();
+  // conformer meant to move away from it. The published set stays up until
+  // it is replaced or withdrawn below, so the Animation tool does not see the
+  // source vanish and reappear.
+  resetAnimation(false);
 
   m_haveModes = m_molecule->hasVibrations();
   if (m_haveModes) {
     m_mode = defaultMode();
     setMode(m_mode);
   }
+  // No modes here, or a mode that could not be built: withdraw the old set.
+  if (m_animationFrames.empty())
+    publishFrames();
   reloadDialog();
 }
 

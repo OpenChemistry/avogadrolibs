@@ -81,10 +81,10 @@ private slots:
 
 private:
   /**
-   * Stop any running animation, discard its frames and withdraw them from the
-   * molecule.
+   * Stop any running animation and discard its frames, and withdraw them from
+   * the molecule unless @p unpublish is false (the caller republishes).
    */
-  void resetAnimation();
+  void resetAnimation(bool unpublish = true);
 
   /**
    * Re-evaluate the modes for the active conformer: the action state, the
