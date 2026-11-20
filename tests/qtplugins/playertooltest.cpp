@@ -362,8 +362,11 @@ TEST_F(PlayerToolSourceTest, KeepFrameAppendsASet)
 
   ASSERT_TRUE(useSource("vibration"));
   EXPECT_FALSE(keep->isHidden());
+  // Nothing is displaced yet, so there is nothing to keep.
+  EXPECT_FALSE(keep->isEnabled());
   ASSERT_TRUE(run("nextFrame"));
   ASSERT_TRUE(run("nextFrame"));
+  EXPECT_TRUE(keep->isEnabled());
   const Array<Vector3> displayed = mol().atomPositions3d();
 
   keep->click();
@@ -392,7 +395,9 @@ TEST_F(PlayerToolSourceTest, KeepFrameStoresRestAsSetZero)
   ASSERT_TRUE(run("nextFrame"));
   const Array<Vector3> displayed = mol().atomPositions3d();
 
-  keepButton(m_tool.toolWidget())->click();
+  QPushButton* keep = keepButton(m_tool.toolWidget());
+  ASSERT_NE(keep, nullptr);
+  keep->click();
   ASSERT_EQ(mol().coordinate3dCount(), 2u);
   EXPECT_EQ(mol().coordinate3d(0), rest);
   EXPECT_EQ(mol().coordinate3d(1), displayed);
@@ -480,4 +485,67 @@ TEST_F(PlayerToolSourceTest, EditingDisplacedAtomsKeepsTheEdit)
   // Leaving the source must not undo the edit.
   ASSERT_TRUE(useSource("trajectory"));
   EXPECT_EQ(mol().atomPositions3d(), edited);
+}
+
+TEST_F(PlayerToolSourceTest, LeavesAFrameShownByAnotherAnimatorAlone)
+{
+  build(3);
+  mol().setAnimationFrames("vibration", "V", frames(4));
+  ASSERT_TRUE(useSource("vibration"));
+  ASSERT_TRUE(run("nextFrame"));
+
+  // The Vibrations plugin claims after us and shows a frame of the same set.
+  QObject other;
+  mol().claimAnimationPlayback(&other);
+  ASSERT_TRUE(mol().showAnimationFrame("vibration", 3));
+  ASSERT_TRUE(useSource("trajectory"));
+  EXPECT_EQ(mol().shownAnimationId(), QString("vibration"));
+  EXPECT_EQ(mol().shownAnimationFrame(), 3);
+}
+
+TEST_F(PlayerToolSourceTest, RangeWidgetsFollowASourceSwitch)
+{
+  build(30);
+  QWidget* widget = m_tool.toolWidget();
+  const auto spins = widget->findChildren<QSpinBox*>();
+  ASSERT_EQ(spins.size(), 4); // frame, start, end, frame rate
+  QSpinBox* frame = spins[0];
+  QSpinBox* first = spins[1];
+  QSpinBox* last = spins[2];
+  first->setValue(15);
+
+  mol().setAnimationFrames("vibration", "V", frames(4));
+  ASSERT_TRUE(useSource("vibration"));
+  EXPECT_EQ(frame->minimum(), 1);
+  EXPECT_EQ(frame->maximum(), 4);
+  EXPECT_EQ(frame->value(), 1);
+  EXPECT_EQ(first->value(), 1);
+  EXPECT_EQ(last->value(), 4);
+  EXPECT_EQ(m_outcome.result.value("frame").toInt(), 0);
+  ASSERT_TRUE(run("coordinateSetCount"));
+  EXPECT_EQ(m_outcome.result.value("frame").toInt(), 0);
+}
+
+TEST_F(PlayerToolSourceTest, TrajectoryIdIsReserved)
+{
+  build(3);
+  mol().setAnimationFrames("trajectory", "Imposter", frames(4));
+  ASSERT_TRUE(run("listAnimationSources"));
+  const QVariantList sources = m_outcome.result.value("sources").toList();
+  ASSERT_EQ(sources.size(), 1);
+  EXPECT_EQ(sources[0].toMap().value("frames").toInt(), 3);
+  ASSERT_TRUE(useSource("trajectory"));
+  EXPECT_EQ(m_outcome.result.value("count").toInt(), 3);
+}
+
+TEST_F(PlayerToolSourceTest, NullMoleculeClearsTheSourceRow)
+{
+  build(3);
+  mol().setAnimationFrames("vibration", "V", frames(4));
+  auto* combo = m_tool.toolWidget()->findChild<QComboBox*>();
+  ASSERT_NE(combo, nullptr);
+  ASSERT_EQ(combo->count(), 2);
+  m_tool.setMolecule(nullptr);
+  EXPECT_EQ(combo->count(), 0);
+  EXPECT_TRUE(combo->parentWidget()->isHidden());
 }

@@ -357,16 +357,26 @@ TEST_F(VibrationsPluginTest, AnimationShowsFramesAndStopRestoresRest)
   EXPECT_EQ(m_molecule.atomPositions3d(), rest);
 }
 
-TEST_F(VibrationsPluginTest, ChangingModeKeepsTheShownIndex)
+TEST_F(VibrationsPluginTest, AmplitudeChangeKeepsTheShownIndex)
 {
   goTo(1);
   m_plugin->startVibrationAnimation();
   QMetaObject::invokeMethod(m_plugin, "advanceFrame");
   QMetaObject::invokeMethod(m_plugin, "advanceFrame");
   const Array<Vector3> rest = m_molecule.coordinate3d(1);
+  EXPECT_EQ(m_molecule.shownAnimationFrame(), 2);
 
   // Rebuilt frames are built from the rest geometry, not the displaced one.
   m_plugin->setAmplitude(40);
   EXPECT_EQ(m_molecule.restPositions3d(), rest);
-  EXPECT_TRUE(m_molecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_molecule.shownAnimationFrame(), 2);
+
+  // Mode 1 (index 1) is the default; frame 2 of 20 is at phase 2 pi * 2 / 20,
+  // and the peak displacement is lx * 0.001 * amplitude^2.
+  const Array<Vector3> lx = m_molecule.vibrationLx(1);
+  const double scale = std::sin(2.0 * pi * 2.0 / 20.0) * 0.001 * 40.0 * 40.0;
+  const Array<Vector3> shown = m_molecule.atomPositions3d();
+  ASSERT_EQ(shown.size(), rest.size());
+  for (size_t i = 0; i < rest.size(); ++i)
+    EXPECT_NEAR((shown[i] - (rest[i] + lx[i] * scale)).norm(), 0.0, 1e-12);
 }

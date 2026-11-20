@@ -1135,6 +1135,40 @@ TEST_F(MoleculeTest, animationDisplayIsNotCopied)
   EXPECT_EQ(m_testMolecule.atomPositions3d(), otherPositions);
 }
 
+TEST_F(MoleculeTest, editFromAChangedSlotDuringShowOwnsThePositions)
+{
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  Array<Avogadro::Vector3> edited = shownFrames(3)[1];
+  edited[0] = Avogadro::Vector3(-9.0, 0.0, 0.0);
+  bool editing = false;
+  QObject::connect(&m_testMolecule, &Molecule::changed, [&](unsigned int) {
+    if (editing)
+      return;
+    editing = true;
+    m_testMolecule.setAtomPositions3d(edited);
+    m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  });
+
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  m_testMolecule.clearAnimationDisplay();
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), edited);
+}
+
+TEST_F(MoleculeTest, emptyRestPositionsAreRestored)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.setAtomPositions3d(Array<Avogadro::Vector3>());
+  ASSERT_TRUE(molecule.atomPositions3d().empty());
+  molecule.setAnimationFrames("v", "V", shownFrames(1));
+  ASSERT_TRUE(molecule.showAnimationFrame("v", 0));
+  EXPECT_EQ(molecule.atomPositions3d().size(), 1u);
+  molecule.clearAnimationDisplay();
+  EXPECT_TRUE(molecule.atomPositions3d().empty());
+  EXPECT_FALSE(molecule.isShowingAnimationFrame());
+}
+
 TEST_F(MoleculeTest, claimAnimationPlayback)
 {
   QObject* received = nullptr;

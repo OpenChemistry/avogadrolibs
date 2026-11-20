@@ -366,14 +366,16 @@ void Molecule::emitChanged(unsigned int change)
         // from the old one. The caller's emit below covers the move.
         // With no stored set to move to, put the rest geometry back.
         const int active = coordinate3d();
-        if (active >= 0 && active < static_cast<int>(coordinate3dCount()))
-          setAtomPositions3d(coordinate3d(static_cast<size_t>(active)));
-        else if (m_animationRestPositions.size() == atomCount())
-          setAtomPositions3d(m_animationRestPositions);
+        const Core::Array<Vector3> target =
+          active >= 0 && active < static_cast<int>(coordinate3dCount())
+            ? coordinate3d(static_cast<size_t>(active))
+            : m_animationRestPositions;
+        if (target.empty() || target.size() == atomCount())
+          setAtomPositions3d(target);
         dropAnimationDisplay();
       } else if (invalidatesDerivedData(change)) {
         dropAnimationDisplay();
-      } else if ((change & Atoms) && !m_emittingAnimationDisplay &&
+      } else if ((change & Atoms) &&
                  atomPositions3d() !=
                    animationFrame(m_shownAnimationId,
                                   static_cast<size_t>(m_shownAnimationIndex))) {
@@ -417,14 +419,6 @@ void Molecule::dropAnimationDisplay()
   emit animationDisplayChanged();
 }
 
-void Molecule::emitDisplayChange()
-{
-  const bool wasEmitting = m_emittingAnimationDisplay;
-  m_emittingAnimationDisplay = true;
-  emitChanged(Atoms | Moved);
-  m_emittingAnimationDisplay = wasEmitting;
-}
-
 bool Molecule::showAnimationFrame(const QString& id, size_t index)
 {
   const AnimationFrameSet* set = findFrameSet(id);
@@ -441,7 +435,7 @@ bool Molecule::showAnimationFrame(const QString& id, size_t index)
   setAtomPositions3d(set->frames[index]);
   m_shownAnimationId = id;
   m_shownAnimationIndex = static_cast<int>(index);
-  emitDisplayChange();
+  emitChanged(Atoms | Moved);
   if (!sameFrame)
     emit animationDisplayChanged();
   return true;
@@ -455,9 +449,9 @@ void Molecule::clearAnimationDisplay()
   m_shownAnimationId.clear();
   m_shownAnimationIndex = -1;
   m_animationRestPositions.clear();
-  if (rest.size() == atomCount())
+  if (rest.empty() || rest.size() == atomCount())
     setAtomPositions3d(rest);
-  emitDisplayChange();
+  emitChanged(Atoms | Moved);
   emit animationDisplayChanged();
 }
 
@@ -482,7 +476,7 @@ void Molecule::refreshShownFrame(const AnimationFrameSet& set)
   m_shownAnimationIndex = static_cast<int>(index);
   if (moved) {
     setAtomPositions3d(frame);
-    emitDisplayChange();
+    emitChanged(Atoms | Moved);
   }
   if (indexChanged)
     emit animationDisplayChanged();

@@ -13,6 +13,7 @@
 #include <avogadro/core/vector.h>
 
 #include <QtCore/QElapsedTimer>
+#include <QtCore/QStringList>
 #include <QtCore/QTimer>
 
 class QComboBox;
@@ -76,6 +77,12 @@ protected slots:
   /** The molecule started, stopped or moved the displayed frame. */
   void animationDisplayChanged();
 
+  /** @return True if there is a displaced frame of ours to keep. */
+  bool canKeepFrame() const;
+
+  /** The published ids, without the one reserved for the trajectory. */
+  QStringList publishedIds() const;
+
   /** The user picked an entry in the source combo box. */
   void sourceActivated(int index);
 
@@ -86,7 +93,7 @@ protected slots:
   void forward();
   void play();
   void stop();
-  void animate(int advance = 1);
+  bool animate(int advance = 1);
   void animateDue();
 
   void recordMovie();
@@ -133,11 +140,14 @@ private:
   /** Claim the display from other animators, if we do not already hold it. */
   void claimPlayback();
 
-  /** Show frame m_sourceFrame of the published source. */
-  void displayPublishedFrame();
+  /**
+   * Show frame @p index of the published source.
+   * @return False, leaving everything as it was, if it cannot be shown.
+   */
+  bool displayPublishedFrame(int index);
 
   /** Display coordinate set @p frame and update the widgets to match. */
-  void setFrame(int frame);
+  bool setFrame(int frame);
 
   /** Push m_currentFrame into the slider and spin box without recursing. */
   void syncWidgets();

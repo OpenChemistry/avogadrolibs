@@ -300,7 +300,8 @@ public:
 
   /**
    * Publish @p frames under @p id, replacing any earlier set with that id.
-   * An empty @p frames array removes the set.
+   * An empty @p frames array removes the set. The id "trajectory" is
+   * reserved by the Animation tool for the molecule's own coordinate sets.
    */
   void setAnimationFrames(const QString& id, const QString& label,
                           const Core::Array<Core::Array<Vector3>>& frames);
@@ -422,12 +423,9 @@ private:
   QString m_shownAnimationId;
   int m_shownAnimationIndex = -1;
   Core::Array<Vector3> m_animationRestPositions;
-  bool m_emittingAnimationDisplay = false;
 
   /** Forget the display without touching the positions. */
   void dropAnimationDisplay();
-  /** Emit Atoms | Moved for a change the display itself made. */
-  void emitDisplayChange();
   /** Re-show the shown index from a freshly published set. */
   void refreshShownFrame(const AnimationFrameSet& set);
   AnimationFrameSet* findFrameSet(const QString& id);
