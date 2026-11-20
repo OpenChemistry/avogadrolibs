@@ -31,6 +31,7 @@ set(plugins
   SpaceGroup
   Surfaces
   TemplateTool
+  Vibrations
 )
 
 set(testSrcs "")
