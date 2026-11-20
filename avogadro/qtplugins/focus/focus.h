@@ -34,8 +34,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   void setCamera(Rendering::Camera* camera) override;
@@ -58,6 +56,9 @@ private:
   QAction* m_unfocusAction;
 
   void newFocus(Eigen::Vector3f point, float distance);
+
+  /// Add every scripting command to the command registry.
+  void registerFocusCommands();
 };
 
 } // namespace Avogadro::QtPlugins

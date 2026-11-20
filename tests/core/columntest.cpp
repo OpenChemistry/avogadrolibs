@@ -87,9 +87,9 @@ TEST(ColumnTest, setAll)
 TEST(ColumnTest, swapFullLength)
 {
   auto column = makeLabels({ "a", "b", "c" });
-  column.swapEntries(0, 2, 3);
+  column.swapEntries(0, 2);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c", "b", "a" }));
-  column.swapEntries(1, 1, 3);
+  column.swapEntries(1, 1);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c", "b", "a" }));
 }
 
@@ -98,18 +98,18 @@ TEST(ColumnTest, swapRagged)
   // Two entries for four entities.
   auto column = makeLabels({ "a", "b" });
   // Only the lower index has an entry: the value travels to the higher one.
-  column.swapEntries(1, 3, 4);
+  column.swapEntries(1, 3);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "", "", "b" }));
   // Argument order does not matter.
   column = makeLabels({ "a", "b" });
-  column.swapEntries(3, 0, 4);
+  column.swapEntries(3, 0);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "", "b", "", "a" }));
   // Neither has an entry: nothing to do.
   column = makeLabels({ "a", "b" });
-  column.swapEntries(2, 3, 4);
+  column.swapEntries(2, 3);
   EXPECT_EQ(column.size(), static_cast<Index>(2));
   // Both do.
-  column.swapEntries(0, 1, 4);
+  column.swapEntries(0, 1);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "b", "a" }));
 }
 
@@ -146,7 +146,7 @@ TEST(ColumnTest, fillCallableAndValue)
   // A plain value fills the same way.
   Column<Vector3> other;
   other.set(0, Vector3(1, 1, 1), 1);
-  other.swapEntries(0, 2, 3, Vector3(9, 9, 9));
+  other.swapEntries(0, 2, Vector3(9, 9, 9));
   EXPECT_EQ(other.size(), static_cast<Index>(3));
   EXPECT_EQ(other.value(0, Vector3::Zero()), Vector3(9, 9, 9));
   EXPECT_EQ(other.value(1, Vector3::Zero()), Vector3(9, 9, 9));
@@ -233,4 +233,41 @@ TEST(ColumnTest, takeFromLeavesSourceEmpty)
   EXPECT_TRUE(source.empty());
   source.set(0, "n", 1);
   EXPECT_EQ(source.size(), static_cast<Index>(1));
+}
+
+TEST(ColumnTest, addEntryAppendsAndDropsStaleEntries)
+{
+  auto column = makeLabels({ "a", "b" });
+  column.addEntry(3, "c");
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
+
+  // Entries past the new entity's index belong to no entity.
+  auto stale = makeLabels({ "a", "b", "x", "y" });
+  stale.addEntry(3, "c");
+  EXPECT_EQ(toVector(stale), (std::vector<std::string>{ "a", "b", "c" }));
+
+  Column<std::string> empty;
+  empty.addEntry(1, "z");
+  EXPECT_EQ(toVector(empty), (std::vector<std::string>{ "z" }));
+}
+
+TEST(ColumnTest, removeEntryDropsEntriesPastTheCount)
+{
+  // Four entries for three entities: the extra one belongs to no entity.
+  auto column = makeLabels({ "a", "b", "c", "x" });
+  column.removeEntry(0, 3, "?");
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c", "b" }));
+}
+
+TEST(ColumnTest, sliceAndRestoreOnAnOverLongColumn)
+{
+  auto column = makeLabels({ "a", "b", "c", "x" });
+  const auto original = toVector(column);
+  const auto saved = column.slice(0, 3);
+  EXPECT_EQ(toVector(saved), (std::vector<std::string>{ "a", "c" }));
+  column.removeEntry(0, 3, "?");
+  column.restore(0, saved, 3);
+  // The entry past the count is gone; the rest is as it was.
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
+  EXPECT_EQ(original.size(), static_cast<size_t>(4));
 }

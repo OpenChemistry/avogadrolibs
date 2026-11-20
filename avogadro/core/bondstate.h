@@ -54,10 +54,21 @@ struct BondState
     f(properties, others.properties...);
   }
 
-  /** Exchange everything stored for bonds @p a and @p b. */
-  void swapEntries(Index a, Index b, Index count)
+  /**
+   * Add the entries of a new bond. @p count is the number of bonds after the
+   * addition. The orders column gets @p order and the properties get their
+   * unset values; labels are optional, so the new bond has none.
+   */
+  void addEntry(Index count, unsigned char order)
   {
-    forEachColumn([&](auto& column) { column.swapEntries(a, b, count); });
+    orders.addEntry(count, order);
+    properties.addEntry(count);
+  }
+
+  /** Exchange everything stored for bonds @p a and @p b. */
+  void swapEntries(Index a, Index b)
+  {
+    forEachColumn([&](auto& column) { column.swapEntries(a, b); });
   }
 
   /** Remove bond @p index by swap-and-pop. @p count is before the removal. */

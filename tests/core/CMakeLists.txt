@@ -5,6 +5,7 @@ set(tests
   Aromaticity
   Array
   Atom
+  AtomState
   AtomTyper
   AtomUtilities
   BasisSet
@@ -21,6 +22,7 @@ set(tests
   Cube
   DihedralIterator
   Eigen
+  FrozenMaskColumn
   Element
   GaussianPrimitiveNormalization
   GaussianSet

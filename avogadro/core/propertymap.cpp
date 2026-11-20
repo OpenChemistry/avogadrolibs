@@ -20,7 +20,7 @@ static const int intSentinel = std::numeric_limits<int>::min();
 
 void PropertyMap::setDouble(const std::string& name, Index index, double value)
 {
-  auto& col = m_doubles[name];
+  auto& col = m_doubles[name].array();
   if (col.size() <= index)
     col.resize(index + 1, doubleSentinel);
   col[index] = value;
@@ -28,7 +28,7 @@ void PropertyMap::setDouble(const std::string& name, Index index, double value)
 
 void PropertyMap::setInt(const std::string& name, Index index, int value)
 {
-  auto& col = m_ints[name];
+  auto& col = m_ints[name].array();
   if (col.size() <= index)
     col.resize(index + 1, intSentinel);
   col[index] = value;
@@ -37,7 +37,7 @@ void PropertyMap::setInt(const std::string& name, Index index, int value)
 void PropertyMap::setString(const std::string& name, Index index,
                             const std::string& value)
 {
-  auto& col = m_strings[name];
+  auto& col = m_strings[name].array();
   if (col.size() <= index)
     col.resize(index + 1, std::string());
   col[index] = value;
@@ -55,9 +55,9 @@ std::optional<double> PropertyMap::getDouble(const std::string& name,
                                              Index index) const
 {
   auto it = m_doubles.find(name);
-  if (it == m_doubles.end() || index >= it->second.size())
+  if (it == m_doubles.end() || !it->second.hasEntry(index))
     return std::nullopt;
-  double val = it->second[index];
+  double val = it->second.array()[index];
   if (std::isnan(val))
     return std::nullopt;
   return val;
@@ -67,9 +67,9 @@ std::optional<int> PropertyMap::getInt(const std::string& name,
                                        Index index) const
 {
   auto it = m_ints.find(name);
-  if (it == m_ints.end() || index >= it->second.size())
+  if (it == m_ints.end() || !it->second.hasEntry(index))
     return std::nullopt;
-  int val = it->second[index];
+  int val = it->second.array()[index];
   if (val == intSentinel)
     return std::nullopt;
   return val;
@@ -79,9 +79,9 @@ std::optional<std::string> PropertyMap::getString(const std::string& name,
                                                   Index index) const
 {
   auto it = m_strings.find(name);
-  if (it == m_strings.end() || index >= it->second.size())
+  if (it == m_strings.end() || !it->second.hasEntry(index))
     return std::nullopt;
-  const std::string& val = it->second[index];
+  const std::string& val = it->second.array()[index];
   if (val.empty())
     return std::nullopt;
   return val;
@@ -105,27 +105,27 @@ void PropertyMap::createDoubles(const std::string& name, Index count)
 {
   if (m_doubles.find(name) != m_doubles.end())
     return;
-  m_doubles[name] = Array<double>(count, doubleSentinel);
+  m_doubles[name].array() = Array<double>(count, doubleSentinel);
 }
 
 void PropertyMap::createInts(const std::string& name, Index count)
 {
   if (m_ints.find(name) != m_ints.end())
     return;
-  m_ints[name] = Array<int>(count, intSentinel);
+  m_ints[name].array() = Array<int>(count, intSentinel);
 }
 
 void PropertyMap::createStrings(const std::string& name, Index count)
 {
   if (m_strings.find(name) != m_strings.end())
     return;
-  m_strings[name] = Array<std::string>(count, std::string());
+  m_strings[name].array() = Array<std::string>(count, std::string());
 }
 
 void PropertyMap::setDoubles(const std::string& name,
                              const Array<double>& values)
 {
-  m_doubles[name] = values;
+  m_doubles[name].array() = values;
 }
 
 const Array<double>& PropertyMap::doubles(const std::string& name) const
@@ -133,13 +133,13 @@ const Array<double>& PropertyMap::doubles(const std::string& name) const
   static const Array<double> empty;
   auto it = m_doubles.find(name);
   if (it != m_doubles.end())
-    return it->second;
+    return it->second.array();
   return empty;
 }
 
 void PropertyMap::setInts(const std::string& name, const Array<int>& values)
 {
-  m_ints[name] = values;
+  m_ints[name].array() = values;
 }
 
 const Array<int>& PropertyMap::ints(const std::string& name) const
@@ -147,14 +147,14 @@ const Array<int>& PropertyMap::ints(const std::string& name) const
   static const Array<int> empty;
   auto it = m_ints.find(name);
   if (it != m_ints.end())
-    return it->second;
+    return it->second.array();
   return empty;
 }
 
 void PropertyMap::setStrings(const std::string& name,
                              const Array<std::string>& values)
 {
-  m_strings[name] = values;
+  m_strings[name].array() = values;
 }
 
 const Array<std::string>& PropertyMap::strings(const std::string& name) const
@@ -162,7 +162,7 @@ const Array<std::string>& PropertyMap::strings(const std::string& name) const
   static const Array<std::string> empty;
   auto it = m_strings.find(name);
   if (it != m_strings.end())
-    return it->second;
+    return it->second.array();
   return empty;
 }
 
@@ -244,25 +244,14 @@ std::set<std::string> PropertyMap::matrixNames() const
 
 void PropertyMap::addEntry(Index entityCount)
 {
-  // Entries at or past the new entity's index belong to no entity (the
-  // setters don't check the index), so drop them before appending.
-  const Index index = entityCount > 0 ? entityCount - 1 : 0;
-  for (auto& kv : m_doubles) {
-    if (kv.second.size() > index)
-      kv.second.resize(index);
-    kv.second.push_back(doubleSentinel);
-  }
-  for (auto& kv : m_ints) {
-    if (kv.second.size() > index)
-      kv.second.resize(index);
-    kv.second.push_back(intSentinel);
-  }
-  for (auto& kv : m_strings) {
-    if (kv.second.size() > index)
-      kv.second.resize(index);
-    kv.second.push_back(std::string());
-  }
+  for (auto& kv : m_doubles)
+    kv.second.addEntry(entityCount, doubleSentinel);
+  for (auto& kv : m_ints)
+    kv.second.addEntry(entityCount, intSentinel);
+  for (auto& kv : m_strings)
+    kv.second.addEntry(entityCount, std::string());
   // Sparse matrices: the new entity has no entry.
+  const Index index = entityCount > 0 ? entityCount - 1 : 0;
   for (auto& kv : m_matrices) {
     auto& col = kv.second;
     for (auto it = col.begin(); it != col.end();) {
@@ -276,82 +265,48 @@ void PropertyMap::addEntry(Index entityCount)
 
 namespace {
 
-// A dense column can be shorter than the entity count: setDouble() and
-// friends only grow it as far as the entity they were given, and an entity
-// added afterwards has no entry. The entries it does have still belong to
-// entities 0..size-1, so a swap or a swap-and-pop has to follow the same
-// three cases as the optional arrays in Molecule (see swapAtomEntry() in
-// molecule.cpp) rather than skip a short column, which would leave every
-// value on the entity that now has its old index.
+// The dense columns follow the rules of Column, with the unset sentinel of
+// the type as the fill. Entries past the entity count belong to no entity
+// (the setters don't check the index); Column drops them on removal.
+
 template <typename T>
-void swapColumnEntries(Array<T>& column, Index a, Index b, const T& sentinel)
+void removeDense(std::map<std::string, Column<T>>& columns, Index index,
+                 Index entityCount, const T& sentinel)
 {
-  const Index lo = a < b ? a : b;
-  const Index hi = a < b ? b : a;
-  if (column.size() <= lo)
-    return; // neither entity has an entry
-  if (column.size() <= hi)
-    column.resize(hi + 1, sentinel); // only lo has one: it travels to hi
-  std::swap(column[a], column[b]);
+  for (auto& kv : columns)
+    kv.second.removeEntry(index, entityCount, sentinel);
 }
 
 template <typename T>
-void removeColumnEntry(Array<T>& column, Index index, Index entityCount,
-                       const T& sentinel)
+void swapDense(std::map<std::string, Column<T>>& columns, Index a, Index b,
+               const T& sentinel)
 {
-  // Entries past entityCount belong to no entity (the setters don't check
-  // the index), so drop them and treat the column as full.
-  if (column.size() > entityCount)
-    column.resize(entityCount);
-  if (column.size() == entityCount) {
-    column.swapAndPop(index);
-  } else if (index < column.size()) {
-    // The entity swapped into index (the former last one) has no entry of
-    // its own, so the stale value at index must not stay behind.
-    column[index] = sentinel;
-  }
+  for (auto& kv : columns)
+    kv.second.swapEntries(a, b, sentinel);
 }
 
-// The slice of a dense column. This mirrors Column::slice(), except that a
-// column at least entityCount long counts as full, because
-// removeColumnEntry() first trims entries past the count (a Column never
-// holds such entries).
+// Columns with nothing to save are left out of @p out.
 template <typename T>
-void sliceColumn(const std::map<std::string, Array<T>>& columns,
-                 std::map<std::string, Array<T>>& out, Index index,
-                 Index entityCount)
+void sliceDense(const std::map<std::string, Column<T>>& columns,
+                std::map<std::string, Column<T>>& out, Index index,
+                Index entityCount)
 {
   for (const auto& kv : columns) {
-    const Array<T>& column = kv.second;
-    if (index >= column.size())
-      continue;
-    Array<T> saved;
-    saved.push_back(column[index]);
-    if (column.size() >= entityCount && entityCount > 0)
-      saved.push_back(column[entityCount - 1]);
-    out[kv.first] = std::move(saved);
+    Column<T> saved = kv.second.slice(index, entityCount);
+    if (!saved.empty())
+      out[kv.first] = saved;
   }
 }
 
 template <typename T>
-void restoreColumn(std::map<std::string, Array<T>>& columns,
-                   const std::map<std::string, Array<T>>& saved, Index index,
-                   Index entityCount)
+void restoreDense(std::map<std::string, Column<T>>& columns,
+                  const std::map<std::string, Column<T>>& saved, Index index,
+                  Index entityCount)
 {
   for (const auto& kv : saved) {
     auto it = columns.find(kv.first);
-    if (it == columns.end())
-      continue;
-    Array<T>& column = it->second;
-    const Array<T>& values = kv.second;
-    if (values.size() == 2) {
-      if (index >= entityCount || column.size() != entityCount - 1)
-        continue;
-      column.push_back(values[1]);
-      column[index] = values[0];
-    } else if (index < column.size()) {
-      column[index] = values[0];
-    }
+    if (it != columns.end())
+      it->second.restore(index, kv.second, entityCount);
   }
 }
 
@@ -359,12 +314,9 @@ void restoreColumn(std::map<std::string, Array<T>>& columns,
 
 void PropertyMap::removeEntry(Index index, Index entityCount)
 {
-  for (auto& kv : m_doubles)
-    removeColumnEntry(kv.second, index, entityCount, doubleSentinel);
-  for (auto& kv : m_ints)
-    removeColumnEntry(kv.second, index, entityCount, intSentinel);
-  for (auto& kv : m_strings)
-    removeColumnEntry(kv.second, index, entityCount, std::string());
+  removeDense(m_doubles, index, entityCount, doubleSentinel);
+  removeDense(m_ints, index, entityCount, intSentinel);
+  removeDense(m_strings, index, entityCount, std::string());
 
   // Sparse matrices: remove the entry at index, re-key the last entry.
   Index lastIndex = entityCount - 1;
@@ -384,9 +336,9 @@ void PropertyMap::removeEntry(Index index, Index entityCount)
 PropertyMap PropertyMap::slice(Index index, Index entityCount) const
 {
   PropertyMap result;
-  sliceColumn(m_doubles, result.m_doubles, index, entityCount);
-  sliceColumn(m_ints, result.m_ints, index, entityCount);
-  sliceColumn(m_strings, result.m_strings, index, entityCount);
+  sliceDense(m_doubles, result.m_doubles, index, entityCount);
+  sliceDense(m_ints, result.m_ints, index, entityCount);
+  sliceDense(m_strings, result.m_strings, index, entityCount);
   for (const auto& kv : m_matrices) {
     auto it = kv.second.find(index);
     if (it != kv.second.end())
@@ -398,9 +350,9 @@ PropertyMap PropertyMap::slice(Index index, Index entityCount) const
 void PropertyMap::restore(Index index, const PropertyMap& saved,
                           Index entityCount)
 {
-  restoreColumn(m_doubles, saved.m_doubles, index, entityCount);
-  restoreColumn(m_ints, saved.m_ints, index, entityCount);
-  restoreColumn(m_strings, saved.m_strings, index, entityCount);
+  restoreDense(m_doubles, saved.m_doubles, index, entityCount);
+  restoreDense(m_ints, saved.m_ints, index, entityCount);
+  restoreDense(m_strings, saved.m_strings, index, entityCount);
 
   if (entityCount == 0)
     return;
@@ -423,14 +375,11 @@ void PropertyMap::restore(Index index, const PropertyMap& saved,
   }
 }
 
-void PropertyMap::swapEntries(Index a, Index b, Index /*entityCount*/)
+void PropertyMap::swapEntries(Index a, Index b)
 {
-  for (auto& kv : m_doubles)
-    swapColumnEntries(kv.second, a, b, doubleSentinel);
-  for (auto& kv : m_ints)
-    swapColumnEntries(kv.second, a, b, intSentinel);
-  for (auto& kv : m_strings)
-    swapColumnEntries(kv.second, a, b, std::string());
+  swapDense(m_doubles, a, b, doubleSentinel);
+  swapDense(m_ints, a, b, intSentinel);
+  swapDense(m_strings, a, b, std::string());
 
   // Sparse matrices: swap entries at a and b.
   for (auto& kv : m_matrices) {
