@@ -33,9 +33,12 @@ public slots:
 
 protected:
   bool event(QEvent* e) override;
+  void changeEvent(QEvent* e) override;
 
 private:
   void showToolTip(QHelpEvent* e) const;
+  /// Set the mark colors to suit the current light/dark palette.
+  void updateFormatColors();
 
   struct Mark
   {
