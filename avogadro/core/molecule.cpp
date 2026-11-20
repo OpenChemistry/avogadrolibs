@@ -2606,23 +2606,19 @@ bool Molecule::setResidueLabel(Index residueId, const std::string& label)
 
 bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
 {
-  if (pairs.size() == bondCount()) {
-    Index bond = 0;
-    for (const auto& pair : pairs) {
-      setBondPair(bond, pair);
-      ++bond;
-    }
-    return true;
-  }
-  return false;
+  if (pairs.size() != bondCount())
+    return false;
+  Array<std::pair<size_t, size_t>> graphPairs;
+  graphPairs.reserve(pairs.size());
+  for (const auto& pair : pairs)
+    graphPairs.push_back(std::pair<size_t, size_t>(pair.first, pair.second));
+  return m_graph.editEdgesInPlace(graphPairs);
 }
 
 bool Molecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
 {
-  if (bondId < bondCount()) {
-    m_graph.editEdgeInPlace(bondId, pair.first, pair.second);
-    return true;
-  }
+  if (bondId < bondCount())
+    return m_graph.editEdgeInPlace(bondId, pair.first, pair.second);
   return false;
 }
 

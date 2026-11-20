@@ -221,6 +221,24 @@ size_t Graph::addEdge(size_t a, size_t b)
   }
 
   // Merge subgraphs
+  joinSubgraphs(a, b);
+
+  // Add the edge to each vertex' adjacency list.
+  neighborsA.push_back(b);
+  neighborsB.push_back(a);
+
+  // Add the edge to each vertex' incident edge list.
+  size_t newEdgeIndex = edgeCount();
+  m_edgeMap[a].push_back(newEdgeIndex);
+  m_edgeMap[b].push_back(newEdgeIndex);
+
+  m_edgePairs.push_back(std::pair<size_t, size_t>(a, b));
+
+  return newEdgeIndex;
+}
+
+void Graph::joinSubgraphs(size_t a, size_t b) const
+{
   int subgraphA = m_vertexToSubgraph[a];
   int subgraphB = m_vertexToSubgraph[b];
   if (subgraphA < 0 && subgraphB < 0) {
@@ -252,19 +270,6 @@ size_t Graph::addEdge(size_t a, size_t b)
     // Just leave it empty, it could be reused
     m_subgraphToVertices[subgraphB].clear();
   }
-
-  // Add the edge to each vertex' adjacency list.
-  neighborsA.push_back(b);
-  neighborsB.push_back(a);
-
-  // Add the edge to each vertex' incident edge list.
-  size_t newEdgeIndex = edgeCount();
-  m_edgeMap[a].push_back(newEdgeIndex);
-  m_edgeMap[b].push_back(newEdgeIndex);
-
-  m_edgePairs.push_back(std::pair<size_t, size_t>(a, b));
-
-  return newEdgeIndex;
 }
 
 std::set<size_t> Graph::checkConectivity(size_t a, size_t b) const
@@ -422,25 +427,117 @@ void Graph::removeEdges(size_t index)
   }
 }
 
-void Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
+bool Graph::editEdgeInPlace(size_t edgeIndex, size_t a, size_t b)
 {
-  auto& pair = m_edgePairs[edgeIndex];
+  if (edgeIndex >= m_edgePairs.size() || a >= size() || b >= size() || a == b)
+    return false;
+  if (b < a)
+    std::swap(a, b);
 
-  // Remove references to the deleted edge from both endpoints.
-  for (size_t i = 0; i < m_edgeMap[pair.first].size(); i++) {
-    std::swap(m_edgeMap[pair.first][i], m_edgeMap[pair.first].back());
-    m_edgeMap[pair.first].pop_back();
-  }
-  for (size_t i = 0; i < m_edgeMap[pair.second].size(); i++) {
-    std::swap(m_edgeMap[pair.second][i], m_edgeMap[pair.second].back());
-    m_edgeMap[pair.second].pop_back();
+  const std::pair<size_t, size_t> oldPair = m_edgePairs[edgeIndex];
+  // removeVertex() can leave a stored pair with first > second, so compare
+  // the endpoints as an unordered pair.
+  if ((oldPair.first == a && oldPair.second == b) ||
+      (oldPair.first == b && oldPair.second == a)) {
+    m_edgePairs[edgeIndex] = std::pair<size_t, size_t>(a, b);
+    return true;
   }
 
+  // Refuse to create a duplicate edge (the old edge is a different pair, so
+  // any existing a-b connection is some other edge).
+  const std::vector<size_t>& neighborsA = m_adjacencyList[a];
+  if (std::find(neighborsA.begin(), neighborsA.end(), b) != neighborsA.end())
+    return false;
+
+  // Detach exactly the old edge from both endpoints.
+  auto eraseValue = [](std::vector<size_t>& list, size_t value) {
+    auto iter = std::find(list.begin(), list.end(), value);
+    if (iter != list.end()) {
+      std::swap(*iter, list.back());
+      list.pop_back();
+    }
+  };
+  eraseValue(m_edgeMap[oldPair.first], edgeIndex);
+  eraseValue(m_edgeMap[oldPair.second], edgeIndex);
+  eraseValue(m_adjacencyList[oldPair.first], oldPair.second);
+  eraseValue(m_adjacencyList[oldPair.second], oldPair.first);
+
+  // The old connection may have been the only link inside its component.
+  // Mark it dirty and let the lazy split pass sort it out, as removeEdge does.
+  if (m_vertexToSubgraph[oldPair.first] >= 0)
+    m_subgraphDirty[m_vertexToSubgraph[oldPair.first]] = true;
+
+  // Attach the new edge, merging components as addEdge does.
+  joinSubgraphs(a, b);
+  m_adjacencyList[a].push_back(b);
+  m_adjacencyList[b].push_back(a);
   m_edgeMap[a].push_back(edgeIndex);
   m_edgeMap[b].push_back(edgeIndex);
+  m_edgePairs[edgeIndex] = std::pair<size_t, size_t>(a, b);
+  return true;
+}
 
-  pair.first = a;
-  pair.second = b;
+bool Graph::editEdgesInPlace(const Array<std::pair<size_t, size_t>>& pairs)
+{
+  if (pairs.size() != m_edgePairs.size())
+    return false;
+
+  // Validate the final set as a whole; intermediate states do not matter.
+  Array<std::pair<size_t, size_t>> normalized(pairs);
+  std::set<std::pair<size_t, size_t>> seen;
+  for (size_t i = 0; i < normalized.size(); ++i) {
+    std::pair<size_t, size_t>& pair = normalized[i];
+    if (pair.first >= size() || pair.second >= size() ||
+        pair.first == pair.second)
+      return false;
+    if (pair.second < pair.first)
+      std::swap(pair.first, pair.second);
+    if (!seen.insert(pair).second)
+      return false;
+  }
+
+  // Rebuild the adjacency, incidence and component data from scratch,
+  // keeping the edge indices.
+  removeEdges();
+  for (size_t i = 0; i < normalized.size(); ++i) {
+    const size_t a = normalized[i].first;
+    const size_t b = normalized[i].second;
+    m_adjacencyList[a].push_back(b);
+    m_adjacencyList[b].push_back(a);
+    m_edgeMap[a].push_back(i);
+    m_edgeMap[b].push_back(i);
+    m_edgePairs.push_back(normalized[i]);
+  }
+
+  // Assign components in one pass. Calling joinSubgraphs() per edge would
+  // make each disjoint pair scan every slot in createNewSubgraph(), which is
+  // O(edges * components). removeEdges() left every vertex lone with no
+  // component, so a depth-first search from each unassigned vertex suffices.
+  std::vector<size_t> stack;
+  for (size_t v = 0; v < m_adjacencyList.size(); ++v) {
+    if (m_adjacencyList[v].empty() || m_vertexToSubgraph[v] >= 0)
+      continue;
+    const int slot = static_cast<int>(m_subgraphToVertices.size());
+    m_subgraphToVertices.emplace_back();
+    m_subgraphDirty.push_back(false);
+    m_vertexToSubgraph[v] = slot;
+    m_subgraphToVertices[slot].insert(v);
+    m_loneVertices.erase(v);
+    stack.push_back(v);
+    while (!stack.empty()) {
+      const size_t current = stack.back();
+      stack.pop_back();
+      for (size_t neighbor : m_adjacencyList[current]) {
+        if (m_vertexToSubgraph[neighbor] >= 0)
+          continue;
+        m_vertexToSubgraph[neighbor] = slot;
+        m_subgraphToVertices[slot].insert(neighbor);
+        m_loneVertices.erase(neighbor);
+        stack.push_back(neighbor);
+      }
+    }
+  }
+  return true;
 }
 
 void Graph::swapEdgeIndices(size_t edgeIndex1, size_t edgeIndex2)
@@ -650,6 +747,7 @@ size_t Graph::subgraph(size_t element) const
     int newSubgraph = createNewSubgraph();
     m_vertexToSubgraph[element] = newSubgraph;
     m_subgraphToVertices[newSubgraph].insert(element);
+    m_loneVertices.erase(element);
     return newSubgraph;
   }
   if (m_subgraphDirty[r]) {

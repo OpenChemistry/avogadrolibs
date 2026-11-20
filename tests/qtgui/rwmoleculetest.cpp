@@ -806,6 +806,66 @@ TEST(RWMoleculeTest, setBondPairs)
                          mol.bondPairs().end()));
 }
 
+TEST(RWMoleculeTest, setBondPairsPermutationUndoRedo)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+  mol.addBond(2, 3, 3);
+  mol.undoStack().clear();
+
+  typedef std::pair<Index, Index> BondPair;
+  const Array<BondPair> old(mol.bondPairs());
+  Array<BondPair> rotated;
+  rotated.push_back(Molecule::makeBondPair(1, 2));
+  rotated.push_back(Molecule::makeBondPair(2, 3));
+  rotated.push_back(Molecule::makeBondPair(0, 1));
+  ASSERT_TRUE(mol.setBondPairs(rotated));
+  EXPECT_EQ(mol.undoStack().count(), 1);
+  EXPECT_EQ(mol.bondOrder(0), 1);
+  EXPECT_EQ(mol.bondPair(0), Molecule::makeBondPair(1, 2));
+  mol.undoStack().undo();
+  EXPECT_TRUE(std::equal(old.begin(), old.end(), mol.bondPairs().begin(),
+                         mol.bondPairs().end()));
+  mol.undoStack().redo();
+  EXPECT_TRUE(std::equal(rotated.begin(), rotated.end(),
+                         mol.bondPairs().begin(), mol.bondPairs().end()));
+  ASSERT_TRUE(mol.removeAtom(1)); // must terminate with consistent bonds
+}
+
+TEST(RWMoleculeTest, setBondPairRefusalsPushNothing)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6);
+  mol.addBond(0, 1, 1);
+  mol.addBond(1, 2, 2);
+  mol.undoStack().clear();
+
+  EXPECT_FALSE(mol.setBondPair(0, Molecule::makeBondPair(2, 2)));
+  EXPECT_FALSE(mol.setBondPair(0, std::make_pair(Index(0), Index(9))));
+  EXPECT_FALSE(mol.setBondPair(0, std::make_pair(Index(2), Index(1))));
+  EXPECT_FALSE(mol.setBondPair(7, Molecule::makeBondPair(0, 3)));
+  // Setting a bond to the pair it already has succeeds without an undo step.
+  EXPECT_TRUE(mol.setBondPair(0, std::make_pair(Index(1), Index(0))));
+
+  typedef std::pair<Index, Index> BondPair;
+  Array<BondPair> dup(mol.bondPairs());
+  dup[0] = dup[1];
+  EXPECT_FALSE(mol.setBondPairs(dup));
+  Array<BondPair> bad(mol.bondPairs());
+  bad[0] = std::make_pair(Index(0), Index(9));
+  EXPECT_FALSE(mol.setBondPairs(bad));
+
+  EXPECT_EQ(mol.undoStack().count(), 0);
+  EXPECT_EQ(mol.bondPair(0), Molecule::makeBondPair(0, 1));
+  EXPECT_EQ(mol.bondPair(1), Molecule::makeBondPair(1, 2));
+}
+
 TEST(RWMoleculeTest, setBondPair)
 {
   Molecule m;
@@ -2240,10 +2300,10 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           return;
         }
       }
-      pick = pickInt(0, 16);
+      pick = pickInt(0, 17);
       // Constraints, scan coordinates and residues, which are not undoable.
       if (chance(12))
-        pick = pickInt(17, 20);
+        pick = pickInt(18, 21);
       // 13 would be setIsotope(), which is not left out by accident:
       // RWMolecule::setIsotope() has no undo command (it says so in a TODO)
       // and edits the molecule silently, so there is no undo state to
@@ -2256,14 +2316,16 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         pick = 0;
       if ((pick == 4 || pick == 5) && bonds == 0)
         pick = 0;
-      if (pick >= 17 && n < 2)
+      if (pick == 17 && (n < 2 || bonds == 0))
         pick = 0;
-      if (pick == 17 && model.constraints.size() >= 6)
-        pick = 18;
-      if (pick == 18 && model.constraints.empty())
-        pick = 17;
-      if (pick == 20 && model.residues.size() >= 4)
+      if (pick >= 18 && n < 2)
+        pick = 0;
+      if (pick == 18 && model.constraints.size() >= 6)
         pick = 19;
+      if (pick == 19 && model.constraints.empty())
+        pick = 18;
+      if (pick == 21 && model.residues.size() >= 4)
+        pick = 20;
 
       switch (pick) {
         case 0:
@@ -2331,6 +2393,50 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           const auto order = static_cast<unsigned char>(pickInt(1, 3));
           mol.setBondOrder(i, order);
           model.bonds[i].order = order;
+          break;
+        }
+        case 17: {
+          // Includes self-bonds, out-of-range atoms and pairs another bond
+          // already joins; those are refused without an undo command.
+          op = "setBondPair";
+          const Index i = pickIndex(bonds);
+          Index a = pickIndex(n);
+          Index b = pickIndex(n);
+          if (chance(10))
+            b = a;
+          else if (chance(10))
+            b = n + pickIndex(3);
+          else if (chance(15)) {
+            const auto existing = mol.bondPair(pickIndex(bonds));
+            a = existing.first;
+            b = existing.second;
+          }
+          if (chance(50))
+            std::swap(a, b);
+          bool expected = a != b && a < n && b < n;
+          if (expected) {
+            const Index ida = model.atoms[a].id;
+            const Index idb = model.atoms[b].id;
+            for (size_t k = 0; k < model.bonds.size(); ++k) {
+              const auto& bond = model.bonds[k];
+              const bool sameAtoms = (bond.atomA == ida && bond.atomB == idb) ||
+                                     (bond.atomA == idb && bond.atomB == ida);
+              if (sameAtoms && k != i)
+                expected = false;
+            }
+          }
+          const bool accepted = mol.setBondPair(i, std::make_pair(a, b));
+          if (accepted != expected) {
+            ADD_FAILURE() << "seed " << seed << ", step " << step
+                          << ": setBondPair(" << i << ", " << a << ", " << b
+                          << ") returned " << accepted << ", expected "
+                          << expected;
+            return;
+          }
+          if (expected) {
+            model.bonds[i].atomA = model.atoms[a].id;
+            model.bonds[i].atomB = model.atoms[b].id;
+          }
           break;
         }
         case 6: {
@@ -2410,7 +2516,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           model.atoms[i].layer = layer;
           break;
         }
-        case 17: {
+        case 18: {
           op = "addConstraint";
           const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
           const double value = pickInt(1, 180);
@@ -2418,7 +2524,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           model.addConstraint(value, atoms);
           break;
         }
-        case 18: {
+        case 19: {
           op = "removeConstraint";
           std::array<Index, 4> atoms =
             model.indicesOf(model.constraints[pickIndex(
@@ -2433,7 +2539,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           model.removeConstraint(atoms);
           break;
         }
-        case 19: {
+        case 20: {
           op = "setScanCoordinates";
           std::vector<std::array<Index, 4>> coordinates;
           std::vector<Avogadro::Core::Constraint> constraints;
@@ -2447,7 +2553,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           model.setScanCoordinates(coordinates);
           break;
         }
-        case 20: {
+        case 21: {
           op = "addResidue";
           std::string name = "R" + std::to_string(step);
           Index number = static_cast<Index>(pickInt(1, 99));
