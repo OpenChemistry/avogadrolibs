@@ -562,6 +562,9 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
 bool Molecule::frozenAtom(Index atomId) const
 {
   const auto& mask = m_atomState.frozenMask.storage();
+  if (atomId >= static_cast<Index>(mask.rows() / 3))
+    return false;
+
   auto base = static_cast<Eigen::Index>(atomId * 3);
   if (base <= mask.rows() - 3) {
     return (mask[base] == 0.0 && mask[base + 1] == 0.0 &&
@@ -573,6 +576,9 @@ bool Molecule::frozenAtom(Index atomId) const
 bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 {
   const auto& mask = m_atomState.frozenMask.storage();
+  if (axis < 0 || axis >= 3 || atomId >= static_cast<Index>(mask.rows() / 3))
+    return false;
+
   auto base = static_cast<Eigen::Index>(atomId * 3);
   if (base <= mask.rows() - 3) {
     return (mask[base + axis] == 0.0);
@@ -582,6 +588,9 @@ bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
+  if (axis < 0 || axis >= 3 || atomId >= m_atomicNumbers.size())
+    return;
+
   auto& mask = m_atomState.frozenMask.storage();
   Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());

@@ -1262,6 +1262,43 @@ TEST_F(MoleculeTest, frozenAtomMaskFollowsAtoms)
   EXPECT_FALSE(molecule.frozenAtom(0));
 }
 
+TEST_F(MoleculeTest, frozenAtomAxisRangeChecks)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.setFrozenAtomAxis(1, 0, true); // atom1: x only
+
+  // axis 3 on atom 0 would alias atom 1's x entry; -1 on atom 1 aliases
+  // atom 0's z entry
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 3));
+  EXPECT_FALSE(molecule.frozenAtomAxis(1, -1));
+  EXPECT_FALSE(molecule.frozenAtomAxis(1, 3));
+  molecule.setFrozenAtomAxis(0, 3, true);
+  molecule.setFrozenAtomAxis(1, -1, true);
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 0));
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 2));
+  EXPECT_TRUE(molecule.frozenAtomAxis(1, 0));
+  EXPECT_FALSE(molecule.frozenAtomAxis(1, 1));
+
+  // a huge index must neither wrap into the mask nor change anything
+  const Index huge = Avogadro::MaxIndex;
+  EXPECT_FALSE(molecule.frozenAtom(huge));
+  EXPECT_FALSE(molecule.frozenAtomAxis(huge, 0));
+  molecule.setFrozenAtom(huge, true);
+  molecule.setFrozenAtomAxis(huge, 0, true);
+  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_TRUE(molecule.frozenAtomAxis(1, 0));
+  EXPECT_FALSE(molecule.frozenAtom(0));
+
+  // also with an empty mask
+  Molecule empty;
+  EXPECT_FALSE(empty.frozenAtom(huge));
+  EXPECT_FALSE(empty.frozenAtomAxis(huge, 0));
+  empty.setFrozenAtomAxis(huge, 0, true);
+  EXPECT_EQ(empty.frozenAtomMask().size(), 0);
+}
+
 TEST_F(MoleculeTest, coordinates3dFollowTheirAtoms)
 {
   Molecule molecule;
