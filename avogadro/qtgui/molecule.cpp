@@ -364,9 +364,12 @@ void Molecule::emitChanged(unsigned int change)
       if (change & Conformer) {
         // Whoever moved to another set meant to see it, not a frame built
         // from the old one. The caller's emit below covers the move.
+        // With no stored set to move to, put the rest geometry back.
         const int active = coordinate3d();
         if (active >= 0 && active < static_cast<int>(coordinate3dCount()))
           setAtomPositions3d(coordinate3d(static_cast<size_t>(active)));
+        else if (m_animationRestPositions.size() == atomCount())
+          setAtomPositions3d(m_animationRestPositions);
         dropAnimationDisplay();
       } else if (invalidatesDerivedData(change)) {
         dropAnimationDisplay();

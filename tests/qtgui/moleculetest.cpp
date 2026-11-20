@@ -1071,6 +1071,20 @@ TEST_F(MoleculeTest, conformerChangeDropsTheDisplayInEitherOrder)
   EXPECT_EQ(m_testMolecule.restPositions3d(), m_testMolecule.coordinate3d(2));
 }
 
+TEST_F(MoleculeTest, conformerChangeWithNoStoredSetsRestoresTheRest)
+{
+  ASSERT_EQ(m_testMolecule.coordinate3dCount(), 0u);
+  const Array<Avogadro::Vector3> rest = m_testMolecule.atomPositions3d();
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  ASSERT_NE(m_testMolecule.atomPositions3d(), rest);
+
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved |
+                             Molecule::Conformer);
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), rest);
+}
+
 TEST_F(MoleculeTest, structuralChangeDropsTheDisplayWithoutRestoring)
 {
   m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
