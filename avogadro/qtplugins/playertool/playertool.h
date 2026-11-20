@@ -8,17 +8,21 @@
 
 #include <avogadro/qtgui/toolplugin.h>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QTimer>
 
+class QComboBox;
 class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QOpenGLWidget;
 class QPushButton;
 class QSlider;
+class QWidget;
 
 namespace Avogadro::QtPlugins {
 
@@ -46,8 +50,9 @@ public:
 
   /**
    * Registers nextFrame, previousFrame, setCoordinateSet and
-   * coordinateSetCount: the scripting / RPC equivalents of the panel's frame
-   * controls. None of them need the tool widget to exist.
+   * coordinateSetCount, the scripting / RPC equivalents of the panel's frame
+   * controls, and listAnimationSources and setAnimationSource for choosing
+   * what they act on. None of them need the tool widget to exist.
    */
   void registerCommands() override;
   bool handleCommand(const QString& command,
@@ -61,6 +66,15 @@ public slots:
 protected slots:
   /** Pick up conformer changes made elsewhere (e.g. the conformer plot). */
   void moleculeChanged(unsigned int changes);
+
+  /** The molecule's published animation frames changed. */
+  void sourcesChanged();
+
+  /** Another animator took over the display: stop playing. */
+  void animationPlaybackClaimed(QObject* owner);
+
+  /** The user picked an entry in the source combo box. */
+  void sourceActivated(int index);
 
   void back();
   void forward();
@@ -77,6 +91,51 @@ protected slots:
   void updateLimits();
 
 private:
+  /** The id of the source that plays the molecule's coordinate sets. */
+  static QString trajectoryId() { return QStringLiteral("trajectory"); }
+
+  /** @return True if the current source is a published frame set. */
+  bool onPublished() const { return m_source != trajectoryId(); }
+
+  /** @return The number of frames in the current source. */
+  int frameTotal() const;
+
+  /** @return The frame shown in the current source. */
+  int shownFrame() const
+  {
+    return onPublished() ? m_sourceFrame : m_currentFrame;
+  }
+
+  /**
+   * Switch to source @p id. @p userPicked pins the choice against the default
+   * rule. @return False if there is no such source.
+   */
+  bool selectSource(const QString& id, bool userPicked);
+
+  /** Apply the default-source rule, unless the user chose a source. */
+  void applyDefaultSource();
+
+  /** Rebuild the combo box and show or hide its row. */
+  void rebuildSourceCombo() const;
+
+  /** Enable the controls that only make sense for one kind of source. */
+  void updateSourceControls() const;
+
+  /** The geometry the published frames are displacements of. */
+  Core::Array<Vector3> currentRest() const;
+
+  /** Remember the rest geometry before showing a published frame. */
+  void takeRest();
+
+  /**
+   * Put the rest geometry back if a displaced frame of ours is still on
+   * screen; otherwise leave whatever is there alone.
+   */
+  void restoreRest();
+
+  /** Show frame m_sourceFrame of the published source. */
+  void displayPublishedFrame();
+
   /** Display coordinate set @p frame and update the widgets to match. */
   void setFrame(int frame);
 
@@ -90,8 +149,26 @@ private:
   QAction* m_activateAction;
   QtGui::Molecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
+  /** The trajectory frame, tracking the molecule's active coordinate set. */
   int m_currentFrame;
   int m_frameCount;
+  /** The source being played: trajectoryId() or a published frame set id. */
+  QString m_source = trajectoryId();
+  bool m_userPickedSource = false;
+  /** The frame shown from a published source. */
+  int m_sourceFrame = 0;
+  int m_publishedTotal = 0;
+  Core::Array<Vector3> m_rest;
+  int m_restConformer = -1;
+  bool m_haveRest = false;
+  /** What a published frame last put on screen, to tell if it is still there.
+   */
+  Core::Array<Vector3> m_shownPositions;
+  bool m_showingDisplaced = false;
+  /** Once the source row has appeared it stays for this molecule. */
+  mutable bool m_sourceRowShown = false;
+  mutable QWidget* m_sourceRow = nullptr;
+  mutable QComboBox* m_sourceCombo = nullptr;
   bool m_updatingWidgets;
   mutable QWidget* m_toolWidget;
   QTimer m_timer;
