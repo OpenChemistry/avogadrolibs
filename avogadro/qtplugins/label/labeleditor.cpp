@@ -10,10 +10,8 @@
 #include <avogadro/rendering/primitive.h>
 #include <avogadro/rendering/textlabel3d.h>
 
-#include <QAction>
-#include <QKeyEvent>
-
-#include <QDebug>
+#include <QtGui/QAction>
+#include <QtGui/QKeyEvent>
 
 namespace Avogadro::QtPlugins {
 
@@ -33,7 +31,7 @@ LabelEditor::LabelEditor(QObject* parent_)
   setIcon();
 }
 
-LabelEditor::~LabelEditor() {}
+LabelEditor::~LabelEditor() = default;
 
 void LabelEditor::setIcon(bool darkTheme)
 {
