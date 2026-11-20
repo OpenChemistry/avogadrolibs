@@ -61,6 +61,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 {
   // Call the base classes assignment operator
   Core::Molecule::operator=(other);
+  dropAnimationDisplay();
   clearAnimationFrames();
 
   // Copy over the unique ids
@@ -74,6 +75,7 @@ Molecule& Molecule::operator=(const Core::Molecule& other)
 {
   // Call the base classes assignment operator
   Core::Molecule::operator=(other);
+  dropAnimationDisplay();
   clearAnimationFrames();
 
   // Reset the unique ids.
@@ -358,6 +360,24 @@ bool Molecule::invalidatesDerivedData(unsigned int changes)
 void Molecule::emitChanged(unsigned int change)
 {
   if (change != NoChange) {
+    if (isShowingAnimationFrame()) {
+      if (change & Conformer) {
+        // Whoever moved to another set meant to see it, not a frame built
+        // from the old one. The caller's emit below covers the move.
+        const int active = coordinate3d();
+        if (active >= 0 && active < static_cast<int>(coordinate3dCount()))
+          setAtomPositions3d(coordinate3d(static_cast<size_t>(active)));
+        dropAnimationDisplay();
+      } else if (invalidatesDerivedData(change)) {
+        dropAnimationDisplay();
+      } else if ((change & Atoms) && !m_emittingAnimationDisplay &&
+                 atomPositions3d() !=
+                   animationFrame(m_shownAnimationId,
+                                  static_cast<size_t>(m_shownAnimationIndex))) {
+        // Someone else moved the atoms: the edit owns the positions now.
+        dropAnimationDisplay();
+      }
+    }
     // A replacement carries its own derived data, so only an in-place edit
     // discards it. RWMolecule::modifyMolecule has already stopped the workers
     // that were using what the replacement swapped out.
@@ -382,6 +402,87 @@ void Molecule::emitChanged(unsigned int change)
       clearAnimationFrames();
     emit changed(change);
   }
+}
+
+void Molecule::dropAnimationDisplay()
+{
+  if (!isShowingAnimationFrame())
+    return;
+  m_shownAnimationId.clear();
+  m_shownAnimationIndex = -1;
+  m_animationRestPositions.clear();
+  emit animationDisplayChanged();
+}
+
+void Molecule::emitDisplayChange()
+{
+  const bool wasEmitting = m_emittingAnimationDisplay;
+  m_emittingAnimationDisplay = true;
+  emitChanged(Atoms | Moved);
+  m_emittingAnimationDisplay = wasEmitting;
+}
+
+bool Molecule::showAnimationFrame(const QString& id, size_t index)
+{
+  const AnimationFrameSet* set = findFrameSet(id);
+  if (set == nullptr || index >= set->frames.size() ||
+      set->frames[index].size() != atomCount())
+    return false;
+
+  const bool wasShowing = isShowingAnimationFrame();
+  const bool sameFrame = wasShowing && m_shownAnimationId == id &&
+                         m_shownAnimationIndex == static_cast<int>(index);
+  if (!wasShowing)
+    m_animationRestPositions = atomPositions3d();
+
+  setAtomPositions3d(set->frames[index]);
+  m_shownAnimationId = id;
+  m_shownAnimationIndex = static_cast<int>(index);
+  emitDisplayChange();
+  if (!sameFrame)
+    emit animationDisplayChanged();
+  return true;
+}
+
+void Molecule::clearAnimationDisplay()
+{
+  if (!isShowingAnimationFrame())
+    return;
+  const Core::Array<Vector3> rest = m_animationRestPositions;
+  m_shownAnimationId.clear();
+  m_shownAnimationIndex = -1;
+  m_animationRestPositions.clear();
+  if (rest.size() == atomCount())
+    setAtomPositions3d(rest);
+  emitDisplayChange();
+  emit animationDisplayChanged();
+}
+
+Core::Array<Vector3> Molecule::restPositions3d() const
+{
+  return isShowingAnimationFrame() ? m_animationRestPositions
+                                   : atomPositions3d();
+}
+
+void Molecule::refreshShownFrame(const AnimationFrameSet& set)
+{
+  const size_t index =
+    std::min(static_cast<size_t>(m_shownAnimationIndex), set.frames.size() - 1);
+  const Core::Array<Vector3>& frame = set.frames[index];
+  if (frame.size() != atomCount()) {
+    clearAnimationDisplay();
+    return;
+  }
+
+  const bool indexChanged = static_cast<int>(index) != m_shownAnimationIndex;
+  const bool moved = frame != atomPositions3d();
+  m_shownAnimationIndex = static_cast<int>(index);
+  if (moved) {
+    setAtomPositions3d(frame);
+    emitDisplayChange();
+  }
+  if (indexChanged)
+    emit animationDisplayChanged();
 }
 
 void Molecule::clearAnimationFrames()
@@ -417,6 +518,8 @@ void Molecule::setAnimationFrames(
   if (AnimationFrameSet* set = findFrameSet(id)) {
     set->label = label;
     set->frames = frames;
+    if (isShowingAnimationFrame() && m_shownAnimationId == id)
+      refreshShownFrame(*set);
   } else {
     m_animationFrameSets.push_back({ id, label, frames });
   }
@@ -426,6 +529,12 @@ void Molecule::setAnimationFrames(
 void Molecule::removeAnimationFrames(const QString& id)
 {
   const AnimationFrameSet* set = findFrameSet(id);
+  if (set == nullptr)
+    return;
+  if (isShowingAnimationFrame() && m_shownAnimationId == id)
+    clearAnimationDisplay();
+  // The display emits to listeners that may publish; look the set up again.
+  set = findFrameSet(id);
   if (set == nullptr)
     return;
   m_animationFrameSets.erase(m_animationFrameSets.begin() +

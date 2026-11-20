@@ -331,6 +331,38 @@ public:
    * Other animators should stop; emits animationPlaybackClaimed().
    */
   void claimAnimationPlayback(QObject* owner);
+
+  /**
+   * Put frame @p index of set @p id on screen. The first call saves the
+   * current atomPositions3d() as the rest positions; then the frame replaces
+   * the positions and Atoms | Moved is emitted. Nothing changes and false is
+   * returned if the set is unknown, @p index is out of range, or the frame
+   * does not have atomCount() positions.
+   *
+   * The molecule keeps this display consistent: republishing the shown set
+   * re-shows the same (clamped) index, removing it restores the rest
+   * positions, and a conformer change, a structural change or an edit of the
+   * atoms by anyone else drops the display and leaves the new positions
+   * alone. Like the frame sets, the display is not copied or saved.
+   */
+  bool showAnimationFrame(const QString& id, size_t index);
+
+  /** Restore the rest positions and stop showing a frame, if one is shown. */
+  void clearAnimationDisplay();
+
+  bool isShowingAnimationFrame() const { return m_shownAnimationIndex >= 0; }
+
+  /** @return The id of the set being shown, empty if none. */
+  QString shownAnimationId() const { return m_shownAnimationId; }
+
+  /** @return The index being shown, -1 if none. */
+  int shownAnimationFrame() const { return m_shownAnimationIndex; }
+
+  /**
+   * @return The positions saved when the display started while a frame is
+   * shown, otherwise atomPositions3d().
+   */
+  Core::Array<Vector3> restPositions3d() const;
   /** @} */
 
 public slots:
@@ -368,6 +400,12 @@ signals:
   /** @p owner started animating; other animators should stop. */
   void animationPlaybackClaimed(QObject* owner);
 
+  /**
+   * A frame started or stopped being shown, was dropped (conformer change,
+   * edit), or the shown index changed.
+   */
+  void animationDisplayChanged();
+
 private:
   struct AnimationFrameSet
   {
@@ -379,6 +417,19 @@ private:
   std::vector<AnimationFrameSet> m_animationFrameSets;
 
   void clearAnimationFrames();
+
+  // The frame being shown, if any. Deliberately omitted from every copy.
+  QString m_shownAnimationId;
+  int m_shownAnimationIndex = -1;
+  Core::Array<Vector3> m_animationRestPositions;
+  bool m_emittingAnimationDisplay = false;
+
+  /** Forget the display without touching the positions. */
+  void dropAnimationDisplay();
+  /** Emit Atoms | Moved for a change the display itself made. */
+  void emitDisplayChange();
+  /** Re-show the shown index from a freshly published set. */
+  void refreshShownFrame(const AnimationFrameSet& set);
   AnimationFrameSet* findFrameSet(const QString& id);
   const AnimationFrameSet* findFrameSet(const QString& id) const;
 
