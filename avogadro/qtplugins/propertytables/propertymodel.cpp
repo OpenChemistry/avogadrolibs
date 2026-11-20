@@ -1330,6 +1330,7 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
     // Initialize structure tracking for change detection
     m_lastAtomCount = molecule->atomCount();
     m_lastBondCount = molecule->bondCount();
+    m_lastConformerCount = molecule->coordinate3dCount();
 
     updateCache();
 
@@ -1400,6 +1401,14 @@ void PropertyModel::updateTable(unsigned int flags)
       m_lastAtomCount = currentAtomCount;
       m_lastBondCount = currentBondCount;
     }
+  }
+
+  // A new coordinate set adds a row to the conformer table without touching
+  // atoms or bonds.
+  if (m_type == ConformerType && m_molecule != nullptr &&
+      m_molecule->coordinate3dCount() != m_lastConformerCount) {
+    structureChanged = true;
+    m_lastConformerCount = m_molecule->coordinate3dCount();
   }
 
   // A reorder changes no counts, so the check above cannot see it; the flag

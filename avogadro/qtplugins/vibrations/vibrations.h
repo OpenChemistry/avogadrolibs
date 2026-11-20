@@ -53,6 +53,12 @@ public:
 public slots:
   void setMode(int mode);
   void setAmplitude(int amplitude);
+
+  /** Set the number of frames in one vibration cycle (clamped to 4-200). */
+  void setFramesPerCycle(int frames);
+
+  /** Make @p frame (zero-based) the active coordinate set. */
+  void goToFrame(int frame);
   void startVibrationAnimation();
   void stopVibrationAnimation();
   void openDialog();
@@ -70,14 +76,38 @@ public slots:
 private slots:
   void advanceFrame();
 
+  /** Stop our animation if another animator took over the display. */
+  void animationPlaybackClaimed(QObject* owner);
+
 private:
-  /** Stop any running animation and discard its frames. */
+  /** Stop the timer and put the dialog's button back to "start". */
+  void stopTimer();
+
+  /**
+   * Stop any running animation and withdraw the published frames, which also
+   * puts the rest positions back if one of them is on screen.
+   */
   void resetAnimation();
 
   /**
-   * Rebuild the dialog's mode table for the active conformer. Records which
-   * conformer it was built for so playback, which signals a conformer change
-   * on every frame, does not rebuild it repeatedly.
+   * Re-evaluate the modes for the active conformer: the action state, the
+   * default mode, the published frames and the dialog. Never shows the dialog.
+   */
+  void refreshModes();
+
+  /** @return The mode to select by default: the first above 0.5 cm^-1. */
+  int defaultMode() const;
+
+  /**
+   * Publish @p frames for the Animation tool, replacing the current set. An
+   * empty array, or an active frame without modes, withdraws the set.
+   */
+  void publishFrames(const Core::Array<Core::Array<Vector3>>& frames);
+
+  /**
+   * Bring the dialog (if it exists) in step with the active conformer: the
+   * mode table, the selected mode, the controls, or the page pointing at the
+   * frames that do have modes. Does not show it.
    */
   void reloadDialog();
 
@@ -86,12 +116,6 @@ private:
    * @note m_molecule must not be null; the callers check that first.
    */
   bool activeConformerIsStored() const;
-
-  /**
-   * Put back the undisplaced geometry the animation was drawn on top of, and
-   * reset the frame counter.
-   */
-  void restoreRestGeometry();
 
   /**
    * @return The geometry the normal modes belong to, which is not necessarily
@@ -109,15 +133,13 @@ private:
 
   QTimer* m_timer;
 
-  /**
-   * The displaced geometries the animation cycles through. These are held
-   * here rather than pushed into the molecule's coordinate sets, which would
-   * destroy any trajectory or reaction path that was loaded from the file.
-   */
-  Core::Array<Core::Array<Vector3>> m_animationFrames;
+  /** The conformer the current mode was chosen for, -1 if none. */
+  int m_modeConformer = -1;
 
-  /** The conformer the dialog's mode table was last built for, -1 if none. */
-  int m_dialogConformer = -1;
+  /** True if the active conformer has vibrational modes. */
+  bool m_haveModes = false;
+
+  int m_framesPerCycle = 20;
 
   int m_currentFrame = 0;
   int m_mode;

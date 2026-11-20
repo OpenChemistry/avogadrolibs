@@ -904,6 +904,12 @@ public:
   size_t vibrationConformerCount() const;
 
   /**
+   * @return True if any conformer carries vibrational data. Cheaper than
+   * vibrationConformerCount() > 0 because it builds no list.
+   */
+  bool hasAnyVibrations() const;
+
+  /**
    * @return The indices of the conformers carrying vibrational data, in
    * increasing order.
    */

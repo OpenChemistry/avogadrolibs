@@ -15,7 +15,10 @@
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <list>
+#include <vector>
 
 namespace Avogadro::QtGui {
 
@@ -285,6 +288,84 @@ public:
   void swapBond(Index a, Index b);
   void swapAtom(Index a, Index b);
 
+  /**
+   * @name Animation frames
+   * A view-only set of named coordinate sequences (for example a vibration
+   * cycle) that the Animation tool can step through or record. They are not
+   * saved, not part of undo, and not copied with the molecule. They are
+   * dropped when the structure changes (see invalidatesDerivedData()), but
+   * survive plain Atoms | Moved changes.
+   * @{
+   */
+
+  /**
+   * Publish @p frames under @p id, replacing any earlier set with that id.
+   * An empty @p frames array removes the set. The id "trajectory" is
+   * reserved by the Animation tool for the molecule's own coordinate sets.
+   */
+  void setAnimationFrames(const QString& id, const QString& label,
+                          const Core::Array<Core::Array<Vector3>>& frames);
+
+  /** Remove the set @p id. Does nothing (and emits nothing) if unknown. */
+  void removeAnimationFrames(const QString& id);
+
+  /** @return The ids of the published sets, in the order first published. */
+  QStringList animationFrameIds() const;
+
+  /** @return The label of set @p id, or an empty string if unknown. */
+  QString animationFrameLabel(const QString& id) const;
+
+  /** @return The frames of set @p id, or an empty array if unknown. */
+  Core::Array<Core::Array<Vector3>> animationFrames(const QString& id) const;
+
+  /** @return The number of frames in set @p id, 0 if unknown. */
+  size_t animationFrameCount(const QString& id) const;
+
+  /**
+   * @return Frame @p index of set @p id, without copying the whole set. Empty
+   * if the set is unknown or @p index is out of range.
+   */
+  Core::Array<Vector3> animationFrame(const QString& id, size_t index) const;
+
+  /**
+   * Announce that @p owner is about to display its own animation frames.
+   * Other animators should stop; emits animationPlaybackClaimed().
+   */
+  void claimAnimationPlayback(QObject* owner);
+
+  /**
+   * Put frame @p index of set @p id on screen. The first call saves the
+   * current atomPositions3d() as the rest positions; then the frame replaces
+   * the positions and Atoms | Moved is emitted. Nothing changes and false is
+   * returned if the set is unknown, @p index is out of range, or the frame
+   * does not have atomCount() positions.
+   *
+   * The molecule keeps this display consistent: republishing the shown set
+   * re-shows the same (clamped) index, removing it restores the rest
+   * positions, and a conformer change, a structural change or an edit of the
+   * atoms by anyone else drops the display and leaves the new positions
+   * alone. Like the frame sets, the display is not copied or saved.
+   */
+  bool showAnimationFrame(const QString& id, size_t index);
+
+  /** Restore the rest positions and stop showing a frame, if one is shown. */
+  void clearAnimationDisplay();
+
+  bool isShowingAnimationFrame() const { return m_shownAnimationIndex >= 0; }
+
+  /** @return The id of the set being shown, empty if none. */
+  QString shownAnimationId() const { return m_shownAnimationId; }
+
+  /** @return The index being shown, -1 if none. */
+  int shownAnimationFrame() const { return m_shownAnimationIndex; }
+
+  /**
+   * @return The positions saved when the display started while a frame is
+   * shown, otherwise atomPositions3d().
+   */
+  Core::Array<Vector3> restPositions3d() const;
+  /** @} */
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -314,7 +395,42 @@ signals:
    */
   void update() const;
 
+  /** The set of published animation frames changed. */
+  void animationFramesChanged();
+
+  /** @p owner started animating; other animators should stop. */
+  void animationPlaybackClaimed(QObject* owner);
+
+  /**
+   * A frame started or stopped being shown, was dropped (conformer change,
+   * edit), or the shown index changed.
+   */
+  void animationDisplayChanged();
+
 private:
+  struct AnimationFrameSet
+  {
+    QString id;
+    QString label;
+    Core::Array<Core::Array<Vector3>> frames;
+  };
+  // Deliberately omitted from every copy and assignment.
+  std::vector<AnimationFrameSet> m_animationFrameSets;
+
+  void clearAnimationFrames();
+
+  // The frame being shown, if any. Deliberately omitted from every copy.
+  QString m_shownAnimationId;
+  int m_shownAnimationIndex = -1;
+  Core::Array<Vector3> m_animationRestPositions;
+
+  /** Forget the display without touching the positions. */
+  void dropAnimationDisplay();
+  /** Re-show the shown index from a freshly published set. */
+  void refreshShownFrame(const AnimationFrameSet& set);
+  AnimationFrameSet* findFrameSet(const QString& id);
+  const AnimationFrameSet* findFrameSet(const QString& id) const;
+
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
 

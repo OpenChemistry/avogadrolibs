@@ -824,3 +824,362 @@ TEST_F(MoleculeTest, partialChargesFollowStructuralChanges)
                              Molecule::Replaced);
   EXPECT_EQ(m_testMolecule.partialChargeTypes().size(), 2u);
 }
+
+namespace {
+Array<Array<Avogadro::Vector3>> twoFrames(Index atoms)
+{
+  Array<Array<Avogadro::Vector3>> frames;
+  for (int f = 0; f < 2; ++f)
+    frames.push_back(
+      Array<Avogadro::Vector3>(atoms, Avogadro::Vector3(f, 0, 0)));
+  return frames;
+}
+} // namespace
+
+TEST_F(MoleculeTest, animationFramesPublishAndRemove)
+{
+  int changes = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationFramesChanged,
+                   [&changes]() { ++changes; });
+  EXPECT_TRUE(m_testMolecule.animationFrameIds().isEmpty());
+  EXPECT_TRUE(m_testMolecule.animationFrames("vibration").empty());
+
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+  m_testMolecule.setAnimationFrames("other", "Other", twoFrames(3));
+  EXPECT_EQ(changes, 2);
+  EXPECT_EQ(m_testMolecule.animationFrameIds(),
+            QStringList({ "vibration", "other" }));
+  EXPECT_EQ(m_testMolecule.animationFrameLabel("vibration"), QString("Mode 1"));
+  EXPECT_EQ(m_testMolecule.animationFrames("vibration").size(), 2u);
+
+  // Replacing keeps the position in the list.
+  m_testMolecule.setAnimationFrames("vibration", "Mode 2", twoFrames(3));
+  EXPECT_EQ(changes, 3);
+  EXPECT_EQ(m_testMolecule.animationFrameIds().first(), QString("vibration"));
+  EXPECT_EQ(m_testMolecule.animationFrameLabel("vibration"), QString("Mode 2"));
+
+  m_testMolecule.removeAnimationFrames("missing");
+  EXPECT_EQ(changes, 3);
+  m_testMolecule.removeAnimationFrames("vibration");
+  EXPECT_EQ(changes, 4);
+  EXPECT_EQ(m_testMolecule.animationFrameIds(), QStringList({ "other" }));
+  EXPECT_TRUE(m_testMolecule.animationFrames("vibration").empty());
+  EXPECT_TRUE(m_testMolecule.animationFrameLabel("vibration").isEmpty());
+
+  // An empty array behaves like a removal.
+  m_testMolecule.setAnimationFrames("other", "Other", {});
+  EXPECT_EQ(changes, 5);
+  EXPECT_TRUE(m_testMolecule.animationFrameIds().isEmpty());
+  m_testMolecule.setAnimationFrames("other", "Other", {});
+  EXPECT_EQ(changes, 5);
+}
+
+TEST_F(MoleculeTest, animationFramesSurviveMovesNotStructure)
+{
+  int changes = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationFramesChanged,
+                   [&changes]() { ++changes; });
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+  ASSERT_EQ(changes, 1);
+
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved |
+                             Molecule::Conformer);
+  EXPECT_EQ(changes, 1);
+  EXPECT_EQ(m_testMolecule.animationFrameIds().size(), 1);
+
+  m_testMolecule.addAtom(1);
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Added);
+  EXPECT_EQ(changes, 2);
+  EXPECT_TRUE(m_testMolecule.animationFrameIds().isEmpty());
+
+  // Nothing to drop, so no signal.
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Removed);
+  EXPECT_EQ(changes, 2);
+}
+
+TEST_F(MoleculeTest, animationFramesNotCopied)
+{
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+
+  Molecule copy(m_testMolecule);
+  EXPECT_TRUE(copy.animationFrameIds().isEmpty());
+
+  Molecule assigned;
+  assigned.setAnimationFrames("stale", "Stale", twoFrames(1));
+  assigned = m_testMolecule;
+  EXPECT_TRUE(assigned.animationFrameIds().isEmpty());
+  EXPECT_EQ(m_testMolecule.animationFrameIds().size(), 1);
+
+  Avogadro::Core::Molecule core(m_testMolecule);
+  Molecule fromCore(core);
+  EXPECT_TRUE(fromCore.animationFrameIds().isEmpty());
+}
+
+TEST_F(MoleculeTest, animationFrameAccessors)
+{
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+  EXPECT_EQ(m_testMolecule.animationFrameCount("vibration"), 2u);
+  EXPECT_EQ(m_testMolecule.animationFrameCount("missing"), 0u);
+  EXPECT_EQ(m_testMolecule.animationFrame("vibration", 1).size(), 3u);
+  EXPECT_EQ(m_testMolecule.animationFrame("vibration", 1)[0].x(), 1.0);
+  EXPECT_TRUE(m_testMolecule.animationFrame("vibration", 2).empty());
+  EXPECT_TRUE(m_testMolecule.animationFrame("missing", 0).empty());
+}
+
+namespace {
+
+// Frame f puts every atom at x = 10 + f, so it differs from the rest.
+Array<Array<Avogadro::Vector3>> shownFrames(Index atoms, int count = 3,
+                                            double offset = 10.0)
+{
+  Array<Array<Avogadro::Vector3>> frames;
+  for (int f = 0; f < count; ++f) {
+    frames.push_back(
+      Array<Avogadro::Vector3>(atoms, Avogadro::Vector3(offset + f, 0.0, 0.0)));
+  }
+  return frames;
+}
+
+} // namespace
+
+TEST_F(MoleculeTest, showAnimationFrameSavesRestAndReplacesPositions)
+{
+  const Array<Avogadro::Vector3> rest = m_testMolecule.atomPositions3d();
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  unsigned int lastChange = 0;
+  int changes = 0;
+  int displayChanges = 0;
+  QObject::connect(&m_testMolecule, &Molecule::changed, [&](unsigned int c) {
+    lastChange = c;
+    ++changes;
+  });
+  QObject::connect(&m_testMolecule, &Molecule::animationDisplayChanged,
+                   [&]() { ++displayChanges; });
+
+  EXPECT_FALSE(m_testMolecule.showAnimationFrame("missing", 0));
+  EXPECT_FALSE(m_testMolecule.showAnimationFrame("v", 3));
+  m_testMolecule.setAnimationFrames("bad", "B", shownFrames(2));
+  EXPECT_FALSE(m_testMolecule.showAnimationFrame("bad", 0));
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(changes, 0);
+
+  EXPECT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), shownFrames(3)[1]);
+  EXPECT_EQ(m_testMolecule.restPositions3d(), rest);
+  EXPECT_EQ(m_testMolecule.shownAnimationId(), QString("v"));
+  EXPECT_EQ(m_testMolecule.shownAnimationFrame(), 1);
+  EXPECT_EQ(changes, 1);
+  EXPECT_EQ(lastChange, Molecule::Atoms | Molecule::Moved);
+  EXPECT_EQ(displayChanges, 1);
+
+  // A second frame keeps the first rest geometry.
+  EXPECT_TRUE(m_testMolecule.showAnimationFrame("v", 2));
+  EXPECT_EQ(m_testMolecule.restPositions3d(), rest);
+  EXPECT_EQ(displayChanges, 2);
+
+  m_testMolecule.clearAnimationDisplay();
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), rest);
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.shownAnimationFrame(), -1);
+  EXPECT_TRUE(m_testMolecule.shownAnimationId().isEmpty());
+  EXPECT_EQ(lastChange, Molecule::Atoms | Molecule::Moved);
+  EXPECT_EQ(displayChanges, 3);
+
+  const int before = changes;
+  m_testMolecule.clearAnimationDisplay(); // nothing shown: no-op
+  EXPECT_EQ(changes, before);
+  EXPECT_EQ(m_testMolecule.restPositions3d(), rest);
+}
+
+TEST_F(MoleculeTest, republishingTheShownSetKeepsTheClampedIndex)
+{
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 2));
+  int changes = 0;
+  QObject::connect(&m_testMolecule, &Molecule::changed,
+                   [&](unsigned int) { ++changes; });
+
+  // Identical frames: positions do not change, so nothing is emitted.
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  EXPECT_EQ(changes, 0);
+  EXPECT_EQ(m_testMolecule.shownAnimationFrame(), 2);
+
+  // Different frames: the same index is re-shown.
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3, 3, 50.0));
+  EXPECT_EQ(changes, 1);
+  EXPECT_EQ(m_testMolecule.shownAnimationFrame(), 2);
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), shownFrames(3, 3, 50.0)[2]);
+
+  // Fewer frames: the index is clamped.
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3, 2, 70.0));
+  EXPECT_EQ(m_testMolecule.shownAnimationFrame(), 1);
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), shownFrames(3, 2, 70.0)[1]);
+
+  // A frame of the wrong size cannot be shown: back to the rest geometry.
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(2));
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+}
+
+TEST_F(MoleculeTest, removingTheShownSetRestoresTheRest)
+{
+  const Array<Avogadro::Vector3> rest = m_testMolecule.atomPositions3d();
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  m_testMolecule.setAnimationFrames("other", "O", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+
+  m_testMolecule.removeAnimationFrames("other"); // not shown: untouched
+  EXPECT_TRUE(m_testMolecule.isShowingAnimationFrame());
+
+  m_testMolecule.removeAnimationFrames("v");
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), rest);
+
+  m_testMolecule.setAnimationFrames("other", "O", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("other", 0));
+  m_testMolecule.setAnimationFrames("other", "O", {}); // empty set = remove
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), rest);
+}
+
+TEST_F(MoleculeTest, conformerChangeDropsTheDisplayInEitherOrder)
+{
+  for (int i = 0; i < 3; ++i) {
+    m_testMolecule.setCoordinate3d(
+      Array<Avogadro::Vector3>(3, Avogadro::Vector3(100.0 * i, 0, 0)), i);
+  }
+  m_testMolecule.setCoordinate3d(0);
+  const unsigned int conformer =
+    Molecule::Atoms | Molecule::Moved | Molecule::Conformer;
+
+  // The set is republished before the Conformer emit.
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  m_testMolecule.setCoordinate3d(1);
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3, 3, 50.0));
+  m_testMolecule.emitChanged(conformer);
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), m_testMolecule.coordinate3d(1));
+
+  // The Conformer emit comes first.
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  m_testMolecule.setCoordinate3d(2);
+  m_testMolecule.emitChanged(conformer);
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3, 3, 70.0));
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), m_testMolecule.coordinate3d(2));
+  EXPECT_EQ(m_testMolecule.restPositions3d(), m_testMolecule.coordinate3d(2));
+}
+
+TEST_F(MoleculeTest, conformerChangeWithNoStoredSetsRestoresTheRest)
+{
+  ASSERT_EQ(m_testMolecule.coordinate3dCount(), 0u);
+  const Array<Avogadro::Vector3> rest = m_testMolecule.atomPositions3d();
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  ASSERT_NE(m_testMolecule.atomPositions3d(), rest);
+
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved |
+                             Molecule::Conformer);
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), rest);
+}
+
+TEST_F(MoleculeTest, structuralChangeDropsTheDisplayWithoutRestoring)
+{
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  int displayChanges = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationDisplayChanged,
+                   [&]() { ++displayChanges; });
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Modified);
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), shownFrames(3)[1]);
+  EXPECT_EQ(displayChanges, 1);
+}
+
+TEST_F(MoleculeTest, editsByOthersDropTheDisplayButEqualEmitsDoNot)
+{
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+
+  // Same positions, as when a plugin refreshes force vectors.
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  EXPECT_TRUE(m_testMolecule.isShowingAnimationFrame());
+  // Selection changes carry no Atoms flag.
+  m_testMolecule.emitChanged(Molecule::Selection);
+  EXPECT_TRUE(m_testMolecule.isShowingAnimationFrame());
+
+  Array<Avogadro::Vector3> edited = shownFrames(3)[1];
+  edited[0] = Avogadro::Vector3(-5.0, 1.0, 2.0);
+  m_testMolecule.setAtomPositions3d(edited);
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), edited);
+}
+
+TEST_F(MoleculeTest, animationDisplayIsNotCopied)
+{
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+
+  Molecule copy(m_testMolecule);
+  EXPECT_FALSE(copy.isShowingAnimationFrame());
+  EXPECT_TRUE(m_testMolecule.isShowingAnimationFrame());
+
+  // Assigning over a shown molecule drops the display without restoring.
+  Molecule other(m_testMolecule);
+  const Array<Avogadro::Vector3> otherPositions = other.atomPositions3d();
+  m_testMolecule = other;
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), otherPositions);
+}
+
+TEST_F(MoleculeTest, editFromAChangedSlotDuringShowOwnsThePositions)
+{
+  m_testMolecule.setAnimationFrames("v", "V", shownFrames(3));
+  Array<Avogadro::Vector3> edited = shownFrames(3)[1];
+  edited[0] = Avogadro::Vector3(-9.0, 0.0, 0.0);
+  bool editing = false;
+  QObject::connect(&m_testMolecule, &Molecule::changed, [&](unsigned int) {
+    if (editing)
+      return;
+    editing = true;
+    m_testMolecule.setAtomPositions3d(edited);
+    m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  });
+
+  ASSERT_TRUE(m_testMolecule.showAnimationFrame("v", 1));
+  EXPECT_FALSE(m_testMolecule.isShowingAnimationFrame());
+  m_testMolecule.clearAnimationDisplay();
+  EXPECT_EQ(m_testMolecule.atomPositions3d(), edited);
+}
+
+TEST_F(MoleculeTest, emptyRestPositionsAreRestored)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  molecule.setAtomPositions3d(Array<Avogadro::Vector3>());
+  ASSERT_TRUE(molecule.atomPositions3d().empty());
+  molecule.setAnimationFrames("v", "V", shownFrames(1));
+  ASSERT_TRUE(molecule.showAnimationFrame("v", 0));
+  EXPECT_EQ(molecule.atomPositions3d().size(), 1u);
+  molecule.clearAnimationDisplay();
+  EXPECT_TRUE(molecule.atomPositions3d().empty());
+  EXPECT_FALSE(molecule.isShowingAnimationFrame());
+}
+
+TEST_F(MoleculeTest, claimAnimationPlayback)
+{
+  QObject* received = nullptr;
+  int count = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationPlaybackClaimed,
+                   [&](QObject* owner) {
+                     received = owner;
+                     ++count;
+                   });
+  QObject owner;
+  m_testMolecule.claimAnimationPlayback(&owner);
+  EXPECT_EQ(count, 1);
+  EXPECT_EQ(received, &owner);
+}
