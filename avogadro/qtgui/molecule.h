@@ -317,6 +317,15 @@ public:
   /** @return The frames of set @p id, or an empty array if unknown. */
   Core::Array<Core::Array<Vector3>> animationFrames(const QString& id) const;
 
+  /** @return The number of frames in set @p id, 0 if unknown. */
+  size_t animationFrameCount(const QString& id) const;
+
+  /**
+   * @return Frame @p index of set @p id, without copying the whole set. Empty
+   * if the set is unknown or @p index is out of range.
+   */
+  Core::Array<Vector3> animationFrame(const QString& id, size_t index) const;
+
   /**
    * Announce that @p owner is about to display its own animation frames.
    * Other animators should stop; emits animationPlaybackClaimed().

@@ -916,6 +916,17 @@ TEST_F(MoleculeTest, animationFramesNotCopied)
   EXPECT_TRUE(fromCore.animationFrameIds().isEmpty());
 }
 
+TEST_F(MoleculeTest, animationFrameAccessors)
+{
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+  EXPECT_EQ(m_testMolecule.animationFrameCount("vibration"), 2u);
+  EXPECT_EQ(m_testMolecule.animationFrameCount("missing"), 0u);
+  EXPECT_EQ(m_testMolecule.animationFrame("vibration", 1).size(), 3u);
+  EXPECT_EQ(m_testMolecule.animationFrame("vibration", 1)[0].x(), 1.0);
+  EXPECT_TRUE(m_testMolecule.animationFrame("vibration", 2).empty());
+  EXPECT_TRUE(m_testMolecule.animationFrame("missing", 0).empty());
+}
+
 TEST_F(MoleculeTest, claimAnimationPlayback)
 {
   QObject* received = nullptr;

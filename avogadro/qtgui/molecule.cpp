@@ -450,6 +450,26 @@ Core::Array<Core::Array<Vector3>> Molecule::animationFrames(
   return Core::Array<Core::Array<Vector3>>();
 }
 
+size_t Molecule::animationFrameCount(const QString& id) const
+{
+  for (const AnimationFrameSet& set : m_animationFrameSets) {
+    if (set.id == id)
+      return set.frames.size();
+  }
+  return 0;
+}
+
+Core::Array<Vector3> Molecule::animationFrame(const QString& id,
+                                              size_t index) const
+{
+  for (const AnimationFrameSet& set : m_animationFrameSets) {
+    if (set.id == id)
+      return index < set.frames.size() ? set.frames[index]
+                                       : Core::Array<Vector3>();
+  }
+  return Core::Array<Vector3>();
+}
+
 void Molecule::claimAnimationPlayback(QObject* owner)
 {
   emit animationPlaybackClaimed(owner);
