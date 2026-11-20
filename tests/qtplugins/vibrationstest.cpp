@@ -281,3 +281,30 @@ TEST_F(VibrationsPluginTest, EmptyFramePageOffersNearestFrame)
   EXPECT_EQ(m_molecule.coordinate3d(), 1);
   EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
 }
+
+TEST_F(VibrationsPluginTest, HiddenDialogCatchesUpWhenOpened)
+{
+  QDialog* dlg = dialog();
+  ASSERT_NE(dlg, nullptr);
+  dlg->hide();
+  goTo(1);
+
+  // Still showing the page built for frame 1 (no modes): not rebuilt while
+  // hidden.
+  bool stale = false;
+  for (QLabel* label : dlg->findChildren<QLabel*>()) {
+    if (label->text().startsWith(QStringLiteral("Vibrations available")))
+      stale = true;
+  }
+  EXPECT_TRUE(stale);
+
+  m_plugin->openDialog();
+  EXPECT_TRUE(dlg->isVisible());
+  QPushButton* start = nullptr;
+  for (QPushButton* button : dlg->findChildren<QPushButton*>()) {
+    if (button->text() == QStringLiteral("Start Animation"))
+      start = button;
+  }
+  ASSERT_NE(start, nullptr);
+  EXPECT_TRUE(start->isEnabled()); // the modes page is up to date
+}

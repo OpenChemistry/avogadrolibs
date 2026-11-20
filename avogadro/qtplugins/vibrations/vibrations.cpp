@@ -120,7 +120,9 @@ void Vibrations::refreshModes()
 
 void Vibrations::reloadDialog()
 {
-  if (m_dialog == nullptr || m_molecule == nullptr)
+  // A hidden dialog catches up in openDialog(), so playback over a trajectory
+  // does not rebuild it on every frame.
+  if (m_dialog == nullptr || m_molecule == nullptr || !m_dialog->isVisible())
     return;
 
   m_dialog->setMolecule(m_molecule);
@@ -529,8 +531,9 @@ void Vibrations::openDialog()
     connect(m_dialog, &VibrationDialog::generateDisplacedCoordinates, this,
             &Vibrations::generateDisplacedCoordinates);
   }
-  reloadDialog();
+  // Show first: reloadDialog() skips a hidden dialog.
   m_dialog->show();
+  reloadDialog();
   m_dialog->raise();
   m_dialog->activateWindow();
 }
