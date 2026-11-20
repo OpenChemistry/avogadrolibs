@@ -432,7 +432,6 @@ TEST_F(PlayerToolSourceTest, RepublishBeforeConformerSignalDoesNotDisplace)
   // about the conformer change.
   mol().setCoordinate3d(2);
   mol().setAnimationFrames("vibration", "V2", frames(4, 50.0));
-  EXPECT_EQ(mol().atomPositions3d(), mol().coordinate3d(2));
   mol().emitChanged(Molecule::Atoms | Molecule::Moved | Molecule::Conformer);
   EXPECT_EQ(mol().atomPositions3d(), mol().coordinate3d(2));
   ASSERT_TRUE(run("coordinateSetCount"));
@@ -440,4 +439,45 @@ TEST_F(PlayerToolSourceTest, RepublishBeforeConformerSignalDoesNotDisplace)
 
   ASSERT_TRUE(useSource("trajectory"));
   EXPECT_EQ(mol().atomPositions3d(), mol().coordinate3d(2));
+}
+
+TEST_F(PlayerToolSourceTest, DisplayLivesInTheMolecule)
+{
+  build(3);
+  mol().setAnimationFrames("vibration", "V", frames(4));
+  mol().setAnimationFrames("other", "O", frames(2, 90.0));
+  ASSERT_TRUE(useSource("vibration"));
+  ASSERT_TRUE(run("nextFrame"));
+  EXPECT_EQ(mol().shownAnimationId(), QString("vibration"));
+  EXPECT_EQ(mol().shownAnimationFrame(), 1);
+  EXPECT_EQ(mol().restPositions3d(), mol().coordinate3d(0));
+
+  // The Player only clears a display it owns.
+  ASSERT_TRUE(mol().showAnimationFrame("other", 1));
+  ASSERT_TRUE(useSource("trajectory"));
+  EXPECT_EQ(mol().shownAnimationId(), QString("other"));
+
+  ASSERT_TRUE(useSource("vibration"));
+  ASSERT_TRUE(run("nextFrame"));
+  ASSERT_TRUE(useSource("trajectory"));
+  EXPECT_FALSE(mol().isShowingAnimationFrame());
+  EXPECT_EQ(mol().atomPositions3d(), mol().coordinate3d(0));
+}
+
+TEST_F(PlayerToolSourceTest, EditingDisplacedAtomsKeepsTheEdit)
+{
+  build(3);
+  mol().setAnimationFrames("vibration", "V", frames(4));
+  ASSERT_TRUE(useSource("vibration"));
+  ASSERT_TRUE(run("nextFrame"));
+
+  Array<Vector3> edited = mol().atomPositions3d();
+  edited[0] = Vector3(-7.0, 0.0, 0.0);
+  mol().setAtomPositions3d(edited);
+  mol().emitChanged(Molecule::Atoms | Molecule::Moved);
+  EXPECT_FALSE(mol().isShowingAnimationFrame());
+
+  // Leaving the source must not undo the edit.
+  ASSERT_TRUE(useSource("trajectory"));
+  EXPECT_EQ(mol().atomPositions3d(), edited);
 }

@@ -83,12 +83,12 @@ void Vibrations::stopTimer()
   }
 }
 
-void Vibrations::resetAnimation(bool unpublish)
+void Vibrations::resetAnimation()
 {
   stopTimer();
-  m_animationFrames.clear();
   m_currentFrame = 0;
-  if (m_molecule && unpublish)
+  // Withdrawing the set also puts back the rest positions if it was shown.
+  if (m_molecule)
     m_molecule->removeAnimationFrames(QStringLiteral("vibration"));
 }
 
@@ -111,20 +111,19 @@ void Vibrations::refreshModes()
   m_actions[0]->setEnabled(m_molecule->hasAnyVibrations());
 
   // The frames were built from the previous conformer's geometry and modes.
-  // Drop them rather than restoring that geometry: whoever changed the
-  // conformer meant to move away from it. The published set stays up until
-  // it is replaced or withdrawn below, so the Animation tool does not see the
-  // source vanish and reappear.
-  resetAnimation(false);
+  // The published set stays up until it is replaced or withdrawn below, so
+  // the Animation tool does not see the source vanish and reappear. The
+  // molecule has already dropped any displayed frame on a conformer change.
+  stopTimer();
+  m_currentFrame = 0;
 
   m_haveModes = m_molecule->hasVibrations();
   if (m_haveModes) {
     m_mode = defaultMode();
     setMode(m_mode);
+  } else {
+    publishFrames(Core::Array<Core::Array<Vector3>>());
   }
-  // No modes here, or a mode that could not be built: withdraw the old set.
-  if (m_animationFrames.empty())
-    publishFrames();
   reloadDialog();
 }
 
@@ -288,8 +287,7 @@ void Vibrations::setMode(int mode)
   // A mode with the wrong number of displacements cannot be animated, and
   // indexing it per atom below would run off the end.
   if (atomDisplacements.size() != atomPositions.size()) {
-    m_animationFrames.clear();
-    publishFrames();
+    publishFrames(Core::Array<Core::Array<Vector3>>());
     return;
   }
 
@@ -302,15 +300,14 @@ void Vibrations::setMode(int mode)
     ++atom;
   }
 
-  // Build the displaced geometries in our own buffer. Writing them into the
+  // Publish the displaced geometries as a frame set. Writing them into the
   // molecule's coordinate sets would overwrite a loaded trajectory or
   // reaction path, and make the conformer-aware UI count them as conformers.
   // The peak displacement is lx * 0.001 * amplitude^2: the amplitude enters
   // twice, as it has since 2.0 (the force vectors above scale only once).
   const double peakScale = 0.001 * m_amplitude * m_amplitude;
-  m_animationFrames = vibrationFrames(atomPositions, atomDisplacements,
-                                      peakScale, m_framesPerCycle);
-  publishFrames();
+  publishFrames(vibrationFrames(atomPositions, atomDisplacements, peakScale,
+                                m_framesPerCycle));
 
   m_currentFrame = 0;
 
@@ -331,36 +328,11 @@ Core::Array<Vector3> Vibrations::restGeometry() const
   // Take the rest geometry from the stored coordinate set, not from the
   // displayed positions: while an animation is running those are a displaced
   // frame, and building on them would make the molecule walk away from its
-  // equilibrium geometry. Frame 0 is the rest geometry when there are no
-  // coordinate sets.
+  // equilibrium geometry. With no coordinate sets the molecule remembers the
+  // positions that were on screen before the first frame was shown.
   if (activeConformerIsStored())
     return m_molecule->coordinate3d(m_molecule->coordinate3d());
-  if (!m_animationFrames.empty())
-    return m_animationFrames[0];
-  return m_molecule->atomPositions3d();
-}
-
-void Vibrations::restoreRestGeometry()
-{
-  m_currentFrame = 0;
-  if (m_molecule == nullptr)
-    return;
-
-  // Put back the geometry the animation was drawn on top of. The animation
-  // never changed the active conformer, so re-reading it here is the same
-  // index setMode() built the frames from.
-  if (activeConformerIsStored()) {
-    m_molecule->setCoordinate3d(m_molecule->coordinate3d());
-  } else if (!m_animationFrames.empty()) {
-    // No coordinate sets at all (a plain frequency calculation): frame 0 is
-    // the undisplaced geometry.
-    m_molecule->setAtomPositions3d(m_animationFrames[0]);
-  }
-
-  // Only the displayed positions moved: the animation never changed the
-  // active conformer, so this is not a Conformer change and must not make the
-  // dialog rebuild its mode table.
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Moved);
+  return m_molecule->restPositions3d();
 }
 
 void Vibrations::setAmplitude(int amplitude)
@@ -387,11 +359,11 @@ void Vibrations::goToFrame(int frame)
                           QtGui::Molecule::Conformer);
 }
 
-void Vibrations::publishFrames()
+void Vibrations::publishFrames(const Core::Array<Core::Array<Vector3>>& frames)
 {
   if (m_molecule == nullptr)
     return;
-  if (m_animationFrames.empty() || !m_molecule->hasVibrations()) {
+  if (frames.empty() || !m_molecule->hasVibrations()) {
     m_molecule->removeAnimationFrames(QStringLiteral("vibration"));
     return;
   }
@@ -403,7 +375,7 @@ void Vibrations::publishFrames()
   m_molecule->setAnimationFrames(
     QStringLiteral("vibration"),
     tr("Vibration: mode %1, %2 cm⁻¹").arg(m_mode + 1).arg(frequency, 0, 'f', 1),
-    m_animationFrames);
+    frames);
 }
 
 void Vibrations::animationPlaybackClaimed(QObject* owner)
@@ -495,10 +467,10 @@ void Vibrations::startVibrationAnimation()
   if (m_molecule == nullptr)
     return;
 
-  // The frames were built by setMode(). Nothing to animate without them.
-  if (m_animationFrames.empty())
+  // The frames were published by setMode(). Nothing to animate without them.
+  if (m_molecule->animationFrameCount(QStringLiteral("vibration")) == 0)
     setMode(m_mode);
-  if (m_animationFrames.empty())
+  if (m_molecule->animationFrameCount(QStringLiteral("vibration")) == 0)
     return;
 
   m_currentFrame = 0;
@@ -516,9 +488,12 @@ void Vibrations::startVibrationAnimation()
 void Vibrations::stopVibrationAnimation()
 {
   if (m_timer && m_timer->isActive()) {
-    m_timer->stop();
-    // Restore the geometry we were animating, not a hardcoded frame 0.
-    restoreRestGeometry();
+    stopTimer();
+    m_currentFrame = 0;
+    // Put the geometry back, unless the Animation tool has taken over.
+    if (m_molecule &&
+        m_molecule->shownAnimationId() == QLatin1String("vibration"))
+      m_molecule->clearAnimationDisplay();
   }
 }
 
@@ -549,15 +524,19 @@ void Vibrations::openDialog()
 
 void Vibrations::advanceFrame()
 {
-  if (m_molecule == nullptr || m_animationFrames.empty())
+  if (m_molecule == nullptr)
     return;
 
-  if (++m_currentFrame >= static_cast<int>(m_animationFrames.size()))
+  const QString id = QStringLiteral("vibration");
+  const auto count = static_cast<int>(m_molecule->animationFrameCount(id));
+  if (count == 0)
+    return;
+
+  if (++m_currentFrame >= count)
     m_currentFrame = 0;
 
-  // Display the displaced geometry without disturbing the coordinate sets.
-  m_molecule->setAtomPositions3d(m_animationFrames[m_currentFrame]);
-  // Use Moved flag for coordinate changes, not Added (which implies new atoms)
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Moved);
+  // The molecule puts the frame on screen and remembers the rest positions,
+  // leaving the coordinate sets alone.
+  m_molecule->showAnimationFrame(id, static_cast<size_t>(m_currentFrame));
 }
 } // namespace Avogadro::QtPlugins

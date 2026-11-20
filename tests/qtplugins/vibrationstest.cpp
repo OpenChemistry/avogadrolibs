@@ -339,3 +339,34 @@ TEST_F(VibrationsPluginTest, ConformerChangeNeverWithdrawsFramesBetweenModes)
   goTo(0);
   EXPECT_TRUE(m_molecule.animationFrameIds().isEmpty());
 }
+
+TEST_F(VibrationsPluginTest, AnimationShowsFramesAndStopRestoresRest)
+{
+  goTo(1);
+  const Array<Vector3> rest = m_molecule.coordinate3d(1);
+  m_plugin->startVibrationAnimation();
+  QMetaObject::invokeMethod(m_plugin, "advanceFrame");
+  QMetaObject::invokeMethod(m_plugin, "advanceFrame");
+  EXPECT_EQ(m_molecule.shownAnimationId(), QString("vibration"));
+  EXPECT_EQ(m_molecule.shownAnimationFrame(), 2);
+  EXPECT_EQ(m_molecule.restPositions3d(), rest);
+  EXPECT_EQ(m_molecule.coordinate3d(), 1);
+
+  m_plugin->stopVibrationAnimation();
+  EXPECT_FALSE(m_molecule.isShowingAnimationFrame());
+  EXPECT_EQ(m_molecule.atomPositions3d(), rest);
+}
+
+TEST_F(VibrationsPluginTest, ChangingModeKeepsTheShownIndex)
+{
+  goTo(1);
+  m_plugin->startVibrationAnimation();
+  QMetaObject::invokeMethod(m_plugin, "advanceFrame");
+  QMetaObject::invokeMethod(m_plugin, "advanceFrame");
+  const Array<Vector3> rest = m_molecule.coordinate3d(1);
+
+  // Rebuilt frames are built from the rest geometry, not the displaced one.
+  m_plugin->setAmplitude(40);
+  EXPECT_EQ(m_molecule.restPositions3d(), rest);
+  EXPECT_TRUE(m_molecule.isShowingAnimationFrame());
+}

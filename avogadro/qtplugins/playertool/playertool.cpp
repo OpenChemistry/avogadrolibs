@@ -284,7 +284,7 @@ void PlayerTool::setMolecule(QtGui::Molecule* mol)
   if (m_molecule) {
     // Don't leave the old molecule on a displaced frame.
     stop();
-    restoreRest();
+    clearOwnDisplay();
     disconnect(m_molecule, nullptr, this, nullptr);
   }
 
@@ -293,8 +293,6 @@ void PlayerTool::setMolecule(QtGui::Molecule* mol)
   m_userPickedSource = false;
   m_sourceFrame = 0;
   m_publishedTotal = 0;
-  m_rest.clear();
-  m_shownPositions.clear();
   m_holdsPlayback = false;
   m_sourceRowShown = false;
 
@@ -304,6 +302,8 @@ void PlayerTool::setMolecule(QtGui::Molecule* mol)
             &PlayerTool::sourcesChanged);
     connect(m_molecule, &Molecule::animationPlaybackClaimed, this,
             &PlayerTool::animationPlaybackClaimed);
+    connect(m_molecule, &Molecule::animationDisplayChanged, this,
+            &PlayerTool::animationDisplayChanged);
   }
 
   // Adopt whichever coordinate set the new molecule is already showing.
@@ -348,13 +348,11 @@ void PlayerTool::moleculeChanged(unsigned int changes)
   // Another plugin (the conformer plot, a script, ...) moved to a new frame.
   int frame = m_molecule->coordinate3d();
   if (onPublished()) {
-    // The displaced frames belong to the old set. Take the new set as the
-    // rest geometry and wait for the user to step before displacing it.
-    if (frame != m_restConformer) {
-      takeRest();
-      m_sourceFrame = 0;
-      syncWidgets();
-    }
+    // The molecule has dropped any displayed frame, since it was built from
+    // the old set. Wait for the user to step before displaying another.
+    m_currentFrame = frame;
+    m_sourceFrame = 0;
+    syncWidgets();
     return;
   }
 
@@ -375,9 +373,8 @@ void PlayerTool::sourcesChanged()
     const int total =
       static_cast<int>(m_molecule->animationFrameCount(m_source));
     if (total == 0) {
-      // The source went away: put the geometry back and fall back.
+      // The source went away, and the molecule restored its rest positions.
       stop();
-      restoreRest();
       m_source = trajectoryId();
       m_userPickedSource = false;
       m_sourceFrame = 0;
@@ -389,11 +386,6 @@ void PlayerTool::sourcesChanged()
       if (total != m_publishedTotal)
         limitsChanged = true;
       m_publishedTotal = total;
-      // A pending conformer change means the displaced frame is already gone
-      // from screen; the Conformer branch of moleculeChanged() takes over.
-      if (!m_shownPositions.empty() &&
-          m_molecule->coordinate3d() == m_restConformer)
-        displayPublishedFrame();
     }
   }
 
@@ -434,11 +426,9 @@ bool PlayerTool::selectSource(const QString& id, bool userPicked)
 
   if (id != m_source) {
     stop();
-    if (onPublished())
-      restoreRest();
+    clearOwnDisplay();
     m_source = id;
     if (onPublished()) {
-      takeRest();
       m_sourceFrame = 0;
       m_publishedTotal = static_cast<int>(m_molecule->animationFrameCount(id));
     } else {
@@ -525,9 +515,10 @@ void PlayerTool::keepFrame()
   // With no coordinate sets the vibrations are keyed at 0, so store the rest
   // geometry there first to keep them attached to it.
   if (m_molecule->coordinate3dCount() == 0) {
-    if (m_rest.size() != m_molecule->atomCount())
+    const Core::Array<Vector3> rest = m_molecule->restPositions3d();
+    if (rest.size() != m_molecule->atomCount())
       return;
-    m_molecule->setCoordinate3d(m_rest, 0);
+    m_molecule->setCoordinate3d(rest, 0);
   }
   m_molecule->setCoordinate3d(displayed, m_molecule->coordinate3dCount());
 
@@ -543,41 +534,37 @@ void PlayerTool::keepFrame()
   m_molecule->emitChanged(Molecule::Properties | Molecule::Modified);
 }
 
-Core::Array<Vector3> PlayerTool::currentRest() const
+void PlayerTool::clearOwnDisplay()
 {
-  const int active = m_molecule->coordinate3d();
-  if (active >= 0 && active < static_cast<int>(m_molecule->coordinate3dCount()))
-    return m_molecule->coordinate3d(static_cast<size_t>(active));
-  return m_molecule->atomPositions3d();
-}
-
-void PlayerTool::takeRest()
-{
-  if (!m_molecule)
-    return;
-  m_rest = currentRest();
-  m_restConformer = m_molecule->coordinate3d();
-  m_shownPositions.clear();
-}
-
-void PlayerTool::restoreRest()
-{
-  if (!m_molecule || m_rest.empty())
-    return;
-  const Core::Array<Vector3> rest = std::move(m_rest);
-  m_rest.clear();
+  // Only undo what we showed: the Vibrations dialog may be showing its own
+  // frame of another set.
   m_holdsPlayback = false;
+  if (m_molecule && onPublished() && m_molecule->shownAnimationId() == m_source)
+    m_molecule->clearAnimationDisplay();
+}
 
-  // Only undo what we did: if the user edited the displaced geometry or
-  // another conformer replaced it, that is not ours to overwrite.
-  const bool ours = !m_shownPositions.empty() &&
-                    m_molecule->atomPositions3d() == m_shownPositions;
-  m_shownPositions.clear();
-  if (!ours || rest.size() != m_molecule->atomCount())
+void PlayerTool::animationDisplayChanged()
+{
+  if (!m_molecule || !onPublished())
     return;
 
-  m_molecule->setAtomPositions3d(rest);
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
+  if (!m_molecule->isShowingAnimationFrame()) {
+    // Dropped by a conformer change or an edit: nothing is displaced now.
+    if (m_sourceFrame != 0) {
+      m_sourceFrame = 0;
+      syncWidgets();
+    }
+    return;
+  }
+
+  // Another animator is showing this source at another index. Follow it,
+  // unless we are the one playing.
+  const int index = m_molecule->shownAnimationFrame();
+  if (m_molecule->shownAnimationId() == m_source && index != m_sourceFrame &&
+      !m_timer.isActive()) {
+    m_sourceFrame = index;
+    syncWidgets();
+  }
 }
 
 void PlayerTool::claimPlayback()
@@ -599,21 +586,11 @@ void PlayerTool::displayPublishedFrame()
     return;
   m_sourceFrame = std::clamp(m_sourceFrame, 0, total - 1);
 
-  const Core::Array<Vector3> positions =
-    m_molecule->animationFrame(m_source, static_cast<size_t>(m_sourceFrame));
-  if (positions.size() != m_molecule->atomCount())
-    return;
-
-  if (m_rest.empty())
-    takeRest();
-
-  // Tell other animators to let go, then show the frame without touching the
-  // active coordinate set: no Conformer flag, so nothing follows it.
+  // Tell other animators to let go, then show the frame. The molecule keeps
+  // the rest positions and leaves the active coordinate set alone.
   claimPlayback();
-  m_molecule->setAtomPositions3d(positions);
-  m_shownPositions = positions;
+  m_molecule->showAnimationFrame(m_source, static_cast<size_t>(m_sourceFrame));
   syncWidgets();
-  m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
 }
 
 void PlayerTool::animationPlaybackClaimed(QObject* owner)
@@ -800,13 +777,17 @@ void PlayerTool::recordMovie()
   int numberLength =
     static_cast<int>(ceil(log10(static_cast<float>(total) + 1)));
 
-  // Leave on screen what was there before recording.
-  const Core::Array<Vector3> onScreen = m_molecule->atomPositions3d();
+  // Afterwards, put back what was on screen before recording.
+  const QString previousId = m_molecule->shownAnimationId();
+  const int previousFrame = m_molecule->shownAnimationFrame();
   const auto restoreDisplay = qScopeGuard([&]() {
-    if (published && m_molecule->atomPositions3d() != onScreen &&
-        onScreen.size() == m_molecule->atomCount()) {
-      m_molecule->setAtomPositions3d(onScreen);
-      m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
+    if (!published || m_molecule->shownAnimationId() != m_source)
+      return;
+    if (previousId.isEmpty() || previousFrame < 0) {
+      m_molecule->clearAnimationDisplay();
+    } else {
+      m_molecule->showAnimationFrame(previousId,
+                                     static_cast<size_t>(previousFrame));
     }
   });
 
@@ -814,13 +795,8 @@ void PlayerTool::recordMovie()
   auto renderFrame = [&](int i, QImage& image) {
     qApp->processEvents();
     if (published) {
-      const Core::Array<Vector3> positions =
-        m_molecule->animationFrame(m_source, static_cast<size_t>(i));
-      if (positions.size() == m_molecule->atomCount()) {
-        claimPlayback();
-        m_molecule->setAtomPositions3d(positions);
-        m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
-      }
+      claimPlayback();
+      m_molecule->showAnimationFrame(m_source, static_cast<size_t>(i));
     } else {
       m_molecule->setCoordinate3d(i);
       if (bonding) {

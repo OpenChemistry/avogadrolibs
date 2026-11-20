@@ -84,10 +84,10 @@ private:
   void stopTimer();
 
   /**
-   * Stop any running animation and discard its frames, and withdraw them from
-   * the molecule unless @p unpublish is false (the caller republishes).
+   * Stop any running animation and withdraw the published frames, which also
+   * puts the rest positions back if one of them is on screen.
    */
-  void resetAnimation(bool unpublish = true);
+  void resetAnimation();
 
   /**
    * Re-evaluate the modes for the active conformer: the action state, the
@@ -98,8 +98,11 @@ private:
   /** @return The mode to select by default: the first above 0.5 cm^-1. */
   int defaultMode() const;
 
-  /** Publish the animation frames for the Animation tool. */
-  void publishFrames();
+  /**
+   * Publish @p frames for the Animation tool, replacing the current set. An
+   * empty array, or an active frame without modes, withdraws the set.
+   */
+  void publishFrames(const Core::Array<Core::Array<Vector3>>& frames);
 
   /**
    * Bring the dialog (if it exists) in step with the active conformer: the
@@ -113,12 +116,6 @@ private:
    * @note m_molecule must not be null; the callers check that first.
    */
   bool activeConformerIsStored() const;
-
-  /**
-   * Put back the undisplaced geometry the animation was drawn on top of, and
-   * reset the frame counter.
-   */
-  void restoreRestGeometry();
 
   /**
    * @return The geometry the normal modes belong to, which is not necessarily
@@ -135,14 +132,6 @@ private:
   VibrationDialog* m_dialog;
 
   QTimer* m_timer;
-
-  /**
-   * The displaced geometries the animation cycles through. These are held
-   * here rather than pushed into the molecule's coordinate sets, which would
-   * destroy any trajectory or reaction path that was loaded from the file.
-   * They are also published to the molecule for the Animation tool.
-   */
-  Core::Array<Core::Array<Vector3>> m_animationFrames;
 
   /** The conformer the current mode was chosen for, -1 if none. */
   int m_modeConformer = -1;

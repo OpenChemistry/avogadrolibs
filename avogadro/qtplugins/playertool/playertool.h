@@ -73,6 +73,9 @@ protected slots:
   /** Another animator took over the display: stop playing. */
   void animationPlaybackClaimed(QObject* owner);
 
+  /** The molecule started, stopped or moved the displayed frame. */
+  void animationDisplayChanged();
+
   /** The user picked an entry in the source combo box. */
   void sourceActivated(int index);
 
@@ -124,17 +127,8 @@ private:
   /** Enable the controls that only make sense for one kind of source. */
   void updateSourceControls() const;
 
-  /** The geometry the published frames are displacements of. */
-  Core::Array<Vector3> currentRest() const;
-
-  /** Remember the rest geometry before showing a published frame. */
-  void takeRest();
-
-  /**
-   * Put the rest geometry back if a displaced frame of ours is still on
-   * screen; otherwise leave whatever is there alone.
-   */
-  void restoreRest();
+  /** Stop showing our published frame, restoring the rest positions. */
+  void clearOwnDisplay();
 
   /** Claim the display from other animators, if we do not already hold it. */
   void claimPlayback();
@@ -164,11 +158,6 @@ private:
   /** The frame shown from a published source. */
   int m_sourceFrame = 0;
   int m_publishedTotal = 0;
-  Core::Array<Vector3> m_rest;
-  int m_restConformer = -1;
-  /** What a published frame last put on screen, to tell if it is still there.
-   */
-  Core::Array<Vector3> m_shownPositions;
   /** True while we are the animator that last claimed the display. */
   bool m_holdsPlayback = false;
   /** Once the source row has appeared it stays for this molecule. */
