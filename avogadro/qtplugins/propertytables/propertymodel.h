@@ -151,6 +151,7 @@ private:
   // coordinate-only
   mutable Index m_lastAtomCount = 0;
   mutable Index m_lastBondCount = 0;
+  mutable size_t m_lastConformerCount = 0;
 
   QString secStructure(unsigned int type) const;
 

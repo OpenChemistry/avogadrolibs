@@ -13,6 +13,7 @@
 
 #include <QtCore/QTimer>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QWidget>
 
@@ -343,4 +344,82 @@ TEST_F(PlayerToolSourceTest, SourceComboRowStaysOnceShown)
   m_molecule.removeAnimationFrames("vibration");
   EXPECT_EQ(combo->count(), 1);
   EXPECT_FALSE(combo->parentWidget()->isHidden());
+}
+
+namespace {
+
+QPushButton* keepButton(QWidget* widget)
+{
+  for (auto* button : widget->findChildren<QPushButton*>()) {
+    if (button->text() == QStringLiteral("Keep This Frame"))
+      return button;
+  }
+  return nullptr;
+}
+
+void addVibrations(Molecule& molecule, size_t conformer)
+{
+  Array<double> freqs;
+  freqs.push_back(1000.0);
+  molecule.setVibrationFrequencies(freqs, conformer);
+}
+
+} // namespace
+
+TEST_F(PlayerToolSourceTest, KeepFrameAppendsASet)
+{
+  build(3);
+  m_molecule.setCoordinate3d(1);
+  addVibrations(m_molecule, 1);
+  m_tool.setMolecule(&m_molecule);
+  m_molecule.setAnimationFrames("vibration", "V", frames(4));
+  QWidget* widget = m_tool.toolWidget();
+  QPushButton* keep = keepButton(widget);
+  ASSERT_NE(keep, nullptr);
+  // Only offered on a published source.
+  EXPECT_TRUE(keep->isHidden());
+
+  ASSERT_TRUE(useSource("vibration"));
+  EXPECT_FALSE(keep->isHidden());
+  EXPECT_TRUE(keep->isEnabled());
+  ASSERT_TRUE(run("nextFrame"));
+  ASSERT_TRUE(run("nextFrame"));
+  const Array<Vector3> displayed = m_molecule.atomPositions3d();
+
+  keep->click();
+  ASSERT_EQ(m_molecule.coordinate3dCount(), 4u);
+  EXPECT_EQ(m_molecule.coordinate3d(3), displayed);
+  EXPECT_EQ(m_molecule.coordinate3d(), 1);
+  EXPECT_TRUE(m_molecule.hasVibrations(1));
+  EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
+
+  // Still on the published source, and the trajectory entry counts the set.
+  ASSERT_TRUE(run("listAnimationSources"));
+  EXPECT_EQ(m_result.value("current").toString(), QString("vibration"));
+  EXPECT_EQ(m_result.value("sources").toList()[0].toMap().value("frames"), 4);
+  EXPECT_EQ(m_molecule.atomPositions3d(), displayed);
+}
+
+TEST_F(PlayerToolSourceTest, KeepFrameStoresRestAsSetZero)
+{
+  build(0);
+  addVibrations(m_molecule, 0);
+  m_tool.setMolecule(&m_molecule);
+  m_molecule.setAnimationFrames("vibration", "V", frames(4));
+  ASSERT_TRUE(run("coordinateSetCount"));
+  ASSERT_EQ(m_result.value("source").toString(), QString("vibration"));
+  const Array<Vector3> rest = m_molecule.atomPositions3d();
+  ASSERT_TRUE(run("nextFrame"));
+  const Array<Vector3> displayed = m_molecule.atomPositions3d();
+
+  keepButton(m_tool.toolWidget())->click();
+  ASSERT_EQ(m_molecule.coordinate3dCount(), 2u);
+  EXPECT_EQ(m_molecule.coordinate3d(0), rest);
+  EXPECT_EQ(m_molecule.coordinate3d(1), displayed);
+  EXPECT_EQ(m_molecule.coordinate3d(), 0);
+  EXPECT_TRUE(m_molecule.hasVibrations(0));
+  EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
+  ASSERT_TRUE(run("coordinateSetCount"));
+  EXPECT_EQ(m_result.value("source").toString(), QString("vibration"));
+  EXPECT_EQ(m_molecule.atomPositions3d(), displayed);
 }

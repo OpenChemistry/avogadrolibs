@@ -76,6 +76,9 @@ protected slots:
   /** The user picked an entry in the source combo box. */
   void sourceActivated(int index);
 
+  /** Store the displayed geometry of a published source as a new set. */
+  void keepFrame();
+
   void back();
   void forward();
   void play();
@@ -169,6 +172,7 @@ private:
   mutable bool m_sourceRowShown = false;
   mutable QWidget* m_sourceRow = nullptr;
   mutable QComboBox* m_sourceCombo = nullptr;
+  mutable QPushButton* m_keepButton = nullptr;
   bool m_updatingWidgets;
   mutable QWidget* m_toolWidget;
   QTimer m_timer;

@@ -201,6 +201,16 @@ QWidget* PlayerTool::toolWidget() const
     recordLayout->addStretch(1);
     layout->addLayout(recordLayout);
 
+    auto* keepLayout = new QHBoxLayout;
+    keepLayout->addStretch(1);
+    m_keepButton = new QPushButton(tr("Keep This Frame"));
+    m_keepButton->setToolTip(
+      tr("Add the displayed geometry as a new coordinate set"));
+    connect(m_keepButton, SIGNAL(clicked()), SLOT(keepFrame()));
+    keepLayout->addWidget(m_keepButton);
+    keepLayout->addStretch(1);
+    layout->addLayout(keepLayout);
+
     m_toolWidget->setLayout(layout);
     rebuildSourceCombo();
     updateSourceControls();
@@ -477,6 +487,40 @@ void PlayerTool::updateSourceControls() const
 {
   if (m_dynamicBonding)
     m_dynamicBonding->setEnabled(!onPublished());
+  if (m_keepButton) {
+    m_keepButton->setVisible(onPublished());
+    m_keepButton->setEnabled(onPublished());
+  }
+}
+
+void PlayerTool::keepFrame()
+{
+  if (!m_molecule || !onPublished())
+    return;
+
+  const Core::Array<Vector3> displayed = m_molecule->atomPositions3d();
+  if (displayed.size() != m_molecule->atomCount())
+    return;
+
+  // With no coordinate sets the vibrations are keyed at 0, so store the rest
+  // geometry there first to keep them attached to it.
+  if (m_molecule->coordinate3dCount() == 0) {
+    if (m_rest.size() != m_molecule->atomCount())
+      return;
+    m_molecule->setCoordinate3d(m_rest, 0);
+  }
+  m_molecule->setCoordinate3d(displayed, m_molecule->coordinate3dCount());
+
+  // Keeping a frame is a choice to stay here: the default rule would
+  // otherwise move to the trajectory now that there is more than one set.
+  m_userPickedSource = true;
+
+  // The active set and the atoms are unchanged, so this is neither a
+  // Conformer change nor a structural one. Properties | Modified is what
+  // makes the conformer plot and tables pick up the new set, and with no
+  // Atoms or Bonds flag it leaves vibrations and published frames alone (see
+  // QtGui::Molecule::invalidatesDerivedData()).
+  m_molecule->emitChanged(Molecule::Properties | Molecule::Modified);
 }
 
 Core::Array<Vector3> PlayerTool::currentRest() const
