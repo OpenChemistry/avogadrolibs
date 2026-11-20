@@ -1233,7 +1233,9 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   Index index = bond(atom1, atom2).index();
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
-    m_bondState.addEntry(bondCount(), order);
+    // Not bondCount(): it asserts the graph and the orders agree, and the
+    // edge is already in the graph while its order is not.
+    m_bondState.addEntry(m_graph.edgeCount(), order);
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
     m_bondState.orders.array()[index] = order;
