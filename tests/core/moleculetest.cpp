@@ -1263,6 +1263,43 @@ TEST_F(MoleculeTest, frozenAtomMaskFollowsAtoms)
   EXPECT_FALSE(molecule.frozenAtom(0));
 }
 
+TEST_F(MoleculeTest, frozenAtomAxisRangeChecks)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(6);
+  molecule.setFrozenAtomAxis(1, 0, true); // atom1: x only
+
+  // axis 3 on atom 0 would alias atom 1's x entry; -1 on atom 1 aliases
+  // atom 0's z entry
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 3));
+  EXPECT_FALSE(molecule.frozenAtomAxis(1, -1));
+  EXPECT_FALSE(molecule.frozenAtomAxis(1, 3));
+  molecule.setFrozenAtomAxis(0, 3, true);
+  molecule.setFrozenAtomAxis(1, -1, true);
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 0));
+  EXPECT_FALSE(molecule.frozenAtomAxis(0, 2));
+  EXPECT_TRUE(molecule.frozenAtomAxis(1, 0));
+  EXPECT_FALSE(molecule.frozenAtomAxis(1, 1));
+
+  // a huge index must neither wrap into the mask nor change anything
+  const Index huge = Avogadro::MaxIndex;
+  EXPECT_FALSE(molecule.frozenAtom(huge));
+  EXPECT_FALSE(molecule.frozenAtomAxis(huge, 0));
+  molecule.setFrozenAtom(huge, true);
+  molecule.setFrozenAtomAxis(huge, 0, true);
+  EXPECT_EQ(molecule.atomCount(), 2);
+  EXPECT_TRUE(molecule.frozenAtomAxis(1, 0));
+  EXPECT_FALSE(molecule.frozenAtom(0));
+
+  // also with an empty mask
+  Molecule empty;
+  EXPECT_FALSE(empty.frozenAtom(huge));
+  EXPECT_FALSE(empty.frozenAtomAxis(huge, 0));
+  empty.setFrozenAtomAxis(huge, 0, true);
+  EXPECT_EQ(empty.frozenAtomMask().size(), 0);
+}
+
 TEST_F(MoleculeTest, coordinates3dFollowTheirAtoms)
 {
   Molecule molecule;
@@ -3218,6 +3255,9 @@ private:
     SetBondLabel,
     SetBondProperties,
     SetBondPair,
+    ClearBonds,
+    SetAllBondOrders,
+    SetAllBondLabels,
     SetAtomicNumber,
     SetPosition3d,
     SetPosition2d,
@@ -3261,6 +3301,9 @@ private:
       "setBondLabel",
       "bondProperties",
       "setBondPair",
+      "clearBonds",
+      "setBondOrders",
+      "setBondLabels",
       "setAtomicNumber",
       "setAtomPosition3d",
       "setAtomPosition2d",
@@ -3317,6 +3360,9 @@ private:
       case ActivateCoordinateSet:
       case SetAllPositions3d:
       case SetAllLabels:
+      case ClearBonds:
+      case SetAllBondOrders:
+      case SetAllBondLabels:
         return 1;
       case CopyConstruct:
       case CopyAssign:
@@ -3623,6 +3669,50 @@ bool ShadowRunner::step(int stepNumber)
         mol.bondProperties().setInt(ShadowModel::kBondIntProperty, i, v);
         model.bonds[i].intProperty = v;
       }
+      break;
+    }
+    // setBondPair() is not here: Graph::editEdgeInPlace() corrupts the edge
+    // lists (the loops that drop the old endpoints' entries pop the wrong
+    // ones), after which removeAtom() never finishes.
+    case ClearBonds: {
+      mol.clearBonds();
+      model.clearBonds();
+      break;
+    }
+    case SetAllBondOrders: {
+      Array<unsigned char> all;
+      for (Index i = 0; i < bonds; ++i)
+        all.push_back(static_cast<unsigned char>(pickInt(1, 3)));
+      // Orders must cover every bond; a short array is refused.
+      if (chance(20) && bonds > 0) {
+        Array<unsigned char> shortArray;
+        for (Index i = 0; i + 1 < bonds; ++i)
+          shortArray.push_back(2);
+        if (mol.setBondOrders(shortArray)) {
+          ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                        << ": setBondOrders accepted a short array";
+          return false;
+        }
+      }
+      mol.setBondOrders(all);
+      for (Index i = 0; i < bonds; ++i)
+        model.bonds[i].order = all[i];
+      break;
+    }
+    case SetAllBondLabels: {
+      Array<std::string> all;
+      // An empty array clears every label.
+      if (chance(25)) {
+        mol.setBondLabels(all);
+        for (auto& bond : model.bonds)
+          bond.label.clear();
+        break;
+      }
+      for (Index i = 0; i < bonds; ++i)
+        all.push_back("bl" + std::to_string(i) + "." + std::to_string(m_step));
+      mol.setBondLabels(all);
+      for (Index i = 0; i < bonds; ++i)
+        model.bonds[i].label = all[i];
       break;
     }
     case SetAtomicNumber: {

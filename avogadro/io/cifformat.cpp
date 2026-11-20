@@ -216,6 +216,7 @@ struct Site
   Vector3 fractional = Vector3::Zero();
   std::string disorderGroup;    // empty if the atom is not disordered
   std::string disorderAssembly; // empty is the one implicit assembly
+  double occupancy = 1.0;
 };
 
 // Everything a block says that the reader uses.
@@ -299,10 +300,10 @@ bool readCell(cif::Block& block, CifData& data)
 
 void readSites(cif::Block& block, CifData& data)
 {
-  cif::Table table =
-    findTable(block, "atom_site",
-              { "label", "fract_x", "fract_y", "fract_z", "?type_symbol",
-                "?calc_flag", "?disorder_assembly", "?disorder_group" });
+  cif::Table table = findTable(
+    block, "atom_site",
+    { "label", "fract_x", "fract_y", "fract_z", "?type_symbol", "?calc_flag",
+      "?disorder_assembly", "?disorder_group", "?occupancy" });
   if (!table.ok())
     return;
 
@@ -350,6 +351,13 @@ void readSites(cif::Block& block, CifData& data)
     }
     if (row.has(6))
       site.disorderAssembly = Core::trimmed(cif::as_string(row[6]));
+
+    // a missing or unreadable occupancy counts as a full one
+    if (row.has(8)) {
+      const std::optional<double> occupancy = parseCifNumber(row[8]);
+      if (occupancy)
+        site.occupancy = *occupancy;
+    }
 
     data.sites.push_back(site);
   }
@@ -411,6 +419,63 @@ bool areAlternatives(const Site& a, const Site& b)
   return !a.disorderGroup.empty() && !b.disorderGroup.empty() &&
          a.disorderGroup != b.disorderGroup &&
          a.disorderAssembly == b.disorderAssembly;
+}
+
+// Which sites to keep when only the major configuration of each disorder
+// assembly is read. Avogadro stores no occupancy per atom yet, so keeping every
+// group would put all the alternatives on the same atoms (six Cl on one carbon
+// for a CHCl3 split over two groups). Within an assembly the group with the
+// highest mean occupancy is kept, the first one in the file on a tie. The only
+// group of an assembly is kept only at a mean occupancy of 0.5 or more,
+// otherwise it is the minor part of a disorder whose other part is labeled
+// elsewhere or not at all. Negative groups (SHELX disorder across a symmetry
+// element) and sites without a group are always kept.
+std::vector<bool> majorDisorderMask(const std::vector<Site>& sites)
+{
+  struct Group
+  {
+    std::string label;
+    double sum = 0.0;
+    std::size_t count = 0;
+    double mean() const { return count > 0 ? sum / double(count) : 0.0; }
+  };
+  std::map<std::string, std::vector<Group>> assemblies;
+  for (const Site& site : sites) {
+    if (site.disorderGroup.empty() || site.disorderGroup[0] == '-')
+      continue;
+    std::vector<Group>& groups = assemblies[site.disorderAssembly];
+    auto it = std::find_if(groups.begin(), groups.end(), [&](const Group& g) {
+      return g.label == site.disorderGroup;
+    });
+    if (it == groups.end()) {
+      groups.emplace_back();
+      it = groups.end() - 1;
+      it->label = site.disorderGroup;
+    }
+    it->sum += site.occupancy;
+    ++it->count;
+  }
+
+  std::map<std::string, std::string> major;
+  for (const auto& assembly : assemblies) {
+    const Group* best = nullptr;
+    for (const Group& group : assembly.second) {
+      if (best == nullptr || group.mean() > best->mean())
+        best = &group;
+    }
+    if (best != nullptr && (assembly.second.size() > 1 || best->mean() >= 0.5))
+      major[assembly.first] = best->label;
+  }
+
+  std::vector<bool> keep(sites.size(), true);
+  for (std::size_t i = 0; i < sites.size(); ++i) {
+    const Site& site = sites[i];
+    if (site.disorderGroup.empty() || site.disorderGroup[0] == '-')
+      continue;
+    const auto it = major.find(site.disorderAssembly);
+    keep[i] = it != major.end() && it->second == site.disorderGroup;
+  }
+  return keep;
 }
 
 } // namespace
@@ -509,9 +574,18 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     return false;
   }
 
+  std::string disorder = "major";
+  stringOption("disorder", disorder);
+  std::vector<bool> keepSite(data.sites.size(), true);
+  if (!Core::caseInsensitiveEquals(disorder, "all"))
+    keepSite = majorDisorderMask(data.sites);
+
   std::vector<Site> sites;
   std::vector<Vector3> positions;
-  for (const Site& site : data.sites) {
+  for (std::size_t i = 0; i < data.sites.size(); ++i) {
+    if (!keepSite[i])
+      continue;
+    const Site& site = data.sites[i];
     const Vector3 position = cell->toCartesian(site.fractional);
     if (!position.allFinite())
       continue;

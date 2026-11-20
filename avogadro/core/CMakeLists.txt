@@ -21,6 +21,7 @@ target_sources(Headers PUBLIC
     array.h
     avogadrocore.h
     color3f.h
+  column.h
     constraint.h
     contrastcolor.h
     coordinateset.h
@@ -49,6 +50,7 @@ avogadro_headers(Core
   bondorderperception.h
   basisset.h
   bond.h
+  bondstate.h
   conformerquantity.h
   coordinateblockgenerator.h
   crystaltools.h

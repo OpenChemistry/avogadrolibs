@@ -5,6 +5,9 @@ categories:
     labels:
       - 'feature'
       - 'enhancement'
+  - title: '👁 Accessibility Improvements'
+    labels:
+      'accessibility'
   - title: '🐛 Bug Fixes'
     labels:
       - 'crash'
@@ -14,6 +17,9 @@ categories:
   - title: '🚀 Performance Improvements'
     labels:
       - 'speed'
+  - title: '🤖 Automation Improvements'
+    labels:
+      - 'automation'
   - title: '🧰 Maintenance'
     labels:
       - 'chore'

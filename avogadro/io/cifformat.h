@@ -25,7 +25,17 @@ namespace Avogadro::Io {
  * with stored operations) is filled out to all the atoms of its cell first, and
  * no bonds are written (a bond across a cell face needs a symmetry code).
  *
- * Occupancies and displacement parameters are not stored.
+ * The read option "disorder" chooses what to do with disordered sites. Avogadro
+ * stores no occupancy per atom yet, so with "major" (the default) only one
+ * configuration is read: in each disorder assembly the group with the highest
+ * mean occupancy is kept (the first in the file on a tie; a lone group needs
+ * 0.5 or more) and the atoms of the other groups are dropped. Groups with a
+ * negative label (disorder across a symmetry element) and atoms without a group
+ * are always kept. With "all" every atom of every group is read; bonds between
+ * alternatives are never perceived.
+ *
+ * Displacement parameters are not stored, and occupancies are used only to
+ * choose the major group.
  */
 class AVOGADROIO_EXPORT CifFormat : public FileFormat
 {

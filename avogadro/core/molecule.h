@@ -12,6 +12,7 @@
 
 #include "array.h"
 #include "bond.h"
+#include "bondstate.h"
 #include "bondorderperception.h"
 #include "constraint.h"
 #include "elements.h"
@@ -527,7 +528,10 @@ public:
    */
   bool setBondLabel(Index bondIndex, const std::string& label);
 
-  const Core::Array<std::string> bondLabels() const { return m_bondLabels; }
+  const Core::Array<std::string> bondLabels() const
+  {
+    return m_bondState.labels.array();
+  }
 
   /**
    * Set all the bond labels in the molecule.
@@ -1433,7 +1437,6 @@ protected:
 
   std::map<std::string, MatrixX> m_spectra; //!< Sets of spectra
   PropertyMap m_atomProperties;             //!< Custom per-atom properties
-  PropertyMap m_bondProperties;             //!< Custom per-bond properties
   PropertyMap m_residueProperties;          //!< Custom per-residue properties
   PropertyMap m_conformerProperties;        //!< Custom per-conformer properties
   CustomElementMap m_customElementMap;
@@ -1442,7 +1445,6 @@ protected:
   Array<Vector2> m_positions2d;
   Array<Vector3> m_positions3d;
   Array<std::string> m_atomLabels;
-  Array<std::string> m_bondLabels;
   Array<std::string> m_residueLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
   int m_coordinate3dIndex = 0;           //!< Active coordinate set index.
@@ -1528,8 +1530,8 @@ private:
   void repointResidueAtoms(const Molecule& source);
 
   mutable Graph m_graph; // A transformation of the molecule to a graph.
-  // edge information
-  Array<unsigned char> m_bondOrders;
+  // edge information: orders, labels and custom properties
+  BondState m_bondState;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
   /**
@@ -1839,7 +1841,7 @@ std::pair<Index, Index> Molecule::makeBondPair(const Index& a, const Index& b)
 
 inline Index Molecule::bondCount() const
 {
-  assert(m_graph.edgeCount() == m_bondOrders.size());
+  assert(m_graph.edgeCount() == m_bondState.orders.size());
   return m_graph.edgeCount();
 }
 
@@ -1850,32 +1852,22 @@ inline const Array<std::pair<Index, Index>>& Molecule::bondPairs() const
 
 inline const Array<unsigned char>& Molecule::bondOrders() const
 {
-  return m_bondOrders;
+  return m_bondState.orders.array();
 }
 
 inline std::string Molecule::bondLabel(Index bondId) const
 {
-  return bondId < m_bondLabels.size() ? m_bondLabels[bondId] : "";
+  return m_bondState.labels.value(bondId, std::string());
 }
 
 inline bool Molecule::setBondLabels(const Core::Array<std::string>& labels)
 {
-  if (labels.size() == bondCount() || labels.empty()) {
-    m_bondLabels = labels;
-    return true;
-  }
-  return false;
+  return m_bondState.labels.setAll(labels, bondCount(), true);
 }
 
 inline bool Molecule::setBondLabel(Index bondId, const std::string& label)
 {
-  if (bondId < bondCount()) {
-    if (bondId >= m_bondLabels.size())
-      m_bondLabels.resize(bondCount(), "");
-    m_bondLabels[bondId] = label;
-    return true;
-  }
-  return false;
+  return m_bondState.labels.set(bondId, label, bondCount());
 }
 
 inline const Graph& Molecule::graph() const
