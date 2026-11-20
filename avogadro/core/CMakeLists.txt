@@ -44,6 +44,7 @@ add_library(Core)
 
 avogadro_headers(Core
   atom.h
+  atomstate.h
   atomtyper.h
   atomtyper-inline.h
   atomutilities.h
@@ -52,6 +53,7 @@ avogadro_headers(Core
   bond.h
   bondstate.h
   conformerquantity.h
+  frozenmaskcolumn.h
   coordinateblockgenerator.h
   crystaltools.h
   cube.h

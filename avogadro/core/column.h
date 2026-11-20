@@ -105,14 +105,34 @@ public:
   const Array<T>& array() const { return m_values; }
 
   /**
+   * Append the entry of a newly added entity. @p count is the number of
+   * entities after the addition, so the new entity's index is count - 1.
+   * Entries at or past that index belong to no entity (array() can leave
+   * them), so they are dropped first; the new entity then gets @p value.
+   * For a required column this is a plain append. An optional column that
+   * should stay short for new entities is simply not passed here.
+   *
+   * A column shorter than count - 1 gets @p value at its end, not at the new
+   * entity's index. That is harmless only when @p value is the column's
+   * "unset" value (as for PropertyMap's sentinels): the entity at the end had
+   * no entry, and now reads as unset either way. Pass a real value only to a
+   * column that covers every entity. (PropertyMap relies on the extra entry,
+   * since the CJSON writer serializes the raw array length.)
+   */
+  void addEntry(Index count, const T& value)
+  {
+    trimTo(count > 0 ? count - 1 : 0);
+    m_values.push_back(value);
+  }
+
+  /**
    * Exchange the entries of entities @p a and @p b. Three cases: both have
    * an entry (plain swap); only the lower index has one (grow to cover the
    * higher, new entries being fill(i), then swap, so the value travels with
-   * its entity); neither does (nothing to do). @p count is unused and is
-   * accepted so that a Column and a PropertyMap take the same call.
+   * its entity); neither does (nothing to do).
    */
   template <typename Fill>
-  void swapEntries(Index a, Index b, Index /*count*/, Fill fill)
+  void swapEntries(Index a, Index b, Fill fill)
   {
     using std::swap;
     const Index lo = a < b ? a : b;
@@ -127,15 +147,14 @@ public:
     }
   }
 
-  void swapEntries(Index a, Index b, Index count)
-  {
-    swapEntries(a, b, count, T());
-  }
+  void swapEntries(Index a, Index b) { swapEntries(a, b, T()); }
 
   /**
    * Remove the entry of entity @p index by swap-and-pop. @p count is the
-   * number of entities before the removal. If the column covers every entity
-   * it reindexes exactly as the entities do. If it is shorter but reaches
+   * number of entities before the removal. Entries past @p count belong to no
+   * entity (array() can leave them), so they are dropped first. If the column
+   * then covers every entity it reindexes exactly as the entities do. If it is
+   * shorter but reaches
    * @p index, the entity moved into @p index (the former last one) has no
    * entry of its own, so the stale value is reset to fill(count - 1). If it
    * does not reach @p index nothing changes.
@@ -143,6 +162,7 @@ public:
   template <typename Fill>
   void removeEntry(Index index, Index count, Fill fill)
   {
+    trimTo(count);
     if (m_values.size() == count) {
       m_values.swapAndPop(index);
     } else if (index < m_values.size()) {
@@ -152,6 +172,17 @@ public:
 
   void removeEntry(Index index, Index count) { removeEntry(index, count, T()); }
 
+  /**
+   * Drop every entry for an entity at or past @p count. A Column never holds
+   * such entries through its own functions, but a caller that writes to
+   * array() directly can leave them.
+   */
+  void trimTo(Index count)
+  {
+    if (m_values.size() > count)
+      m_values.resize(count);
+  }
+
   /** Remove every entry. */
   void clear() { m_values.clear(); }
 
@@ -159,16 +190,12 @@ public:
    * Give @p other's data to this column and leave @p other empty and
    * unshared, as the move operations of Molecule need.
    */
-  void takeFrom(Column& other)
-  {
-    Array<T> empty;
-    m_values.swap(other.m_values);
-    other.m_values.swap(empty);
-  }
+  void takeFrom(Column& other) { m_values.takeFrom(other.m_values); }
 
   /**
    * Save what removeEntry(@p index, @p count, ...) is about to change, for
-   * restore(). Call it before removeEntry(). The result has 0 entries if the
+   * restore(). Call it before removeEntry(). Entries past @p count are
+   * ignored, as removeEntry() drops them. The result has 0 entries if the
    * column does not reach @p index; 1 (the value at @p index) if it is
    * shorter than @p count; 2 (that, then the value at count - 1, which the
    * removal moves into @p index) if it covers every entity.
@@ -176,10 +203,11 @@ public:
   Column slice(Index index, Index count) const
   {
     Column result;
-    if (index >= m_values.size())
+    const Index length = m_values.size() < count ? m_values.size() : count;
+    if (index >= length)
       return result;
     result.m_values.push_back(m_values[index]);
-    if (m_values.size() == count)
+    if (length == count)
       result.m_values.push_back(m_values[count - 1]);
     return result;
   }

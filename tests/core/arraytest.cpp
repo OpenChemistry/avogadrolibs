@@ -23,6 +23,34 @@ TEST(ArrayTest, setSize)
   EXPECT_EQ(array.size(), static_cast<size_t>(2));
 }
 
+TEST(ArrayTest, takeFrom)
+{
+  Array<int> from(3, 7);
+  Array<int> to(5, 1);
+  to.takeFrom(from);
+
+  ASSERT_EQ(to.size(), static_cast<size_t>(3));
+  EXPECT_EQ(to[0], 7);
+  EXPECT_TRUE(from.empty());
+
+  // The source does not share storage with the destination.
+  EXPECT_NE(from.constData(), to.constData());
+  from.push_back(9);
+  EXPECT_EQ(to.size(), static_cast<size_t>(3));
+  EXPECT_EQ(from.size(), static_cast<size_t>(1));
+
+  // A copy that shares the source's storage is unaffected.
+  Array<int> shared(to);
+  Array<int> other(2, 4);
+  to.takeFrom(other);
+  EXPECT_EQ(shared.size(), static_cast<size_t>(3));
+  EXPECT_EQ(to.size(), static_cast<size_t>(2));
+
+  // Taking from itself changes nothing.
+  to.takeFrom(to);
+  EXPECT_EQ(to.size(), static_cast<size_t>(2));
+}
+
 TEST(ArrayTest, isEmpty)
 {
   Array<int> array;

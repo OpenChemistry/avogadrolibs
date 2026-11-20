@@ -10,6 +10,7 @@
 
 #include "avogadrocore.h"
 #include "array.h"
+#include "column.h"
 #include "matrix.h"
 
 #include <climits>
@@ -165,9 +166,8 @@ public:
 
   /**
    * Swap entries at indices @p a and @p b.
-   * @p entityCount is the current entity count (used to check column sizes).
    */
-  void swapEntries(Index a, Index b, Index entityCount);
+  void swapEntries(Index a, Index b);
 
   /**
    * Save what removeEntry(@p index, @p entityCount) is about to change, so
@@ -207,9 +207,10 @@ public:
   bool empty() const;
 
 private:
-  std::map<std::string, Array<double>> m_doubles;
-  std::map<std::string, Array<int>> m_ints;
-  std::map<std::string, Array<std::string>> m_strings;
+  // Dense columns; the unset sentinel of each type is the Column fill.
+  std::map<std::string, Column<double>> m_doubles;
+  std::map<std::string, Column<int>> m_ints;
+  std::map<std::string, Column<std::string>> m_strings;
   std::map<std::string, std::unordered_map<Index, MatrixX>> m_matrices;
 };
 

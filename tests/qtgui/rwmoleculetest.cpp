@@ -16,6 +16,7 @@
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <random>
 #include <tuple>
@@ -2061,19 +2062,29 @@ TEST(RWMoleculeTest, randomSequenceUndoRedoRoundTrip)
 // adding an atom discards them by design, and undo does not bring them back.
 // The order in which a removed atom's bonds are listed afterwards is
 // unspecified, so bonds are matched by their endpoints' unique ids.
+//
+// Constraints, scan coordinates and residues are edited on the molecule
+// directly, since RWMolecule has no undoable API for them. They are compared
+// straight after an edit (so that swapAtom() and removeAtom() are held to
+// their rules by identity), but not after undo or redo, which do not restore
+// them: removing an atom drops every constraint and scan coordinate that names
+// it, undoing the removal does not bring them back, and removeAtom() leaves
+// residue proxies stale (plan section 4.6). Before the next edit the shadow
+// adopts whatever the molecule holds (Model::adoptReferences()).
 // ---------------------------------------------------------------------------
 
 namespace {
 
 using ShadowModel::Model;
 
-std::string compareWithShadow(RWMolecule& mol, Model expected)
+std::string compareWithShadow(RWMolecule& mol, Model expected,
+                              bool checkReferences)
 {
   std::string error = expected.syncBondOrder(mol.molecule());
   if (!error.empty())
     return error;
 
-  error = ShadowModel::verify(mol.molecule(), expected, false);
+  error = ShadowModel::verify(mol.molecule(), expected, false, checkReferences);
   if (!error.empty())
     return error;
 
@@ -2135,7 +2146,8 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
     int step = 0;
     std::string recent; // the last few operations, for a failure message
 
-    auto check = [&](const char* what, const Model& expected) {
+    auto check = [&](const char* what, const Model& expected,
+                     bool references = false) {
       const std::string entry = std::to_string(step) + ":" + op + ";";
       if (recent.compare(std::max<size_t>(recent.size(), entry.size()) -
                            entry.size(),
@@ -2143,7 +2155,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         recent += " " + entry;
       if (recent.size() > 500)
         recent.erase(0, recent.size() - 500);
-      const std::string error = compareWithShadow(mol, expected);
+      const std::string error = compareWithShadow(mol, expected, references);
       if (error.empty())
         return true;
       ADD_FAILURE() << "seed " << seed << ", step " << step << ", op " << op
@@ -2151,6 +2163,20 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
                     << mol.undoStack().index() << "]: " << error
                     << "\n  recent operations:" << recent;
       return false;
+    };
+    // Distinct atom indices, MaxIndex for the unused references.
+    auto pickAtoms = [&](Index count, int fewest, int most) {
+      std::array<Index, 4> atoms = { Avogadro::MaxIndex, Avogadro::MaxIndex,
+                                     Avogadro::MaxIndex, Avogadro::MaxIndex };
+      const int wanted =
+        std::min<int>(pickInt(fewest, most), static_cast<int>(count));
+      for (int k = 0; k < wanted; ++k) {
+        Index index = pickIndex(count);
+        while (std::find(atoms.begin(), atoms.end(), index) != atoms.end())
+          index = (index + 1) % count;
+        atoms[static_cast<size_t>(k)] = index;
+      }
+      return atoms;
     };
     auto atIndex = [&]() {
       return static_cast<size_t>(mol.undoStack().index());
@@ -2204,7 +2230,20 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       // snapshot has them (see compareWithShadow()), so line the shadow up
       // with the molecule before picking a bond by index.
       model.syncBondOrder(mol.molecule());
+      {
+        const Model previous = model;
+        const std::string error =
+          model.adoptReferences(mol.molecule(), previous);
+        if (!error.empty()) {
+          ADD_FAILURE() << "seed " << seed << ", step " << step << ": "
+                        << error;
+          return;
+        }
+      }
       pick = pickInt(0, 16);
+      // Constraints, scan coordinates and residues, which are not undoable.
+      if (chance(12))
+        pick = pickInt(17, 20);
       // 13 would be setIsotope(), which is not left out by accident:
       // RWMolecule::setIsotope() has no undo command (it says so in a TODO)
       // and edits the molecule silently, so there is no undo state to
@@ -2217,6 +2256,14 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         pick = 0;
       if ((pick == 4 || pick == 5) && bonds == 0)
         pick = 0;
+      if (pick >= 17 && n < 2)
+        pick = 0;
+      if (pick == 17 && model.constraints.size() >= 6)
+        pick = 18;
+      if (pick == 18 && model.constraints.empty())
+        pick = 17;
+      if (pick == 20 && model.residues.size() >= 4)
+        pick = 19;
 
       switch (pick) {
         case 0:
@@ -2363,6 +2410,63 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           model.atoms[i].layer = layer;
           break;
         }
+        case 17: {
+          op = "addConstraint";
+          const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
+          const double value = pickInt(1, 180);
+          m.addConstraint(value, atoms[0], atoms[1], atoms[2], atoms[3]);
+          model.addConstraint(value, atoms);
+          break;
+        }
+        case 18: {
+          op = "removeConstraint";
+          std::array<Index, 4> atoms =
+            model.indicesOf(model.constraints[pickIndex(
+              static_cast<Index>(model.constraints.size()))]);
+          if (chance(50)) {
+            size_t used = 0;
+            while (used < 4 && atoms[used] != Avogadro::MaxIndex)
+              ++used;
+            std::reverse(atoms.begin(), atoms.begin() + used);
+          }
+          m.removeConstraint(atoms[0], atoms[1], atoms[2], atoms[3]);
+          model.removeConstraint(atoms);
+          break;
+        }
+        case 19: {
+          op = "setScanCoordinates";
+          std::vector<std::array<Index, 4>> coordinates;
+          std::vector<Avogadro::Core::Constraint> constraints;
+          const int count = pickInt(0, 3);
+          for (int i = 0; i < count; ++i) {
+            const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
+            coordinates.push_back(atoms);
+            constraints.emplace_back(atoms[0], atoms[1], atoms[2], atoms[3]);
+          }
+          m.setScanCoordinates(constraints);
+          model.setScanCoordinates(coordinates);
+          break;
+        }
+        case 20: {
+          op = "addResidue";
+          std::string name = "R" + std::to_string(step);
+          Index number = static_cast<Index>(pickInt(1, 99));
+          char chain = static_cast<char>('A' + pickInt(0, 2));
+          Avogadro::Core::Residue& residue = m.addResidue(name, number, chain);
+          ShadowModel::ResidueRecord record;
+          record.name = name;
+          record.number = number;
+          record.chain = chain;
+          const std::array<Index, 4> chosen = pickAtoms(n, 1, 4);
+          for (size_t i = 0;
+               i < chosen.size() && chosen[i] != Avogadro::MaxIndex; ++i) {
+            const std::string atomName = "A" + std::to_string(i);
+            residue.addResidueAtom(atomName, m.atom(chosen[i]));
+            record.members[atomName] = model.atoms[chosen[i]].id;
+          }
+          model.addResidue(record);
+          break;
+        }
         default: {
           op = "reorderAtoms";
           Array<Index> order(n);
@@ -2383,7 +2487,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       const auto after = static_cast<size_t>(mol.undoStack().index());
       states.resize(static_cast<size_t>(mol.undoStack().count()) + 1);
       states[after] = model;
-      if (!check("after the edit", model))
+      if (!check("after the edit", model, true))
         return;
 
       // One step back and forth, so every edit's undo is checked against the

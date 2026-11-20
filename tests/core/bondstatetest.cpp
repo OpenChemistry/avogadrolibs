@@ -55,7 +55,7 @@ void expectSame(const BondState& expected, const BondState& actual, Index count)
 TEST(BondStateTest, swapMovesEveryColumn)
 {
   BondState state = makeState();
-  state.swapEntries(0, 3, 4);
+  state.swapEntries(0, 3);
   EXPECT_EQ(state.orders.value(0, 0), 4);
   EXPECT_EQ(state.orders.value(3, 0), 1);
   // Bond 0 had a label, bond 3 did not: it travels with its bond.
