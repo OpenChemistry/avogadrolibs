@@ -141,6 +141,9 @@ foreach(plugin ${testNames})
   elseif(plugin STREQUAL "MeasureTool")
     # measuretooltest.cpp also defines MeasureWidgetTest.
     set(filter "MeasureToolCommandTest.*:MeasureWidgetTest.*")
+  elseif(plugin STREQUAL "Vibrations")
+    # vibrationstest.cpp also defines VibrationsPluginTest.
+    set(filter "VibrationsCommandTest.*:VibrationsPluginTest.*")
   elseif(plugin STREQUAL "Surfaces")
     # surfacestest.cpp also defines SurfacesResolutionTest and
     # SurfacesDistanceFieldTest and SurfacesSolventExcludedTest.

@@ -53,6 +53,12 @@ public:
 public slots:
   void setMode(int mode);
   void setAmplitude(int amplitude);
+
+  /** Set the number of frames in one vibration cycle (clamped to 4-200). */
+  void setFramesPerCycle(int frames);
+
+  /** Make @p frame (zero-based) the active coordinate set. */
+  void goToFrame(int frame);
   void startVibrationAnimation();
   void stopVibrationAnimation();
   void openDialog();
@@ -70,14 +76,32 @@ public slots:
 private slots:
   void advanceFrame();
 
+  /** Stop our animation if another animator took over the display. */
+  void animationPlaybackClaimed(QObject* owner);
+
 private:
-  /** Stop any running animation and discard its frames. */
+  /**
+   * Stop any running animation, discard its frames and withdraw them from the
+   * molecule.
+   */
   void resetAnimation();
 
   /**
-   * Rebuild the dialog's mode table for the active conformer. Records which
-   * conformer it was built for so playback, which signals a conformer change
-   * on every frame, does not rebuild it repeatedly.
+   * Re-evaluate the modes for the active conformer: the action state, the
+   * default mode, the published frames and the dialog. Never shows the dialog.
+   */
+  void refreshModes();
+
+  /** @return The mode to select by default: the first above 0.5 cm^-1. */
+  int defaultMode() const;
+
+  /** Publish the animation frames for the Animation tool. */
+  void publishFrames();
+
+  /**
+   * Bring the dialog (if it exists) in step with the active conformer: the
+   * mode table, the selected mode, the controls, or the page pointing at the
+   * frames that do have modes. Does not show it.
    */
   void reloadDialog();
 
@@ -113,11 +137,17 @@ private:
    * The displaced geometries the animation cycles through. These are held
    * here rather than pushed into the molecule's coordinate sets, which would
    * destroy any trajectory or reaction path that was loaded from the file.
+   * They are also published to the molecule for the Animation tool.
    */
   Core::Array<Core::Array<Vector3>> m_animationFrames;
 
-  /** The conformer the dialog's mode table was last built for, -1 if none. */
-  int m_dialogConformer = -1;
+  /** The conformer the current mode was chosen for, -1 if none. */
+  int m_modeConformer = -1;
+
+  /** True if the active conformer has vibrational modes. */
+  bool m_haveModes = false;
+
+  int m_framesPerCycle = 20;
 
   int m_currentFrame = 0;
   int m_mode;

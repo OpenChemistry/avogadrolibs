@@ -5,6 +5,7 @@
 
 #include "vibrations.h"
 #include "vibrationdialog.h"
+#include "vibrationframes.h"
 
 #include <avogadro/core/array.h>
 #include <avogadro/core/variant.h>
@@ -16,7 +17,9 @@
 #include <QtCore/QTimer>
 #include <QtWidgets/QFileDialog>
 
+#include <algorithm>
 #include <cmath>
+#include <vector>
 
 namespace Avogadro::QtPlugins {
 
@@ -50,25 +53,25 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
   if (mol == nullptr)
     return;
 
-  if (m_molecule != nullptr)
+  if (m_molecule != nullptr) {
+    // Frames belong to the molecule they were built from.
+    resetAnimation();
     m_molecule->disconnect(this);
+  }
 
   m_molecule = mol;
-  // Frames belong to the molecule they were built from.
-  resetAnimation();
-  m_dialogConformer = -1; // force the table to rebuild for the new molecule
-
-  bool isVibrational = mol->hasVibrations();
-
-  m_actions[0]->setEnabled(isVibrational);
-  if (m_dialog)
-    reloadDialog();
-
-  if (isVibrational)
-    openDialog();
+  m_modeConformer = -1; // force the modes to be re-read for the new molecule
+  refreshModes();
 
   connect(m_molecule, SIGNAL(changed(unsigned int)),
           SLOT(moleculeChanged(unsigned int)));
+  connect(m_molecule, &QtGui::Molecule::animationPlaybackClaimed, this,
+          &Vibrations::animationPlaybackClaimed);
+
+  // Only a freshly loaded molecule opens the dialog, and only if there is
+  // something to show.
+  if (m_molecule->vibrationConformerCount() > 0)
+    openDialog();
 }
 
 void Vibrations::resetAnimation()
@@ -80,6 +83,39 @@ void Vibrations::resetAnimation()
   }
   m_animationFrames.clear();
   m_currentFrame = 0;
+  if (m_molecule)
+    m_molecule->removeAnimationFrames(QStringLiteral("vibration"));
+}
+
+int Vibrations::defaultMode() const
+{
+  const Core::Array<double> freqs = m_molecule->vibrationFrequencies();
+  for (size_t i = 0; i < freqs.size(); ++i) {
+    if (freqs[i] > 0.5)
+      return static_cast<int>(i);
+  }
+  return 0;
+}
+
+void Vibrations::refreshModes()
+{
+  if (m_molecule == nullptr)
+    return;
+
+  m_modeConformer = m_molecule->coordinate3d();
+  m_actions[0]->setEnabled(m_molecule->vibrationConformerCount() > 0);
+
+  // The frames were built from the previous conformer's geometry and modes.
+  // Drop them rather than restoring that geometry: whoever changed the
+  // conformer meant to move away from it.
+  resetAnimation();
+
+  m_haveModes = m_molecule->hasVibrations();
+  if (m_haveModes) {
+    m_mode = defaultMode();
+    setMode(m_mode);
+  }
+  reloadDialog();
 }
 
 void Vibrations::reloadDialog()
@@ -87,12 +123,27 @@ void Vibrations::reloadDialog()
   if (m_dialog == nullptr || m_molecule == nullptr)
     return;
 
-  // setMolecule() rebuilds the mode table and re-selects a mode, so only call
-  // it when the modes on show are actually stale. Trajectory playback emits a
-  // conformer change on every frame, and rebuilding the table there was both
-  // wasted work and a visible flicker.
-  m_dialogConformer = m_molecule->coordinate3d();
   m_dialog->setMolecule(m_molecule);
+
+  if (m_haveModes || m_molecule->vibrationConformerCount() == 0) {
+    m_dialog->showModes();
+    m_dialog->setAmplitude(m_amplitude);
+    m_dialog->setFramesPerCycle(m_framesPerCycle);
+    if (m_haveModes)
+      m_dialog->setCurrentMode(m_mode);
+    return;
+  }
+
+  // The active frame has no modes, but others do. Frame numbers are shown
+  // one-based, as the Animation tool shows them.
+  QList<int> numbers;
+  std::vector<int> frames;
+  for (size_t conformer : m_molecule->vibrationConformers()) {
+    numbers << static_cast<int>(conformer) + 1;
+    frames.push_back(static_cast<int>(conformer));
+  }
+  m_dialog->showNoModes(
+    numbers, nearestVibrationFrame(frames, m_molecule->coordinate3d()));
 }
 
 void Vibrations::moleculeChanged(unsigned int changes)
@@ -103,30 +154,21 @@ void Vibrations::moleculeChanged(unsigned int changes)
   // A file can carry a Hessian at more than one geometry, so the modes belong
   // to the active conformer and have to be re-read when it changes. Compare
   // the index rather than trusting the flag alone: the flag tells us to look,
-  // but playback re-emits it for every frame of the same conformer, and a
-  // caller that forgets it would otherwise leave the table stale.
+  // but playback re-emits it for every frame of the same conformer. A
+  // structural edit discards or replaces the modes without moving to another
+  // conformer.
   const bool conformerChanged = (changes & QtGui::Molecule::Conformer) != 0 &&
-                                m_molecule->coordinate3d() != m_dialogConformer;
+                                m_molecule->coordinate3d() != m_modeConformer;
+  const bool structureChanged =
+    QtGui::Molecule::invalidatesDerivedData(changes);
 
-  if (conformerChanged) {
-    // The frames were built from the previous conformer's geometry and modes.
-    // Drop them rather than restoring that geometry: whoever changed the
-    // conformer meant to move away from it.
-    resetAnimation();
-  }
-
-  bool currentVibrational = m_actions[0]->isEnabled();
-  bool isVibrational = m_molecule->hasVibrations();
-
-  if (currentVibrational != isVibrational) {
-    m_actions[0]->setEnabled(isVibrational);
-    reloadDialog();
-    if (isVibrational)
-      openDialog();
-  } else if (conformerChanged && isVibrational) {
-    // Same enabled state, different modes: reload the table for this
-    // conformer. This re-selects a mode, which rebuilds the frames.
-    reloadDialog();
+  if (conformerChanged || structureChanged ||
+      m_haveModes != m_molecule->hasVibrations() ||
+      m_actions[0]->isEnabled() !=
+        (m_molecule->vibrationConformerCount() > 0)) {
+    // Never raise or show the dialog from here: this runs on every playback
+    // frame.
+    refreshModes();
   }
 }
 
@@ -164,6 +206,10 @@ bool Vibrations::handleCommand(const QString& command,
   }
 
   if (command == "showVibrations") {
+    if (m_molecule->vibrationConformerCount() == 0) {
+      emit commandFailed(tr("No vibrational modes"));
+      return true;
+    }
     openDialog();
     return true;
   } else if (command == "setVibrationalMode") {
@@ -228,43 +274,30 @@ void Vibrations::setMode(int mode)
 
   // A mode with the wrong number of displacements cannot be animated, and
   // indexing it per atom below would run off the end.
-  if (atomDisplacements.size() != atomPositions.size())
+  if (atomDisplacements.size() != atomPositions.size()) {
+    m_animationFrames.clear();
+    publishFrames();
     return;
+  }
 
   // TODO: needs an option (show forces or not)
-  double factor = 0.01 * m_amplitude;
+  // The arrows are lx * 0.1 * amplitude.
+  const double forceScale = 0.1 * m_amplitude;
   Index atom = 0;
-  for (Vector3& v : atomDisplacements) {
-    v *= 10.0 * factor;
-    m_molecule->setForceVector(atom, v);
+  for (const Vector3& v : atomDisplacements) {
+    m_molecule->setForceVector(atom, v * forceScale);
     ++atom;
   }
 
   // Build the displaced geometries in our own buffer. Writing them into the
   // molecule's coordinate sets would overwrite a loaded trajectory or
   // reaction path, and make the conformer-aware UI count them as conformers.
-  const int frames = 5; // TODO: needs an option
-  m_animationFrames.clear();
-
-  // One cycle: 0 -> +max -> 0 -> -max -> 0, sampled at `frames` steps per leg.
-  auto appendFrame = [&](double scale) {
-    Core::Array<Vector3> framePositions;
-    framePositions.reserve(atomPositions.size());
-    for (Index i = 0; i < atomPositions.size(); ++i)
-      framePositions.push_back(atomPositions[i] +
-                               atomDisplacements[i] * factor * scale);
-    m_animationFrames.push_back(framePositions);
-  };
-
-  appendFrame(0.0);
-  for (int i = 1; i <= frames; ++i) // out along +displacement
-    appendFrame(double(i) / frames);
-  for (int i = frames - 1; i >= 0; --i) // back to the original geometry
-    appendFrame(double(i) / frames);
-  for (int i = 1; i <= frames; ++i) // out along -displacement
-    appendFrame(-double(i) / frames);
-  for (int i = frames - 1; i >= 0; --i) // and back again
-    appendFrame(-double(i) / frames);
+  // The peak displacement is lx * 0.001 * amplitude^2: the amplitude enters
+  // twice, as it has since 2.0 (the force vectors above scale only once).
+  const double peakScale = 0.001 * m_amplitude * m_amplitude;
+  m_animationFrames = vibrationFrames(atomPositions, atomDisplacements,
+                                      peakScale, m_framesPerCycle);
+  publishFrames();
 
   m_currentFrame = 0;
 
@@ -321,6 +354,56 @@ void Vibrations::setAmplitude(int amplitude)
 {
   m_amplitude = amplitude;
   setMode(m_mode);
+}
+
+void Vibrations::setFramesPerCycle(int frames)
+{
+  m_framesPerCycle = std::clamp(frames, 4, 200);
+  setMode(m_mode);
+}
+
+void Vibrations::goToFrame(int frame)
+{
+  if (m_molecule == nullptr || frame < 0 ||
+      frame >= static_cast<int>(m_molecule->coordinate3dCount()))
+    return;
+
+  // The conformer plot and the Animation tool follow the Conformer flag.
+  m_molecule->setCoordinate3d(frame);
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Moved |
+                          QtGui::Molecule::Conformer);
+}
+
+void Vibrations::publishFrames()
+{
+  if (m_molecule == nullptr)
+    return;
+  if (m_animationFrames.empty() || !m_molecule->hasVibrations()) {
+    m_molecule->removeAnimationFrames(QStringLiteral("vibration"));
+    return;
+  }
+
+  const Core::Array<double> freqs = m_molecule->vibrationFrequencies();
+  const double frequency =
+    m_mode >= 0 && m_mode < static_cast<int>(freqs.size()) ? freqs[m_mode]
+                                                           : 0.0;
+  m_molecule->setAnimationFrames(
+    QStringLiteral("vibration"),
+    tr("Vibration: mode %1, %2 cm⁻¹").arg(m_mode + 1).arg(frequency, 0, 'f', 1),
+    m_animationFrames);
+}
+
+void Vibrations::animationPlaybackClaimed(QObject* owner)
+{
+  if (owner == this || m_timer == nullptr || !m_timer->isActive())
+    return;
+
+  // The claimer is about to display its own frame, so leave the geometry
+  // alone.
+  m_timer->stop();
+  m_currentFrame = 0;
+  if (m_dialog)
+    m_dialog->resetAnimationButton();
 }
 
 void Vibrations::generateDisplacedCoordinates(const QList<int>& modes,
@@ -408,6 +491,7 @@ void Vibrations::startVibrationAnimation()
     return;
 
   m_currentFrame = 0;
+  m_molecule->claimAnimationPlayback(this);
 
   if (!m_timer) {
     m_timer = new QTimer(this);
@@ -433,6 +517,10 @@ void Vibrations::openDialog()
     m_dialog = new VibrationDialog(qobject_cast<QWidget*>(parent()));
     connect(m_dialog, SIGNAL(modeChanged(int)), SLOT(setMode(int)));
     connect(m_dialog, SIGNAL(amplitudeChanged(int)), SLOT(setAmplitude(int)));
+    connect(m_dialog, &VibrationDialog::framesPerCycleChanged, this,
+            &Vibrations::setFramesPerCycle);
+    connect(m_dialog, &VibrationDialog::goToFrame, this,
+            &Vibrations::goToFrame);
     connect(m_dialog, SIGNAL(startAnimation()),
             SLOT(startVibrationAnimation()));
     connect(m_dialog, SIGNAL(stopAnimation()), SLOT(stopVibrationAnimation()));

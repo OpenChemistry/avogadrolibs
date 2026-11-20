@@ -6,6 +6,16 @@
 #include <gtest/gtest.h>
 
 #include <vibrationframes.h>
+#include <vibrations.h>
+
+#include <avogadro/qtgui/molecule.h>
+
+#include <QtCore/QTimer>
+#include <QtGui/QAction>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QWidget>
 
 #include <cmath>
 
@@ -101,4 +111,173 @@ TEST(VibrationsCommandTest, NearestFrame)
   EXPECT_EQ(nearestVibrationFrame({ 1, 4 }, 4), 1);
   EXPECT_EQ(nearestVibrationFrame({ 4 }, 4), -1);
   EXPECT_EQ(nearestVibrationFrame({}, 4), -1);
+}
+
+namespace {
+
+// Three coordinate sets, with modes only on set 1.
+class VibrationsPluginTest : public testing::Test
+{
+protected:
+  void SetUp() override
+  {
+    m_molecule.addAtom(6);
+    m_molecule.addAtom(8);
+    for (size_t set = 0; set < 3; ++set) {
+      m_molecule.setCoordinate3d(
+        pair(Vector3(0.0, 0.0, set), Vector3(1.2, 0.0, set)), set);
+    }
+    m_molecule.setCoordinate3d(0);
+
+    Array<double> freqs;
+    freqs.push_back(0.1);
+    freqs.push_back(1234.56);
+    freqs.push_back(2000.0);
+    Array<Array<Vector3>> lx;
+    for (int mode = 0; mode < 3; ++mode)
+      lx.push_back(pair(Vector3(0.0, 0.0, 0.5 * (mode + 1)),
+                        Vector3(0.0, 0.0, -0.25 * (mode + 1))));
+    m_molecule.setVibrationFrequencies(freqs, 1);
+    m_molecule.setVibrationLx(lx, 1);
+
+    m_plugin = new Avogadro::QtPlugins::Vibrations(&m_parent);
+    m_plugin->setMolecule(&m_molecule);
+  }
+
+  void goTo(int frame)
+  {
+    m_molecule.setCoordinate3d(frame);
+    m_molecule.emitChanged(Avogadro::QtGui::Molecule::Atoms |
+                           Avogadro::QtGui::Molecule::Moved |
+                           Avogadro::QtGui::Molecule::Conformer);
+  }
+
+  QDialog* dialog() { return m_parent.findChild<QDialog*>(); }
+
+  QWidget m_parent;
+  Avogadro::QtGui::Molecule m_molecule;
+  Avogadro::QtPlugins::Vibrations* m_plugin = nullptr;
+};
+
+} // namespace
+
+TEST_F(VibrationsPluginTest, ActionEnabledOnAnyFrame)
+{
+  EXPECT_EQ(m_molecule.coordinate3d(), 0);
+  EXPECT_FALSE(m_molecule.hasVibrations());
+  ASSERT_EQ(m_plugin->actions().size(), 1);
+  EXPECT_TRUE(m_plugin->actions()[0]->isEnabled());
+}
+
+TEST_F(VibrationsPluginTest, PublishesFramesOnlyWhereModesExist)
+{
+  const QString id = QStringLiteral("vibration");
+  EXPECT_TRUE(m_molecule.animationFrameIds().isEmpty());
+
+  goTo(1);
+  EXPECT_EQ(m_molecule.animationFrameIds(), QStringList({ id }));
+  EXPECT_EQ(m_molecule.animationFrames(id).size(), 20u);
+  // The first mode with a positive frequency is the default.
+  EXPECT_EQ(m_molecule.animationFrameLabel(id),
+            QString::fromUtf8("Vibration: mode 2, 1234.6 cm⁻¹"));
+
+  goTo(2);
+  EXPECT_TRUE(m_molecule.animationFrameIds().isEmpty());
+  goTo(1);
+  EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
+  goTo(0);
+  EXPECT_TRUE(m_molecule.animationFrameIds().isEmpty());
+}
+
+TEST_F(VibrationsPluginTest, FramesPerCycleChangesFrameCount)
+{
+  goTo(1);
+  m_plugin->setFramesPerCycle(8);
+  EXPECT_EQ(m_molecule.animationFrames("vibration").size(), 8u);
+  m_plugin->setFramesPerCycle(1);
+  EXPECT_EQ(m_molecule.animationFrames("vibration").size(), 4u);
+  m_plugin->setFramesPerCycle(100000);
+  EXPECT_EQ(m_molecule.animationFrames("vibration").size(), 200u);
+}
+
+TEST_F(VibrationsPluginTest, AmplitudeKeepsItsSquaredScale)
+{
+  goTo(1);
+  m_plugin->setFramesPerCycle(4);
+  m_plugin->setAmplitude(20);
+  const auto frames = m_molecule.animationFrames("vibration");
+  ASSERT_EQ(frames.size(), 4u);
+  const Array<Vector3> rest = m_molecule.coordinate3d(1);
+  const Array<Vector3> lx = m_molecule.vibrationLx(1);
+  EXPECT_EQ(frames[0][0], rest[0]);
+  // Frame 1 is the +peak: lx * 0.001 * amplitude^2.
+  EXPECT_NEAR((frames[1][1] - (rest[1] + lx[1] * 0.4)).norm(), 0.0, 1e-12);
+  EXPECT_NEAR((frames[3][1] - (rest[1] - lx[1] * 0.4)).norm(), 0.0, 1e-12);
+}
+
+TEST_F(VibrationsPluginTest, GoToFrameMovesTheActiveFrame)
+{
+  m_plugin->goToFrame(1);
+  EXPECT_EQ(m_molecule.coordinate3d(), 1);
+  EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
+  m_plugin->goToFrame(7); // out of range: ignored
+  EXPECT_EQ(m_molecule.coordinate3d(), 1);
+}
+
+TEST_F(VibrationsPluginTest, ConformerChangeDoesNotShowDialog)
+{
+  // Loading a molecule with modes may open the dialog; playback must not.
+  QDialog* dlg = dialog();
+  if (dlg != nullptr)
+    dlg->hide();
+  goTo(1);
+  goTo(2);
+  goTo(0);
+  dlg = dialog();
+  if (dlg != nullptr)
+    EXPECT_FALSE(dlg->isVisible());
+}
+
+TEST_F(VibrationsPluginTest, ForeignClaimStopsAnimation)
+{
+  goTo(1);
+  m_plugin->startVibrationAnimation();
+  auto* timer = m_plugin->findChild<QTimer*>();
+  ASSERT_NE(timer, nullptr);
+  EXPECT_TRUE(timer->isActive());
+
+  // Our own claim is not a reason to stop.
+  m_molecule.claimAnimationPlayback(m_plugin);
+  EXPECT_TRUE(timer->isActive());
+
+  QObject other;
+  m_molecule.claimAnimationPlayback(&other);
+  EXPECT_FALSE(timer->isActive());
+  // The frames stay available for the Animation tool.
+  EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
+}
+
+TEST_F(VibrationsPluginTest, EmptyFramePageOffersNearestFrame)
+{
+  // Set 0 has no modes, so the dialog points at set 1 (frame numbers are
+  // one-based, as in the Animation tool).
+  QDialog* dlg = dialog();
+  ASSERT_NE(dlg, nullptr);
+
+  bool foundLabel = false;
+  for (QLabel* label : dlg->findChildren<QLabel*>()) {
+    if (label->text() == QStringLiteral("Vibrations available at frame(s): 2"))
+      foundLabel = true;
+  }
+  EXPECT_TRUE(foundLabel);
+
+  QPushButton* go = nullptr;
+  for (QPushButton* button : dlg->findChildren<QPushButton*>()) {
+    if (button->text() == QStringLiteral("Go to frame 2"))
+      go = button;
+  }
+  ASSERT_NE(go, nullptr);
+  go->click();
+  EXPECT_EQ(m_molecule.coordinate3d(), 1);
+  EXPECT_FALSE(m_molecule.animationFrameIds().isEmpty());
 }

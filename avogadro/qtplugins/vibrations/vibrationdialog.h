@@ -32,8 +32,28 @@ public:
                            Qt::WindowFlags f = Qt::WindowFlags());
   ~VibrationDialog() override;
 
+  /** Rebuild the mode table for the molecule's active conformer. */
   void setMolecule(QtGui::Molecule* molecule);
   int currentMode() const;
+
+  /** Highlight @p mode in the table without emitting modeChanged(). */
+  void setCurrentMode(int mode);
+
+  /** Set the amplitude slider without emitting amplitudeChanged(). */
+  void setAmplitude(int amplitude);
+
+  /** Set frames per cycle without emitting framesPerCycleChanged(). */
+  void setFramesPerCycle(int frames);
+
+  /** Show the mode table and enable the animation controls. */
+  void showModes();
+
+  /**
+   * Replace the mode table with a note that the active frame has no modes.
+   * @param framesWithModes One-based frame numbers that have modes.
+   * @param nearestFrame Zero-based frame the button goes to.
+   */
+  void showNoModes(const QList<int>& framesWithModes, int nearestFrame);
 
   /**
    * @return The rows selected in the mode table, in increasing order. Empty
@@ -51,6 +71,7 @@ public:
 protected slots:
   void selectRow(QModelIndex);
   void changeAnimation();
+  void requestGoToFrame();
   void showTableContextMenu(const QPoint& point);
   void requestDisplacedCoordinates();
 
@@ -63,6 +84,9 @@ signals:
   void generateDisplacedCoordinates(const QList<int>& modes, double scale,
                                     int structures);
   void amplitudeChanged(int amplitude);
+  void framesPerCycleChanged(int frames);
+  /** The user asked to move to the zero-based @p frame. */
+  void goToFrame(int frame);
   void startAnimation();
   void stopAnimation();
 
@@ -71,6 +95,7 @@ private:
   QString modeSummary(const QList<int>& modes) const;
 
   Ui::VibrationDialog* m_ui;
+  int m_goToFrame = -1;
 };
 
 } // namespace Avogadro::QtPlugins
