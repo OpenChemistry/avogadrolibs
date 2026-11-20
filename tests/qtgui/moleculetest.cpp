@@ -824,3 +824,109 @@ TEST_F(MoleculeTest, partialChargesFollowStructuralChanges)
                              Molecule::Replaced);
   EXPECT_EQ(m_testMolecule.partialChargeTypes().size(), 2u);
 }
+
+namespace {
+Array<Array<Avogadro::Vector3>> twoFrames(Index atoms)
+{
+  Array<Array<Avogadro::Vector3>> frames;
+  for (int f = 0; f < 2; ++f)
+    frames.push_back(
+      Array<Avogadro::Vector3>(atoms, Avogadro::Vector3(f, 0, 0)));
+  return frames;
+}
+} // namespace
+
+TEST_F(MoleculeTest, animationFramesPublishAndRemove)
+{
+  int changes = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationFramesChanged,
+                   [&changes]() { ++changes; });
+  EXPECT_TRUE(m_testMolecule.animationFrameIds().isEmpty());
+  EXPECT_TRUE(m_testMolecule.animationFrames("vibration").empty());
+
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+  m_testMolecule.setAnimationFrames("other", "Other", twoFrames(3));
+  EXPECT_EQ(changes, 2);
+  EXPECT_EQ(m_testMolecule.animationFrameIds(),
+            QStringList({ "vibration", "other" }));
+  EXPECT_EQ(m_testMolecule.animationFrameLabel("vibration"), QString("Mode 1"));
+  EXPECT_EQ(m_testMolecule.animationFrames("vibration").size(), 2u);
+
+  // Replacing keeps the position in the list.
+  m_testMolecule.setAnimationFrames("vibration", "Mode 2", twoFrames(3));
+  EXPECT_EQ(changes, 3);
+  EXPECT_EQ(m_testMolecule.animationFrameIds().first(), QString("vibration"));
+  EXPECT_EQ(m_testMolecule.animationFrameLabel("vibration"), QString("Mode 2"));
+
+  m_testMolecule.removeAnimationFrames("missing");
+  EXPECT_EQ(changes, 3);
+  m_testMolecule.removeAnimationFrames("vibration");
+  EXPECT_EQ(changes, 4);
+  EXPECT_EQ(m_testMolecule.animationFrameIds(), QStringList({ "other" }));
+  EXPECT_TRUE(m_testMolecule.animationFrames("vibration").empty());
+  EXPECT_TRUE(m_testMolecule.animationFrameLabel("vibration").isEmpty());
+
+  // An empty array behaves like a removal.
+  m_testMolecule.setAnimationFrames("other", "Other", {});
+  EXPECT_EQ(changes, 5);
+  EXPECT_TRUE(m_testMolecule.animationFrameIds().isEmpty());
+  m_testMolecule.setAnimationFrames("other", "Other", {});
+  EXPECT_EQ(changes, 5);
+}
+
+TEST_F(MoleculeTest, animationFramesSurviveMovesNotStructure)
+{
+  int changes = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationFramesChanged,
+                   [&changes]() { ++changes; });
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+  ASSERT_EQ(changes, 1);
+
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved);
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Moved |
+                             Molecule::Conformer);
+  EXPECT_EQ(changes, 1);
+  EXPECT_EQ(m_testMolecule.animationFrameIds().size(), 1);
+
+  m_testMolecule.addAtom(1);
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Added);
+  EXPECT_EQ(changes, 2);
+  EXPECT_TRUE(m_testMolecule.animationFrameIds().isEmpty());
+
+  // Nothing to drop, so no signal.
+  m_testMolecule.emitChanged(Molecule::Atoms | Molecule::Removed);
+  EXPECT_EQ(changes, 2);
+}
+
+TEST_F(MoleculeTest, animationFramesNotCopied)
+{
+  m_testMolecule.setAnimationFrames("vibration", "Mode 1", twoFrames(3));
+
+  Molecule copy(m_testMolecule);
+  EXPECT_TRUE(copy.animationFrameIds().isEmpty());
+
+  Molecule assigned;
+  assigned.setAnimationFrames("stale", "Stale", twoFrames(1));
+  assigned = m_testMolecule;
+  EXPECT_TRUE(assigned.animationFrameIds().isEmpty());
+  EXPECT_EQ(m_testMolecule.animationFrameIds().size(), 1);
+
+  Avogadro::Core::Molecule core(m_testMolecule);
+  Molecule fromCore(core);
+  EXPECT_TRUE(fromCore.animationFrameIds().isEmpty());
+}
+
+TEST_F(MoleculeTest, claimAnimationPlayback)
+{
+  QObject* received = nullptr;
+  int count = 0;
+  QObject::connect(&m_testMolecule, &Molecule::animationPlaybackClaimed,
+                   [&](QObject* owner) {
+                     received = owner;
+                     ++count;
+                   });
+  QObject owner;
+  m_testMolecule.claimAnimationPlayback(&owner);
+  EXPECT_EQ(count, 1);
+  EXPECT_EQ(received, &owner);
+}

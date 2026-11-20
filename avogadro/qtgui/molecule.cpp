@@ -60,6 +60,7 @@ Molecule& Molecule::operator=(const Molecule& other)
 {
   // Call the base classes assignment operator
   Core::Molecule::operator=(other);
+  clearAnimationFrames();
 
   // Copy over the unique ids
   m_atomUniqueIds = other.m_atomUniqueIds;
@@ -72,6 +73,7 @@ Molecule& Molecule::operator=(const Core::Molecule& other)
 {
   // Call the base classes assignment operator
   Core::Molecule::operator=(other);
+  clearAnimationFrames();
 
   // Reset the unique ids.
   m_atomUniqueIds.clear();
@@ -373,8 +375,84 @@ void Molecule::emitChanged(unsigned int change)
       for (const std::string& type : partialChargeTypes())
         removePartialCharges(type);
     }
+    // Animation frames are per-atom positions of the old structure, so even a
+    // replacement leaves them stale.
+    if (invalidatesDerivedData(change))
+      clearAnimationFrames();
     emit changed(change);
   }
+}
+
+void Molecule::clearAnimationFrames()
+{
+  if (m_animationFrameSets.empty())
+    return;
+  m_animationFrameSets.clear();
+  emit animationFramesChanged();
+}
+
+void Molecule::setAnimationFrames(
+  const QString& id, const QString& label,
+  const Core::Array<Core::Array<Vector3>>& frames)
+{
+  if (frames.empty()) {
+    removeAnimationFrames(id);
+    return;
+  }
+  for (AnimationFrameSet& set : m_animationFrameSets) {
+    if (set.id == id) {
+      set.label = label;
+      set.frames = frames;
+      emit animationFramesChanged();
+      return;
+    }
+  }
+  m_animationFrameSets.push_back({ id, label, frames });
+  emit animationFramesChanged();
+}
+
+void Molecule::removeAnimationFrames(const QString& id)
+{
+  for (auto it = m_animationFrameSets.begin(); it != m_animationFrameSets.end();
+       ++it) {
+    if (it->id == id) {
+      m_animationFrameSets.erase(it);
+      emit animationFramesChanged();
+      return;
+    }
+  }
+}
+
+QStringList Molecule::animationFrameIds() const
+{
+  QStringList ids;
+  for (const AnimationFrameSet& set : m_animationFrameSets)
+    ids << set.id;
+  return ids;
+}
+
+QString Molecule::animationFrameLabel(const QString& id) const
+{
+  for (const AnimationFrameSet& set : m_animationFrameSets) {
+    if (set.id == id)
+      return set.label;
+  }
+  return QString();
+}
+
+Core::Array<Core::Array<Vector3>> Molecule::animationFrames(
+  const QString& id) const
+{
+  for (const AnimationFrameSet& set : m_animationFrameSets) {
+    if (set.id == id)
+      return set.frames;
+  }
+  return Core::Array<Core::Array<Vector3>>();
+}
+
+void Molecule::claimAnimationPlayback(QObject* owner)
+{
+  emit animationPlaybackClaimed(owner);
 }
 
 void Molecule::emitUpdate() const

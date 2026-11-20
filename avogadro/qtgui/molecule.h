@@ -15,7 +15,10 @@
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <list>
+#include <vector>
 
 namespace Avogadro::QtGui {
 
@@ -285,6 +288,42 @@ public:
   void swapBond(Index a, Index b);
   void swapAtom(Index a, Index b);
 
+  /**
+   * @name Animation frames
+   * A view-only set of named coordinate sequences (for example a vibration
+   * cycle) that the Animation tool can step through or record. They are not
+   * saved, not part of undo, and not copied with the molecule. They are
+   * dropped when the structure changes (see invalidatesDerivedData()), but
+   * survive plain Atoms | Moved changes.
+   * @{
+   */
+
+  /**
+   * Publish @p frames under @p id, replacing any earlier set with that id.
+   * An empty @p frames array removes the set.
+   */
+  void setAnimationFrames(const QString& id, const QString& label,
+                          const Core::Array<Core::Array<Vector3>>& frames);
+
+  /** Remove the set @p id. Does nothing (and emits nothing) if unknown. */
+  void removeAnimationFrames(const QString& id);
+
+  /** @return The ids of the published sets, in the order first published. */
+  QStringList animationFrameIds() const;
+
+  /** @return The label of set @p id, or an empty string if unknown. */
+  QString animationFrameLabel(const QString& id) const;
+
+  /** @return The frames of set @p id, or an empty array if unknown. */
+  Core::Array<Core::Array<Vector3>> animationFrames(const QString& id) const;
+
+  /**
+   * Announce that @p owner is about to display its own animation frames.
+   * Other animators should stop; emits animationPlaybackClaimed().
+   */
+  void claimAnimationPlayback(QObject* owner);
+  /** @} */
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
@@ -314,7 +353,24 @@ signals:
    */
   void update() const;
 
+  /** The set of published animation frames changed. */
+  void animationFramesChanged();
+
+  /** @p owner started animating; other animators should stop. */
+  void animationPlaybackClaimed(QObject* owner);
+
 private:
+  struct AnimationFrameSet
+  {
+    QString id;
+    QString label;
+    Core::Array<Core::Array<Vector3>> frames;
+  };
+  // Deliberately omitted from every copy and assignment.
+  std::vector<AnimationFrameSet> m_animationFrameSets;
+
+  void clearAnimationFrames();
+
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;
 
