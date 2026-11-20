@@ -379,6 +379,8 @@ private:
   std::vector<AnimationFrameSet> m_animationFrameSets;
 
   void clearAnimationFrames();
+  AnimationFrameSet* findFrameSet(const QString& id);
+  const AnimationFrameSet* findFrameSet(const QString& id) const;
 
   Core::Array<Index> m_atomUniqueIds;
   Core::Array<Index> m_bondUniqueIds;

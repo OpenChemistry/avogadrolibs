@@ -10,6 +10,7 @@
 #include "slatersetconcurrent.h"
 #include "rwmolecule.h"
 
+#include <algorithm>
 #include <iostream>
 
 #include <avogadro/core/basisset.h>
@@ -391,6 +392,20 @@ void Molecule::clearAnimationFrames()
   emit animationFramesChanged();
 }
 
+Molecule::AnimationFrameSet* Molecule::findFrameSet(const QString& id)
+{
+  auto it =
+    std::find_if(m_animationFrameSets.begin(), m_animationFrameSets.end(),
+                 [&id](const AnimationFrameSet& set) { return set.id == id; });
+  return it == m_animationFrameSets.end() ? nullptr : &*it;
+}
+
+const Molecule::AnimationFrameSet* Molecule::findFrameSet(
+  const QString& id) const
+{
+  return const_cast<Molecule*>(this)->findFrameSet(id);
+}
+
 void Molecule::setAnimationFrames(
   const QString& id, const QString& label,
   const Core::Array<Core::Array<Vector3>>& frames)
@@ -399,28 +414,23 @@ void Molecule::setAnimationFrames(
     removeAnimationFrames(id);
     return;
   }
-  for (AnimationFrameSet& set : m_animationFrameSets) {
-    if (set.id == id) {
-      set.label = label;
-      set.frames = frames;
-      emit animationFramesChanged();
-      return;
-    }
+  if (AnimationFrameSet* set = findFrameSet(id)) {
+    set->label = label;
+    set->frames = frames;
+  } else {
+    m_animationFrameSets.push_back({ id, label, frames });
   }
-  m_animationFrameSets.push_back({ id, label, frames });
   emit animationFramesChanged();
 }
 
 void Molecule::removeAnimationFrames(const QString& id)
 {
-  for (auto it = m_animationFrameSets.begin(); it != m_animationFrameSets.end();
-       ++it) {
-    if (it->id == id) {
-      m_animationFrameSets.erase(it);
-      emit animationFramesChanged();
-      return;
-    }
-  }
+  const AnimationFrameSet* set = findFrameSet(id);
+  if (set == nullptr)
+    return;
+  m_animationFrameSets.erase(m_animationFrameSets.begin() +
+                             (set - m_animationFrameSets.data()));
+  emit animationFramesChanged();
 }
 
 QStringList Molecule::animationFrameIds() const
@@ -433,41 +443,29 @@ QStringList Molecule::animationFrameIds() const
 
 QString Molecule::animationFrameLabel(const QString& id) const
 {
-  for (const AnimationFrameSet& set : m_animationFrameSets) {
-    if (set.id == id)
-      return set.label;
-  }
-  return QString();
+  const AnimationFrameSet* set = findFrameSet(id);
+  return set ? set->label : QString();
 }
 
 Core::Array<Core::Array<Vector3>> Molecule::animationFrames(
   const QString& id) const
 {
-  for (const AnimationFrameSet& set : m_animationFrameSets) {
-    if (set.id == id)
-      return set.frames;
-  }
-  return Core::Array<Core::Array<Vector3>>();
+  const AnimationFrameSet* set = findFrameSet(id);
+  return set ? set->frames : Core::Array<Core::Array<Vector3>>();
 }
 
 size_t Molecule::animationFrameCount(const QString& id) const
 {
-  for (const AnimationFrameSet& set : m_animationFrameSets) {
-    if (set.id == id)
-      return set.frames.size();
-  }
-  return 0;
+  const AnimationFrameSet* set = findFrameSet(id);
+  return set ? set->frames.size() : 0;
 }
 
 Core::Array<Vector3> Molecule::animationFrame(const QString& id,
                                               size_t index) const
 {
-  for (const AnimationFrameSet& set : m_animationFrameSets) {
-    if (set.id == id)
-      return index < set.frames.size() ? set.frames[index]
-                                       : Core::Array<Vector3>();
-  }
-  return Core::Array<Vector3>();
+  const AnimationFrameSet* set = findFrameSet(id);
+  return set != nullptr && index < set->frames.size() ? set->frames[index]
+                                                      : Core::Array<Vector3>();
 }
 
 void Molecule::claimAnimationPlayback(QObject* owner)

@@ -80,6 +80,9 @@ private slots:
   void animationPlaybackClaimed(QObject* owner);
 
 private:
+  /** Stop the timer and put the dialog's button back to "start". */
+  void stopTimer();
+
   /**
    * Stop any running animation and discard its frames, and withdraw them from
    * the molecule unless @p unpublish is false (the caller republishes).

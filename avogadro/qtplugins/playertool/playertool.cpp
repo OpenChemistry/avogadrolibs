@@ -293,8 +293,9 @@ void PlayerTool::setMolecule(QtGui::Molecule* mol)
   m_userPickedSource = false;
   m_sourceFrame = 0;
   m_publishedTotal = 0;
-  m_haveRest = false;
-  m_showingDisplaced = false;
+  m_rest.clear();
+  m_shownPositions.clear();
+  m_holdsPlayback = false;
   m_sourceRowShown = false;
 
   if (m_molecule) {
@@ -349,9 +350,7 @@ void PlayerTool::moleculeChanged(unsigned int changes)
   if (onPublished()) {
     // The displaced frames belong to the old set. Take the new set as the
     // rest geometry and wait for the user to step before displacing it.
-    m_currentFrame = frame;
     if (frame != m_restConformer) {
-      m_showingDisplaced = false;
       takeRest();
       m_sourceFrame = 0;
       syncWidgets();
@@ -392,7 +391,8 @@ void PlayerTool::sourcesChanged()
       m_publishedTotal = total;
       // A pending conformer change means the displaced frame is already gone
       // from screen; the Conformer branch of moleculeChanged() takes over.
-      if (m_showingDisplaced && m_molecule->coordinate3d() == m_restConformer)
+      if (!m_shownPositions.empty() &&
+          m_molecule->coordinate3d() == m_restConformer)
         displayPublishedFrame();
     }
   }
@@ -471,15 +471,35 @@ void PlayerTool::rebuildSourceCombo() const
 
   if (m_sourceCombo) {
     const QSignalBlocker blocker(m_sourceCombo);
-    m_sourceCombo->clear();
+    QStringList wantedIds;
+    QStringList wantedLabels;
     if (count >= 1) {
-      m_sourceCombo->addItem(tr("Trajectory (%n frame(s))", nullptr, count),
-                             trajectoryId());
+      wantedIds << trajectoryId();
+      wantedLabels << tr("Trajectory (%n frame(s))", nullptr, count);
     }
     for (const QString& id : ids) {
-      m_sourceCombo->addItem(m_molecule->animationFrameLabel(id), id);
+      wantedIds << id;
+      wantedLabels << m_molecule->animationFrameLabel(id);
     }
-    m_sourceCombo->setCurrentIndex(m_sourceCombo->findData(m_source));
+
+    // Republishing happens on every amplitude or frame-count change, so
+    // leave the entries alone when only a label (or nothing) differs.
+    bool sameIds = m_sourceCombo->count() == wantedIds.size();
+    for (int i = 0; sameIds && i < wantedIds.size(); ++i)
+      sameIds = m_sourceCombo->itemData(i).toString() == wantedIds[i];
+    if (sameIds) {
+      for (int i = 0; i < wantedIds.size(); ++i) {
+        if (m_sourceCombo->itemText(i) != wantedLabels[i])
+          m_sourceCombo->setItemText(i, wantedLabels[i]);
+      }
+    } else {
+      m_sourceCombo->clear();
+      for (int i = 0; i < wantedIds.size(); ++i)
+        m_sourceCombo->addItem(wantedLabels[i], wantedIds[i]);
+    }
+    const int current = m_sourceCombo->findData(m_source);
+    if (m_sourceCombo->currentIndex() != current)
+      m_sourceCombo->setCurrentIndex(current);
   }
   if (m_sourceRow)
     m_sourceRow->setVisible(m_sourceRowShown);
@@ -489,10 +509,8 @@ void PlayerTool::updateSourceControls() const
 {
   if (m_dynamicBonding)
     m_dynamicBonding->setEnabled(!onPublished());
-  if (m_keepButton) {
+  if (m_keepButton)
     m_keepButton->setVisible(onPublished());
-    m_keepButton->setEnabled(onPublished());
-  }
 }
 
 void PlayerTool::keepFrame()
@@ -539,27 +557,35 @@ void PlayerTool::takeRest()
     return;
   m_rest = currentRest();
   m_restConformer = m_molecule->coordinate3d();
-  m_haveRest = true;
-  m_showingDisplaced = false;
   m_shownPositions.clear();
 }
 
 void PlayerTool::restoreRest()
 {
-  if (!m_molecule || !m_haveRest)
+  if (!m_molecule || m_rest.empty())
     return;
-  m_haveRest = false;
+  const Core::Array<Vector3> rest = std::move(m_rest);
+  m_rest.clear();
+  m_holdsPlayback = false;
 
   // Only undo what we did: if the user edited the displaced geometry or
   // another conformer replaced it, that is not ours to overwrite.
-  const bool ours =
-    m_showingDisplaced && m_molecule->atomPositions3d() == m_shownPositions;
-  m_showingDisplaced = false;
-  if (!ours || m_rest.size() != m_molecule->atomCount())
+  const bool ours = !m_shownPositions.empty() &&
+                    m_molecule->atomPositions3d() == m_shownPositions;
+  m_shownPositions.clear();
+  if (!ours || rest.size() != m_molecule->atomCount())
     return;
 
-  m_molecule->setAtomPositions3d(m_rest);
+  m_molecule->setAtomPositions3d(rest);
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
+}
+
+void PlayerTool::claimPlayback()
+{
+  if (!m_molecule || m_holdsPlayback)
+    return;
+  m_molecule->claimAnimationPlayback(this);
+  m_holdsPlayback = true;
 }
 
 void PlayerTool::displayPublishedFrame()
@@ -578,15 +604,14 @@ void PlayerTool::displayPublishedFrame()
   if (positions.size() != m_molecule->atomCount())
     return;
 
-  if (!m_haveRest)
+  if (m_rest.empty())
     takeRest();
 
   // Tell other animators to let go, then show the frame without touching the
   // active coordinate set: no Conformer flag, so nothing follows it.
-  m_molecule->claimAnimationPlayback(this);
+  claimPlayback();
   m_molecule->setAtomPositions3d(positions);
   m_shownPositions = positions;
-  m_showingDisplaced = true;
   syncWidgets();
   m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
 }
@@ -595,7 +620,10 @@ void PlayerTool::animationPlaybackClaimed(QObject* owner)
 {
   // The claimer is about to display its own frame, so leave the geometry
   // alone.
-  if (owner != this && m_timer.isActive())
+  if (owner == this)
+    return;
+  m_holdsPlayback = false;
+  if (m_timer.isActive())
     stop();
 }
 
@@ -632,8 +660,7 @@ void PlayerTool::play()
   int timeOut = static_cast<int>(1000 / fps);
   if (m_timer.isActive())
     m_timer.stop();
-  if (m_molecule)
-    m_molecule->claimAnimationPlayback(this);
+  claimPlayback();
   m_playFps = fps;
   m_playTicks = 0;
   m_playClock.start();
@@ -790,7 +817,7 @@ void PlayerTool::recordMovie()
       const Core::Array<Vector3> positions =
         m_molecule->animationFrame(m_source, static_cast<size_t>(i));
       if (positions.size() == m_molecule->atomCount()) {
-        m_molecule->claimAnimationPlayback(this);
+        claimPlayback();
         m_molecule->setAtomPositions3d(positions);
         m_molecule->emitChanged(Molecule::Atoms | Molecule::Moved);
       }
@@ -1046,23 +1073,22 @@ bool PlayerTool::handleCommand(const QString& command,
 
   if (command == QLatin1String("listAnimationSources")) {
     QVariantList sources;
-    const auto count = static_cast<int>(m_molecule->coordinate3dCount());
-    if (count >= 1) {
-      QVariantMap entry;
-      entry.insert(QStringLiteral("id"), trajectoryId());
-      entry.insert(QStringLiteral("label"),
-                   tr("Trajectory (%n frame(s))", nullptr, count));
-      entry.insert(QStringLiteral("frames"), count);
-      sources << entry;
-    }
-    for (const QString& id : m_molecule->animationFrameIds()) {
+    auto addSource = [&sources](const QString& id, const QString& label,
+                                int frames) {
       QVariantMap entry;
       entry.insert(QStringLiteral("id"), id);
-      entry.insert(QStringLiteral("label"),
-                   m_molecule->animationFrameLabel(id));
-      entry.insert(QStringLiteral("frames"),
-                   static_cast<int>(m_molecule->animationFrameCount(id)));
+      entry.insert(QStringLiteral("label"), label);
+      entry.insert(QStringLiteral("frames"), frames);
       sources << entry;
+    };
+    const auto count = static_cast<int>(m_molecule->coordinate3dCount());
+    if (count >= 1) {
+      addSource(trajectoryId(), tr("Trajectory (%n frame(s))", nullptr, count),
+                count);
+    }
+    for (const QString& id : m_molecule->animationFrameIds()) {
+      addSource(id, m_molecule->animationFrameLabel(id),
+                static_cast<int>(m_molecule->animationFrameCount(id)));
     }
     QVariantMap result;
     result.insert(QStringLiteral("sources"), sources);

@@ -70,17 +70,22 @@ void Vibrations::setMolecule(QtGui::Molecule* mol)
 
   // Only a freshly loaded molecule opens the dialog, and only if there is
   // something to show.
-  if (m_molecule->vibrationConformerCount() > 0)
+  if (m_molecule->hasAnyVibrations())
     openDialog();
 }
 
-void Vibrations::resetAnimation(bool unpublish)
+void Vibrations::stopTimer()
 {
   if (m_timer && m_timer->isActive()) {
     m_timer->stop();
     if (m_dialog)
       m_dialog->resetAnimationButton();
   }
+}
+
+void Vibrations::resetAnimation(bool unpublish)
+{
+  stopTimer();
   m_animationFrames.clear();
   m_currentFrame = 0;
   if (m_molecule && unpublish)
@@ -103,7 +108,7 @@ void Vibrations::refreshModes()
     return;
 
   m_modeConformer = m_molecule->coordinate3d();
-  m_actions[0]->setEnabled(m_molecule->vibrationConformerCount() > 0);
+  m_actions[0]->setEnabled(m_molecule->hasAnyVibrations());
 
   // The frames were built from the previous conformer's geometry and modes.
   // Drop them rather than restoring that geometry: whoever changed the
@@ -130,9 +135,8 @@ void Vibrations::reloadDialog()
   if (m_dialog == nullptr || m_molecule == nullptr || !m_dialog->isVisible())
     return;
 
-  m_dialog->setMolecule(m_molecule);
-
-  if (m_haveModes || m_molecule->vibrationConformerCount() == 0) {
+  if (m_haveModes || !m_molecule->hasAnyVibrations()) {
+    m_dialog->setMolecule(m_molecule);
     m_dialog->showModes();
     m_dialog->setAmplitude(m_amplitude);
     m_dialog->setFramesPerCycle(m_framesPerCycle);
@@ -141,21 +145,24 @@ void Vibrations::reloadDialog()
     return;
   }
 
-  // The active frame has no modes, but others do. Frame numbers are shown
-  // one-based, as the Animation tool shows them.
-  QList<int> numbers;
+  // The active frame has no modes, but others do. The table is hidden, so it
+  // is not rebuilt.
   std::vector<int> frames;
-  for (size_t conformer : m_molecule->vibrationConformers()) {
-    numbers << static_cast<int>(conformer) + 1;
+  for (size_t conformer : m_molecule->vibrationConformers())
     frames.push_back(static_cast<int>(conformer));
-  }
   m_dialog->showNoModes(
-    numbers, nearestVibrationFrame(frames, m_molecule->coordinate3d()));
+    frames, nearestVibrationFrame(frames, m_molecule->coordinate3d()));
 }
 
 void Vibrations::moleculeChanged(unsigned int changes)
 {
   if (m_molecule == nullptr)
+    return;
+
+  // A trajectory with no vibrations anywhere has nothing to follow, and this
+  // runs on every playback frame.
+  if (!m_haveModes && !m_actions[0]->isEnabled() &&
+      !m_molecule->hasAnyVibrations())
     return;
 
   // A file can carry a Hessian at more than one geometry, so the modes belong
@@ -171,8 +178,7 @@ void Vibrations::moleculeChanged(unsigned int changes)
 
   if (conformerChanged || structureChanged ||
       m_haveModes != m_molecule->hasVibrations() ||
-      m_actions[0]->isEnabled() !=
-        (m_molecule->vibrationConformerCount() > 0)) {
+      m_actions[0]->isEnabled() != m_molecule->hasAnyVibrations()) {
     // Never raise or show the dialog from here: this runs on every playback
     // frame.
     refreshModes();
@@ -213,7 +219,7 @@ bool Vibrations::handleCommand(const QString& command,
   }
 
   if (command == "showVibrations") {
-    if (m_molecule->vibrationConformerCount() == 0) {
+    if (!m_molecule->hasAnyVibrations()) {
       emit commandFailed(tr("No vibrational modes"));
       return true;
     }
@@ -402,15 +408,13 @@ void Vibrations::publishFrames()
 
 void Vibrations::animationPlaybackClaimed(QObject* owner)
 {
-  if (owner == this || m_timer == nullptr || !m_timer->isActive())
+  if (owner == this)
     return;
 
   // The claimer is about to display its own frame, so leave the geometry
   // alone.
-  m_timer->stop();
+  stopTimer();
   m_currentFrame = 0;
-  if (m_dialog)
-    m_dialog->resetAnimationButton();
 }
 
 void Vibrations::generateDisplacedCoordinates(const QList<int>& modes,

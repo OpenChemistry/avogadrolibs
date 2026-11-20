@@ -13,6 +13,8 @@
 #include <QtCore/QList>
 #include <QtCore/QModelIndex>
 
+#include <vector>
+
 namespace Ui {
 class VibrationDialog;
 }
@@ -50,10 +52,10 @@ public:
 
   /**
    * Replace the mode table with a note that the active frame has no modes.
-   * @param framesWithModes One-based frame numbers that have modes.
+   * @param framesWithModes Zero-based frames that have modes.
    * @param nearestFrame Zero-based frame the button goes to.
    */
-  void showNoModes(const QList<int>& framesWithModes, int nearestFrame);
+  void showNoModes(const std::vector<int>& framesWithModes, int nearestFrame);
 
   /**
    * @return The rows selected in the mode table, in increasing order. Empty

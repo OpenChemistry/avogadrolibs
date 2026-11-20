@@ -5,6 +5,8 @@
 
 #include "vibrationframes.h"
 
+#include <avogadro/core/avogadrocore.h>
+
 #include <cmath>
 #include <cstdlib>
 
@@ -18,12 +20,10 @@ Core::Array<Core::Array<Vector3>> vibrationFrames(
   if (framesPerCycle < 1 || rest.empty() || rest.size() != lx.size())
     return frames;
 
-  constexpr double twoPi = 6.283185307179586476925286766559;
   frames.reserve(static_cast<size_t>(framesPerCycle));
   for (int k = 0; k < framesPerCycle; ++k) {
-    const double phase = twoPi * k / static_cast<double>(framesPerCycle);
-    // Frame 0 must be exactly the rest geometry.
-    const double scale = k == 0 ? 0.0 : std::sin(phase) * peakScale;
+    const double phase = 2.0 * PI_D * k / static_cast<double>(framesPerCycle);
+    const double scale = std::sin(phase) * peakScale;
     Core::Array<Vector3> positions;
     positions.reserve(rest.size());
     for (size_t i = 0; i < rest.size(); ++i)

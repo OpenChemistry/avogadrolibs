@@ -1452,11 +1452,14 @@ TEST_F(MoleculeTest, conformersWithoutAHessianAreEmptyNotMissing)
   for (size_t i = 0; i < 4; ++i)
     molecule.setCoordinate3d(Array<Vector3>(2, Vector3(0, 0, 0)), i);
 
+  EXPECT_FALSE(molecule.hasAnyVibrations());
   molecule.setVibrationFrequencies(Array<double>(1, 1600.0), 3);
 
   EXPECT_EQ(molecule.vibrationConformerCount(), static_cast<size_t>(1));
   ASSERT_EQ(molecule.vibrationConformers().size(), static_cast<size_t>(1));
   EXPECT_EQ(molecule.vibrationConformers()[0], static_cast<size_t>(3));
+
+  EXPECT_TRUE(molecule.hasAnyVibrations());
 
   ASSERT_TRUE(molecule.setCoordinate3d(1));
   EXPECT_FALSE(molecule.hasVibrations());

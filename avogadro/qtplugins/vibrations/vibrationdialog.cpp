@@ -125,12 +125,12 @@ void VibrationDialog::showModes()
   m_ui->startButton->setEnabled(true);
 }
 
-void VibrationDialog::showNoModes(const QList<int>& framesWithModes,
+void VibrationDialog::showNoModes(const std::vector<int>& framesWithModes,
                                   int nearestFrame)
 {
   QStringList numbers;
   for (int frame : framesWithModes)
-    numbers << QString::number(frame);
+    numbers << QString::number(frame + 1); // shown one-based
   m_goToFrame = nearestFrame;
   m_ui->noModesLabel->setText(
     tr("Vibrations available at frame(s): %1").arg(numbers.join(", ")));

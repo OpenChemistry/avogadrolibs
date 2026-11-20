@@ -136,6 +136,9 @@ private:
    */
   void restoreRest();
 
+  /** Claim the display from other animators, if we do not already hold it. */
+  void claimPlayback();
+
   /** Show frame m_sourceFrame of the published source. */
   void displayPublishedFrame();
 
@@ -163,11 +166,11 @@ private:
   int m_publishedTotal = 0;
   Core::Array<Vector3> m_rest;
   int m_restConformer = -1;
-  bool m_haveRest = false;
   /** What a published frame last put on screen, to tell if it is still there.
    */
   Core::Array<Vector3> m_shownPositions;
-  bool m_showingDisplaced = false;
+  /** True while we are the animator that last claimed the display. */
+  bool m_holdsPlayback = false;
   /** Once the source row has appeared it stays for this molecule. */
   mutable bool m_sourceRowShown = false;
   mutable QWidget* m_sourceRow = nullptr;
