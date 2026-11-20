@@ -17,6 +17,7 @@
 
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/calc/chargemodel.h>
+#include <avogadro/calc/eeqmodel.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 #include <avogadro/rendering/geometrynode.h>
@@ -236,8 +237,10 @@ TEST_F(LabelChargeTest, chargesAreRecalculatedAfterAnEditKeepingAtomCount)
 
 TEST_F(LabelChargeTest, failedCalculationIsNotRetried)
 {
-  // An unregistered model: nothing can calculate charges.
+  // No registered models (including the built-in EEQ): nothing can
+  // calculate charges.
   Avogadro::Calc::ChargeManager::unregisterModel(kModelId);
+  Avogadro::Calc::ChargeManager::unregisterModel("eeq");
   m_registered = false;
 
   Label label;
@@ -248,6 +251,27 @@ TEST_F(LabelChargeTest, failedCalculationIsNotRetried)
     QTest::qWait(kSettle);
   }
   EXPECT_EQ(CountingModel::calls, 0);
+  EXPECT_EQ(changed.count(), 0);
+  Avogadro::Calc::ChargeManager::registerModel(new Avogadro::Calc::EEQModel);
+}
+
+TEST_F(LabelChargeTest, failedEEQChargesAreNotStored)
+{
+  // Leave only the built-in EEQ model, and make it fail through its atom cap.
+  Avogadro::Calc::ChargeManager::unregisterModel(kModelId);
+  m_registered = false;
+  auto* mol = m_harness.molecule();
+  while (mol->atomCount() <= Avogadro::Calc::EEQModel::maxAtoms())
+    mol->addAtom(1, Vector3(static_cast<double>(mol->atomCount()), 0, 0));
+
+  Label label;
+  label.setEnabled(true);
+  QSignalSpy changed(&label, &Label::drawablesChanged);
+  for (int i = 0; i < 2; ++i) {
+    process(label);
+    QTest::qWait(kSettle);
+  }
+  EXPECT_TRUE(mol->partialChargeTypes().empty());
   EXPECT_EQ(changed.count(), 0);
 }
 

@@ -40,13 +40,13 @@ public:
   void setMolecule(QtGui::Molecule* mol) override
   {
     m_molecule = mol ? mol->undoMolecule() : nullptr;
-    m_atoms.clear();
+    m_atomIds.clear();
   }
 
   void setEditMolecule(QtGui::RWMolecule* mol) override
   {
     if (m_molecule != mol)
-      m_atoms.clear();
+      m_atomIds.clear();
     m_molecule = mol;
   }
 
@@ -68,27 +68,24 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  /**
-   * Called by the app to tell the tool to register commands.
-   * If the tool has commands, it should emit the registerCommand signals.
-   */
-  void registerCommands() override;
-
 public Q_SLOTS:
   void axisChanged(int axis);
   void alignChanged(int align);
-  void align();
+  bool align();
 
 private:
   QAction* m_activateAction;
   QtGui::RWMolecule* m_molecule;
   Rendering::GLRenderer* m_renderer;
-  QVector<Rendering::Identifier> m_atoms;
+  QVector<Index> m_atomIds;
 
   int m_axis;
   int m_alignType;
 
   mutable QWidget* m_toolWidget;
+
+  /// Add every scripting command to the command registry.
+  void registerAlignToolCommands();
 
 private Q_SLOTS:
   void toolWidgetDestroyed();

@@ -213,16 +213,22 @@ void Mesh::smooth(int iterationCount)
   for (int iteration = 0; iteration < iterationCount; ++iteration) {
     Array<Vector3f> newVertices = m_vertices; // Store smoothed vertices
 
-    for (size_t i = 0; i < m_vertices.size(); ++i) {
+    // Read through the shared (const) data, write through a pointer taken
+    // once, so no per-element copy-on-write check is needed.
+    const Vector3f* oldData = m_vertices.constData();
+    Vector3f* newData = newVertices.data();
+    const size_t vertexCount = m_vertices.size();
+
+    for (size_t i = 0; i < vertexCount; ++i) {
       Vector3f sum(0.0f, 0.0f, 0.0f);
       size_t neighborCount = adjacencyList[i].size();
 
       if (neighborCount > 0) { // Prevent division by zero for isolated vertices
         for (size_t neighbor : adjacencyList[i]) {
-          sum += m_vertices[neighbor];
+          sum += oldData[neighbor];
         }
-        sum += weight * m_vertices[i];
-        newVertices[i] = sum / (weight + neighborCount);
+        sum += weight * oldData[i];
+        newData[i] = sum / (weight + neighborCount);
       } // Else keep the original vertex position if isolated
     }
     m_vertices = newVertices; // Update vertices after processing all
@@ -231,19 +237,22 @@ void Mesh::smooth(int iterationCount)
   m_normals.clear();
   m_normals.resize(m_vertices.size(), Vector3f(0.0f, 0.0f, 0.0f));
 
+  const Vector3f* vertexData = m_vertices.constData();
+  Vector3f* normalData = m_normals.data();
+
   for (const auto& tri : m_triangles) {
     size_t i = static_cast<size_t>(tri.x());
     size_t j = static_cast<size_t>(tri.y());
     size_t k = static_cast<size_t>(tri.z());
 
-    Vector3f a = m_vertices[i];
-    Vector3f b = m_vertices[j];
-    Vector3f c = m_vertices[k];
+    Vector3f a = vertexData[i];
+    Vector3f b = vertexData[j];
+    Vector3f c = vertexData[k];
     Vector3f triangleNormal = (b - a).cross(c - a).normalized();
 
-    m_normals[i] += triangleNormal;
-    m_normals[j] += triangleNormal;
-    m_normals[k] += triangleNormal;
+    normalData[i] += triangleNormal;
+    normalData[j] += triangleNormal;
+    normalData[k] += triangleNormal;
   }
 
   for (auto& normal : m_normals) {

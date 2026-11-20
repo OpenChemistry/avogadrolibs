@@ -38,6 +38,9 @@ with only the C++ standard library and Eigen.
 - **`Core::Array` is copy-on-write.** Copies are cheap until written to, and
   any non-const access detaches. Hold `const` references
   (`const auto& positions = molecule.atomPositions3d();`) to avoid copies.
+  In a hot write loop, call `data()` once before the loop and write through
+  the pointer: every non-const `operator[]` re-checks whether the storage is
+  shared, which is several times slower per element.
 - Use `Real`, `Vector3` and friends from [avogadrocore.h](avogadrocore.h) and
   [vector.h](vector.h), and the unit constants in `avogadrocore.h`.
 - Shared parsing helpers live in [utilities.h](utilities.h): `lexicalCast`,

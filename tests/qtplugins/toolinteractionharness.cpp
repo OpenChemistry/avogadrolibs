@@ -120,6 +120,8 @@ void ToolInteractionHarness::updateScene()
 
 void ToolInteractionHarness::resetCamera()
 {
+  // Changes are built lazily in paintGL(), which offscreen tests never reach.
+  m_widget->applyPendingSceneChanges();
   renderer().resetCamera();
   renderer().applyProjection();
 }
@@ -162,12 +164,14 @@ QPoint ToolInteractionHarness::emptyPoint() const
 
 Rendering::Identifier ToolInteractionHarness::hitAt(const QPoint& point) const
 {
+  m_widget->applyPendingSceneChanges();
   return m_widget->renderer().hit(point.x(), point.y());
 }
 
 void ToolInteractionHarness::settle()
 {
   QCoreApplication::processEvents();
+  m_widget->applyPendingSceneChanges();
   renderer().applyProjection();
 }
 

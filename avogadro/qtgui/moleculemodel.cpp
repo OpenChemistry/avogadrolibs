@@ -4,23 +4,20 @@
 ******************************************************************************/
 
 #include "moleculemodel.h"
+#include "colortheme.h"
 #include "molecule.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QIcon>
-#include <QtGui/QPalette>
 
 namespace Avogadro::QtGui {
 
 MoleculeModel::MoleculeModel(QObject* p)
   : QAbstractItemModel(p), m_activeMolecule(nullptr)
 {
-  const QPalette defaultPalette;
-  bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
-                   defaultPalette.color(QPalette::Window).lightness());
-  loadIcons(darkMode);
+  loadIcons(colorTheme() == ColorTheme::Dark);
 }
 
 QModelIndex MoleculeModel::parent(const QModelIndex&) const

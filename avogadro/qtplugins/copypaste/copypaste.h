@@ -50,6 +50,7 @@ private slots:
   void copyMappedSMILES();
   void copyInChI();
   void copyXYZ();
+  void copyOther();
   void cut();
   void paste();
   void clear();
@@ -66,6 +67,7 @@ private:
   QAction* m_copyMappedSMILES;
   QAction* m_copyInChI;
   QAction* m_copyXYZ;
+  QAction* m_copyOther;
   QAction* m_cutAction;
   QAction* m_clearAction;
   QAction* m_pasteAction;

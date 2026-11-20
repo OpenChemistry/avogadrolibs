@@ -38,13 +38,11 @@ Molecule::Molecule()
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
     m_spectra(other.m_spectra), m_atomProperties(other.m_atomProperties),
-    m_bondProperties(other.m_bondProperties),
     m_residueProperties(other.m_residueProperties),
     m_conformerProperties(other.m_conformerProperties),
     m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
     m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
-    m_residueLabels(other.m_residueLabels),
+    m_atomLabels(other.m_atomLabels), m_residueLabels(other.m_residueLabels),
     m_coordinates3d(other.m_coordinates3d),
     m_coordinate3dIndex(other.m_coordinate3dIndex),
     m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
@@ -58,7 +56,7 @@ Molecule::Molecule(const Molecule& other)
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
     m_constraints(other.m_constraints),
     m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_bondState(other.m_bondState), m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::make_shared<MoleculeInfo>(other.ensureLayerInfo()))
 {
   // Share the meshes and cubes; a mutable access detaches (see detachMesh)
@@ -80,7 +78,7 @@ Molecule::Molecule(const Molecule& other)
 void Molecule::readProperties(const Molecule& other)
 {
   m_atomLabels = other.m_atomLabels;
-  m_bondLabels = other.m_bondLabels;
+  m_bondState.labels = other.m_bondState.labels;
   m_residueLabels = other.m_residueLabels;
   m_colors = other.m_colors;
   // merge data maps by iterating through other's map
@@ -100,7 +98,7 @@ void Molecule::readProperties(const Molecule& other)
 
   // merge custom property maps
   m_atomProperties = other.m_atomProperties;
-  m_bondProperties = other.m_bondProperties;
+  m_bondState.properties = other.m_bondState.properties;
   m_residueProperties = other.m_residueProperties;
   m_conformerProperties = other.m_conformerProperties;
 
@@ -137,7 +135,6 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_partialCharges = other.m_partialCharges;
     m_spectra = other.m_spectra;
     m_atomProperties = other.m_atomProperties;
-    m_bondProperties = other.m_bondProperties;
     m_residueProperties = other.m_residueProperties;
     m_conformerProperties = other.m_conformerProperties;
     m_customElementMap = other.m_customElementMap;
@@ -145,7 +142,6 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
     m_atomLabels = other.m_atomLabels;
-    m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_coordinate3dIndex = other.m_coordinate3dIndex;
@@ -161,7 +157,7 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_residues = other.m_residues;
     repointResidueAtoms(other);
     m_graph = other.m_graph;
-    m_bondOrders = other.m_bondOrders;
+    m_bondState = other.m_bondState;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
     m_constraints = other.m_constraints;
@@ -287,8 +283,6 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   other.m_spectra.clear();
   m_atomProperties = std::move(other.m_atomProperties);
   other.m_atomProperties.clear();
-  m_bondProperties = std::move(other.m_bondProperties);
-  other.m_bondProperties.clear();
   m_residueProperties = std::move(other.m_residueProperties);
   other.m_residueProperties.clear();
   m_conformerProperties = std::move(other.m_conformerProperties);
@@ -301,7 +295,6 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   takeArray(m_positions2d, other.m_positions2d);
   takeArray(m_positions3d, other.m_positions3d);
   takeArray(m_atomLabels, other.m_atomLabels);
-  takeArray(m_bondLabels, other.m_bondLabels);
   takeArray(m_residueLabels, other.m_residueLabels);
   takeArray(m_coordinates3d, other.m_coordinates3d);
   m_coordinate3dIndex = std::exchange(other.m_coordinate3dIndex, 0);
@@ -344,7 +337,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   // the source afterwards leaves it empty and unshared.
   m_graph = std::move(other.m_graph);
   other.m_graph = Graph();
-  takeArray(m_bondOrders, other.m_bondOrders);
+  m_bondState.takeFrom(other.m_bondState);
   takeArray(m_atomicNumbers, other.m_atomicNumbers);
 }
 
@@ -409,12 +402,12 @@ const PropertyMap& Molecule::atomProperties() const
 
 PropertyMap& Molecule::bondProperties()
 {
-  return m_bondProperties;
+  return m_bondState.properties;
 }
 
 const PropertyMap& Molecule::bondProperties() const
 {
-  return m_bondProperties;
+  return m_bondState.properties;
 }
 
 PropertyMap& Molecule::residueProperties()
@@ -609,6 +602,9 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
 
 bool Molecule::frozenAtom(Index atomId) const
 {
+  if (atomId >= static_cast<Index>(m_frozenAtomMask.rows() / 3))
+    return false;
+
   auto base = static_cast<Eigen::Index>(atomId * 3);
   if (base <= m_frozenAtomMask.rows() - 3) {
     return (m_frozenAtomMask[base] == 0.0 &&
@@ -620,6 +616,10 @@ bool Molecule::frozenAtom(Index atomId) const
 
 bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 {
+  if (axis < 0 || axis >= 3 ||
+      atomId >= static_cast<Index>(m_frozenAtomMask.rows() / 3))
+    return false;
+
   auto base = static_cast<Eigen::Index>(atomId * 3);
   if (base <= m_frozenAtomMask.rows() - 3) {
     return (m_frozenAtomMask[base + axis] == 0.0);
@@ -629,6 +629,9 @@ bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
+  if (axis < 0 || axis >= 3 || atomId >= m_atomicNumbers.size())
+    return;
+
   Eigen::Index size = m_frozenAtomMask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
@@ -649,8 +652,11 @@ void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 void Molecule::setHallNumber(unsigned short hallNumber)
 {
   m_hallNumber = hallNumber;
-  if (hallNumber != 0)
+  if (hallNumber != 0) {
     m_data.remove(SpaceGroups::internationalNumberKey());
+    m_data.remove(SpaceGroups::operationsKey());
+    m_data.remove(SpaceGroups::fileNameKey());
+  }
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)
@@ -1064,34 +1070,6 @@ void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
   }
 }
 
-// Bond-indexed counterpart of swapAtomEntry()/removeAtomEntry() above, same
-// ragged-array rule, used for m_bondLabels: it may be shorter than
-// bondCount() (a bond added after labels were last set has no entry), so
-// removeBond()'s swap-and-pop and swapBond() have to treat a short entry as
-// "no label" rather than silently attaching it to the wrong bond.
-template <typename T>
-void swapBondEntry(Array<T>& values, Index a, Index b, Index max)
-{
-  using std::swap;
-  const Index lo = a < b ? a : b;
-  if (values.size() > max) {
-    swap(values[a], values[b]);
-  } else if (values.size() > lo) {
-    values.resize(max + 1, T());
-    swap(values[a], values[b]);
-  }
-}
-
-template <typename T>
-void removeBondEntry(Array<T>& values, Index index, Index bondCount)
-{
-  if (values.size() == bondCount) {
-    values.swapAndPop(index);
-  } else if (index < values.size()) {
-    values[index] = T();
-  }
-}
-
 // Constraints and scan coordinates both name up to four atoms by index, so
 // both follow the same rule when those atoms move. @p reindex maps an old atom
 // index to its new one, or to MaxIndex for an atom that is going away; an
@@ -1145,7 +1123,7 @@ void Molecule::swapBond(Index a, Index b)
 {
   // See swapEdgeIndices(): the callers are undo commands holding indices from
   // before the edit they reverse, so an index can name a bond that no longer
-  // exists. m_bondOrders would be indexed out of bounds below.
+  // exists. The bond orders would be indexed out of bounds below.
   if (a >= bondCount() || b >= bondCount())
     return;
 
@@ -1153,9 +1131,7 @@ void Molecule::swapBond(Index a, Index b)
   using std::swap;
 
   m_graph.swapEdgeIndices(a, b);
-  swap(m_bondOrders[a], m_bondOrders[b]);
-  m_bondProperties.swapEntries(a, b, bondCount());
-  swapBondEntry(m_bondLabels, a, b, a > b ? a : b);
+  m_bondState.swapEntries(a, b, bondCount());
 }
 
 void Molecule::swapAtom(Index a, Index b)
@@ -1364,12 +1340,10 @@ void Molecule::clearAtoms()
   setScanCoordinates({});
 
   m_atomicNumbers.clear();
-  m_bondOrders.clear();
-  m_bondLabels.clear();
+  m_bondState.clear();
   m_residueLabels.clear();
   m_graph.clear();
   m_atomProperties.clear();
-  m_bondProperties.clear();
   m_residues.clear();
   m_residueProperties.clear();
   m_conformerProperties.clear();
@@ -1397,11 +1371,11 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
   Index index = bond(atom1, atom2).index();
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
-    m_bondOrders.push_back(order);
-    m_bondProperties.addEntry(bondCount());
+    m_bondState.orders.array().push_back(order);
+    m_bondState.properties.addEntry(bondCount());
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
-    m_bondOrders[index] = order;
+    m_bondState.orders.array()[index] = order;
   }
   // Any existing charges are invalidated, but deliberately *not*
   // clearCalculatedResults(): perceiveBondsSimple() adds bonds one at a time,
@@ -1446,12 +1420,10 @@ bool Molecule::removeBond(Index index)
 {
   if (index >= bondCount())
     return false;
-  m_bondProperties.removeEntry(index, bondCount());
-  // Bond-indexed like m_bondOrders below, so it has to run before
-  // m_graph.removeEdge() changes bondCount().
-  removeBondEntry(m_bondLabels, index, bondCount());
+  // Every per-bond column has to go before m_graph.removeEdge() changes
+  // bondCount().
+  m_bondState.removeEntry(index, bondCount());
   m_graph.removeEdge(index);
-  m_bondOrders.swapAndPop(index);
   // Connectivity is part of what was calculated from, so a bond going away
   // invalidates the results just as an atom going away does.
   clearCalculatedResults();
@@ -1475,9 +1447,7 @@ bool Molecule::removeBond(const AtomType& a, const AtomType& b)
 
 void Molecule::clearBonds()
 {
-  m_bondOrders.clear();
-  m_bondProperties.clear();
-  m_bondLabels.clear();
+  m_bondState.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
 
@@ -2185,6 +2155,8 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     metal[atom] = Elements::isMetal(m_atomicNumbers[atom]) ? 1 : 0;
 
   std::vector<unsigned int> orderSum(atoms, 0);
+  // Read-only until step 4, which takes its own mutable reference.
+  const Array<unsigned char>& orders = bondOrders();
   std::vector<char> hasMetalBond(atoms, 0);
   std::vector<char> hasNonMetalBond(atoms, 0);
   for (Index bond = 0; bond < bondTotal; ++bond) {
@@ -2197,8 +2169,8 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     }
     hasNonMetalBond[a] = 1;
     hasNonMetalBond[b] = 1;
-    orderSum[a] += m_bondOrders[bond];
-    orderSum[b] += m_bondOrders[bond];
+    orderSum[a] += orders[bond];
+    orderSum[b] += orders[bond];
   }
 
   BondOrderProblem problem;
@@ -2272,7 +2244,7 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   // non-metal atoms can be raised; existing multiple bonds are fixed.
   std::vector<Index> bondOfEdge;
   for (Index bond = 0; bond < bondTotal; ++bond) {
-    if (m_bondOrders[bond] != 1)
+    if (orders[bond] != 1)
       continue;
     const Index a = m_graph.endpoints(bond).first;
     const Index b = m_graph.endpoints(bond).second;
@@ -2317,10 +2289,11 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   // Step 4: commit what was found. A component that failed still gets the
   // best-effort partial assignment (see solveBondOrders()), and the atoms it
   // could not satisfy are reported.
+  auto& mutableOrders = m_bondState.orders.array();
   for (std::size_t edge = 0; edge < bondOfEdge.size(); ++edge) {
     if (solution.extra[edge] > 0) {
-      m_bondOrders[bondOfEdge[edge]] = static_cast<unsigned char>(
-        m_bondOrders[bondOfEdge[edge]] + solution.extra[edge]);
+      mutableOrders[bondOfEdge[edge]] = static_cast<unsigned char>(
+        mutableOrders[bondOfEdge[edge]] + solution.extra[edge]);
     }
   }
 
@@ -2783,22 +2756,18 @@ bool Molecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
 
 unsigned char Molecule::bondOrder(Index bondId) const
 {
-  return bondId < m_bondOrders.size() ? m_bondOrders[bondId] : 0;
+  return m_bondState.orders.value(bondId, 0);
 }
 
 bool Molecule::setBondOrders(const Array<unsigned char>& orders)
 {
-  if (orders.size() == bondCount()) {
-    m_bondOrders = orders;
-    return true;
-  }
-  return false;
+  return m_bondState.orders.setAll(orders, bondCount(), false);
 }
 
 bool Molecule::setBondOrder(Index bondId, unsigned char order)
 {
   if (bondId < bondCount()) {
-    m_bondOrders[bondId] = order;
+    m_bondState.orders.array()[bondId] = order;
     return true;
   }
   return false;
@@ -3039,7 +3008,7 @@ Array<unsigned char> Molecule::getAtomOrders(Index index) const
   Array<unsigned char> result;
   const std::vector<Index>& edgeIndices = m_graph.edges(index);
   for (unsigned long edgeIndice : edgeIndices) {
-    result.push_back(m_bondOrders[edgeIndice]);
+    result.push_back(m_bondState.orders.array()[edgeIndice]);
   }
   return result;
 }

@@ -136,6 +136,12 @@ public:
   const std::vector<CylinderColor>& cylinders() const { return m_cylinders; }
 
   /**
+   * Call after changing the cylinders in place through cylinders() so the
+   * next render uploads them again.
+   */
+  void markDirty() { m_dirty = true; }
+
+  /**
    * Clear the contents of the node.
    */
   void clear() override;

@@ -28,6 +28,7 @@ class EditorToolWidget;
 class Editor : public QtGui::ToolPlugin
 {
   Q_OBJECT
+  Q_PROPERTY(QVariantMap drawOptions READ drawOptions NOTIFY drawOptionsChanged)
 public:
   explicit Editor(QObject* parent_ = nullptr);
   ~Editor() override;
@@ -61,10 +62,24 @@ public:
   void draw(Rendering::GroupNode& node) override;
 
   void registerCommands() override;
+  unsigned char atomicNumber() const { return m_atomicNumber; }
+  unsigned char bondOrder() const { return m_bondOrder; }
+  bool adjustHydrogens() const { return m_adjustHydrogens; }
+  QVariantMap drawOptions() const;
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
+public slots:
+  void setAtomicNumber(unsigned char number);
+  void setBondOrder(unsigned char order);
+  void setAdjustHydrogens(bool adjust);
+
+signals:
+  void drawOptionsChanged();
+
 private slots:
+  void syncToolWidget() const;
+  void updateDrawOptionsFromWidget();
   void clearKeyPressBuffer()
   {
     m_keyPressBuffer.clear();
@@ -113,9 +128,12 @@ private:
   QtGui::RWMolecule* m_molecule;
   QtOpenGL::GLWidget* m_glWidget;
   Rendering::GLRenderer* m_renderer;
-  // Parentless when the tool has no widget parent (tests, fuzzing); the
-  // tool dock may also own and delete it first, hence the guard.
-  QPointer<EditorToolWidget> m_toolWidget;
+  // The tool dock may own and delete the lazily created panel first.
+  mutable QPointer<EditorToolWidget> m_toolWidget;
+  unsigned char m_atomicNumber = 6;
+  unsigned char m_bondOrder = 0;
+  bool m_adjustHydrogens = true;
+  bool m_adjustBondLengths = true;
   Rendering::Identifier m_clickedObject;
   Rendering::Identifier m_newObject;
   Rendering::Identifier m_bondedAtom;

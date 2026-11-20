@@ -1,6 +1,7 @@
 add_library(IO)
 
 avogadro_headers(IO
+  cifformat.h
   cifsymmetry.h
   cjsonformat.h
   cmlformat.h
@@ -25,6 +26,7 @@ avogadro_headers(IO
 
 target_sources(IO PRIVATE
   binaryblock_p.h
+  cifformat.cpp
   cifsymmetry.cpp
   cjsonformat.cpp
   cmlformat.cpp
@@ -63,22 +65,24 @@ if(USE_LIBARCHIVE)
   find_package(LibArchive)
   find_package(ZLIB)
   if(LibArchive_FOUND AND ZLIB_FOUND)
+    set_property(GLOBAL PROPERTY AvogadroLibs_LINKS_LIBARCHIVE ON)
     target_compile_definitions(IO PRIVATE AVO_USE_LIBARCHIVE)
-    target_link_libraries(IO PRIVATE LibArchive::LibArchive ${ZLIB_LIBRARIES})
+    target_link_libraries(IO PRIVATE LibArchive::LibArchive ZLIB::ZLIB)
 
-    # Do not inherit zlib's include directory blindly. On Unix it is the
-    # platform's own header directory, and adding that to the search path
-    # reorders the standard headers. With both Xcode and the Command Line
-    # Tools installed, FindZLIB picks the Command Line Tools SDK while the
-    # compiler's sysroot is Xcode's, and mixing the two breaks libc++'s
-    # <complex> on the math.h isnan/isinf macros. CMake drops include
-    # directories it knows are implicit, but a second SDK's path is not one of
-    # them. So add it only when zlib.h cannot be found without it, which is
-    # exactly the case that needs it (vcpkg, Conda, a custom prefix).
+    # Link the imported target (so static exports can name it), but do not
+    # inherit zlib's include directory blindly. On Unix it is the platform's
+    # own header directory, and adding that to the search path reorders the
+    # standard headers ahead of libc++'s wrappers. With both Xcode and the
+    # Command Line Tools installed, FindZLIB picks the Command Line Tools SDK,
+    # and the resulting -isystem breaks libc++ on the math.h isnan/isinf
+    # macros. CMake drops include directories it knows are implicit, but an
+    # SDK path is not always one of them. So keep the target's include
+    # directory only when zlib.h cannot be found without it, which is exactly
+    # the case that needs it (vcpkg, Conda, a custom prefix).
     include(CheckIncludeFile)
     check_include_file(zlib.h AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
-    if(NOT AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
-      target_include_directories(IO SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
+    if(AvogadroLibs_ZLIB_H_IN_DEFAULT_PATH)
+      set_property(TARGET ZLIB::ZLIB PROPERTY INTERFACE_INCLUDE_DIRECTORIES "")
     endif()
   else()
     message(STATUS
@@ -107,6 +111,9 @@ avogadro_add_library(IO)
 target_link_libraries(IO
   PUBLIC Avogadro::Core
   PRIVATE struct pugixml::pugixml nlohmann_json::nlohmann_json)
+# gemmi's CIF tokenizer is header-only and used only in cifformat.cpp. Keep it
+# out of the exported link interface, like fast_float in Core.
+target_link_libraries(IO PRIVATE "$<BUILD_INTERFACE:gemmi::cif>")
 if(WIN32)
   target_link_libraries(IO PRIVATE ws2_32)
 endif()

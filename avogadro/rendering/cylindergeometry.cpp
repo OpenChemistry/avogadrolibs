@@ -6,6 +6,7 @@
 #include "cylindergeometry.h"
 
 #include "camera.h"
+#include "geometrytiming.h"
 #include "scene.h"
 #include "visitor.h"
 
@@ -168,7 +169,10 @@ void CylinderGeometry::update()
   if (!d->vbo.ready() || m_dirty) {
     std::vector<ColorNormalVertex> cylinderVertices;
     std::vector<unsigned int> cylinderIndices;
-    tessellate(cylinderVertices, cylinderIndices);
+    {
+      GeometryTiming::Scope timer;
+      tessellate(cylinderVertices, cylinderIndices);
+    }
 
     d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
     d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);

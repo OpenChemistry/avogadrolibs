@@ -11,6 +11,7 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/fileformatmanager.h>
 
+#include <avogadro/qtgui/colortheme.h>
 #include <avogadro/qtgui/gaussiansetconcurrent.h>
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
@@ -26,7 +27,6 @@
 #include <QtCore/QSet>
 
 #include <QtGui/QColor>
-#include <QtGui/QPalette>
 
 #include <QtWidgets/QMessageBox>
 
@@ -1133,41 +1133,6 @@ bool InterfaceScript::parseRules(const QJsonArray& json,
   return result;
 }
 
-// Dark-mode palette: brighter / higher-value colors for contrast on dark
-// backgrounds.
-static const std::map<std::string, QColor> darkModeColors = {
-  { "red", QColorConstants::Svg::crimson },         // #DC143C
-  { "orange", QColorConstants::Svg::coral },        // #FF7F50
-  { "yellow", QColorConstants::Svg::goldenrod },    // #DAA520
-  { "green", QColorConstants::Svg::springgreen },   // #00FF7F
-  { "cyan", QColorConstants::Svg::cyan },           // #00FFFF
-  { "blue", QColorConstants::Svg::dodgerblue },     // #1E90FF
-  { "purple", QColorConstants::Svg::mediumpurple }, // #9370DB
-  { "pink", QColorConstants::Svg::orchid },         // #DA70D6
-  { "white", QColorConstants::Svg::whitesmoke },    // #F5F5F5
-  { "gray", QColorConstants::Svg::darkgray },       // #A9A9A9
-};
-
-// Light-mode palette: deeper / more saturated colors for contrast on light
-// backgrounds.
-static const std::map<std::string, QColor> lightModeColors = {
-  { "red", QColorConstants::Svg::maroon },        // #800000
-  { "orange", QColorConstants::Svg::coral },      // #FF7F50
-  { "yellow", QColorConstants::Svg::goldenrod },  // #DAA520
-  { "green", QColorConstants::Svg::limegreen },   // #32CD32
-  { "cyan", QColorConstants::Svg::deepskyblue },  // #00BFFF
-  { "blue", QColorConstants::Svg::blue },         // #0000FF
-  { "purple", QColorConstants::Svg::blueviolet }, // #8A2BE2
-  { "pink", QColorConstants::Svg::fuchsia },      // #FF00FF
-  { "white", QColorConstants::Svg::black },       // #000000
-  { "gray", QColorConstants::Svg::dimgray },      // #696969
-};
-
-inline const QColor highlightColor(const std::string& name, bool isDarkMode)
-{
-  return isDarkMode ? darkModeColors.at(name) : lightModeColors.at(name);
-}
-
 bool InterfaceScript::parseFormat(const QJsonObject& json,
                                   QTextCharFormat& format) const
 {
@@ -1207,9 +1172,7 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
       { QString("block"), HighlightPreset::Block },
     };
 
-    const QPalette defaultPalette;
-    bool isDarkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
-                       defaultPalette.color(QPalette::Window).lightness());
+    const ColorTheme theme = colorTheme();
 
     if (mapStringToPreset.count(preset) == 0) {
       qDebug() << "Invalid style preset: " << preset;
@@ -1225,32 +1188,32 @@ bool InterfaceScript::parseFormat(const QJsonObject& json,
     switch (presetType) {
       case HighlightPreset::Title:
         format.setFontWeight(QFont::Bold);
-        format.setForeground(highlightColor("green", isDarkMode));
+        format.setForeground(highlightColor("green", theme));
         return true;
       case HighlightPreset::Keyword:
-        format.setForeground(highlightColor("blue", isDarkMode));
+        format.setForeground(highlightColor("blue", theme));
         return true;
       case HighlightPreset::Property:
-        format.setForeground(highlightColor("cyan", isDarkMode));
+        format.setForeground(highlightColor("cyan", theme));
         return true;
       case HighlightPreset::NumLiteral:
-        format.setForeground(highlightColor("orange", isDarkMode));
+        format.setForeground(highlightColor("orange", theme));
         return true;
       case HighlightPreset::StrLiteral:
-        format.setForeground(highlightColor("red", isDarkMode));
+        format.setForeground(highlightColor("red", theme));
         return true;
       case HighlightPreset::Comment:
         format.setFontItalic(true);
-        format.setForeground(highlightColor("gray", isDarkMode));
+        format.setForeground(highlightColor("gray", theme));
         return true;
       case HighlightPreset::Method:
-        format.setForeground(highlightColor("purple", isDarkMode));
+        format.setForeground(highlightColor("purple", theme));
         return true;
       case HighlightPreset::Basis:
-        format.setForeground(highlightColor("pink", isDarkMode));
+        format.setForeground(highlightColor("pink", theme));
         return true;
       case HighlightPreset::Block:
-        format.setForeground(highlightColor("yellow", isDarkMode));
+        format.setForeground(highlightColor("yellow", theme));
         return true;
     }
   }

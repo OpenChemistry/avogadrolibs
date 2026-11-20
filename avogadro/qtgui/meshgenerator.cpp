@@ -13,6 +13,11 @@
 #include <QReadWriteLock>
 
 #include <QtCore/QSet>
+#include <QtConcurrent/QtConcurrent>
+
+#include <atomic>
+#include <numeric>
+#include <vector>
 
 namespace Avogadro::QtGui {
 
@@ -27,6 +32,38 @@ QSet<MeshGenerator*>& liveGenerators()
 {
   static QSet<MeshGenerator*> instances;
   return instances;
+}
+
+/// The indices 0 .. count - 1, the z slabs handed to QtConcurrent::blockingMap.
+/// An empty vector (count <= 0) makes blockingMap return immediately.
+std::vector<int> slabIndices(int count)
+{
+  std::vector<int> indices(count > 0 ? static_cast<size_t>(count) : 0);
+  std::iota(indices.begin(), indices.end(), 0);
+  return indices;
+}
+
+/// QtConcurrent::blockingMap over the z slabs 0 .. count - 1, with the
+/// hand-offs made visible to thread sanitizers, which cannot see the
+/// synchronization inside an uninstrumented Qt: each task acquires what the
+/// caller wrote before, and the caller acquires what every task wrote.
+/// Without them, every buffer access across passes raced, and matching those
+/// reports against suppressions cost TSan builds minutes per surface.
+/// This mirrors parallelFor() in qtplugins/surfaces/edtfill.cpp; share it
+/// once both land.
+template <typename Task>
+void parallelForSlabs(int count, Task&& task)
+{
+  // Built before the release, so the elements are covered by it.
+  std::vector<int> slabs = slabIndices(count);
+  std::atomic<int> handoff{ 0 };
+  handoff.store(1, std::memory_order_release);
+  QtConcurrent::blockingMap(slabs, [&](const int& k) {
+    handoff.load(std::memory_order_acquire);
+    task(k);
+    handoff.fetch_add(1, std::memory_order_acq_rel);
+  });
+  handoff.load(std::memory_order_acquire);
 }
 } // namespace
 
@@ -45,7 +82,7 @@ MeshGenerator::MeshGenerator(const Cube* cube_, Mesh* mesh_, float iso,
     m_min(0.0, 0.0, 0.0), m_dim(0, 0, 0), m_progmin(0), m_progmax(0)
 {
   liveGenerators().insert(this);
-  initialize(cube_, mesh_, iso, passes);
+  initialize(cube_, mesh_, iso, passes, reverse);
 }
 
 MeshGenerator::~MeshGenerator()
@@ -99,6 +136,13 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
   m_passes = passes;
   m_reverseWinding = reverse;
 
+  // The triangle tables assume grid indices form a right-handed frame. A step
+  // matrix with a negative determinant (one or three backwards axes) mirrors
+  // the surface in space, which turns every triangle inside out, so the
+  // winding is swapped again to compensate.
+  const bool mirrored = m_cube->steps().determinant() < 0.0;
+  m_flipWinding = (reverse != mirrored);
+
   for (unsigned int i = 0; i < 3; ++i)
     m_stepSize[i] = static_cast<float>(m_cube->spacing()[i]);
   m_min = m_cube->min().cast<float>();
@@ -115,7 +159,10 @@ bool MeshGenerator::initialize(const Cube* cube_, Mesh* mesh_, float iso,
 
 void MeshGenerator::FlyingEdgesAlgorithmPass1()
 {
-  for (int k = 0; k != m_dim.z(); ++k) {
+  // Each pass runs in parallel over z slabs. Every slab only writes the
+  // buffer entries of its own (j, k) rows; see the notes on each pass.
+  // Writes edgeCases for the rows of slab k only.
+  parallelForSlabs(m_dim.z(), [&](int k) {
     for (int j = 0; j != m_dim.y(); ++j) {
 
       auto curEdgeCases =
@@ -128,9 +175,11 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
         curEdgeCases[i - 1] = calcCaseEdge(isGE[(i + 1) % 2], isGE[i % 2]);
       }
     }
-  }
+  });
 
-  for (int k = 0; k != m_dim.z(); ++k) {
+  // isCutEdge() reads edgeCases of the neighboring rows j + 1 and k + 1, so
+  // this has to wait until every slab has finished the loop above.
+  parallelForSlabs(m_dim.z(), [&](int k) {
     for (int j = 0; j != m_dim.y(); ++j) {
       gridEdge& curGridEdge = gridEdges[k * m_dim.y() + j];
       curGridEdge.xl = m_dim.x();
@@ -145,12 +194,16 @@ void MeshGenerator::FlyingEdgesAlgorithmPass1()
         }
       }
     }
-  }
+  });
 }
 
 void MeshGenerator::FlyingEdgesAlgorithmPass2()
 {
-  for (int k = 0; k != m_dim.z() - 1; ++k) {
+  // A (j, k) row writes its own cubeCases and triCounter entries and, through
+  // ge0..ge3, gridEdges rows j / j + 1 and k / k + 1. The j + 1 and k + 1 rows
+  // are only written at the last j or k, and those rows are never the "own"
+  // row of any slab, so every gridEdge has exactly one writer.
+  parallelForSlabs(m_dim.z() - 1, [&](int k) {
     for (int j = 0; j != m_dim.y() - 1; ++j) {
       int xl, xr;
       calcTrimValues(xl, xr, j, k); // xl, xr set in this function
@@ -221,7 +274,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass2()
         }
       }
     }
-  }
+  });
 }
 
 void MeshGenerator::FlyingEdgesAlgorithmPass3()
@@ -264,8 +317,9 @@ void MeshGenerator::FlyingEdgesAlgorithmPass3()
 
 void MeshGenerator::FlyingEdgesAlgorithmPass4()
 {
-
-  for (int k = 0; k != m_dim.z() - 1; ++k) {
+  // The prefix sums of pass 3 give every row its own range of m_vertices,
+  // m_normals and m_triangles, so slabs write disjoint elements.
+  parallelForSlabs(m_dim.z() - 1, [&](int k) {
     for (int j = 0; j != m_dim.y() - 1; ++j) {
       // find adjusted trim values
       int xl, xr;
@@ -532,7 +586,7 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         // Add triangles
         const signed char* caseTri = m_caseTriangles[caseId]; // size 16
         for (int idx = 0; caseTri[idx] != -1; idx += 3) {
-          if (!m_reverseWinding) {
+          if (!m_flipWinding) {
             // Reverse winding order by swapping vertices 1 and 2
             m_triangles[triIdx][0] = globalIdxs[caseTri[idx]];
             m_triangles[triIdx][1] = globalIdxs[caseTri[idx + 2]];
@@ -546,13 +600,20 @@ void MeshGenerator::FlyingEdgesAlgorithmPass4()
         }
       }
     }
-  }
+  });
+}
+
+bool MeshGenerator::isDone() const noexcept
+{
+  return m_done.load(std::memory_order_acquire);
 }
 
 void MeshGenerator::run()
 {
+  m_done.store(false, std::memory_order_relaxed);
   if (!m_cube || !m_mesh) {
     qDebug() << "No mesh or cube set - nothing to find isosurface of…";
+    m_done.store(true, std::memory_order_release);
     return;
   }
 
@@ -564,6 +625,16 @@ void MeshGenerator::run()
   FlyingEdgesAlgorithmPass2();
   FlyingEdgesAlgorithmPass3();
   FlyingEdgesAlgorithmPass4();
+
+  // The triangle winding (and so the face normals that smoothing computes)
+  // flips when the winding is reversed, so the gradient normals must flip
+  // with it to give the same lighting for any number of smoothing passes.
+  // (The gradient is a true gradient in space, so a mirrored step matrix does
+  // not change its direction; only the triangle winding compensates for it.)
+  if (m_reverseWinding) {
+    for (auto& normal : m_normals)
+      normal = -normal;
+  }
 
   m_mesh->setVertices(m_vertices);
   m_mesh->setNormals(m_normals);
@@ -579,6 +650,9 @@ void MeshGenerator::run()
   cubeCases.resize(0);
   gridEdges.resize(0);
   triCounter.resize(0);
+
+  // Last, so the writes above are ordered before isDone() returns true.
+  m_done.store(true, std::memory_order_release);
 }
 
 void MeshGenerator::clear()

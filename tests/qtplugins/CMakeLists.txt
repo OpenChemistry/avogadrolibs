@@ -14,9 +14,11 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets Test REQUIRED)
 # through avogadroapp's RPC harness instead.
 set(plugins
   AlignTool
+  AutoOpt
   ApplyColors
   Bonding
   ConstraintsExtension
+  CopyPaste
   Crystal
   Editor
   Focus
@@ -68,7 +70,8 @@ foreach(plugin ${scenePlugins})
 endforeach()
 if(haveScenePlugins)
   message(STATUS "Adding scene plugin serialize test.")
-  list(APPEND testSrcs scenepluginserializetest.cpp labelchargetest.cpp)
+  list(APPEND testSrcs scenepluginserializetest.cpp labelchargetest.cpp
+    ballandstickupdatetest.cpp)
   foreach(plugin ${scenePlugins})
     list(APPEND pluginTargets ${plugin})
     get_target_property(pluginDir ${plugin} SOURCE_DIR)
@@ -138,8 +141,10 @@ foreach(plugin ${testNames})
     # measuretooltest.cpp also defines MeasureWidgetTest.
     set(filter "MeasureToolCommandTest.*:MeasureWidgetTest.*")
   elseif(plugin STREQUAL "Surfaces")
-    # surfacestest.cpp also defines SurfacesResolutionTest.
-    set(filter "SurfacesCommandTest.*:SurfacesResolutionTest.*")
+    # surfacestest.cpp also defines SurfacesResolutionTest and
+    # SurfacesDistanceFieldTest and SurfacesSolventExcludedTest.
+    set(filter
+      "SurfacesCommandTest.*:SurfacesResolutionTest.*:SurfacesDistanceFieldTest.*:SurfacesSolventExcludedTest.*")
   else()
     set(filter "${plugin}CommandTest.*")
   endif()
@@ -152,8 +157,16 @@ endforeach()
 
 if(haveGLWidgetTest)
   add_test(NAME "QtPlugins-GLWidgetReentry"
-    COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*")
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=GLWidgetReentryTest.*:GLWidgetCoalesceTest.*:GLWidgetCoordsTest.*")
   set_tests_properties("QtPlugins-GLWidgetReentry" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    TIMEOUT 120)
+endif()
+
+if(haveScenePlugins)
+  add_test(NAME "QtPlugins-BallAndStickUpdate"
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=BallAndStickUpdateTest.*")
+  set_tests_properties("QtPlugins-BallAndStickUpdate" PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
 endif()
@@ -280,4 +293,15 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
     message(STATUS "Skipping fuzz_qtplugin_commands: a plugin target is "
       "missing.")
   endif()
+endif()
+
+if(TARGET Editor)
+  get_target_property(editor_source_dir Editor SOURCE_DIR)
+  add_executable(AvogadroEditorTests editordrawoptionstest.cpp)
+  target_include_directories(AvogadroEditorTests PRIVATE "${editor_source_dir}")
+  target_link_libraries(AvogadroEditorTests PRIVATE Editor Avogadro::QtOpenGL
+    Qt${QT_VERSION}::Test ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  add_test(NAME QtPlugins-EditorDrawOptions COMMAND AvogadroEditorTests)
+  set_tests_properties(QtPlugins-EditorDrawOptions PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endif()

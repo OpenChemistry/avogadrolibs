@@ -10,6 +10,9 @@
 #include <avogadro/core/mesh.h>
 #include <avogadro/core/vector.h>
 
+#include <algorithm>
+#include <vector>
+
 using Avogadro::Vector3f;
 using Avogadro::Core::Array;
 using Avogadro::Core::Color3f;
@@ -85,4 +88,76 @@ TEST_F(MeshTest, assignment)
 
   assertEquals(m_testMesh, assign);
   EXPECT_NE(m_testMesh.lock(), assign.lock());
+}
+
+TEST_F(MeshTest, smoothMatchesReference)
+{
+  // A perturbed grid with a couple of isolated vertices.
+  const int n = 12;
+  Array<Vector3f> vertices;
+  Array<Vector3f> triangles;
+  for (int y = 0; y < n; ++y) {
+    for (int x = 0; x < n; ++x) {
+      float jitter = static_cast<float>((x * 7 + y * 13) % 5) * 0.1f;
+      vertices.push_back(
+        Vector3f(static_cast<float>(x), static_cast<float>(y), jitter));
+    }
+  }
+  vertices.push_back(Vector3f(50.0f, 50.0f, 50.0f)); // isolated
+  for (int y = 0; y + 1 < n; ++y) {
+    for (int x = 0; x + 1 < n; ++x) {
+      float a = static_cast<float>(y * n + x);
+      float b = a + 1.0f;
+      float c = a + static_cast<float>(n);
+      float d = c + 1.0f;
+      triangles.push_back(Vector3f(a, b, c));
+      triangles.push_back(Vector3f(b, d, c));
+    }
+  }
+  Mesh mesh;
+  mesh.setVertices(vertices);
+  mesh.setNormals(Array<Vector3f>(vertices.size(), Vector3f::Zero()));
+  mesh.setTriangles(triangles);
+
+  // Reference: straightforward Jacobi smoothing, same operation order.
+  std::vector<std::vector<size_t>> adj(vertices.size());
+  for (const auto& t : triangles) {
+    size_t i = static_cast<size_t>(t.x());
+    size_t j = static_cast<size_t>(t.y());
+    size_t k = static_cast<size_t>(t.z());
+    adj[i].push_back(j);
+    adj[i].push_back(k);
+    adj[j].push_back(i);
+    adj[j].push_back(k);
+    adj[k].push_back(i);
+    adj[k].push_back(j);
+  }
+  for (auto& v : adj) {
+    std::sort(v.begin(), v.end());
+    v.erase(std::unique(v.begin(), v.end()), v.end());
+  }
+  std::vector<Vector3f> ref(vertices.begin(), vertices.end());
+  for (int iter = 0; iter < 3; ++iter) {
+    std::vector<Vector3f> next = ref;
+    for (size_t i = 0; i < ref.size(); ++i) {
+      if (adj[i].empty())
+        continue;
+      Vector3f sum(0.0f, 0.0f, 0.0f);
+      for (size_t nb : adj[i])
+        sum += ref[nb];
+      sum += 1.0f * ref[i];
+      next[i] = sum / (1.0f + adj[i].size());
+    }
+    ref = next;
+  }
+
+  mesh.smooth(3);
+  ASSERT_EQ(mesh.vertices().size(), ref.size());
+  for (size_t i = 0; i < ref.size(); ++i) {
+    EXPECT_EQ(mesh.vertices()[i].x(), ref[i].x());
+    EXPECT_EQ(mesh.vertices()[i].y(), ref[i].y());
+    EXPECT_EQ(mesh.vertices()[i].z(), ref[i].z());
+  }
+  EXPECT_EQ(mesh.vertices()[vertices.size() - 1].x(), 50.0f);
+  EXPECT_EQ(mesh.normals().size(), ref.size());
 }

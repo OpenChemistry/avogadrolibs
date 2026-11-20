@@ -5,6 +5,9 @@
 
 #include "copypaste.h"
 
+#include "copyasdialog.h"
+
+#include <avogadro/core/stereo.h>
 #include <avogadro/io/cjsonformat.h>
 #include <avogadro/io/fileformatmanager.h>
 #include <avogadro/io/smilesformat.h>
@@ -13,12 +16,14 @@
 #include <avogadro/qtgui/rwmolecule.h>
 
 #include <QtCore/QMimeData>
+#include <QtCore/QSettings>
 
 #include <QAction>
 #include <QtGui/QClipboard>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -26,14 +31,82 @@ namespace Avogadro::QtPlugins {
 
 using namespace Avogadro::QtGui;
 
+namespace {
+
+// Build a molecule from the selected atoms (and the bonds between them) of
+// mol, keeping the per-atom data the clipboard formats can carry.
+std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
+{
+  auto copy = std::make_unique<QtGui::Molecule>();
+
+  // MaxIndex marks an atom that was not copied
+  std::vector<Index> atomIndex(mol.atomCount(), MaxIndex);
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    if (!mol.atomSelected(i))
+      continue;
+    auto a = copy->addAtom(mol.atomicNumber(i));
+    a.setPosition3d(mol.atomPosition3d(i));
+    a.setFormalCharge(mol.formalCharge(i));
+    a.setIsotope(mol.isotope(i));
+    const std::string label = mol.atomLabel(i);
+    if (!label.empty())
+      copy->setAtomLabel(a.index(), label);
+
+    if (Core::atomStereoUnspecified(mol, i))
+      Core::setAtomStereoUnspecified(*copy, a.index());
+
+    // track the index
+    atomIndex[i] = a.index();
+  }
+
+  for (Index i = 0; i < mol.bondCount(); ++i) {
+    Core::Bond bond = mol.bond(i);
+    Index start = bond.atom1().index();
+    Index end = bond.atom2().index();
+    if (atomIndex[start] != MaxIndex && atomIndex[end] != MaxIndex) {
+      Core::Bond newBond =
+        copy->addBond(atomIndex[start], atomIndex[end], bond.order());
+      if (Core::bondStereoUnspecified(mol, i))
+        Core::setBondStereoUnspecified(*copy, newBond.index());
+    }
+  }
+
+  // Residues keep only the selected atoms; PDB-style writers need them.
+  for (Index r = 0; r < mol.residueCount(); ++r) {
+    const Core::Residue& residue = mol.residue(r);
+    std::vector<Core::Atom> kept;
+    for (const Core::Atom& atom : residue.residueAtoms())
+      if (atom.index() < atomIndex.size() &&
+          atomIndex[atom.index()] != MaxIndex)
+        kept.push_back(atom);
+    if (kept.empty())
+      continue;
+
+    std::string name = residue.residueName();
+    Index number = residue.residueId();
+    char chain = residue.chainId();
+    Core::Residue& newResidue = copy->addResidue(name, number, chain);
+    newResidue.setHeterogen(residue.isHeterogen());
+    newResidue.setSecondaryStructure(residue.secondaryStructure());
+    for (const Core::Atom& atom : kept)
+      newResidue.addResidueAtom(residue.atomName(atom),
+                                copy->atom(atomIndex[atom.index()]));
+  }
+
+  return copy;
+}
+
+} // namespace
+
 CopyPaste::CopyPaste(QObject* parent_)
   : Avogadro::QtGui::ExtensionPlugin(parent_), m_pastedFormat(nullptr),
-    m_copyAction(new QAction(tr("Copy"), this)),
+    m_molecule(nullptr), m_copyAction(new QAction(tr("Copy"), this)),
     // don't translate SMILES, InChI, or XYZ
     m_copySMILES(new QAction("SMILES", this)),
     m_copyMappedSMILES(new QAction(tr("Atom Mapped SMILES"), this)),
     m_copyInChI(new QAction("InChI", this)),
     m_copyXYZ(new QAction("XYZ", this)),
+    m_copyOther(new QAction(tr("Other Format…"), this)),
     m_cutAction(new QAction(tr("Cut"), this)),
     m_clearAction(new QAction(tr("Delete"), this)),
     m_pasteAction(new QAction(tr("&Paste"), this))
@@ -66,6 +139,11 @@ CopyPaste::CopyPaste(QObject* parent_)
   m_copyXYZ->setProperty("menu submenu", copyAs);
   connect(m_copyXYZ, SIGNAL(triggered()), SLOT(copyXYZ()));
 
+  // last in the submenu, but above Paste (which is in the Edit menu itself)
+  m_copyOther->setProperty("menu priority", 515);
+  m_copyOther->setProperty("menu submenu", copyAs);
+  connect(m_copyOther, SIGNAL(triggered()), SLOT(copyOther()));
+
   m_pasteAction->setShortcut(QKeySequence::Paste);
   m_pasteAction->setIcon(QIcon::fromTheme("edit-paste"));
   m_pasteAction->setProperty("menu priority", 510);
@@ -86,8 +164,8 @@ QList<QAction*> CopyPaste::actions() const
 {
   QList<QAction*> result;
   return result << m_copyAction << m_copySMILES << m_copyMappedSMILES
-                << m_copyInChI << m_copyXYZ << m_cutAction << m_pasteAction
-                << m_clearAction;
+                << m_copyInChI << m_copyXYZ << m_copyOther << m_cutAction
+                << m_pasteAction << m_clearAction;
 }
 
 QStringList CopyPaste::menuPath(QAction* action) const
@@ -154,6 +232,32 @@ void CopyPaste::copyXYZ()
   delete format;
 }
 
+void CopyPaste::copyOther()
+{
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
+    return;
+
+  const std::vector<CopyAsFormat> formats = CopyAsDialog::availableFormats();
+  if (formats.empty())
+    return;
+
+  QSettings settings;
+  const QString key("copypaste/lastCopyAsFormat");
+  CopyAsDialog dialog(formats, settings.value(key).toString(),
+                      qobject_cast<QWidget*>(this->parent()));
+  if (dialog.exec() != QDialog::Accepted)
+    return;
+
+  const int index = dialog.selectedIndex();
+  if (index < 0 || index >= static_cast<int>(formats.size()))
+    return;
+
+  settings.setValue(key, formats[index].label);
+  std::unique_ptr<Io::FileFormat> format =
+    CopyAsDialog::createFormat(formats[index]);
+  copy(format.get());
+}
+
 bool CopyPaste::copy(Io::FileFormat* format)
 {
   if (m_molecule == nullptr || m_molecule->atomCount() == 0 ||
@@ -161,32 +265,12 @@ bool CopyPaste::copy(Io::FileFormat* format)
     return false;
 
   std::string output;
-  QtGui::Molecule* copy = m_molecule;
+  const QtGui::Molecule* copy = m_molecule;
+  std::unique_ptr<QtGui::Molecule> selection; // owns the copy, if any
 
   if (!m_molecule->isSelectionEmpty()) {
-    // create a copy of the selected atoms only
-    copy = new QtGui::Molecule(m_molecule->parent());
-
-    // go through the selected atoms and add them
-    // make sure to track the new index
-    std::vector<Index> atomIndex(m_molecule->atomCount(), 0);
-    for (Index i = 0; i < m_molecule->atomCount(); ++i)
-      if (m_molecule->atomSelected(i)) {
-        auto a = copy->addAtom(m_molecule->atomicNumber(i));
-        a.setPosition3d(m_molecule->atomPosition3d(i));
-
-        // track the index
-        atomIndex[i] = a.index();
-      }
-
-    for (Index i = 0; i < m_molecule->bondCount(); ++i) {
-      Core::Bond bond = m_molecule->bond(i);
-      Index start = bond.atom1().index();
-      Index end = bond.atom2().index();
-      if (m_molecule->atomSelected(start) && m_molecule->atomSelected(end)) {
-        copy->addBond(atomIndex[start], atomIndex[end], bond.order());
-      }
-    }
+    selection = selectionCopy(*m_molecule);
+    copy = selection.get();
   }
 
   if (!format->writeString(output, *copy)) {
@@ -211,9 +295,6 @@ bool CopyPaste::copy(Io::FileFormat* format)
 
   mimeData->setData("text/plain", outputBA);
   QApplication::clipboard()->setMimeData(mimeData);
-
-  if (!m_molecule->isSelectionEmpty())
-    copy->deleteLater(); // don't leak our copy
 
   return true;
 }

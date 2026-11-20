@@ -20,6 +20,31 @@ using std::sqrt;
 
 namespace {
 
+// The per-axis coordinate tables (in bohr) of a cube whose grid runs along
+// x, y and z. The MO evaluators below are separable per axis, which a skewed
+// cube read from a file is not, so this refuses one (returns false) rather
+// than fill it on the wrong grid. Cubes made for these calculations are
+// axis aligned.
+bool separableGrid(const Avogadro::Core::Cube& cube, Avogadro::Vector3& minBohr,
+                   Avogadro::Vector3& spBohr, std::vector<double>& gridX,
+                   std::vector<double>& gridY, std::vector<double>& gridZ)
+{
+  if (!cube.isAxisAligned())
+    return false;
+  minBohr = cube.min() * Avogadro::ANGSTROM_TO_BOHR;
+  spBohr = cube.spacing() * Avogadro::ANGSTROM_TO_BOHR;
+  gridX.resize(cube.nx());
+  gridY.resize(cube.ny());
+  gridZ.resize(cube.nz());
+  for (int i = 0; i < cube.nx(); ++i)
+    gridX[i] = minBohr.x() + i * spBohr.x();
+  for (int j = 0; j < cube.ny(); ++j)
+    gridY[j] = minBohr.y() + j * spBohr.y();
+  for (int k = 0; k < cube.nz(); ++k)
+    gridZ[k] = minBohr.z() + k * spBohr.z();
+  return true;
+}
+
 // Shell-major grid evaluators with factored exp() and fused MO coefficients.
 // Each function handles the primitive loop and the triple (i,j,k) grid loop
 // for one shell type. The MO coefficient is fused directly, so these
@@ -739,25 +764,34 @@ bool GaussianSetTools::evaluateMOGrid(
     for (int k = 0; k < nz; ++k)
       dz[k] = gridZ[k] - shell.centerBohr[2];
 
-    // Range-clipped index bounds (clipped to slab in x)
-    int imin = std::max(
-      iStart, static_cast<int>(std::floor(
-                (shell.centerBohr[0] - cutoff - minBohr.x()) / spBohr.x())));
-    int imax = std::min(
-      iEnd - 1, static_cast<int>(std::ceil(
-                  (shell.centerBohr[0] + cutoff - minBohr.x()) / spBohr.x())));
-    int jmin = std::max(
-      0, static_cast<int>(std::floor(
-           (shell.centerBohr[1] - cutoff - minBohr.y()) / spBohr.y())));
-    int jmax = std::min(
-      ny - 1, static_cast<int>(std::ceil(
-                (shell.centerBohr[1] + cutoff - minBohr.y()) / spBohr.y())));
-    int kmin = std::max(
-      0, static_cast<int>(std::floor(
-           (shell.centerBohr[2] - cutoff - minBohr.z()) / spBohr.z())));
-    int kmax = std::min(
-      nz - 1, static_cast<int>(std::ceil(
-                (shell.centerBohr[2] + cutoff - minBohr.z()) / spBohr.z())));
+    // Range-clipped index bounds (clipped to slab in x). The spacing may be
+    // negative, which swaps the two bounds, so they are ordered first and
+    // clamped in double before the int conversion.
+    auto axisBounds = [cutoff](double center, double minimum, double spacing,
+                               int& lo, int& hi) {
+      constexpr double limit = 1.0e9;
+      double a = (center - cutoff - minimum) / spacing;
+      double b = (center + cutoff - minimum) / spacing;
+      if (!std::isfinite(a) || !std::isfinite(b)) {
+        lo = 1;
+        hi = 0; // empty
+        return;
+      }
+      if (a > b)
+        std::swap(a, b);
+      lo = static_cast<int>(std::floor(std::clamp(a, -limit, limit)));
+      hi = static_cast<int>(std::ceil(std::clamp(b, -limit, limit)));
+    };
+    int imin, imax, jmin, jmax, kmin, kmax;
+    axisBounds(shell.centerBohr[0], minBohr.x(), spBohr.x(), imin, imax);
+    axisBounds(shell.centerBohr[1], minBohr.y(), spBohr.y(), jmin, jmax);
+    axisBounds(shell.centerBohr[2], minBohr.z(), spBohr.z(), kmin, kmax);
+    imin = std::max(iStart, imin);
+    imax = std::min(iEnd - 1, imax);
+    jmin = std::max(0, jmin);
+    jmax = std::min(ny - 1, jmax);
+    kmin = std::max(0, kmin);
+    kmax = std::min(nz - 1, kmax);
 
     if (imin > imax || jmin > jmax || kmin > kmax)
       continue;
@@ -826,16 +860,10 @@ bool GaussianSetTools::calculateMolecularOrbitalSlab(Cube& cube, int moNumber,
   if (iStart >= iEnd)
     return true;
 
-  Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
-  Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
-
-  std::vector<double> gridX(nx), gridY(ny), gridZ(nz);
-  for (int i = 0; i < nx; ++i)
-    gridX[i] = minBohr.x() + i * spBohr.x();
-  for (int j = 0; j < ny; ++j)
-    gridY[j] = minBohr.y() + j * spBohr.y();
-  for (int k = 0; k < nz; ++k)
-    gridZ[k] = minBohr.z() + k * spBohr.z();
+  Vector3 minBohr, spBohr;
+  std::vector<double> gridX, gridY, gridZ;
+  if (!separableGrid(cube, minBohr, spBohr, gridX, gridY, gridZ))
+    return false;
 
   // Slab buffer: indexed by global i via (i - iStart) inside the shell
   // evaluators
@@ -987,16 +1015,10 @@ bool GaussianSetTools::calculateElectronDensitySlab(Cube& cube, int iStart,
 
   const size_t slabSize = static_cast<size_t>(iEnd - iStart) * ny * nz;
 
-  Vector3 minBohr = cube.min() * ANGSTROM_TO_BOHR;
-  Vector3 spBohr = cube.spacing() * ANGSTROM_TO_BOHR;
-
-  std::vector<double> gridX(nx), gridY(ny), gridZ(nz);
-  for (int i = 0; i < nx; ++i)
-    gridX[i] = minBohr.x() + i * spBohr.x();
-  for (int j = 0; j < ny; ++j)
-    gridY[j] = minBohr.y() + j * spBohr.y();
-  for (int k = 0; k < nz; ++k)
-    gridZ[k] = minBohr.z() + k * spBohr.z();
+  Vector3 minBohr, spBohr;
+  std::vector<double> gridX, gridY, gridZ;
+  if (!separableGrid(cube, minBohr, spBohr, gridX, gridY, gridZ))
+    return false;
 
   std::vector<double> density(slabSize, 0.0);
   std::vector<double> moGrid(slabSize);

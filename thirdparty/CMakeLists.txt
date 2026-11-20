@@ -1,5 +1,8 @@
 if(NOT TARGET gif-h)
-  add_library(gif-h INTERFACE IMPORTED GLOBAL)
+  add_library(gif-h INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS gif-h EXPORT AvogadroLibsTargets)
+  endif()
   target_include_directories(gif-h INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gif-h>)
 endif(NOT TARGET gif-h)
@@ -10,7 +13,10 @@ if (USE_QT)
   if(USE_EXTERNAL_TOMLPLUSPLUS)
     find_package(tomlplusplus 3.4.0 REQUIRED GLOBAL)
   else()
-    add_library(tomlplusplus INTERFACE IMPORTED GLOBAL)
+    add_library(tomlplusplus INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS tomlplusplus EXPORT AvogadroLibsTargets)
+  endif()
     target_include_directories(tomlplusplus
       INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
     add_library(tomlplusplus::tomlplusplus ALIAS tomlplusplus)
@@ -20,7 +26,10 @@ endif()
 if(USE_EXTERNAL_NLOHMANN)
   find_package(nlohmann_json 3.3.0 REQUIRED GLOBAL)
 else()
-  add_library(nlohmann_json INTERFACE IMPORTED GLOBAL)
+  add_library(nlohmann_json INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS nlohmann_json EXPORT AvogadroLibsTargets)
+  endif()
   target_include_directories(nlohmann_json
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
   add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
@@ -43,6 +52,23 @@ else()
   add_library(FastFloat::fast_float ALIAS fast_float)
 endif(USE_EXTERNAL_FASTFLOAT)
 
+if(USE_EXTERNAL_GEMMI)
+  # Untested: relies on upstream's exported gemmi::headers target.
+  find_package(gemmi CONFIG REQUIRED GLOBAL)
+  add_library(gemmi_cif INTERFACE)
+  target_link_libraries(gemmi_cif INTERFACE gemmi::headers)
+  add_library(gemmi::cif ALIAS gemmi_cif)
+else()
+  # Header-only CIF tokenizer, see gemmi/README.md
+  add_library(gemmi_cif INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS gemmi_cif EXPORT AvogadroLibsTargets)
+  endif()
+  target_include_directories(gemmi_cif SYSTEM
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gemmi/include>)
+  add_library(gemmi::cif ALIAS gemmi_cif)
+endif(USE_EXTERNAL_GEMMI)
+
 if(USE_EXTERNAL_PUGIXML)
   find_package(pugixml 1.12 REQUIRED GLOBAL)
 else()
@@ -56,7 +82,7 @@ else()
   # link them too -- and install(EXPORT) refuses to generate at all if one of
   # them is in no export set. A shared build absorbs them and needs none of
   # this, which is why BUILD_SHARED_LIBS=OFF did not configure before.
-  if(NOT BUILD_SHARED_LIBS)
+  if(NOT BUILD_SHARED_LIBS AND NOT SKBUILD)
     install(TARGETS pugixml EXPORT "AvogadroLibsTargets"
       ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
   endif()
@@ -74,7 +100,7 @@ else()
   set_target_properties(struct PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
   target_include_directories(struct PUBLIC $<BUILD_INTERFACE:${_STRUCT_ROOT}>)
   # See the pugixml block above.
-  if(NOT BUILD_SHARED_LIBS)
+  if(NOT BUILD_SHARED_LIBS AND NOT SKBUILD)
     install(TARGETS struct EXPORT "AvogadroLibsTargets"
       ARCHIVE DESTINATION "${INSTALL_ARCHIVE_DIR}")
   endif()
@@ -82,13 +108,19 @@ else()
 endif(USE_EXTERNAL_STRUCT)
 
 if(NOT TARGET cppoptlib)
-  add_library(cppoptlib INTERFACE IMPORTED GLOBAL)
+  add_library(cppoptlib INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS cppoptlib EXPORT AvogadroLibsTargets)
+  endif()
   target_include_directories(cppoptlib INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/cppoptlib/include>)
 endif(NOT TARGET cppoptlib)
 
 if(NOT TARGET tinycolormap)
-  add_library(tinycolormap INTERFACE IMPORTED GLOBAL)
+  add_library(tinycolormap INTERFACE)
+  if(NOT SKBUILD AND (NOT BUILD_SHARED_LIBS OR BUILD_STATIC_PLUGINS))
+    install(TARGETS tinycolormap EXPORT AvogadroLibsTargets)
+  endif()
   target_include_directories(tinycolormap INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tinycolormap/include>)
 endif(NOT TARGET tinycolormap)

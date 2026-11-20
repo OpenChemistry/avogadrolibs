@@ -41,6 +41,7 @@ class CSVRThermostat;
 class AutoOpt : public QtGui::ToolPlugin
 {
   Q_OBJECT
+  Q_PROPERTY(bool running READ running NOTIFY runningChanged)
 public:
   explicit AutoOpt(QObject* parent_ = nullptr);
   ~AutoOpt() override;
@@ -71,6 +72,12 @@ public:
   QUndoCommand* keyPressEvent(QKeyEvent* e) override;
 
   void draw(Rendering::GroupNode& node) override;
+  bool running() const { return m_running; }
+  bool handleCommand(const QString& command,
+                     const QVariantMap& options) override;
+
+signals:
+  void runningChanged();
 
 public slots:
   void startStop();

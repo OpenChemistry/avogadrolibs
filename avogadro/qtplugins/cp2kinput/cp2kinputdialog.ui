@@ -113,6 +113,9 @@
          <property name="text">
           <string>Filename Base:</string>
          </property>
+         <property name="buddy">
+          <cstring>baseNameEdit</cstring>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -214,6 +217,9 @@
            <property name="text">
             <string>Functional</string>
            </property>
+           <property name="buddy">
+            <cstring>functionalCombo</cstring>
+           </property>
           </widget>
          </item>
          <item>
@@ -263,6 +269,9 @@
          <property name="text">
           <string>FF Emax Spline Spin</string>
          </property>
+         <property name="buddy">
+          <cstring>emaxSplineSpin</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -303,6 +312,9 @@
          <property name="text">
           <string>FF RCUT NB</string>
          </property>
+         <property name="buddy">
+          <cstring>rcutnbSplineSpin</cstring>
+         </property>
         </widget>
        </item>
        <item row="1" column="1">
@@ -340,6 +352,9 @@
          <property name="text">
           <string>Poisson EWALD type</string>
          </property>
+         <property name="buddy">
+          <cstring>ewaldtypeCombo</cstring>
+         </property>
         </widget>
        </item>
        <item row="2" column="1">
@@ -366,6 +381,9 @@
         <widget class="QLabel" name="label_11">
          <property name="text">
           <string>Poisson EWALD Alpha</string>
+         </property>
+         <property name="buddy">
+          <cstring>ewaldalphaSpin</cstring>
          </property>
         </widget>
        </item>
@@ -397,6 +415,9 @@
         <widget class="QLabel" name="label_23">
          <property name="text">
           <string>Poisson EWALD GMAX</string>
+         </property>
+         <property name="buddy">
+          <cstring>ewaldgmaxSpin</cstring>
          </property>
         </widget>
        </item>
@@ -439,6 +460,9 @@
          <property name="text">
           <string>LSD</string>
          </property>
+         <property name="buddy">
+          <cstring>lsdcheckBox</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -469,6 +493,9 @@
         <widget class="QLabel" name="label_12">
          <property name="text">
           <string>MAX SCF</string>
+         </property>
+         <property name="buddy">
+          <cstring>maxscfspinBox</cstring>
          </property>
         </widget>
        </item>
@@ -503,6 +530,9 @@
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>EPS SCF</string>
+         </property>
+         <property name="buddy">
+          <cstring>epsscfSpinBox</cstring>
          </property>
         </widget>
        </item>
@@ -541,6 +571,9 @@
          <property name="text">
           <string>SCF GUESS</string>
          </property>
+         <property name="buddy">
+          <cstring>scfguessComboBox</cstring>
+         </property>
         </widget>
        </item>
        <item row="3" column="1">
@@ -567,6 +600,9 @@
         <widget class="QLabel" name="label_24">
          <property name="text">
           <string>OUTER MAX SCF</string>
+         </property>
+         <property name="buddy">
+          <cstring>outerMaxscfSpinBox</cstring>
          </property>
         </widget>
        </item>
@@ -601,6 +637,9 @@
         <widget class="QLabel" name="label_25">
          <property name="text">
           <string>OUTER EPS SCF</string>
+         </property>
+         <property name="buddy">
+          <cstring>outerEpsscfSpinBox</cstring>
          </property>
         </widget>
        </item>
@@ -638,6 +677,9 @@
         <widget class="QLabel" name="label_26">
          <property name="text">
           <string>OT T MINIMIZER</string>
+         </property>
+         <property name="buddy">
+          <cstring>otminimizerComboBox</cstring>
          </property>
         </widget>
        </item>

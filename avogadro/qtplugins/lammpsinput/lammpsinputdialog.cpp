@@ -143,9 +143,14 @@ void LammpsInputDialog::updatePreviewText()
     QString message =
       tr("Would you like to update the preview text, losing all "
          "changes made in the Lammps input deck preview pane?");
+    // The message box runs a nested event loop; don't stack prompts.
+    if (m_promptingOverwrite)
+      return;
+    m_promptingOverwrite = true;
     int response = QMessageBox::question(
       this, tr("Overwrite modified input files?"), message,
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    m_promptingOverwrite = false;
 
     if (static_cast<QMessageBox::StandardButton>(response) == QMessageBox::No) {
       return;

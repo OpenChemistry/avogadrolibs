@@ -4,6 +4,8 @@ avogadro_headers(Calc
   chargemodel.h
   chargemanager.h
   defaultmodel.h
+  eeqdata.h
+  eeqmodel.h
   energycalculator.h
   energyoptimizer.h
   energymanager.h
@@ -17,6 +19,7 @@ target_sources(Calc PRIVATE
   chargemodel.cpp
   chargemanager.cpp
   defaultmodel.cpp
+  eeqmodel.cpp
   energycalculator.cpp
   energyoptimizer.cpp
   energymanager.cpp
@@ -26,6 +29,8 @@ target_sources(Calc PRIVATE
 
 avogadro_add_library(Calc)
 
+find_package(Threads REQUIRED)
+
 target_link_libraries(Calc
   PUBLIC Avogadro::Core
-  PRIVATE cppoptlib)
+  PRIVATE cppoptlib Threads::Threads)

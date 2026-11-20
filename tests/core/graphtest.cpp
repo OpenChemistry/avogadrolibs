@@ -137,6 +137,21 @@ TEST(GraphTest, removeEdgesRemovesAllIncidentEdges)
   EXPECT_EQ(graph.degree(3), static_cast<size_t>(0));
 }
 
+TEST(GraphTest, degree)
+{
+  Graph graph(4);
+  graph.addEdge(0, 1);
+  graph.addEdge(0, 2);
+  graph.addEdge(0, 3);
+
+  EXPECT_EQ(graph.degree(0), static_cast<size_t>(3));
+  EXPECT_EQ(graph.degree(1), static_cast<size_t>(1));
+  EXPECT_EQ(graph.degree(3), static_cast<size_t>(1));
+  // Out-of-range indices have no neighbors.
+  EXPECT_EQ(graph.degree(4), static_cast<size_t>(0));
+  EXPECT_EQ(graph.degree(100), static_cast<size_t>(0));
+}
+
 TEST(GraphTest, edgeCount)
 {
   Graph graph(3);

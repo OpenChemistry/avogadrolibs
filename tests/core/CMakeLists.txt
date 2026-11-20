@@ -11,6 +11,8 @@ set(tests
   Bond
   BondOrderPerception
   Color3f
+  BondState
+  Column
   Constraint
   ContrastColor
   ConformerQuantity

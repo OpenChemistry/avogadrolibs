@@ -529,7 +529,9 @@ std::pair<size_t, size_t> Graph::endpoints(size_t index) const
 
 size_t Graph::degree(size_t index) const
 {
-  return neighbors(index).size();
+  if (index >= m_adjacencyList.size())
+    return 0;
+  return m_adjacencyList[index].size();
 }
 
 bool Graph::containsEdge(size_t a, size_t b) const

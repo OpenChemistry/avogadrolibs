@@ -47,6 +47,9 @@
          <property name="text">
           <string>Symmetrically equivalent atoms:</string>
          </property>
+         <property name="buddy">
+          <cstring>equivalenceTree</cstring>
+         </property>
         </widget>
        </item>
        <item>
@@ -114,6 +117,9 @@
          <property name="text">
           <string>Symmetry elements:</string>
          </property>
+         <property name="buddy">
+          <cstring>operationsTable</cstring>
+         </property>
         </widget>
        </item>
        <item>
@@ -149,6 +155,9 @@
         <widget class="QLabel" name="subgroupsLabel">
          <property name="text">
           <string>Subgroups:</string>
+         </property>
+         <property name="buddy">
+          <cstring>subgroupsTree</cstring>
          </property>
         </widget>
        </item>
@@ -212,6 +221,9 @@
       <widget class="QLabel" name="toleranceLabel">
        <property name="text">
         <string>Tolerance:</string>
+       </property>
+       <property name="buddy">
+        <cstring>toleranceCombo</cstring>
        </property>
       </widget>
      </item>

@@ -224,6 +224,8 @@ private:
 
   Ui::InputGeneratorWidget* m_ui;
   bool m_updatePending;
+  /** True while the overwrite prompt is open (blocks nested prompts). */
+  bool m_promptingOverwrite = false;
   QList<QTextEdit*> m_dirtyTextEdits;
   QtGui::InterfaceScript m_inputGenerator;
 };
