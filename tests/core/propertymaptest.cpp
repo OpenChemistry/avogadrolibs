@@ -192,3 +192,34 @@ TEST(PropertyMapTest, eraseAndInsertOnEmptyMap)
   map.insertEntry(0, saved, 1);
   EXPECT_TRUE(map.empty());
 }
+
+TEST(PropertyMapTest, insertEntryShiftsColumnsMissingFromSaved)
+{
+  const Avogadro::Index count = 4; // entities after the insertion
+  PropertyMap map;
+  for (Avogadro::Index k = 0; k < 3; ++k) {
+    map.setDouble("d", k, static_cast<double>(k));
+    map.setInt("i", k, static_cast<int>(k));
+    map.setString("s", k, std::to_string(k));
+  }
+  // Stops before index 2, so there is nothing to shift.
+  map.setDouble("short", 0, 7.0);
+
+  map.insertEntry(2, PropertyMap(), count);
+
+  for (Avogadro::Index k : { 0, 1 }) {
+    EXPECT_EQ(map.getDouble("d", k), static_cast<double>(k));
+    EXPECT_EQ(map.getInt("i", k), static_cast<int>(k));
+    EXPECT_EQ(map.getString("s", k), std::to_string(k));
+  }
+  // The new entity is unset; the old third entity is now the fourth.
+  EXPECT_FALSE(map.getDouble("d", 2).has_value());
+  EXPECT_FALSE(map.getInt("i", 2).has_value());
+  EXPECT_FALSE(map.getString("s", 2).has_value());
+  EXPECT_EQ(map.getDouble("d", 3), 2.0);
+  EXPECT_EQ(map.getInt("i", 3), 2);
+  EXPECT_EQ(map.getString("s", 3), "2");
+
+  EXPECT_EQ(map.doubles("short").size(), static_cast<size_t>(1));
+  EXPECT_EQ(map.getDouble("short", 0), 7.0);
+}

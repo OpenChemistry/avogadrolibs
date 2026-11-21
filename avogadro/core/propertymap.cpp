@@ -400,16 +400,22 @@ void PropertyMap::eraseEntry(Index index, Index entityCount)
 void PropertyMap::insertEntry(Index index, const PropertyMap& saved,
                               Index entityCount)
 {
-  auto insertDense = [index, entityCount](auto& columns, const auto& savedMap) {
-    for (const auto& kv : savedMap) {
-      auto it = columns.find(kv.first);
-      if (it != columns.end())
-        it->second.insertEntry(index, kv.second, entityCount);
+  // Every existing column shifts, including those @p saved has no entry for
+  // (a column added after the slice, or an empty @p saved): the entity gets
+  // the "unset" value there.
+  auto insertDense = [index, entityCount](auto& columns, const auto& savedMap,
+                                          const auto& sentinel) {
+    for (auto& kv : columns) {
+      auto it = savedMap.find(kv.first);
+      if (it != savedMap.end())
+        kv.second.insertEntry(index, it->second, entityCount);
+      else
+        kv.second.insertValue(index, sentinel, entityCount);
     }
   };
-  insertDense(m_doubles, saved.m_doubles);
-  insertDense(m_ints, saved.m_ints);
-  insertDense(m_strings, saved.m_strings);
+  insertDense(m_doubles, saved.m_doubles, doubleSentinel);
+  insertDense(m_ints, saved.m_ints, intSentinel);
+  insertDense(m_strings, saved.m_strings, std::string());
 
   for (auto& kv : m_matrices) {
     std::unordered_map<Index, MatrixX> shifted;

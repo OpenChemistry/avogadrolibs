@@ -5777,3 +5777,31 @@ TEST(MoleculeResidueTest, insertResidueUndoesRemoveResidue)
   EXPECT_EQ(mol.residueCount(), 4u);
   EXPECT_EQ(mol.residueLabel(3), "");
 }
+
+TEST(MoleculeResidueTest, insertResidueWithDefaultPropertiesKeepsAlignment)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+  for (Index r = 0; r < 3; ++r) {
+    mol.residueProperties().setInt("count", r, static_cast<int>(r + 1));
+    mol.residueProperties().setString("tag", r, "t" + std::to_string(r + 1));
+  }
+  const Avogadro::Core::Residue added = mol.residue(0);
+
+  // No saved properties: the new residue has none, the others keep theirs.
+  ASSERT_TRUE(mol.insertResidue(1, added));
+
+  ASSERT_EQ(mol.residueCount(), 4u);
+  const auto& props = mol.residueProperties();
+  EXPECT_FALSE(props.getDouble("value", 1).has_value());
+  EXPECT_FALSE(props.getInt("count", 1).has_value());
+  EXPECT_FALSE(props.getString("tag", 1).has_value());
+  const Index original[] = { 0, 2, 3 };
+  for (Index r = 0; r < 3; ++r) {
+    const Index now = original[r];
+    EXPECT_EQ(props.getDouble("value", now), 10.0 * (r + 1));
+    EXPECT_EQ(props.getInt("count", now), static_cast<int>(r + 1));
+    EXPECT_EQ(props.getString("tag", now), "t" + std::to_string(r + 1));
+    EXPECT_EQ(mol.residueLabel(now), "label" + std::to_string(r + 1));
+  }
+}

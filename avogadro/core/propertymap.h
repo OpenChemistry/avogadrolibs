@@ -204,7 +204,9 @@ public:
    * Undo eraseEntry(@p index, ...) given @p saved = slice(@p index, ...)
    * taken just before it: entries at and above @p index shift up by one and
    * the saved values go into @p index. @p entityCount is the count after the
-   * restoration. Same name and meaning as Column::insertEntry().
+   * restoration. Same name and meaning as Column::insertEntry(). Dense
+   * columns @p saved has no entry for are shifted too, the entity getting
+   * the unset value; a column that does not reach @p index is untouched.
    */
   void insertEntry(Index index, const PropertyMap& saved, Index entityCount);
 

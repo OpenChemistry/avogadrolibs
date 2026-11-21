@@ -203,6 +203,22 @@ public:
   }
 
   /**
+   * Insert @p value as the entry of entity @p index, shifting the entries
+   * above it up by one, for an entity that has nothing saved to restore (the
+   * counterpart of insertEntry() when only the order must be kept). @p count
+   * is the number of entities after the insertion. A column that does not
+   * reach @p index has no entries to shift and is left alone, so its length
+   * does not grow.
+   */
+  void insertValue(Index index, const T& value, Index count)
+  {
+    if (index >= m_values.size())
+      return;
+    m_values.insert(m_values.begin() + index, value);
+    trimTo(count);
+  }
+
+  /**
    * Drop every entry for an entity at or past @p count. A Column never holds
    * such entries through its own functions, but a caller that writes to
    * array() directly can leave them.

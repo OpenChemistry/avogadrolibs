@@ -325,3 +325,24 @@ TEST(ColumnTest, insertEntryIgnoresAnEmptySlice)
   column.insertEntry(0, Column<std::string>(), 2);
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a" }));
 }
+
+TEST(ColumnTest, insertValueShiftsTheEntriesAbove)
+{
+  auto column = makeLabels({ "a", "b", "c" });
+  column.insertValue(1, "x", 4);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "x", "b", "c" }));
+  // Entries past the new count belong to no entity and are dropped.
+  column.insertValue(0, "y", 4);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "y", "a", "x", "b" }));
+}
+
+TEST(ColumnTest, insertValueLeavesAShortColumnAlone)
+{
+  auto column = makeLabels({ "a", "b" });
+  column.insertValue(2, "x", 4);
+  column.insertValue(3, "x", 4);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b" }));
+  Column<std::string> empty;
+  empty.insertValue(0, "x", 1);
+  EXPECT_TRUE(empty.empty());
+}
