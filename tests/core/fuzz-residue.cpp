@@ -104,22 +104,23 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
     Residue& res = mol.residue(ri);
 
     switch (fdp.ConsumeIntegral<uint8_t>() % 10) {
-      case 0: { // atomByName with known name
+      case 0: { // atomIndexByName with known name
         std::string name =
           kBackboneNames[fdp.ConsumeIntegral<uint8_t>() % kNumBackboneNames];
-        Atom a = res.atomByName(name);
+        Atom a = mol.atom(res.atomIndexByName(name));
         (void)a.isValid();
         break;
       }
-      case 1: { // atomByName with random name
+      case 1: { // atomIndexByName with random name
         std::string name = fdp.ConsumeRandomLengthString(kMaxNameLen);
-        Atom a = res.atomByName(name);
+        Atom a = mol.atom(res.atomIndexByName(name));
         (void)a.isValid();
         break;
       }
-      case 2: { // residueAtoms
-        auto atoms = res.residueAtoms();
+      case 2: { // atomIndices and atomIndexMap
+        auto atoms = res.atomIndices();
         (void)atoms.size();
+        (void)res.atomIndexMap().size();
         break;
       }
       case 3: { // hasAtomByIndex
@@ -178,7 +179,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
     (void)res.secondaryStructure();
     (void)res.isHeterogen();
     (void)res.color();
-    (void)res.residueAtoms();
+    (void)res.atomIndices();
   }
 
   return 0;

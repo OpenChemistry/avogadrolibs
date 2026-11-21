@@ -568,8 +568,8 @@ void ApplyColors::applyCustomColorResidue(const QColor& new_color)
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection) {
-      auto caAtom = residue.atomByName("CA");
-      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+      const Index caIndex = residue.atomIndexByName("CA");
+      if (caIndex == MaxIndex || !m_molecule->atomSelected(caIndex))
         continue;
     }
 
@@ -592,8 +592,8 @@ void ApplyColors::resetColorsResidue()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection) {
-      auto caAtom = residue.atomByName("CA");
-      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+      const Index caIndex = residue.atomIndexByName("CA");
+      if (caIndex == MaxIndex || !m_molecule->atomSelected(caIndex))
         continue;
     }
 
@@ -626,8 +626,8 @@ void ApplyColors::applySecondaryStructureColors()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection) {
-      auto caAtom = residue.atomByName("CA");
-      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+      const Index caIndex = residue.atomIndexByName("CA");
+      if (caIndex == MaxIndex || !m_molecule->atomSelected(caIndex))
         continue;
     }
 
@@ -714,8 +714,8 @@ void ApplyColors::applyAminoColors()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection) {
-      auto caAtom = residue.atomByName("CA");
-      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+      const Index caIndex = residue.atomIndexByName("CA");
+      if (caIndex == MaxIndex || !m_molecule->atomSelected(caIndex))
         continue;
     }
 
@@ -741,8 +741,8 @@ void ApplyColors::applyShapelyColors()
     // if there's a selection and this residue isn't selected, skip it
     auto& residue = m_molecule->residue(i);
     if (isSelection) {
-      auto caAtom = residue.atomByName("CA");
-      if (!caAtom.isValid() || !m_molecule->atomSelected(caAtom.index()))
+      const Index caIndex = residue.atomIndexByName("CA");
+      if (caIndex == MaxIndex || !m_molecule->atomSelected(caIndex))
         continue;
     }
 

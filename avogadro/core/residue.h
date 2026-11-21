@@ -13,6 +13,7 @@
 #include <limits>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "vector.h"
 
@@ -82,11 +83,35 @@ public:
   /** Adds an atom to the residue class */
   void addResidueAtom(const std::string& name, const Atom& atom);
 
-  /** \return a vector containing the atoms added to the residue */
-  std::vector<Atom> residueAtoms() const;
+  /**
+   * \return the indices of the atoms in the residue, sorted ascending, one
+   * per atom name
+   */
+  std::vector<Index> atomIndices() const;
 
-  /** \return the atom map for the residue */
-  AtomNameMap& atomNameMap() { return m_atomNameMap; }
+  /**
+   * \return the index of the atom with the name specified (e.g., "CA"), or
+   * MaxIndex if the residue has no such atom
+   */
+  Index atomIndexByName(const std::string& name) const;
+
+  /** \return a copy of the residue's map from atom name to atom index */
+  std::map<std::string, Index> atomIndexMap() const;
+
+  /**
+   * \return a vector containing the atoms added to the residue
+   * \deprecated Use atomIndices(), and Molecule::atom() if a proxy is needed.
+   */
+  [[deprecated("Use atomIndices()")]] std::vector<Atom> residueAtoms() const;
+
+  /**
+   * \return the atom map for the residue
+   * \deprecated Use atomIndexMap().
+   */
+  [[deprecated("Use atomIndexMap()")]] AtomNameMap& atomNameMap()
+  {
+    return m_atomNameMap;
+  }
 
   /** Sets bonds to atoms in the residue based on data from residuedata header
    */
@@ -94,8 +119,10 @@ public:
 
   /**
    * \return the atom with the name specified (e.g., "CA")
+   * \deprecated Use atomIndexByName(), and Molecule::atom() for a proxy.
    */
-  Atom atomByName(std::string name) const;
+  [[deprecated("Use atomIndexByName()")]] Atom atomByName(
+    std::string name) const;
   /**
    * \return the atomic number of the atom with the name specified (e.g., "CA" =
    * "C")
@@ -113,8 +140,10 @@ public:
 
   /**
    * \return the name of @p atom or an empty string if not in this residue
+   * \deprecated Use atomName(Index) with atom.index().
    */
-  std::string atomName(const Atom atom) const;
+  [[deprecated("Use atomName(Index)")]] std::string atomName(
+    const Atom atom) const;
 
   /**
    * \return the name of atom @p index or an empty string if not in this residue
@@ -139,6 +168,9 @@ public:
   Vector3ub color() const;
 
 protected:
+  // Molecule repoints and remaps the proxies when atoms move or go.
+  friend class Molecule;
+
   std::string m_residueName;
   Index m_residueId = std::numeric_limits<Index>::max();
   char m_chainId = 'A';

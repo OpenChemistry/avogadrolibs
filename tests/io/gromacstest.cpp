@@ -89,11 +89,11 @@ TEST(GromacsTest, residueAtomNamesAndElements)
   const Residue& residue = molecule.residues()[0];
   EXPECT_EQ(residue.residueName(), "CYS");
 
-  auto ca = residue.atomByName("CA");
-  auto hg = residue.atomByName("HG");
-  auto sg = residue.atomByName("SG");
-  auto hb1 = residue.atomByName("HB1");
-  auto n = residue.atomByName("N");
+  auto ca = molecule.atom(residue.atomIndexByName("CA"));
+  auto hg = molecule.atom(residue.atomIndexByName("HG"));
+  auto sg = molecule.atom(residue.atomIndexByName("SG"));
+  auto hb1 = molecule.atom(residue.atomIndexByName("HB1"));
+  auto n = molecule.atom(residue.atomIndexByName("N"));
   ASSERT_TRUE(ca.isValid());
   ASSERT_TRUE(hg.isValid());
   ASSERT_TRUE(sg.isValid());
@@ -104,8 +104,8 @@ TEST(GromacsTest, residueAtomNamesAndElements)
   EXPECT_EQ(sg.atomicNumber(), 16);
   EXPECT_EQ(hb1.atomicNumber(), 1);
   EXPECT_EQ(n.atomicNumber(), 7);
-  EXPECT_EQ(residue.atomName(ca), "CA");
-  EXPECT_EQ(residue.atomName(hb1), "HB1");
+  EXPECT_EQ(residue.atomName(ca.index()), "CA");
+  EXPECT_EQ(residue.atomName(hb1.index()), "HB1");
 
   EXPECT_TRUE(molecule.bond(n, ca).isValid());
   EXPECT_TRUE(molecule.bond(ca, molecule.atom(6)).isValid()); // CA-CB
@@ -191,10 +191,10 @@ TEST(GromacsTest, proteinBoxFile)
 
   const Residue& first = molecule.residues()[0];
   EXPECT_EQ(first.residueName(), "CYS");
-  auto ca = first.atomByName("CA");
+  auto ca = molecule.atom(first.atomIndexByName("CA"));
   ASSERT_TRUE(ca.isValid());
   EXPECT_EQ(ca.atomicNumber(), 6);
-  EXPECT_EQ(first.atomName(ca), "CA");
+  EXPECT_EQ(first.atomName(ca.index()), "CA");
 
   // 20 peptides of 93 atoms, each a tree of 92 bonds, would give 1840 bonds
   // in 20 molecules. Known artifact of this file: Packmol left HG (atom 662)

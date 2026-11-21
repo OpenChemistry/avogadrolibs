@@ -114,6 +114,67 @@ TEST(PropertyMapTest, sliceAndRestoreRoundTrip)
   }
 }
 
+TEST(PropertyMapTest, eraseEntryKeepsTheOrder)
+{
+  const Avogadro::Index count = 4;
+  PropertyMap map;
+  for (Avogadro::Index k = 0; k < count; ++k)
+    map.setDouble("d", k, static_cast<double>(k));
+  for (Avogadro::Index k : { 1, 3 }) {
+    Avogadro::MatrixX m(1, 1);
+    m(0, 0) = 100.0 + static_cast<double>(k);
+    map.setMatrix("m", k, m);
+  }
+
+  map.eraseEntry(1, count);
+  // The later entities move down by one; the last is not swapped in.
+  ASSERT_EQ(map.doubles("d").size(), static_cast<size_t>(3));
+  EXPECT_EQ(map.getDouble("d", 0), 0.0);
+  EXPECT_EQ(map.getDouble("d", 1), 2.0);
+  EXPECT_EQ(map.getDouble("d", 2), 3.0);
+  EXPECT_FALSE(map.hasMatrix("m", 0));
+  EXPECT_FALSE(map.hasMatrix("m", 1));
+  EXPECT_FALSE(map.hasMatrix("m", 3));
+  ASSERT_TRUE(map.hasMatrix("m", 2));
+  EXPECT_EQ((*map.getMatrix("m", 2))(0, 0), 103.0);
+}
+
+TEST(PropertyMapTest, sliceEraseAndInsertRoundTrip)
+{
+  const Avogadro::Index count = 5;
+  PropertyMap map;
+  for (Avogadro::Index k = 0; k < count; ++k)
+    map.setDouble("d", k, 1.5 * static_cast<double>(k));
+  for (Avogadro::Index k = 0; k < 3; ++k)
+    map.setInt("i", k, 10 + static_cast<int>(k));
+  map.setString("s", 0, "zero");
+  for (Avogadro::Index k : { 1, 4 }) {
+    Avogadro::MatrixX m(1, 1);
+    m(0, 0) = 100.0 + static_cast<double>(k);
+    map.setMatrix("m", k, m);
+  }
+
+  for (Avogadro::Index index = 0; index < count; ++index) {
+    SCOPED_TRACE("index " + std::to_string(index));
+    PropertyMap work = map;
+    const PropertyMap saved = work.slice(index, count);
+    work.eraseEntry(index, count);
+    work.insertEntry(index, saved, count);
+    expectSameProperties(map, work, count);
+  }
+
+  // Taking out several, the way removing an atom can, and putting them back
+  // in ascending order.
+  PropertyMap work = map;
+  const PropertyMap first = work.slice(1, count);
+  const PropertyMap second = work.slice(3, count);
+  work.eraseEntry(3, count);
+  work.eraseEntry(1, count - 1);
+  work.insertEntry(1, first, count - 1);
+  work.insertEntry(3, second, count);
+  expectSameProperties(map, work, count);
+}
+
 TEST(PropertyMapTest, sliceAndRestoreOnEmptyMap)
 {
   PropertyMap map;
@@ -121,4 +182,44 @@ TEST(PropertyMapTest, sliceAndRestoreOnEmptyMap)
   map.removeEntry(0, 1);
   map.restore(0, saved, 1);
   EXPECT_TRUE(map.empty());
+}
+
+TEST(PropertyMapTest, eraseAndInsertOnEmptyMap)
+{
+  PropertyMap map;
+  const PropertyMap saved = map.slice(0, 1);
+  map.eraseEntry(0, 1);
+  map.insertEntry(0, saved, 1);
+  EXPECT_TRUE(map.empty());
+}
+
+TEST(PropertyMapTest, insertEntryShiftsColumnsMissingFromSaved)
+{
+  const Avogadro::Index count = 4; // entities after the insertion
+  PropertyMap map;
+  for (Avogadro::Index k = 0; k < 3; ++k) {
+    map.setDouble("d", k, static_cast<double>(k));
+    map.setInt("i", k, static_cast<int>(k));
+    map.setString("s", k, std::to_string(k));
+  }
+  // Stops before index 2, so there is nothing to shift.
+  map.setDouble("short", 0, 7.0);
+
+  map.insertEntry(2, PropertyMap(), count);
+
+  for (Avogadro::Index k : { 0, 1 }) {
+    EXPECT_EQ(map.getDouble("d", k), static_cast<double>(k));
+    EXPECT_EQ(map.getInt("i", k), static_cast<int>(k));
+    EXPECT_EQ(map.getString("s", k), std::to_string(k));
+  }
+  // The new entity is unset; the old third entity is now the fourth.
+  EXPECT_FALSE(map.getDouble("d", 2).has_value());
+  EXPECT_FALSE(map.getInt("i", 2).has_value());
+  EXPECT_FALSE(map.getString("s", 2).has_value());
+  EXPECT_EQ(map.getDouble("d", 3), 2.0);
+  EXPECT_EQ(map.getInt("i", 3), 2);
+  EXPECT_EQ(map.getString("s", 3), "2");
+
+  EXPECT_EQ(map.doubles("short").size(), static_cast<size_t>(1));
+  EXPECT_EQ(map.getDouble("short", 0), 7.0);
 }
