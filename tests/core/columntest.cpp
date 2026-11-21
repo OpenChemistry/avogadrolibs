@@ -271,3 +271,57 @@ TEST(ColumnTest, sliceAndRestoreOnAnOverLongColumn)
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
   EXPECT_EQ(original.size(), static_cast<size_t>(4));
 }
+
+TEST(ColumnTest, eraseEntryKeepsTheOrder)
+{
+  auto column = makeLabels({ "a", "b", "c", "d" });
+  column.eraseEntry(1, 4);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "c", "d" }));
+  column.eraseEntry(2, 3);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "c" }));
+  column.eraseEntry(0, 2);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "c" }));
+}
+
+TEST(ColumnTest, eraseEntryOnAShortColumn)
+{
+  // Three entries for five entities: erasing past the end changes nothing,
+  // erasing within it shortens the column.
+  auto column = makeLabels({ "a", "b", "c" });
+  column.eraseEntry(4, 5);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
+  column.eraseEntry(0, 5);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "b", "c" }));
+  // Entries past the count belong to no entity and go first.
+  auto longer = makeLabels({ "a", "b", "c", "x" });
+  longer.eraseEntry(0, 3);
+  EXPECT_EQ(toVector(longer), (std::vector<std::string>{ "b", "c" }));
+  Column<std::string> empty;
+  empty.eraseEntry(0, 1);
+  EXPECT_TRUE(empty.empty());
+}
+
+TEST(ColumnTest, sliceEraseAndInsertRoundTrip)
+{
+  // A column covering every entity and one that stops short of the end.
+  for (const auto& values :
+       { std::vector<std::string>{ "a", "b", "c", "d" },
+         std::vector<std::string>{ "a", "b" }, std::vector<std::string>{} }) {
+    for (Index index = 0; index < 4; ++index) {
+      SCOPED_TRACE("size " + std::to_string(values.size()) + ", index " +
+                   std::to_string(index));
+      auto column = makeLabels(values);
+      const auto saved = column.slice(index, 4);
+      column.eraseEntry(index, 4);
+      column.insertEntry(index, saved, 4);
+      EXPECT_EQ(toVector(column), values);
+    }
+  }
+}
+
+TEST(ColumnTest, insertEntryIgnoresAnEmptySlice)
+{
+  auto column = makeLabels({ "a" });
+  column.insertEntry(0, Column<std::string>(), 2);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a" }));
+}
