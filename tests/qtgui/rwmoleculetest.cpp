@@ -1241,17 +1241,17 @@ TEST(RWMoleculeTest, reorderAtomsCarriesResidues)
   // Each name still names the atom it was given: buildDistinctAtoms() sets
   // atomic number i + 1, so the original atom is identifiable after the move.
   const Avogadro::Core::Residue& moved = m.residue(0);
-  EXPECT_EQ(1, moved.atomByName("N").atomicNumber());
-  EXPECT_EQ(2, moved.atomByName("CA").atomicNumber());
-  EXPECT_EQ(3, moved.atomByName("C").atomicNumber());
-  EXPECT_EQ(static_cast<size_t>(3), moved.residueAtoms().size());
+  EXPECT_EQ(1, m.atom(moved.atomIndexByName("N")).atomicNumber());
+  EXPECT_EQ(2, m.atom(moved.atomIndexByName("CA")).atomicNumber());
+  EXPECT_EQ(3, m.atom(moved.atomIndexByName("C")).atomicNumber());
+  EXPECT_EQ(static_cast<size_t>(3), moved.atomIndices().size());
 
   // And undo puts the membership back where it started.
   mol.undoStack().undo();
   const Avogadro::Core::Residue& restored = m.residue(0);
-  EXPECT_EQ(static_cast<Index>(0), restored.atomByName("N").index());
-  EXPECT_EQ(static_cast<Index>(1), restored.atomByName("CA").index());
-  EXPECT_EQ(static_cast<Index>(2), restored.atomByName("C").index());
+  EXPECT_EQ(static_cast<Index>(0), restored.atomIndexByName("N"));
+  EXPECT_EQ(static_cast<Index>(1), restored.atomIndexByName("CA"));
+  EXPECT_EQ(static_cast<Index>(2), restored.atomIndexByName("C"));
 }
 
 // An index from before an atom was removed used to be written straight into

@@ -59,6 +59,22 @@
 #include <string>
 #include <vector>
 
+// Tests that exercise the deprecated Residue accessors on purpose wrap the
+// calls in these, so that the rest of the build can stay warning-free.
+#if defined(_MSC_VER)
+#define SHADOW_BEGIN_DEPRECATED                                                \
+  __pragma(warning(push)) __pragma(warning(disable : 4996))
+#define SHADOW_END_DEPRECATED __pragma(warning(pop))
+#elif defined(__GNUC__) || defined(__clang__)
+#define SHADOW_BEGIN_DEPRECATED                                                \
+  _Pragma("GCC diagnostic push")                                               \
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+#define SHADOW_END_DEPRECATED _Pragma("GCC diagnostic pop")
+#else
+#define SHADOW_BEGIN_DEPRECATED
+#define SHADOW_END_DEPRECATED
+#endif
+
 namespace ShadowModel {
 
 using Avogadro::Index;

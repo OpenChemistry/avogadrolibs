@@ -434,13 +434,15 @@ void Label::processResidue(const Core::Molecule& molecule,
   node.addChild(geometry);
 
   for (const auto& residue : molecule.residues()) {
-    Atom caAtom = residue.atomByName("CA");
+    Atom caAtom = molecule.atom(residue.atomIndexByName("CA"));
     if (!caAtom.isValid() ||
         !m_layerManager.atomEnabled(layer, caAtom.index())) {
       continue;
     }
     auto name = residue.residueName();
-    const auto atoms = residue.residueAtoms();
+    std::vector<Atom> atoms;
+    for (Index atomIndex : residue.atomIndices())
+      atoms.push_back(molecule.atom(atomIndex));
     const std::string customLabel = molecule.residueLabel(residue.residueId());
     Vector3f pos = Vector3f::Zero();
     for (const auto& atom : atoms) {

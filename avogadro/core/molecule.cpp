@@ -230,7 +230,7 @@ void Molecule::repointResidueAtoms(const Molecule& source)
   // Residues sharing their container with the source detach on this first
   // write, so the source's own proxies are left alone.
   for (auto& residue : m_residues) {
-    for (auto& entry : residue.atomNameMap()) {
+    for (auto& entry : residue.m_atomNameMap) {
       if (entry.second.molecule() == &source)
         entry.second = AtomType(this, entry.second.index());
     }
@@ -1079,7 +1079,7 @@ void Molecule::swapAtom(Index a, Index b)
   // residue's atom names go on pointing at indices that now hold different
   // atoms -- the residue silently adopts its neighbours.
   for (auto& residue : m_residues) {
-    for (auto& entry : residue.atomNameMap()) {
+    for (auto& entry : residue.m_atomNameMap) {
       const Index index = entry.second.index();
       if (index == a)
         entry.second = AtomType(entry.second.molecule(), b);

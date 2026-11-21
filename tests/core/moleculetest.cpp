@@ -643,6 +643,9 @@ TEST_F(MoleculeTest, moveRepointsResidueAtoms)
   };
   auto expectRepointed = [](const Molecule& m) {
     const Avogadro::Core::Residue& residue = m.residue(0);
+    // The proxies themselves are what is checked here, so this uses the
+    // deprecated accessors on purpose.
+    SHADOW_BEGIN_DEPRECATED
     const auto n = residue.atomByName("N");
     const auto ca = residue.atomByName("CA");
     EXPECT_EQ(n.molecule(), &m);
@@ -650,6 +653,10 @@ TEST_F(MoleculeTest, moveRepointsResidueAtoms)
     EXPECT_EQ(n.index(), 0u);
     EXPECT_EQ(ca.index(), 2u);
     EXPECT_EQ(residue.atomName(m.atom(2)), "CA");
+    SHADOW_END_DEPRECATED
+    EXPECT_EQ(residue.atomIndexByName("N"), 0u);
+    EXPECT_EQ(residue.atomIndexByName("CA"), 2u);
+    EXPECT_EQ(residue.atomName(static_cast<Avogadro::Index>(2)), "CA");
   };
 
   Molecule original;
@@ -683,7 +690,9 @@ TEST_F(MoleculeTest, copyRepointsResidueAtomsAndBasisSet)
   original.setBasisSet(basis);
 
   auto expectOwnPointers = [](Molecule& m) {
+    SHADOW_BEGIN_DEPRECATED
     const auto ca = std::as_const(m).residue(0).atomByName("CA");
+    SHADOW_END_DEPRECATED
     EXPECT_EQ(ca.molecule(), &m);
     EXPECT_EQ(ca.index(), 2u);
     ASSERT_NE(m.basisSet(), nullptr);
@@ -2162,19 +2171,22 @@ TEST_F(MoleculeTest, SwapAtomReindexesResidues)
   // Each name must still resolve to the atom it was given, which is now at a
   // different index and is identified here by its element.
   const Avogadro::Core::Residue& swapped = molecule.residue(0);
-  EXPECT_EQ(static_cast<Avogadro::Index>(2), swapped.atomByName("N").index());
-  EXPECT_EQ(7, swapped.atomByName("N").atomicNumber());
-  EXPECT_EQ(static_cast<Avogadro::Index>(1), swapped.atomByName("CA").index());
-  EXPECT_EQ(6, swapped.atomByName("CA").atomicNumber());
-  EXPECT_EQ(static_cast<Avogadro::Index>(0), swapped.atomByName("O").index());
-  EXPECT_EQ(8, swapped.atomByName("O").atomicNumber());
+  auto at = [&molecule](const Avogadro::Core::Residue& r, const char* name) {
+    return molecule.atom(r.atomIndexByName(name));
+  };
+  EXPECT_EQ(static_cast<Avogadro::Index>(2), swapped.atomIndexByName("N"));
+  EXPECT_EQ(7, at(swapped, "N").atomicNumber());
+  EXPECT_EQ(static_cast<Avogadro::Index>(1), swapped.atomIndexByName("CA"));
+  EXPECT_EQ(6, at(swapped, "CA").atomicNumber());
+  EXPECT_EQ(static_cast<Avogadro::Index>(0), swapped.atomIndexByName("O"));
+  EXPECT_EQ(8, at(swapped, "O").atomicNumber());
 
   // Swapping back restores the original numbering.
   molecule.swapAtom(0, 2);
   EXPECT_EQ(static_cast<Avogadro::Index>(0),
-            molecule.residue(0).atomByName("N").index());
+            molecule.residue(0).atomIndexByName("N"));
   EXPECT_EQ(static_cast<Avogadro::Index>(2),
-            molecule.residue(0).atomByName("O").index());
+            molecule.residue(0).atomIndexByName("O"));
 }
 
 // An atom outside the residue must not be dragged into it by a swap.
@@ -2196,9 +2208,9 @@ TEST_F(MoleculeTest, SwapAtomLeavesUnrelatedAtomsOutOfResidues)
   molecule.swapAtom(0, 3);
 
   const Avogadro::Core::Residue& swapped = molecule.residue(0);
-  EXPECT_EQ(static_cast<size_t>(1), swapped.residueAtoms().size());
-  EXPECT_EQ(static_cast<Avogadro::Index>(3), swapped.atomByName("C1").index());
-  EXPECT_EQ(6, swapped.atomByName("C1").atomicNumber());
+  EXPECT_EQ(static_cast<size_t>(1), swapped.atomIndices().size());
+  EXPECT_EQ(static_cast<Avogadro::Index>(3), swapped.atomIndexByName("C1"));
+  EXPECT_EQ(6, molecule.atom(swapped.atomIndexByName("C1")).atomicNumber());
 }
 
 // Constraints name atoms by index without being atom-indexed themselves, so
@@ -2836,8 +2848,8 @@ void expectConsistent(const Molecule& mol, const std::string& step)
   // wrong atom after a removal without ever going out of bounds. Bounds
   // is all this checks.
   for (const auto& residue : mol.residues()) {
-    for (const auto& atom : residue.residueAtoms())
-      EXPECT_LT(atom.index(), n) << "residue atom";
+    for (Avogadro::Index index : residue.atomIndices())
+      EXPECT_LT(index, n) << "residue atom";
   }
 
   auto expectAtomReference = [n](Index index, const char* what) {
