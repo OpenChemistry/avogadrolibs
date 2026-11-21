@@ -2382,9 +2382,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       entry["color"] = color;
 
       json atoms;
-      for (const auto& item : residue.atomNameMap()) {
+      for (const auto& item : residue.atomIndexMap()) {
         // dictionary between names and atom Id
-        atoms[item.first] = item.second.index();
+        atoms[item.first] = item.second;
       }
       entry["atoms"] = atoms;
       residues.push_back(entry);

@@ -74,11 +74,10 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
   // Residues keep only the selected atoms; PDB-style writers need them.
   for (Index r = 0; r < mol.residueCount(); ++r) {
     const Core::Residue& residue = mol.residue(r);
-    std::vector<Core::Atom> kept;
-    for (const Core::Atom& atom : residue.residueAtoms())
-      if (atom.index() < atomIndex.size() &&
-          atomIndex[atom.index()] != MaxIndex)
-        kept.push_back(atom);
+    std::vector<Index> kept;
+    for (Index index : residue.atomIndices())
+      if (index < atomIndex.size() && atomIndex[index] != MaxIndex)
+        kept.push_back(index);
     if (kept.empty())
       continue;
 
@@ -88,9 +87,9 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
     Core::Residue& newResidue = copy->addResidue(name, number, chain);
     newResidue.setHeterogen(residue.isHeterogen());
     newResidue.setSecondaryStructure(residue.secondaryStructure());
-    for (const Core::Atom& atom : kept)
-      newResidue.addResidueAtom(residue.atomName(atom),
-                                copy->atom(atomIndex[atom.index()]));
+    for (Index index : kept)
+      newResidue.addResidueAtom(residue.atomName(index),
+                                copy->atom(atomIndex[index]));
   }
 
   return copy;

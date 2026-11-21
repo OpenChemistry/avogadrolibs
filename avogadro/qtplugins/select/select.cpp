@@ -256,8 +256,7 @@ void Select::selectWater()
   // also select water residues (which may be isolated "O" atoms)
   for (const auto& residue : m_molecule->residues()) {
     if (residue.residueName() == "HOH") {
-      for (auto atom : residue.residueAtoms()) {
-        Index i = atom.index();
+      for (Index i : residue.atomIndices()) {
         m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                     undoText);
       }
@@ -278,8 +277,9 @@ void Select::selectBackboneAtoms()
   QString undoText = tr("Select Backbone");
 
   for (const auto& residue : m_molecule->residues()) {
-    for (auto atom : residue.residueAtoms()) {
-      auto name = residue.atomName(atom);
+    for (Index atomIndex : residue.atomIndices()) {
+      auto atom = m_molecule->atom(atomIndex);
+      auto name = residue.atomName(atomIndex);
       if (name == "CA" || name == "C" || name == "N" || name == "O") {
         Index i = atom.index();
         m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
@@ -291,7 +291,7 @@ void Select::selectBackboneAtoms()
         auto bonds = m_molecule->bonds(atom.index());
         if (bonds.size() == 1) {
           auto otherAtom = bonds[0].getOtherAtom(atom.index());
-          auto otherName = residue.atomName(otherAtom);
+          auto otherName = residue.atomName(otherAtom.index());
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
@@ -317,8 +317,9 @@ void Select::selectSidechainAtoms()
   QString undoText = tr("Select Sidechain");
 
   for (const auto& residue : m_molecule->residues()) {
-    for (auto atom : residue.residueAtoms()) {
-      auto name = residue.atomName(atom);
+    for (Index atomIndex : residue.atomIndices()) {
+      auto atom = m_molecule->atom(atomIndex);
+      auto name = residue.atomName(atomIndex);
       if (name != "CA" && name != "C" && name != "N" && name != "O") {
         Index i = atom.index();
         m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
@@ -331,7 +332,7 @@ void Select::selectSidechainAtoms()
         auto bonds = m_molecule->bonds(atom.index());
         if (bonds.size() == 1) {
           auto otherAtom = bonds[0].getOtherAtom(atom.index());
-          auto otherName = residue.atomName(otherAtom);
+          auto otherName = residue.atomName(otherAtom.index());
           if (otherName == "CA" || otherName == "C" || otherName == "N" ||
               otherName == "O") {
             Index i = atom.index();
@@ -510,8 +511,7 @@ void Select::selectResidue()
         for (const auto& residue : m_molecule->residues()) {
           if (residue.residueId() != static_cast<Index>(index))
             continue;
-          for (auto atom : residue.residueAtoms()) {
-            Index i = atom.index();
+          for (Index i : residue.atomIndices()) {
             m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                         undoText);
           }
@@ -533,8 +533,7 @@ void Select::selectResidue()
           if (residue.residueId() != static_cast<Index>(index) ||
               name != residue.residueName().c_str())
             continue;
-          for (auto atom : residue.residueAtoms()) {
-            Index i = atom.index();
+          for (Index i : residue.atomIndices()) {
             m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                         undoText);
           }
@@ -545,8 +544,7 @@ void Select::selectResidue()
       for (const auto& residue : m_molecule->residues()) {
         if (label == residue.residueName().c_str()) {
           // select the atoms of the residue
-          for (auto atom : residue.residueAtoms()) {
-            Index i = atom.index();
+          for (Index i : residue.atomIndices()) {
             m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                         undoText);
           }

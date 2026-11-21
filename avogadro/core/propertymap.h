@@ -190,6 +190,26 @@ public:
    */
   void restore(Index index, const PropertyMap& saved, Index entityCount);
 
+  /**
+   * Remove the entry at @p index and shift the entries above it down by one,
+   * so that the order of the entities is kept (compare removeEntry(), which
+   * moves the last entity into @p index). @p entityCount is the count before
+   * the removal. Same name and meaning as Column::eraseEntry(). Save
+   * slice(@p index, @p entityCount) first to be able to insertEntry() it
+   * again.
+   */
+  void eraseEntry(Index index, Index entityCount);
+
+  /**
+   * Undo eraseEntry(@p index, ...) given @p saved = slice(@p index, ...)
+   * taken just before it: entries at and above @p index shift up by one and
+   * the saved values go into @p index. @p entityCount is the count after the
+   * restoration. Same name and meaning as Column::insertEntry(). Dense
+   * columns @p saved has no entry for are shifted too, the entity getting
+   * the unset value; a column that does not reach @p index is untouched.
+   */
+  void insertEntry(Index index, const PropertyMap& saved, Index entityCount);
+
   /** Clear all columns and data. */
   void clear();
 

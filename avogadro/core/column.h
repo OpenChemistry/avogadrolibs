@@ -173,6 +173,52 @@ public:
   void removeEntry(Index index, Index count) { removeEntry(index, count, T()); }
 
   /**
+   * Remove the entry of entity @p index, shifting the entries above it down
+   * by one so that the order of the entities is kept. This is the removal
+   * for entities that are ordered (residues), where removeEntry()'s
+   * swap-and-pop would move the last one into the middle. @p count is the
+   * number of entities before the removal. A column that does not reach
+   * @p index has nothing to remove and is left alone.
+   */
+  void eraseEntry(Index index, Index count)
+  {
+    trimTo(count);
+    if (index < m_values.size())
+      m_values.erase(m_values.begin() + index);
+  }
+
+  /**
+   * Undo eraseEntry(@p index, ...) given @p saved = slice(@p index, ...)
+   * taken just before it: the saved value goes back at @p index and the
+   * entries above it shift up by one. @p count is the number of entities
+   * after the restoration. Does nothing if @p saved is empty or if the column
+   * is shorter than @p index, which eraseEntry() cannot have left.
+   */
+  void insertEntry(Index index, const Column& saved, Index count)
+  {
+    if (saved.m_values.empty() || index > m_values.size())
+      return;
+    m_values.insert(m_values.begin() + index, saved.m_values[0]);
+    trimTo(count);
+  }
+
+  /**
+   * Insert @p value as the entry of entity @p index, shifting the entries
+   * above it up by one, for an entity that has nothing saved to restore (the
+   * counterpart of insertEntry() when only the order must be kept). @p count
+   * is the number of entities after the insertion. A column that does not
+   * reach @p index has no entries to shift and is left alone, so its length
+   * does not grow.
+   */
+  void insertValue(Index index, const T& value, Index count)
+  {
+    if (index >= m_values.size())
+      return;
+    m_values.insert(m_values.begin() + index, value);
+    trimTo(count);
+  }
+
+  /**
    * Drop every entry for an entity at or past @p count. A Column never holds
    * such entries through its own functions, but a caller that writes to
    * array() directly can leave them.

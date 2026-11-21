@@ -8,6 +8,8 @@
 #include "residuecolors.h"
 #include "residuedata.h"
 
+#include <algorithm>
+
 namespace Avogadro::Core {
 
 Residue::Residue(std::string& name)
@@ -54,6 +56,32 @@ Residue& Residue::operator=(Residue other)
 void Residue::addResidueAtom(const std::string& name, const Atom& atom)
 {
   m_atomNameMap.insert(std::pair<std::string, Atom>(name, atom));
+}
+
+std::vector<Index> Residue::atomIndices() const
+{
+  std::vector<Index> indices;
+  indices.reserve(m_atomNameMap.size());
+  for (const auto& it : m_atomNameMap)
+    indices.push_back(it.second.index());
+  std::sort(indices.begin(), indices.end());
+  return indices;
+}
+
+Index Residue::atomIndexByName(const std::string& name) const
+{
+  auto search = m_atomNameMap.find(name);
+  if (search != m_atomNameMap.end())
+    return search->second.index();
+  return MaxIndex;
+}
+
+std::map<std::string, Index> Residue::atomIndexMap() const
+{
+  std::map<std::string, Index> result;
+  for (const auto& it : m_atomNameMap)
+    result.emplace(it.first, it.second.index());
+  return result;
 }
 
 std::vector<Atom> Residue::residueAtoms() const
@@ -170,10 +198,9 @@ Vector3ub Residue::color() const
 
 bool Residue::hasAtomByIndex(Index index) const
 {
-  for (const auto& atom : residueAtoms()) {
-    if (atom.index() == index) {
+  for (const auto& it : m_atomNameMap) {
+    if (it.second.index() == index)
       return true;
-    }
   }
   return false;
 }

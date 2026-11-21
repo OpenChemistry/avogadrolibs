@@ -230,7 +230,7 @@ void Molecule::repointResidueAtoms(const Molecule& source)
   // Residues sharing their container with the source detach on this first
   // write, so the source's own proxies are left alone.
   for (auto& residue : m_residues) {
-    for (auto& entry : residue.atomNameMap()) {
+    for (auto& entry : residue.m_atomNameMap) {
       if (entry.second.molecule() == &source)
         entry.second = AtomType(this, entry.second.index());
     }
@@ -845,10 +845,11 @@ namespace {
 // coordinates too, dropping an entry that loses an atom rather than reindexing
 // it, and clearAtoms() clears both.
 //
-// One is still unhandled, and needs a decision rather than a mechanical
-// remap: m_residues in removeAtom(). Dropping a hydrogen from a residue is
-// just an erase, but dropping a backbone atom arguably invalidates the
-// residue altogether, and that is a chemistry question.
+// removeAtom() handles the residues too. Dropping a hydrogen from a residue
+// is just an erase, but dropping a backbone atom arguably invalidates the
+// residue altogether, so the rule is the blunt one: a residue that loses an
+// atom is removed whole (its other atoms stay, in no residue), and the
+// residues that name the last atom follow it into the hole.
 
 // Plain Array<T>, one entry per atom. An optional array can be shorter than
 // atomCount() -- an atom added after the array was last set has no entry --
@@ -1079,7 +1080,7 @@ void Molecule::swapAtom(Index a, Index b)
   // residue's atom names go on pointing at indices that now hold different
   // atoms -- the residue silently adopts its neighbours.
   for (auto& residue : m_residues) {
-    for (auto& entry : residue.atomNameMap()) {
+    for (auto& entry : residue.m_atomNameMap) {
       const Index index = entry.second.index();
       if (index == a)
         entry.second = AtomType(entry.second.molecule(), b);
@@ -1145,6 +1146,29 @@ bool Molecule::removeAtom(Index index)
 
   remapAtomReferences(m_constraints, follow);
   remapScanCoordinates(*this, follow);
+
+  // Residues name atoms by index through their proxies, so they get the same
+  // treatment, with one difference: a residue that names the removed atom is
+  // not left without it, it is removed (R14). removeResidue() keeps the order
+  // of the others, so go from the back to keep the indices still to visit
+  // valid. Then the last atom's proxies follow it into the hole.
+  const auto& constResidues = std::as_const(m_residues);
+  for (Index r = residueCount(); r > 0; --r) {
+    if (constResidues[r - 1].hasAtomByIndex(index))
+      removeResidue(r - 1);
+  }
+  if (lastAtom != index) {
+    for (Index r = 0; r < residueCount(); ++r) {
+      // Only a residue that names the last atom is written to, so only that
+      // one detaches from a copy that shares the array.
+      if (!constResidues[r].hasAtomByIndex(lastAtom))
+        continue;
+      for (auto& entry : m_residues[r].m_atomNameMap) {
+        if (entry.second.index() == lastAtom)
+          entry.second = AtomType(entry.second.molecule(), index);
+      }
+    }
+  }
 
   // Losing an atom makes this a different molecule, so anything calculated
   // from the old one goes rather than being reindexed. Contrast the members
@@ -2577,6 +2601,41 @@ const Residue& Molecule::residue(Index index) const
 Index Molecule::residueCount() const
 {
   return static_cast<Index>(m_residues.size());
+}
+
+bool Molecule::removeResidue(Index residueIndex)
+{
+  const Index count = residueCount();
+  if (residueIndex >= count)
+    return false;
+
+  m_residues.erase(m_residues.begin() + residueIndex);
+  // The labels array may be shorter than the residue array.
+  if (residueIndex < m_residueLabels.size())
+    m_residueLabels.erase(m_residueLabels.begin() + residueIndex);
+  m_residueProperties.eraseEntry(residueIndex, count);
+  return true;
+}
+
+bool Molecule::insertResidue(Index residueIndex, const Residue& residue,
+                             const std::string& label,
+                             const PropertyMap& properties)
+{
+  const Index count = residueCount();
+  if (residueIndex > count)
+    return false;
+
+  m_residues.insert(m_residues.begin() + residueIndex, residue);
+  for (auto& entry : m_residues[residueIndex].m_atomNameMap)
+    entry.second = AtomType(this, entry.second.index());
+  // A label is stored only if there is one, or if later residues have theirs.
+  if (!label.empty() || m_residueLabels.size() > residueIndex) {
+    if (m_residueLabels.size() < residueIndex)
+      m_residueLabels.resize(residueIndex, std::string());
+    m_residueLabels.insert(m_residueLabels.begin() + residueIndex, label);
+  }
+  m_residueProperties.insertEntry(residueIndex, properties, count + 1);
+  return true;
 }
 
 std::string Molecule::residueLabel(Index residueId) const

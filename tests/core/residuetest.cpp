@@ -15,6 +15,15 @@ using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
 using Avogadro::Core::Residue;
 
+// The tests of the deprecated accessors call them on purpose.
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#elif defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
 TEST(ResidueTest, defaultConstructor)
 {
   Residue r;
@@ -161,6 +170,96 @@ TEST(ResidueTest, atomName)
   EXPECT_EQ(r.atomName(ca), "CA");
   EXPECT_EQ(r.atomName(static_cast<Index>(0)), "N");
   EXPECT_EQ(r.atomName(static_cast<Index>(1)), "CA");
+}
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#elif defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+
+TEST(ResidueTest, atomIndicesAreSortedByIndexNotName)
+{
+  Molecule mol;
+  Atom a0 = mol.addAtom(6);
+  Atom a1 = mol.addAtom(7);
+  Atom a2 = mol.addAtom(8);
+
+  // The map orders by name ("A" < "B" < "Z"), the indices run 2, 0, 1.
+  Residue r;
+  r.addResidueAtom("A", a2);
+  r.addResidueAtom("B", a0);
+  r.addResidueAtom("Z", a1);
+
+  const std::vector<Index> indices = r.atomIndices();
+  ASSERT_EQ(indices.size(), static_cast<size_t>(3));
+  EXPECT_EQ(indices[0], static_cast<Index>(0));
+  EXPECT_EQ(indices[1], static_cast<Index>(1));
+  EXPECT_EQ(indices[2], static_cast<Index>(2));
+  EXPECT_TRUE(Residue().atomIndices().empty());
+}
+
+TEST(ResidueTest, atomIndexByName)
+{
+  Molecule mol;
+  mol.addAtom(6);
+  Atom ca = mol.addAtom(6);
+
+  Residue r;
+  r.addResidueAtom("CA", ca);
+
+  EXPECT_EQ(r.atomIndexByName("CA"), static_cast<Index>(1));
+  EXPECT_EQ(r.atomIndexByName("NONEXISTENT"), Avogadro::MaxIndex);
+  EXPECT_EQ(r.atomIndexByName(""), Avogadro::MaxIndex);
+}
+
+TEST(ResidueTest, atomIndexMap)
+{
+  Molecule mol;
+  Atom n = mol.addAtom(7);
+  mol.addAtom(6);
+  Atom c = mol.addAtom(6);
+
+  Residue r;
+  r.addResidueAtom("N", n);
+  r.addResidueAtom("C", c);
+
+  const std::map<std::string, Index> map = r.atomIndexMap();
+  ASSERT_EQ(map.size(), static_cast<size_t>(2));
+  EXPECT_EQ(map.at("N"), static_cast<Index>(0));
+  EXPECT_EQ(map.at("C"), static_cast<Index>(2));
+  EXPECT_TRUE(Residue().atomIndexMap().empty());
+
+  // A copy, not a view: later changes to the residue do not show in it.
+  r.addResidueAtom("CA", mol.atom(1));
+  EXPECT_EQ(map.size(), static_cast<size_t>(2));
+}
+
+TEST(ResidueTest, indexAccessorsAgreeWithTheDeprecatedOnes)
+{
+  Molecule mol;
+  Atom n = mol.addAtom(7);
+  Atom ca = mol.addAtom(6);
+
+  Residue r;
+  r.addResidueAtom("N", n);
+  r.addResidueAtom("CA", ca);
+
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#elif defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+  EXPECT_EQ(r.atomByName("CA").index(), r.atomIndexByName("CA"));
+  EXPECT_EQ(r.residueAtoms().size(), r.atomIndices().size());
+  EXPECT_EQ(r.atomNameMap().size(), r.atomIndexMap().size());
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#elif defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 }
 
 TEST(ResidueTest, heterogen)

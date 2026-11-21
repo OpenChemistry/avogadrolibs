@@ -436,13 +436,15 @@ void Label::processResidue(const Core::Molecule& molecule,
 
   for (Index r = 0; r < molecule.residueCount(); ++r) {
     const auto& residue = molecule.residue(r);
-    Atom caAtom = residue.atomByName("CA");
+    Atom caAtom = molecule.atom(residue.atomIndexByName("CA"));
     if (!caAtom.isValid() ||
         !m_layerManager.atomEnabled(layer, caAtom.index())) {
       continue;
     }
     auto name = residue.residueName();
-    const auto atoms = residue.residueAtoms();
+    std::vector<Atom> atoms;
+    for (Index atomIndex : residue.atomIndices())
+      atoms.push_back(molecule.atom(atomIndex));
     if (atoms.empty())
       continue;
     const std::string customLabel = molecule.residueLabel(r);

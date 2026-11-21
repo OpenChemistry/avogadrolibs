@@ -80,8 +80,10 @@ foreach(TestName ${tests})
   if(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
   elseif(TestName STREQUAL "Molecule")
-    # moleculetest.cpp also defines MoleculeCoordinateSetTest.
-    set(testFilter "MoleculeTest.*:MoleculeCoordinateSetTest.*")
+    # moleculetest.cpp also defines MoleculeCoordinateSetTest and
+    # MoleculeResidueTest.
+    set(testFilter
+      "MoleculeTest.*:MoleculeCoordinateSetTest.*:MoleculeResidueTest.*")
   else()
     set(testFilter "${TestName}Test.*")
   endif()
