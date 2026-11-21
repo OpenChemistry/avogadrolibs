@@ -209,8 +209,8 @@ inline bool loadBackbone(const std::string& name, Backbone& result)
   for (const auto& residue : molecule.residues()) {
     if (residue.isHeterogen())
       continue;
-    auto ca = residue.atomByName("CA");
-    auto o = residue.atomByName("O");
+    auto ca = molecule.atom(residue.atomIndexByName("CA"));
+    auto o = molecule.atom(residue.atomIndexByName("O"));
     if (!ca.isValid() || !o.isValid())
       continue;
     const Vector3f p = ca.position3d().cast<float>();

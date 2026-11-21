@@ -1138,6 +1138,31 @@ public:
   Array<Residue>& residues() { return m_residues; }
   const Array<Residue>& residues() const { return m_residues; }
 
+  /**
+   * Remove residue @p residueIndex, keeping the order of the others: the
+   * residues after it, their labels and their custom properties all move down
+   * by one (nothing is swapped into the gap, since the cartoon and secondary
+   * structure code walk the residues in order). The atoms the residue named
+   * stay in the molecule, in no residue.
+   * @return True on success, false if @p residueIndex is out of range.
+   */
+  bool removeResidue(Index residueIndex);
+
+  /**
+   * Insert @p residue at @p residueIndex, shifting the later residues, labels
+   * and custom properties up by one. This undoes removeResidue(): pass the
+   * residue, its residueLabel() and the properties saved with
+   * residueProperties().slice(@p residueIndex, residueCount()) from before the
+   * removal. The residue's atom proxies are pointed at this molecule and keep
+   * their indices.
+   * Restoring an empty label that was the last entry of the label array
+   * leaves the array one entry shorter, which reads the same.
+   * @return True on success, false if @p residueIndex is past residueCount().
+   */
+  bool insertResidue(Index residueIndex, const Residue& residue,
+                     const std::string& label = std::string(),
+                     const PropertyMap& properties = PropertyMap());
+
   /** @return The number of residues in the molecule. */
   Index residueCount() const;
 

@@ -375,6 +375,62 @@ void PropertyMap::restore(Index index, const PropertyMap& saved,
   }
 }
 
+void PropertyMap::eraseEntry(Index index, Index entityCount)
+{
+  for (auto& kv : m_doubles)
+    kv.second.eraseEntry(index, entityCount);
+  for (auto& kv : m_ints)
+    kv.second.eraseEntry(index, entityCount);
+  for (auto& kv : m_strings)
+    kv.second.eraseEntry(index, entityCount);
+
+  // Sparse matrices: drop the entry at index, re-key those above it.
+  for (auto& kv : m_matrices) {
+    std::unordered_map<Index, MatrixX> shifted;
+    for (auto& entry : kv.second) {
+      if (entry.first < index)
+        shifted.emplace(entry.first, std::move(entry.second));
+      else if (entry.first > index)
+        shifted.emplace(entry.first - 1, std::move(entry.second));
+    }
+    kv.second = std::move(shifted);
+  }
+}
+
+void PropertyMap::insertEntry(Index index, const PropertyMap& saved,
+                              Index entityCount)
+{
+  // Every existing column shifts, including those @p saved has no entry for
+  // (a column added after the slice, or an empty @p saved): the entity gets
+  // the "unset" value there.
+  auto insertDense = [index, entityCount](auto& columns, const auto& savedMap,
+                                          const auto& sentinel) {
+    for (auto& kv : columns) {
+      auto it = savedMap.find(kv.first);
+      if (it != savedMap.end())
+        kv.second.insertEntry(index, it->second, entityCount);
+      else
+        kv.second.insertValue(index, sentinel, entityCount);
+    }
+  };
+  insertDense(m_doubles, saved.m_doubles, doubleSentinel);
+  insertDense(m_ints, saved.m_ints, intSentinel);
+  insertDense(m_strings, saved.m_strings, std::string());
+
+  for (auto& kv : m_matrices) {
+    std::unordered_map<Index, MatrixX> shifted;
+    for (auto& entry : kv.second) {
+      shifted.emplace(entry.first >= index ? entry.first + 1 : entry.first,
+                      std::move(entry.second));
+    }
+    kv.second = std::move(shifted);
+  }
+  for (const auto& kv : saved.m_matrices) {
+    for (const auto& entry : kv.second)
+      m_matrices[kv.first][entry.first] = entry.second;
+  }
+}
+
 void PropertyMap::swapEntries(Index a, Index b)
 {
   swapDense(m_doubles, a, b, doubleSentinel);

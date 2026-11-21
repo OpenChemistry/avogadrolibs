@@ -627,12 +627,12 @@ void RWMolecule::addResidue(const Core::Residue& residue, Index offset)
   newResidue.setSecondaryStructure(residue.secondaryStructure());
 
   // now go through all the atoms and add them using the offset
-  for (Core::Atom atom : residue.residueAtoms()) {
+  for (Index atomIndex : residue.atomIndices()) {
     // get the new index
-    Index newIndex = atom.index() + offset;
+    Index newIndex = atomIndex + offset;
     Core::Atom myAtom = m_molecule.atom(newIndex);
     // get the atom name
-    std::string atomName = residue.atomName(atom);
+    std::string atomName = residue.atomName(atomIndex);
     newResidue.addResidueAtom(atomName, myAtom);
   }
 }

@@ -625,13 +625,13 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
         info.chainId = origRes.chainId();
         info.heterogen = origRes.isHeterogen();
         info.ss = origRes.secondaryStructure();
-        for (const auto& atom : origRes.residueAtoms()) {
-          if (assemblySet.insert(atom.index()).second)
-            assemblyAtoms.push_back(atom.index());
+        for (const auto& atomIndex : origRes.atomIndices()) {
+          if (assemblySet.insert(atomIndex).second)
+            assemblyAtoms.push_back(atomIndex);
 
-          std::string aName = origRes.atomName(atom);
+          std::string aName = origRes.atomName(atomIndex);
           if (!aName.empty())
-            info.atomNames.emplace_back(aName, atom.index());
+            info.atomNames.emplace_back(aName, atomIndex);
         }
         residuesToCopy.push_back(std::move(info));
       }

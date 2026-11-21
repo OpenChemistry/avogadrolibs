@@ -194,7 +194,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
     if (residue.isHeterogen())
       continue;
 
-    auto oxygen = residue.atomByName("O");
+    auto oxygen = m_molecule->atom(residue.atomIndexByName("O"));
     if (oxygen.isValid()) {
       auto* oRecord = new hBondRecord();
       oRecord->atom = oxygen.index();
@@ -205,7 +205,7 @@ void SecondaryStructureAssigner::assignBackboneHydrogenBonds()
       m_hBonds.push_back(oRecord);
     }
 
-    auto nitrogen = residue.atomByName("N");
+    auto nitrogen = m_molecule->atom(residue.atomIndexByName("N"));
     if (nitrogen.isValid()) {
       auto* nRecord = new hBondRecord();
       nRecord->atom = nitrogen.index();
