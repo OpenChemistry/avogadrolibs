@@ -80,6 +80,52 @@ public:
 } // namespace
 
 namespace {
+// Removing an atom removes every residue that names it (see
+// Core::Molecule::removeAtom()), so undoing the add of an atom or the removal
+// of one has to put them back: each with its index, its label and its slice of
+// the custom residue properties. They are saved in ascending index order,
+// which is the order to re-insert them in: each goes back where it was once
+// the ones before it are in place. The proxies in the saved residues use the
+// numbering from before the removal, so restore() must run once the atoms are
+// numbered that way again.
+struct DroppedResidues
+{
+  struct Entry
+  {
+    Index index;
+    Core::Residue residue;
+    std::string label;
+    Core::PropertyMap properties;
+  };
+  std::vector<Entry> entries;
+
+  // Call just before removing the atom.
+  void save(const Core::Molecule& molecule, Index atomId)
+  {
+    entries.clear();
+    const Index residueCount = molecule.residueCount();
+    for (Index r = 0; r < residueCount; ++r) {
+      const Core::Residue& residue = molecule.residue(r);
+      if (!residue.hasAtomByIndex(atomId))
+        continue;
+      entries.push_back(
+        { r, residue, molecule.residueLabel(r),
+          molecule.residueProperties().slice(r, residueCount) });
+    }
+  }
+
+  void restore(Core::Molecule& molecule)
+  {
+    for (const auto& dropped : entries) {
+      molecule.insertResidue(dropped.index, dropped.residue, dropped.label,
+                             dropped.properties);
+    }
+    entries.clear();
+  }
+};
+} // namespace
+
+namespace {
 class AddAtomCommand : public RWMolecule::UndoCommand
 {
   unsigned char m_atomicNumber;
@@ -89,6 +135,8 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   size_t m_layer;
   bool m_added = false;
   Vector3 m_position3d;
+  // The residues undo() drops along with the atom, for redo() to put back.
+  DroppedResidues m_droppedResidues;
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
@@ -114,6 +162,9 @@ public:
       return;
 
     m_molecule.layer().addAtom(m_layer, m_atomId);
+    // Every atom of a dropped residue has an index <= m_atomId, so it exists
+    // again by now.
+    m_droppedResidues.restore(m_molecule);
   }
 
   void undo() override
@@ -123,6 +174,7 @@ public:
 
     assert(m_molecule.atomCount() == m_atomId + 1);
     m_layer = m_molecule.layer().getLayerID(m_atomId);
+    m_droppedResidues.save(m_molecule, m_atomId);
     m_molecule.removeAtom(m_atomId);
   }
 };
@@ -171,24 +223,11 @@ class RemoveAtomCommand : public RWMolecule::UndoCommand
   bool m_hasFrozen = false;
   bool m_frozenAxis[3] = { false, false, false };
 
-  // Removing an atom removes every residue that names it (see
-  // Core::Molecule::removeAtom()), so undo has to put them back: each with its
-  // index, its label and its slice of the custom residue properties. They are
-  // saved in ascending index order, which is the order to re-insert them in:
-  // each goes back where it was once the ones before it are in place. The
-  // proxies in the saved residues use the numbering from before the removal,
-  // which is the one undo() has restored by the time it inserts them.
+  // The residues removeAtom() drops with the atom (see DroppedResidues).
   //
   // Step 4 of the molecule refactor (atom snapshots) will fold this into the
   // snapshot of the removed atom.
-  struct DroppedResidue
-  {
-    Index index;
-    Core::Residue residue;
-    std::string label;
-    Core::PropertyMap properties;
-  };
-  std::vector<DroppedResidue> m_droppedResidues;
+  DroppedResidues m_droppedResidues;
 
 public:
   RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
@@ -242,16 +281,7 @@ public:
         m_frozenAxis[axis] = m_molecule.frozenAtomAxis(m_atomId, axis);
     }
 
-    m_droppedResidues.clear();
-    const Index residueCount = m_molecule.residueCount();
-    for (Index r = 0; r < residueCount; ++r) {
-      const Core::Residue& residue = m_molecule.residue(r);
-      if (!residue.hasAtomByIndex(m_atomId))
-        continue;
-      m_droppedResidues.push_back(
-        { r, residue, m_molecule.residueLabel(r),
-          m_molecule.residueProperties().slice(r, residueCount) });
-    }
+    m_droppedResidues.save(m_molecule, m_atomId);
 
     m_molecule.removeAtom(m_atomId);
   }
@@ -272,11 +302,7 @@ public:
     m_bonds.clear();
 
     // The atoms are numbered as they were, so the residues can go back.
-    for (const auto& dropped : m_droppedResidues) {
-      m_molecule.insertResidue(dropped.index, dropped.residue, dropped.label,
-                               dropped.properties);
-    }
-    m_droppedResidues.clear();
+    m_droppedResidues.restore(m_molecule);
 
     // The atom is back at m_atomId now: restore whatever it had, and leave
     // everything else alone.

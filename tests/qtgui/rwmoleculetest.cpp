@@ -1257,6 +1257,86 @@ TEST(RWMoleculeTest, reorderAtomsCarriesResidues)
   EXPECT_EQ(static_cast<Index>(2), restored.atomIndexByName("C"));
 }
 
+// Undoing the atoms that appendMolecule() added removes the residues that
+// name them; redoing the atoms has to bring the residues back, as the other
+// undo commands restore what removeAtom() drops. appendMolecule() copies the
+// name, id, chain, heterogen flag, secondary structure and atom names of a
+// residue, not its label or custom properties.
+TEST(RWMoleculeTest, appendMoleculeUndoRedoRestoresResidues)
+{
+  // Molecule::addResidue() takes lvalues.
+  auto addResidue = [](Molecule& molecule, std::string name, Index number,
+                       char chain) -> Avogadro::Core::Residue& {
+    return molecule.addResidue(name, number, chain);
+  };
+
+  Molecule m;
+  RWMolecule mol(m);
+  buildDistinctAtoms(mol, 3);
+  Avogadro::Core::Residue& original = addResidue(m, "GLY", 1, 'A');
+  original.addResidueAtom("N", m.atom(0));
+  original.addResidueAtom("CA", m.atom(1));
+  m.setResidueLabel(0, "original");
+  m.residueProperties().setDouble("value", 0, 42.0);
+
+  Molecule source;
+  for (unsigned char z = 6; z <= 10; ++z)
+    source.addAtom(z);
+  Avogadro::Core::Residue& first = addResidue(source, "ALA", 7, 'B');
+  first.addResidueAtom("N", source.atom(0));
+  first.addResidueAtom("CA", source.atom(1));
+  first.setHeterogen(true);
+  Avogadro::Core::Residue& second = addResidue(source, "SER", 8, 'C');
+  second.addResidueAtom("N", source.atom(2));
+  second.addResidueAtom("OG", source.atom(4));
+  // The atom outside the residues is not named by any.
+
+  mol.appendMolecule(source, "Append");
+  ASSERT_EQ(static_cast<Index>(8), mol.atomCount());
+
+  // Everything about the residues that the test compares.
+  auto state = [&m]() {
+    std::string text;
+    for (Index r = 0; r < m.residueCount(); ++r) {
+      const Avogadro::Core::Residue& residue = m.residue(r);
+      text += residue.residueName() + "/" +
+              std::to_string(residue.residueId()) + "/" + residue.chainId() +
+              "/" + std::to_string(residue.isHeterogen()) + "/" +
+              m.residueLabel(r) + "/";
+      const auto value = m.residueProperties().getDouble("value", r);
+      text += value ? std::to_string(*value) : "unset";
+      for (Index atomIndex : residue.atomIndices()) {
+        text +=
+          " " + residue.atomName(atomIndex) + "=" + std::to_string(atomIndex);
+      }
+      text += "\n";
+    }
+    return text;
+  };
+
+  const std::string appended = state();
+  ASSERT_EQ(static_cast<Index>(3), m.residueCount());
+  EXPECT_EQ(static_cast<Index>(3), m.residue(1).atomIndexByName("N"));
+  EXPECT_EQ(static_cast<Index>(7), m.residue(2).atomIndexByName("OG"));
+  EXPECT_EQ("original", m.residueLabel(0));
+
+  for (int cycle = 0; cycle < 2; ++cycle) {
+    SCOPED_TRACE("cycle " + std::to_string(cycle));
+    mol.undoStack().undo();
+    ASSERT_EQ(static_cast<Index>(3), mol.atomCount());
+    ASSERT_EQ(static_cast<Index>(1), m.residueCount());
+    EXPECT_EQ("GLY", m.residue(0).residueName());
+    EXPECT_EQ(static_cast<Index>(0), m.residue(0).atomIndexByName("N"));
+    EXPECT_EQ(static_cast<Index>(1), m.residue(0).atomIndexByName("CA"));
+    EXPECT_EQ("original", m.residueLabel(0));
+    EXPECT_EQ(42.0, m.residueProperties().getDouble("value", 0));
+
+    mol.undoStack().redo();
+    ASSERT_EQ(static_cast<Index>(8), mol.atomCount());
+    EXPECT_EQ(appended, state());
+  }
+}
+
 // An index from before an atom was removed used to be written straight into
 // a std::vector<bool> sized to the current atom count, corrupting the heap
 // and crashing somewhere unrelated later. It has to be ignored instead.
