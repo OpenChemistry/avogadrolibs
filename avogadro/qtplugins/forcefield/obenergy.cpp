@@ -25,10 +25,27 @@
 
 #include <iostream>
 #include <memory>
+#include <mutex>
 
 using namespace OpenBabel;
 
 namespace Avogadro::QtPlugins {
+
+namespace {
+
+// Open Babel keeps process-global, unsynchronized state: the OBLocale nesting
+// counter and saved locale string, the lazy OBGlobalDataBase::Init() of the
+// typers and aromaticity data, and the plugin map. Giving each OBEnergy its
+// own force field clone does not protect that state, so every call into Open
+// Babel (from the GUI thread and any worker thread) must hold this mutex.
+// It is not recursive: never call back into OBEnergy while holding it.
+std::mutex& openBabelMutex()
+{
+  static std::mutex mutex;
+  return mutex;
+}
+
+} // namespace
 
 class OBEnergy::Private
 {
@@ -90,8 +107,11 @@ OBEnergy::OBEnergy(const std::string& method)
     if (!pluginDir.isEmpty())
       qputenv("BABEL_LIBDIR", pluginDir.toLocal8Bit());
   }
-  // Ensure the plugins are loaded
-  OBPlugin::LoadAllPlugins();
+  {
+    // Ensure the plugins are loaded
+    std::lock_guard<std::mutex> lock(openBabelMutex());
+    OBPlugin::LoadAllPlugins();
+  }
 
   // The private force field instance is created lazily in setMolecule():
   // MakeNewInstance() allocates it and the first Setup() then calls
@@ -100,9 +120,12 @@ OBEnergy::OBEnergy(const std::string& method)
 
 #ifndef NDEBUG
   qDebug() << "OBEnergy: method: " << method.c_str();
-  if (OBPlugin::GetPlugin("forcefields", method.c_str()) == nullptr) {
-    qDebug() << "OBEnergy: method not found: " << method.c_str();
-    qDebug() << OBPlugin::ListAsString("forcefields").c_str();
+  {
+    std::lock_guard<std::mutex> lock(openBabelMutex());
+    if (OBPlugin::GetPlugin("forcefields", method.c_str()) == nullptr) {
+      qDebug() << "OBEnergy: method not found: " << method.c_str();
+      qDebug() << OBPlugin::ListAsString("forcefields").c_str();
+    }
   }
 #endif
 
@@ -156,6 +179,8 @@ OBEnergy::OBEnergy(const std::string& method)
 
 OBEnergy::~OBEnergy()
 {
+  // destroying the force field and OBMol also touches Open Babel's globals
+  std::lock_guard<std::mutex> lock(openBabelMutex());
   delete d;
 }
 
@@ -179,6 +204,8 @@ void OBEnergy::setMolecule(Core::Molecule* mol)
   if (mol == nullptr || mol->atomCount() == 0) {
     return; // nothing to do
   }
+
+  std::lock_guard<std::mutex> lock(openBabelMutex());
 
   // set up our internal OBMol, discarding any molecule from a previous call
   d->setup = false;
@@ -210,19 +237,23 @@ Real OBEnergy::value(const Eigen::VectorXd& x)
       d->m_obmol == nullptr || !d->setup)
     return 0.0; // nothing to do
 
-  // OBMol::SetCoordinates() blindly copies 3 * NumAtoms() doubles out of the
-  // supplied array, so a stale coordinate vector would read off the end.
-  const auto n = d->m_obmol->NumAtoms();
-  if (x.size() != static_cast<Eigen::Index>(3 * n))
-    return 0.0;
-
-  // update all coordinates at once (SetCoordinates copies the array)
-  d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
-
   double energy = 0.0;
-  if (d->m_forceField != nullptr) {
-    d->m_forceField->SetCoordinates(*d->m_obmol);
-    energy = d->m_forceField->Energy(false);
+  {
+    std::lock_guard<std::mutex> lock(openBabelMutex());
+
+    // OBMol::SetCoordinates() blindly copies 3 * NumAtoms() doubles out of
+    // the supplied array, so a stale coordinate vector would read off the end.
+    const auto n = d->m_obmol->NumAtoms();
+    if (x.size() != static_cast<Eigen::Index>(3 * n))
+      return 0.0;
+
+    // update all coordinates at once (SetCoordinates copies the array)
+    d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
+
+    if (d->m_forceField != nullptr) {
+      d->m_forceField->SetCoordinates(*d->m_obmol);
+      energy = d->m_forceField->Energy(false);
+    }
   }
 
   // if method is not GAFF, convert to kJ/mol
@@ -251,24 +282,33 @@ Real OBEnergy::evaluate(const Eigen::VectorXd& x, Eigen::VectorXd* grad)
   // out rather than read past either buffer. Zero the caller's gradient so a
   // reused buffer can't feed a previous iteration's forces back to the
   // optimizer alongside our zero energy.
-  const auto n = d->m_obmol->NumAtoms();
-  if (x.size() != static_cast<Eigen::Index>(3 * n)) {
-    grad->setZero();
-    return 0.0;
+  double energy = 0.0;
+  bool haveGradient = false;
+  {
+    std::lock_guard<std::mutex> lock(openBabelMutex());
+
+    const auto n = d->m_obmol->NumAtoms();
+    if (x.size() != static_cast<Eigen::Index>(3 * n)) {
+      grad->setZero();
+      return 0.0;
+    }
+
+    d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
+
+    if (d->m_forceField != nullptr) {
+      d->m_forceField->SetCoordinates(*d->m_obmol);
+      energy = d->m_forceField->Energy(true);
+
+      // GetGradientPtr returns forces (not gradients), so negate. This copies
+      // the array while the lock is held.
+      Eigen::Map<const Eigen::VectorXd> obForces(
+        d->m_forceField->GetGradientPtr(), 3 * n);
+      *grad = -obForces;
+      haveGradient = true;
+    }
   }
 
-  d->m_obmol->SetCoordinates(const_cast<double*>(x.data()));
-
-  double energy = 0.0;
-  if (d->m_forceField != nullptr) {
-    d->m_forceField->SetCoordinates(*d->m_obmol);
-    energy = d->m_forceField->Energy(true);
-
-    // GetGradientPtr returns forces (not gradients), so negate
-    Eigen::Map<const Eigen::VectorXd> obForces(
-      d->m_forceField->GetGradientPtr(), 3 * n);
-    *grad = -obForces;
-
+  if (haveGradient) {
     // if method is not GAFF, convert to kJ/mol
     if (m_identifier != "GAFF") {
       energy *= Calc::KCAL_TO_KJ;

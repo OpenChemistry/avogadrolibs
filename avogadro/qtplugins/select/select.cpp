@@ -506,14 +506,17 @@ void Select::selectResidue()
     // check if it's a number - select that residue index
     int index = label.toInt(&ok);
     if (ok) {
-      auto residueList = m_molecule->residues();
-      if (index >= 1 && index < static_cast<int>(residueList.size())) {
-        auto residue = residueList[index];
-        for (Index i : residue.atomIndices()) {
-          m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
-                                                      undoText);
+      // select the residue(s) with this (PDB) residue number
+      if (index >= 0) {
+        for (const auto& residue : m_molecule->residues()) {
+          if (residue.residueId() != static_cast<Index>(index))
+            continue;
+          for (Index i : residue.atomIndices()) {
+            m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
+                                                        undoText);
+          }
         }
-      } // index makes sense
+      }
       continue;
     }
 
@@ -524,16 +527,18 @@ void Select::selectResidue()
       QString name = match.captured(1);
       index = match.captured(2).toInt();
 
-      auto residueList = m_molecule->residues();
-      if (index >= 1 && index < static_cast<int>(residueList.size())) {
-        auto residue = residueList[index];
-        if (name == residue.residueName().c_str()) {
+      // select residues with this number whose name matches (e.g. HIS57)
+      if (index >= 0) {
+        for (const auto& residue : m_molecule->residues()) {
+          if (residue.residueId() != static_cast<Index>(index) ||
+              name != residue.residueName().c_str())
+            continue;
           for (Index i : residue.atomIndices()) {
             m_molecule->undoMolecule()->setAtomSelected(i, evalSelect(true, i),
                                                         undoText);
           }
-        } // check if name matches specified (e.g. HIS57 is really a HIS)
-      } // index makes sense
+        }
+      }
     } else {
       // standard residue name
       for (const auto& residue : m_molecule->residues()) {
