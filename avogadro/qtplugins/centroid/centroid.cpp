@@ -5,6 +5,7 @@
 
 #include "centroid.h"
 
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
@@ -32,6 +33,8 @@ Centroid::Centroid(QObject* parent_)
   connect(m_centroidAction, SIGNAL(triggered()), SLOT(addCentroid()));
   connect(m_comAction, SIGNAL(triggered()), SLOT(addCenterOfMass()));
   connect(m_normalAction, SIGNAL(triggered()), SLOT(normal()));
+
+  registerCentroidCommands();
 }
 
 QList<QAction*> Centroid::actions() const
@@ -52,8 +55,18 @@ void Centroid::setMolecule(QtGui::Molecule* mol)
 
 void Centroid::addCentroid()
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
-    return;
+  Index newIndex = 0;
+  Vector3 newPos(0.0, 0.0, 0.0);
+  computeCentroid(newIndex, newPos);
+}
+
+bool Centroid::computeCentroid(Index& newIndex, Vector3& newPos, QString* error)
+{
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0) {
+    if (error)
+      *error = tr("No molecule");
+    return false;
+  }
 
   Vector3 center(0.0, 0.0, 0.0);
   Index count = 0;
@@ -68,19 +81,39 @@ void Centroid::addCentroid()
     center += m_molecule->atomPosition3d(i);
     ++count;
   }
+  if (count == 0) {
+    if (error)
+      *error = tr("No non-dummy atoms found to compute centroid.");
+    return false;
+  }
   center /= count;
 
-  m_molecule->undoMolecule()->addAtom(0, center);
+  auto atom = m_molecule->undoMolecule()->addAtom(0, center);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  newIndex = atom.index();
+  newPos = center;
+  return true;
 }
 
 void Centroid::addCenterOfMass()
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
-    return;
+  Index newIndex = 0;
+  Vector3 newPos(0.0, 0.0, 0.0);
+  computeCenterOfMass(newIndex, newPos);
+}
+
+bool Centroid::computeCenterOfMass(Index& newIndex, Vector3& newPos,
+                                   QString* error)
+{
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0) {
+    if (error)
+      *error = tr("No molecule");
+    return false;
+  }
 
   Vector3 center(0.0, 0.0, 0.0);
   Real totalMass = 0.0;
+  Index count = 0;
   bool hasSelection = !m_molecule->isSelectionEmpty();
 
   // we have to first find the centroid
@@ -98,84 +131,144 @@ void Centroid::addCenterOfMass()
     center += m_molecule->atomPosition3d(i) * mass;
 
     totalMass += mass;
+    ++count;
+  }
+  if (count == 0 || totalMass <= 0.0) {
+    if (error)
+      *error = tr("No non-dummy atoms found to compute center of mass.");
+    return false;
   }
   center /= totalMass;
 
-  m_molecule->undoMolecule()->addAtom(0, center);
+  auto atom = m_molecule->undoMolecule()->addAtom(0, center);
   m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  newIndex = atom.index();
+  newPos = center;
+  return true;
 }
 
 void Centroid::normal()
 {
-  if (m_molecule == nullptr || m_molecule->atomCount() == 0)
-    return;
-
+  Index newIndex = 0;
   Vector3 newPos(0.0, 0.0, 0.0);
-  if (m_molecule->isSelectionEmpty()) {
-    auto pair = m_molecule->bestFitPlane();
-    newPos = pair.second * 2.0 + pair.first;
-  } else {
-    Array<Vector3> selectedAtoms;
-    for (Index i = 0; i < m_molecule->atomCount(); ++i) {
-      if (!m_molecule->atomSelected(i))
-        continue;
-
-      selectedAtoms.push_back(m_molecule->atomPosition3d(i));
-    }
-
-    auto pair = m_molecule->bestFitPlane(selectedAtoms);
-    newPos = pair.second * 2.0 + pair.first;
-  }
-  m_molecule->undoMolecule()->addAtom(0, newPos);
-
-  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  computeNormal(newIndex, newPos);
 }
 
-void Centroid::registerCommands()
+bool Centroid::computeNormal(Index& newIndex, Vector3& newPos, QString* error)
 {
-  emit registerCommand("addCentroid",
-                       tr("Add a dummy atom at the geometric center of the "
-                          "molecule or the selected atoms."));
+  if (m_molecule == nullptr || m_molecule->atomCount() == 0) {
+    if (error)
+      *error = tr("No molecule");
+    return false;
+  }
 
-  emit registerCommand("addCenterOfMass",
-                       tr("Add a dummy atom at the center of mass of the "
-                          "molecule or the selected atoms."));
+  Array<Vector3> points;
+  bool hasSelection = !m_molecule->isSelectionEmpty();
+  for (Index i = 0; i < m_molecule->atomCount(); ++i) {
+    if (hasSelection && !m_molecule->atomSelected(i))
+      continue;
+    if (m_molecule->atomicNumber(i) == 0)
+      continue;
 
-  emit registerCommand("addPerpendicular",
-                       tr("Add a dummy atom perpendicular to the plane of the "
-                          "molecule or the selected atoms."));
+    points.push_back(m_molecule->atomPosition3d(i));
+  }
+
+  if (points.size() < 3) {
+    if (error) {
+      if (points.empty())
+        *error = tr("No non-dummy atoms found to compute perpendicular point.");
+      else
+        *error = tr("At least three non-dummy atoms are required to compute a "
+                    "best-fit plane.");
+    }
+    return false;
+  }
+
+  auto pair = m_molecule->bestFitPlane(points);
+  newPos = pair.second * 2.0 + pair.first;
+
+  auto atom = m_molecule->undoMolecule()->addAtom(0, newPos);
+  m_molecule->emitChanged(QtGui::Molecule::Atoms | QtGui::Molecule::Added);
+  newIndex = atom.index();
+  return true;
+}
+
+void Centroid::registerCentroidCommands()
+{
+  QtGui::CommandSpec addCentroid;
+  addCentroid.name = "addCentroid";
+  addCentroid.description =
+    tr("Add a dummy atom at the geometric center of the "
+       "molecule or the selected atoms.");
+  addCentroid.needsMolecule = true;
+  addCentroid.handler = [this](const QtGui::CommandArguments&) {
+    Index newIndex = 0;
+    Vector3 newPos(0.0, 0.0, 0.0);
+    QString error;
+    if (!computeCentroid(newIndex, newPos, &error)) {
+      emit commandFailed(error);
+      return;
+    }
+    QVariantMap result;
+    result["index"] = static_cast<qlonglong>(newIndex);
+    QVariantList posList;
+    posList << newPos.x() << newPos.y() << newPos.z();
+    result["position"] = posList;
+    emit commandFinished(QString(), result);
+  };
+  commandRegistry().add(std::move(addCentroid));
+
+  QtGui::CommandSpec addCenterOfMass;
+  addCenterOfMass.name = "addCenterOfMass";
+  addCenterOfMass.description =
+    tr("Add a dummy atom at the center of mass of the "
+       "molecule or the selected atoms.");
+  addCenterOfMass.needsMolecule = true;
+  addCenterOfMass.handler = [this](const QtGui::CommandArguments&) {
+    Index newIndex = 0;
+    Vector3 newPos(0.0, 0.0, 0.0);
+    QString error;
+    if (!computeCenterOfMass(newIndex, newPos, &error)) {
+      emit commandFailed(error);
+      return;
+    }
+    QVariantMap result;
+    result["index"] = static_cast<qlonglong>(newIndex);
+    QVariantList posList;
+    posList << newPos.x() << newPos.y() << newPos.z();
+    result["position"] = posList;
+    emit commandFinished(QString(), result);
+  };
+  commandRegistry().add(std::move(addCenterOfMass));
+
+  QtGui::CommandSpec addPerpendicular;
+  addPerpendicular.name = "addPerpendicular";
+  addPerpendicular.description =
+    tr("Add a dummy atom perpendicular to the plane of the "
+       "molecule or the selected atoms.");
+  addPerpendicular.needsMolecule = true;
+  addPerpendicular.handler = [this](const QtGui::CommandArguments&) {
+    Index newIndex = 0;
+    Vector3 newPos(0.0, 0.0, 0.0);
+    QString error;
+    if (!computeNormal(newIndex, newPos, &error)) {
+      emit commandFailed(error);
+      return;
+    }
+    QVariantMap result;
+    result["index"] = static_cast<qlonglong>(newIndex);
+    QVariantList posList;
+    posList << newPos.x() << newPos.y() << newPos.z();
+    result["position"] = posList;
+    emit commandFinished(QString(), result);
+  };
+  commandRegistry().add(std::move(addPerpendicular));
 }
 
 bool Centroid::handleCommand(const QString& command,
                              [[maybe_unused]] const QVariantMap& options)
 {
-  static const QStringList knownCommands = { "addCentroid", "addCenterOfMass",
-                                             "addPerpendicular" };
-
-  if (!knownCommands.contains(command))
-    return false; // not one of our commands
-
-  if (m_molecule == nullptr) {
-    emit commandFailed(tr("No molecule"));
-    return true;
-  }
-
-  if (command == "addCentroid") {
-    addCentroid();
-    return true;
-  }
-
-  if (command == "addCenterOfMass") {
-    addCenterOfMass();
-    return true;
-  }
-
-  if (command == "addPerpendicular") {
-    normal();
-    return true;
-  }
-
-  return false;
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 } // namespace Avogadro::QtPlugins
