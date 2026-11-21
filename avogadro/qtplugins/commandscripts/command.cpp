@@ -14,9 +14,12 @@
 #include <avogadro/qtgui/packagemanager.h>
 #include <avogadro/qtgui/pythonscript.h>
 #include <avogadro/qtgui/timedprogressdialog.h>
+#include <avogadro/qtgui/iodevicestreambuf.h>
 #include <avogadro/qtgui/utilities.h>
 
 #include <avogadro/rendering/camera.h>
+#include <avogadro/rendering/gltfvisitor.h>
+#include <avogadro/rendering/scene.h>
 
 #include <QAction>
 #include <QtWidgets/QDialog>
@@ -28,10 +31,14 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringList>
+#include <QtCore/QTemporaryDir>
 #include <QtCore/QtPlugin>
+
+#include <ostream>
 
 namespace Avogadro::QtPlugins {
 
@@ -84,6 +91,7 @@ Command::Command(QObject* parent_)
 
 Command::~Command()
 {
+  releaseSceneFile();
   qDeleteAll(m_dialogs.values());
   m_dialogs.clear();
 }
@@ -257,6 +265,12 @@ QJsonObject packageOptions(const QAction* action, const QString& packageDir,
   if (!inputFormat.isEmpty())
     options.insert(QStringLiteral("inputMoleculeFormat"), inputFormat);
 
+  // Not read by InterfaceScript; it only rides along with the cached options
+  // so run() can find out what the feature asked for.
+  const QString inputScene = action->property("packageInputScene").toString();
+  if (!inputScene.isEmpty())
+    options.insert(QStringLiteral("inputScene"), inputScene);
+
   // The definitions must be wrapped under "userOptions" so that
   // JsonWidget::buildOptionGui() recognises them and builds the dialog.
   if (!userOptionsValue.isEmpty()) {
@@ -386,6 +400,57 @@ void Command::setCamera(Rendering::Camera* camera)
   m_camera = camera;
 }
 
+void Command::setScene(Rendering::Scene* scene)
+{
+  // The renderer's own scene, so it reflects what is on screen when run()
+  // is called. Owned by the GLWidget, which outlives every command it starts.
+  m_scene = scene;
+}
+
+bool Command::writeSceneGlb(Rendering::Scene* scene, Rendering::Camera* camera,
+                            const QString& fileName)
+{
+  if (scene == nullptr || camera == nullptr) {
+    qWarning() << "Command: cannot write the scene; there is no active view.";
+    return false;
+  }
+
+  // Deliberately no centerOn() or setScale(): unlike File > Export > glTF,
+  // the script gets Avogadro's own frame (angstroms), matching the CJSON
+  // coordinates and properties.modelView it already receives.
+  Rendering::GltfVisitor visitor;
+  visitor.setCamera(*camera);
+  visitor.begin();
+  scene->rootNode().accept(visitor);
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::WriteOnly)) {
+    qWarning() << "Command: cannot open" << fileName
+               << "for writing:" << file.errorString();
+    return false;
+  }
+  bool ok = false;
+  {
+    QtGui::IODeviceStreamBuf buffer(file);
+    std::ostream stream(&buffer);
+    ok = visitor.write(stream) && stream;
+  }
+  file.close();
+  if (!ok || file.error() != QFileDevice::NoError) {
+    qWarning() << "Command: writing the scene failed:"
+               << QString::fromStdString(visitor.error()) << file.errorString();
+    return false;
+  }
+  return true;
+}
+
+void Command::releaseSceneFile()
+{
+  // A cancelled script may still be shutting down; on POSIX that is harmless
+  // for a file it already opened.
+  m_sceneDir.reset();
+}
+
 void Command::run()
 {
   if (m_currentDialog)
@@ -402,6 +467,7 @@ void Command::run()
     m_currentScript = nullptr;
     m_runningMolecule.clear();
   }
+  releaseSceneFile();
 
   if (m_currentInterface) {
     QJsonObject collected = m_currentInterface->collectOptions();
@@ -451,6 +517,37 @@ void Command::run()
     if (m_camera != nullptr) {
       m_currentScript->setCamera(m_camera->modelView().matrix(),
                                  m_camera->projection().matrix());
+    }
+
+    // Hand the script the scene as a glb if the feature asked for one. Any
+    // failure leaves "scene" out; scripts must cope with it being absent.
+    if (interp.isPackageMode()) {
+      const QJsonValue inputScene =
+        iface.options().value(QStringLiteral("inputScene"));
+      if (inputScene.isString() && !inputScene.toString().isEmpty()) {
+        if (inputScene.toString() != QLatin1String("glb")) {
+          qWarning() << "Command: unknown input-scene value"
+                     << inputScene.toString();
+        } else {
+          m_sceneDir = std::make_unique<QTemporaryDir>();
+          if (!m_sceneDir->isValid()) {
+            qWarning() << "Command: cannot create a temporary directory for "
+                          "the scene.";
+            m_sceneDir.reset();
+          } else {
+            const QString path =
+              m_sceneDir->filePath(QStringLiteral("scene.glb"));
+            if (writeSceneGlb(m_scene, m_camera, path)) {
+              QJsonObject scene;
+              scene.insert(QStringLiteral("format"), QStringLiteral("glb"));
+              scene.insert(QStringLiteral("fileName"), path);
+              options.insert(QStringLiteral("scene"), scene);
+            } else {
+              releaseSceneFile();
+            }
+          }
+        }
+      }
     }
 
     // Snapshot so processFinished() can detect if the molecule was closed
@@ -520,6 +617,7 @@ void Command::cancelCommand()
   m_currentScript->deleteLater();
   m_currentScript = nullptr;
   m_runningMolecule.clear();
+  releaseSceneFile();
 }
 
 void Command::commandFailed(const QStringList& errors)
@@ -536,6 +634,7 @@ void Command::commandFailed(const QStringList& errors)
     m_currentScript = nullptr;
   }
   m_runningMolecule.clear();
+  releaseSceneFile();
 
   QMessageBox::warning(qobject_cast<QWidget*>(parent()),
                        tr("Error Running Script"), details);
@@ -580,6 +679,7 @@ void Command::processFinished()
     // read the interpreter directly.
     errors = script->interpreter().errorList();
   }
+  releaseSceneFile();
 
   if (!errors.isEmpty())
     qWarning() << errors;
@@ -742,6 +842,8 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
                       metadata.value("user-options").toString());
   action->setProperty("packageInputFormat",
                       metadata.value("input-format").toString());
+  action->setProperty("packageInputScene",
+                      metadata.value("input-scene").toString());
   action->setEnabled(true);
 
   // TODO priorities in higher level menus? Probably needs change in MenuBuilder
