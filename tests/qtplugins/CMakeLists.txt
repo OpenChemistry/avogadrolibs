@@ -17,6 +17,7 @@ set(plugins
   AutoOpt
   ApplyColors
   Bonding
+  Centroid
   ConstraintsExtension
   CopyPaste
   Crystal
