@@ -30,16 +30,16 @@
 // rules in remapAtomReferences(): swapAtom() relabels them, removeAtom() drops
 // any that names the removed atom and moves the former last atom's references
 // into the hole, clearAtoms() drops them all. Residues repoint on swapAtom(),
-// copy and move, but removeAtom() does NOT repoint them today, which the plan
-// (plans/molecule-refactor-plan.md, section 4.6) schedules to become "remove
-// the whole residue". Rather than encode the stale indices as correct, the
-// model marks a residue unverified once a removal touches it and stops checking
-// its membership.
+// copy and move. removeAtom() removes every residue that names the removed
+// atom, whole and with its label and custom property, keeping the order of
+// the others (plans/molecule-refactor-plan.md, section 4.6); the atoms it
+// named stay in the molecule, in no residue.
 //
 // Not modelled, on purpose (see the report accompanying this test):
 //   basis sets (atom centres), unit cells, meshes, cubes, spectra, layer ids
 //   as such (only each atom's layer), conformer properties, the custom
-//   element map, per-residue colors and the residue label / property arrays.
+//   element map, per-residue colors and residue properties other than one
+//   double column.
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/constraint.h>
@@ -88,6 +88,7 @@ inline const char* kAtomStringProperty = "shadow-s";
 inline const char* kAtomMatrixProperty = "shadow-m";
 inline const char* kBondDoubleProperty = "shadow-bd";
 inline const char* kBondIntProperty = "shadow-bi";
+inline const char* kResidueDoubleProperty = "shadow-rd";
 
 struct Atom
 {
@@ -154,9 +155,16 @@ struct ResidueRecord
   Avogadro::Core::Residue::SecondaryStructure secondary =
     Avogadro::Core::Residue::undefined;
   std::map<std::string, Index> members; // atom name -> atom identity
-  // False once the library's removeAtom() has left this residue's proxies
-  // stale (see the header comment); its membership is then not checked.
-  bool verified = true;
+  std::string label;                    // empty: no custom label
+  std::optional<double> doubleProperty;
+
+  bool names(Index atomId) const
+  {
+    for (const auto& member : members)
+      if (member.second == atomId)
+        return true;
+    return false;
+  }
 };
 
 inline std::string str(const Vector3& v)
@@ -267,9 +275,6 @@ public:
   {
     clearCalculated();
     const Index id = atoms[index].id;
-    // The atom that moves into the hole, whose references must follow it. By
-    // identity they do so without any work; only the residues need care.
-    const Index movedId = atoms.back().id;
     // An entry that loses an atom is dropped, not shortened.
     auto loses = [id](const Reference& r) { return r.names(id); };
     constraints.erase(
@@ -278,13 +283,13 @@ public:
     scanCoordinates.erase(
       std::remove_if(scanCoordinates.begin(), scanCoordinates.end(), loses),
       scanCoordinates.end());
-    // Plan section 4.6: removeAtom() does not repoint residue proxies today.
-    for (auto& residue : residues) {
-      for (const auto& member : residue.members) {
-        if (member.second == id || member.second == movedId)
-          residue.verified = false;
-      }
-    }
+    // Plan section 4.6: a residue that names the atom goes, whole, and the
+    // others keep their order. The atom that moves into the hole is followed
+    // by identity, so nothing else needs doing.
+    residues.erase(
+      std::remove_if(residues.begin(), residues.end(),
+                     [id](const ResidueRecord& r) { return r.names(id); }),
+      residues.end());
     bonds.erase(std::remove_if(bonds.begin(), bonds.end(),
                                [id](const Bond& b) {
                                  return b.atomA == id || b.atomB == id;
@@ -384,15 +389,19 @@ public:
 
   void addResidue(const ResidueRecord& residue) { residues.push_back(residue); }
 
+  // Molecule::removeResidue(): the later residues move down by one.
+  void removeResidue(Index index)
+  {
+    if (index < residues.size())
+      residues.erase(residues.begin() + static_cast<std::ptrdiff_t>(index));
+  }
+
   // For tests where the molecule itself decides what is left (RWMolecule undo
-  // and redo drop constraints and leave residue proxies stale, and nothing
-  // puts them back): take the constraints, scan coordinates and residue
-  // membership the molecule has now, naming atoms by this model's identities.
-  // Residues that @p previous had given up on stay unverified, as do ones
-  // whose proxies are out of range. Returns an error if a constraint names an
-  // atom that does not exist.
-  std::string adoptReferences(const Avogadro::Core::Molecule& mol,
-                              const Model& previous)
+  // and redo drop constraints, and nothing puts them back): take the
+  // constraints and scan coordinates the molecule has now, naming atoms by
+  // this model's identities. Residues are not adopted: undo does restore
+  // them. Returns an error if a constraint names an atom that does not exist.
+  std::string adoptReferences(const Avogadro::Core::Molecule& mol)
   {
     auto convert = [this](const Avogadro::Core::Constraint& c, Reference& out,
                           std::string& error) {
@@ -427,25 +436,6 @@ public:
         return error;
       r.value = 0.0;
       scanCoordinates.push_back(r);
-    }
-    residues.clear();
-    for (Index i = 0; i < mol.residueCount(); ++i) {
-      const auto& residue = mol.residue(i);
-      ResidueRecord record;
-      record.name = residue.residueName();
-      record.number = residue.residueId();
-      record.chain = residue.chainId();
-      record.heterogen = residue.isHeterogen();
-      record.secondary = residue.secondaryStructure();
-      record.verified =
-        i >= previous.residues.size() || previous.residues[i].verified;
-      for (const auto& atom : residue.residueAtoms()) {
-        if (atom.index() >= atomCount())
-          record.verified = false;
-        else
-          record.members[residue.atomName(atom)] = atoms[atom.index()].id;
-      }
-      residues.push_back(record);
     }
     return std::string();
   }
@@ -617,9 +607,9 @@ private:
 // partial charges, velocities, normal modes), which the library drops when
 // the structure changes and which undo therefore cannot be expected to bring
 // back. @p checkReferences says whether to compare constraints, scan
-// coordinates and residues, which undo and redo do not restore (removing an
-// atom drops the constraints that name it, and undoing the removal does not
-// bring them back).
+// coordinates, which undo and redo do not restore (removing an atom drops the
+// constraints that name it, and undoing the removal does not bring them
+// back). Residues are always compared.
 inline std::string verify(const Avogadro::Core::Molecule& mol,
                           const Model& model, bool checkCalculated = true,
                           bool checkReferences = true)
@@ -879,42 +869,82 @@ inline std::string verify(const Avogadro::Core::Molecule& mol,
                       mol.scanCoordinates(), false);
     if (!error.empty())
       return error;
+  }
 
-    if (mol.residueCount() != model.residues.size()) {
-      out << "residueCount: expected " << model.residues.size() << " got "
-          << mol.residueCount();
+  // Residues, in order: fields, which atom each name refers to, label and
+  // custom property. Always compared; undo restores them.
+  if (mol.residueCount() != model.residues.size()) {
+    out << "residueCount: expected " << model.residues.size() << " got "
+        << mol.residueCount();
+    return out.str();
+  }
+  for (size_t r = 0; r < model.residues.size(); ++r) {
+    const ResidueRecord& want = model.residues[r];
+    const auto& residue = mol.residue(static_cast<Index>(r));
+    std::ostringstream where;
+    where << "residue " << r << " (" << want.name << ") ";
+    const std::string at = where.str();
+    if (residue.residueName() != want.name ||
+        residue.residueId() != want.number || residue.chainId() != want.chain ||
+        residue.isHeterogen() != want.heterogen ||
+        residue.secondaryStructure() != want.secondary) {
+      out << at << "fields differ";
       return out.str();
     }
-    for (size_t r = 0; r < model.residues.size(); ++r) {
-      const ResidueRecord& want = model.residues[r];
-      if (!want.verified)
-        continue; // stale proxies, see the header comment
-      const auto& residue = mol.residue(static_cast<Index>(r));
-      out << "residue " << r << " ";
-      if (residue.residueName() != want.name ||
-          residue.residueId() != want.number ||
-          residue.chainId() != want.chain ||
-          residue.isHeterogen() != want.heterogen ||
-          residue.secondaryStructure() != want.secondary) {
-        out << "fields differ";
+    const std::vector<Index> gotIndices = residue.atomIndices();
+    if (gotIndices.size() != want.members.size()) {
+      out << at << "has " << gotIndices.size() << " atoms, expected "
+          << want.members.size();
+      return out.str();
+    }
+    std::vector<Index> wantIndices;
+    for (const auto& member : want.members) {
+      const Index index = model.indexOf(member.second);
+      wantIndices.push_back(index);
+      const Index got = residue.atomIndexByName(member.first);
+      if (got != index) {
+        out << at << "atom '" << member.first << "': expected index " << index
+            << " got index " << got;
         return out.str();
       }
-      if (residue.residueAtoms().size() != want.members.size()) {
-        out << "has " << residue.residueAtoms().size() << " atoms, expected "
-            << want.members.size();
+      if (residue.atomName(index) != member.first) {
+        out << at << "atom " << index << " is named '"
+            << residue.atomName(index) << "', expected '" << member.first
+            << "'";
         return out.str();
       }
-      for (const auto& member : want.members) {
-        const Index index = model.indexOf(member.second);
-        const auto proxy = residue.atomByName(member.first);
-        if (proxy.molecule() != &mol || proxy.index() != index) {
-          out << "atom '" << member.first << "': expected index " << index
-              << " in this molecule, got index " << proxy.index()
-              << (proxy.molecule() == &mol ? "" : " in another molecule");
-          return out.str();
-        }
+    }
+    std::sort(wantIndices.begin(), wantIndices.end());
+    if (gotIndices != wantIndices) {
+      out << at << "atomIndices() differ";
+      return out.str();
+    }
+    if (residue.atomIndexMap().size() != want.members.size()) {
+      out << at << "atomIndexMap() has " << residue.atomIndexMap().size()
+          << " entries, expected " << want.members.size();
+      return out.str();
+    }
+    // The proxies behind the index API must still belong to this molecule.
+    // That is only visible through the deprecated accessor.
+    SHADOW_BEGIN_DEPRECATED
+    for (const auto& proxy : residue.residueAtoms()) {
+      if (proxy.molecule() != &mol) {
+        out << at << "has an atom proxy in another molecule";
+        return out.str();
       }
-      out.str(std::string());
+    }
+    SHADOW_END_DEPRECATED
+    if (mol.residueLabel(static_cast<Index>(r)) != want.label) {
+      out << at << "label: expected '" << want.label << "' got '"
+          << mol.residueLabel(static_cast<Index>(r)) << "'";
+      return out.str();
+    }
+    const auto gotProperty = mol.residueProperties().getDouble(
+      kResidueDoubleProperty, static_cast<Index>(r));
+    if (!(gotProperty == want.doubleProperty)) {
+      out << at << "double property: expected " << str(want.doubleProperty)
+          << " got " << str(gotProperty);
+      return out.str();
     }
   }
   return std::string();

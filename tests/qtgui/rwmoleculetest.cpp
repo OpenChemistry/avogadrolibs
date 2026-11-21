@@ -15,6 +15,8 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
+#include <QUndoCommand>
+
 #include <algorithm>
 #include <array>
 #include <functional>
@@ -33,6 +35,7 @@ using Avogadro::QtGui::RWMolecule;
 // TODO move this to an algorithms header
 #include <avogadro/core/elements.h>
 #include <map>
+#include <optional>
 #include <sstream>
 #include <string>
 
@@ -2123,19 +2126,60 @@ TEST(RWMoleculeTest, randomSequenceUndoRedoRoundTrip)
 // The order in which a removed atom's bonds are listed afterwards is
 // unspecified, so bonds are matched by their endpoints' unique ids.
 //
-// Constraints, scan coordinates and residues are edited on the molecule
-// directly, since RWMolecule has no undoable API for them. They are compared
-// straight after an edit (so that swapAtom() and removeAtom() are held to
-// their rules by identity), but not after undo or redo, which do not restore
-// them: removing an atom drops every constraint and scan coordinate that names
-// it, undoing the removal does not bring them back, and removeAtom() leaves
-// residue proxies stale (plan section 4.6). Before the next edit the shadow
-// adopts whatever the molecule holds (Model::adoptReferences()).
+// Constraints and scan coordinates are edited on the molecule directly, since
+// RWMolecule has no undoable API for them. They are compared straight after
+// an edit (so that swapAtom() and removeAtom() are held to their rules by
+// identity), but not after undo or redo, which do not restore them: removing
+// an atom drops every constraint and scan coordinate that names it, and
+// undoing the removal does not bring them back. Before the next edit the
+// shadow adopts whatever the molecule holds (Model::adoptReferences()).
+//
+// Residues are compared after every step, undo and redo included: removing an
+// atom removes the residues that name it, and undoing the removal puts them
+// back (plan section 4.6). RWMolecule has no undo for adding a residue, so
+// the test pushes its own command (AddResidueCommand), which makes the
+// residues part of each undo state.
 // ---------------------------------------------------------------------------
 
 namespace {
 
 using ShadowModel::Model;
+
+// Adds a residue (with an optional label and custom property) on redo and
+// removes it again on undo. RWMolecule::addResidue() is not undoable yet.
+class AddResidueCommand : public QUndoCommand
+{
+public:
+  AddResidueCommand(Molecule& m, const Avogadro::Core::Residue& residue,
+                    const std::string& label, std::optional<double> property)
+    : m_molecule(m), m_residue(residue), m_label(label), m_property(property)
+  {
+  }
+
+  void redo() override
+  {
+    Avogadro::Core::Residue copy(m_residue);
+    m_molecule.addResidue(copy);
+    const Index index = m_molecule.residueCount() - 1;
+    if (!m_label.empty())
+      m_molecule.setResidueLabel(index, m_label);
+    if (m_property) {
+      m_molecule.residueProperties().setDouble(
+        ShadowModel::kResidueDoubleProperty, index, *m_property);
+    }
+  }
+
+  void undo() override
+  {
+    m_molecule.removeResidue(m_molecule.residueCount() - 1);
+  }
+
+private:
+  Molecule& m_molecule;
+  Avogadro::Core::Residue m_residue;
+  std::string m_label;
+  std::optional<double> m_property;
+};
 
 std::string compareWithShadow(RWMolecule& mol, Model expected,
                               bool checkReferences)
@@ -2291,9 +2335,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       // with the molecule before picking a bond by index.
       model.syncBondOrder(mol.molecule());
       {
-        const Model previous = model;
-        const std::string error =
-          model.adoptReferences(mol.molecule(), previous);
+        const std::string error = model.adoptReferences(mol.molecule());
         if (!error.empty()) {
           ADD_FAILURE() << "seed " << seed << ", step " << step << ": "
                         << error;
@@ -2301,7 +2343,8 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         }
       }
       pick = pickInt(0, 17);
-      // Constraints, scan coordinates and residues, which are not undoable.
+      // Constraints and scan coordinates, which are not undoable, and
+      // residues.
       if (chance(12))
         pick = pickInt(18, 21);
       // 13 would be setIsotope(), which is not left out by accident:
@@ -2558,7 +2601,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           std::string name = "R" + std::to_string(step);
           Index number = static_cast<Index>(pickInt(1, 99));
           char chain = static_cast<char>('A' + pickInt(0, 2));
-          Avogadro::Core::Residue& residue = m.addResidue(name, number, chain);
+          Avogadro::Core::Residue residue(name, number, chain);
           ShadowModel::ResidueRecord record;
           record.name = name;
           record.number = number;
@@ -2570,6 +2613,14 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
             residue.addResidueAtom(atomName, m.atom(chosen[i]));
             record.members[atomName] = model.atoms[chosen[i]].id;
           }
+          // Labels and a property on about half of them, so the arrays are
+          // ragged.
+          if (chance(50))
+            record.label = "label" + std::to_string(step);
+          if (chance(50))
+            record.doubleProperty = static_cast<double>(pickInt(1, 99));
+          mol.undoStack().push(new AddResidueCommand(m, residue, record.label,
+                                                     record.doubleProperty));
           model.addResidue(record);
           break;
         }
@@ -3392,4 +3443,140 @@ TEST(RWMoleculeTest, operationsFillAndReduceRejectBadInput)
   EXPECT_FALSE(other.fillUnitCellFromOperations(bCenteredOperations));
   EXPECT_FALSE(
     other.reduceCellToAsymmetricUnitFromOperations(bCenteredOperations));
+}
+
+// ---------------------------------------------------------------------------
+// Removing an atom removes the residues that name it, and undoing the removal
+// brings them back exactly: index, atoms, label and custom property
+// (plan section 4.6).
+// ---------------------------------------------------------------------------
+
+namespace {
+
+// Five atoms, atomic numbers 1-5, and residues R1 = {N: 0, CA: 1},
+// R2 = {N: 2, CA: 3}, R3 = {N: 4, O: 1}, each with a label and a property.
+void buildResidueMolecule(Molecule& m, RWMolecule& mol)
+{
+  for (Index i = 0; i < 5; ++i)
+    mol.addAtom(static_cast<unsigned char>(i + 1));
+  mol.undoStack().clear();
+  const std::vector<std::vector<std::pair<std::string, Index>>> members = {
+    { { "N", 0 }, { "CA", 1 } },
+    { { "N", 2 }, { "CA", 3 } },
+    { { "N", 4 }, { "O", 1 } }
+  };
+  for (size_t r = 0; r < members.size(); ++r) {
+    std::string name = "R" + std::to_string(r + 1);
+    Index number = static_cast<Index>(r + 1);
+    char chain = 'A';
+    Avogadro::Core::Residue& residue = m.addResidue(name, number, chain);
+    for (const auto& member : members[r])
+      residue.addResidueAtom(member.first, m.atom(member.second));
+    m.setResidueLabel(static_cast<Index>(r), "label" + name);
+    m.residueProperties().setDouble("value", static_cast<Index>(r),
+                                    10.0 * static_cast<double>(r + 1));
+  }
+}
+
+struct ResidueSnapshot
+{
+  std::string name;
+  std::map<std::string, int> atomicNumbers; // name -> atomic number
+  std::map<std::string, Index> indices;     // name -> atom index
+  std::string label;
+  std::optional<double> value;
+
+  bool operator==(const ResidueSnapshot& other) const
+  {
+    return name == other.name && atomicNumbers == other.atomicNumbers &&
+           indices == other.indices && label == other.label &&
+           value == other.value;
+  }
+};
+
+std::vector<ResidueSnapshot> snapshotResidues(const Molecule& m)
+{
+  std::vector<ResidueSnapshot> out;
+  for (Index r = 0; r < m.residueCount(); ++r) {
+    ResidueSnapshot s;
+    s.name = m.residue(r).residueName();
+    s.indices = m.residue(r).atomIndexMap();
+    for (const auto& entry : s.indices)
+      s.atomicNumbers[entry.first] = m.atom(entry.second).atomicNumber();
+    s.label = m.residueLabel(r);
+    s.value = m.residueProperties().getDouble("value", r);
+    out.push_back(s);
+  }
+  return out;
+}
+
+} // namespace
+
+TEST(RWMoleculeTest, removeAtomUndoRestoresItsResidues)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildResidueMolecule(m, mol);
+  const auto before = snapshotResidues(m);
+  ASSERT_EQ(before.size(), static_cast<size_t>(3));
+
+  // Atom 1 is named by R1 and R3: both go, R2 stays and shifts to index 0.
+  // Atom 4, the last, moves into index 1, but its only residue (R3) is gone.
+  ASSERT_TRUE(mol.removeAtom(1));
+  ASSERT_EQ(m.residueCount(), 1u);
+  EXPECT_EQ(m.residue(0).residueName(), "R2");
+  EXPECT_EQ(m.residueLabel(0), "labelR2");
+  EXPECT_EQ(m.residueProperties().getDouble("value", 0), 20.0);
+  EXPECT_EQ(m.residue(0).atomIndices(), (std::vector<Index>{ 2, 3 }));
+  const auto removed = snapshotResidues(m);
+
+  mol.undoStack().undo();
+  EXPECT_EQ(snapshotResidues(m), before);
+  for (Index r = 0; r < m.residueCount(); ++r) {
+    for (Index i : m.residue(r).atomIndices())
+      EXPECT_EQ(m.atom(i).molecule(), &m);
+  }
+
+  mol.undoStack().redo();
+  EXPECT_EQ(snapshotResidues(m), removed);
+
+  mol.undoStack().undo();
+  EXPECT_EQ(snapshotResidues(m), before);
+}
+
+TEST(RWMoleculeTest, removeLastAtomUndoRestoresItsResidue)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildResidueMolecule(m, mol);
+  const auto before = snapshotResidues(m);
+
+  // The last atom (4) is only in R3, at the end of the residue array.
+  ASSERT_TRUE(mol.removeAtom(4));
+  EXPECT_EQ(m.residueCount(), 2u);
+  mol.undoStack().undo();
+  EXPECT_EQ(snapshotResidues(m), before);
+  mol.undoStack().redo();
+  EXPECT_EQ(m.residueCount(), 2u);
+  mol.undoStack().undo();
+  EXPECT_EQ(snapshotResidues(m), before);
+}
+
+TEST(RWMoleculeTest, removeAtomOutsideResiduesUndoRepointsTheLastAtom)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildResidueMolecule(m, mol);
+  // A sixth atom, in no residue.
+  mol.addAtom(6);
+  const auto before = snapshotResidues(m);
+
+  // Atom 5, the last, is in no residue; removing atom 2 (in R2) moves it to
+  // index 2 and removes R2. Undo has to put atom 5 back at the end.
+  ASSERT_TRUE(mol.removeAtom(2));
+  EXPECT_EQ(m.residueCount(), 2u);
+  mol.undoStack().undo();
+  EXPECT_EQ(snapshotResidues(m), before);
+  EXPECT_EQ(m.atomicNumber(5), 6);
+  EXPECT_EQ(m.atomicNumber(2), 3);
 }

@@ -3301,6 +3301,9 @@ private:
     CopyAssign,
     MoveConstruct,
     MoveAssign,
+    SetResidueLabel,
+    SetResidueProperty,
+    RemoveResidue,
     OpCount
   };
 
@@ -3352,6 +3355,9 @@ private:
       "copy assign",
       "move construct",
       "move assign",
+      "setResidueLabel",
+      "setResidueProperty",
+      "removeResidue",
     };
     return names[op];
   }
@@ -3380,6 +3386,9 @@ private:
       case RemoveConstraint:
       case SetScanCoordinates:
       case AddResidue:
+      case SetResidueLabel:
+      case SetResidueProperty:
+      case RemoveResidue:
         return 2;
       case AddCoordinateSet:
       case ReplaceCoordinateSet:
@@ -3590,6 +3599,12 @@ bool ShadowRunner::step(int stepNumber)
     op = AddConstraint;
   if (op == AddResidue && model.residues.size() >= 4)
     op = SwapAtom;
+  // The residue edits need a residue (and no atoms: they may be the first
+  // thing a molecule gets, since a residue can be empty).
+  if ((op == SetResidueLabel || op == SetResidueProperty ||
+       op == RemoveResidue) &&
+      model.residues.empty())
+    op = AddResidue;
   if ((op == AddConstraint || op == SetScanCoordinates) && n < 2)
     op = AddAtom;
   if (op == ActivateCoordinateSet && model.frameCount == 0)
@@ -3807,7 +3822,46 @@ bool ShadowRunner::step(int stepNumber)
         residue.addResidueAtom(atomName, mol.atom(chosen[i]));
         record.members[atomName] = model.atoms[chosen[i]].id;
       }
+      // Labels and a custom property on about half of the residues, so that
+      // the arrays are ragged (a label on a later residue only, say).
+      if (chance(50)) {
+        record.label = "label" + std::to_string(m_step);
+        mol.setResidueLabel(mol.residueCount() - 1, record.label);
+      }
+      if (chance(50)) {
+        record.doubleProperty = static_cast<double>(pickInt(1, 99));
+        mol.residueProperties().setDouble(ShadowModel::kResidueDoubleProperty,
+                                          mol.residueCount() - 1,
+                                          *record.doubleProperty);
+      }
       model.addResidue(record);
+      break;
+    }
+    case SetResidueLabel: {
+      const Index r = pickIndex(mol.residueCount());
+      const std::string label = chance(20) ? "" : "L" + std::to_string(m_step);
+      mol.setResidueLabel(r, label);
+      model.residues[r].label = label;
+      break;
+    }
+    case SetResidueProperty: {
+      const Index r = pickIndex(mol.residueCount());
+      const double value = static_cast<double>(pickInt(1, 99));
+      mol.residueProperties().setDouble(ShadowModel::kResidueDoubleProperty, r,
+                                        value);
+      model.residues[r].doubleProperty = value;
+      break;
+    }
+    case RemoveResidue: {
+      const Index r =
+        chance(25) ? mol.residueCount() - 1 : pickIndex(mol.residueCount());
+      if (!mol.removeResidue(r)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": removeResidue(" << r << ") refused, count "
+                      << mol.residueCount();
+        return false;
+      }
+      model.removeResidue(r);
       break;
     }
     case ClearAtoms: {
@@ -5481,4 +5535,245 @@ TEST_F(MoleculeTest, setBondPairsPermutationAndRefusal)
   expectBondsConsistent(mol);
   ASSERT_TRUE(mol.removeAtom(1));
   expectBondsConsistent(mol);
+}
+
+// ---------------------------------------------------------------------------
+// Residues follow their atoms on removal (plan section 4.6): removing an atom
+// removes every residue that names it, whole, and keeps the order of the
+// others; the residues that name the last atom follow it into the hole.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+// Adds residue "name" with the named atoms, in the order the names are given.
+void addNamedResidue(Molecule& mol, const std::string& name,
+                     const std::vector<std::pair<std::string, Index>>& atoms)
+{
+  std::string resName = name;
+  Index number = mol.residueCount() + 1;
+  char chain = 'A';
+  Avogadro::Core::Residue& residue = mol.addResidue(resName, number, chain);
+  for (const auto& atom : atoms)
+    residue.addResidueAtom(atom.first, mol.atom(atom.second));
+}
+
+// Five atoms (atomic numbers 1-5, so each is recognizable), then residues
+// R1 = {N: 0, CA: 1}, R2 = {N: 2, CA: 3}, R3 = {N: 4}, each with a label and
+// a custom property; atom 4 is the last atom.
+void buildThreeResidues(Molecule& mol)
+{
+  for (unsigned char z = 1; z <= 5; ++z)
+    mol.addAtom(z);
+  addNamedResidue(mol, "R1", { { "N", 0 }, { "CA", 1 } });
+  addNamedResidue(mol, "R2", { { "N", 2 }, { "CA", 3 } });
+  addNamedResidue(mol, "R3", { { "N", 4 } });
+  for (Index r = 0; r < 3; ++r) {
+    mol.setResidueLabel(r, "label" + std::to_string(r + 1));
+    mol.residueProperties().setDouble("value", r, 10.0 * (r + 1));
+  }
+}
+
+std::vector<std::string> residueNames(const Molecule& mol)
+{
+  std::vector<std::string> names;
+  for (Index r = 0; r < mol.residueCount(); ++r)
+    names.push_back(mol.residue(r).residueName());
+  return names;
+}
+
+// The atomic number of the atom a residue calls @p name, 0 if it has none.
+int atomicNumberOf(const Molecule& mol, Index residue, const char* name)
+{
+  return mol.atom(mol.residue(residue).atomIndexByName(name)).atomicNumber();
+}
+
+} // namespace
+
+TEST(MoleculeResidueTest, removeResidueKeepsTheOrder)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+
+  EXPECT_FALSE(mol.removeResidue(3));
+  EXPECT_FALSE(mol.removeResidue(Avogadro::MaxIndex));
+  EXPECT_EQ(mol.residueCount(), 3u);
+
+  ASSERT_TRUE(mol.removeResidue(1));
+  EXPECT_EQ(residueNames(mol), (std::vector<std::string>{ "R1", "R3" }));
+  EXPECT_EQ(mol.residueLabel(0), "label1");
+  EXPECT_EQ(mol.residueLabel(1), "label3");
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 0), 10.0);
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 1), 30.0);
+  EXPECT_FALSE(mol.residueProperties().getDouble("value", 2).has_value());
+  // The atoms stay, in no residue.
+  EXPECT_EQ(mol.atomCount(), 5u);
+
+  ASSERT_TRUE(mol.removeResidue(1));
+  ASSERT_TRUE(mol.removeResidue(0));
+  EXPECT_EQ(mol.residueCount(), 0u);
+  EXPECT_FALSE(mol.removeResidue(0));
+}
+
+TEST(MoleculeResidueTest, removeResidueWithShortLabelsAndProperties)
+{
+  // Only the first residue has a label and a property.
+  Molecule mol;
+  for (unsigned char z = 1; z <= 3; ++z)
+    mol.addAtom(z);
+  addNamedResidue(mol, "R1", { { "N", 0 } });
+  addNamedResidue(mol, "R2", { { "N", 1 } });
+  addNamedResidue(mol, "R3", { { "N", 2 } });
+  mol.setResidueLabel(0, "first");
+  mol.residueProperties().setDouble("value", 0, 1.0);
+
+  ASSERT_TRUE(mol.removeResidue(2));
+  EXPECT_EQ(mol.residueLabel(0), "first");
+  ASSERT_TRUE(mol.removeResidue(1));
+  EXPECT_EQ(mol.residueLabel(0), "first");
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 0), 1.0);
+  ASSERT_TRUE(mol.removeResidue(0));
+  EXPECT_EQ(mol.residueLabel(0), "");
+  EXPECT_FALSE(mol.residueProperties().getDouble("value", 0).has_value());
+}
+
+TEST(MoleculeResidueTest, removeAtomInAMiddleResidueRemovesThatResidue)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+
+  // Atom 3 (CA of R2) goes; the last atom (4, in R3) moves into index 3.
+  ASSERT_TRUE(mol.removeAtom(3));
+  EXPECT_EQ(mol.atomCount(), 4u);
+  EXPECT_EQ(residueNames(mol), (std::vector<std::string>{ "R1", "R3" }));
+  EXPECT_EQ(mol.residueLabel(0), "label1");
+  EXPECT_EQ(mol.residueLabel(1), "label3");
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 0), 10.0);
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 1), 30.0);
+
+  // R1 is untouched.
+  EXPECT_EQ(mol.residue(0).atomIndices(), (std::vector<Index>{ 0, 1 }));
+  EXPECT_EQ(atomicNumberOf(mol, 0, "N"), 1);
+  EXPECT_EQ(atomicNumberOf(mol, 0, "CA"), 2);
+  // R3 followed its atom (atomic number 5) into the hole.
+  EXPECT_EQ(mol.residue(1).atomIndexByName("N"), 3u);
+  EXPECT_EQ(atomicNumberOf(mol, 1, "N"), 5);
+  // R2's other atom (atomic number 3, index 2) is still there, in no residue.
+  EXPECT_EQ(mol.atomicNumber(2), 3);
+  for (Index r = 0; r < mol.residueCount(); ++r)
+    EXPECT_FALSE(mol.residue(r).hasAtomByIndex(2));
+  // Every proxy still belongs to this molecule.
+  for (Index r = 0; r < mol.residueCount(); ++r) {
+    for (Index i : mol.residue(r).atomIndices())
+      EXPECT_EQ(mol.atom(i).molecule(), &mol);
+  }
+}
+
+TEST(MoleculeResidueTest, removeTheLastAtomWhenItIsInAResidue)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+
+  ASSERT_TRUE(mol.removeAtom(4));
+  EXPECT_EQ(mol.atomCount(), 4u);
+  EXPECT_EQ(residueNames(mol), (std::vector<std::string>{ "R1", "R2" }));
+  EXPECT_EQ(mol.residueLabel(1), "label2");
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 1), 20.0);
+  EXPECT_EQ(mol.residue(1).atomIndices(), (std::vector<Index>{ 2, 3 }));
+  EXPECT_EQ(atomicNumberOf(mol, 1, "CA"), 4);
+}
+
+TEST(MoleculeResidueTest, removeAnAtomInTwoResiduesRemovesBoth)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+  // Atom 1 is also named by R3.
+  std::string name = "R4";
+  Index number = 4;
+  char chain = 'A';
+  mol.addResidue(name, number, chain).addResidueAtom("X", mol.atom(1));
+  mol.residue(2).addResidueAtom("Y", mol.atom(1));
+  mol.setResidueLabel(3, "label4");
+
+  ASSERT_TRUE(mol.removeAtom(1));
+  // R1, R3 and R4 name atom 1; only R2 is left.
+  EXPECT_EQ(residueNames(mol), (std::vector<std::string>{ "R2" }));
+  EXPECT_EQ(mol.residueLabel(0), "label2");
+  EXPECT_EQ(mol.residueProperties().getDouble("value", 0), 20.0);
+  // The last atom (index 4) moved to 1; R2 named atoms 2 and 3 only.
+  EXPECT_EQ(mol.residue(0).atomIndices(), (std::vector<Index>{ 2, 3 }));
+}
+
+TEST(MoleculeResidueTest, removeAnAtomInNoResidueRepointsTheLastAtom)
+{
+  Molecule mol;
+  for (unsigned char z = 1; z <= 4; ++z)
+    mol.addAtom(z);
+  // Atom 0 belongs to no residue; atom 3, the last, belongs to R1.
+  addNamedResidue(mol, "R1", { { "A", 3 }, { "B", 2 } });
+  mol.setResidueLabel(0, "keep");
+
+  ASSERT_TRUE(mol.removeAtom(0));
+  ASSERT_EQ(mol.residueCount(), 1u);
+  EXPECT_EQ(mol.residueLabel(0), "keep");
+  EXPECT_EQ(mol.residue(0).atomIndexByName("A"), 0u);
+  EXPECT_EQ(mol.residue(0).atomIndexByName("B"), 2u);
+  EXPECT_EQ(atomicNumberOf(mol, 0, "A"), 4);
+  EXPECT_EQ(atomicNumberOf(mol, 0, "B"), 3);
+
+  // And the last atom, in no residue: nothing moves.
+  ASSERT_TRUE(mol.removeAtom(2));
+  ASSERT_EQ(mol.residueCount(), 0u);
+}
+
+TEST(MoleculeResidueTest, removeAnAtomIsRefusedOutOfRangeAndChangesNothing)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+  EXPECT_FALSE(mol.removeAtom(5));
+  EXPECT_FALSE(mol.removeAtom(Avogadro::MaxIndex));
+  EXPECT_EQ(mol.residueCount(), 3u);
+  EXPECT_EQ(mol.residueLabel(2), "label3");
+}
+
+TEST(MoleculeResidueTest, removeAtomOnACopyLeavesTheOriginalResidues)
+{
+  // The residue array is shared copy-on-write with a copy.
+  Molecule original;
+  buildThreeResidues(original);
+  Molecule copy(original);
+
+  ASSERT_TRUE(copy.removeAtom(0));
+  EXPECT_EQ(residueNames(copy), (std::vector<std::string>{ "R2", "R3" }));
+  EXPECT_EQ(copy.residue(1).atomIndexByName("N"), 0u);
+
+  EXPECT_EQ(residueNames(original),
+            (std::vector<std::string>{ "R1", "R2", "R3" }));
+  EXPECT_EQ(original.residue(2).atomIndexByName("N"), 4u);
+  EXPECT_EQ(original.residueLabel(0), "label1");
+  EXPECT_EQ(original.atom(4).molecule(), &original);
+  EXPECT_EQ(copy.atom(0).molecule(), &copy);
+}
+
+TEST(MoleculeResidueTest, insertResidueUndoesRemoveResidue)
+{
+  Molecule mol;
+  buildThreeResidues(mol);
+  const Avogadro::Core::Residue saved = mol.residue(1);
+  const auto properties = mol.residueProperties().slice(1, 3);
+
+  ASSERT_TRUE(mol.removeResidue(1));
+  EXPECT_FALSE(mol.insertResidue(3, saved));
+  ASSERT_TRUE(mol.insertResidue(1, saved, "label2", properties));
+
+  EXPECT_EQ(residueNames(mol), (std::vector<std::string>{ "R1", "R2", "R3" }));
+  for (Index r = 0; r < 3; ++r) {
+    EXPECT_EQ(mol.residueLabel(r), "label" + std::to_string(r + 1));
+    EXPECT_EQ(mol.residueProperties().getDouble("value", r),
+              10.0 * static_cast<double>(r + 1));
+  }
+  EXPECT_EQ(mol.residue(1).atomIndices(), (std::vector<Index>{ 2, 3 }));
+  // Insert at the end is allowed.
+  EXPECT_TRUE(mol.insertResidue(3, saved));
+  EXPECT_EQ(mol.residueCount(), 4u);
+  EXPECT_EQ(mol.residueLabel(3), "");
 }
