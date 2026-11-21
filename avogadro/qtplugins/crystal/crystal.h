@@ -29,8 +29,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -61,6 +59,9 @@ private:
   QAction* m_standardOrientationAction;
   QAction* m_toggleUnitCellAction;
   QAction* m_wrapAtomsToCellAction;
+
+  /// Add every scripting command to the command registry.
+  void registerCrystalCommands();
 };
 
 inline QString Crystal::description() const

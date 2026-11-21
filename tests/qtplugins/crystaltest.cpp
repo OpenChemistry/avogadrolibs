@@ -228,19 +228,27 @@ TEST_F(CrystalCommandTest, noMoleculeFails)
   }
 }
 
-// Not settled by the decisions: without a unit cell both commands claim the
-// command and silently do nothing (no undo entry either).
-TEST_F(CrystalCommandTest, undecidedNoUnitCellIsSilentNoOp)
+TEST_F(CrystalCommandTest, rejectsUnknownOption)
 {
-  recordUndecided("wrapUnitCell/standardCrystalOrientation without a unit "
-                  "cell return true and do nothing");
+  buildCubicArgon();
+  QVariantMap badOptions;
+  badOptions.insert(QStringLiteral("extra"), 42);
+  const auto outcome = m_harness.run("wrapUnitCell", badOptions);
+  EXPECT_EQ(outcome.status, CommandStatus::Failed) << describe(outcome);
+}
 
+// Without a unit cell both commands fail with an error message instead of
+// silently doing nothing.
+TEST_F(CrystalCommandTest, noUnitCellReturnsError)
+{
   m_harness.molecule()->addAtom(18, Vector3(5.0, -1.0, 2.0));
   const MoleculeSnapshot before = m_harness.snapshot();
   for (const char* name : { "wrapUnitCell", "standardCrystalOrientation" }) {
     const CommandOutcome out = m_harness.run(name);
     EXPECT_TRUE(out.claimed) << name;
-    EXPECT_EQ(out.status, CommandStatus::Finished) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.message, QStringLiteral("The molecule has no unit cell."))
+      << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
   EXPECT_EQ(m_harness.snapshot(), before);
