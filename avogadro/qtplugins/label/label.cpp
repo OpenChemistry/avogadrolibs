@@ -432,6 +432,7 @@ void Label::processResidue(const Core::Molecule& molecule,
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
+  auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
 
   for (Index r = 0; r < molecule.residueCount(); ++r) {
     const auto& residue = molecule.residue(r);
@@ -460,8 +461,8 @@ void Label::processResidue(const Core::Molecule& molecule,
         radius = auxR;
       }
     }
+    radius *= interface->radiusScalar;
 
-    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
     Vector3ub color = interface->color;
     std::string text = "";
     if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
