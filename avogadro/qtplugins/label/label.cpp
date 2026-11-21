@@ -432,8 +432,10 @@ void Label::processResidue(const Core::Molecule& molecule,
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
+  auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
 
-  for (const auto& residue : molecule.residues()) {
+  for (Index r = 0; r < molecule.residueCount(); ++r) {
+    const auto& residue = molecule.residue(r);
     Atom caAtom = molecule.atom(residue.atomIndexByName("CA"));
     if (!caAtom.isValid() ||
         !m_layerManager.atomEnabled(layer, caAtom.index())) {
@@ -443,7 +445,9 @@ void Label::processResidue(const Core::Molecule& molecule,
     std::vector<Atom> atoms;
     for (Index atomIndex : residue.atomIndices())
       atoms.push_back(molecule.atom(atomIndex));
-    const std::string customLabel = molecule.residueLabel(residue.residueId());
+    if (atoms.empty())
+      continue;
+    const std::string customLabel = molecule.residueLabel(r);
     Vector3f pos = Vector3f::Zero();
     for (const auto& atom : atoms) {
       pos += atom.position3d().cast<float>();
@@ -456,11 +460,11 @@ void Label::processResidue(const Core::Molecule& molecule,
       auto auxR = static_cast<float>(Elements::radiusVDW(atomicNumber));
       auxR += (atom.position3d().cast<float>() - pos).norm();
       if (auxR > radius) {
-        auxR = radius;
+        radius = auxR;
       }
     }
+    radius *= interface->radiusScalar;
 
-    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
     Vector3ub color = interface->color;
     std::string text = "";
     if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
