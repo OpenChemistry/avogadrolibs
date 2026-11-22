@@ -15,7 +15,7 @@ namespace Avogadro::MoleQueue {
 JsonRpcClient::JsonRpcClient(QObject* parent_)
   : QObject(parent_), m_packetCounter(0), m_socket(nullptr)
 {
-  connect(this, SIGNAL(newPacket(QByteArray)), SLOT(readPacket(QByteArray)),
+  connect(this, &JsonRpcClient::newPacket, this, &JsonRpcClient::readPacket,
           Qt::QueuedConnection);
 }
 
@@ -47,7 +47,8 @@ bool JsonRpcClient::connectToServer(const QString& serverName_)
   // New connection.
   if (m_socket == nullptr) {
     m_socket = new QLocalSocket(this);
-    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readSocket()));
+    connect(m_socket, &QLocalSocket::readyRead, this,
+            &JsonRpcClient::readSocket);
   }
 
   if (serverName_.isEmpty()) {
@@ -131,7 +132,7 @@ void JsonRpcClient::readSocket()
     stream >> json;
     emit newPacket(json);
     if (m_socket->bytesAvailable() > 0)
-      QTimer::singleShot(0, this, SLOT(readSocket()));
+      QTimer::singleShot(0, this, &JsonRpcClient::readSocket);
   }
 }
 
