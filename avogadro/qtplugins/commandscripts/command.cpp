@@ -372,8 +372,8 @@ void Command::menuActivated()
   auto* buttonBox =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
-  connect(buttonBox, SIGNAL(accepted()), this, SLOT(run()));
-  connect(buttonBox, SIGNAL(rejected()), m_currentDialog, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, this, &Command::run);
+  connect(buttonBox, &QDialogButtonBox::rejected, m_currentDialog, &QDialog::reject);
   vbox->addWidget(buttonBox);
   m_currentDialog->setLayout(vbox);
   m_currentDialog->exec();
@@ -394,8 +394,8 @@ void Command::run()
   closeProgressDialog();
 
   if (m_currentScript) {
-    disconnect(m_currentScript, SIGNAL(finished()), this,
-               SLOT(processFinished()));
+    disconnect(m_currentScript, &QtGui::InterfaceScript::finished, this,
+              &Command::processFinished);
     // Kill the child process so an abandoned xtb run does not keep going.
     m_currentScript->interpreter().asyncTerminate();
     m_currentScript->deleteLater();
@@ -427,7 +427,7 @@ void Command::run()
       m_currentScript->setScriptFilePath(iface.scriptFilePath());
       options = collected;
     }
-    connect(m_currentScript, SIGNAL(finished()), this, SLOT(processFinished()));
+    connect(m_currentScript, &QtGui::InterfaceScript::finished, this, &Command::processFinished);
     connect(m_currentScript, &QtGui::InterfaceScript::progress, this,
             &Command::updateProgress);
 
@@ -514,8 +514,8 @@ void Command::cancelCommand()
     return;
 
   // Kill the child process and drop whatever partial output it produced.
-  disconnect(m_currentScript, SIGNAL(finished()), this,
-             SLOT(processFinished()));
+  disconnect(m_currentScript, &QtGui::InterfaceScript::finished, this,
+             &Command::processFinished);
   m_currentScript->interpreter().asyncTerminate();
   m_currentScript->deleteLater();
   m_currentScript = nullptr;
@@ -635,8 +635,8 @@ void Command::configurePython()
   dlg.setLayout(layout);
 
   // Connect
-  connect(buttonBox, SIGNAL(accepted()), &dlg, SLOT(accept()));
-  connect(buttonBox, SIGNAL(rejected()), &dlg, SLOT(reject()));
+  connect(buttonBox, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
+  connect(buttonBox, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
 
   // Show dialog
   auto response = static_cast<QDialog::DialogCode>(dlg.exec());
@@ -748,7 +748,7 @@ void Command::registerFeature(const QString& type, const QString& packageDir,
   if (!priorities.empty())
     action->setProperty("menu priority", priorities.last());
 
-  connect(action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(action, &QAction::triggered, this, &Command::menuActivated);
   m_actions << action;
   m_packageActions.insert(
     QtGui::PackageManager::packageFeatureKey(packageDir, command, identifier),
