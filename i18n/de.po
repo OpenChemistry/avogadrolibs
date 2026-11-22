@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-22 21:54+0000\n"
+"PO-Revision-Date: 2026-11-22 22:11+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -570,17 +570,19 @@ msgstr "Kein Molekül"
 #: qtgui/commandregistry.cpp:76
 #, qt-format
 msgid "atom index #%1 in %2 must be a whole number."
-msgstr ""
+msgstr "Atomindex #%1 in %2 muss eine ganze Zahl sein."
 
 #: qtgui/commandregistry.cpp:79
 #, qt-format
 msgid "%1 must be a whole number (an atom index)."
-msgstr ""
+msgstr "%1 muss eine ganze Zahl sein (ein Atomindex)."
 
 #: qtgui/commandregistry.cpp:91
 #, qt-format
 msgid "atom index #%1 in %2 is negative; atom indices must be zero or greater."
 msgstr ""
+"Atomindex #%1 in %2 ist negativ: Atomindices aber müssen Null oder größer "
+"als Null sein."
 
 #: qtgui/commandregistry.cpp:95
 #, qt-format
@@ -625,7 +627,7 @@ msgstr "%1 muss eine Liste von drei endlichen Zahlen [x, y, z] sein."
 #: qtgui/commandregistry.cpp:268
 #, qt-format
 msgid "%1 must be a list of 3 finite numbers [x, y, z] in %2."
-msgstr ""
+msgstr "%1 muß eine Liste von drei endlichen Zahlen [x, y, z] in %2 sein."
 
 #: qtgui/commandregistry.cpp:283
 #, qt-format
@@ -660,7 +662,7 @@ msgstr "%1 muss eine Zeichenkette (string) sein."
 #: qtgui/commandregistry.cpp:443
 #, qt-format
 msgid "%1 must be one of: %2."
-msgstr ""
+msgstr "%1 muß einer dieser Werte sein: %2."
 
 #: qtgui/commandregistry.cpp:453
 #, qt-format
@@ -675,22 +677,24 @@ msgstr "unbekannte Option \"%1\" für Befehl \"%2\"."
 #: qtgui/commandregistry.cpp:939
 #, qt-format
 msgid "options \"%1\" and \"%2\" are the same option; give only \"%1\"."
-msgstr ""
+msgstr "Optionen \"%1\"und \"%2\" sind identisch; geben Sie nur \"%1\" an."
 
 #: qtgui/commandregistry.cpp:970
 #, qt-format
 msgid "missing required option \"%1\"."
-msgstr ""
+msgstr "fehlende, jedoch notwendige Option \"%1\"."
 
 #: qtgui/commandregistry.cpp:996
 #, qt-format
 msgid "%1 must be a list of zero-based atom indices."
-msgstr ""
+msgstr "%1 muß eine Liste Null-basierter Atomindices sein."
 
 #: qtgui/commandregistry.cpp:1021
 #, qt-format
 msgid "atom index %1 is repeated in %2; each atom must be different."
 msgstr ""
+"Atomindex %1 wird in %2 wiederholt gebraucht; jedes Atom muß aber "
+"verschieden sein."
 
 #: qtgui/commandregistry.cpp:1048 qtplugins/editor/editor.cpp:1202
 #, qt-format
