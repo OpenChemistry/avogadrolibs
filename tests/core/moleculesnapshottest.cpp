@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/moleculesnapshot.h>
 #include <avogadro/core/residue.h>
@@ -525,4 +526,25 @@ TEST(MoleculeSnapshotTest, calculatedResultsAreNotRestored)
   ASSERT_TRUE(mol.restoreAtomSnapshot(2, snapshot));
   EXPECT_TRUE(mol.partialChargeTypes().empty());
   EXPECT_TRUE(mol.forceVectors().empty());
+}
+
+// A color that was grown by a setter (and then undone) holds the element's
+// color of whichever atom was at that index. When the removed atom comes back
+// the entry at its index must be its own element's.
+TEST(MoleculeSnapshotTest, colorColumnGrownAfterTheRemoval)
+{
+  Molecule mol;
+  mol.addAtom(6);
+  mol.addAtom(9);
+  const Molecule before = mol;
+  const AtomSnapshot snapshot = mol.atomSnapshot(0);
+  ASSERT_TRUE(mol.removeAtom(0)); // the fluorine is atom 0 now
+  // What setting and un-setting a color leaves: an entry with the element's
+  // color for every atom.
+  mol.setColor(0, Vector3ub(mol.color(0)));
+  ASSERT_EQ(1u, mol.colors().size());
+  ASSERT_TRUE(mol.restoreAtomSnapshot(0, snapshot));
+  EXPECT_TRUE(sameMolecule(before, mol));
+  EXPECT_EQ(Vector3ub(Avogadro::Core::Elements::color(6)), mol.color(0));
+  EXPECT_EQ(Vector3ub(Avogadro::Core::Elements::color(9)), mol.color(1));
 }

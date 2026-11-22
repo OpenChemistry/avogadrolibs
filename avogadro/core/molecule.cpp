@@ -1466,7 +1466,7 @@ bool Molecule::restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot)
   for (size_t i = 0; i < frames; ++i)
     restorePositions(m_coordinates3d[i], snapshot.m_framePositions[i]);
 
-  m_atomState.restore(atomId, snapshot.m_state, count);
+  m_atomState.restore(atomId, snapshot.m_state, count, m_atomicNumbers);
 
   // Same reason as in addAtom(): the results are not about this structure.
   clearCalculatedResults();

@@ -168,6 +168,25 @@ struct AtomState
    * Undo removeEntry(@p index, ...) using @p saved from slice(). @p count is
    * the number of atoms after the restoration. The caller has to put the atom
    * itself back first; this restores only what the state stores for it.
+   * @p atomicNumbers are those of the molecule after the restoration, which
+   * the color of an atom without one is derived from. This is the overload
+   * Molecule uses: it also copes with a color column that an undone setter
+   * left grown (see Column::restore() with a fill).
+   */
+  void restore(Index index, const AtomState& saved, Index count,
+               const Array<unsigned char>& atomicNumbers)
+  {
+    forEachColumn(
+      &atomicNumbers,
+      [&](auto& column, const auto& fill, const auto& part) {
+        restoreColumn(column, index, part, count, fill);
+      },
+      saved);
+  }
+
+  /**
+   * As above, for a state whose columns are exactly as removeEntry() left
+   * them. It needs no atomic numbers.
    */
   void restore(Index index, const AtomState& saved, Index count)
   {
@@ -193,6 +212,16 @@ struct AtomState
   }
 
 private:
+  template <typename Column, typename Fill>
+  static void restoreColumn(Column& column, Index index, const Column& saved,
+                            Index count, const Fill& fill)
+  {
+    if constexpr (std::is_same_v<Fill, NoFill>)
+      column.restore(index, saved, count);
+    else
+      column.restore(index, saved, count, fill);
+  }
+
   // The columns that take no fill have swapEntries(a, b) and
   // removeEntry(index, count) only (or, for Column, the T() default), and
   // PropertyMap's public API is deliberately left without a tag overload, so

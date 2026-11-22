@@ -209,6 +209,43 @@ TEST(ColumnTest, restoreIgnoresAColumnThatNoLongerMatches)
   EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "c" }));
 }
 
+// A setter that is undone leaves the column it grew behind, so a column that
+// did not reach the entity when it was removed may reach it when it comes back.
+TEST(ColumnTest, restoreWithFillCopesWithAColumnThatGrewMeanwhile)
+{
+  // Entities 0..3 are "a".."d" in a column that stops before entity 2.
+  auto original = makeLabels({ "a", "b" });
+  const Index count = 4;
+  const auto fill = [](Index index) { return std::string(1, 'p' + index); };
+  const auto saved = original.slice(2, count);
+  ASSERT_TRUE(saved.empty());
+  auto column = original;
+  column.removeEntry(2, count, fill);
+
+  // Meanwhile the column grew to cover the three entities that are left, the
+  // last one (the moved entity, now at index 2) holding its own default.
+  column.set(2, fill(3), count - 1, fill);
+  ASSERT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "s" }));
+
+  // Its default is not needed: index 2 is the restored entity's default.
+  column.restore(2, saved, count, fill);
+  EXPECT_EQ(toVector(column), (std::vector<std::string>{ "a", "b", "r" }));
+
+  // A real value of the moved entity goes back to the end with it.
+  column = original;
+  column.removeEntry(2, count, fill);
+  column.set(2, "real", count - 1, fill);
+  column.restore(2, saved, count, fill);
+  EXPECT_EQ(toVector(column),
+            (std::vector<std::string>{ "a", "b", "r", "real" }));
+
+  // Without the growth nothing changes.
+  column = original;
+  column.removeEntry(2, count, fill);
+  column.restore(2, saved, count, fill);
+  EXPECT_EQ(toVector(column), toVector(original));
+}
+
 TEST(ColumnTest, copyConstructionSharesAssignmentCopies)
 {
   auto original = makeLabels({ "a", "b" });

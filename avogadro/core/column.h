@@ -267,6 +267,31 @@ public:
   {
     if (saved.m_values.empty())
       return;
+    restoreCovered(index, saved, count);
+  }
+
+  /**
+   * As restore(), for a column whose fill depends on the entity (see Fill
+   * above). It also copes with one thing that restore() does not: a setter
+   * that is later undone leaves the column it grew behind, so a column that
+   * did not reach @p index when the entity was removed (@p saved is empty) may
+   * reach it now. The entry there is the moved entity's, and its fill(count -
+   * 1) is the entity's own default, so it is not needed; @p index is left with
+   * fill(index) for the entity that is back. Any other value in it is real, and
+   * goes back to the end of the column with its entity.
+   */
+  template <typename Fill>
+  void restore(Index index, const Column& saved, Index count, Fill fill)
+  {
+    if (saved.m_values.empty())
+      restoreUncovered(index, count, fill);
+    else
+      restoreCovered(index, saved, count);
+  }
+
+private:
+  void restoreCovered(Index index, const Column& saved, Index count)
+  {
     if (saved.m_values.size() == 2) {
       // Covered every entity before: one entry went at the end of the
       // column, and index took the last entry's value.
@@ -279,7 +304,22 @@ public:
     }
   }
 
-private:
+  // restore() for an entity the column had no entry for.
+  template <typename Fill>
+  void restoreUncovered(Index index, Index count, Fill fill)
+  {
+    if (count == 0 || index >= m_values.size() || index >= count - 1)
+      return;
+    const Index last = count - 1;
+    const T moved = m_values[index];
+    if (!(moved == fillValue(fill, last))) {
+      // A real value of the entity that moved: it goes back to the end.
+      growTo(last, fill);
+      m_values.push_back(moved);
+    }
+    m_values[index] = fillValue(fill, index);
+  }
+
   template <typename Fill>
   static T fillValue(const Fill& fill, Index index)
   {
