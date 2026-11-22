@@ -9,9 +9,9 @@
 
 #include <QUndoCommand>
 #include <cassert>
+#include <utility>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 using Core::Array;
 using Core::AtomHybridization;
@@ -36,14 +36,6 @@ protected:
   Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
   Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
   Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
-  // Selection has no public size accessor on Core::Molecule (unlike labels,
-  // colors, etc., which expose their backing Array<T> directly): m_molecule
-  // is protected, reached here only because UndoCommand is a nested class of
-  // RWMolecule, which QtGui::Molecule befriends.
-  bool hasSelectionEntry(Index atomId)
-  {
-    return atomId < m_molecule.m_selectedAtoms.size();
-  }
 
   RWMolecule& m_mol;
   QtGui::Molecule& m_molecule;
@@ -80,6 +72,9 @@ public:
 } // namespace
 
 namespace {
+// Undoing the add of an atom removes it, and redoing puts back exactly what
+// was removed: the atom with everything that was done to it since, taken as a
+// snapshot (R4). Later commands are undone first, so the atom has no bonds.
 class AddAtomCommand : public RWMolecule::UndoCommand
 {
   unsigned char m_atomicNumber;
@@ -89,6 +84,7 @@ class AddAtomCommand : public RWMolecule::UndoCommand
   size_t m_layer;
   bool m_added = false;
   Vector3 m_position3d;
+  Core::AtomSnapshot m_snapshot; // empty until the first undo
 
 public:
   AddAtomCommand(RWMolecule& m, unsigned char aN, bool usingPositions,
@@ -103,6 +99,13 @@ public:
   void redo() override
   {
     assert(m_molecule.atomCount() == m_atomId);
+    if (!m_snapshot.isEmpty()) {
+      // A redo after an undo. An atom that cannot go back leaves the molecule
+      // as it was, and undoing that must do the same.
+      m_added = m_molecule.restoreAtomSnapshot(m_atomId, m_snapshot, m_atomUid);
+      return;
+    }
+
     auto atom = m_usingPositions
                   ? m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid)
                   : m_molecule.addAtom(m_atomicNumber, m_atomUid);
@@ -122,145 +125,42 @@ public:
       return;
 
     assert(m_molecule.atomCount() == m_atomId + 1);
-    m_layer = m_molecule.layer().getLayerID(m_atomId);
+    m_snapshot = m_molecule.atomSnapshot(m_atomId);
     m_molecule.removeAtom(m_atomId);
   }
 };
 } // namespace
 
 namespace {
+// The snapshot holds everything removeAtom() discards that undo restores
+// (R4): the atom's state in every array and coordinate set, the layer, and the
+// constraints, scan coordinates and residues that named it. RWMolecule removes
+// the atom's bonds with commands of their own first. Calculated results are
+// not restored (R3).
 class RemoveAtomCommand : public RWMolecule::UndoCommand
 {
   Index m_atomId;
   Index m_atomUid;
-  unsigned char m_atomicNumber;
-  Vector3 m_position3d;
-  Array<std::pair<Index, Index>> m_bonds;
-  Array<unsigned char> m_orders;
-  size_t m_layer;
-
-  // Per-atom state captured just before removeAtom() in redo(), restored in
-  // undo() once the atom is back at m_atomId. Each of these lives in an
-  // Array that may be shorter than atomCount() -- an atom that was never
-  // given one has no entry, and the accessor falls back to a default rather
-  // than indexing out of bounds. The matching setter grows the array to
-  // atomCount() on first write, though, so calling it unconditionally would
-  // manufacture an entry (and, for color specifically, freeze what the
-  // accessor otherwise computes fresh from the atomic number) for every atom
-  // the growth covers, not just this one. So each field is only restored
-  // when the removed atom actually had it.
-  //
-  // Calculated results (partial charges, force vectors, vibration data, ...)
-  // are not restored: removeAtom() clears them for every atom, since they
-  // describe a molecule that no longer exists once an atom is gone. Restoring
-  // just this atom's would leave one real value among defaults.
-  bool m_hasLabel = false;
-  std::string m_label;
-  bool m_hasSelection = false;
-  bool m_selected = false;
-  bool m_hasFormalCharge = false;
-  signed char m_formalCharge = 0;
-  bool m_hasColor = false;
-  Vector3ub m_color = Vector3ub(0, 0, 0);
-  bool m_hasIsotope = false;
-  unsigned short m_isotope = 0;
-  bool m_hasHybridization = false;
-  AtomHybridization m_hybridization = Core::HybridizationUnknown;
-  bool m_hasPosition2d = false;
-  Vector2 m_position2d = Vector2::Zero();
-  bool m_hasFrozen = false;
-  bool m_frozenAxis[3] = { false, false, false };
+  Core::AtomSnapshot m_snapshot;
 
 public:
-  RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid, unsigned char aN,
-                    const Vector3& pos)
-    : UndoCommand(m), m_atomId(atomId), m_atomUid(uid), m_atomicNumber(aN),
-      m_position3d(pos)
+  RemoveAtomCommand(RWMolecule& m, Index atomId, Index uid)
+    : UndoCommand(m), m_atomId(atomId), m_atomUid(uid)
   {
   }
 
   void redo() override
   {
     assert(m_atomId < m_molecule.atomCount());
-    m_layer = m_molecule.layer().getLayerID(m_atomId);
-    m_bonds = m_molecule.getAtomBonds(m_atomId);
-    m_orders = m_molecule.getAtomOrders(m_atomId);
-
-    m_hasLabel = m_molecule.atomLabels().size() > m_atomId;
-    if (m_hasLabel)
-      m_label = m_molecule.atomLabel(m_atomId);
-
-    m_hasSelection = hasSelectionEntry(m_atomId);
-    if (m_hasSelection)
-      m_selected = m_molecule.atomSelected(m_atomId);
-
-    m_hasFormalCharge = m_molecule.formalCharges().size() > m_atomId;
-    if (m_hasFormalCharge)
-      m_formalCharge = m_molecule.formalCharge(m_atomId);
-
-    m_hasColor = m_molecule.colors().size() > m_atomId;
-    if (m_hasColor)
-      m_color = m_molecule.color(m_atomId);
-
-    m_hasIsotope = m_molecule.isotopes().size() > m_atomId;
-    if (m_hasIsotope)
-      m_isotope = m_molecule.isotope(m_atomId);
-
-    m_hasHybridization = m_molecule.hybridizations().size() > m_atomId;
-    if (m_hasHybridization)
-      m_hybridization = m_molecule.hybridization(m_atomId);
-
-    m_hasPosition2d = m_molecule.atomPositions2d().size() > m_atomId;
-    if (m_hasPosition2d)
-      m_position2d = m_molecule.atomPosition2d(m_atomId);
-
-    // The frozen-atom mask grows in whole-atom (3-row) units, so an atom
-    // either has all three axis entries or none.
-    m_hasFrozen = m_molecule.frozenAtomMask().rows() >=
-                  static_cast<Eigen::Index>(3 * (m_atomId + 1));
-    if (m_hasFrozen) {
-      for (int axis = 0; axis < 3; ++axis)
-        m_frozenAxis[axis] = m_molecule.frozenAtomAxis(m_atomId, axis);
-    }
-
+    m_snapshot = m_molecule.atomSnapshot(m_atomId);
     m_molecule.removeAtom(m_atomId);
   }
 
   void undo() override
   {
-    // As in RemoveBondCommand::undo(): a refused add leaves atomCount()
-    // unchanged, and everything below indexes with atomCount() - 1.
-    auto atom = m_molecule.addAtom(m_atomicNumber, m_position3d, m_atomUid);
-    if (!atom.isValid())
-      return;
-
-    // Swap the moved and unremoved atom data if needed
-    Index movedId = m_mol.atomCount() - 1;
-    m_molecule.layer().addAtom(m_layer, movedId);
-    m_molecule.swapAtom(m_atomId, movedId);
-    m_molecule.addBonds(m_bonds, m_orders);
-    m_bonds.clear();
-
-    // The atom is back at m_atomId now: restore whatever it had, and leave
-    // everything else alone.
-    if (m_hasLabel)
-      m_molecule.setAtomLabel(m_atomId, m_label);
-    if (m_hasSelection)
-      m_molecule.setAtomSelected(m_atomId, m_selected);
-    if (m_hasFormalCharge)
-      m_molecule.setFormalCharge(m_atomId, m_formalCharge);
-    if (m_hasColor)
-      m_molecule.setColor(m_atomId, m_color);
-    if (m_hasIsotope)
-      m_molecule.setIsotope(m_atomId, m_isotope);
-    if (m_hasHybridization)
-      m_molecule.setHybridization(m_atomId, m_hybridization);
-    if (m_hasPosition2d)
-      m_molecule.setAtomPosition2d(m_atomId, m_position2d);
-    if (m_hasFrozen) {
-      for (int axis = 0; axis < 3; ++axis)
-        m_molecule.setFrozenAtomAxis(m_atomId, axis, m_frozenAxis[axis]);
-    }
+    // As in RemoveBondCommand::undo(): the atom may not come back, if its
+    // unique id is no longer free, and the molecule is then left as it was.
+    m_molecule.restoreAtomSnapshot(m_atomId, m_snapshot, m_atomUid);
   }
 };
 } // namespace
@@ -542,8 +442,8 @@ class SetAtomColorCommand : public RWMolecule::UndoCommand
 public:
   SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
                       Vector3ub newColor)
-    : UndoCommand(m), m_atomId(atomId), m_oldColor(oldColor),
-      m_newColor(newColor)
+    : UndoCommand(m), m_atomId(atomId), m_oldColor(std::move(oldColor)),
+      m_newColor(std::move(newColor))
   {
   }
 
@@ -561,8 +461,8 @@ class SetResidueColorCommand : public RWMolecule::UndoCommand
 public:
   SetResidueColorCommand(RWMolecule& m, Index residueId, Vector3ub oldColor,
                          Vector3ub newColor)
-    : UndoCommand(m), m_residueId(residueId), m_oldColor(oldColor),
-      m_newColor(newColor)
+    : UndoCommand(m), m_residueId(residueId), m_oldColor(std::move(oldColor)),
+      m_newColor(std::move(newColor))
   {
   }
 
@@ -640,51 +540,31 @@ public:
 } // namespace
 
 namespace {
+// The snapshot holds the bond's atoms and its state: order, label and custom
+// properties (R4).
 class RemoveBondCommand : public RWMolecule::UndoCommand
 {
   Index m_bondId;
   Index m_bondUid;
-  std::pair<Index, Index> m_bondPair;
-  unsigned char m_bondOrder;
-  // The label lives in an array that may be shorter than bondCount(), and
-  // setBondLabel() grows it to bondCount() on first write, so it is only
-  // restored when the bond had one (see RemoveAtomCommand).
-  bool m_hasLabel = false;
-  std::string m_label;
+  Core::BondSnapshot m_snapshot;
 
 public:
-  RemoveBondCommand(RWMolecule& m, Index bondId, Index bondUid,
-                    const std::pair<Index, Index>& bondPair,
-                    unsigned char bondOrder)
-    : UndoCommand(m), m_bondId(bondId), m_bondUid(bondUid),
-      m_bondPair(bondPair), m_bondOrder(bondOrder)
+  RemoveBondCommand(RWMolecule& m, Index bondId, Index bondUid)
+    : UndoCommand(m), m_bondId(bondId), m_bondUid(bondUid)
   {
   }
 
   void redo() override
   {
-    m_hasLabel = m_molecule.bondLabels().size() > m_bondId;
-    if (m_hasLabel)
-      m_label = m_molecule.bondLabel(m_bondId);
+    m_snapshot = m_molecule.bondSnapshot(m_bondId);
     m_molecule.removeBond(m_bondId);
   }
 
   void undo() override
   {
-    // The bond may not come back: addBond() refuses a unique id that is no
-    // longer free and atom indices that no longer exist. bondCount() has not
-    // grown then, so the swap below would name a bond that is not there --
-    // and on an empty molecule bondCount() - 1 underflows to MaxIndex.
-    auto bond = m_molecule.addBond(m_bondPair.first, m_bondPair.second,
-                                   m_bondOrder, m_bondUid);
-    if (!bond.isValid())
-      return;
-
-    Index movedId = m_molecule.bondCount() - 1;
-    m_molecule.swapBond(m_bondId, movedId);
-
-    if (m_hasLabel)
-      m_molecule.setBondLabel(m_bondId, m_label);
+    // The bond may not come back: its unique id may no longer be free, or its
+    // atoms gone. The molecule is then left as it was.
+    m_molecule.restoreBondSnapshot(m_bondId, m_snapshot, m_bondUid);
   }
 };
 } // namespace
@@ -1096,6 +976,6 @@ public:
 } // namespace
 */
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
+
 #endif

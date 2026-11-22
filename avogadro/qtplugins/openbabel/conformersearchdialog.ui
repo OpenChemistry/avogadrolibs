@@ -25,6 +25,9 @@
         <property name="text">
          <string>Number of conformers:</string>
         </property>
+        <property name="buddy">
+         <cstring>numSpin</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
@@ -67,6 +70,9 @@
         <property name="text">
          <string>Optimization per conformer:</string>
         </property>
+        <property name="buddy">
+         <cstring>optimizationStepsSpinBox</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
@@ -104,6 +110,9 @@
           <property name="text">
            <string>Children:</string>
           </property>
+          <property name="buddy">
+           <cstring>childrenSpinBox</cstring>
+          </property>
          </widget>
         </item>
         <item row="0" column="1">
@@ -129,6 +138,9 @@
           </property>
           <property name="text">
            <string>Mutability:</string>
+          </property>
+          <property name="buddy">
+           <cstring>mutabilitySpinBox</cstring>
           </property>
          </widget>
         </item>
@@ -156,6 +168,9 @@
           <property name="text">
            <string>Convergence:</string>
           </property>
+          <property name="buddy">
+           <cstring>convergenceSpinBox</cstring>
+          </property>
          </widget>
         </item>
         <item row="2" column="1">
@@ -178,6 +193,9 @@
          <widget class="QLabel" name="label_5">
           <property name="text">
            <string>Scoring method:</string>
+          </property>
+          <property name="buddy">
+           <cstring>scoringComboBox</cstring>
           </property>
          </widget>
         </item>

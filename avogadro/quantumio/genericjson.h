@@ -12,8 +12,7 @@
 #include <map>
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT GenericJson : public Io::FileFormat
 {
@@ -45,7 +44,6 @@ public:
   }
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

@@ -5,6 +5,7 @@
 
 #include "focus.h"
 
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
@@ -25,6 +26,8 @@ Focus::Focus(QObject* parent_)
 
   connect(m_focusSelectionAction, SIGNAL(triggered()), SLOT(focusSelection()));
   connect(m_unfocusAction, SIGNAL(triggered()), SLOT(unfocus()));
+
+  registerFocusCommands();
 }
 
 Focus::~Focus() {}
@@ -133,36 +136,32 @@ void Focus::unfocus()
   emit updateRequested();
 }
 
-void Focus::registerCommands()
+void Focus::registerFocusCommands()
 {
-  emit registerCommand("focusSelection", tr("Focus a selection"));
-  emit registerCommand("unfocus", tr("Unfocus a focused selection"));
+  QtGui::CommandSpec focusSelection;
+  focusSelection.name = "focusSelection";
+  focusSelection.description = tr("Focus a selection");
+  focusSelection.needsMolecule = true;
+  focusSelection.handler = [this](const QtGui::CommandArguments&) {
+    this->focusSelection();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(focusSelection));
+
+  QtGui::CommandSpec unfocus;
+  unfocus.name = "unfocus";
+  unfocus.description = tr("Unfocus a focused selection");
+  unfocus.needsMolecule = true;
+  unfocus.handler = [this](const QtGui::CommandArguments&) {
+    this->unfocus();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(unfocus));
 }
 
-bool Focus::handleCommand(const QString& command,
-                          [[maybe_unused]] const QVariantMap& options)
+bool Focus::handleCommand(const QString& command, const QVariantMap& options)
 {
-  static const QStringList knownCommands = { "focusSelection", "unfocus" };
-
-  if (!knownCommands.contains(command))
-    return false; // not one of our commands
-
-  if (m_molecule == nullptr) {
-    emit commandFailed(tr("No molecule"));
-    return true;
-  }
-
-  if (command == "focusSelection") {
-    focusSelection();
-    return true;
-  }
-
-  if (command == "unfocus") {
-    unfocus();
-    return true;
-  }
-
-  return false;
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 } // namespace Avogadro::QtPlugins

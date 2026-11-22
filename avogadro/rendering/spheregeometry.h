@@ -11,13 +11,14 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace Rendering {
+#include <utility>
+
+namespace Avogadro::Rendering {
 
 struct SphereColor
 {
   SphereColor(Vector3f centre, float r, Vector3ub c)
-    : center(centre), radius(r), color(c)
+    : center(std::move(centre)), radius(r), color(std::move(c))
   {
   }
   Vector3f center;
@@ -107,6 +108,12 @@ public:
   const Core::Array<SphereColor>& spheres() const { return m_spheres; }
 
   /**
+   * Call after changing the spheres in place through spheres() so the
+   * next render uploads them again.
+   */
+  void markDirty() { m_dirty = true; }
+
+  /**
    * Clear the contents of the node.
    */
   void clear() override;
@@ -144,7 +151,7 @@ inline void swap(SphereGeometry& lhs, SphereGeometry& rhs)
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_SPHEREGEOMETRY_H

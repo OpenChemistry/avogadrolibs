@@ -29,6 +29,19 @@
 
 namespace Avogadro::Core {
 
+namespace {
+
+// The bit of m_elements for an atomic number. Custom elements share a single
+// bit (element_count - 1, as addAtom() sets), since std::bitset::set() throws
+// for anything past it; removeAtom() has to test and reset the clamped bit too.
+unsigned char elementBit(unsigned char number)
+{
+  return number < element_count ? number
+                                : static_cast<unsigned char>(element_count - 1);
+}
+
+} // namespace
+
 Molecule::Molecule()
   : m_unitCell(nullptr), m_layerInfo(std::make_shared<MoleculeInfo>())
 {
@@ -37,28 +50,21 @@ Molecule::Molecule()
 
 Molecule::Molecule(const Molecule& other)
   : m_data(other.m_data), m_partialCharges(other.m_partialCharges),
-    m_spectra(other.m_spectra), m_atomProperties(other.m_atomProperties),
-    m_bondProperties(other.m_bondProperties),
-    m_residueProperties(other.m_residueProperties),
+    m_spectra(other.m_spectra), m_residueProperties(other.m_residueProperties),
     m_conformerProperties(other.m_conformerProperties),
     m_customElementMap(other.m_customElementMap), m_elements(other.m_elements),
-    m_positions2d(other.m_positions2d), m_positions3d(other.m_positions3d),
-    m_atomLabels(other.m_atomLabels), m_bondLabels(other.m_bondLabels),
+    m_atomState(other.m_atomState), m_positions3d(other.m_positions3d),
     m_residueLabels(other.m_residueLabels),
     m_coordinates3d(other.m_coordinates3d),
     m_coordinate3dIndex(other.m_coordinate3dIndex),
     m_velocities(other.m_velocities), m_timesteps(other.m_timesteps),
-    m_hybridizations(other.m_hybridizations),
-    m_formalCharges(other.m_formalCharges), m_isotopes(other.m_isotopes),
-    m_forceVectors(other.m_forceVectors), m_colors(other.m_colors),
-    m_vibrations(other.m_vibrations), m_selectedAtoms(other.m_selectedAtoms),
-    m_meshes(), m_cubes(), m_basisSet(other.m_basisSet),
+    m_forceVectors(other.m_forceVectors), m_vibrations(other.m_vibrations),
+    m_basisSet(other.m_basisSet),
     m_unitCell(other.m_unitCell ? std::make_unique<UnitCell>(*other.m_unitCell)
                                 : nullptr),
     m_residues(other.m_residues), m_hallNumber(other.m_hallNumber),
-    m_constraints(other.m_constraints),
-    m_frozenAtomMask(other.m_frozenAtomMask), m_graph(other.m_graph),
-    m_bondOrders(other.m_bondOrders), m_atomicNumbers(other.m_atomicNumbers),
+    m_constraints(other.m_constraints), m_graph(other.m_graph),
+    m_bondState(other.m_bondState), m_atomicNumbers(other.m_atomicNumbers),
     m_layerInfo(std::make_shared<MoleculeInfo>(other.ensureLayerInfo()))
 {
   // Share the meshes and cubes; a mutable access detaches (see detachMesh)
@@ -79,10 +85,10 @@ Molecule::Molecule(const Molecule& other)
 
 void Molecule::readProperties(const Molecule& other)
 {
-  m_atomLabels = other.m_atomLabels;
-  m_bondLabels = other.m_bondLabels;
+  m_atomState.labels = other.m_atomState.labels;
+  m_bondState.labels = other.m_bondState.labels;
   m_residueLabels = other.m_residueLabels;
-  m_colors = other.m_colors;
+  m_atomState.colors = other.m_atomState.colors;
   // merge data maps by iterating through other's map
   for (auto it = other.m_data.constBegin(); it != other.m_data.constEnd();
        ++it) {
@@ -99,8 +105,8 @@ void Molecule::readProperties(const Molecule& other)
   m_spectra = other.m_spectra;
 
   // merge custom property maps
-  m_atomProperties = other.m_atomProperties;
-  m_bondProperties = other.m_bondProperties;
+  m_atomState.properties = other.m_atomState.properties;
+  m_bondState.properties = other.m_bondState.properties;
   m_residueProperties = other.m_residueProperties;
   m_conformerProperties = other.m_conformerProperties;
 
@@ -136,36 +142,26 @@ Molecule& Molecule::operator=(const Molecule& other)
     m_data = other.m_data;
     m_partialCharges = other.m_partialCharges;
     m_spectra = other.m_spectra;
-    m_atomProperties = other.m_atomProperties;
-    m_bondProperties = other.m_bondProperties;
+    m_atomState = other.m_atomState;
     m_residueProperties = other.m_residueProperties;
     m_conformerProperties = other.m_conformerProperties;
     m_customElementMap = other.m_customElementMap;
     m_elements = other.m_elements;
-    m_positions2d = other.m_positions2d;
     m_positions3d = other.m_positions3d;
-    m_atomLabels = other.m_atomLabels;
-    m_bondLabels = other.m_bondLabels;
     m_residueLabels = other.m_residueLabels;
     m_coordinates3d = other.m_coordinates3d;
     m_coordinate3dIndex = other.m_coordinate3dIndex;
     m_velocities = other.m_velocities;
     m_timesteps = other.m_timesteps;
-    m_hybridizations = other.m_hybridizations;
-    m_formalCharges = other.m_formalCharges;
-    m_isotopes = other.m_isotopes;
     m_forceVectors = other.m_forceVectors;
-    m_colors = other.m_colors;
     m_vibrations = other.m_vibrations;
-    m_selectedAtoms = other.m_selectedAtoms;
     m_residues = other.m_residues;
     repointResidueAtoms(other);
     m_graph = other.m_graph;
-    m_bondOrders = other.m_bondOrders;
+    m_bondState = other.m_bondState;
     m_atomicNumbers = other.m_atomicNumbers;
     m_hallNumber = other.m_hallNumber;
     m_constraints = other.m_constraints;
-    m_frozenAtomMask = other.m_frozenAtomMask;
 
     clearMeshes();
 
@@ -242,29 +238,12 @@ Molecule& Molecule::operator=(Molecule&& other) noexcept
   return *this;
 }
 
-namespace {
-
-// Give @p to the contents of @p from and leave @p from empty and unshared.
-// Core::Array has no move operations, and copying one would either share its
-// container with the source (copy construction) or deep-copy it (assignment).
-template <typename T>
-void takeArray(Array<T>& to, Array<T>& from)
-{
-  Array<T> empty;
-  to.swap(from);
-  // The source takes the fresh container; this one's old data is released
-  // when empty goes out of scope.
-  from.swap(empty);
-}
-
-} // namespace
-
 void Molecule::repointResidueAtoms(const Molecule& source)
 {
   // Residues sharing their container with the source detach on this first
   // write, so the source's own proxies are left alone.
   for (auto& residue : m_residues) {
-    for (auto& entry : residue.atomNameMap()) {
+    for (auto& entry : residue.m_atomNameMap) {
       if (entry.second.molecule() == &source)
         entry.second = AtomType(this, entry.second.index());
     }
@@ -285,10 +264,7 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   other.m_partialCharges.clear();
   m_spectra = std::move(other.m_spectra);
   other.m_spectra.clear();
-  m_atomProperties = std::move(other.m_atomProperties);
-  other.m_atomProperties.clear();
-  m_bondProperties = std::move(other.m_bondProperties);
-  other.m_bondProperties.clear();
+  m_atomState.takeFrom(other.m_atomState);
   m_residueProperties = std::move(other.m_residueProperties);
   other.m_residueProperties.clear();
   m_conformerProperties = std::move(other.m_conformerProperties);
@@ -298,25 +274,16 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
   m_elements = other.m_elements;
   other.m_elements.reset();
 
-  takeArray(m_positions2d, other.m_positions2d);
-  takeArray(m_positions3d, other.m_positions3d);
-  takeArray(m_atomLabels, other.m_atomLabels);
-  takeArray(m_bondLabels, other.m_bondLabels);
-  takeArray(m_residueLabels, other.m_residueLabels);
-  takeArray(m_coordinates3d, other.m_coordinates3d);
+  m_positions3d.takeFrom(other.m_positions3d);
+  m_residueLabels.takeFrom(other.m_residueLabels);
+  m_coordinates3d.takeFrom(other.m_coordinates3d);
   m_coordinate3dIndex = std::exchange(other.m_coordinate3dIndex, 0);
-  takeArray(m_velocities, other.m_velocities);
-  takeArray(m_timesteps, other.m_timesteps);
-  takeArray(m_hybridizations, other.m_hybridizations);
-  takeArray(m_formalCharges, other.m_formalCharges);
-  takeArray(m_isotopes, other.m_isotopes);
-  takeArray(m_forceVectors, other.m_forceVectors);
-  takeArray(m_colors, other.m_colors);
+  m_velocities.takeFrom(other.m_velocities);
+  m_timesteps.takeFrom(other.m_timesteps);
+  m_forceVectors.takeFrom(other.m_forceVectors);
 
   m_vibrations = std::move(other.m_vibrations);
   other.m_vibrations.clear();
-  m_selectedAtoms = std::move(other.m_selectedAtoms);
-  other.m_selectedAtoms.clear();
 
   m_meshes = std::move(other.m_meshes);
   other.m_meshes.clear();
@@ -331,21 +298,18 @@ void Molecule::takeContentsFrom(Molecule& other) noexcept
     m_basisSet->setMolecule(this);
   m_unitCell = std::move(other.m_unitCell);
 
-  takeArray(m_residues, other.m_residues);
+  m_residues.takeFrom(other.m_residues);
   repointResidueAtoms(other);
   m_hallNumber = std::exchange(other.m_hallNumber, 0);
   m_constraints = std::move(other.m_constraints);
   other.m_constraints.clear();
-  // Eigen's move assignment swaps, so empty the source explicitly.
-  m_frozenAtomMask = std::move(other.m_frozenAtomMask);
-  other.m_frozenAtomMask.resize(0);
 
   // Graph has no swap, and its defaulted moves copy its edge Array; resetting
   // the source afterwards leaves it empty and unshared.
   m_graph = std::move(other.m_graph);
   other.m_graph = Graph();
-  takeArray(m_bondOrders, other.m_bondOrders);
-  takeArray(m_atomicNumbers, other.m_atomicNumbers);
+  m_bondState.takeFrom(other.m_bondState);
+  m_atomicNumbers.takeFrom(other.m_atomicNumbers);
 }
 
 Molecule::~Molecule()
@@ -399,22 +363,22 @@ std::set<std::string> Molecule::partialChargeTypes() const
 
 PropertyMap& Molecule::atomProperties()
 {
-  return m_atomProperties;
+  return m_atomState.properties;
 }
 
 const PropertyMap& Molecule::atomProperties() const
 {
-  return m_atomProperties;
+  return m_atomState.properties;
 }
 
 PropertyMap& Molecule::bondProperties()
 {
-  return m_bondProperties;
+  return m_bondState.properties;
 }
 
 const PropertyMap& Molecule::bondProperties() const
 {
-  return m_bondProperties;
+  return m_bondState.properties;
 }
 
 PropertyMap& Molecule::residueProperties()
@@ -588,69 +552,84 @@ void Molecule::setFrozenAtom(Index atomId, bool frozen)
   if (atomId >= m_atomicNumbers.size())
     return;
 
-  Eigen::Index size = m_frozenAtomMask.rows();
+  auto& mask = m_atomState.frozenMask.storage();
+  Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
-  if (m_frozenAtomMask.rows() != newSize)
-    m_frozenAtomMask.conservativeResize(newSize);
+  if (mask.rows() != newSize)
+    mask.conservativeResize(newSize);
 
-  if (m_frozenAtomMask.rows() > size)
-    for (Eigen::Index i = size; i < m_frozenAtomMask.rows(); ++i)
-      m_frozenAtomMask[i] = 1.0f;
+  if (mask.rows() > size)
+    for (Eigen::Index i = size; i < mask.rows(); ++i)
+      mask[i] = 1.0f;
 
   float value = frozen ? 0.0f : 1.0f;
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (base <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[base] = value;
-    m_frozenAtomMask[base + 1] = value;
-    m_frozenAtomMask[base + 2] = value;
+  if (base <= mask.rows() - 3) {
+    mask[base] = value;
+    mask[base + 1] = value;
+    mask[base + 2] = value;
   }
 }
 
 bool Molecule::frozenAtom(Index atomId) const
 {
+  const auto& mask = m_atomState.frozenMask.storage();
+  if (atomId >= static_cast<Index>(mask.rows() / 3))
+    return false;
+
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (base <= m_frozenAtomMask.rows() - 3) {
-    return (m_frozenAtomMask[base] == 0.0 &&
-            m_frozenAtomMask[base + 1] == 0.0 &&
-            m_frozenAtomMask[base + 2] == 0.0);
+  if (base <= mask.rows() - 3) {
+    return (mask[base] == 0.0 && mask[base + 1] == 0.0 &&
+            mask[base + 2] == 0.0);
   }
   return false;
 }
 
 bool Molecule::frozenAtomAxis(Index atomId, int axis) const
 {
+  const auto& mask = m_atomState.frozenMask.storage();
+  if (axis < 0 || axis >= 3 || atomId >= static_cast<Index>(mask.rows() / 3))
+    return false;
+
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (base <= m_frozenAtomMask.rows() - 3) {
-    return (m_frozenAtomMask[base + axis] == 0.0);
+  if (base <= mask.rows() - 3) {
+    return (mask[base + axis] == 0.0);
   }
   return false;
 }
 
 void Molecule::setFrozenAtomAxis(Index atomId, int axis, bool frozen)
 {
-  Eigen::Index size = m_frozenAtomMask.rows();
+  if (axis < 0 || axis >= 3 || atomId >= m_atomicNumbers.size())
+    return;
+
+  auto& mask = m_atomState.frozenMask.storage();
+  Eigen::Index size = mask.rows();
   auto newSize = static_cast<Eigen::Index>(3 * m_atomicNumbers.size());
 
-  if (m_frozenAtomMask.rows() != newSize)
-    m_frozenAtomMask.conservativeResize(newSize);
+  if (mask.rows() != newSize)
+    mask.conservativeResize(newSize);
 
-  if (m_frozenAtomMask.rows() > size)
-    for (Eigen::Index i = size; i < m_frozenAtomMask.rows(); ++i)
-      m_frozenAtomMask[i] = 1.0f;
+  if (mask.rows() > size)
+    for (Eigen::Index i = size; i < mask.rows(); ++i)
+      mask[i] = 1.0f;
 
   float value = frozen ? 0.0f : 1.0f;
   auto base = static_cast<Eigen::Index>(atomId * 3);
-  if (axis >= 0 && axis < 3 && base <= m_frozenAtomMask.rows() - 3) {
-    m_frozenAtomMask[base + axis] = value;
+  if (axis >= 0 && axis < 3 && base <= mask.rows() - 3) {
+    mask[base + axis] = value;
   }
 }
 
 void Molecule::setHallNumber(unsigned short hallNumber)
 {
   m_hallNumber = hallNumber;
-  if (hallNumber != 0)
+  if (hallNumber != 0) {
     m_data.remove(SpaceGroups::internationalNumberKey());
+    m_data.remove(SpaceGroups::operationsKey());
+    m_data.remove(SpaceGroups::fileNameKey());
+  }
 }
 
 void Molecule::setData(const std::string& name, const Variant& value)
@@ -685,32 +664,32 @@ VariantMap& Molecule::dataMap()
 
 Array<AtomHybridization>& Molecule::hybridizations()
 {
-  return m_hybridizations;
+  return m_atomState.hybridizations.array();
 }
 
 const Array<AtomHybridization>& Molecule::hybridizations() const
 {
-  return m_hybridizations;
+  return m_atomState.hybridizations.array();
 }
 
 Array<unsigned short>& Molecule::isotopes()
 {
-  return m_isotopes;
+  return m_atomState.isotopes.array();
 }
 
 const Array<unsigned short>& Molecule::isotopes() const
 {
-  return m_isotopes;
+  return m_atomState.isotopes.array();
 }
 
 Array<signed char>& Molecule::formalCharges()
 {
-  return m_formalCharges;
+  return m_atomState.formalCharges.array();
 }
 
 const Array<signed char>& Molecule::formalCharges() const
 {
-  return m_formalCharges;
+  return m_atomState.formalCharges.array();
 }
 
 signed char Molecule::totalCharge() const
@@ -720,9 +699,10 @@ signed char Molecule::totalCharge() const
   // check the data map first
   if (m_data.hasValue("totalCharge")) {
     charge = m_data.value("totalCharge").toInt();
-  } else if (!m_formalCharges.empty()) {
-    for (Index i = 0; i < m_formalCharges.size(); ++i)
-      charge += m_formalCharges[i];
+  } else if (!m_atomState.formalCharges.empty()) {
+    const auto& charges = m_atomState.formalCharges.array();
+    for (Index i = 0; i < charges.size(); ++i)
+      charge += charges[i];
     return charge;
   }
   return charge; // should be zero
@@ -759,22 +739,22 @@ char Molecule::totalSpinMultiplicity() const
 
 Array<Vector3ub>& Molecule::colors()
 {
-  return m_colors;
+  return m_atomState.colors.array();
 }
 
 const Array<Vector3ub>& Molecule::colors() const
 {
-  return m_colors;
+  return m_atomState.colors.array();
 }
 
 Array<Vector2>& Molecule::atomPositions2d()
 {
-  return m_positions2d;
+  return m_atomState.positions2d.array();
 }
 
 const Array<Vector2>& Molecule::atomPositions2d() const
 {
-  return m_positions2d;
+  return m_atomState.positions2d.array();
 }
 
 Array<Vector3>& Molecule::atomPositions3d()
@@ -819,10 +799,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   m_graph.addVertex();
   m_atomicNumbers.push_back(number);
   // we're not going to easily handle custom elements
-  if (number < element_count)
-    m_elements.set(number);
-  else
-    m_elements.set(element_count - 1); // custom element
+  m_elements.set(elementBit(number));
 
   // The new atom's position, if addAtom(number, position) has just stored it.
   addAtomEntryFrames(m_coordinates3d, atomCount() - 1, [this](Index i) {
@@ -834,7 +811,7 @@ Molecule::AtomType Molecule::addAtom(unsigned char number)
   // The calculated results are per-atom, so a new atom invalidates them just
   // as a removed atom does (see removeAtom()).
   clearCalculatedResults();
-  m_atomProperties.addEntry(atomCount());
+  m_atomState.addEntry(atomCount());
   return AtomType(this, static_cast<Index>(atomCount() - 1));
 }
 
@@ -850,13 +827,17 @@ namespace {
 
 // Every member touched below is indexed by atom, kept in step with
 // m_atomicNumbers and m_graph. Molecule::swapAtom(), Molecule::removeAtom(),
-// and Molecule::clearAtoms() must each handle every atom-indexed member: a
+// and Molecule::clearAtoms() must each handle every atom-indexed member, and
+// atomSnapshot() and restoreAtomSnapshot() must save and put back whatever
+// removeAtom() drops or moves: a
 // member that is added to the class but missed in one of the three is a
 // real bug (e.g. a label silently ending up on the wrong atom after a
 // removal). The helpers below let each member cost one line per function,
 // so the three function bodies can be written as parallel lists and a
 // member missing from one of them is visible by inspection. When a new
-// atom-indexed member is added to Molecule, add it to all three.
+// atom-indexed member is added to Molecule, add it to all three. The
+// optional columns in m_atomState are the exception: each goes into
+// AtomState::forEachColumn() alone, which the three functions call once.
 //
 // "Handle" is not always "reindex". swapAtom() reindexes everything, since
 // swapping two indices relabels the same structure. removeAtom() changes the
@@ -876,10 +857,11 @@ namespace {
 // coordinates too, dropping an entry that loses an atom rather than reindexing
 // it, and clearAtoms() clears both.
 //
-// One is still unhandled, and needs a decision rather than a mechanical
-// remap: m_residues in removeAtom(). Dropping a hydrogen from a residue is
-// just an erase, but dropping a backbone atom arguably invalidates the
-// residue altogether, and that is a chemistry question.
+// removeAtom() handles the residues too. Dropping a hydrogen from a residue
+// is just an erase, but dropping a backbone atom arguably invalidates the
+// residue altogether, so the rule is the blunt one: a residue that loses an
+// atom is removed whole (its other atoms stay, in no residue), and the
+// residues that name the last atom follow it into the hole.
 
 // Plain Array<T>, one entry per atom. An optional array can be shorter than
 // atomCount() -- an atom added after the array was last set has no entry --
@@ -984,62 +966,6 @@ void removeAtomEntryFrames(Array<Array<T>>& frames, Index index,
   removeAtomEntryFrames(frames, index, atomCount, [](Index) { return T(); });
 }
 
-// std::vector<bool>, one entry per atom. std::swap() on the vector<bool>
-// proxy reference is a well-known trap, so swap the two values explicitly.
-void swapAtomEntry(std::vector<bool>& values, Index a, Index b, Index max)
-{
-  // Same three cases as the Array<T> overload above.
-  const Index lo = a < b ? a : b;
-  if (values.size() <= lo)
-    return;
-  if (values.size() <= max)
-    values.resize(max + 1, false);
-  bool temp = values[a];
-  values[a] = values[b];
-  values[b] = temp;
-}
-
-// Eigen::VectorXd storing 3 entries (x, y, z) per atom, as used by
-// m_frozenAtomMask. Same three-way split as swapAtomEntry(): rows() is
-// tracked in atom units (rows()/3) since each atom occupies 3 rows.
-void swapAtomMaskEntry(Eigen::VectorXd& values, Index a, Index b, Index max)
-{
-  auto ea = static_cast<Eigen::Index>(a);
-  auto eb = static_cast<Eigen::Index>(b);
-  auto lo = static_cast<Eigen::Index>(a < b ? a : b);
-  if (values.rows() >= static_cast<Eigen::Index>(3 * (max + 1))) {
-    for (Eigen::Index i = 0; i < 3; ++i)
-      std::swap(values[3 * ea + i], values[3 * eb + i]);
-  } else if (values.rows() > 3 * lo) {
-    // The atom at lo has a mask entry; the one at hi does not yet. Grow so
-    // the mask travels with its atom, filling the new rows with "not
-    // frozen" -- the same default setFrozenAtom() gives a newly-covered
-    // atom -- then swap.
-    const Eigen::Index oldRows = values.rows();
-    values.conservativeResize(static_cast<Eigen::Index>(3 * (max + 1)));
-    for (Eigen::Index i = oldRows; i < values.rows(); ++i)
-      values[i] = 1.0;
-    for (Eigen::Index i = 0; i < 3; ++i)
-      std::swap(values[3 * ea + i], values[3 * eb + i]);
-  }
-}
-
-void removeAtomMaskEntry(Eigen::VectorXd& values, Index index, Index atomCount)
-{
-  auto eIndex = static_cast<Eigen::Index>(index);
-  if (values.rows() == static_cast<Eigen::Index>(3 * atomCount)) {
-    Eigen::Index last = values.rows() - 3;
-    for (Eigen::Index i = 0; i < 3; ++i)
-      values[3 * eIndex + i] = values[last + i];
-    values.conservativeResize(values.rows() - 3);
-  } else if (values.rows() > 3 * eIndex) {
-    // The atom swapped into index (the former last atom) has no mask entry
-    // of its own, i.e. it is not frozen -- see the growth case above.
-    for (Eigen::Index i = 0; i < 3; ++i)
-      values[3 * eIndex + i] = 1.0;
-  }
-}
-
 // Normal mode displacements, keyed by conformer. Each conformer holds one
 // Array<Vector3> per mode, and those inner arrays are indexed by atom.
 void swapAtomEntryVibrations(std::map<size_t, Molecule::VibrationData>& vibs,
@@ -1064,34 +990,6 @@ void swapAtomEntry(std::map<std::string, MatrixX>& models, Index a, Index b,
   }
 }
 
-// Bond-indexed counterpart of swapAtomEntry()/removeAtomEntry() above, same
-// ragged-array rule, used for m_bondLabels: it may be shorter than
-// bondCount() (a bond added after labels were last set has no entry), so
-// removeBond()'s swap-and-pop and swapBond() have to treat a short entry as
-// "no label" rather than silently attaching it to the wrong bond.
-template <typename T>
-void swapBondEntry(Array<T>& values, Index a, Index b, Index max)
-{
-  using std::swap;
-  const Index lo = a < b ? a : b;
-  if (values.size() > max) {
-    swap(values[a], values[b]);
-  } else if (values.size() > lo) {
-    values.resize(max + 1, T());
-    swap(values[a], values[b]);
-  }
-}
-
-template <typename T>
-void removeBondEntry(Array<T>& values, Index index, Index bondCount)
-{
-  if (values.size() == bondCount) {
-    values.swapAndPop(index);
-  } else if (index < values.size()) {
-    values[index] = T();
-  }
-}
-
 // Constraints and scan coordinates both name up to four atoms by index, so
 // both follow the same rule when those atoms move. @p reindex maps an old atom
 // index to its new one, or to MaxIndex for an atom that is going away; an
@@ -1100,23 +998,30 @@ void removeBondEntry(Array<T>& values, Index index, Index bondCount)
 // swapAtom() only relabels, so nothing is dropped there; removeAtom() does
 // both.
 template <typename Reindex>
+bool losesAtom(const Constraint& entry, Reindex reindex)
+{
+  // An unused reference is MaxIndex before and after, so comparing against
+  // the old value is what separates "was never set" from "just lost its
+  // atom".
+  return reindex(entry.aIndex()) == MaxIndex ||
+         reindex(entry.bIndex()) == MaxIndex ||
+         (reindex(entry.cIndex()) == MaxIndex && entry.cIndex() != MaxIndex) ||
+         (reindex(entry.dIndex()) == MaxIndex && entry.dIndex() != MaxIndex);
+}
+
+template <typename Reindex>
 void remapAtomReferences(std::vector<Constraint>& entries, Reindex reindex)
 {
   for (auto it = entries.begin(); it != entries.end();) {
+    if (losesAtom(*it, reindex)) {
+      it = entries.erase(it);
+      continue;
+    }
+
     const Index a = reindex(it->aIndex());
     const Index b = reindex(it->bIndex());
     const Index c = reindex(it->cIndex());
     const Index d = reindex(it->dIndex());
-
-    // An unused reference is MaxIndex before and after, so comparing against
-    // the old value is what separates "was never set" from "just lost its
-    // atom".
-    if (a == MaxIndex || b == MaxIndex ||
-        (c == MaxIndex && it->cIndex() != MaxIndex) ||
-        (d == MaxIndex && it->dIndex() != MaxIndex)) {
-      it = entries.erase(it);
-      continue;
-    }
 
     // set() keeps the force constant and re-infers only a type that was not
     // set explicitly, and that inference asks which references are MaxIndex --
@@ -1145,7 +1050,7 @@ void Molecule::swapBond(Index a, Index b)
 {
   // See swapEdgeIndices(): the callers are undo commands holding indices from
   // before the edit they reverse, so an index can name a bond that no longer
-  // exists. m_bondOrders would be indexed out of bounds below.
+  // exists. The bond orders would be indexed out of bounds below.
   if (a >= bondCount() || b >= bondCount())
     return;
 
@@ -1153,9 +1058,7 @@ void Molecule::swapBond(Index a, Index b)
   using std::swap;
 
   m_graph.swapEdgeIndices(a, b);
-  swap(m_bondOrders[a], m_bondOrders[b]);
-  m_bondProperties.swapEntries(a, b, bondCount());
-  swapBondEntry(m_bondLabels, a, b, a > b ? a : b);
+  m_bondState.swapEntries(a, b);
 }
 
 void Molecule::swapAtom(Index a, Index b)
@@ -1169,27 +1072,20 @@ void Molecule::swapAtom(Index a, Index b)
 
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with removeAtom() and clearAtoms().
-  swapAtomEntry(m_positions2d, a, b, max,
-                [](Index) { return Vector2::Zero(); });
+  // with removeAtom(), clearAtoms() and restoreAtomSnapshot(). m_atomState
+  // holds the rest of the optional per-atom columns and handles them all in
+  // one call. It reads m_atomicNumbers for the color fill, so it runs before
+  // they are swapped.
+  m_atomState.swapEntries(a, b, m_atomicNumbers);
   swapAtomEntry(m_positions3d, a, b, max,
                 [](Index) { return Vector3::Zero(); });
-  swapAtomEntry(m_atomLabels, a, b, max);
-  swapAtomEntry(m_hybridizations, a, b, max);
-  swapAtomEntry(m_formalCharges, a, b, max);
-  swapAtomEntry(m_isotopes, a, b, max);
   swapAtomEntry(m_forceVectors, a, b, max,
                 [](Index) { return Vector3::Zero(); });
-  swapAtomEntry(m_colors, a, b, max, [this](Index i) {
-    return Vector3ub(Elements::color(m_atomicNumbers[i]));
-  });
-  swapAtomEntry(m_selectedAtoms, a, b, max);
   swapAtomEntryFrames(m_coordinates3d, a, b, max,
                       [](Index) { return Vector3::Zero(); });
   swapAtomEntryFrames(m_velocities, a, b, max,
                       [](Index) { return Vector3::Zero(); });
   swapAtomEntryVibrations(m_vibrations, a, b, max);
-  swapAtomMaskEntry(m_frozenAtomMask, a, b, max);
   swapAtomEntry(m_partialCharges, a, b, max);
 
   // Allow Argument Dependent Lookup for swap
@@ -1197,7 +1093,6 @@ void Molecule::swapAtom(Index a, Index b)
   swap(m_atomicNumbers[a], m_atomicNumbers[b]);
   m_graph.swapVertexIndices(a, b);
   ensureLayerInfo().layer.swapLayer(a, b);
-  m_atomProperties.swapEntries(a, b, atomCount());
 
   // Residues are not an atom-indexed member and so are reached by none of the
   // helpers above: the array is residue-indexed, and it is the Atom proxies
@@ -1205,7 +1100,7 @@ void Molecule::swapAtom(Index a, Index b)
   // residue's atom names go on pointing at indices that now hold different
   // atoms -- the residue silently adopts its neighbours.
   for (auto& residue : m_residues) {
-    for (auto& entry : residue.atomNameMap()) {
+    for (auto& entry : residue.m_atomNameMap) {
       const Index index = entry.second.index();
       if (index == a)
         entry.second = AtomType(entry.second.molecule(), b);
@@ -1244,33 +1139,15 @@ bool Molecule::removeAtom(Index index)
 
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with swapAtom() and clearAtoms(). These must all run before
-  // m_atomicNumbers (and therefore atomCount()) is updated below.
-  removeAtomEntry(m_positions2d, index, atomCount(),
-                  [](Index) { return Vector2::Zero(); });
+  // with swapAtom(), clearAtoms() and restoreAtomSnapshot(). m_atomState
+  // holds the rest of the optional per-atom columns and handles them all in
+  // one call. These must all run before m_atomicNumbers (and therefore
+  // atomCount()) is updated below; the color fill reads it.
+  m_atomState.removeEntry(index, atomCount(), m_atomicNumbers);
   removeAtomEntry(m_positions3d, index, atomCount(),
                   [](Index) { return Vector3::Zero(); });
-  removeAtomEntry(m_atomLabels, index, atomCount());
-  removeAtomEntry(m_hybridizations, index, atomCount());
-  removeAtomEntry(m_formalCharges, index, atomCount());
-  removeAtomEntry(m_isotopes, index, atomCount());
-  removeAtomEntry(m_colors, index, atomCount(), [this](Index i) {
-    return Vector3ub(Elements::color(m_atomicNumbers[i]));
-  });
   removeAtomEntryFrames(m_coordinates3d, index, atomCount(),
                         [](Index) { return Vector3::Zero(); });
-  removeAtomMaskEntry(m_frozenAtomMask, index, atomCount());
-
-  if (m_selectedAtoms.size() == atomCount()) {
-    // swap and pop on std::vector<bool>
-    if (index != m_selectedAtoms.size() - 1) {
-      m_selectedAtoms[index] = m_selectedAtoms.back();
-    }
-    m_selectedAtoms.pop_back();
-  } else if (index < m_selectedAtoms.size()) {
-    // The former last atom has no entry, so it is not selected.
-    m_selectedAtoms[index] = false;
-  }
 
   // Constraints and scan coordinates name atoms by index without being
   // atom-indexed themselves, so neither the helpers above nor atomCount()
@@ -1290,6 +1167,19 @@ bool Molecule::removeAtom(Index index)
   remapAtomReferences(m_constraints, follow);
   remapScanCoordinates(*this, follow);
 
+  // Residues name atoms by index through their proxies, so they get the same
+  // treatment, with one difference: a residue that names the removed atom is
+  // not left without it, it is removed (R14). removeResidue() keeps the order
+  // of the others, so go from the back to keep the indices still to visit
+  // valid. Then the last atom's proxies follow it into the hole.
+  const auto& constResidues = std::as_const(m_residues);
+  for (Index r = residueCount(); r > 0; --r) {
+    if (constResidues[r - 1].hasAtomByIndex(index))
+      removeResidue(r - 1);
+  }
+  if (lastAtom != index)
+    moveResidueReferences(lastAtom, index);
+
   // Losing an atom makes this a different molecule, so anything calculated
   // from the old one goes rather than being reindexed. Contrast the members
   // above, which are either the structure itself or user state about it
@@ -1298,21 +1188,11 @@ bool Molecule::removeAtom(Index index)
   // swapAtom() reindexes instead, and is right to: swapping two indices
   // relabels the same structure rather than changing it.
   clearCalculatedResults();
-  m_atomProperties.removeEntry(index, atomCount());
   removeBonds(index);
 
   // before we remove, check if there's any other atom of this element
-  // (e.g., we removed the last oxygen). Custom elements share a single bit
-  // (element_count - 1, the same clamp addAtom() applies -- see the comment
-  // there), so the bit to test/reset has to be the clamped one: comparing or
-  // resetting the raw atomic number would throw for a custom element (out of
-  // range for m_elements) and would miss that a different custom element
-  // still holds that bit.
-  auto elementBit = [](unsigned char number) {
-    return number < element_count
-             ? number
-             : static_cast<unsigned char>(element_count - 1);
-  };
+  // (e.g., we removed the last oxygen). Compare the clamped bits, so that a
+  // different custom element still holding the shared bit is found.
   const unsigned char bitToRemove = elementBit(m_atomicNumbers[index]);
   bool foundAnother = false;
   for (Index i = 0; i < atomCount(); ++i) {
@@ -1335,27 +1215,324 @@ bool Molecule::removeAtom(Index index)
   return true;
 }
 
+void Molecule::moveResidueReferences(Index from, Index to)
+{
+  const auto& constResidues = std::as_const(m_residues);
+  for (Index r = 0; r < residueCount(); ++r) {
+    // Only a residue that names @p from is written to, so only that one
+    // detaches from a copy that shares the array.
+    if (!constResidues[r].hasAtomByIndex(from))
+      continue;
+    for (auto& entry : m_residues[r].m_atomNameMap) {
+      if (entry.second.index() == from)
+        entry.second = AtomType(entry.second.molecule(), to);
+    }
+  }
+}
+
 bool Molecule::removeAtom(const AtomType& atom_)
 {
   return removeAtom(atom_.index());
+}
+
+AtomSnapshot Molecule::atomSnapshot(Index atomId) const
+{
+  AtomSnapshot snapshot;
+  const Index count = atomCount();
+  if (atomId >= count)
+    return snapshot;
+
+  snapshot.m_count = count;
+  snapshot.m_atomId = atomId;
+  snapshot.m_atomicNumber = m_atomicNumbers[atomId];
+  snapshot.m_state = m_atomState.slice(atomId, count);
+
+  // The three position arrays follow removeAtomEntry()'s rule: an array that
+  // covers every atom is swap-and-popped, a different length that reaches the
+  // atom has the entry overwritten by the fill, and one that does not reach it
+  // is left alone.
+  auto slicePositions = [atomId, count](const Array<Vector3>& values,
+                                        Vector3& value) {
+    using Removal = AtomSnapshot::PositionRemoval;
+    if (values.size() == count) {
+      value = values[atomId];
+      return Removal::SwapAndPop;
+    }
+    if (atomId < values.size()) {
+      value = values[atomId];
+      return Removal::Overwritten;
+    }
+    return Removal::None;
+  };
+  snapshot.m_position.removal =
+    slicePositions(m_positions3d, snapshot.m_position.value);
+  snapshot.m_frameValues.resize(m_coordinates3d.size(), Vector3::Zero());
+  snapshot.m_frameRemovals.reserve(m_coordinates3d.size());
+  for (size_t i = 0; i < m_coordinates3d.size(); ++i) {
+    snapshot.m_frameRemovals.push_back(
+      slicePositions(m_coordinates3d[i], snapshot.m_frameValues[i]));
+  }
+
+  const Layer& atomLayers = layer();
+  snapshot.m_layerCount = atomLayers.atomCount();
+  snapshot.m_layer = atomLayers.getLayerID(atomId);
+  snapshot.m_lastLayer = atomLayers.getLayerID(snapshot.m_layerCount - 1);
+
+  // The same mapping removeAtom() applies to them.
+  const Index lastAtom = count - 1;
+  auto follow = [atomId, lastAtom](Index atom) {
+    if (atom == atomId)
+      return MaxIndex;
+    if (atom == lastAtom)
+      return atomId;
+    return atom;
+  };
+  for (size_t i = 0; i < m_constraints.size(); ++i) {
+    if (losesAtom(m_constraints[i], follow))
+      snapshot.m_constraints.push_back({ i, m_constraints[i] });
+  }
+  const std::vector<Constraint> scanned = scanCoordinates();
+  for (size_t i = 0; i < scanned.size(); ++i) {
+    if (losesAtom(scanned[i], follow))
+      snapshot.m_scanCoordinates.push_back({ i, scanned[i] });
+  }
+
+  // The residues go from the back, as removeAtom() removes them.
+  for (Index r = residueCount(); r > 0; --r) {
+    if (!m_residues[r - 1].hasAtomByIndex(atomId))
+      continue;
+    AtomSnapshot::DroppedResidue dropped;
+    dropped.index = r - 1;
+    dropped.residue = m_residues[r - 1];
+    dropped.label = residueLabel(r - 1);
+    dropped.properties = m_residueProperties.slice(r - 1, residueCount());
+    snapshot.m_residues.push_back(std::move(dropped));
+  }
+
+  // removeAtom() removes the first of the atom's bonds until none is left. Each
+  // removal moves the last bond into the hole, so the index of the next one
+  // (and what is at it) depends on the removals before it. Run that on the
+  // list of the atom's bonds and a copy of the bond columns, without touching
+  // the graph: the same rules as Graph::removeEdge() and the columns'
+  // removeEntry().
+  std::vector<size_t> incident = m_graph.edges(atomId);
+  if (!incident.empty()) {
+    BondState scratch = m_bondState;
+    // Where a bond that moved came from: current index -> index before any of
+    // the removals.
+    std::map<size_t, size_t> original;
+    auto originalOf = [&original](size_t index) {
+      const auto found = original.find(index);
+      return found == original.end() ? index : found->second;
+    };
+    Index bonds = static_cast<Index>(m_graph.edgeCount());
+    while (!incident.empty() && bonds > 0) {
+      const size_t bondId = incident.front();
+      if (bondId >= bonds)
+        break; // the graph and the bond columns disagree; take what we have
+      AtomSnapshot::DroppedBond dropped;
+      dropped.id = static_cast<Index>(bondId);
+      BondSnapshot& bond = dropped.bond;
+      const auto pair = m_graph.endpoints(originalOf(bondId));
+      bond.m_pair = std::make_pair(static_cast<Index>(pair.first),
+                                   static_cast<Index>(pair.second));
+      bond.m_state = scratch.slice(bondId, bonds);
+      bond.m_count = bonds;
+      snapshot.m_bonds.push_back(std::move(dropped));
+
+      scratch.removeEntry(bondId, bonds);
+      // The removed edge leaves the atom's own list by swap-and-pop too.
+      incident.front() = incident.back();
+      incident.pop_back();
+      const size_t lastBond = bonds - 1;
+      if (bondId != lastBond) {
+        for (auto& entry : incident) {
+          if (entry == lastBond)
+            entry = bondId;
+        }
+        original[bondId] = originalOf(lastBond);
+      }
+      --bonds;
+    }
+  }
+
+  return snapshot;
+}
+
+bool Molecule::restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot)
+{
+  // Every saved entry belongs at the index the snapshot was taken at; restored
+  // anywhere else, each would land in the wrong slot.
+  if (snapshot.isEmpty() || snapshot.m_count != atomCount() + 1 ||
+      atomId != snapshot.m_atomId)
+    return false;
+
+  const Index count = snapshot.m_count;
+  const Index lastAtom = count - 1;
+
+  // Everything is checked before anything is changed. The layer array is
+  // swap-and-popped within its own length, which is not always the atom count.
+  Layer& atomLayers = layer();
+  const Index layerCount = snapshot.m_layerCount;
+  const bool layerTouched = atomId < layerCount;
+  if (atomLayers.atomCount() != (layerTouched ? layerCount - 1 : layerCount))
+    return false;
+
+  // The bonds go back in the opposite order to their removal, each into the
+  // state the one after it left.
+  Index bonds = bondCount();
+  for (auto it = snapshot.m_bonds.rbegin(); it != snapshot.m_bonds.rend();
+       ++it) {
+    const BondSnapshot& bond = it->bond;
+    if (bond.isEmpty() || bond.m_count != bonds + 1 ||
+        bond.m_pair.first >= count || bond.m_pair.second >= count ||
+        bond.m_pair.first == bond.m_pair.second)
+      return false;
+    ++bonds;
+  }
+
+  // The reverse of the removal, last step first.
+  if (layerTouched) {
+    if (atomId != layerCount - 1)
+      atomLayers.addAtom(snapshot.m_lastLayer, layerCount - 1);
+    atomLayers.addAtom(snapshot.m_layer, atomId);
+  }
+
+  if (atomId == lastAtom) {
+    m_atomicNumbers.push_back(snapshot.m_atomicNumber);
+  } else {
+    m_atomicNumbers.push_back(m_atomicNumbers[atomId]);
+    m_atomicNumbers[atomId] = snapshot.m_atomicNumber;
+  }
+  m_elements.set(elementBit(snapshot.m_atomicNumber));
+
+  // The new vertex is at the end with no edges; the atom that took atomId's
+  // place goes back to the end, as removeVertex() moved it.
+  m_graph.addVertex();
+  if (atomId != lastAtom)
+    m_graph.swapVertexIndices(atomId, lastAtom);
+
+  for (auto it = snapshot.m_bonds.rbegin(); it != snapshot.m_bonds.rend();
+       ++it) {
+    // Checked above, and none of them can be a duplicate: the atom has no
+    // bonds yet and every one of these joins it to a different atom.
+    restoreBondSnapshot(it->id, it->bond);
+  }
+
+  // Everything below is the atom's and the user's state, in the reverse of
+  // the order removeAtom() takes it. The residues that named the last atom
+  // were repointed at atomId; they go back, and the same goes for the
+  // constraints and scan coordinates.
+  if (atomId != lastAtom) {
+    auto unfollow = [atomId, lastAtom](Index atom) {
+      return atom == atomId ? lastAtom : atom;
+    };
+    moveResidueReferences(atomId, lastAtom);
+    remapAtomReferences(m_constraints, unfollow);
+    remapScanCoordinates(*this, unfollow);
+  }
+  // Removed from the back, so back in from the front.
+  for (auto it = snapshot.m_residues.rbegin(); it != snapshot.m_residues.rend();
+       ++it)
+    insertResidue(it->index, it->residue, it->label, it->properties);
+
+  for (const auto& dropped : snapshot.m_constraints) {
+    const size_t position = std::min(dropped.position, m_constraints.size());
+    m_constraints.insert(m_constraints.begin() + position, dropped.constraint);
+  }
+  if (!snapshot.m_scanCoordinates.empty()) {
+    std::vector<Constraint> coordinates = scanCoordinates();
+    for (const auto& dropped : snapshot.m_scanCoordinates) {
+      const size_t position = std::min(dropped.position, coordinates.size());
+      coordinates.insert(coordinates.begin() + position, dropped.constraint);
+    }
+    setScanCoordinates(coordinates);
+  }
+
+  // The position arrays, as Column::restore() does for the columns. After a
+  // swap-and-pop, the last atom's position is the one at atomId (unless the
+  // atom was the last), and it goes back to the end.
+  auto restorePositions = [atomId,
+                           count](Array<Vector3>& values, const Vector3& value,
+                                  AtomSnapshot::PositionRemoval removal) {
+    using Removal = AtomSnapshot::PositionRemoval;
+    if (removal == Removal::SwapAndPop) {
+      if (values.size() != count - 1)
+        return;
+      if (atomId == count - 1) {
+        values.push_back(value);
+      } else {
+        values.push_back(values[atomId]);
+        values[atomId] = value;
+      }
+    } else if (removal == Removal::Overwritten && atomId < values.size()) {
+      values[atomId] = value;
+    }
+  };
+  restorePositions(m_positions3d, snapshot.m_position.value,
+                   snapshot.m_position.removal);
+  const size_t frames =
+    std::min(m_coordinates3d.size(), snapshot.m_frameRemovals.size());
+  for (size_t i = 0; i < frames; ++i) {
+    restorePositions(m_coordinates3d[i], snapshot.m_frameValues[i],
+                     snapshot.m_frameRemovals[i]);
+  }
+
+  m_atomState.restore(atomId, snapshot.m_state, count, m_atomicNumbers);
+
+  // Same reason as in addAtom(): the results are not about this structure.
+  clearCalculatedResults();
+  return true;
+}
+
+BondSnapshot Molecule::bondSnapshot(Index bondId) const
+{
+  BondSnapshot snapshot;
+  if (bondId >= bondCount())
+    return snapshot;
+
+  const auto pair = m_graph.endpoints(bondId);
+  snapshot.m_pair = std::make_pair(static_cast<Index>(pair.first),
+                                   static_cast<Index>(pair.second));
+  snapshot.m_state = m_bondState.slice(bondId, bondCount());
+  snapshot.m_count = bondCount();
+  return snapshot;
+}
+
+bool Molecule::restoreBondSnapshot(Index bondId, const BondSnapshot& snapshot)
+{
+  if (snapshot.isEmpty() || snapshot.m_count != bondCount() + 1 ||
+      bondId >= snapshot.m_count)
+    return false;
+
+  const Index a = snapshot.m_pair.first;
+  const Index b = snapshot.m_pair.second;
+  if (a >= atomCount() || b >= atomCount() || a == b || bond(a, b).isValid())
+    return false;
+
+  // The edge goes in at the end, the columns take their entries back as
+  // removeEntry() left them, and then the edge moves into place: the bond that
+  // the removal moved into bondId goes back to the end.
+  m_graph.addEdge(a, b);
+  m_bondState.restore(bondId, snapshot.m_state, snapshot.m_count);
+  if (bondId != snapshot.m_count - 1)
+    m_graph.swapEdgeIndices(bondId, snapshot.m_count - 1);
+
+  // As in addBond(): the charges depend on the bonds. Nothing else a removal
+  // discards is brought back.
+  m_partialCharges.clear();
+  return true;
 }
 
 void Molecule::clearAtoms()
 {
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with swapAtom() and removeAtom().
-  m_positions2d.clear();
+  // with swapAtom(), removeAtom() and restoreAtomSnapshot().
+  m_atomState.clear();
   m_positions3d.clear();
-  m_atomLabels.clear();
-  m_hybridizations.clear();
-  m_formalCharges.clear();
-  m_isotopes.clear();
   m_forceVectors.clear();
-  m_colors.clear();
-  m_selectedAtoms.clear();
   m_coordinates3d.clear();
-  m_frozenAtomMask.resize(0);
 
   // With no atoms left there is nothing for any calculated result to be about,
   // nor for a scan coordinate to name.
@@ -1364,12 +1541,9 @@ void Molecule::clearAtoms()
   setScanCoordinates({});
 
   m_atomicNumbers.clear();
-  m_bondOrders.clear();
-  m_bondLabels.clear();
+  m_bondState.clear();
   m_residueLabels.clear();
   m_graph.clear();
-  m_atomProperties.clear();
-  m_bondProperties.clear();
   m_residues.clear();
   m_residueProperties.clear();
   m_conformerProperties.clear();
@@ -1391,17 +1565,21 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
                                      unsigned char order)
 {
   // See bond(): a released build has no assert, so refuse the bond rather
-  // than corrupting the graph.
-  if (atom1 >= m_atomicNumbers.size() || atom2 >= m_atomicNumbers.size())
+  // than corrupting the graph. An atom bonded to itself is refused as well:
+  // the graph has no self-edges, and setBondPair(), RWMolecule::addBond() and
+  // restoreBondSnapshot() all refuse one.
+  if (atom1 >= m_atomicNumbers.size() || atom2 >= m_atomicNumbers.size() ||
+      atom1 == atom2)
     return BondType();
   Index index = bond(atom1, atom2).index();
   if (index >= bondCount()) {
     m_graph.addEdge(atom1, atom2);
-    m_bondOrders.push_back(order);
-    m_bondProperties.addEntry(bondCount());
+    // Not bondCount(): it asserts the graph and the orders agree, and the
+    // edge is already in the graph while its order is not.
+    m_bondState.addEntry(m_graph.edgeCount(), order);
     index = static_cast<Index>(m_graph.edgeCount() - 1);
   } else {
-    m_bondOrders[index] = order;
+    m_bondState.orders.array()[index] = order;
   }
   // Any existing charges are invalidated, but deliberately *not*
   // clearCalculatedResults(): perceiveBondsSimple() adds bonds one at a time,
@@ -1446,12 +1624,10 @@ bool Molecule::removeBond(Index index)
 {
   if (index >= bondCount())
     return false;
-  m_bondProperties.removeEntry(index, bondCount());
-  // Bond-indexed like m_bondOrders below, so it has to run before
-  // m_graph.removeEdge() changes bondCount().
-  removeBondEntry(m_bondLabels, index, bondCount());
+  // Every per-bond column has to go before m_graph.removeEdge() changes
+  // bondCount().
+  m_bondState.removeEntry(index, bondCount());
   m_graph.removeEdge(index);
-  m_bondOrders.swapAndPop(index);
   // Connectivity is part of what was calculated from, so a bond going away
   // invalidates the results just as an atom going away does.
   clearCalculatedResults();
@@ -1475,9 +1651,7 @@ bool Molecule::removeBond(const AtomType& a, const AtomType& b)
 
 void Molecule::clearBonds()
 {
-  m_bondOrders.clear();
-  m_bondProperties.clear();
-  m_bondLabels.clear();
+  m_bondState.clear();
   m_graph.removeEdges();
   m_graph.setSize(atomCount());
 
@@ -1512,7 +1686,9 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
 {
   // Not assert(): NDEBUG removes it, and an out-of-range index from a file
   // reader then indexes the graph's edge map out of bounds instead.
-  if (atomId1 >= atomCount() || atomId2 >= atomCount())
+  // No atom is bonded to itself, and the search below would otherwise answer
+  // with any bond of atomId1, since every one of them has it as an endpoint.
+  if (atomId1 >= atomCount() || atomId2 >= atomCount() || atomId1 == atomId2)
     return BondType();
 
   const std::vector<Index>& edgeIndices = m_graph.edges(atomId1);
@@ -2185,6 +2361,8 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     metal[atom] = Elements::isMetal(m_atomicNumbers[atom]) ? 1 : 0;
 
   std::vector<unsigned int> orderSum(atoms, 0);
+  // Read-only until step 4, which takes its own mutable reference.
+  const Array<unsigned char>& orders = bondOrders();
   std::vector<char> hasMetalBond(atoms, 0);
   std::vector<char> hasNonMetalBond(atoms, 0);
   for (Index bond = 0; bond < bondTotal; ++bond) {
@@ -2197,8 +2375,8 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
     }
     hasNonMetalBond[a] = 1;
     hasNonMetalBond[b] = 1;
-    orderSum[a] += m_bondOrders[bond];
-    orderSum[b] += m_bondOrders[bond];
+    orderSum[a] += orders[bond];
+    orderSum[b] += orders[bond];
   }
 
   BondOrderProblem problem;
@@ -2272,7 +2450,7 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   // non-metal atoms can be raised; existing multiple bonds are fixed.
   std::vector<Index> bondOfEdge;
   for (Index bond = 0; bond < bondTotal; ++bond) {
-    if (m_bondOrders[bond] != 1)
+    if (orders[bond] != 1)
       continue;
     const Index a = m_graph.endpoints(bond).first;
     const Index b = m_graph.endpoints(bond).second;
@@ -2317,10 +2495,11 @@ BondOrderResult Molecule::perceiveBondOrders(const BondOrderOptions& options)
   // Step 4: commit what was found. A component that failed still gets the
   // best-effort partial assignment (see solveBondOrders()), and the atoms it
   // could not satisfy are reported.
+  auto& mutableOrders = m_bondState.orders.array();
   for (std::size_t edge = 0; edge < bondOfEdge.size(); ++edge) {
     if (solution.extra[edge] > 0) {
-      m_bondOrders[bondOfEdge[edge]] = static_cast<unsigned char>(
-        m_bondOrders[bondOfEdge[edge]] + solution.extra[edge]);
+      mutableOrders[bondOfEdge[edge]] = static_cast<unsigned char>(
+        mutableOrders[bondOfEdge[edge]] + solution.extra[edge]);
     }
   }
 
@@ -2734,6 +2913,41 @@ Index Molecule::residueCount() const
   return static_cast<Index>(m_residues.size());
 }
 
+bool Molecule::removeResidue(Index residueIndex)
+{
+  const Index count = residueCount();
+  if (residueIndex >= count)
+    return false;
+
+  m_residues.erase(m_residues.begin() + residueIndex);
+  // The labels array may be shorter than the residue array.
+  if (residueIndex < m_residueLabels.size())
+    m_residueLabels.erase(m_residueLabels.begin() + residueIndex);
+  m_residueProperties.eraseEntry(residueIndex, count);
+  return true;
+}
+
+bool Molecule::insertResidue(Index residueIndex, const Residue& residue,
+                             const std::string& label,
+                             const PropertyMap& properties)
+{
+  const Index count = residueCount();
+  if (residueIndex > count)
+    return false;
+
+  m_residues.insert(m_residues.begin() + residueIndex, residue);
+  for (auto& entry : m_residues[residueIndex].m_atomNameMap)
+    entry.second = AtomType(this, entry.second.index());
+  // A label is stored only if there is one, or if later residues have theirs.
+  if (!label.empty() || m_residueLabels.size() > residueIndex) {
+    if (m_residueLabels.size() < residueIndex)
+      m_residueLabels.resize(residueIndex, std::string());
+    m_residueLabels.insert(m_residueLabels.begin() + residueIndex, label);
+  }
+  m_residueProperties.insertEntry(residueIndex, properties, count + 1);
+  return true;
+}
+
 std::string Molecule::residueLabel(Index residueId) const
 {
   return residueId < m_residueLabels.size() ? m_residueLabels[residueId] : "";
@@ -2761,44 +2975,36 @@ bool Molecule::setResidueLabel(Index residueId, const std::string& label)
 
 bool Molecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
 {
-  if (pairs.size() == bondCount()) {
-    Index bond = 0;
-    for (const auto& pair : pairs) {
-      setBondPair(bond, pair);
-      ++bond;
-    }
-    return true;
-  }
-  return false;
+  if (pairs.size() != bondCount())
+    return false;
+  Array<std::pair<size_t, size_t>> graphPairs;
+  graphPairs.reserve(pairs.size());
+  for (const auto& pair : pairs)
+    graphPairs.push_back(std::pair<size_t, size_t>(pair.first, pair.second));
+  return m_graph.editEdgesInPlace(graphPairs);
 }
 
 bool Molecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
 {
-  if (bondId < bondCount()) {
-    m_graph.editEdgeInPlace(bondId, pair.first, pair.second);
-    return true;
-  }
+  if (bondId < bondCount())
+    return m_graph.editEdgeInPlace(bondId, pair.first, pair.second);
   return false;
 }
 
 unsigned char Molecule::bondOrder(Index bondId) const
 {
-  return bondId < m_bondOrders.size() ? m_bondOrders[bondId] : 0;
+  return m_bondState.orders.value(bondId, 0);
 }
 
 bool Molecule::setBondOrders(const Array<unsigned char>& orders)
 {
-  if (orders.size() == bondCount()) {
-    m_bondOrders = orders;
-    return true;
-  }
-  return false;
+  return m_bondState.orders.setAll(orders, bondCount(), false);
 }
 
 bool Molecule::setBondOrder(Index bondId, unsigned char order)
 {
   if (bondId < bondCount()) {
-    m_bondOrders[bondId] = order;
+    m_bondState.orders.array()[bondId] = order;
     return true;
   }
   return false;
@@ -2822,16 +3028,13 @@ bool Molecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
     // update element mask, with the same clamp for custom elements as
     // addAtom() and setAtomicNumber()
     m_elements.reset();
-    for (unsigned char atomicNumber : m_atomicNumbers) {
-      if (atomicNumber < element_count)
-        m_elements.set(atomicNumber);
-      else
-        m_elements.set(element_count - 1);
-    }
+    for (unsigned char atomicNumber : m_atomicNumbers)
+      m_elements.set(elementBit(atomicNumber));
     // update colors too
-    if (nums.size() == m_colors.size()) {
+    auto& colors = m_atomState.colors.array();
+    if (nums.size() == colors.size()) {
       for (Index i = 0; i < nums.size(); ++i)
-        m_colors[i] = Vector3ub(Elements::color(m_atomicNumbers[i]));
+        colors[i] = Vector3ub(Elements::color(m_atomicNumbers[i]));
     }
 
     return true;
@@ -2846,19 +3049,15 @@ bool Molecule::setAtomicNumber(Index atomId, unsigned char number)
 
     // recalculate the element mask
     m_elements.reset();
-    for (unsigned char atomicNumber : m_atomicNumbers) {
-      // The same clamp addAtom() applies. Custom elements are numbered at or
-      // above element_count, and std::bitset::set() throws for those, so
-      // without this a molecule holding one cannot be edited at all.
-      if (atomicNumber < element_count)
-        m_elements.set(atomicNumber);
-      else
-        m_elements.set(element_count - 1);
-    }
+    // elementBit() clamps custom elements; std::bitset::set() throws for them
+    // otherwise.
+    for (unsigned char atomicNumber : m_atomicNumbers)
+      m_elements.set(elementBit(atomicNumber));
 
     // update colors too
-    if (atomId < m_colors.size())
-      m_colors[atomId] = Vector3ub(Elements::color(number));
+    auto& colors = m_atomState.colors.array();
+    if (atomId < colors.size())
+      colors[atomId] = Vector3ub(Elements::color(number));
 
     return true;
   }
@@ -3039,7 +3238,7 @@ Array<unsigned char> Molecule::getAtomOrders(Index index) const
   Array<unsigned char> result;
   const std::vector<Index>& edgeIndices = m_graph.edges(index);
   for (unsigned long edgeIndice : edgeIndices) {
-    result.push_back(m_bondOrders[edgeIndice]);
+    result.push_back(m_bondState.orders.array()[edgeIndice]);
   }
   return result;
 }

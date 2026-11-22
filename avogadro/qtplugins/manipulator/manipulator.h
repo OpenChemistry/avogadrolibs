@@ -15,8 +15,7 @@
 #include <QtCore/Qt> // for Qt:: namespace
 #include <QtWidgets/QAbstractButton>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class ManipulateWidget;
 
@@ -95,7 +94,6 @@ private:
   ToolAction m_currentAction;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTOPENGL_MANIPULATOR_H

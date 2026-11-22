@@ -12,8 +12,7 @@
 #include "camera.h"
 #include <string>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class POVRayVisitor povrayvisitor.h <avogadro/rendering/povrayvisitor.h>
@@ -62,7 +61,7 @@ private:
   std::string m_sceneData;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_POVRAYVISITOR_H

@@ -15,8 +15,7 @@
 
 #include <tuple>
 
-namespace Avogadro {
-namespace Core {
+namespace Avogadro::Core {
 
 /**
  * @class Constraint constraint.h <avogadro/core/constraint.h>
@@ -283,7 +282,7 @@ protected:
   mutable bool m_typeExplicit = false;    // true once setType() has been called
 };
 
-} // End namespace Core
-} // End namespace Avogadro
+} // namespace Avogadro::Core
+// End namespace Avogadro
 
 #endif // AVOGADRO_CORE_CONSTRAINT_H

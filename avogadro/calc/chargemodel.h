@@ -13,6 +13,7 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
+#include <cstddef>
 #include <string>
 
 namespace Avogadro::Calc {
@@ -105,11 +106,47 @@ public:
    * @param points The points in space to calculate the potential at.
    * @return The electrostatic potential at the points in an array.
    *
-   * This method is used for batch calculation and defaults to simply
-   * calculating each point at a time. Some methods work faster in batches.
+   * This method is used for batch calculation. The default implementation
+   * evaluates the point-charge model directly (using the same math as
+   * potential()), in parallel across the points. Subclasses that override
+   * potential() should also override this method, since the default does not
+   * call potential().
    */
   virtual Core::Array<double> potentials(
     Core::Molecule& mol, const Core::Array<Vector3>& points) const;
+
+  /**
+   * @brief Point-charge electrostatic potential at many points, in parallel.
+   *
+   * Computes sum(q[i] / |r[i] - point|) over the atoms (skipping distances of
+   * 0.01 or less) divided by the dielectric constant, for each point. This is
+   * what the default potentials() uses, and gives bit-identical results to
+   * the default potential(). It has no shared state and does not use any
+   * model, so it is safe to call from any thread.
+   * @param charges The partial charge of each atom.
+   * @param atomPositions The position of each atom.
+   * @param atomCount The number of atoms (entries in both arrays).
+   * @param points The points in space to calculate the potential at.
+   * @param dielectric The dielectric constant; values that are not positive
+   *        and finite are treated as 1.
+   * @param maxThreads 0 chooses automatically from the hardware and the
+   *        amount of work (small jobs stay on the calling thread). A positive
+   *        value uses up to that many threads, whatever the amount of work.
+   * @return The potentials, one per point.
+   */
+  static Core::Array<double> pointChargePotentials(
+    const double* charges, const Vector3* atomPositions, std::size_t atomCount,
+    const Core::Array<Vector3>& points, double dielectric,
+    std::size_t maxThreads = 0);
+
+  /**
+   * @return true if potential() / potentials() are computed by something
+   * other than the point-charge model on partialCharges() (for example an
+   * external script). Such models can not be replaced by evaluating the
+   * partial charges directly, and are not safe to call from another thread
+   * while the model is in use elsewhere. The default is false.
+   */
+  virtual bool hasCustomPotentials() const { return false; }
 
 protected:
   /**

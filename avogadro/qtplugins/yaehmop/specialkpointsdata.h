@@ -13,7 +13,7 @@ namespace Avogadro::QtPlugins {
 // If there are multiple ways to express a space group's special k points
 // depending on some conditions like if a > b or a < b, there is a #
 // separating the different conditions
-const char* special_k_points[] = {
+const char* const special_k_points[] = {
   "",
   "GM 0 0 0", // 1
   "GM 0 0 0,Z 0 0 0.5,Y 0 0.5 0,X 0.5 0 0,V 0.5 0.5 0,U 0.5 0 0.5,T 0 0.5 "

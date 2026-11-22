@@ -12,8 +12,7 @@
 
 class QLabel;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class ContainerWidget containerwidget.h <avogadro/qtgui/containerwidget.h>
@@ -48,7 +47,6 @@ private:
   bool m_active;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_CONTAINERWIDGET_H

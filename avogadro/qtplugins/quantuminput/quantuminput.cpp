@@ -6,7 +6,6 @@
 #include "quantuminput.h"
 
 #include <avogadro/molequeue/client/jobobject.h>
-#include <avogadro/molequeue/inputgenerator.h>
 #include <avogadro/molequeue/inputgeneratordialog.h>
 #include <avogadro/molequeue/inputgeneratorwidget.h>
 
@@ -39,7 +38,6 @@
 
 namespace Avogadro::QtPlugins {
 
-using MoleQueue::InputGenerator;
 using MoleQueue::InputGeneratorDialog;
 using MoleQueue::JobObject;
 
@@ -264,7 +262,7 @@ void QuantumInput::menuActivated()
         }
       }
       if (!opts.isEmpty())
-        dlg->widget().inputGenerator().setOptions(opts);
+        dlg->widget().inputGenerator().setOptionsJson(opts);
     }
 
     dlg->widget().reloadOptions();

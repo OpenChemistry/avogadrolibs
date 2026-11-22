@@ -10,8 +10,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class LineStripGeometry linestripgeometry.h
@@ -143,7 +142,7 @@ inline void swap(LineStripGeometry& lhs, LineStripGeometry& rhs)
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_LINESTRIPGEOMETRY_H

@@ -35,6 +35,12 @@ struct CifSymmetry
   std::string hallSymbol;
 
   /**
+   * The name of the space group for display: the Hermann-Mauguin symbol if the
+   * file gives one, else the Hall symbol, else empty.
+   */
+  std::string name;
+
+  /**
    * The hall number whose operations are exactly @p operations, or 0 if there
    * are none or they are not in the table of Core::SpaceGroups.
    */
@@ -58,8 +64,8 @@ struct CifSymmetry
   /**
    * @return true if the file lists several operations that are not those of
    * any table entry (a non-standard setting such as A-1 or I-1, or an origin
-   * shift). The table cannot describe such a file, so its atoms should be
-   * expanded with its own operations; see expandCifAtoms().
+   * shift). The table cannot describe such a file, so the molecule keeps its
+   * operations instead of a Hall number; see applyCifSymmetry().
    */
   bool hasUntabulatedOperations() const
   {
@@ -76,7 +82,9 @@ struct CifSymmetry
  * _space_group_symop.operation_xyz column (or from a single such tag and
  * value); other columns, quoting, comments and text fields are handled. The
  * Hall symbol comes from _symmetry_space_group_name_Hall,
- * _space_group_name_Hall or _space_group.name_Hall.
+ * _space_group_name_Hall or _space_group.name_Hall, and the name from
+ * _symmetry_space_group_name_H-M, _space_group_name_H-M_alt or
+ * _space_group.name_H-M_alt.
  *
  * Text that is not a CIF, or that has no symmetry information, gives an
  * empty result. This never fails.
@@ -84,22 +92,34 @@ struct CifSymmetry
 AVOGADROIO_EXPORT CifSymmetry readCifSymmetry(std::string_view cifText);
 
 /**
- * Fill the unit cell of @p molecule, which holds the asymmetric unit of a CIF
- * file, by applying the symmetry operations of the file, for a file whose
- * operations match no entry of the space group table
- * (CifSymmetry::hasUntabulatedOperations()). Atoms within 0.25 angstrom of
- * another are not added, so a molecule that was already expanded is left as it
- * is. Afterwards the molecule has Hall number 1 (P1), as if it had been read
- * from a calculation: every atom is present and no further symmetry applies.
- * If atoms were added, the bonds are perceived again from the coordinates (the
- * original bonds only cover the asymmetric unit).
- *
- * @return true if the operations were applied. Nothing is changed, and false
- * is returned, if the file has no untabulated operations, the molecule has no
- * unit cell, or any operation cannot be parsed.
+ * Build a CifSymmetry from the symmetry operations and the Hall symbol that a
+ * file gives, looking both up in the table of Core::SpaceGroups. Either may be
+ * empty. @p name is the Hermann-Mauguin symbol for display (CifSymmetry::name),
+ * which falls back to the Hall symbol. readCifSymmetry() uses this too, so
+ * every reader resolves them the same way.
  */
-AVOGADROIO_EXPORT bool expandCifAtoms(const CifSymmetry& symmetry,
-                                      Core::Molecule& molecule);
+AVOGADROIO_EXPORT CifSymmetry makeCifSymmetry(
+  const std::vector<std::string>& operations, const std::string& hallSymbol,
+  const std::string& name = std::string());
+
+/**
+ * Set the space group of @p molecule, which holds the asymmetric unit read
+ * from a CIF file, from what the file spells out itself. Does nothing if the
+ * molecule has no unit cell.
+ *
+ * Operations that match no table entry are kept on the molecule instead of a
+ * Hall number (Core::SpaceGroups::setStoredOperations()): the Hall number is 0,
+ * the international number a reader may have guessed from the name is removed,
+ * and the atoms are not expanded, so the user keeps the asymmetric unit and
+ * Fill Unit Cell uses the operations of the file. If they cannot be parsed, or
+ * for any other file, the Hall number is that of the operations, else that of
+ * the Hall symbol, and a molecule keeps the group a reader already found if
+ * the file lists only the identity (the operations were stripped, or every
+ * atom is already present) while the reader named a larger group. Nothing is
+ * changed if the file identifies no group. The bonds are never touched.
+ */
+AVOGADROIO_EXPORT void applyCifSymmetry(const CifSymmetry& symmetry,
+                                        Core::Molecule& molecule);
 
 } // namespace Avogadro::Io
 

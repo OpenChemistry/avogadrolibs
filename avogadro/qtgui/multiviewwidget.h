@@ -10,8 +10,7 @@
 
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class ContainerWidget;
 class ViewFactory;
@@ -67,7 +66,6 @@ private:
   void splitView(Qt::Orientation orient, ContainerWidget* container);
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_MULTIVIEWWIDGET_H

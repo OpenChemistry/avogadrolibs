@@ -11,8 +11,7 @@
 
 #include <QtGui/QColor>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render the unit cell boundaries.
@@ -58,7 +57,7 @@ private:
   bool m_multiColor;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_CRYSTALSCENE_H

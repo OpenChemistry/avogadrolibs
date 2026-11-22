@@ -31,9 +31,7 @@ Q_DECLARE_METATYPE(Avogadro::Calc::EnergyCalculator*)
 Q_DECLARE_METATYPE(std::vector<Eigen::VectorXd>)
 Q_DECLARE_METATYPE(std::vector<double>)
 
-namespace Avogadro {
-
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class CalcWorker calcworker.h <avogadro/qtgui/calcworker.h>
@@ -177,7 +175,6 @@ private:
   Calc::OptimizerState m_optState;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_CALCWORKER_H

@@ -13,8 +13,7 @@
 #include <mutex>
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT GenericOutput : public Io::FileFormat
 {
@@ -51,7 +50,6 @@ protected:
   std::string m_identifier = "Avogadro: Generic Output";
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

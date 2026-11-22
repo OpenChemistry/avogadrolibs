@@ -8,8 +8,7 @@
 
 #include <QtWidgets/QGraphicsScene>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class ElementDetail;
 
@@ -52,7 +51,7 @@ private:
   ElementDetail* m_detail;
 };
 
-} // End namespace QtGui
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui
+// End namespace Avogadro
 
 #endif // AVOGADRO_QTGUI_PERIODICTABLESCENE_P_H

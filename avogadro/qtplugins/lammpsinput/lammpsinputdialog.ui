@@ -59,6 +59,9 @@
        <property name="text">
         <string>Filename Base:</string>
        </property>
+       <property name="buddy">
+        <cstring>baseNameEdit</cstring>
+       </property>
       </widget>
      </item>
      <item row="1" column="1">
@@ -142,6 +145,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QLabel" name="label_waterPotential">
        <property name="text">
         <string>Water Potential</string>
+       </property>
+       <property name="buddy">
+        <cstring>waterPotentialCombo</cstring>
        </property>
       </widget>
      </item>
@@ -291,6 +297,9 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Coordinate Data File</string>
        </property>
+       <property name="buddy">
+        <cstring>readDataLine</cstring>
+       </property>
       </widget>
      </item>
      <item row="6" column="4" colspan="4">
@@ -304,6 +313,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QLabel" name="label_therm">
        <property name="text">
         <string>Ensemble</string>
+       </property>
+       <property name="buddy">
+        <cstring>ensembleCombo</cstring>
        </property>
       </widget>
      </item>
@@ -325,6 +337,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QLabel" name="label_temp">
        <property name="text">
         <string>Temperature</string>
+       </property>
+       <property name="buddy">
+        <cstring>tempSpin</cstring>
        </property>
       </widget>
      </item>
@@ -351,6 +366,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="text">
         <string>NH Chains</string>
+       </property>
+       <property name="buddy">
+        <cstring>nhChainSpin</cstring>
        </property>
       </widget>
      </item>
@@ -398,6 +416,9 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Time Step</string>
        </property>
+       <property name="buddy">
+        <cstring>stepSpin</cstring>
+       </property>
       </widget>
      </item>
      <item row="10" column="1">
@@ -420,6 +441,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="text">
         <string>Dump XYZ</string>
+       </property>
+       <property name="buddy">
+        <cstring>dumpXYZEdit</cstring>
        </property>
       </widget>
      </item>
@@ -654,6 +678,9 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Total Steps</string>
        </property>
+       <property name="buddy">
+        <cstring>runSpin</cstring>
+       </property>
       </widget>
      </item>
      <item row="10" column="3">
@@ -686,6 +713,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Dump Interval</string>
+       </property>
+       <property name="buddy">
+        <cstring>dumpStepSpin</cstring>
        </property>
       </widget>
      </item>
@@ -720,6 +750,9 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Initial Velocities</string>
        </property>
+       <property name="buddy">
+        <cstring>velocityDistCombo</cstring>
+       </property>
       </widget>
      </item>
      <item row="9" column="1">
@@ -746,6 +779,9 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="text">
         <string>Temperature</string>
+       </property>
+       <property name="buddy">
+        <cstring>velocityTempSpin</cstring>
        </property>
       </widget>
      </item>
@@ -815,12 +851,18 @@ p, li { white-space: pre-wrap; }
        <property name="text">
         <string>Output</string>
        </property>
+       <property name="buddy">
+        <cstring>thermoStyleCombo</cstring>
+       </property>
       </widget>
      </item>
      <item row="12" column="2">
       <widget class="QLabel" name="label_11">
        <property name="text">
         <string>Output Interval</string>
+       </property>
+       <property name="buddy">
+        <cstring>thermoSpin</cstring>
        </property>
       </widget>
      </item>

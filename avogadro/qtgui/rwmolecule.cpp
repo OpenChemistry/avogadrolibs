@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <set>
 
 #ifdef USE_SPGLIB
 #include <avogadro/core/avospglib.h>
@@ -84,7 +85,7 @@ bool RWMolecule::removeAtom(Index atomId)
 
   // Remove any bonds containing this atom first.
   Array<BondType> atomBonds = bonds(atomId);
-  while (atomBonds.size()) {
+  while (!atomBonds.empty()) {
     // Ensure that indices aren't invalidated as we remove them:
     assert("atomBonds have ascending indices" &&
            (atomBonds.size() == 1 ||
@@ -93,8 +94,7 @@ bool RWMolecule::removeAtom(Index atomId)
     atomBonds.pop_back();
   }
 
-  auto* comm = new RemoveAtomCommand(
-    *this, atomId, uniqueId, atomicNumber(atomId), atomPosition3d(atomId));
+  auto* comm = new RemoveAtomCommand(*this, atomId, uniqueId);
   comm->setText(tr("Remove Atom"));
 
   m_undoStack.push(comm);
@@ -421,9 +421,7 @@ bool RWMolecule::removeBond(Index bondId)
   if (bondUid == MaxIndex)
     return false;
 
-  auto* comm =
-    new RemoveBondCommand(*this, bondId, bondUid, m_molecule.bondPair(bondId),
-                          m_molecule.bondOrder(bondId));
+  auto* comm = new RemoveBondCommand(*this, bondId, bondUid);
   comm->setText(tr("Removed Bond"));
   m_undoStack.push(comm);
   return true;
@@ -469,14 +467,20 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
   if (pairs.size() != m_molecule.bondCount())
     return false;
 
-  // Correct any pairs that are ordered improperly:
+  // Correct any pairs that are ordered improperly, and refuse the whole set
+  // (without touching the undo stack) if the core would: out of range
+  // vertices, self-bonds or duplicate pairs.
   using BondPair = std::pair<Index, Index>;
   Array<BondPair> p(pairs);
-  // Use for reading to prevent copies unless needed (Array is copy-on-write):
-  const Array<BondPair>& p_const = p;
-  for (size_t i = 0; i < p.size(); ++i)
-    if (p_const[i].first > p_const[i].second)
-      swap(p[i].first, p[i].second);
+  std::set<BondPair> seen;
+  for (size_t i = 0; i < p.size(); ++i) {
+    BondPair& pair = p[i];
+    if (pair.first > pair.second)
+      swap(pair.first, pair.second);
+    if (pair.second >= m_molecule.atomCount() || pair.first == pair.second ||
+        !seen.insert(pair).second)
+      return false;
+  }
 
   auto* comm = new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
   comm->setText(tr("Update Bonds"));
@@ -486,18 +490,22 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
 
 bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
 {
-  if (bondId >= bondCount() || pair.first == pair.second)
+  if (bondId >= bondCount() || pair.first == pair.second ||
+      pair.first >= atomCount() || pair.second >= atomCount())
     return false;
 
-  SetBondPairCommand* comm = nullptr;
-  if (pair.first < pair.second) {
-    comm =
-      new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId), pair);
-  } else {
-    comm =
-      new SetBondPairCommand(*this, bondId, m_molecule.bondPair(bondId),
-                             Molecule::makeBondPair(pair.first, pair.second));
-  }
+  const std::pair<Index, Index> newPair =
+    Molecule::makeBondPair(pair.first, pair.second);
+  const std::pair<Index, Index> oldPair = m_molecule.bondPair(bondId);
+  // The stored pair is not always ordered (removeAtom() renumbers atoms
+  // without re-sorting), so compare the endpoints as an unordered pair.
+  if (newPair == Molecule::makeBondPair(oldPair.first, oldPair.second))
+    return true; // nothing to change
+  // Another bond already joins these atoms: the core would refuse.
+  if (m_molecule.graph().containsEdge(newPair.first, newPair.second))
+    return false;
+
+  auto* comm = new SetBondPairCommand(*this, bondId, oldPair, newPair);
   comm->setText(tr("Update Bond"));
   m_undoStack.push(comm);
   return true;
@@ -616,12 +624,12 @@ void RWMolecule::addResidue(const Core::Residue& residue, Index offset)
   newResidue.setSecondaryStructure(residue.secondaryStructure());
 
   // now go through all the atoms and add them using the offset
-  for (Core::Atom atom : residue.residueAtoms()) {
+  for (Index atomIndex : residue.atomIndices()) {
     // get the new index
-    Index newIndex = atom.index() + offset;
+    Index newIndex = atomIndex + offset;
     Core::Atom myAtom = m_molecule.atom(newIndex);
     // get the atom name
-    std::string atomName = residue.atomName(atom);
+    std::string atomName = residue.atomName(atomIndex);
     newResidue.addResidueAtom(atomName, myAtom);
   }
 }
@@ -903,8 +911,9 @@ bool RWMolecule::symmetrizeCell(double cartTol, double copyTol)
   return true;
 }
 
-bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
-                              bool allCopies)
+bool RWMolecule::editUnitCell(const std::function<bool(Molecule&)>& edit,
+                              Molecule::MoleculeChanges changes,
+                              const QString& undoText, bool resizeLayers)
 {
   // If there is no unit cell, there is nothing to do
   if (!m_molecule.unitCell())
@@ -914,16 +923,46 @@ bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
   // The atom positions and numbers of atoms may change
   cancelBackgroundCalculations();
   Molecule newMolecule = m_molecule;
-  newMolecule.setHallNumber(hallNumber);
 
-  Core::SpaceGroups::fillUnitCell(newMolecule, hallNumber, cartTol, true,
-                                  allCopies);
-
-  Molecule::MoleculeChanges changes = Molecule::Added | Molecule::Atoms;
-  QString undoText = tr("Fill Unit Cell");
+  if (!edit(newMolecule))
+    return false;
 
   modifyMolecule(newMolecule, changes, undoText);
+
+  if (resizeLayers) {
+    // Resize layer info to match the new atom count
+    Core::LayerManager::getMoleculeInfo(&m_molecule)
+      ->layer.resize(m_molecule.atomCount());
+  }
   return true;
+}
+
+bool RWMolecule::fillUnitCell(unsigned short hallNumber, double cartTol,
+                              bool allCopies)
+{
+  return editUnitCell(
+    [=](Molecule& mol) {
+      mol.setHallNumber(hallNumber);
+      Core::SpaceGroups::fillUnitCell(mol, hallNumber, cartTol, true,
+                                      allCopies);
+      return true;
+    },
+    Molecule::Added | Molecule::Atoms, tr("Fill Unit Cell"), false);
+}
+
+bool RWMolecule::fillUnitCellFromOperations(
+  const std::vector<std::string>& operations, double cartTol, bool allCopies)
+{
+  // An empty list is not a symmetry; the core call would accept it
+  if (operations.empty())
+    return false;
+
+  return editUnitCell(
+    [&](Molecule& mol) {
+      return Core::SpaceGroups::fillUnitCellFromOperations(
+        mol, operations, cartTol, true, allCopies);
+    },
+    Molecule::Added | Molecule::Atoms, tr("Fill Unit Cell"), false);
 }
 
 bool RWMolecule::fillTranslationalCopies(double cartTol)
@@ -946,27 +985,29 @@ bool RWMolecule::fillTranslationalCopies(double cartTol)
 bool RWMolecule::reduceCellToAsymmetricUnit(unsigned short hallNumber,
                                             double cartTol)
 {
-  // If there is no unit cell, there is nothing to do
-  if (!m_molecule.unitCell())
+  return editUnitCell(
+    [=](Molecule& mol) {
+      Core::SpaceGroups::reduceToAsymmetricUnit(mol, hallNumber, cartTol);
+      return true;
+    },
+    Molecule::Removed | Molecule::Atoms, tr("Reduce Cell to Asymmetric Unit"),
+    true);
+}
+
+bool RWMolecule::reduceCellToAsymmetricUnitFromOperations(
+  const std::vector<std::string>& operations, double cartTol)
+{
+  // An empty list is not a symmetry; the core call would accept it
+  if (operations.empty())
     return false;
 
-  // Make a copy of the molecule to edit so we can store the old one
-  // The atom positions and numbers of atoms may change
-  cancelBackgroundCalculations();
-  Molecule newMolecule = m_molecule;
-
-  Core::SpaceGroups::reduceToAsymmetricUnit(newMolecule, hallNumber, cartTol);
-
-  Molecule::MoleculeChanges changes = Molecule::Removed | Molecule::Atoms;
-  QString undoText = tr("Reduce Cell to Asymmetric Unit");
-
-  modifyMolecule(newMolecule, changes, undoText);
-
-  // Resize layer info to match the new atom count
-  Core::LayerManager::getMoleculeInfo(&m_molecule)
-    ->layer.resize(m_molecule.atomCount());
-
-  return true;
+  return editUnitCell(
+    [&](Molecule& mol) {
+      return Core::SpaceGroups::reduceToAsymmetricUnitFromOperations(
+        mol, operations, cartTol);
+    },
+    Molecule::Removed | Molecule::Atoms, tr("Reduce Cell to Asymmetric Unit"),
+    true);
 }
 
 void RWMolecule::emitChanged(unsigned int change)

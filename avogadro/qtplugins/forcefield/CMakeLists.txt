@@ -5,9 +5,10 @@ endif()
 set(forcefield_srcs
   forcefield.cpp
   forcefielddialog.cpp
-  obmmenergy.cpp
-  scriptenergy.cpp
 )
+if(USE_SUBPROCESS)
+  list(APPEND forcefield_srcs obmmenergy.cpp scriptenergy.cpp)
+endif()
 
 if (BUILD_GPL_PLUGINS)
   find_package(OpenBabel3)

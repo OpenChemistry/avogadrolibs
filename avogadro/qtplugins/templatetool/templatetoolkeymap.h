@@ -10,8 +10,7 @@
 
 #include <map>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 // Lookup table mapping key buffer strings to fragment CJSON paths
 // for the ligands tab (currentTab == 1)
@@ -138,7 +137,6 @@ inline const std::map<QString, QString>& groupKeyMap()
   return keyMap;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_TEMPLATETOOLKEYMAP_H

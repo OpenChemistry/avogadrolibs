@@ -148,6 +148,55 @@ public:
   static const char* internationalNumberKey();
 
   /**
+   * @return the key of the Molecule data map entry (a string) in which file
+   * readers keep the symmetry operations of a file whose operations match no
+   * entry of the space group table (a non-standard setting or an origin
+   * shift). The operations are joined with newlines. They go with a Hall
+   * number of 0; Molecule::setHallNumber() removes them once a real Hall
+   * number is set. See setStoredOperations().
+   */
+  static const char* operationsKey();
+
+  /**
+   * @return the key of the Molecule data map entry (a string) that holds the
+   * name of the space group as the file gave it, for display, next to
+   * operationsKey(). Removed together with it.
+   */
+  static const char* fileNameKey();
+
+  /**
+   * @return true if @p key is one of the keys SpaceGroups keeps in a
+   * molecule's data map (internationalNumberKey(), operationsKey() and
+   * fileNameKey()), which generic property writers should skip.
+   */
+  static bool isSpaceGroupDataKey(const std::string& key);
+
+  /**
+   * @return true if every operation can be parsed (the grammar of
+   * hallNumberFromTransforms()) and the list is not empty.
+   */
+  static bool operationsAreValid(const std::vector<std::string>& operations);
+
+  /**
+   * @return the symmetry operations stored in @p molecule under
+   * operationsKey(), or an empty list if there are none.
+   */
+  static std::vector<std::string> storedOperations(const Molecule& molecule);
+
+  /**
+   * Store the symmetry operations of a file in @p molecule (under
+   * operationsKey()) and the name of its space group (under fileNameKey()).
+   * Nothing is stored unless every operation can be parsed. On success the
+   * Hall number of the molecule is set to 0 and internationalNumberKey() is
+   * removed, since no table entry describes the structure.
+   *
+   * @return true if the operations were stored.
+   */
+  static bool setStoredOperations(Molecule& molecule,
+                                  const std::vector<std::string>& operations,
+                                  const std::string& name);
+
+  /**
    * @return an enum representing the crystal system for a given hall number.
    * If an invalid hall number is given, None will be returned.
    */
@@ -255,6 +304,19 @@ public:
   static bool fillUnitCellFromOperations(
     Molecule& mol, const std::vector<std::string>& operations,
     double cartTol = 1e-5, bool wrapToCell = true, bool allCopies = false);
+
+  /**
+   * Reduce a cell to its asymmetric unit with a list of symmetry operations
+   * (the grammar of hallNumberFromTransforms()), as given by a file, instead
+   * of the ones of a table entry; the counterpart of
+   * fillUnitCellFromOperations(). Identity operations are ignored.
+   *
+   * @return false, and leave @p mol unchanged, if the molecule has no unit
+   * cell or any operation cannot be parsed.
+   */
+  static bool reduceToAsymmetricUnitFromOperations(
+    Molecule& mol, const std::vector<std::string>& operations,
+    double cartTol = 1e-5);
 
   /**
    * Add translational copies of atoms on the unit cell boundary.

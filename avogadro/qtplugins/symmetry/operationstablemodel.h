@@ -30,8 +30,7 @@ extern "C"
 
 #define OPERATIONSTABLEMODEL_COLUMN_COUNT 3
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class OperationsTableModel : public QAbstractTableModel
 {
@@ -67,6 +66,6 @@ private:
   const msym::msym_symmetry_operation_t* m_operations;
   int m_operations_size;
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_OPERATIONSTABLEMODEL_H

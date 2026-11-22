@@ -9,8 +9,7 @@
 #include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class VertexArrayObject vertexarrayobject.h
@@ -59,7 +58,6 @@ private:
   unsigned int m_handle = 0;
 };
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_VERTEXARRAYOBJECT_H

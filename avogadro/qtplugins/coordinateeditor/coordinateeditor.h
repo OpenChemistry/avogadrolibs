@@ -10,8 +10,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 class CoordinateEditorDialog;
 
 /**
@@ -49,7 +48,6 @@ private:
   QAction* m_action;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_COORDINATEEDITOR_H

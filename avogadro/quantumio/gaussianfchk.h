@@ -14,8 +14,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT GaussianFchk : public Io::FileFormat
 {
@@ -104,7 +103,6 @@ private:
   Core::Array<Core::Array<Vector3>> m_vibDisplacements;
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

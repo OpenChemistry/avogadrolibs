@@ -10,8 +10,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class Quad quad.h
@@ -32,7 +31,7 @@ public:
                const Vector3f& bottomLeft, const Vector3f& bottomRight);
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_QUAD_H

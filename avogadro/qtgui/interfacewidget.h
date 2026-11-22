@@ -19,8 +19,7 @@ class QJsonValue;
 class QTextEdit;
 class QWidget;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 class Molecule;
 
 /**
@@ -100,7 +99,6 @@ private:
   QtGui::InterfaceScript m_interfaceScript;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_INTERFACEWIDGET_H

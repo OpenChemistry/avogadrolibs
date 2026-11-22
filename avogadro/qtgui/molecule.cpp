@@ -22,15 +22,26 @@ namespace Avogadro::QtGui {
 
 using std::swap;
 
+namespace {
+
+// Can @p uniqueId go to a new entry? As addAtom() and addBond() take it: a
+// slot that is free, or the fresh id one past the end.
+bool uniqueIdIsFree(const Core::Array<Index>& ids, Index uniqueId)
+{
+  const auto count = static_cast<Index>(ids.size());
+  return uniqueId == count || (uniqueId < count && ids[uniqueId] == MaxIndex);
+}
+
+} // namespace
+
 Molecule::Molecule(QObject* p)
-  : QObject(p), Core::Molecule(), m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(p), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(false);
 }
 
 Molecule::Molecule(const Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : Core::Molecule(other), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(false);
   // Now assign the unique ids
@@ -42,8 +53,7 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : Core::Molecule(other), m_undoMolecule(new RWMolecule(*this, this))
 {
   // As in the two constructors above: without this the undo molecule was
   // left uninitialized, so undoMolecule() handed back a wild pointer and the
@@ -168,6 +178,39 @@ bool Molecule::removeAtom(Index index)
 bool Molecule::removeAtom(const AtomType& atom_)
 {
   return removeAtom(atom_.index());
+}
+
+bool Molecule::restoreAtomSnapshot(Index atomId,
+                                   const Core::AtomSnapshot& snapshot,
+                                   Index uniqueId)
+{
+  // The unique ids of an atom's bonds are not in the snapshot. RWMolecule
+  // removes the bonds with commands of their own first, so there are none.
+  if (snapshot.hasBonds())
+    return false;
+
+  // As addAtom(): a free slot, or the fresh id one past the end.
+  const auto uniqueCount = static_cast<Index>(m_atomUniqueIds.size());
+  if (!uniqueIdIsFree(m_atomUniqueIds, uniqueId))
+    return false;
+
+  // The atom the removal moved into atomId is at atomId now and goes back to
+  // the end. Find its unique id before the restoration puts another atom there.
+  const Index lastAtom = atomCount(); // the last index after the restoration
+  Index movedUniqueId = MaxIndex;
+  if (atomId < lastAtom)
+    movedUniqueId = findAtomUniqueId(atomId);
+
+  if (!Core::Molecule::restoreAtomSnapshot(atomId, snapshot))
+    return false;
+
+  if (uniqueId == uniqueCount)
+    m_atomUniqueIds.push_back(atomId);
+  else
+    m_atomUniqueIds[uniqueId] = atomId;
+  if (movedUniqueId != MaxIndex)
+    m_atomUniqueIds[movedUniqueId] = lastAtom;
+  return true;
 }
 
 Molecule::AtomType Molecule::atomByUniqueId(Index uniqueId)
@@ -309,6 +352,33 @@ bool Molecule::removeBond(Index index)
 bool Molecule::removeBond(const BondType& bond_)
 {
   return removeBond(bond_.index());
+}
+
+bool Molecule::restoreBondSnapshot(Index bondId,
+                                   const Core::BondSnapshot& snapshot,
+                                   Index uniqueId)
+{
+  const auto uniqueCount = static_cast<Index>(m_bondUniqueIds.size());
+  if (!uniqueIdIsFree(m_bondUniqueIds, uniqueId))
+    return false;
+
+  // As for atoms: the bond that the removal moved into bondId goes back to
+  // the end.
+  const Index lastBond = bondCount();
+  Index movedUniqueId = MaxIndex;
+  if (bondId < lastBond)
+    movedUniqueId = findBondUniqueId(bondId);
+
+  if (!Core::Molecule::restoreBondSnapshot(bondId, snapshot))
+    return false;
+
+  if (uniqueId == uniqueCount)
+    m_bondUniqueIds.push_back(bondId);
+  else
+    m_bondUniqueIds[uniqueId] = bondId;
+  if (movedUniqueId != MaxIndex)
+    m_bondUniqueIds[movedUniqueId] = lastBond;
+  return true;
 }
 
 bool Molecule::removeBond(const AtomType& a, const AtomType& b)

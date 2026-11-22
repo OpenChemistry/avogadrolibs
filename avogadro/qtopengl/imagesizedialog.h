@@ -16,8 +16,7 @@
 class QCheckBox;
 class QSpinBox;
 
-namespace Avogadro {
-namespace QtOpenGL {
+namespace Avogadro::QtOpenGL {
 
 class GLWidget;
 
@@ -85,7 +84,6 @@ private:
   double m_aspect = 1.0;
 };
 
-} // namespace QtOpenGL
-} // namespace Avogadro
+} // namespace Avogadro::QtOpenGL
 
 #endif // AVOGADRO_QTOPENGL_IMAGESIZEDIALOG_H

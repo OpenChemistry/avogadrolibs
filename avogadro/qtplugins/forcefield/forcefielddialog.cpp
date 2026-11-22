@@ -26,8 +26,7 @@
 
 #include <cmath> // for log10
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace {
 // Minimal JsonWidget subclass that renders a fixed options schema with no
@@ -237,5 +236,4 @@ void ForceFieldDialog::updateOptionsButton()
   m_optionsButton->setEnabled(!schemaJson.isEmpty());
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -9,8 +9,7 @@
 #include "fileformat.h"
 #include "mdlformat.h"
 
-namespace Avogadro {
-namespace Io {
+namespace Avogadro::Io {
 
 /**
  * @class SdfFormat sdfformat.h <avogadro/io/sdfformat.h>
@@ -59,7 +58,30 @@ public:
                            const Core::Molecule& molecule) override;
 };
 
-} // namespace Io
-} // namespace Avogadro
+/**
+ * @class SdfV3000Format sdfformat.h <avogadro/io/sdfformat.h>
+ * @brief Write-only variant of SdfFormat that always writes V3000 records.
+ *
+ * Every record of a multi-molecule file is written as V3000. Plain "sdf"
+ * lookups still find SdfFormat first.
+ */
+class AVOGADROIO_EXPORT SdfV3000Format : public SdfFormat
+{
+public:
+  SdfV3000Format() { m_writeV3000 = true; }
+  ~SdfV3000Format() override = default;
+
+  Operations supportedOperations() const override
+  {
+    return Write | MultiMolecule | File | Stream | String;
+  }
+
+  FileFormat* newInstance() const override { return new SdfV3000Format; }
+  std::string identifier() const override { return "Avogadro: SDF V3000"; }
+  std::string name() const override { return "SDF V3000"; }
+  std::vector<std::string> fileExtensions() const override { return { "sdf" }; }
+};
+
+} // namespace Avogadro::Io
 
 #endif // AVOGADRO_IO_MDLFORMAT_H

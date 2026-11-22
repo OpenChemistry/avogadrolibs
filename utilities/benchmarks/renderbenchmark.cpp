@@ -64,6 +64,7 @@
 #include <random>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #ifndef _WIN32
@@ -95,8 +96,22 @@ public:
 enum class Mode
 {
   Rebuild,
-  Render
+  Render,
+  Coords
 };
+
+const char* modeName(Mode mode)
+{
+  switch (mode) {
+    case Mode::Render:
+      return "render";
+    case Mode::Coords:
+      return "coords";
+    case Mode::Rebuild:
+    default:
+      return "rebuild";
+  }
+}
 
 struct Options
 {
@@ -193,6 +208,10 @@ void printUsage(const char* argv0)
     << "Options:\n"
     << "  --mode MODE      rebuild (default): rebuild the scene every frame\n"
     << "                   render: build once, rotate the camera, render only\n"
+    << "                   coords: build once, then every frame switch the\n"
+       "                   coordinate set and call each plugin's\n"
+       "                   updateCoordinates() (falling back to process()),\n"
+       "                   as GLWidget does when only positions change\n"
     << "  --style NAME     Display type to enable (repeatable, case\n"
     << "                   insensitive; default \"Ball and Stick\")\n"
     << "  --list-styles    Print the available display types and exit\n"
@@ -308,6 +327,8 @@ bool parseArguments(int argc, char** argv, Options& options)
         options.mode = Mode::Rebuild;
       else if (value == "render")
         options.mode = Mode::Render;
+      else if (value == "coords")
+        options.mode = Mode::Coords;
       else {
         std::cerr << "Unknown mode: " << value << "\n";
         return false;
@@ -456,6 +477,16 @@ struct Report
   bool gpuTiming = false;
   SurfaceReport surface;
   double zoomApplied = 1.0;
+  // Exact byte counts from BufferObject::totalBytesUploaded(): the cold first
+  // frame, and the smallest and largest per-frame upload over the timed
+  // frames (equal when every frame uploads the same amount).
+  std::uint64_t uploadedBytesFirstFrame = 0;
+  std::uint64_t uploadedBytesFrameMin = 0;
+  std::uint64_t uploadedBytesFrameMax = 0;
+  // Coords mode only: plugin updates attempted over the timed frames, and
+  // how many of them returned false and fell back to a full process().
+  std::uint64_t coordsUpdates = 0;
+  std::uint64_t coordsFallbacks = 0;
   Series cold;
   Series timed;
 };
@@ -686,8 +717,7 @@ bool writeJson(const Report& r, const std::string& path)
       << "  \"gl_version\": \"" << jsonEscape(r.version) << "\",\n"
       << "  \"width\": " << r.options.width << ",\n"
       << "  \"height\": " << r.options.height << ",\n"
-      << "  \"mode\": \""
-      << (r.options.mode == Mode::Rebuild ? "rebuild" : "render") << "\",\n"
+      << "  \"mode\": \"" << modeName(r.options.mode) << "\",\n"
       << "  \"atoms\": " << r.atoms << ",\n"
       << "  \"bonds\": " << r.bonds << ",\n"
       << "  \"coordinate_sets\": " << r.coordinateSets << ",\n"
@@ -695,7 +725,16 @@ bool writeJson(const Report& r, const std::string& path)
       << "  \"warmup\": " << r.options.warmup << ",\n"
       << "  \"frames\": " << r.options.frames << ",\n"
       << "  \"gpu_timing\": " << (r.gpuTiming ? "true" : "false") << ",\n"
-      << "  \"zoom\": " << r.zoomApplied << ",\n";
+      << "  \"zoom\": " << r.zoomApplied << ",\n"
+      << "  \"uploaded_bytes_first_frame\": " << r.uploadedBytesFirstFrame
+      << ",\n"
+      << "  \"uploaded_bytes_per_frame_min\": " << r.uploadedBytesFrameMin
+      << ",\n"
+      << "  \"uploaded_bytes_per_frame_max\": " << r.uploadedBytesFrameMax
+      << ",\n";
+  if (r.options.mode == Mode::Coords)
+    out << "  \"coords_updates\": " << r.coordsUpdates << ",\n"
+        << "  \"coords_fallbacks\": " << r.coordsFallbacks << ",\n";
   if (r.surface.requested) {
     const SurfaceReport& s = r.surface;
     out << "  \"surface\": {\n"
@@ -918,8 +957,7 @@ int main(int argc, char** argv)
             << (options.file.empty() ? "generated" : "loaded") << " in "
             << std::fixed << std::setprecision(1) << report.loadMs << " ms\n"
             << "Styles:      " << styleList << "\n"
-            << "Mode:        "
-            << (options.mode == Mode::Rebuild ? "rebuild" : "render") << ", "
+            << "Mode:        " << modeName(options.mode) << ", "
             << options.warmup << " warmup + " << options.frames
             << " timed frames\n";
 #ifndef NDEBUG
@@ -1060,7 +1098,11 @@ int main(int argc, char** argv)
 
   // Duplicates GLWidget::updateScene() (avogadro/qtopengl/glwidget.cpp, minus
   // the tool drawing) so each stage can be timed. Keep in sync with it.
+  // The plugin/node pairs buildScene() made, for updateCoordinates().
+  std::vector<std::pair<ScenePlugin*, GroupNode*>> engineNodes;
+
   auto buildScene = [&](Series& series) {
+    engineNodes.clear();
     GroupNode& node = renderer.scene().rootNode();
     Clock::time_point t = Clock::now();
     node.clear();
@@ -1069,6 +1111,7 @@ int main(int argc, char** argv)
     series.add("scene clear", clearMs);
     for (ScenePlugin* plugin : plugins) {
       auto* engineNode = new GroupNode(moleculeNode);
+      engineNodes.emplace_back(plugin, engineNode);
       t = Clock::now();
       plugin->process(mol, *engineNode);
       const double processMs = elapsedMs(t, Clock::now());
@@ -1097,6 +1140,32 @@ int main(int argc, char** argv)
     series.add("resetGeometry", resetMs);
   };
 
+  // Mirrors GLWidget::updateCoordinates() (minus the tool drawing): update
+  // each plugin's node in place, or rebuild just that node on a false return.
+  // Timed under the same "process: NAME" names as the rebuild mode so
+  // summaries line up.
+  auto updateCoordinates = [&](Series& series) {
+    const Clock::time_point start = Clock::now();
+    for (const auto& entry : engineNodes) {
+      ScenePlugin* plugin = entry.first;
+      GroupNode* engineNode = entry.second;
+      const Clock::time_point t = Clock::now();
+      ++report.coordsUpdates;
+      if (!plugin->updateCoordinates(mol, *engineNode)) {
+        ++report.coordsFallbacks;
+        engineNode->clear();
+        engineNode->clearUI();
+        plugin->process(mol, *engineNode);
+      }
+      series.add("process: " + plugin->name().toStdString(),
+                 elapsedMs(t, Clock::now()));
+    }
+    series.add("update coords", elapsedMs(start, Clock::now()));
+    const Clock::time_point t = Clock::now();
+    renderer.resetGeometry();
+    series.add("resetGeometry", elapsedMs(t, Clock::now()));
+  };
+
   auto renderFrame = [&](Series& series) {
     // The renderer's initialize()/resize() leave its own offscreen buffer
     // bound, and render() presents to whatever is bound when it starts, so
@@ -1118,6 +1187,8 @@ int main(int argc, char** argv)
       series.add("render total gpu", timings.totalGpuMs());
     series.add("uploaded MB",
                static_cast<double>(timings.bufferBytesUploaded) / 1.0e6);
+    series.add("tessellate cpu", timings.tessellateCpuMs);
+    series.add("upload cpu", timings.uploadCpuMs);
   };
 
   auto rotateCamera = [&]() {
@@ -1135,6 +1206,9 @@ int main(int argc, char** argv)
     if (options.mode == Mode::Rebuild) {
       mol.setCoordinate3d(static_cast<int>(frameNumber % sets));
       buildScene(series);
+    } else if (options.mode == Mode::Coords) {
+      mol.setCoordinate3d(static_cast<int>(frameNumber % sets));
+      updateCoordinates(series);
     } else {
       rotateCamera();
     }
@@ -1186,6 +1260,8 @@ int main(int argc, char** argv)
       report.zoomApplied = options.zoom;
     }
     ++frameNumber;
+    report.uploadedBytesFirstFrame =
+      BufferObject::totalBytesUploaded() - before;
     if (BufferObject::totalBytesUploaded() == before) {
       std::cerr << "ERROR: the first frame uploaded 0 bytes; the chosen "
                    "styles produced no geometry.\n";
@@ -1197,14 +1273,28 @@ int main(int argc, char** argv)
     Series discard;
     runFrame(discard);
   }
-  for (std::size_t i = 0; i < options.frames; ++i)
+  report.coordsUpdates = 0;
+  report.coordsFallbacks = 0;
+  for (std::size_t i = 0; i < options.frames; ++i) {
+    const std::uint64_t before = BufferObject::totalBytesUploaded();
     runFrame(report.timed);
+    const std::uint64_t bytes = BufferObject::totalBytesUploaded() - before;
+    if (i == 0 || bytes < report.uploadedBytesFrameMin)
+      report.uploadedBytesFrameMin = bytes;
+    if (i == 0 || bytes > report.uploadedBytesFrameMax)
+      report.uploadedBytesFrameMax = bytes;
+  }
 
   if (!report.timed.names().empty() && !report.gpuTiming)
     std::cout << "NOTE: GPU timer queries unavailable; GPU columns omitted.\n";
   printTable(report);
   std::cout << "\n(cold = first frame: build + render, includes tessellation "
                "and first-use shader setup)\n";
+  if (options.mode == Mode::Coords)
+    std::cout << "\nCoordinate updates: " << report.coordsFallbacks << " of "
+              << report.coordsUpdates
+              << " plugin updates fell back to process() over the timed "
+                 "frames\n";
   if (wantSurface)
     std::cout << std::fixed << std::setprecision(2)
               << "\nSurface mesh: mean edge " << sr.edgeMeanA

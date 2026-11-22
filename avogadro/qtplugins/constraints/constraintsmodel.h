@@ -14,8 +14,7 @@
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/core/constraint.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class ConstraintsModel : public QAbstractTableModel
 
@@ -23,7 +22,7 @@ class ConstraintsModel : public QAbstractTableModel
   Q_OBJECT
 
 public:
-  ConstraintsModel() : QAbstractTableModel() {}
+  ConstraintsModel() {}
 
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -47,7 +46,7 @@ private:
 
 }; // ConstraintsModel
 
-} // namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif

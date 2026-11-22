@@ -432,3 +432,31 @@ def test_constraint_unbound_wrong_self():
         core.Constraint.is_valid(5, 3)
     with pytest.raises(TypeError):
         core.Constraint.is_valid(core.Constraint([0, 1], 1.0), "x")
+
+
+def test_cube_steps_axis_aligned():
+    mol, cube = make_cube((3, 4, 5))
+    assert cube.is_axis_aligned
+    assert np.allclose(cube.steps, np.diag([0.5, 0.5, 0.5]))
+    assert cube.steps.shape == (3, 3)
+
+
+def test_cube_skewed_steps():
+    mol = core.Molecule()
+    cube = mol.add_cube()
+    # Columns are the step vectors along i, j, k.
+    steps = np.array([[1.0, 0.5, 0.0], [0.0, 1.0, 0.25], [0.0, 0.0, 1.0]])
+    assert cube.set_limits(np.array([1.0, 2.0, 3.0]), np.array([3, 3, 3], dtype=np.int32), steps)
+    assert not cube.is_axis_aligned
+    assert np.allclose(cube.steps, steps)
+    # The far corner is origin + steps @ (n - 1).
+    assert np.allclose(cube.max, np.array([1.0, 2.0, 3.0]) + steps @ np.array([2, 2, 2]))
+    lo, hi = cube.bounding_box()
+    assert np.all(lo <= cube.min) and np.all(hi >= cube.max)
+
+
+def test_cube_singular_steps_rejected():
+    mol = core.Molecule()
+    cube = mol.add_cube()
+    steps = np.array([[1.0, 2.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+    assert not cube.set_limits(np.zeros(3), np.array([3, 3, 3], dtype=np.int32), steps)

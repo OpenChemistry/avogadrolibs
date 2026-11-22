@@ -19,12 +19,18 @@
      <property name="text">
       <string>Distance Tolerance:</string>
      </property>
+     <property name="buddy">
+      <cstring>toleranceSpinBox</cstring>
+     </property>
     </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Minimum Distance:</string>
+     </property>
+     <property name="buddy">
+      <cstring>minimumSpinBox</cstring>
      </property>
     </widget>
    </item>

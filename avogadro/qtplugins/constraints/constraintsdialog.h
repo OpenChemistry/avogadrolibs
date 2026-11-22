@@ -11,8 +11,7 @@
 #include <QDialog>
 #include <QtCore/QPointer>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace Ui {
 class ConstraintsDialog;
@@ -54,6 +53,6 @@ private:
   QMetaObject::Connection m_changedConnection;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_CONSTRAINTSDIALOG_H

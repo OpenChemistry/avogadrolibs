@@ -9,8 +9,7 @@
 #include <Eigen/Geometry>
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The ResetView class is an extension to center the camera in the best
@@ -64,7 +63,6 @@ private:
   float calculateOptimalOrthographicScale(const Eigen::Affine3f& viewTransform);
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif

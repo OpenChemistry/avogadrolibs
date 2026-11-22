@@ -165,8 +165,9 @@ struct LayerLabel : Core::LayerData
     std::stringstream output;
     output.imbue(std::locale::classic());
     output << atomOptions << " " << residueOptions << " " << radiusScalar << " "
-           << (int)color[0] << " " << (int)color[1] << " " << (int)color[2]
-           << " " << bondOptions << " " << labelScale;
+           << static_cast<int>(color[0]) << " " << static_cast<int>(color[1])
+           << " " << static_cast<int>(color[2]) << " " << bondOptions << " "
+           << labelScale;
     return output.str();
   }
 
@@ -431,16 +432,22 @@ void Label::processResidue(const Core::Molecule& molecule,
 {
   auto* geometry = new GeometryNode;
   node.addChild(geometry);
+  auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
 
-  for (const auto& residue : molecule.residues()) {
-    Atom caAtom = residue.atomByName("CA");
+  for (Index r = 0; r < molecule.residueCount(); ++r) {
+    const auto& residue = molecule.residue(r);
+    Atom caAtom = molecule.atom(residue.atomIndexByName("CA"));
     if (!caAtom.isValid() ||
         !m_layerManager.atomEnabled(layer, caAtom.index())) {
       continue;
     }
     auto name = residue.residueName();
-    const auto atoms = residue.residueAtoms();
-    const std::string customLabel = molecule.residueLabel(residue.residueId());
+    std::vector<Atom> atoms;
+    for (Index atomIndex : residue.atomIndices())
+      atoms.push_back(molecule.atom(atomIndex));
+    if (atoms.empty())
+      continue;
+    const std::string customLabel = molecule.residueLabel(r);
     Vector3f pos = Vector3f::Zero();
     for (const auto& atom : atoms) {
       pos += atom.position3d().cast<float>();
@@ -453,21 +460,21 @@ void Label::processResidue(const Core::Molecule& molecule,
       auto auxR = static_cast<float>(Elements::radiusVDW(atomicNumber));
       auxR += (atom.position3d().cast<float>() - pos).norm();
       if (auxR > radius) {
-        auxR = radius;
+        radius = auxR;
       }
     }
+    radius *= interface->radiusScalar;
 
-    auto* interface = m_layerManager.getSetting<LayerLabel>(layer);
     Vector3ub color = interface->color;
     std::string text = "";
     if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
-      text = (text == "" ? "" : " / ") + name;
+      text = (text.empty() ? "" : " / ") + name;
     }
     if (interface->residueOptions & LayerLabel::LabelOptions::Index) {
       text += std::to_string(residue.residueId());
     }
     if (interface->residueOptions & LayerLabel::LabelOptions::Custom) {
-      text += (text == "" ? "" : " / ") + customLabel;
+      text += (text.empty() ? "" : " / ") + customLabel;
     }
     TextLabel3D* residueLabel =
       createLabel(text, pos, radius, color, interface->labelScale);
@@ -477,7 +484,8 @@ void Label::processResidue(const Core::Molecule& molecule,
 
 namespace {
 // Choose a charge type: GFN2 or AM1BCC, then MMFF94, then Gasteiger, else
-// whatever comes first. Returns an empty string for an empty set.
+// whatever comes first, keeping the always-available EEQ model as the last
+// resort. Returns an empty string for an empty set.
 std::string preferredChargeType(const std::set<std::string>& types)
 {
   if (types.empty())
@@ -485,6 +493,10 @@ std::string preferredChargeType(const std::set<std::string>& types)
   for (const char* preferred : { "GFN2", "am1bcc", "mmff94", "gasteiger" }) {
     if (types.find(preferred) != types.end())
       return preferred;
+  }
+  for (const std::string& type : types) {
+    if (type != "eeq")
+      return type;
   }
   return *types.begin();
 }
@@ -609,7 +621,7 @@ void Label::processAtom(const QtGui::Molecule& molecule,
       // already set
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Index) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index() + 1);
+      text += (text.empty() ? "" : " / ") + std::to_string(atom.index() + 1);
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Name) {
       std::string name = std::string(Elements::symbol(atomicNumber));
@@ -621,17 +633,17 @@ void Label::processAtom(const QtGui::Molecule& molecule,
           name = "T";
         }
       }
-      text += (text == "" ? "" : " / ") + name;
+      text += (text.empty() ? "" : " / ") + name;
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::Ordinal) {
-      text += (text == "" ? "" : " / ") +
+      text += (text.empty() ? "" : " / ") +
               std::string(Elements::symbol(atomicNumber) +
                           std::to_string(atomCount[atomicNumber]));
     }
     if (interface->atomOptions & LayerLabel::LabelOptions::UniqueID) {
-      text += (text == "" ? "" : " / ") + std::to_string(atom.index());
+      text += (text.empty() ? "" : " / ") + std::to_string(atom.index());
     }
-    if (text != "") {
+    if (!text.empty()) {
       const Vector3f pos(atom.position3d().cast<float>());
       Vector3ub color = atom.color();
       float radius = static_cast<float>(Elements::radiusVDW(atomicNumber)) *

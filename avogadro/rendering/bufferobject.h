@@ -15,8 +15,7 @@
 #include <string> // For member variables.
 #include <vector> // For API.
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class BufferObject bufferobject.h <avogadro/rendering/bufferobject.h>
@@ -100,7 +99,6 @@ inline bool BufferObject::upload(const ContainerT& array,
                         objectType);
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_BUFFEROBJECT_H

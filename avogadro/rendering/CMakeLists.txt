@@ -1,22 +1,24 @@
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
+if(NOT EMSCRIPTEN)
+  find_package(OpenGL REQUIRED)
+  find_package(GLEW REQUIRED)
 
-# GLEW_STATIC switches glew.h from __declspec(dllimport) to plain externs, so
-# it has to describe how the GLEW we found was built. BUILD_SHARED_LIBS says
-# how *we* build our own libraries and nothing at all about GLEW: a static
-# avogadrolibs against a system GLEW DLL -- which is what the Windows fuzz job
-# builds -- defined it wrongly and left every __glew* symbol undefined.
-get_target_property(_glew_type GLEW::GLEW TYPE)
-if(WIN32)
-  if(_glew_type STREQUAL "STATIC_LIBRARY")
-    add_definitions(-DGLEW_STATIC)
-  elseif(_glew_type STREQUAL "UNKNOWN_LIBRARY" AND NOT BUILD_SHARED_LIBS)
-    # FindGLEW in module mode records no type. The superbuild builds its own
-    # GLEW to follow BUILD_SHARED_LIBS, so fall back to that inference there.
-    add_definitions(-DGLEW_STATIC)
+  # GLEW_STATIC switches glew.h from __declspec(dllimport) to plain externs, so
+  # it has to describe how the GLEW we found was built. BUILD_SHARED_LIBS says
+  # how *we* build our own libraries and nothing at all about GLEW: a static
+  # avogadrolibs against a system GLEW DLL -- which is what the Windows fuzz job
+  # builds -- defined it wrongly and left every __glew* symbol undefined.
+  get_target_property(_glew_type GLEW::GLEW TYPE)
+  if(WIN32)
+    if(_glew_type STREQUAL "STATIC_LIBRARY")
+      add_definitions(-DGLEW_STATIC)
+    elseif(_glew_type STREQUAL "UNKNOWN_LIBRARY" AND NOT BUILD_SHARED_LIBS)
+      # FindGLEW in module mode records no type. The superbuild builds its own
+      # GLEW to follow BUILD_SHARED_LIBS, so fall back to that inference there.
+      add_definitions(-DGLEW_STATIC)
+    endif()
   endif()
+  unset(_glew_type)
 endif()
-unset(_glew_type)
 
 add_library(Rendering)
 
@@ -33,10 +35,12 @@ avogadro_headers(Rendering
   cartoongeometry.h
   curvegeometry.h
   cylindergeometry.h
+  geometrytiming.h
   dashedlinegeometry.h
   drawable.h
   geometrynode.h
   geometryvisitor.h
+  gltfvisitor.h
   groupnode.h
   glrenderer.h
   glrendervisitor.h
@@ -81,10 +85,12 @@ target_sources(Rendering PRIVATE
   camera.cpp
   curvegeometry.cpp
   cylindergeometry.cpp
+  geometrytiming.cpp
   dashedlinegeometry.cpp
   drawable.cpp
   geometrynode.cpp
   geometryvisitor.cpp
+  gltfvisitor.cpp
   groupnode.cpp
   glrenderer.cpp
   glrendervisitor.cpp
@@ -147,7 +153,7 @@ foreach(file ${shader_files})
   add_custom_command(
     OUTPUT ${resh}
     DEPENDS ${src} encodefile
-    COMMAND encodefile
+    COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:encodefile>
     ARGS ${src} ${resh} ${file_we}
     COMMENT "Encoding ${src}"
     )
@@ -162,9 +168,15 @@ target_link_libraries(Rendering
   PUBLIC
     Avogadro::Headers
   PRIVATE
-    Avogadro::Core # Needed for an emum in residue.h that we should move, maybe others.
-    GLEW::GLEW
-    OpenGL::GL)
+    $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
+    Avogadro::Core) # Needed for an enum in residue.h.
+if(EMSCRIPTEN)
+  # Emscripten supplies GLES headers and GL entry points. Finding desktop
+  # OpenGL injects the sysroot C headers ahead of libc++'s wrapper headers.
+  target_link_options(Rendering PUBLIC "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2")
+else()
+  target_link_libraries(Rendering PRIVATE GLEW::GLEW OpenGL::GL)
+endif()
 
 if(USE_3DCONNEXION AND (WIN32 OR APPLE))
   target_compile_definitions(Rendering PUBLIC _3DCONNEXION)

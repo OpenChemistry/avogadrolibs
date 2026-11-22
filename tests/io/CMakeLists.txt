@@ -1,5 +1,6 @@
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
+  Cif
   CifSymmetry
   BondOrdersCorpus
   Cjson
@@ -8,6 +9,7 @@ set(tests
   Dcd
   FileFormatGuard
   FileFormatManager
+  GemmiCif
   Gromacs
   Lammps
   Mdl
@@ -44,7 +46,7 @@ message(STATUS "Test source files: ${testSrcs}")
 # Add a single executable for all of our tests.
 add_executable(AvogadroIOTests ${testSrcs})
 target_link_libraries(AvogadroIOTests Avogadro::IO
-  nlohmann_json::nlohmann_json ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  nlohmann_json::nlohmann_json gemmi::cif ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 # Helpers shared between the core and io bond order tests.
 target_include_directories(AvogadroIOTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
@@ -68,6 +70,7 @@ if(ENABLE_FUZZ OR DEFINED ENV{LIB_FUZZING_ENGINE})
   # produces a target that does nothing, so check supportedOperations() first.
   # The lookup is case-sensitive, hence POSCAR and OUTCAR.
   set(fuzz
+    cif
     cjson
     cml
     sdf

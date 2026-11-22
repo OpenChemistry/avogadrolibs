@@ -12,8 +12,7 @@
 #include <QtCore/QMultiHash>
 #include <QtCore/QVariant>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief This extension registers FileFormat reader/writers that are
@@ -61,7 +60,6 @@ private:
   void unregisterFileFormats();
   void registerFileFormats();
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_QUANTUMOUTPUT_H

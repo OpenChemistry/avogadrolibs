@@ -10,6 +10,7 @@
 
 #include "avogadrocore.h"
 #include "array.h"
+#include "column.h"
 #include "matrix.h"
 
 #include <climits>
@@ -19,6 +20,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 namespace Avogadro::Core {
 
@@ -164,20 +166,71 @@ public:
 
   /**
    * Swap entries at indices @p a and @p b.
-   * @p entityCount is the current entity count (used to check column sizes).
    */
-  void swapEntries(Index a, Index b, Index entityCount);
+  void swapEntries(Index a, Index b);
+
+  /**
+   * Save what removeEntry(@p index, @p entityCount) is about to change, so
+   * that restore() can undo it. Same name and meaning as Column::slice().
+   * The result is a PropertyMap holding, for each column that reaches
+   * @p index, the value at @p index; a dense column that covers every
+   * entity also gets the value at the last entity, which the removal moves
+   * into @p index (see Column::slice()). A sparse matrix column holds the
+   * matrix at @p index, if there is one. @p entityCount is the count before
+   * the removal. Call this before removeEntry().
+   */
+  PropertyMap slice(Index index, Index entityCount) const;
+
+  /**
+   * Undo removeEntry(@p index, ...) given @p saved = slice(@p index, ...)
+   * taken just before it. @p entityCount is the count after the
+   * restoration. Assumes the map is exactly as the removal left it, as
+   * Column::restore() does. Values past entityCount, which the removal
+   * discards as belonging to no entity, are not brought back.
+   */
+  void restore(Index index, const PropertyMap& saved, Index entityCount);
+
+  /**
+   * Remove the entry at @p index and shift the entries above it down by one,
+   * so that the order of the entities is kept (compare removeEntry(), which
+   * moves the last entity into @p index). @p entityCount is the count before
+   * the removal. Same name and meaning as Column::eraseEntry(). Save
+   * slice(@p index, @p entityCount) first to be able to insertEntry() it
+   * again.
+   */
+  void eraseEntry(Index index, Index entityCount);
+
+  /**
+   * Undo eraseEntry(@p index, ...) given @p saved = slice(@p index, ...)
+   * taken just before it: entries at and above @p index shift up by one and
+   * the saved values go into @p index. @p entityCount is the count after the
+   * restoration. Same name and meaning as Column::insertEntry(). Dense
+   * columns @p saved has no entry for are shifted too, the entity getting
+   * the unset value; a column that does not reach @p index is untouched.
+   */
+  void insertEntry(Index index, const PropertyMap& saved, Index entityCount);
 
   /** Clear all columns and data. */
   void clear();
+
+  /**
+   * Take @p other's contents, leaving it empty. Same name and meaning as
+   * Column::takeFrom().
+   */
+  void takeFrom(PropertyMap& other)
+  {
+    *this = std::move(other);
+    other.clear();
+  }
 
   /** @return true if no columns exist. */
   bool empty() const;
 
 private:
-  std::map<std::string, Array<double>> m_doubles;
-  std::map<std::string, Array<int>> m_ints;
-  std::map<std::string, Array<std::string>> m_strings;
+  // Dense columns; the unset sentinel of each type is the Column fill.
+  std::map<std::string, Column<double>> m_doubles;
+  std::map<std::string, Column<int>> m_ints;
+  std::map<std::string, Column<std::string>> m_strings;
   std::map<std::string, std::unordered_map<Index, MatrixX>> m_matrices;
 };
 

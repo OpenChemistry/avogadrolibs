@@ -3,6 +3,7 @@ if(QT_VERSION EQUAL 6)
 endif()
 
 set(surfaces_srcs
+  edtfill.cpp
   surfacedialog.cpp
   surfaces.cpp
 )

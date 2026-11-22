@@ -11,8 +11,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT GaussianCube : public Io::FileFormat
 {
@@ -49,7 +48,6 @@ private:
   void outputAll();
 }; // End GaussianCube
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

@@ -20,8 +20,7 @@ class QOpenGLWidget;
 class QPushButton;
 class QSlider;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief PlayerTool enables playback of trajectories.
@@ -114,7 +113,6 @@ inline void PlayerTool::setGLRenderer(Rendering::GLRenderer* renderer)
   m_renderer = renderer;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_PLAYERTOOL_H

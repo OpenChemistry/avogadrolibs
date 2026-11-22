@@ -11,13 +11,16 @@
 #include "avogadrocore.h"
 
 #include "array.h"
+#include "atomstate.h"
 #include "bond.h"
+#include "bondstate.h"
 #include "bondorderperception.h"
 #include "constraint.h"
 #include "elements.h"
 #include "graph.h"
 #include "layer.h"
 #include "moleculeinfo.h"
+#include "moleculesnapshot.h"
 #include "propertymap.h"
 #include "variantmap.h"
 #include "vector.h"
@@ -376,7 +379,10 @@ public:
    */
   bool setAtomLabel(Index atomId, const std::string& label);
 
-  const Core::Array<std::string> atomLabels() const { return m_atomLabels; }
+  const Core::Array<std::string> atomLabels() const
+  {
+    return m_atomState.labels.array();
+  }
 
   /**
    * Set all the atom labels in the molecule.
@@ -450,6 +456,40 @@ public:
   virtual bool removeAtom(const AtomType& atom);
 
   /**
+   * @brief Save everything removeAtom(@p atomId) is about to discard, so that
+   * restoreAtomSnapshot() can undo it.
+   *
+   * Call this immediately before removeAtom(@p atomId). The snapshot covers
+   * the atom's element, layer and per-atom state, its position in every
+   * coordinate frame, the constraints and scan coordinates and residues the
+   * removal drops, and the bonds it takes with it. It holds no calculated
+   * results, which a removal discards for good, nor the basis set, cubes or
+   * meshes, which a removal does not touch.
+   *
+   * Taking a snapshot of an atom with bonds costs a copy of the bond columns
+   * that have data, since the order the bonds go in is found by running the
+   * removal on the columns alone.
+   * @return the snapshot, which is empty if @p atomId is out of range.
+   */
+  AtomSnapshot atomSnapshot(Index atomId) const;
+
+  /**
+   * @brief Undo removeAtom(@p atomId), given the snapshot taken just before.
+   *
+   * The molecule has to be exactly as the removal left it. The atom, its bonds
+   * and everything in the snapshot go back where they were: every index, the
+   * layer, the per-atom state and the per-bond state are those from before
+   * the removal. Calculated results and velocities, which the removal
+   * discarded, stay discarded, and the order of the bond list inside a
+   * vertex of the graph, which nothing outside the graph can see, is not
+   * kept. A bond's two atoms come back in ascending order.
+   * @return true on success. false, changing nothing, if @p snapshot is
+   * empty, the molecule does not have one atom (or the snapshot's bonds) fewer
+   * than when it was taken, or @p atomId is not the index it was taken at.
+   */
+  bool restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot);
+
+  /**
    * Remove all atoms from the molecule.
    */
   virtual void clearAtoms();
@@ -465,7 +505,7 @@ public:
    * @param atom2 The second atom in the bond.
    * @param order The bond order.
    * @return The new bond object. Will be invalid if @a atom1 or @a atom2 does
-   * not exist.
+   * not exist, or if they are the same atom: an atom cannot bond to itself.
    * @{
    */
   virtual BondType addBond(Index atom1, Index atom2, unsigned char order = 1);
@@ -501,6 +541,26 @@ public:
   /** @} */
 
   /**
+   * @brief Save what removeBond(@p bondId) is about to discard, so that
+   * restoreBondSnapshot() can undo it. Call it immediately before the removal.
+   * It holds the bond's atoms and per-bond state (order, label, custom
+   * properties), not the partial charges the removal clears.
+   * @return the snapshot, which is empty if @p bondId is out of range.
+   */
+  BondSnapshot bondSnapshot(Index bondId) const;
+
+  /**
+   * @brief Undo removeBond(@p bondId), given the snapshot taken just before.
+   * The molecule has to be exactly as the removal left it. The bond returns
+   * with its index, its atoms (in ascending order) and its state.
+   * @return true on success. false, changing nothing, if @p snapshot is empty,
+   * the molecule does not have one bond fewer than when it was taken, @p bondId
+   * is past bondCount(), or the bond's atoms are not in the molecule or are
+   * already bonded.
+   */
+  bool restoreBondSnapshot(Index bondId, const BondSnapshot& snapshot);
+
+  /**
    * Remove all bonds from the molecule.
    */
   virtual void clearBonds();
@@ -527,7 +587,10 @@ public:
    */
   bool setBondLabel(Index bondIndex, const std::string& label);
 
-  const Core::Array<std::string> bondLabels() const { return m_bondLabels; }
+  const Core::Array<std::string> bondLabels() const
+  {
+    return m_bondState.labels.array();
+  }
 
   /**
    * Set all the bond labels in the molecule.
@@ -539,11 +602,17 @@ public:
   /**
    * @brief Get all bonds to @p a.
    * @return A vector of bonds to the supplied atom @p a.
+   * @note The const overload allocates on every call and is deprecated; use
+   * the non-const overload, or iterate graph().edges(a) with bondPair().
+   * The const overload returns an empty array when @p a >= atomCount(), but
+   * graph().edges(a) does not, so check @p a < atomCount() before calling it.
+   * It will be removed at the next ABI break.
    * @{
    */
   Array<BondType> bonds(const AtomType& a);
   Array<BondType> bonds(Index a);
-  Array<BondType> bonds(Index a) const;
+  [[deprecated("Use the non-const bonds() or graph().edges()")]] Array<BondType>
+  bonds(Index a) const;
   /** @} */
 
   /**
@@ -807,7 +876,10 @@ public:
    * Setting a Hall number other than 0 removes the entry that file readers
    * keep in the data map when they only know the international table number
    * of the space group (SpaceGroups::internationalNumberKey()): it is
-   * superseded. Setting 0 leaves the data map alone.
+   * superseded. It also removes the symmetry operations and the space group
+   * name that a reader keeps there for a file whose operations match no table
+   * entry (SpaceGroups::operationsKey(), SpaceGroups::fileNameKey()). Setting
+   * 0 leaves the data map alone.
    * @{
    */
   void setHallNumber(unsigned short hallNumber);
@@ -1121,6 +1193,31 @@ public:
   Array<Residue>& residues() { return m_residues; }
   const Array<Residue>& residues() const { return m_residues; }
 
+  /**
+   * Remove residue @p residueIndex, keeping the order of the others: the
+   * residues after it, their labels and their custom properties all move down
+   * by one (nothing is swapped into the gap, since the cartoon and secondary
+   * structure code walk the residues in order). The atoms the residue named
+   * stay in the molecule, in no residue.
+   * @return True on success, false if @p residueIndex is out of range.
+   */
+  bool removeResidue(Index residueIndex);
+
+  /**
+   * Insert @p residue at @p residueIndex, shifting the later residues, labels
+   * and custom properties up by one. This undoes removeResidue(): pass the
+   * residue, its residueLabel() and the properties saved with
+   * residueProperties().slice(@p residueIndex, residueCount()) from before the
+   * removal. The residue's atom proxies are pointed at this molecule and keep
+   * their indices.
+   * Restoring an empty label that was the last entry of the label array
+   * leaves the array one entry shorter, which reads the same.
+   * @return True on success, false if @p residueIndex is past residueCount().
+   */
+  bool insertResidue(Index residueIndex, const Residue& residue,
+                     const std::string& label = std::string(),
+                     const PropertyMap& properties = PropertyMap());
+
   /** @return The number of residues in the molecule. */
   Index residueCount() const;
 
@@ -1301,7 +1398,10 @@ public:
    * 0.0 means the atom is frozen, 1.0 means the atom is not frozen.
    * (i.e., multiply this mask with gradients to freeze atoms)
    */
-  Eigen::VectorXd frozenAtomMask() const { return m_frozenAtomMask; }
+  Eigen::VectorXd frozenAtomMask() const
+  {
+    return m_atomState.frozenMask.storage();
+  }
   ///@} end of constraint methods
 
   /** @name Scan coordinates
@@ -1423,35 +1523,27 @@ protected:
     m_partialCharges; //!< Sets of atomic partial charges
 
   std::map<std::string, MatrixX> m_spectra; //!< Sets of spectra
-  PropertyMap m_atomProperties;             //!< Custom per-atom properties
-  PropertyMap m_bondProperties;             //!< Custom per-bond properties
   PropertyMap m_residueProperties;          //!< Custom per-residue properties
   PropertyMap m_conformerProperties;        //!< Custom per-conformer properties
   CustomElementMap m_customElementMap;
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)
-  Array<Vector2> m_positions2d;
+  // The optional per-atom columns that Molecule never indexes directly: 2D
+  // positions, labels, hybridizations, formal charges, isotopes, colors,
+  // selection, the frozen mask and the custom properties. See atomstate.h.
+  AtomState m_atomState;
   Array<Vector3> m_positions3d;
-  Array<std::string> m_atomLabels;
-  Array<std::string> m_bondLabels;
   Array<std::string> m_residueLabels;
   Array<Array<Vector3>> m_coordinates3d; //!< Store conformers/trajectories.
   int m_coordinate3dIndex = 0;           //!< Active coordinate set index.
   Array<Array<Vector3>> m_velocities;    //!< Store velocities.
   Array<double> m_timesteps;
-  Array<AtomHybridization> m_hybridizations;
-  Array<signed char> m_formalCharges;
-  Array<unsigned short> m_isotopes; //!< Store isotopes of the atoms
   Array<Vector3> m_forceVectors;
-  Array<Vector3ub> m_colors;
   // Vibration data if available, keyed by conformer index. Sparse: a
   // trajectory usually has a Hessian at one geometry, if any. A molecule with
   // no coordinate sets keys its vibrations at 0, which is also the default
   // active index, so the single-geometry case is unchanged.
   std::map<size_t, VibrationData> m_vibrations;
-
-  // Array declaring whether atoms are selected or not.
-  std::vector<bool> m_selectedAtoms;
 
   // Shared between copies of the molecule; the non-const accessors detach a
   // shared element before handing it out (copy on write).
@@ -1469,7 +1561,6 @@ protected:
   unsigned short m_hallNumber = 0;
 
   std::vector<Core::Constraint> m_constraints;
-  Eigen::VectorXd m_frozenAtomMask;
 
 private:
   /**
@@ -1518,9 +1609,15 @@ private:
    */
   void repointResidueAtoms(const Molecule& source);
 
+  /**
+   * Make every residue that names atom @p from name atom @p to instead, under
+   * the same atom name. Only those residues are written to.
+   */
+  void moveResidueReferences(Index from, Index to);
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
-  // edge information
-  Array<unsigned char> m_bondOrders;
+  // edge information: orders, labels and custom properties
+  BondState m_bondState;
   // vertex information
   Array<unsigned char> m_atomicNumbers;
   /**
@@ -1563,82 +1660,49 @@ public:
 
 inline AtomHybridization Molecule::hybridization(Index atomId) const
 {
-  AtomHybridization hyb = HybridizationUnknown;
-  if (atomId < m_hybridizations.size())
-    return m_hybridizations[atomId];
-
-  return hyb;
+  return m_atomState.hybridizations.value(atomId, HybridizationUnknown);
 }
 
 inline bool Molecule::setHybridizations(
   const Core::Array<AtomHybridization>& hybs)
 {
-  if (hybs.size() == atomCount()) {
-    m_hybridizations = hybs;
-    return true;
-  }
-  return false;
+  return m_atomState.hybridizations.setAll(hybs, atomCount(), false);
 }
 
 inline bool Molecule::setHybridization(Index atomId, AtomHybridization hyb)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_hybridizations.size())
-      m_hybridizations.resize(atomCount(), HybridizationUnknown);
-    m_hybridizations[atomId] = hyb;
-    return true;
-  }
-  return false;
+  return m_atomState.hybridizations.set(atomId, hyb, atomCount(),
+                                        HybridizationUnknown);
 }
 
 inline signed char Molecule::formalCharge(Index atomId) const
 {
-  return atomId < m_formalCharges.size() ? m_formalCharges[atomId] : 0;
+  return m_atomState.formalCharges.value(atomId, 0);
 }
 
 inline bool Molecule::setFormalCharges(const Core::Array<signed char>& charges)
 {
-  if (charges.size() == atomCount()) {
-    m_formalCharges = charges;
-    return true;
-  }
-  return false;
+  return m_atomState.formalCharges.setAll(charges, atomCount(), false);
 }
 
 inline bool Molecule::setFormalCharge(Index atomId, signed char charge)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_formalCharges.size())
-      m_formalCharges.resize(atomCount(), 0);
-    m_formalCharges[atomId] = charge;
-    return true;
-  }
-  return false;
+  return m_atomState.formalCharges.set(atomId, charge, atomCount(), 0);
 }
 
 inline unsigned short Molecule::isotope(Index atomId) const
 {
-  return atomId < m_isotopes.size() ? m_isotopes[atomId] : 0;
+  return m_atomState.isotopes.value(atomId, 0);
 }
 
 inline bool Molecule::setIsotopes(const Core::Array<unsigned short>& isotopes)
 {
-  if (isotopes.size() == atomCount()) {
-    m_isotopes = isotopes;
-    return true;
-  }
-  return false;
+  return m_atomState.isotopes.setAll(isotopes, atomCount(), false);
 }
 
 inline bool Molecule::setIsotope(Index atomId, unsigned short isotope)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_isotopes.size())
-      m_isotopes.resize(atomCount(), 0);
-    m_isotopes[atomId] = isotope;
-    return true;
-  }
-  return false;
+  return m_atomState.isotopes.set(atomId, isotope, atomCount(), 0);
 }
 
 inline const Molecule::ElementMask Molecule::elements() const
@@ -1651,33 +1715,22 @@ inline Vector3ub Molecule::color(Index atomId) const
   if (atomId >= atomCount())
     return Vector3ub(0, 0, 0);
 
-  if (atomId < m_colors.size())
-    return m_colors[atomId];
-
+  // Not colors.value(): the element fallback would be built on every call,
+  // and the renderers call this once per atom.
+  if (m_atomState.colors.hasEntry(atomId))
+    return m_atomState.colors.array()[atomId];
   return Vector3ub(Elements::color(atomicNumber(atomId)));
 }
 
 inline bool Molecule::setColors(const Core::Array<Vector3ub>& colors)
 {
-  if (colors.size() == atomCount()) {
-    m_colors = colors;
-    return true;
-  }
-  return false;
+  return m_atomState.colors.setAll(colors, atomCount(), false);
 }
 
 inline bool Molecule::setColor(Index atomId, Vector3ub color)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_colors.size()) {
-      for (Index i = m_colors.size(); i < atomCount(); ++i) {
-        m_colors.push_back(Vector3ub(Elements::color(atomicNumber(i))));
-      }
-    }
-    m_colors[atomId] = color;
-    return true;
-  }
-  return false;
+  return m_atomState.colors.set(atomId, color, atomCount(),
+                                AtomState::ColorFill{ &m_atomicNumbers });
 }
 
 inline size_t Molecule::layer(Index atomId) const
@@ -1696,28 +1749,18 @@ inline bool Molecule::setLayer(Index atomId, size_t layer)
 
 inline Vector2 Molecule::atomPosition2d(Index atomId) const
 {
-  return atomId < m_positions2d.size() ? m_positions2d[atomId]
-                                       : Vector2::Zero();
+  return m_atomState.positions2d.value(atomId, Vector2(Vector2::Zero()));
 }
 
 inline bool Molecule::setAtomPositions2d(const Core::Array<Vector2>& pos)
 {
-  if (pos.size() == atomCount() || pos.empty()) {
-    m_positions2d = pos;
-    return true;
-  }
-  return false;
+  return m_atomState.positions2d.setAll(pos, atomCount(), true);
 }
 
 inline bool Molecule::setAtomPosition2d(Index atomId, const Vector2& pos)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_positions2d.size())
-      m_positions2d.resize(atomCount(), Vector2::Zero());
-    m_positions2d[atomId] = pos;
-    return true;
-  }
-  return false;
+  return m_atomState.positions2d.set(atomId, pos, atomCount(),
+                                     Vector2(Vector2::Zero()));
 }
 
 inline Vector3 Molecule::atomPosition3d(Index atomId) const
@@ -1748,47 +1791,34 @@ inline bool Molecule::setAtomPosition3d(Index atomId, const Vector3& pos)
 
 inline std::string Molecule::atomLabel(Index atomId) const
 {
-  return atomId < m_atomLabels.size() ? m_atomLabels[atomId] : "";
+  return m_atomState.labels.value(atomId, std::string());
 }
 
 inline bool Molecule::setAtomLabels(const Core::Array<std::string>& labels)
 {
-  if (labels.size() == atomCount() || labels.empty()) {
-    m_atomLabels = labels;
-    return true;
-  }
-  return false;
+  return m_atomState.labels.setAll(labels, atomCount(), true);
 }
 
 inline bool Molecule::setAtomLabel(Index atomId, const std::string& label)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_atomLabels.size())
-      m_atomLabels.resize(atomCount(), "");
-    m_atomLabels[atomId] = label;
-    return true;
-  }
-  return false;
+  return m_atomState.labels.set(atomId, label, atomCount(), std::string());
 }
 
 inline void Molecule::setAtomSelected(Index atomId, bool selected)
 {
-  if (atomId < atomCount()) {
-    if (atomId >= m_selectedAtoms.size())
-      m_selectedAtoms.resize(atomCount(), false);
-    m_selectedAtoms[atomId] = selected;
-  }
+  m_atomState.selection.set(atomId, selected ? 1 : 0, atomCount());
 }
 
 inline bool Molecule::atomSelected(Index atomId) const
 {
-  return atomId < m_selectedAtoms.size() ? m_selectedAtoms[atomId] : false;
+  return m_atomState.selection.value(atomId, 0) != 0;
 }
 
 inline bool Molecule::isSelectionEmpty() const
 {
-  for (Index i = 0; i < m_selectedAtoms.size(); ++i) {
-    if (m_selectedAtoms[i])
+  const auto& flags = m_atomState.selection.array();
+  for (Index i = 0; i < flags.size(); ++i) {
+    if (flags[i] != 0)
       return false;
   }
   return true;
@@ -1830,7 +1860,7 @@ std::pair<Index, Index> Molecule::makeBondPair(const Index& a, const Index& b)
 
 inline Index Molecule::bondCount() const
 {
-  assert(m_graph.edgeCount() == m_bondOrders.size());
+  assert(m_graph.edgeCount() == m_bondState.orders.size());
   return m_graph.edgeCount();
 }
 
@@ -1841,32 +1871,22 @@ inline const Array<std::pair<Index, Index>>& Molecule::bondPairs() const
 
 inline const Array<unsigned char>& Molecule::bondOrders() const
 {
-  return m_bondOrders;
+  return m_bondState.orders.array();
 }
 
 inline std::string Molecule::bondLabel(Index bondId) const
 {
-  return bondId < m_bondLabels.size() ? m_bondLabels[bondId] : "";
+  return m_bondState.labels.value(bondId, std::string());
 }
 
 inline bool Molecule::setBondLabels(const Core::Array<std::string>& labels)
 {
-  if (labels.size() == bondCount() || labels.empty()) {
-    m_bondLabels = labels;
-    return true;
-  }
-  return false;
+  return m_bondState.labels.setAll(labels, bondCount(), true);
 }
 
 inline bool Molecule::setBondLabel(Index bondId, const std::string& label)
 {
-  if (bondId < bondCount()) {
-    if (bondId >= m_bondLabels.size())
-      m_bondLabels.resize(bondCount(), "");
-    m_bondLabels[bondId] = label;
-    return true;
-  }
-  return false;
+  return m_bondState.labels.set(bondId, label, bondCount());
 }
 
 inline const Graph& Molecule::graph() const

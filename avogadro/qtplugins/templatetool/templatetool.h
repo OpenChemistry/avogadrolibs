@@ -16,8 +16,7 @@
 #include <QtCore/QPoint>
 #include <QtCore/QTimer>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 class TemplateToolWidget;
 
 /**
@@ -118,7 +117,6 @@ private:
   Real m_bondDistance;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_NAVIGATOR_H

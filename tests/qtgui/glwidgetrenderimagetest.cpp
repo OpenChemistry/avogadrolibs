@@ -510,9 +510,9 @@ TEST_F(GLWidgetRenderImageTest, translucentAloneKeepsPartialAlpha)
   EXPECT_LT(qAlpha(c), 245);
   EXPECT_NEAR(qAlpha(c), 128, 20);
   // Pure red stays red once un-premultiplied. A face-on normal receives only
-  // the mesh shader's ambient term, 255 / 2.2 = 116; a colour blended against
+  // the mesh shader's ambient term, 0.4 * 255 = 102; a color blended against
   // black first would read about half of that.
-  EXPECT_NEAR(qRed(c), 116, 12);
+  EXPECT_NEAR(qRed(c), 102, 12);
   EXPECT_LT(qGreen(c), 25);
   EXPECT_LT(qBlue(c), 25);
   EXPECT_EQ(qAlpha(image.pixel(0, 0)), 0);

@@ -14,8 +14,7 @@
 #include <map>
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT ORCAOutput : public Io::FileFormat
 {
@@ -187,7 +186,6 @@ private:
   Core::Array<double> m_nmrShifts; // for NMR (in ppm)
 };
 
-} // namespace QuantumIO
-} // namespace Avogadro
+} // namespace Avogadro::QuantumIO
 
 #endif

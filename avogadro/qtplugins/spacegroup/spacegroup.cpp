@@ -40,6 +40,8 @@
 
 #include <cmath>
 #include <sstream>
+#include <string>
+#include <vector>
 
 using Avogadro::Core::AvoSpglib;
 using Avogadro::QtGui::Molecule;
@@ -125,9 +127,8 @@ bool hallNumberFromOptions(const QVariantMap& options,
 } // namespace
 
 SpaceGroup::SpaceGroup(QObject* parent_)
-  : Avogadro::QtGui::ExtensionPlugin(parent_), m_actions(QList<QAction*>()),
-    m_molecule(nullptr), m_spgTol(1e-5),
-    m_perceiveSpaceGroupAction(new QAction(this)),
+  : Avogadro::QtGui::ExtensionPlugin(parent_), m_molecule(nullptr),
+    m_spgTol(1e-5), m_perceiveSpaceGroupAction(new QAction(this)),
     m_reduceToPrimitiveAction(new QAction(this)),
     m_conventionalizeCellAction(new QAction(this)),
     m_symmetrizeAction(new QAction(this)),
@@ -220,8 +221,10 @@ bool SpaceGroup::handleCommand(const QString& command,
   if (command != "fillUnitCell" && command != "fillTranslationalCell")
     return false;
 
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command.
+  if (m_molecule == nullptr) {
+    emit commandFailed(tr("No molecule"));
+    return true;
+  }
 
   // An explicit hallNumber or spaceGroup wins over the one of the molecule.
   // Without either, the molecule has to know its space group already: a
@@ -623,6 +626,24 @@ bool SpaceGroup::performFill(bool allCopies, FillSource source,
     source == FillSource::Menu ||
     (source == FillSource::Heuristic && !QtGui::Utilities::dialogsSkipped());
 
+  // A file whose symmetry operations match no table entry keeps them instead
+  // of a Hall number: use them, without asking, for every source. Their
+  // setting is exactly the file's, so there is nothing to conventionalize.
+  if (requestedHall == 0 && m_molecule->hallNumber() == 0) {
+    const std::vector<std::string> operations =
+      Core::SpaceGroups::storedOperations(*m_molecule);
+    if (!operations.empty()) {
+      // 0.25 indicates the distance in A that two atoms must be apart
+      if (m_molecule->undoMolecule()->fillUnitCellFromOperations(
+            operations, 0.25, allCopies))
+        return true;
+      if (errorMessage)
+        *errorMessage = tr("The symmetry operations of the file could not be "
+                           "applied.");
+      return false;
+    }
+  }
+
   // an explicit request wins over what the molecule knows
   unsigned short hallNumber =
     requestedHall != 0 ? requestedHall : m_molecule->hallNumber();
@@ -674,6 +695,30 @@ void SpaceGroup::fillTranslationalCell()
 
 void SpaceGroup::reduceToAsymmetricUnit()
 {
+  // A file whose symmetry operations match no table entry keeps them: offer
+  // to reduce with them, as the perceived space group may be another setting.
+  const std::vector<std::string> operations =
+    Core::SpaceGroups::storedOperations(*m_molecule);
+  if (!operations.empty()) {
+    QString name = QString::fromStdString(
+      m_molecule->data(Core::SpaceGroups::fileNameKey()).toString());
+    QString question =
+      name.isEmpty()
+        ? tr("Reduce to the asymmetric unit with the symmetry operations "
+             "of the file?")
+        : tr("Reduce to the asymmetric unit with the symmetry operations "
+             "of the file (%1)?")
+            .arg(name);
+    QMessageBox::StandardButton answer =
+      QMessageBox::question(nullptr, tr("Reduce to Asymmetric Unit"), question,
+                            QMessageBox::Yes | QMessageBox::No);
+    if (answer == QMessageBox::Yes) {
+      m_molecule->undoMolecule()->reduceCellToAsymmetricUnitFromOperations(
+        operations, m_spgTol);
+      return;
+    }
+  }
+
   // Let's gather some information about the space group first
   unsigned short hallNumber = AvoSpglib::getHallNumber(*m_molecule, m_spgTol);
   unsigned short intNum = Core::SpaceGroups::internationalNumber(hallNumber);

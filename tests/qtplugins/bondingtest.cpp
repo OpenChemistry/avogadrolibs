@@ -24,6 +24,7 @@ using Avogadro::QtPluginsTests::CommandStatus;
 using Avogadro::QtPluginsTests::CommandTestHarness;
 using Avogadro::QtPluginsTests::describe;
 using Avogadro::QtPluginsTests::MoleculeSnapshot;
+using Avogadro::QtPluginsTests::NoMoleculeMessage;
 using Avogadro::QtPluginsTests::recordKnownDeviation;
 
 using BondList = std::vector<std::pair<Index, Index>>;
@@ -244,16 +245,15 @@ TEST_F(BondingCommandTest, noOpCommandsPushNoUndoEntry)
 }
 
 // Contract (decision 1): no molecule -> true + commandFailed("No molecule").
-TEST_F(BondingCommandTest, knownDeviationNoMoleculeIsNotClaimed)
+TEST_F(BondingCommandTest, noMoleculeFails)
 {
-  recordKnownDeviation("with no molecule every command returns false");
-
   const MoleculeSnapshot before = m_harness.snapshot();
   m_harness.setPluginMolecule(nullptr);
   for (const char* name : { "removeBonds", "createBonds", "addBondOrders" }) {
     const CommandOutcome out = m_harness.run(name);
-    // When this fails, expect claimed, Failed, NoMoleculeMessage.
-    EXPECT_FALSE(out.claimed) << name;
+    EXPECT_TRUE(out.claimed) << name;
+    EXPECT_EQ(out.status, CommandStatus::Failed) << name;
+    EXPECT_EQ(out.message, QString(NoMoleculeMessage)) << name;
     EXPECT_TRUE(out.clean()) << name << ": " << describe(out);
   }
   EXPECT_EQ(m_harness.snapshot(), before);

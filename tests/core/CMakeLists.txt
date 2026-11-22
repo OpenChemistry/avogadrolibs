@@ -5,11 +5,14 @@ set(tests
   Aromaticity
   Array
   Atom
+  AtomState
   AtomTyper
   AtomUtilities
   BasisSet
   Bond
   BondOrderPerception
+  BondState
+  Column
   Constraint
   ContrastColor
   ConformerQuantity
@@ -19,6 +22,7 @@ set(tests
   Cube
   DihedralIterator
   Eigen
+  FrozenMaskColumn
   Element
   GaussianPrimitiveNormalization
   GaussianSet
@@ -30,6 +34,7 @@ set(tests
   LayerManager
   Mesh
   Molecule
+  MoleculeSnapshot
   Mutex
   NeighborPerceiver
   PropertyMap
@@ -76,8 +81,10 @@ foreach(TestName ${tests})
   if(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
   elseif(TestName STREQUAL "Molecule")
-    # moleculetest.cpp also defines MoleculeCoordinateSetTest.
-    set(testFilter "MoleculeTest.*:MoleculeCoordinateSetTest.*")
+    # moleculetest.cpp also defines MoleculeCoordinateSetTest and
+    # MoleculeResidueTest.
+    set(testFilter
+      "MoleculeTest.*:MoleculeCoordinateSetTest.*:MoleculeResidueTest.*")
   else()
     set(testFilter "${TestName}Test.*")
   endif()

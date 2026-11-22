@@ -52,6 +52,19 @@ public:
                                Rendering::GroupNode& node);
 
   /**
+   * Update the scene after only the atom positions changed (the Moved and
+   * Conformer molecule changes). It is called instead of process(), with the
+   * same @p node that was passed to the last process() call; the node still
+   * holds what that call added.
+   *
+   * @return True if the plugin updated @p node in place. Return false (the
+   * default) to have the caller rebuild this plugin's node: the caller clears
+   * the children of @p node, keeping the node itself, and calls process().
+   */
+  virtual bool updateCoordinates(const QtGui::Molecule& molecule,
+                                 Rendering::GroupNode& node);
+
+  /**
    * The name of the scene plugin, will be displayed in the user interface.
    */
   virtual QString name() const = 0;

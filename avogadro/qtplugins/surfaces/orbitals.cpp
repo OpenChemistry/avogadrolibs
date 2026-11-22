@@ -397,7 +397,7 @@ void Orbitals::checkQueue()
   }
 
   // Do nothing if all calcs are finished.
-  if (hash.size() == 0) {
+  if (hash.empty()) {
     m_runningCube = false;
 #ifndef NDEBUG
     qDebug() << "Finished queue.";

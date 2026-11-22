@@ -16,9 +16,7 @@ class QAction;
 class QDialog;
 class QTimer;
 
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class VibrationDialog;
 
@@ -126,7 +124,6 @@ private:
   int m_amplitude;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_VIBRATIONS_H

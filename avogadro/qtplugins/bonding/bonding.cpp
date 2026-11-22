@@ -6,6 +6,7 @@
 #include "bonding.h"
 
 #include <avogadro/core/elements.h>
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -52,6 +53,8 @@ Bonding::Bonding(QObject* parent_)
   connect(m_orderAction, &QAction::triggered, this, &Bonding::bondOrders);
   connect(m_clearAction, &QAction::triggered, this, &Bonding::clearBonds);
   connect(m_configAction, &QAction::triggered, this, &Bonding::configure);
+
+  registerBondingCommands();
 }
 
 QList<QAction*> Bonding::actions() const
@@ -71,32 +74,42 @@ void Bonding::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 }
 
-void Bonding::registerCommands()
+void Bonding::registerBondingCommands()
 {
-  emit registerCommand("removeBonds",
-                       tr("Remove bonds from all or selected atoms."));
-  emit registerCommand("createBonds",
-                       tr("Create bonds between all or selected atoms."));
-  emit registerCommand("addBondOrders", tr("Perceive bond orders."));
+  QtGui::CommandSpec removeBonds;
+  removeBonds.name = "removeBonds";
+  removeBonds.description = tr("Remove bonds from all or selected atoms.");
+  removeBonds.needsMolecule = true;
+  removeBonds.handler = [this](const QtGui::CommandArguments&) {
+    clearBonds();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(removeBonds));
+
+  QtGui::CommandSpec createBonds;
+  createBonds.name = "createBonds";
+  createBonds.description = tr("Create bonds between all or selected atoms.");
+  createBonds.needsMolecule = true;
+  createBonds.handler = [this](const QtGui::CommandArguments&) {
+    bond();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(createBonds));
+
+  QtGui::CommandSpec addBondOrders;
+  addBondOrders.name = "addBondOrders";
+  addBondOrders.description = tr("Perceive bond orders.");
+  addBondOrders.needsMolecule = true;
+  addBondOrders.handler = [this](const QtGui::CommandArguments&) {
+    bondOrders();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(addBondOrders));
 }
 
-bool Bonding::handleCommand(const QString& command,
-                            [[maybe_unused]] const QVariantMap& options)
+bool Bonding::handleCommand(const QString& command, const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command.
-
-  if (command == "removeBonds") {
-    clearBonds();
-    return true;
-  } else if (command == "createBonds") {
-    bond();
-    return true;
-  } else if (command == "addBondOrders") {
-    bondOrders();
-    return true;
-  }
-  return false;
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 void Bonding::configure()

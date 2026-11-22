@@ -40,8 +40,13 @@ called_from_lib:libglib-2.0.so
 # only voxels of its own indexX) and checked by the exact voxel comparison in
 # surfacestest.cpp. With a TSan-instrumented Qt, remove these entries first.
 race:Avogadro::QtPlugins::Surfaces::calculateEDT
-race:Avogadro::QtPlugins::Surfaces::performEDTStep
 race:~MapKernel
+# edtfill.cpp runs its loops through parallelFor(), whose atomic hand-offs
+# order the task data, so TSan sees no races in the fills themselves. Qt's
+# own map-kernel state (built on the caller, read by pool threads) is still
+# ordered only inside the uninstrumented Qt. Matched by file because the
+# worker lambdas are inlined into Qt templates.
+race:avogadro/qtplugins/surfaces/edtfill.cpp
 
 # Qt from install-qt-action is not TSan-instrumented and ships without symbols.
 # libQt6Gui converts and scales large QImages on its own thread pool
@@ -73,3 +78,19 @@ race:QtConcurrent::map<QList<Avogadro::QtGui::GaussianShell>
 # generator's reads of the cube stay visible; a mesh freed while still in use
 # would be a use-after-free, which the ASan job covers.
 race:Avogadro::Core::Mesh::~Mesh
+# After run() returns, QThread's exit code (uninstrumented libQt6Core) emits
+# finished(), which reads the generator's vptr through the moc-generated
+# metaObject(). ~MeshGenerator() wait()s for the thread before the destructor
+# chain rewrites the vptr, but that join is a futex inside Qt. Run()'s own
+# writes are ordered by MeshGenerator::isDone(), so match only metaObject().
+race:Avogadro::QtGui::MeshGenerator::metaObject
+# MeshGenerator's Flying Edges passes run through parallelForSlabs()
+# (meshgenerator.cpp), whose atomic hand-offs order the pass buffers, so TSan
+# sees no races in the passes themselves. Qt's own map-kernel state (built on
+# the caller, read by pool threads) and the copied task are still ordered only
+# inside the uninstrumented Qt, as for edtfill.cpp above. Every such stack
+# has a parallelForSlabs frame. Trade-off: a real race between slabs is
+# hidden too. Slabs write disjoint rows by construction, and
+# MeshGeneratorTest.parallelMatchesSingleThread checks the mesh is identical
+# with one thread and with several.
+race:parallelForSlabs

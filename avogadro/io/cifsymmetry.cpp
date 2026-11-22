@@ -177,6 +177,13 @@ bool isOperationTag(const std::string& tag)
          tag == "_space_group_symop.operation_xyz";
 }
 
+bool isHermannMauguinTag(const std::string& tag)
+{
+  return tag == "_symmetry_space_group_name_h-m" ||
+         tag == "_space_group_name_h-m_alt" ||
+         tag == "_space_group.name_h-m_alt" || tag == "_space_group_name_h-m";
+}
+
 bool isHallTag(const std::string& tag)
 {
   return tag == "_symmetry_space_group_name_hall" ||
@@ -226,16 +233,19 @@ void addSingleColumnOperations(const std::vector<Token>& values,
 CifSymmetry readCifSymmetry(std::string_view cifText)
 {
   CifSymmetry result;
+  std::string hallSymbol;
+  std::string name;
   CifTokenizer tokenizer(cifText);
 
   bool haveOperations = false;
   bool haveHall = false;
+  bool haveName = false;
   bool seenData = false;
 
   Token token = tokenizer.next();
   while (token.type != TokenType::End) {
     // everything that is needed has been found
-    if (haveOperations && haveHall)
+    if (haveOperations && haveHall && haveName)
       break;
 
     if (token.type == TokenType::Data) {
@@ -257,10 +267,11 @@ CifSymmetry readCifSymmetry(std::string_view cifText)
         result.operations.push_back(token.text);
         haveOperations = true;
       } else if (isHallTag(tag) && !haveHall) {
-        result.hallSymbol = cifHallSymbol(token.text);
-        result.hallFromSymbol =
-          Core::SpaceGroups::hallNumberFromHallSymbol(token.text);
+        hallSymbol = token.text;
         haveHall = true;
+      } else if (isHermannMauguinTag(tag) && !haveName) {
+        name = token.text;
+        haveName = true;
       }
       token = tokenizer.next();
       continue;
@@ -312,41 +323,61 @@ CifSymmetry readCifSymmetry(std::string_view cifText)
     token = tokenizer.next();
   }
 
+  return makeCifSymmetry(result.operations, hallSymbol, name);
+}
+
+CifSymmetry makeCifSymmetry(const std::vector<std::string>& operations,
+                            const std::string& hallSymbol,
+                            const std::string& name)
+{
+  CifSymmetry result;
+  result.operations = operations;
+  result.hallSymbol = cifHallSymbol(hallSymbol);
+  result.name = Core::trimmed(name);
+  if (result.name.empty())
+    result.name = result.hallSymbol;
+  result.hallFromSymbol =
+    Core::SpaceGroups::hallNumberFromHallSymbol(hallSymbol);
   result.hallFromOperations =
     Core::SpaceGroups::hallNumberFromTransforms(result.operations);
   return result;
 }
 
-namespace {
-// How close two atoms may be before they are one atom, in angstrom. This is
-// the tolerance of the Fill Unit Cell action, so that a structure expands the
-// same way whether or not its setting is in the table.
-constexpr double expandTolerance = 0.25;
-} // namespace
-
-bool expandCifAtoms(const CifSymmetry& symmetry, Core::Molecule& molecule)
+void applyCifSymmetry(const CifSymmetry& symmetry, Core::Molecule& molecule)
 {
-  if (!symmetry.hasUntabulatedOperations() || molecule.unitCell() == nullptr)
-    return false;
+  if (molecule.unitCell() == nullptr)
+    return;
 
-  const auto before = molecule.atomCount();
-  if (!Core::SpaceGroups::fillUnitCellFromOperations(
-        molecule, symmetry.operations, expandTolerance, true, false))
-    return false;
-
-  if (molecule.atomCount() > before) {
-    // The bonds were perceived for the asymmetric unit only; the new atoms
-    // have none. Bond them like CrystalTools::wrapAtomsToUnitCell() does.
-    // Bonds across the cell boundary are found when they are needed
-    // (CrystalTools::perceivePeriodicBonds()).
-    molecule.clearBonds();
-    molecule.perceiveBondsSimple();
-    molecule.perceiveBondOrders();
+  // The operations of the file are in no table entry (a non-standard setting
+  // such as I-1, or an origin that a reader's symbol does not carry), so no
+  // Hall number can describe the structure, and one guessed from the name
+  // would fill the cell with the wrong setting. Keep the asymmetric unit and
+  // the operations of the file, which Fill Unit Cell and Reduce to Asymmetric
+  // Unit use, with Hall number 0. If they cannot be parsed, fall through.
+  if (symmetry.hasUntabulatedOperations() &&
+      Core::SpaceGroups::setStoredOperations(molecule, symmetry.operations,
+                                             symmetry.name)) {
+    return;
   }
 
-  // Every atom is present now: nothing is left for a space group to expand
-  molecule.setHallNumber(1);
-  return true;
+  const unsigned short found = symmetry.hallNumber();
+  if (found == 0)
+    return;
+
+  const char* key = Core::SpaceGroups::internationalNumberKey();
+  const unsigned short previous = molecule.hallNumber();
+  // read before setHallNumber() below, which removes the key
+  const bool hadNumber = molecule.hasData(key);
+
+  // Only the identity is listed (or the Hall symbol is "P 1"), yet the reader
+  // found a larger group. Either every atom is already in the file, so
+  // expanding with that group adds nothing, or the operations were stripped
+  // from the file, and P1 would drop the symmetry-related atoms. The group
+  // that the file names is right, or harmless, in both cases.
+  if (found == 1 && ((previous != 0 && previous != 1) || hadNumber))
+    return;
+
+  molecule.setHallNumber(found);
 }
 
 } // namespace Avogadro::Io

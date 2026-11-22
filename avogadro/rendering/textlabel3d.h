@@ -9,8 +9,7 @@
 #include "avogadrorenderingexport.h"
 #include "textlabelbase.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class TextLabel3D textlabel3d.h <avogadro/rendering/textlabel3d.h>
@@ -43,7 +42,6 @@ public:
   /** @} */
 };
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_TEXTLABEL3D_H

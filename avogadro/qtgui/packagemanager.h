@@ -17,8 +17,7 @@
 
 class QProcessEnvironment;
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @brief Singleton that manages pyproject.toml-based plugin packages.
@@ -243,6 +242,26 @@ public:
    */
   static void clearInstallFailure(const QString& packageDir);
 
+  /**
+   * Decide where a package installed from a local directory should live.
+   *
+   * @return the path of a direct child of @p pluginsDir named after
+   * the symlink-resolved @p sourceDir, or an empty string if the install must
+   * be refused: the source does not exist, has no usable name, or is the
+   * plugins directory itself, inside it, or contains it. Callers should install
+   * from the resolved source path (QFileInfo::canonicalFilePath()).
+   */
+  static QString localInstallDestination(const QString& pluginsDir,
+                                         const QString& sourceDir);
+
+  /**
+   * @return true only if @p path is a direct, named child of
+   * @p pluginsDir (never the directory itself). Symlinks at @p path are
+   * not followed, so a symlinked package passes. Use before deleting.
+   */
+  static bool isManagedPackagePath(const QString& pluginsDir,
+                                   const QString& path);
+
   // --- Registration ---
 
   /**
@@ -378,7 +397,6 @@ private:
                      QList<FeatureEntry>& features);
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_PACKAGEMANAGER_H

@@ -57,8 +57,7 @@ const unsigned char INVALID_ATOMIC_NUMBER =
   std::numeric_limits<unsigned char>::max();
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 using QtGui::Molecule;
 using QtGui::RWAtom;
@@ -786,7 +785,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
     size_t moleculeCenterIndex = selectedIndex;
     size_t moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
 
-    if (m_molecule->bonds(selectedIndex).size() != 0) {
+    if (!m_molecule->bonds(selectedIndex).empty()) {
       moleculeCenterIndex =
         m_molecule->bonds(selectedIndex)[0].getOtherAtom(selectedIndex).index();
       moleculeCenterUID = m_molecule->atomUniqueId(moleculeCenterIndex);
@@ -831,7 +830,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
       }
     }
 
-    if (m_molecule->bonds(selectedIndex).size() != 0) {
+    if (!m_molecule->bonds(selectedIndex).empty()) {
       // Create arrays with the points to align and apply Kabsch algorithm
       std::vector<Vector3> templateLigandPositions;
       templateLigandPositions.reserve(templateLigandIndices.size());
@@ -892,7 +891,7 @@ void TemplateTool::atomLeftClick(QMouseEvent*)
 
     // Remove selected atoms and insert ligand
     // (unless there wasn't a bond to begin with)
-    if (m_molecule->bonds(selectedIndex).size() != 0) {
+    if (!m_molecule->bonds(selectedIndex).empty()) {
       for (size_t UID : selectedUIDs)
         m_molecule->removeAtom(m_molecule->atomByUniqueId(UID).index());
     }
@@ -1046,5 +1045,4 @@ void TemplateTool::atomLeftDrag(QMouseEvent*)
   // by default, don't allow drags for bonds
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

@@ -301,10 +301,17 @@ or "Equilibrium Geometry". |
  * - `"keyword"`: directives defined by the target input format specification
  *   to have special meaning, such as tags indicating where coordinates are
  *   to be found.
- * - `"property"`: A property of the simulation, such as level of theory, basis
- *   set, minimization method, etc.
- * - `"literal"`: A numeric literal (i.e. a raw number, such as a coordinate).
+ * - `"property"`: A property of the simulation, such as a convergence
+ *   criterion or other job setting.
+ * - `"num_literal"`: A numeric literal (i.e. a raw number, such as a
+ *   coordinate).
+ * - `"str_literal"`: A quoted string literal.
+ * - `"method"`: A computational method (level of theory) keyword.
+ * - `"basis"`: A basis set name.
+ * - `"block"`: A block or section delimiter in the input.
  * - `"comment"`: Sections of the input that are ignored by the simulation code.
+ *
+ * The name `"literal"` is accepted as an alias for `"num_literal"`.
  *
  * If advanced formatting is desired, the second form of the `format` member
  * allows fine-tuning of the font properties:
@@ -328,7 +335,8 @@ or "Equilibrium Geometry". |
  * representation of the current molecule's geometry when
  * `--generate-input` is called. The corresponding value
  * indicates the format of the molecule that the script expects. If this value
- * is omitted, no representation of the structure will be provided.
+ * is omitted, no representation of the structure will be provided (the
+ * geometry keywords still work). Cube data is never sent to input generators.
  *
  * @note Currently valid options for inputMoleculeFormat are "cjson" for
  * Chemical JSON or "cml" for Chemical Markup Language.
@@ -389,6 +397,8 @@ or "Equilibrium Geometry". |
  * highlight styles to apply to the file (see `--print-options` documentation).
  * Each string in this array must match a `style` description in a highlighting
  * rule in the `--print-options` output.
+ * If a file omits its `highlightStyles` array, a style named `"default"` is
+ * applied when one is defined.
  * Zero or more highlighting styles may be applied to any file.
  * The order of the files in the
  * GUI will match the order of the files in the array, and the first file will
@@ -643,8 +653,10 @@ public:
    * options are stored in a file referenced by the pyproject.toml metadata.
    * Insert "inputMoleculeFormat" into @p opts before calling if you need a
    * specific molecule format (mirrors the InputGenerator::setOptions()
-   * pattern). After calling this, reloadOptions() on the widget will use the
-   * cached options without invoking the script.
+   * pattern). A "highlightStyles" array in @p opts replaces any styles parsed
+   * earlier, so a package can supply its styles this way. After calling this,
+   * reloadOptions() on the widget will use the cached options without
+   * invoking the script.
    */
   void setOptionsJson(const QJsonObject& opts);
 
@@ -811,7 +823,8 @@ private:
   QByteArray execute(const QStringList& args,
                      const QByteArray& scriptStdin = QByteArray()) const;
   QString processErrorString(const QProcess& proc) const;
-  bool insertMolecule(QJsonObject& json, const Core::Molecule& mol) const;
+  bool insertMolecule(QJsonObject& json, const Core::Molecule& mol,
+                      bool includeCubes = true) const;
   void insertCamera(QJsonObject& cjson) const;
 
   // File extension of requested molecule format
@@ -819,6 +832,8 @@ private:
   mutable QString m_displayName;
   mutable QString m_menuPath;
   mutable QJsonObject m_options;
+  // True once options came from the script or setOptionsJson(), even if empty
+  mutable bool m_optionsLoaded = false;
   mutable QStringList m_warnings;
   mutable QStringList m_errors;
 

@@ -10,8 +10,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class ArcStrip arcstrip.h
@@ -43,7 +42,7 @@ public:
               float lineWidth);
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_ARCSTRIP_H

@@ -13,8 +13,7 @@
 #include <memory>
 #include <vector>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class PluginLayerManager pluginlayermanager.h
@@ -220,7 +219,6 @@ private:
   std::string m_name;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif

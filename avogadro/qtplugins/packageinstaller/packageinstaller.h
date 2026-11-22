@@ -12,8 +12,7 @@
 
 class QAction;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class PackageManagerDialog;
 
@@ -48,7 +47,6 @@ private:
   QPointer<PackageManagerDialog> m_dialog;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_PACKAGEINSTALLER_H

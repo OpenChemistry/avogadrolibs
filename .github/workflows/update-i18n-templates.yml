@@ -8,6 +8,10 @@ on:
     # run weekly, every Sunday at 01:23
     - cron:  '23 1 * * 0'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   update-i18n:
     name: Update translation templates
@@ -25,11 +29,44 @@ jobs:
         sh scripts/extract-messages.sh
 
     - name: Create pull request
-      uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
-      with:
-        commit-message: "Automated translation updates"
-        signoff: true
-        title: "Automated translation updates"
-        branch: update-i18n-templates
-        delete-branch: true
-        labels: i18n
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        BRANCH: update-i18n-templates
+      run: |
+        set -euo pipefail
+
+        git add -A i18n/
+
+        # xgettext rewrites the POT-Creation-Date header every run,
+        # so ignore diffs where that is the only change
+        meaningful=$(git diff --cached -U0 \
+          | grep -E '^[+-]' \
+          | grep -vE '^(\+\+\+|---) ' \
+          | grep -v 'POT-Creation-Date' || true)
+
+        if [ -z "$meaningful" ]; then
+          echo "No meaningful translation template changes."
+          if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null; then
+            echo "Deleting stale branch $BRANCH."
+            git push origin --delete "$BRANCH"
+          fi
+          exit 0
+        fi
+
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git switch -C "$BRANCH"
+        git commit -s -m "Automated translation updates"
+        git push --force origin "$BRANCH"
+
+        open_prs=$(gh pr list --head "$BRANCH" --base "$GITHUB_REF_NAME" \
+          --state open --json number --jq length)
+        if [ "$open_prs" = "0" ]; then
+          gh pr create --base "$GITHUB_REF_NAME" --head "$BRANCH" \
+            --title "Automated translation updates" \
+            --body "Weekly update of the translation template from scripts/extract-messages.sh." \
+            --label i18n
+        else
+          echo "A pull request is already open; the force-push updated it."
+        fi

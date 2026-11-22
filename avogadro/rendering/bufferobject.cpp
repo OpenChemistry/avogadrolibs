@@ -6,6 +6,7 @@
 #include "bufferobject.h"
 
 #include "avogadrogl.h"
+#include "geometrytiming.h"
 
 #include <atomic>
 
@@ -91,8 +92,11 @@ bool BufferObject::uploadInternal(const void* buffer, size_t size,
     return false;
   }
   glBindBuffer(d->type, d->handle);
-  glBufferData(d->type, size, static_cast<const GLvoid*>(buffer),
-               GL_STATIC_DRAW);
+  {
+    GeometryTiming::Scope timer(GeometryTiming::Counter::Upload);
+    glBufferData(d->type, size, static_cast<const GLvoid*>(buffer),
+                 GL_STATIC_DRAW);
+  }
   s_totalBytesUploaded.fetch_add(static_cast<std::uint64_t>(size),
                                  std::memory_order_relaxed);
   m_dirty = false;

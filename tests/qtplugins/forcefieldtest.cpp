@@ -4,6 +4,9 @@
 ******************************************************************************/
 
 #include "energywindow.h"
+#include "forcefield.h"
+
+#include <avogadro/qtgui/molecule.h>
 #include "obmmenergy.h"
 
 #include <QtCore/QtGlobal>
@@ -130,4 +133,22 @@ TEST(EnergyWindowTest, ZeroEnergyStillTested)
   EnergyWindow w;
   EXPECT_FALSE(w.update(10, 0.0, 1e-4));
   EXPECT_TRUE(w.update(20, 0.0, 1e-4));
+}
+
+TEST(ForcefieldCommandTest, clearingMoleculeDoesNotWarn)
+{
+  Avogadro::QtGui::Molecule molecule;
+  Avogadro::QtPlugins::Forcefield forcefield;
+  forcefield.setMolecule(&molecule);
+
+  static QStringList warnings;
+  warnings.clear();
+  auto previousHandler = qInstallMessageHandler(
+    [](QtMsgType type, const QMessageLogContext&, const QString& message) {
+      if (type == QtWarningMsg)
+        warnings.append(message);
+    });
+  forcefield.setMolecule(nullptr);
+  qInstallMessageHandler(previousHandler);
+  EXPECT_TRUE(warnings.isEmpty()) << warnings.join("\n").toStdString();
 }

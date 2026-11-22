@@ -8,8 +8,7 @@
 
 #include <QtWidgets/QDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace Ui {
 class LineFormatInputDialog;
@@ -42,6 +41,6 @@ private:
   Ui::LineFormatInputDialog* m_ui;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_LINEFORMATINPUTDIALOG_H

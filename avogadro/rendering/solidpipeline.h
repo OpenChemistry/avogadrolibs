@@ -8,8 +8,7 @@
 
 #include "camera.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class SolidPipeline
 {
@@ -29,9 +28,9 @@ public:
   void initialize();
 
   /**
-   * @brief Begin solid geometry rendering.
+   * @brief Begin solid geometry rendering. Returns false if unavailable.
    */
-  void begin();
+  bool begin();
 
   void adjustOffset(const Camera& camera);
 
@@ -151,7 +150,7 @@ private:
   Private* d;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

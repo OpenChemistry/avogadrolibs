@@ -12,8 +12,7 @@
 
 class QHelpEvent;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The CoordinateTextEdit class extends QTextEdit to provide context
@@ -34,9 +33,12 @@ public slots:
 
 protected:
   bool event(QEvent* e) override;
+  void changeEvent(QEvent* e) override;
 
 private:
   void showToolTip(QHelpEvent* e) const;
+  /// Set the mark colors to suit the current light/dark palette.
+  void updateFormatColors();
 
   struct Mark
   {
@@ -54,7 +56,6 @@ private:
   QTextCharFormat m_validFormat;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_COORDINATETEXTEDIT_H

@@ -26,7 +26,7 @@ Angle AngleIterator::operator++()
   if (m_mol == nullptr || m_mol->atomCount() < 3 || m_mol->bondCount() < 2)
     return std::make_tuple(MaxIndex, MaxIndex, MaxIndex);
 
-  Graph graph = m_mol->graph();
+  const Graph& graph = m_mol->graph();
   Index count = m_mol->atomCount();
 
   // true if we have a valid current state

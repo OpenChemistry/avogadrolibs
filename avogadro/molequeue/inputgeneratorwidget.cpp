@@ -236,11 +236,13 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
     return;
   }
 
-  // Reset the update throttling
-  m_updatePending = false;
-
   // Have any buffers been modified?
   if (!m_dirtyTextEdits.isEmpty()) {
+    // The message box below runs a nested event loop, which can deliver
+    // another update (molecule changes, timers). Don't stack prompts.
+    if (m_promptingOverwrite)
+      return;
+
     QStringList buffers;
     foreach (QTextEdit* edit, m_dirtyTextEdits)
       buffers << m_textEdits.key(edit, tr("Unknown"));
@@ -249,20 +251,24 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
                          "the new geometry or job options?",
                          "", buffers.size())
                         .arg(buffers.join("\n"));
+    // Keep m_updatePending set so updatePreviewText() is a no-op meanwhile.
+    m_promptingOverwrite = true;
+    m_updatePending = true;
     int response = QMessageBox::question(
       this, tr("Overwrite modified input files?"), message,
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    m_promptingOverwrite = false;
     if (static_cast<QMessageBox::StandardButton>(response) !=
         QMessageBox::Yes) {
-      // Prevent updates while restoring the option cache:
-      bool oldUpdatePending = m_updatePending;
-      m_updatePending = true;
-      // Restore cached options.
+      // Restore cached options (updates are blocked by m_updatePending).
       applyOptions(m_optionCache);
-      m_updatePending = oldUpdatePending;
+      m_updatePending = false;
       return;
     }
   }
+
+  // Reset the update throttling
+  m_updatePending = false;
 
   if (!m_molecule)
     return;
@@ -346,6 +352,12 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
   // Reset dirty buffer list and cached option list
   m_dirtyTextEdits.clear();
   m_optionCache = collectOptions();
+  // collectOptions() substitutes a generated job title for an empty Title.
+  // Keep it empty in the cache so restoring doesn't turn it into literal text.
+  if (auto* titleEdit = qobject_cast<QLineEdit*>(m_widgets.value("Title"))) {
+    if (titleEdit->text().isEmpty())
+      m_optionCache["Title"] = QString();
+  }
 
   // Restore current tab
   if (!currentWidget.isNull())
