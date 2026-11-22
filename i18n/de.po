@@ -23,8 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
 "PO-Revision-Date: 2026-11-22 21:54+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5109,9 +5108,8 @@ msgstr ""
 #: qtplugins/licorice/licorice.cpp:111
 #: qtplugins/surfacerender/surfacerender.cpp:286
 #: qtplugins/vanderwaals/vanderwaals.cpp:108:1876
-#, fuzzy
 msgid "Opacity:"
-msgstr "Intransparenz:"
+msgstr "Opazität:"
 
 #: qtplugins/licorice/licorice.h:35
 msgid "Render atoms as licorice / sticks."
@@ -5485,7 +5483,7 @@ msgstr "Monoisotopische Molekülmasse (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Chemical Formula"
-msgstr "Chemische Formel:"
+msgstr "Chemische Formel"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Number of Atoms"
@@ -6163,7 +6161,7 @@ msgstr "Die Weiterleitung während des Downloads von %1 war erfolglos.\n"
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:512
 #, qt-format
 msgid "Failed to download from %1: status %2, %3\n"
-msgstr "Download von %1 fehlgeschlagen: Status %2, %3\n"
+msgstr "Download von %1 gescheitert: Statuscode %2, %3\n"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:521
 #, qt-format
@@ -6251,7 +6249,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:753
 msgid "Select Plugin Directory"
-msgstr "Wählen Sie Plugin Verzeichnis"
+msgstr "Plugin-Verzeichnis auswählen"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:759
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:772
@@ -7067,7 +7065,6 @@ msgid "QTAIM"
 msgstr "QTAIM"
 
 #: qtplugins/qtaim/qtaimengine.h:29
-#, fuzzy
 msgid "Renders primitives using QTAIM properties"
 msgstr "Rendert primitive Strukturen mit Hilfe von QTAIM-Eigenschaften"
 
@@ -7125,7 +7122,7 @@ msgstr "Ansichtskamera bearbeiten."
 
 #: qtplugins/scriptcharges/scriptcharges.h:35
 msgid "Script Charge Models"
-msgstr ""
+msgstr "Skripte der Ladungsmodelle"
 
 #: qtplugins/scriptcharges/scriptcharges.h:39
 msgid "Load electrostatic models from external scripts."
@@ -11077,7 +11074,7 @@ msgstr "Gesamtenergie"
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:23
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, searchEdit)
 msgid "Search plugins…"
-msgstr "Suche Plugins…"
+msgstr "Plugins suchen…"
 
 #. i18n: file: qtplugins/packageinstaller/packagemanagerdialog.ui:81
 #. i18n: ectx: property (title), widget (QGroupBox, infoBox)
@@ -11747,17 +11744,17 @@ msgstr "Ester"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:470
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethylene"
-msgstr ""
+msgstr "Ethen"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:475
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "ethyne"
-msgstr ""
+msgstr "Ethin"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:480
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "nitro"
-msgstr ""
+msgstr "Nitro"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:485
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
@@ -11767,12 +11764,12 @@ msgstr "Phenyl"
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:490
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "phosphate"
-msgstr ""
+msgstr "Phosphat"
 
 #. i18n: file: qtplugins/templatetool/templatetoolwidget.ui:495
 #. i18n: ectx: property (text), item, widget (QComboBox, groupComboBox)
 msgid "sulfonate"
-msgstr ""
+msgstr "Sulfonat"
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:14
 #. i18n: ectx: property (windowTitle), widget (QDialog, DisplacementDialog)
