@@ -22,9 +22,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-17 17:13+0000\n"
-"Last-Translator: matterhorn103 "
-"<83813148+matterhorn103@users.noreply.github.com>\n"
+"PO-Revision-Date: 2026-11-22 21:06+0000\n"
+"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -1746,6 +1745,8 @@ msgid ""
 "Error running script '%1': could not resolve a command to run it (no python "
 "interpreter or pixi environment)."
 msgstr ""
+"Laufzeitfehler von Skript '%1': Der Befehl zur Ausführung konnte nicht "
+"aufgelöst werden (es fehlt ein Python-Interpreter oder eine pixi-Umgebung)."
 
 #: qtgui/pythonscript.cpp:456
 #, qt-format
@@ -4129,7 +4130,7 @@ msgstr "Aus der &PDB abrufen…"
 #: qtplugins/insertfragment/insertfragment.cpp:58
 #: qtplugins/networkdatabases/networkdatabases.cpp:42
 msgid "&Import"
-msgstr "Importieren"
+msgstr "&Importieren"
 
 #: qtplugins/fetchpdb/fetchpdb.cpp:77 qtplugins/fetchpdb/fetchpdb.cpp:321
 msgid "Fetch PDB"
