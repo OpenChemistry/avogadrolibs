@@ -23,7 +23,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
 "PO-Revision-Date: 2026-11-22 21:54+0000\n"
-"Last-Translator: Jakob Blahusch <jabla@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -5484,7 +5485,7 @@ msgstr "Monoisotopische Molekülmasse (g/mol)"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:182
 msgid "Chemical Formula"
-msgstr "Summenformel"
+msgstr "Chemische Formel:"
 
 #: qtplugins/molecularproperties/molecularmodel.cpp:184
 msgid "Number of Atoms"
