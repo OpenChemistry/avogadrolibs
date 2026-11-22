@@ -82,9 +82,10 @@ InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   m_ui->setupUi(this);
 
   // Options on one side, file preview on the other. The splitter and boxes
-  // mirror automatically for right-to-left layouts.
+  // mirror automatically for right-to-left layouts. Neither side collapses
+  // by dragging, so the preview button always matches the preview state.
   m_ui->splitter->setCollapsible(0, false);
-  m_ui->splitter->setCollapsible(1, true);
+  m_ui->splitter->setCollapsible(1, false);
   m_ui->splitter->setStretchFactor(0, 0);
   m_ui->splitter->setStretchFactor(1, 1);
   m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
