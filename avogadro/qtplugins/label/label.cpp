@@ -466,7 +466,7 @@ void Label::processResidue(const Core::Molecule& molecule,
     radius *= interface->radiusScalar;
 
     Vector3ub color = interface->color;
-    std::string text = "";
+    std::string text;
     if (interface->residueOptions & LayerLabel::LabelOptions::Name) {
       text = (text.empty() ? "" : " / ") + name;
     }

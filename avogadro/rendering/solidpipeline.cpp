@@ -215,7 +215,8 @@ bool SolidPipeline::begin()
 {
   if (!d->initialized || !d->framebufferReady)
     return false;
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&d->defaultFBO);
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING,
+                reinterpret_cast<GLint*>(&d->defaultFBO));
   glGetIntegerv(GL_VIEWPORT, d->defaultViewport);
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
   GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
