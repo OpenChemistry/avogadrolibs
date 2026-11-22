@@ -1609,6 +1609,12 @@ private:
    */
   void repointResidueAtoms(const Molecule& source);
 
+  /**
+   * Make every residue that names atom @p from name atom @p to instead, under
+   * the same atom name. Only those residues are written to.
+   */
+  void moveResidueReferences(Index from, Index to);
+
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information: orders, labels and custom properties
   BondState m_bondState;

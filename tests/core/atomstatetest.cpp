@@ -217,13 +217,14 @@ TEST(AtomStateTest, addEntryOnlyExtendsProperties)
 TEST(AtomStateTest, sliceAndRestoreRoundTrip)
 {
   const AtomState original = makeState();
+  const Array<unsigned char> numbers = makeNumbers();
   for (Index index = 0; index < kAtoms; ++index) {
     SCOPED_TRACE("index " + std::to_string(index));
     AtomState state = original;
     const AtomState saved = state.slice(index, kAtoms);
     state.removeEntry(index, kAtoms, makeNumbers());
     ASSERT_EQ(state.formalCharges.size(), static_cast<Index>(4));
-    state.restore(index, saved, kAtoms);
+    state.restore(index, saved, kAtoms, numbers);
     expectSame(original, state, kAtoms);
   }
 }

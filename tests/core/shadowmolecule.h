@@ -567,11 +567,9 @@ private:
 // @p checkCalculated says whether to compare the calculated results (forces,
 // partial charges, velocities, normal modes), which the library drops when
 // the structure changes and which undo therefore cannot be expected to bring
-// back. @p checkReferences says whether to compare constraints and scan
-// coordinates. Residues are always compared.
+// back. Constraints, scan coordinates and residues are always compared.
 inline std::string verify(const Avogadro::Core::Molecule& mol,
-                          const Model& model, bool checkCalculated = true,
-                          bool checkReferences = true)
+                          const Model& model, bool checkCalculated = true)
 {
   using Avogadro::Core::Elements;
   std::ostringstream out;
@@ -790,45 +788,42 @@ inline std::string verify(const Avogadro::Core::Molecule& mol,
 #undef SHADOW_NUM
 #undef SHADOW_INT
 
-  if (checkReferences) {
-    auto compare = [&](const char* what, const std::vector<Reference>& expected,
-                       const std::vector<Avogadro::Core::Constraint>& actual,
-                       bool withValue) -> std::string {
-      std::ostringstream err;
-      if (expected.size() != actual.size()) {
-        err << what << " count: expected " << expected.size() << " got "
-            << actual.size();
+  auto compare = [&](const char* what, const std::vector<Reference>& expected,
+                     const std::vector<Avogadro::Core::Constraint>& actual,
+                     bool withValue) -> std::string {
+    std::ostringstream err;
+    if (expected.size() != actual.size()) {
+      err << what << " count: expected " << expected.size() << " got "
+          << actual.size();
+      return err.str();
+    }
+    for (size_t i = 0; i < expected.size(); ++i) {
+      const auto want = model.indicesOf(expected[i]);
+      const std::array<Index, 4> got = { actual[i].aIndex(), actual[i].bIndex(),
+                                         actual[i].cIndex(),
+                                         actual[i].dIndex() };
+      if (want != got) {
+        err << what << " " << i << ": expected atom indices (" << want[0]
+            << ", " << want[1] << ", " << want[2] << ", " << want[3]
+            << ") got (" << got[0] << ", " << got[1] << ", " << got[2] << ", "
+            << got[3] << ")";
         return err.str();
       }
-      for (size_t i = 0; i < expected.size(); ++i) {
-        const auto want = model.indicesOf(expected[i]);
-        const std::array<Index, 4> got = { actual[i].aIndex(),
-                                           actual[i].bIndex(),
-                                           actual[i].cIndex(),
-                                           actual[i].dIndex() };
-        if (want != got) {
-          err << what << " " << i << ": expected atom indices (" << want[0]
-              << ", " << want[1] << ", " << want[2] << ", " << want[3]
-              << ") got (" << got[0] << ", " << got[1] << ", " << got[2] << ", "
-              << got[3] << ")";
-          return err.str();
-        }
-        if (withValue && actual[i].value() != expected[i].value) {
-          err << what << " " << i << " value: expected " << expected[i].value
-              << " got " << actual[i].value();
-          return err.str();
-        }
+      if (withValue && actual[i].value() != expected[i].value) {
+        err << what << " " << i << " value: expected " << expected[i].value
+            << " got " << actual[i].value();
+        return err.str();
       }
-      return std::string();
-    };
-    std::string error =
-      compare("constraint", model.constraints, mol.constraints(), true);
-    if (error.empty())
-      error = compare("scan coordinate", model.scanCoordinates,
-                      mol.scanCoordinates(), false);
-    if (!error.empty())
-      return error;
-  }
+    }
+    return std::string();
+  };
+  std::string error =
+    compare("constraint", model.constraints, mol.constraints(), true);
+  if (error.empty())
+    error = compare("scan coordinate", model.scanCoordinates,
+                    mol.scanCoordinates(), false);
+  if (!error.empty())
+    return error;
 
   // Residues, in order: fields, which atom each name refers to, label and
   // custom property. Always compared; undo restores them.

@@ -36,14 +36,6 @@ protected:
   Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
   Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
   Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
-  // Selection has no public size accessor on Core::Molecule (unlike labels,
-  // colors, etc., which expose their backing Array<T> directly): m_molecule
-  // is protected, reached here only because UndoCommand is a nested class of
-  // RWMolecule, which QtGui::Molecule befriends.
-  bool hasSelectionEntry(Index atomId)
-  {
-    return m_molecule.m_atomState.selection.hasEntry(atomId);
-  }
 
   RWMolecule& m_mol;
   QtGui::Molecule& m_molecule;

@@ -22,6 +22,18 @@ namespace Avogadro::QtGui {
 
 using std::swap;
 
+namespace {
+
+// Can @p uniqueId go to a new entry? As addAtom() and addBond() take it: a
+// slot that is free, or the fresh id one past the end.
+bool uniqueIdIsFree(const Core::Array<Index>& ids, Index uniqueId)
+{
+  const auto count = static_cast<Index>(ids.size());
+  return uniqueId == count || (uniqueId < count && ids[uniqueId] == MaxIndex);
+}
+
+} // namespace
+
 Molecule::Molecule(QObject* p)
   : QObject(p), m_undoMolecule(new RWMolecule(*this, this))
 {
@@ -179,8 +191,7 @@ bool Molecule::restoreAtomSnapshot(Index atomId,
 
   // As addAtom(): a free slot, or the fresh id one past the end.
   const auto uniqueCount = static_cast<Index>(m_atomUniqueIds.size());
-  if (uniqueId > uniqueCount ||
-      (uniqueId < uniqueCount && m_atomUniqueIds[uniqueId] != MaxIndex))
+  if (!uniqueIdIsFree(m_atomUniqueIds, uniqueId))
     return false;
 
   // The atom the removal moved into atomId is at atomId now and goes back to
@@ -348,8 +359,7 @@ bool Molecule::restoreBondSnapshot(Index bondId,
                                    Index uniqueId)
 {
   const auto uniqueCount = static_cast<Index>(m_bondUniqueIds.size());
-  if (uniqueId > uniqueCount ||
-      (uniqueId < uniqueCount && m_bondUniqueIds[uniqueId] != MaxIndex))
+  if (!uniqueIdIsFree(m_bondUniqueIds, uniqueId))
     return false;
 
   // As for atoms: the bond that the removal moved into bondId goes back to

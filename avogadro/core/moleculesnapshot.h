@@ -45,7 +45,6 @@ public:
 private:
   friend class Molecule;
 
-  Index m_id = 0; //!< the bond's index, for the bonds inside an AtomSnapshot
   std::pair<Index, Index> m_pair{ MaxIndex, MaxIndex };
   BondState m_state;
   Index m_count = 0; //!< bondCount() when the snapshot was taken
@@ -64,8 +63,8 @@ private:
  * results (partial charges, forces, velocities, vibrations, spectra), which
  * a removal discards and a restoration does not bring back.
  *
- * @note The position in every frame costs about 32 bytes per frame per atom
- * (24 for the position, plus a flag and padding). An undo history that limits
+ * @note The position in every frame costs about 25 bytes per frame per atom
+ * (the position plus a one-byte flag). An undo history that limits
  * its memory has to count that.
  */
 class AVOGADROCORE_EXPORT AtomSnapshot
@@ -115,11 +114,20 @@ private:
     Constraint constraint;
   };
 
+  struct DroppedBond
+  {
+    Index id = 0; //!< the bond's index when it was removed
+    BondSnapshot bond;
+  };
+
   Index m_count = 0; //!< atomCount() when the snapshot was taken
   unsigned char m_atomicNumber = 0;
   AtomState m_state;
   PositionSlice m_position;
-  std::vector<PositionSlice> m_framePositions;
+  // One entry per coordinate frame, in two vectors so that no padding is
+  // stored.
+  std::vector<Vector3> m_frameValues;
+  std::vector<PositionRemoval> m_frameRemovals;
 
   // The layer array may be shorter than the atom count, and removal
   // swap-and-pops within its own length.
@@ -130,7 +138,7 @@ private:
   std::vector<DroppedConstraint> m_constraints;
   std::vector<DroppedConstraint> m_scanCoordinates;
   std::vector<DroppedResidue> m_residues; //!< in the order they were removed
-  std::vector<BondSnapshot> m_bonds;      //!< in the order they were removed
+  std::vector<DroppedBond> m_bonds;       //!< in the order they were removed
 };
 
 } // namespace Avogadro::Core

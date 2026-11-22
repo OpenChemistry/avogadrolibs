@@ -169,9 +169,9 @@ struct AtomState
    * the number of atoms after the restoration. The caller has to put the atom
    * itself back first; this restores only what the state stores for it.
    * @p atomicNumbers are those of the molecule after the restoration, which
-   * the color of an atom without one is derived from. This is the overload
-   * Molecule uses: it also copes with a color column that an undone setter
-   * left grown (see Column::restore() with a fill).
+   * the color of an atom without one is derived from. This also copes with a
+   * color column that an undone setter left grown (see Column::restore() with
+   * a fill).
    */
   void restore(Index index, const AtomState& saved, Index count,
                const Array<unsigned char>& atomicNumbers)
@@ -180,20 +180,6 @@ struct AtomState
       &atomicNumbers,
       [&](auto& column, const auto& fill, const auto& part) {
         restoreColumn(column, index, part, count, fill);
-      },
-      saved);
-  }
-
-  /**
-   * As above, for a state whose columns are exactly as removeEntry() left
-   * them. It needs no atomic numbers.
-   */
-  void restore(Index index, const AtomState& saved, Index count)
-  {
-    forEachColumn(
-      nullptr,
-      [&](auto& column, const auto&, const auto& part) {
-        column.restore(index, part, count);
       },
       saved);
   }
