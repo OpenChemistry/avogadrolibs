@@ -69,6 +69,7 @@ avogadro_headers(Core
   moleculeinfo.h
   mesh.h
   molecule.h
+  moleculesnapshot.h
   mutex.h
   nameatomtyper.h
   neighborperceiver.h

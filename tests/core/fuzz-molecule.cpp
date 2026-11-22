@@ -7,6 +7,9 @@
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/residue.h>
+
+#include <string>
 
 #include "fuzzhelpers.h"
 
@@ -22,9 +25,17 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 
   Molecule mol = FuzzHelpers::buildMolecule(fdp);
 
+  // A snapshot held across later edits. Restoring it is usually a misuse
+  // (the molecule is no longer as the removal left it), which must be
+  // refused or survived, never crash.
+  Index heldAtomId = MaxIndex;
+  AtomSnapshot heldAtom;
+  Index heldBondId = MaxIndex;
+  BondSnapshot heldBond;
+
   size_t steps = fdp.ConsumeIntegralInRange<size_t>(1, 128);
   for (size_t i = 0; i < steps; ++i) {
-    switch (fdp.ConsumeIntegral<uint8_t>() % 12) {
+    switch (fdp.ConsumeIntegral<uint8_t>() % 22) {
       case 0: { // add atom
         unsigned char z = consumeAtomicNumber(fdp);
         mol.addAtom(z);
@@ -116,6 +127,120 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
           break;
         Index atomId = fdp.ConsumeIntegral<uint8_t>() % mol.atomCount();
         mol.setForceVector(atomId, consumeVector3(fdp));
+        break;
+      }
+      case 12: { // remove an atom and restore it at once: must round-trip
+        if (mol.atomCount() == 0)
+          break;
+        Index atomId = fdp.ConsumeIntegral<uint8_t>() % mol.atomCount();
+        const Index atoms = mol.atomCount();
+        const Index bonds = mol.bondCount();
+        const unsigned char number = mol.atomicNumber(atomId);
+        const AtomSnapshot snapshot = mol.atomSnapshot(atomId);
+        if (!mol.removeAtom(atomId))
+          break;
+        if (!mol.restoreAtomSnapshot(atomId, snapshot) ||
+            mol.atomCount() != atoms || mol.bondCount() != bonds ||
+            mol.atomicNumber(atomId) != number)
+          __builtin_trap();
+        // A second restoration is stale and must be refused.
+        if (mol.restoreAtomSnapshot(atomId, snapshot))
+          __builtin_trap();
+        break;
+      }
+      case 13: { // remove an atom, holding its snapshot
+        if (mol.atomCount() == 0)
+          break;
+        Index atomId = fdp.ConsumeIntegral<uint8_t>() % mol.atomCount();
+        heldAtom = mol.atomSnapshot(atomId);
+        heldAtomId = atomId;
+        mol.removeAtom(atomId);
+        break;
+      }
+      case 14: { // restore the held atom, whatever happened since
+        if (heldAtomId == MaxIndex)
+          break;
+        if (mol.restoreAtomSnapshot(heldAtomId, heldAtom))
+          heldAtomId = MaxIndex;
+        break;
+      }
+      case 15: { // remove a bond and restore it at once: must round-trip
+        if (mol.bondCount() == 0)
+          break;
+        Index bondId = fdp.ConsumeIntegral<uint8_t>() % mol.bondCount();
+        const Index bonds = mol.bondCount();
+        const unsigned char order = mol.bondOrder(bondId);
+        const BondSnapshot snapshot = mol.bondSnapshot(bondId);
+        if (!mol.removeBond(bondId))
+          break;
+        if (!mol.restoreBondSnapshot(bondId, snapshot) ||
+            mol.bondCount() != bonds || mol.bondOrder(bondId) != order)
+          __builtin_trap();
+        if (mol.restoreBondSnapshot(bondId, snapshot))
+          __builtin_trap();
+        break;
+      }
+      case 16: { // remove a bond, holding its snapshot
+        if (mol.bondCount() == 0)
+          break;
+        Index bondId = fdp.ConsumeIntegral<uint8_t>() % mol.bondCount();
+        heldBond = mol.bondSnapshot(bondId);
+        heldBondId = bondId;
+        mol.removeBond(bondId);
+        break;
+      }
+      case 17: { // restore the held bond, whatever happened since
+        if (heldBondId == MaxIndex)
+          break;
+        if (mol.restoreBondSnapshot(heldBondId, heldBond))
+          heldBondId = MaxIndex;
+        break;
+      }
+      case 18: { // add a coordinate set, possibly shorter than atomCount()
+        Array<Vector3> frame(
+          fdp.ConsumeIntegralInRange<size_t>(0, mol.atomCount() + 1));
+        for (auto& position : frame)
+          position = consumeVector3(fdp);
+        mol.setCoordinate3d(frame, mol.coordinate3dCount());
+        break;
+      }
+      case 19: { // add a constraint between two to four atoms
+        if (mol.atomCount() < 2)
+          break;
+        auto pick = [&]() {
+          return static_cast<Index>(fdp.ConsumeIntegral<uint8_t>() %
+                                    mol.atomCount());
+        };
+        const Index a = pick();
+        const Index b = pick();
+        const Index c = fdp.ConsumeBool() ? pick() : MaxIndex;
+        mol.addConstraint(1.0, a, b, c);
+        break;
+      }
+      case 20: { // put an atom into a new residue
+        if (mol.atomCount() == 0)
+          break;
+        Index atomId = fdp.ConsumeIntegral<uint8_t>() % mol.atomCount();
+        std::string name = "RES";
+        Index number = mol.residueCount() + 1;
+        char chain = 'A';
+        Residue& residue = mol.addResidue(name, number, chain);
+        residue.addResidueAtom("X" + std::to_string(atomId), mol.atom(atomId));
+        break;
+      }
+      case 21: { // set a custom atom or bond property
+        if (fdp.ConsumeBool()) {
+          if (mol.atomCount() == 0)
+            break;
+          Index atomId = fdp.ConsumeIntegral<uint8_t>() % mol.atomCount();
+          mol.atomProperties().setDouble("p", atomId,
+                                         fdp.ConsumeFloatingPoint<double>());
+        } else {
+          if (mol.bondCount() == 0)
+            break;
+          Index bondId = fdp.ConsumeIntegral<uint8_t>() % mol.bondCount();
+          mol.bondProperties().setInt("q", bondId, fdp.ConsumeIntegral<int>());
+        }
         break;
       }
       default:

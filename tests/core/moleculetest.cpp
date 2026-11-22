@@ -255,6 +255,35 @@ TEST_F(MoleculeTest, addBond)
   EXPECT_EQ(bond.atom2().index(), c.index());
 }
 
+// An atom cannot be bonded to itself. Before, bond(a, a) answered with any
+// bond of a, so addBond(a, a, order) overwrote the order of an unrelated bond
+// (or, for an atom without bonds, added a self-edge to the graph).
+TEST_F(MoleculeTest, addBondRefusesSelfBond)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(8);
+  molecule.addBond(0, 1, 2);
+  molecule.setPartialCharges("test", MatrixX::Constant(2, 1, 0.5));
+
+  EXPECT_FALSE(molecule.addBond(0, 0).isValid());
+  EXPECT_FALSE(molecule.addBond(1, 1, 3).isValid());
+
+  // Nothing changed, not even the charges a real addBond() discards.
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(molecule.bondOrder(0), 2);
+  EXPECT_FALSE(molecule.bond(0, 0).isValid());
+  EXPECT_EQ(molecule.graph().edges(0).size(), static_cast<size_t>(1));
+  EXPECT_FALSE(molecule.partialChargeTypes().empty());
+
+  // An ordinary bond removal still undoes through its snapshot.
+  const Avogadro::Core::BondSnapshot snapshot = molecule.bondSnapshot(0);
+  ASSERT_TRUE(molecule.removeBond(0));
+  ASSERT_TRUE(molecule.restoreBondSnapshot(0, snapshot));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(molecule.bondOrder(0), 2);
+}
+
 TEST_F(MoleculeTest, removeBond)
 {
   Molecule molecule;
@@ -3297,6 +3326,8 @@ private:
     SetScanCoordinates,
     AddResidue,
     ClearAtoms,
+    SnapshotRemoveAtom,
+    SnapshotRemoveBond,
     CopyConstruct,
     CopyAssign,
     MoveConstruct,
@@ -3351,6 +3382,8 @@ private:
       "setScanCoordinates",
       "addResidue",
       "clearAtoms",
+      "removeAtom and restoreAtomSnapshot",
+      "removeBond and restoreBondSnapshot",
       "copy construct",
       "copy assign",
       "move construct",
@@ -3375,6 +3408,9 @@ private:
       case SwapAtom:
       case AddBond:
         return 5;
+      case SnapshotRemoveAtom:
+      case SnapshotRemoveBond:
+        return 4;
       case RemoveBond:
       case SwapBond:
         return 3;
@@ -3590,6 +3626,8 @@ bool ShadowRunner::step(int stepNumber)
     op = AddBond;
   if (op == SwapBond && bonds < 2)
     op = AddBond;
+  if (op == SnapshotRemoveBond && bonds == 0)
+    op = AddBond;
   if (op == AddBond && n < 2)
     op = AddAtom;
   // Keep the lists short so that removals keep hitting them.
@@ -3646,6 +3684,67 @@ bool ShadowRunner::step(int stepNumber)
       if (!error.empty()) {
         ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
                       << ", op removeAtom(" << i << "): " << error;
+        return false;
+      }
+      break;
+    }
+    case SnapshotRemoveAtom: {
+      // Removing an atom and restoring the snapshot puts everything back
+      // except what the removal discards for good.
+      const Index i = chance(25) ? n - 1 : (chance(25) ? 0 : pickIndex(n));
+      const Model before = model;
+      const Avogadro::Core::AtomSnapshot snapshot = mol.atomSnapshot(i);
+      if (snapshot.isEmpty() || !mol.removeAtom(i)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": atomSnapshot/removeAtom(" << i << ") refused";
+        return false;
+      }
+      model.removeAtom(i);
+      const std::string error = model.syncBondOrder(mol);
+      if (!error.empty()) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ", op removeAtom(" << i << "): " << error;
+        return false;
+      }
+      if (!check(mol, model, "after removing with a snapshot"))
+        return false;
+      if (!mol.restoreAtomSnapshot(i, snapshot)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": restoreAtomSnapshot(" << i << ") refused";
+        return false;
+      }
+      model = before;
+      model.discardCalculated();
+      // Restoring twice must be refused and change nothing.
+      if (mol.restoreAtomSnapshot(i, snapshot)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": a second restoreAtomSnapshot was accepted";
+        return false;
+      }
+      break;
+    }
+    case SnapshotRemoveBond: {
+      const Index i = chance(25) ? bonds - 1 : pickIndex(bonds);
+      const Model before = model;
+      const Avogadro::Core::BondSnapshot snapshot = mol.bondSnapshot(i);
+      if (snapshot.isEmpty() || !mol.removeBond(i)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": bondSnapshot/removeBond(" << i << ") refused";
+        return false;
+      }
+      model.removeBond(i);
+      if (!check(mol, model, "after removing a bond with a snapshot"))
+        return false;
+      if (!mol.restoreBondSnapshot(i, snapshot)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": restoreBondSnapshot(" << i << ") refused";
+        return false;
+      }
+      model = before;
+      model.discardCalculated();
+      if (mol.restoreBondSnapshot(i, snapshot)) {
+        ADD_FAILURE() << "seed " << m_seed << ", step " << m_step
+                      << ": a second restoreBondSnapshot was accepted";
         return false;
       }
       break;

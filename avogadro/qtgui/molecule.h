@@ -151,6 +151,29 @@ public:
   bool removeAtom(const AtomType& atom) override;
 
   /**
+   * @brief Undo removeAtom(@p atomId), given the snapshot taken just before
+   * (Core::Molecule::atomSnapshot()), and give the atom back @p uniqueId, the
+   * unique id it had. The unique id of the atom that the removal moved into
+   * @p atomId is moved back too.
+   *
+   * Use this and not the Core::Molecule overload, which leaves the unique ids
+   * stale.
+   * @return true on success. false, changing nothing, if the core restoration
+   * refuses (see Core::Molecule::restoreAtomSnapshot()), if @p uniqueId is not
+   * free (as for addAtom(), one past the last unique id is a fresh one), or if
+   * the snapshot holds bonds: their unique ids are not part of it, and
+   * RWMolecule removes an atom's bonds with commands of their own first.
+   */
+  bool restoreAtomSnapshot(Index atomId, const Core::AtomSnapshot& snapshot,
+                           Index uniqueId);
+
+  /**
+   * The Core::Molecule overload, which does not know about unique ids and so
+   * leaves them stale: for a molecule that is not used with RWMolecule.
+   */
+  using Core::Molecule::restoreAtomSnapshot;
+
+  /**
    * @brief Get the atom referenced by the @p uniqueId, the isValid method
    * should be queried to ensure the id still referenced a valid atom.
    * @param uniqueId The unique identifier for the atom.
@@ -217,6 +240,27 @@ public:
    */
   virtual BondType addBond(Index atomId1, Index atomId2,
                            unsigned char bondOrder, Index uniqueId);
+
+  /**
+   * @brief Undo removeBond(@p bondId), given the snapshot taken just before
+   * (Core::Molecule::bondSnapshot()), and give the bond back @p uniqueId, the
+   * unique id it had. The unique id of the bond that the removal moved into
+   * @p bondId is moved back too.
+   *
+   * Use this and not the Core::Molecule overload, which leaves the unique ids
+   * stale.
+   * @return true on success. false, changing nothing, if the core restoration
+   * refuses (see Core::Molecule::restoreBondSnapshot()) or if @p uniqueId is
+   * not free.
+   */
+  bool restoreBondSnapshot(Index bondId, const Core::BondSnapshot& snapshot,
+                           Index uniqueId);
+
+  /**
+   * The Core::Molecule overload, which does not know about unique ids and so
+   * leaves them stale: for a molecule that is not used with RWMolecule.
+   */
+  using Core::Molecule::restoreBondSnapshot;
 
   /**
    * @brief Remove the specified bond.

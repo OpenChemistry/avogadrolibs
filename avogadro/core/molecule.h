@@ -20,6 +20,7 @@
 #include "graph.h"
 #include "layer.h"
 #include "moleculeinfo.h"
+#include "moleculesnapshot.h"
 #include "propertymap.h"
 #include "variantmap.h"
 #include "vector.h"
@@ -455,6 +456,40 @@ public:
   virtual bool removeAtom(const AtomType& atom);
 
   /**
+   * @brief Save everything removeAtom(@p atomId) is about to discard, so that
+   * restoreAtomSnapshot() can undo it.
+   *
+   * Call this immediately before removeAtom(@p atomId). The snapshot covers
+   * the atom's element, layer and per-atom state, its position in every
+   * coordinate frame, the constraints and scan coordinates and residues the
+   * removal drops, and the bonds it takes with it. It holds no calculated
+   * results, which a removal discards for good, nor the basis set, cubes or
+   * meshes, which a removal does not touch.
+   *
+   * Taking a snapshot of an atom with bonds costs a copy of the bond columns
+   * that have data, since the order the bonds go in is found by running the
+   * removal on the columns alone.
+   * @return the snapshot, which is empty if @p atomId is out of range.
+   */
+  AtomSnapshot atomSnapshot(Index atomId) const;
+
+  /**
+   * @brief Undo removeAtom(@p atomId), given the snapshot taken just before.
+   *
+   * The molecule has to be exactly as the removal left it. The atom, its bonds
+   * and everything in the snapshot go back where they were: every index, the
+   * layer, the per-atom state and the per-bond state are those from before
+   * the removal. Calculated results and velocities, which the removal
+   * discarded, stay discarded, and the order of the bond list inside a
+   * vertex of the graph, which nothing outside the graph can see, is not
+   * kept. A bond's two atoms come back in ascending order.
+   * @return true on success. false, changing nothing, if @p snapshot is
+   * empty, the molecule does not have one atom (or the snapshot's bonds) fewer
+   * than when it was taken, or @p atomId is not the index it was taken at.
+   */
+  bool restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot);
+
+  /**
    * Remove all atoms from the molecule.
    */
   virtual void clearAtoms();
@@ -470,7 +505,7 @@ public:
    * @param atom2 The second atom in the bond.
    * @param order The bond order.
    * @return The new bond object. Will be invalid if @a atom1 or @a atom2 does
-   * not exist.
+   * not exist, or if they are the same atom: an atom cannot bond to itself.
    * @{
    */
   virtual BondType addBond(Index atom1, Index atom2, unsigned char order = 1);
@@ -504,6 +539,26 @@ public:
   virtual bool removeBond(Index atom1, Index atom2);
   virtual bool removeBond(const AtomType& atom1, const AtomType& atom2);
   /** @} */
+
+  /**
+   * @brief Save what removeBond(@p bondId) is about to discard, so that
+   * restoreBondSnapshot() can undo it. Call it immediately before the removal.
+   * It holds the bond's atoms and per-bond state (order, label, custom
+   * properties), not the partial charges the removal clears.
+   * @return the snapshot, which is empty if @p bondId is out of range.
+   */
+  BondSnapshot bondSnapshot(Index bondId) const;
+
+  /**
+   * @brief Undo removeBond(@p bondId), given the snapshot taken just before.
+   * The molecule has to be exactly as the removal left it. The bond returns
+   * with its index, its atoms (in ascending order) and its state.
+   * @return true on success. false, changing nothing, if @p snapshot is empty,
+   * the molecule does not have one bond fewer than when it was taken, @p bondId
+   * is past bondCount(), or the bond's atoms are not in the molecule or are
+   * already bonded.
+   */
+  bool restoreBondSnapshot(Index bondId, const BondSnapshot& snapshot);
 
   /**
    * Remove all bonds from the molecule.
@@ -1553,6 +1608,12 @@ private:
    * the proxies that referred to it at this molecule, keeping their indices.
    */
   void repointResidueAtoms(const Molecule& source);
+
+  /**
+   * Make every residue that names atom @p from name atom @p to instead, under
+   * the same atom name. Only those residues are written to.
+   */
+  void moveResidueReferences(Index from, Index to);
 
   mutable Graph m_graph; // A transformation of the molecule to a graph.
   // edge information: orders, labels and custom properties

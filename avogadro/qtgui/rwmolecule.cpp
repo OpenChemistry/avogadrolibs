@@ -94,8 +94,7 @@ bool RWMolecule::removeAtom(Index atomId)
     atomBonds.pop_back();
   }
 
-  auto* comm = new RemoveAtomCommand(
-    *this, atomId, uniqueId, atomicNumber(atomId), atomPosition3d(atomId));
+  auto* comm = new RemoveAtomCommand(*this, atomId, uniqueId);
   comm->setText(tr("Remove Atom"));
 
   m_undoStack.push(comm);
@@ -422,9 +421,7 @@ bool RWMolecule::removeBond(Index bondId)
   if (bondUid == MaxIndex)
     return false;
 
-  auto* comm =
-    new RemoveBondCommand(*this, bondId, bondUid, m_molecule.bondPair(bondId),
-                          m_molecule.bondOrder(bondId));
+  auto* comm = new RemoveBondCommand(*this, bondId, bondUid);
   comm->setText(tr("Removed Bond"));
   m_undoStack.push(comm);
   return true;
