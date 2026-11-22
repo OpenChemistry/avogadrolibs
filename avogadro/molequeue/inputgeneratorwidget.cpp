@@ -13,6 +13,7 @@
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtGui/QFontDatabase>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
@@ -324,7 +325,14 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
       continue;
     auto* edit = new QTextEdit(this);
     edit->setObjectName(fileName);
-    edit->setFontFamily("monospace");
+    // Input files are plain text laid out in columns. Only the family is set,
+    // so the size still follows the application font (e.g., larger text).
+    QFont fixedFamily;
+    fixedFamily.setFamily(
+      QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
+    fixedFamily.setStyleHint(QFont::TypeWriter);
+    edit->setFont(fixedFamily);
+    edit->setAcceptRichText(false);
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
     m_ui->tabWidget->addTab(edit, fileName);
     m_textEdits.insert(fileName, edit);
@@ -347,7 +355,7 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
       highlighter->setDocument(edit->document());
     }
 
-    edit->setText(m_inputGenerator.fileContents(fileName));
+    edit->setPlainText(m_inputGenerator.fileContents(fileName));
     edit->document()->setModified(false);
     ++index;
   }
