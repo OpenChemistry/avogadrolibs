@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-08 18:51+0000\n"
+"PO-Revision-Date: 2026-11-22 21:07+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remus-"
 "gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.11.2.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 
 #: molequeue/batchjob.cpp:66
 #, qt-format
@@ -2611,19 +2611,19 @@ msgstr "Aplică culorile indexului"
 
 #: qtplugins/applycolors/applycolors.cpp:382
 msgid "No molecule available."
-msgstr ""
+msgstr "Nu există nicio moleculă disponibilă."
 
 #: qtplugins/applycolors/applycolors.cpp:388
 #: qtplugins/applycolors/applycolors.cpp:877
 #: qtplugins/applycolors/applycolors.cpp:904
 #: qtplugins/applycolors/applycolors.cpp:936
 msgid "Molecule has no atoms."
-msgstr ""
+msgstr "Molecula nu are atomi."
 
 #: qtplugins/applycolors/applycolors.cpp:402
 #, qt-format
 msgid "Failed to compute partial charges for model \"%1\"."
-msgstr ""
+msgstr "Nu s-au putut calcula sarcinile parțiale pentru modelul „%1”."
 
 #: qtplugins/applycolors/applycolors.cpp:423
 msgid "Apply Charge Colors"
@@ -2694,12 +2694,18 @@ msgid ""
 "Color atoms along a colormap gradient by atomic index. Options: optional "
 "\"colormap\" (e.g. \"Turbo\", \"Viridis\", \"Magma\")."
 msgstr ""
+"Colorează atomii de-a lungul unui gradient al hărții de culori în funcție de "
+"indicele atomic. Opțiuni: „hartă-culori” opțională (de exemplu, „Turbo”, „"
+"Viridis”, „Magma”)."
 
 #: qtplugins/applycolors/applycolors.cpp:782
 msgid ""
 "Color atoms along a colormap gradient by distance from the first atom. "
 "Options: optional \"colormap\" (e.g. \"Turbo\", \"Viridis\")."
 msgstr ""
+"Colorează atomii de-a lungul unui gradient de culori în funcție de distanța "
+"față de primul atom. Opțiuni: „hartă-culori” opțională (de exemplu, „Turbo”, "
+"„Viridis”)."
 
 #: qtplugins/applycolors/applycolors.cpp:786
 msgid ""
@@ -2707,6 +2713,9 @@ msgid ""
 "\"colormap\" (e.g. \"Coolwarm\"), optional \"model\" (e.g. \"MMFF94\", "
 "\"Gasteiger\")."
 msgstr ""
+"Colorează atomii de-a lungul unui gradient de culori prin sarcină parțială. "
+"Opțiuni: „hartă-culori” opțională (de exemplu, „Coolwarm”), „model” opțional "
+"(de exemplu, „MMFF94”, „Gasteiger”)."
 
 #: qtplugins/applycolors/applycolors.cpp:812
 msgid ""
@@ -2735,27 +2744,27 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:946
 #, qt-format
 msgid "Unknown colormap \"%1\". Did you mean \"%2\"?"
-msgstr ""
+msgstr "Hartă de culori necunoscută „%1”. Ați vrut să spuneți „%2” ?"
 
 #: qtplugins/applycolors/applycolors.cpp:890
 #: qtplugins/applycolors/applycolors.cpp:922
 #: qtplugins/applycolors/applycolors.cpp:949
 #, qt-format
 msgid "Unknown colormap \"%1\"."
-msgstr ""
+msgstr "Hartă de culori necunoscută „%1”."
 
 #: qtplugins/applycolors/applycolors.cpp:909
 msgid "Molecule does not have 3D coordinates."
-msgstr ""
+msgstr "Molecula nu are coordonate 3D."
 
 #: qtplugins/applycolors/applycolors.cpp:980
 #, qt-format
 msgid "Unknown or unavailable charge model \"%1\"."
-msgstr ""
+msgstr "Model de sarcini necunoscut sau indisponibil „%1”."
 
 #: qtplugins/applycolors/applycolors.cpp:989
 msgid "No charge models available for this molecule."
-msgstr ""
+msgstr "Pentru această moleculă nu sunt disponibile modele de sarcini."
 
 #: qtplugins/applycolors/applycolors.h:31
 msgid "ApplyColors"
@@ -3610,10 +3619,12 @@ msgid ""
 "Copy the molecule (or the selected atoms) to the clipboard as text in this "
 "format:"
 msgstr ""
+"Copiază molecula (sau atomii selectați) în clipboard sub formă de text, în "
+"acest format:"
 
 #: qtplugins/copypaste/copyasdialog.cpp:37
 msgid "Clipboard format"
-msgstr ""
+msgstr "Format clipboard"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
@@ -3629,7 +3640,7 @@ msgstr "Atom cartografiat SMILES"
 
 #: qtplugins/copypaste/copypaste.cpp:108
 msgid "Other Format…"
-msgstr ""
+msgstr "Alt format…"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
@@ -4061,6 +4072,8 @@ msgid ""
 "Set drawing options: element (symbol or atomic number), bondOrder, "
 "adjustHydrogens, and adjustBondLengths."
 msgstr ""
+"Definiți opțiunile de desenare: element (simbol sau număr atomic), "
+"bondOrder, adjustHydrogens și adjustBondLengths."
 
 #: qtplugins/editor/editor.cpp:1094
 msgid ""
@@ -4711,15 +4724,15 @@ msgstr "Trimite calculul GAMESS"
 
 #: qtplugins/gltf/gltf.cpp:30
 msgid "glTF Scene (.glb)…"
-msgstr ""
+msgstr "Scenă glTF (.glb)…"
 
 #: qtplugins/gltf/gltf.cpp:82
 msgid "There is no scene to export."
-msgstr ""
+msgstr "Nu există nicio scenă de exportat."
 
 #: qtplugins/gltf/gltf.cpp:84
 msgid "No file name was given."
-msgstr ""
+msgstr "Nu a fost specificat niciun nume de fișier."
 
 #: qtplugins/gltf/gltf.cpp:106 qtplugins/ply/ply.cpp:75
 #, qt-format
@@ -4740,23 +4753,23 @@ msgstr "Salvează fișierul"
 
 #: qtplugins/gltf/gltf.cpp:130
 msgid "glTF Binary (*.glb)"
-msgstr ""
+msgstr "Binar glTF (*.glb)"
 
 #: qtplugins/gltf/gltf.cpp:141
 msgid "Split at midpoint"
-msgstr ""
+msgstr "Despărțire la mijloc"
 
 #: qtplugins/gltf/gltf.cpp:142
 msgid "Gradient"
-msgstr ""
+msgstr "Gradient"
 
 #: qtplugins/gltf/gltf.cpp:145 qtplugins/gltf/gltf.cpp:158
 msgid "glTF Export"
-msgstr ""
+msgstr "Export glTF"
 
 #: qtplugins/gltf/gltf.cpp:145
 msgid "Bond colors:"
-msgstr ""
+msgstr "Culori legături:"
 
 #: qtplugins/gltf/gltf.cpp:168
 msgid ""
@@ -4766,27 +4779,33 @@ msgid ""
 "in the export dialog (\"split\" at first). An existing file is only replaced "
 "if the export succeeds. Returns {\"fileName\": path}."
 msgstr ""
+"Exportă scena curentă ca fișier binar glTF (.glb): {„fileName”: ruta, „"
+"bondColors”: „split”|„gradient”}. Parametrul „bondColors” specifică modul în "
+"care sunt colorate legăturile dintre diferite elemente; valoarea implicită "
+"este ultima opțiune selectată în fereastra de dialog de export („split” "
+"inițial). Un fișier existent este înlocuit numai dacă exportul se realizează "
+"cu succes. Returnează {„fileName”: ruta}."
 
 #: qtplugins/gltf/gltf.cpp:175
 msgid "Path of the .glb file to write."
-msgstr ""
+msgstr "Ruta către fișierul .glb în care se va scrie."
 
 #: qtplugins/gltf/gltf.cpp:179
 msgid "How to colour bonds between different elements."
-msgstr ""
+msgstr "Cum se colorează legăturile dintre diferite elemente."
 
 #: qtplugins/gltf/gltf.cpp:197
 #, qt-format
 msgid "Exported %1."
-msgstr ""
+msgstr "Exportat %1."
 
 #: qtplugins/gltf/gltf.h:24
 msgid "GLTF"
-msgstr ""
+msgstr "GLTF"
 
 #: qtplugins/gltf/gltf.h:28
 msgid "Export the scene as a glTF binary (.glb) file."
-msgstr ""
+msgstr "Exportă scena ca fișier binar glTF (.glb)."
 
 #: qtplugins/hydrogens/hydrogens.cpp:23
 msgid "&Adjust Hydrogens"
@@ -5752,7 +5771,7 @@ msgstr "Deplasează scena."
 
 #: qtplugins/navigator/navigator.cpp:93 qtplugins/resetview/resetview.cpp:68
 msgid "No camera"
-msgstr ""
+msgstr "Fără cameră"
 
 #: qtplugins/navigator/navigator.cpp:131
 msgid "Reverse Direction of Zoom on Scroll"
@@ -6320,7 +6339,7 @@ msgstr "Șterge fișiere"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:736
 msgid "Files Not Deleted"
-msgstr ""
+msgstr "Fișiere neșterse"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:737
 #, qt-format
@@ -6329,6 +6348,9 @@ msgid ""
 "inside the plugins directory:\n"
 "%1"
 msgstr ""
+"Modulul a fost dezactivat, dar fișierele sale au fost păstrate, deoarece nu "
+"se află în directorul modulelor:\n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:753
 msgid "Select Plugin Directory"
@@ -6349,6 +6371,8 @@ msgid ""
 "This directory cannot be installed as a plugin. Choose a plugin directory "
 "outside of the plugins folder (%1)."
 msgstr ""
+"Acest director nu poate fi instalat ca modul. Alegeți un director pentru "
+"module în afara dosarului cu module (%1)."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:786
 #, qt-format
@@ -10798,7 +10822,7 @@ msgstr "Algoritmul de optimizare:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "L-BFGS"
-msgstr ""
+msgstr "L-BFGS"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
@@ -12132,7 +12156,7 @@ msgstr "Remus-Gabriel Chelu"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026"
+msgstr "remusgabriel.chelu@disroot.org, 2023, 2024, 2025, 2026."
 
 #~ msgid "No atoms provided for optimization."
 #~ msgstr "Nu au fost furnizați atomi pentru optimizare."
