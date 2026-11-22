@@ -128,11 +128,11 @@ bool GromacsFormat::read(std::istream& in, Molecule& molecule)
     // "any number of decimal places, the format will then be n+5 positions with
     // n decimal places (n+1 for velocities) in stead of 8 with 3 (with 4 for
     // velocities)".
-    size_t decimal1 = buffer.find(".", 20);
+    size_t decimal1 = buffer.find('.', 20);
     size_t decimal2 = string::npos;
     int decimalSep = 0;
     if (decimal1 != string::npos)
-      decimal2 = buffer.find(".", decimal1 + 1);
+      decimal2 = buffer.find('.', decimal1 + 1);
     if (decimal2 != string::npos)
       decimalSep = decimal2 - decimal1;
     if (decimalSep == 0) {

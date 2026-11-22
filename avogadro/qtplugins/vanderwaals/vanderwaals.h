@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render the molecule as Van der Waals spheres.
@@ -49,7 +48,6 @@ private:
   QWidget* m_setupWidget = nullptr;
   float m_opacity = 1.0;
 };
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_VANDERWAALS_H

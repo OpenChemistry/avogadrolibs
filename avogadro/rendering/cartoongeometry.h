@@ -10,8 +10,7 @@
 
 #include <avogadro/core/residue.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 enum CartoonType
 {
@@ -42,7 +41,6 @@ protected:
   std::vector<std::pair<CartoonType, size_t>> m_type;
   float m_minRadius, m_maxRadius;
 };
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif

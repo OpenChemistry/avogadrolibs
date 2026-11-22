@@ -14,8 +14,7 @@
 #include <QAbstractButton>
 #include <QColor>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class ColorButton colorbutton.h <avogadro/colorbutton.h>
@@ -80,7 +79,6 @@ protected:
   QString m_title; //!< The current dialog title
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif

@@ -10,8 +10,7 @@
 
 #include <avogadro/core/array.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /**
  * @class ArrowGeometry arrowgeometry.h
@@ -128,7 +127,7 @@ inline void swap(ArrowGeometry& lhs, ArrowGeometry& rhs)
   lhs.m_dirty = rhs.m_dirty = true;
 }
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_ARROWGEOMETRY_H

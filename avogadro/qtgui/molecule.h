@@ -17,9 +17,7 @@
 #include <QtCore/QObject>
 #include <list>
 
-namespace Avogadro {
-
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class Mesh;
 class RWMolecule;
@@ -330,7 +328,6 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Molecule::MoleculeChanges)
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_MOLECULE_H

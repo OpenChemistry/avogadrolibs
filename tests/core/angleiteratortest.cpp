@@ -6,7 +6,12 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/angleiterator.h>
+#include <avogadro/core/graph.h>
 #include <avogadro/core/molecule.h>
+
+#include <algorithm>
+#include <set>
+#include <tuple>
 
 using Avogadro::Index;
 using Avogadro::Core::Angle;
@@ -27,6 +32,38 @@ int countAngles(const Molecule& mol)
     angle = ++it;
   }
   return count;
+}
+
+// Build a chain/ring of carbons (indices 0..nC-1) and saturate with H.
+void buildHydrocarbon(Molecule& mol, int nC, bool ring)
+{
+  for (int i = 0; i < nC; ++i)
+    mol.addAtom(6);
+  for (int i = 0; i + 1 < nC; ++i)
+    mol.addBond(mol.atom(i), mol.atom(i + 1), 1);
+  if (ring)
+    mol.addBond(mol.atom(nC - 1), mol.atom(0), 1);
+  for (int i = 0; i < nC; ++i) {
+    int nH = (ring || (i > 0 && i < nC - 1)) ? 2 : 3;
+    for (int h = 0; h < nH; ++h) {
+      Avogadro::Core::Atom hydrogen = mol.addAtom(1);
+      mol.addBond(mol.atom(i), hydrogen, 1);
+    }
+  }
+}
+
+// Independent enumeration straight from the bond graph.
+std::set<std::tuple<Index, Index, Index>> expectedAngles(const Molecule& mol)
+{
+  std::set<std::tuple<Index, Index, Index>> result;
+  for (Index b = 0; b < mol.atomCount(); ++b) {
+    const auto& n = mol.graph().neighbors(b);
+    for (size_t x = 0; x < n.size(); ++x)
+      for (size_t y = x + 1; y < n.size(); ++y)
+        result.insert(
+          std::make_tuple(std::min(n[x], n[y]), b, std::max(n[x], n[y])));
+  }
+  return result;
 }
 
 } // namespace
@@ -129,4 +166,50 @@ TEST(AngleIteratorTest, neopentane)
   mol.addBond(mol.atom(0), mol.atom(4), 1);
 
   EXPECT_EQ(countAngles(mol), 6);
+}
+
+namespace {
+
+void checkAngleContent(const Molecule& mol, size_t expectedCount)
+{
+  const auto expected = expectedAngles(mol);
+  EXPECT_EQ(expected.size(), expectedCount);
+
+  std::set<std::tuple<Index, Index, Index>> seen;
+  AngleIterator it(&mol);
+  Angle angle = it.begin();
+  AngleIterator endIt(&mol);
+  const Angle end = endIt.end();
+  size_t total = 0;
+  while (angle != end) {
+    ++total;
+    Index a = std::get<0>(angle);
+    Index b = std::get<1>(angle);
+    Index c = std::get<2>(angle);
+    seen.insert(std::make_tuple(std::min(a, c), b, std::max(a, c)));
+    angle = ++it;
+  }
+  // no duplicates, and exactly the expected angles
+  EXPECT_EQ(total, expectedCount);
+  EXPECT_EQ(seen, expected);
+}
+
+} // namespace
+
+TEST(AngleIteratorTest, butaneContent)
+{
+  // 4 C + 10 H: every carbon has 4 neighbors -> 4 * C(4,2) = 24 angles
+  Molecule mol;
+  buildHydrocarbon(mol, 4, false);
+  ASSERT_EQ(mol.atomCount(), 14u);
+  checkAngleContent(mol, 24);
+}
+
+TEST(AngleIteratorTest, cyclohexaneContent)
+{
+  // 6 C + 12 H: every carbon has 4 neighbors -> 6 * C(4,2) = 36 angles
+  Molecule mol;
+  buildHydrocarbon(mol, 6, true);
+  ASSERT_EQ(mol.atomCount(), 18u);
+  checkAngleContent(mol, 36);
 }

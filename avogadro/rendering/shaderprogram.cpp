@@ -36,7 +36,11 @@ inline GLenum convertType(Type type)
     case FloatType:
       return GL_FLOAT;
     case DoubleType:
+#ifdef __EMSCRIPTEN__
+      return 0;
+#else
       return GL_DOUBLE;
+#endif
   }
 }
 
@@ -87,9 +91,8 @@ inline GLenum lookupTextureUnit(GLint index)
 ShaderProgram::ShaderProgram()
   : m_handle(0), m_vertexShader(0), m_fragmentShader(0), m_linked(false)
 {
-  // Texture units are queried lazily (see setTextureSampler), so that
-  // constructing a ShaderProgram - and every Drawable that owns one - needs no
-  // GL context.
+  // Scene objects may be constructed before a viewport has a GL context.
+  // Query capabilities when linking, when a context must be current.
 }
 
 ShaderProgram::~ShaderProgram()
@@ -198,17 +201,18 @@ bool ShaderProgram::link()
   glGetProgramiv(static_cast<GLuint>(m_handle), GL_LINK_STATUS, &isCompiled);
   if (isCompiled == 0) {
     GLint length(0);
-    glGetShaderiv(static_cast<GLuint>(m_handle), GL_INFO_LOG_LENGTH, &length);
+    glGetProgramiv(static_cast<GLuint>(m_handle), GL_INFO_LOG_LENGTH, &length);
     if (length > 1) {
       char* logMessage = new char[length];
-      glGetShaderInfoLog(static_cast<GLuint>(m_handle), length, nullptr,
-                         logMessage);
+      glGetProgramInfoLog(static_cast<GLuint>(m_handle), length, nullptr,
+                          logMessage);
       m_error = logMessage;
       delete[] logMessage;
     }
     return false;
   }
   m_linked = true;
+  initializeTextureUnits();
   m_attributes.clear();
   m_uniforms.clear();
   return true;
@@ -256,14 +260,20 @@ bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
                                       int elementTupleSize,
                                       NormalizeOption normalize)
 {
+  const GLenum type = convertType(elementType);
+  if (type == 0) {
+    m_error = "WebGL does not support double vertex attributes; upload float "
+              "data before binding the attribute.";
+    return false;
+  }
   auto location = static_cast<GLint>(findAttributeArray(name));
   if (location == -1) {
     m_error = "Could not use attribute " + name + ". No such attribute.";
     return false;
   }
-  // With a buffer bound, the "pointer" is a byte offset into that buffer.
+  // With a buffer bound, the pointer is a byte offset into that buffer.
   glVertexAttribPointer(
-    location, elementTupleSize, convertType(elementType),
+    location, elementTupleSize, type,
     normalize == Normalize ? GL_TRUE : GL_FALSE, static_cast<GLsizei>(stride),
     reinterpret_cast<const void*>(static_cast<std::uintptr_t>(offset)));
   return true;
@@ -413,11 +423,17 @@ bool ShaderProgram::setUniformValue(const std::string& name, const Vector3ub& v)
 }
 
 bool ShaderProgram::setAttributeArrayInternal(
-  const std::string& name, void* buffer, Avogadro::Type type, int tupleSize,
-  ShaderProgram::NormalizeOption normalize)
+  const std::string& name, const void* buffer, Avogadro::Type type,
+  int tupleSize, ShaderProgram::NormalizeOption normalize)
 {
   if (type == Avogadro::UnknownType) {
     m_error = "Unrecognized data type for attribute " + name + ".";
+    return false;
+  }
+  const GLenum glType = convertType(type);
+  if (glType == 0) {
+    m_error = "WebGL does not support double vertex attributes; upload float "
+              "data before binding the attribute.";
     return false;
   }
   auto location = static_cast<GLint>(findAttributeArray(name));
@@ -426,7 +442,7 @@ bool ShaderProgram::setAttributeArrayInternal(
     return false;
   }
   const auto* data = static_cast<const GLvoid*>(buffer);
-  glVertexAttribPointer(location, tupleSize, convertType(type),
+  glVertexAttribPointer(location, tupleSize, glType,
                         normalize == Normalize ? GL_TRUE : GL_FALSE, 0, data);
   return true;
 }

@@ -10,8 +10,7 @@
 
 #include <QtWidgets/QWidget>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class ViewFactory viewfactory.h <avogadro/qtgui/viewfactory.h>
@@ -40,7 +39,6 @@ public:
   virtual QWidget* createView(const QString& view) = 0;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_VIEWFACTORY_H

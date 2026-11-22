@@ -22,10 +22,13 @@
 #include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
+#include <functional>
+#include <string>
+#include <vector>
+
 #include <QUndoStack>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /** Concrete atom/bond proxy classes for RWMolecule. @{ */
 class RWAtom;
@@ -318,7 +321,7 @@ public:
   Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
   const Core::Array<Vector2>& atomPositions2d() const
   {
-    return m_molecule.m_positions2d;
+    return m_molecule.m_atomState.positions2d.array();
   }
 
   /**
@@ -701,6 +704,22 @@ public:
                     bool allCopies = false);
 
   /**
+   * Fill unit cell using a list of symmetry operations (as stored by a file
+   * reader, see Core::SpaceGroups::storedOperations()) instead of a Hall
+   * number. The Hall number and the stored operations are kept, so the cell
+   * can be reduced again. Changes are emitted.
+   * @param operations Operations like "x,y,z" or "-x+1/2,y,-z".
+   * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @param allCopies If true, all copies will be filled (i.e. edges and
+   * corners)
+   * @return True if the algorithm succeeded, and false if it failed (no unit
+   * cell, or an operation that cannot be parsed).
+   */
+  bool fillUnitCellFromOperations(const std::vector<std::string>& operations,
+                                  double cartTol = 1e-5,
+                                  bool allCopies = false);
+
+  /**
    * Add translational copies of atoms on the unit cell boundary without
    * applying symmetry operations. Changes are emitted.
    * @param cartTol Cartesian tolerance for comparing atom positions.
@@ -717,6 +736,16 @@ public:
    */
   bool reduceCellToAsymmetricUnit(unsigned short hallNumber,
                                   double cartTol = 1e-5);
+
+  /**
+   * Reduce a cell to its asymmetric unit with a list of symmetry operations
+   * instead of a Hall number. Changes are emitted.
+   * @param operations Operations like "x,y,z" or "-x+1/2,y,-z".
+   * @param cartTol Cartesian tolerance for comparing atom positions.
+   * @return True if the algorithm succeeded, and false if it failed.
+   */
+  bool reduceCellToAsymmetricUnitFromOperations(
+    const std::vector<std::string>& operations, double cartTol = 1e-5);
 
   /**
    * Call this function when you wish to merge all undo commands.
@@ -812,19 +841,33 @@ protected:
   QUndoStack m_undoStack;
 
   friend class Molecule;
+
+private:
+  /**
+   * Edit a copy of the molecule with @p edit and make it the current molecule
+   * as one undo step. Does nothing and returns false if there is no unit
+   * cell or @p edit returns false.
+   * @param edit Changes the copy it is given; returns false if it failed.
+   * @param changes The changes to be emitted.
+   * @param undoText The text description for the undo command.
+   * @param resizeLayers If true, resize the layer info to the new atom count.
+   */
+  bool editUnitCell(const std::function<bool(Molecule&)>& edit,
+                    Molecule::MoleculeChanges changes, const QString& undoText,
+                    bool resizeLayers);
 };
 
 class AVOGADROQTGUI_EXPORT RWAtom : public Core::AtomTemplate<RWMolecule>
 {
 public:
-  RWAtom() : Core::AtomTemplate<RWMolecule>() {}
+  RWAtom() {}
   RWAtom(RWMolecule* m, Index i) : Core::AtomTemplate<RWMolecule>(m, i) {}
 };
 
 class AVOGADROQTGUI_EXPORT RWBond : public Core::BondTemplate<RWMolecule>
 {
 public:
-  RWBond() : Core::BondTemplate<RWMolecule>() {}
+  RWBond() {}
   RWBond(RWMolecule* m, Index i) : Core::BondTemplate<RWMolecule>(m, i) {}
 };
 
@@ -1054,7 +1097,6 @@ inline const Core::Array<Vector3>& RWMolecule::forceVectors() const
   return m_molecule.forceVectors();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_RWMOLECULE_H

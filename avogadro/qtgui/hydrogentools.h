@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 class RWAtom;
 class RWMolecule;
 
@@ -90,7 +89,6 @@ public:
                                            std::vector<Vector3>& positions);
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_HYDROGENTOOLS_H

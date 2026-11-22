@@ -169,27 +169,27 @@ void CloseContacts::process(const Molecule& molecule,
   for (const auto& r : molecule.residues()) {
     if (!r.residueName().compare("LYS")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("NZ"), 1.0);
+                     molecule.atom(r.atomIndexByName("NZ")), 1.0);
     } else if (!r.residueName().compare("ARG")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("NE"), 1.0);
+                     molecule.atom(r.atomIndexByName("NE")), 1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("NH1"), 1.0);
+                     molecule.atom(r.atomIndexByName("NH1")), 1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("NH2"), 1.0);
+                     molecule.atom(r.atomIndexByName("NH2")), 1.0);
     } else if (!r.residueName().compare("HIS")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("ND1"), 1.0);
+                     molecule.atom(r.atomIndexByName("ND1")), 1.0);
     } else if (!r.residueName().compare("ASP")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("OD1"), -1.0);
+                     molecule.atom(r.atomIndexByName("OD1")), -1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("OD2"), -1.0);
+                     molecule.atom(r.atomIndexByName("OD2")), -1.0);
     } else if (!r.residueName().compare("GLU")) {
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("OE1"), -1.0);
+                     molecule.atom(r.atomIndexByName("OE1")), -1.0);
       addChargedAtom(positions, charges, residues, molecule, r.residueId(),
-                     r.atomByName("OE2"), -1.0);
+                     molecule.atom(r.atomIndexByName("OE2")), -1.0);
     }
   }
 

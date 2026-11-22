@@ -8,8 +8,7 @@
 
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 class UnitCellDialog;
 
 /**
@@ -29,8 +28,6 @@ public:
 
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
-
-  void registerCommands() override;
 
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
@@ -62,6 +59,9 @@ private:
   QAction* m_standardOrientationAction;
   QAction* m_toggleUnitCellAction;
   QAction* m_wrapAtomsToCellAction;
+
+  /// Add every scripting command to the command registry.
+  void registerCrystalCommands();
 };
 
 inline QString Crystal::description() const
@@ -69,7 +69,6 @@ inline QString Crystal::description() const
   return tr("Tools for crystal-specific editing/analysis.");
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CRYSTAL_H

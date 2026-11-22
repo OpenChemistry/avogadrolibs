@@ -9,8 +9,7 @@
 #include "avogadroqtguiexport.h"
 #include <QtCore/QObject>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class ElementTranslator elementtranslator.h
@@ -46,7 +45,7 @@ public:
   static int numberOfElements();
 };
 
-} // End namespace QtGui
-} // End namespace Avogadro
+} // namespace Avogadro::QtGui
+// End namespace Avogadro
 
 #endif

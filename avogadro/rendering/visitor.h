@@ -9,8 +9,7 @@
 #include "avogadrorenderingexport.h"
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class ArrowGeometry;
 class CylinderGeometry;
@@ -63,7 +62,7 @@ public:
   virtual void visit(VolumeGeometry&) {}
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif // AVOGADRO_RENDERING_VISITOR_H

@@ -8,8 +8,7 @@
 
 #include <QtWidgets/QDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class CondaDialog;
 
@@ -52,7 +51,6 @@ private:
   QStringList m_condaEnvironments;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_CONFIGUREPYTHONDIALOG_H

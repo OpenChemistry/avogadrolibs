@@ -21,6 +21,7 @@ target_sources(Headers PUBLIC
     array.h
     avogadrocore.h
     color3f.h
+  column.h
     constraint.h
     contrastcolor.h
     coordinateset.h
@@ -43,13 +44,16 @@ add_library(Core)
 
 avogadro_headers(Core
   atom.h
+  atomstate.h
   atomtyper.h
   atomtyper-inline.h
   atomutilities.h
   bondorderperception.h
   basisset.h
   bond.h
+  bondstate.h
   conformerquantity.h
+  frozenmaskcolumn.h
   coordinateblockgenerator.h
   crystaltools.h
   cube.h

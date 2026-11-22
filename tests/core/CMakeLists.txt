@@ -5,11 +5,14 @@ set(tests
   Aromaticity
   Array
   Atom
+  AtomState
   AtomTyper
   AtomUtilities
   BasisSet
   Bond
   BondOrderPerception
+  BondState
+  Column
   Constraint
   ContrastColor
   ConformerQuantity
@@ -19,7 +22,9 @@ set(tests
   Cube
   DihedralIterator
   Eigen
+  FrozenMaskColumn
   Element
+  GaussianPrimitiveNormalization
   GaussianSet
   GaussianShellNormalization
   Graph
@@ -67,12 +72,18 @@ target_include_directories(AvogadroTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..
 # filter below would not match -- ctest would then run zero cases and still
 # report success.
 set(parameterizedTests
+  GaussianPrimitiveNormalization
   GaussianShellNormalization
   )
 
 foreach(TestName ${tests})
   if(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
+  elseif(TestName STREQUAL "Molecule")
+    # moleculetest.cpp also defines MoleculeCoordinateSetTest and
+    # MoleculeResidueTest.
+    set(testFilter
+      "MoleculeTest.*:MoleculeCoordinateSetTest.*:MoleculeResidueTest.*")
   else()
     set(testFilter "${TestName}Test.*")
   endif()

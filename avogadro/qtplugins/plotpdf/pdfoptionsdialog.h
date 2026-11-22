@@ -8,8 +8,7 @@
 
 #include <QDialog>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 namespace Ui {
 class PdfOptionsDialog;
@@ -36,6 +35,6 @@ private:
   QScopedPointer<Ui::PdfOptionsDialog> m_ui;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
+
 #endif // AVOGADRO_QTPLUGINS_PDFOPTIONSDIALOG_H

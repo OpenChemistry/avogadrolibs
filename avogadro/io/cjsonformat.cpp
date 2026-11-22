@@ -19,6 +19,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -49,6 +50,23 @@ using Core::LayerManager;
 using Core::Molecule;
 using Core::Residue;
 using Core::Variant;
+
+namespace {
+
+// Names of GaussianSet::PrimitiveNormalization in the "primitiveNormalization"
+// key. Normalize is the default, so it is accepted on read but never written.
+struct NormalizationName
+{
+  const char* name;
+  GaussianSet::PrimitiveNormalization value;
+};
+constexpr NormalizationName normalizationNames[] = {
+  { "normalize", GaussianSet::PrimitiveNormalization::Normalize },
+  { "asIs", GaussianSet::PrimitiveNormalization::AsIs },
+  { "radialIncluded", GaussianSet::PrimitiveNormalization::RadialIncluded }
+};
+
+} // namespace
 
 bool setJsonKey(json& j, Molecule& m, const std::string& key)
 {
@@ -1155,6 +1173,34 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           }
         }
 
+        // How the primitive coefficients are normalized. A missing key is
+        // the default (Normalize); anything unusable keeps the default and is
+        // reported without failing the read.
+        const json& normalization = member(basisSet, "primitiveNormalization");
+        if (normalization.is_string()) {
+          const auto mode = normalization.get<std::string>();
+          const NormalizationName* found = nullptr;
+          for (const auto& entry : normalizationNames)
+            if (mode == entry.name)
+              found = &entry;
+          if (found == nullptr) {
+            appendError("Warning: unknown primitiveNormalization \"" + mode +
+                        "\"; the basis set is normalized.");
+          } else if (found->value ==
+                     GaussianSet::PrimitiveNormalization::AsIs) {
+            if (!basis->setPrimitiveNormalization(found->value))
+              appendError(
+                "Warning: primitiveNormalization \"asIs\" needs "
+                "Cartesian shells only; the basis set is normalized.");
+          } else if (found->value !=
+                     GaussianSet::PrimitiveNormalization::Normalize) {
+            basis->setPrimitiveNormalization(found->value);
+          }
+        } else if (!normalization.is_null()) {
+          appendError("Warning: primitiveNormalization is not a string; the "
+                      "basis set is normalized.");
+        }
+
         const json& orbitals = member(jsonRoot, "orbitals");
         if (orbitals.is_object() && basis->isValid()) {
           // A missing or wrong-typed electronCount used to throw via the
@@ -1521,6 +1567,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     const json& cubeObj = jsonRoot["cube"];
     const json& origin = member(cubeObj, "origin");
     const json& spacing = member(cubeObj, "spacing");
+    // Optional: one step vector per grid axis, which wins over "spacing".
+    const json& stepsJson = member(cubeObj, "steps");
     const json& dimensions = member(cubeObj, "dimensions");
     const json& type = member(cubeObj, "type");
     const json& scalars = member(cubeObj, "scalars");
@@ -1559,8 +1607,40 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
                   scalars.size() == xy * z;
     }
 
+    // "steps" is [[ax, ay, az], [bx, by, bz], [cx, cy, cz]]: row i is the
+    // step vector along grid axis i. When present it must be a valid 3 x 3
+    // step matrix; a malformed one rejects the cube rather than falling back
+    // to "spacing", as the file evidently meant a skewed grid.
+    const bool hasSteps = !stepsJson.is_null();
+    bool stepsOk = !hasSteps;
+    Matrix3 stepMatrix = Matrix3::Zero();
+    if (hasSteps && stepsJson.is_array() && stepsJson.size() == 3) {
+      stepsOk = true;
+      for (int row = 0; stepsOk && row < 3; ++row) {
+        const json& vec = stepsJson[row];
+        if (!isNumericArray(vec) || vec.size() != 3) {
+          stepsOk = false;
+          break;
+        }
+        for (int c = 0; c < 3; ++c) {
+          const double v = vec[c].get<double>();
+          if (!std::isfinite(v))
+            stepsOk = false;
+          // The step vector of axis `row` is column `row` of the matrix.
+          stepMatrix(c, row) = v;
+        }
+      }
+      if (stepsOk) {
+        // Singular matrices are refused by Cube::setStepLimits() too, but
+        // that is only known after the cube has been added, so test it up
+        // front.
+        stepsOk = Cube::validSteps(stepMatrix);
+      }
+    }
+
     if (isNumericArray(origin) && origin.size() == 3 &&
-        isNumericArray(spacing) && spacing.size() == 3 && scalarsOk) {
+        (hasSteps || (isNumericArray(spacing) && spacing.size() == 3)) &&
+        stepsOk && scalarsOk) {
       Cube* cube = molecule.addCube();
 
       // types
@@ -1586,12 +1666,18 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         cube->setName(name.get<std::string>());
 
       Vector3 min(origin[0], origin[1], origin[2]);
-      Vector3 delta(spacing[0], spacing[1], spacing[2]);
-      Vector3 max(min[0] + (points[0] - 1) * delta[0],
-                  min[1] + (points[1] - 1) * delta[1],
-                  min[2] + (points[2] - 1) * delta[2]);
+      if (hasSteps) {
+        cube->setStepLimits(min, points, stepMatrix);
+      } else {
+        Vector3 delta(spacing[0], spacing[1], spacing[2]);
+        Vector3 max(min[0] + (points[0] - 1) * delta[0],
+                    min[1] + (points[1] - 1) * delta[1],
+                    min[2] + (points[2] - 1) * delta[2]);
 
-      cube->setLimits(min, max, points);
+        Matrix3 diag = Vector3(delta).asDiagonal();
+        if (!cube->setStepLimits(min, points, diag))
+          cube->setLimits(min, max, points);
+      }
       // The scalars are converted explicitly rather than handed to
       // Cube::setData() as json, clamping the way lexicalCast<float> does:
       // scalarsOk above only proved these are numeric, not that they fit in
@@ -1701,6 +1787,11 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   // loop through all other properties
   const auto& map = molecule.dataMap();
   for (const auto& element : map) {
+    // The operations and name of a space group that is in no table are kept
+    // (as strings in the properties) so that a saved file keeps its symmetry.
+    // Only internationalNumberKey() is skipped here, unlike other writers that
+    // skip every space group key (isSpaceGroupDataKey()): CJSON round-trips
+    // the operations and the name.
     if (element.first == "name" || element.first == "inchi" ||
         element.first == Core::SpaceGroups::internationalNumberKey())
       continue;
@@ -1860,11 +1951,27 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     if (!gaussian->gtoIndices().empty() && !gaussian->atomIndices().empty()) {
       auto gtoIndices = gaussian->gtoIndices();
       auto gtoA = gaussian->gtoA();
+      // One entry per shell that has primitives. Once the basis has been
+      // initialized, gtoIndices has an extra last entry (the total number of
+      // primitives) that is not the start of a shell, so stop at the number
+      // of shells; the last shell always ends at the total.
+      const size_t nShells = std::min(gtoIndices.size(), symmetry.size());
       json primitivesPerShell;
-      for (size_t i = 0; i < gtoIndices.size() - 1; ++i)
-        primitivesPerShell.push_back(gtoIndices[i + 1] - gtoIndices[i]);
-      primitivesPerShell.push_back(gtoA.size() - gtoIndices.back());
+      for (size_t i = 0; i < nShells; ++i) {
+        const size_t end =
+          (i + 1 < gtoIndices.size()) ? gtoIndices[i + 1] : gtoA.size();
+        primitivesPerShell.push_back(end - gtoIndices[i]);
+      }
       basis["primitivesPerShell"] = primitivesPerShell;
+
+      // Only written when it differs from the default, so files from bases
+      // that need no flag stay unchanged.
+      if (gaussian->primitiveNormalization() !=
+          GaussianSet::PrimitiveNormalization::Normalize) {
+        for (const auto& entry : normalizationNames)
+          if (entry.value == gaussian->primitiveNormalization())
+            basis["primitiveNormalization"] = entry.name;
+      }
 
       auto atomIndices = gaussian->atomIndices();
       json shellToAtomMap;
@@ -1968,6 +2075,15 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
     cubeSpacing.push_back(cube->spacing().y());
     cubeSpacing.push_back(cube->spacing().z());
     cubeObj["spacing"] = cubeSpacing;
+    // A skewed grid also needs its step vectors, one row per grid axis.
+    if (!cube->isAxisAligned()) {
+      const Matrix3 steps = cube->steps();
+      json cubeSteps = json::array();
+      for (int axis = 0; axis < 3; ++axis)
+        cubeSteps.push_back(
+          json::array({ steps(0, axis), steps(1, axis), steps(2, axis) }));
+      cubeObj["steps"] = cubeSteps;
+    }
     json cubeDims;
     cubeDims.push_back(cube->dimensions().x());
     cubeDims.push_back(cube->dimensions().y());
@@ -2266,9 +2382,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       entry["color"] = color;
 
       json atoms;
-      for (const auto& item : residue.atomNameMap()) {
+      for (const auto& item : residue.atomIndexMap()) {
         // dictionary between names and atom Id
-        atoms[item.first] = item.second.index();
+        atoms[item.first] = item.second;
       }
       entry["atoms"] = atoms;
       residues.push_back(entry);
@@ -2353,7 +2469,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       vibrations["conformers"] = std::move(perConformer);
     }
 
-    root["vibrations"] = std::move(vibrations);
+    root["vibrations"] = vibrations;
   }
 
   auto names = LayerManager::getMoleculeInfo(&molecule);

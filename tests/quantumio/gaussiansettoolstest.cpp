@@ -223,6 +223,45 @@ TEST(GaussianSetToolsTest, waterCubeConsistency)
   }
 }
 
+// A grid with a negative spacing on one axis is the mirror of the positive
+// one; the shell bounds must still find the shells.
+TEST(GaussianSetToolsTest, waterMirroredCubeMatches)
+{
+  Molecule molecule;
+  ASSERT_TRUE(
+    loadFchk(AVOGADRO_DATA "/data/fchk/h2o-restricted.fchk", molecule));
+  GaussianSetTools tools(&molecule);
+  auto* basis = dynamic_cast<GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  int homo = static_cast<int>(basis->electronCount(BasisSet::Paired)) / 2 - 1;
+
+  Cube forward;
+  forward.setLimits(molecule, 0.5f, 3.0f);
+  ASSERT_TRUE(tools.calculateMolecularOrbital(forward, homo));
+
+  const Avogadro::Vector3i dim = forward.dimensions();
+  const Avogadro::Vector3 sp = forward.spacing();
+  Avogadro::Vector3 origin = forward.min();
+  origin.x() += (dim.x() - 1) * sp.x();
+  Avogadro::Matrix3 steps =
+    Avogadro::Vector3(-sp.x(), sp.y(), sp.z()).asDiagonal();
+  Cube mirror;
+  ASSERT_TRUE(mirror.setStepLimits(origin, dim, steps));
+  ASSERT_TRUE(tools.calculateMolecularOrbital(mirror, homo));
+
+  double maxAbs = 0.0;
+  for (int i = 0; i < dim.x(); ++i)
+    for (int j = 0; j < dim.y(); ++j)
+      for (int k = 0; k < dim.z(); ++k) {
+        const size_t a = (i * dim.y() + j) * dim.z() + k;
+        const size_t b = ((dim.x() - 1 - i) * dim.y() + j) * dim.z() + k;
+        maxAbs =
+          std::max(maxAbs, std::abs(static_cast<double>((*forward.data())[a])));
+        EXPECT_NEAR((*forward.data())[a], (*mirror.data())[b], 1e-6);
+      }
+  EXPECT_GT(maxAbs, 1e-3);
+}
+
 // ---------------------------------------------------------------------------
 // Water (UHF): alpha and beta orbitals
 // ---------------------------------------------------------------------------

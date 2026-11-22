@@ -296,6 +296,31 @@ TEST_F(SpaceGroupCommandTest, missingSpaceGroupFailsWithoutDialog)
   expectFailure("fillUnitCell", QVariantMap(), "hallNumber");
 }
 
+TEST_F(SpaceGroupCommandTest, storedOperationsFillWithoutParameters)
+{
+  // B -1 is in no table entry: the molecule keeps the operations of the file
+  const std::vector<std::string> operations = { "x,y,z", "-x,-y,-z",
+                                                "x,y+1/2,z+1/2",
+                                                "-x,-y+1/2,-z+1/2" };
+  for (bool skip : { false, true }) {
+    SkipDialogs skipDialogs(skip);
+    for (const char* command : { "fillUnitCell", "fillTranslationalCell" }) {
+      m_harness.buildEmpty();
+      auto* mol = m_harness.molecule();
+      mol->setUnitCell(new UnitCell(Vector3(10.0, 0.0, 0.0),
+                                    Vector3(0.0, 11.0, 0.0),
+                                    Vector3(0.0, 0.0, 12.0)));
+      mol->addAtom(6, Vector3(1.0, 2.0, 3.0));
+      ASSERT_TRUE(SpaceGroups::setStoredOperations(*mol, operations, "B -1"));
+      mol->setHallNumber(0);
+
+      expectFilled(command, QVariantMap(), 4u, 0, command);
+      // still Hall 0, still the operations, so the cell can be reduced
+      EXPECT_EQ(SpaceGroups::storedOperations(*mol), operations);
+    }
+  }
+}
+
 TEST_F(SpaceGroupCommandTest, invalidHallNumberFails)
 {
   // even when the molecule has a valid space group of its own

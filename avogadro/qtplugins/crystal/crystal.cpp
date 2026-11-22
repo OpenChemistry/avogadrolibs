@@ -13,6 +13,7 @@
 #include <avogadro/core/crystaltools.h>
 #include <avogadro/core/unitcell.h>
 
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -82,6 +83,8 @@ Crystal::Crystal(QObject* parent_)
   m_niggliReduceAction->setProperty("menu priority", 140);
 
   updateActions();
+
+  registerCrystalCommands();
 }
 
 Crystal::~Crystal()
@@ -171,27 +174,41 @@ void Crystal::importCrystalClipboard()
   }
 }
 
-void Crystal::registerCommands()
+void Crystal::registerCrystalCommands()
 {
-  emit registerCommand("wrapUnitCell", tr("Wrap atoms into the unit cell."));
-  emit registerCommand("standardCrystalOrientation",
-                       tr("Rotate the unit cell to the standard orientation."));
+  QtGui::CommandSpec wrapUnitCell;
+  wrapUnitCell.name = "wrapUnitCell";
+  wrapUnitCell.description = tr("Wrap atoms into the unit cell.");
+  wrapUnitCell.needsMolecule = true;
+  wrapUnitCell.handler = [this](const QtGui::CommandArguments&) {
+    if (m_molecule->unitCell() == nullptr) {
+      emit commandFailed(tr("The molecule has no unit cell."));
+      return;
+    }
+    wrapAtomsToCell();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(wrapUnitCell));
+
+  QtGui::CommandSpec standardOrientation;
+  standardOrientation.name = "standardCrystalOrientation";
+  standardOrientation.description =
+    tr("Rotate the unit cell to the standard orientation.");
+  standardOrientation.needsMolecule = true;
+  standardOrientation.handler = [this](const QtGui::CommandArguments&) {
+    if (m_molecule->unitCell() == nullptr) {
+      emit commandFailed(tr("The molecule has no unit cell."));
+      return;
+    }
+    this->standardOrientation();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(standardOrientation));
 }
 
-bool Crystal::handleCommand(const QString& command,
-                            [[maybe_unused]] const QVariantMap& options)
+bool Crystal::handleCommand(const QString& command, const QVariantMap& options)
 {
-  if (m_molecule == nullptr)
-    return false; // No molecule to handle the command.
-
-  if (command == "wrapUnitCell") {
-    wrapAtomsToCell();
-    return true;
-  } else if (command == "standardCrystalOrientation") {
-    standardOrientation();
-    return true;
-  }
-  return false;
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 void Crystal::editUnitCell()

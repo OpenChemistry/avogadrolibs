@@ -1,0 +1,334 @@
+name: Rendering Benchmark
+# Nightly regression check for the renderer, on Linux and Windows.
+#
+# Builds AvogadroRenderBenchmark, runs the workloads listed in
+# utilities/benchmarks/ci/workloads.txt under software OpenGL (the runners have
+# no GPU) and compares the result with the baselines committed in
+# utilities/benchmarks/ci/baselines/ (see utilities/benchmarks/ci/summarize.py):
+#
+# * Exact counts (atoms, bonds, coordinate sets, bytes uploaded to the GPU) are
+#   platform independent. Any difference fails the job.
+# * Median CPU stage timings are compared with a per-configuration baseline.
+#   A stage more than 25% slower is only a warning: shared runners are noisy.
+#   GPU timings are recorded but never compared, because with llvmpipe they
+#   measure the software rasteriser.
+#
+# Every run uploads candidate baselines (candidate-*.json) in the artifact.
+# To refresh a baseline, download them from a nightly run and commit them as
+# utilities/benchmarks/ci/baselines/exact.json and <configuration>.json. Take
+# timing baselines from a CI run, never from a developer machine.
+#
+# Configurations:
+#   linux-xvfb             Xvfb + Qt's xcb platform + Mesa llvmpipe
+#   windows-mesa-llvmpipe  a pinned Mesa build placed beside the executable,
+#                          because the runners' own OpenGL is GDI OpenGL 1.1
+#
+# The workflow runs on pull requests only when it, or the benchmark, changes.
+
+on:
+  schedule:
+  - cron: '0 5 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+    - '.github/workflows/render_benchmark.yml'
+    - 'utilities/benchmarks/**'
+
+permissions:
+  contents: read
+
+env:
+  QT_VERSION: 6.8.3
+  BUILD_TYPE: Release
+  BENCH_CI_DIR: openchemistry/avogadrolibs/utilities/benchmarks/ci
+
+# Never cancel a master run (the nightly one); pull requests cancel superseded
+# runs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+# Compiler cache: both jobs only restore the entries that build_linux.yml and
+# build_windows.yml save from master ("Ubuntu x86", "Windows Qt6"), and never
+# save one. They build with the same compiler and flags, so most objects hit,
+# and it avoids two more cache entries competing for the repository's 10 GB
+# budget. The cost is that, when master's entries are evicted, a nightly build
+# is cold.
+
+jobs:
+  linux:
+    name: Linux (linux-xvfb)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      FEATURES: -DBUILD_GPL_PLUGINS=ON -DBUILD_MOLEQUEUE=OFF -DWITH_COORDGEN=OFF -DQT_VERSION=6
+      # Software rendering: the runners have no GPU.
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      GALLIUM_DRIVER: llvmpipe
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    # build_linux.yml's list, minus libfuse2 (AppImage only).
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install ninja-build libeigen3-dev libboost-all-dev libglew-dev libxml2-dev zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
+
+    # Xvfb and Mesa's software GL, plus the libraries Qt's xcb platform
+    # plugin needs at load time.
+    - name: Install GL and Qt runtime dependencies
+      run: |
+        sudo apt-get -qq install xvfb libgl1 libgl1-mesa-dri libglx-mesa0 libegl1 libegl-mesa0 libopengl0 libgbm1 libdrm2 libinput10 \
+          libxcb-cursor0 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 libxcb-xkb1 libxcb-randr0 libxcb-glx0 libxcb-xfixes0 libxcb-sync1 libfontconfig1 libdbus-1-3
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    # Restore only (see the note above the jobs). Must run before Configure,
+    # which needs the compiler-launcher variables it exports.
+    - name: Restore compiler cache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: Ubuntu x86
+        size: 600M
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=gcc CXX=g++ cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja -DUSE_SYSTEM_EIGEN=TRUE
+      shell: bash
+
+    # Only avogadrolibs' dependencies and its configure step, as in
+    # fuzz_linux.yml. The superbuild has no STEP_TARGETS for avogadrolibs, so
+    # the configure stamp is named directly; if the ExternalProject layout
+    # changes, Ninja fails with "unknown target" instead of doing the wrong
+    # thing. avogadroapp and the rest of the superbuild are not needed.
+    - name: Build dependencies
+      run: |
+        CC=gcc CXX=g++ cmake --build . --target avogadrolibs-prefix/src/avogadrolibs-stamp/avogadrolibs-configure
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    # The benchmark is not part of the superbuild's avogadrolibs build, so
+    # turn it on in the avogadrolibs build tree and build just that target.
+    # That is enough for the scene plugins it needs at run time: they are
+    # static plugins (BUILD_STATIC_PLUGINS is ON by default) compiled into
+    # libAvogadroQtPlugins, which the benchmark links, so PluginManager::load()
+    # finds them without any plugin directory.
+    - name: Build the rendering benchmark
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        cmake -DENABLE_RENDERING_BENCHMARKS=ON .
+        cmake --build . --target AvogadroRenderBenchmark
+        exe="${{ runner.workspace }}/build/avogadrolibs/bin/AvogadroRenderBenchmark"
+        if [ ! -x "$exe" ]; then
+          echo "::error::$exe was not found after the build"
+          exit 1
+        fi
+        {
+          echo "BENCH_EXE=$exe"
+          echo "DATA_FILE=$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
+          # The executable finds our shared libraries and the superbuild's
+          # through the build tree; Qt's come from install-qt-action.
+          echo "LD_LIBRARY_PATH=${{ runner.workspace }}/build/avogadrolibs/lib:${{ runner.workspace }}/build/prefix/lib:${{ runner.workspace }}/build/prefix/lib64:$LD_LIBRARY_PATH"
+        } >> "$GITHUB_ENV"
+        ls -l "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
+
+    - name: Benchmark - linux-xvfb
+      timeout-minutes: 45
+      shell: bash
+      run: |
+        mkdir -p "$GITHUB_WORKSPACE/results/linux-xvfb"
+        dpkg -l libgl1-mesa-dri | awk 'END {print "Mesa (libgl1-mesa-dri): " $3}' | tee "$GITHUB_WORKSPACE/results/linux-xvfb/mesa-version.txt"
+        xvfb-run -a -s "-screen 0 1920x1080x24" bash "$GITHUB_WORKSPACE/$BENCH_CI_DIR/run_workloads.sh" linux-xvfb
+
+    # Fails the job on a failed workload or a changed exact count.
+    - name: Summarize and check results
+      if: always()
+      shell: bash
+      run: |
+        PY=$(command -v python3 || command -v python)
+        "$PY" "$GITHUB_WORKSPACE/$BENCH_CI_DIR/summarize.py" \
+          --results "$GITHUB_WORKSPACE/results" \
+          --baselines "$GITHUB_WORKSPACE/$BENCH_CI_DIR/baselines" \
+          --workloads "$GITHUB_WORKSPACE/$BENCH_CI_DIR/workloads.txt" \
+          --configs linux-xvfb
+
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: render-benchmark-linux
+        path: ${{ github.workspace }}/results
+        if-no-files-found: warn
+
+  windows:
+    name: Windows (windows-mesa-llvmpipe)
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      FEATURES: -DBUILD_GPL_PLUGINS=ON -DWITH_COORDGEN=OFF -DQT_VERSION=6 -DUSE_3DCONNEXION=OFF -DBUILD_MOLEQUEUE=OFF
+      # Pinned Mesa for Windows (pal1000/mesa-dist-win, MSVC x64 release
+      # build); the SHA-256 is the digest GitHub reports for the asset.
+      MESA_VERSION: 26.2.4
+      MESA_SHA256: 351fc8c8b695878ffb3eaa044b3ead08672a48b1a045e3c3e3975811df0f6695
+      GALLIUM_DRIVER: llvmpipe
+    steps:
+    - name: Checkout workflow repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Checkout Repositories
+      uses: ./.github/actions/checkout-repositories
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0
+      with:
+        cache: true
+        version: ${{ env.QT_VERSION }}
+
+    - name: Configure MSVC Command Prompt
+      uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+      with:
+        arch: x64
+
+    # The same package list as build_windows.yml (gtest included, though
+    # unused) so the exact-match vcpkg cache key hits master's cache.
+    - name: Install vcpkg packages
+      uses: ./.github/actions/vcpkg-install
+      with:
+        packages: libarchive eigen3 libxml2 zlib gtest
+
+    # build_windows.yml also installs nsis; only the installer needs it.
+    - name: Install Dependencies (Windows)
+      run: |
+        choco install ninja
+      shell: bash
+
+    # Restore only (see the note above the jobs). Must run before Configure,
+    # which needs the compiler-launcher variables it exports.
+    - name: Restore compiler cache
+      uses: ./.github/actions/compiler-cache
+      with:
+        mode: restore
+        name: Windows Qt6
+        size: 600M
+
+    - name: Configure
+      run: |
+        if [ ! -d "${{ runner.workspace }}/build" ]; then mkdir "${{ runner.workspace }}/build"; fi
+        cd "${{ runner.workspace }}/build"
+        CC=cl CXX=cl cmake $GITHUB_WORKSPACE/openchemistry ${{env.FEATURES}} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G Ninja -DCMAKE_TOOLCHAIN_FILE=/c/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_LIBARCHIVE=ON -DUSE_SYSTEM_LIBXML2=ON -DUSE_SYSTEM_ZLIB=ON
+      shell: bash
+
+    # Read-only restore of the third-party downloads; the key is
+    # build_windows.yml's for the "Windows Qt6" entry (sentry off).
+    - name: Cache thirdparty
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: |
+          ${{ runner.workspace }}/build/Downloads
+        key: thirdparty-${{ runner.os }}-${{ runner.arch }}-${{ env.BUILD_TYPE }}-sentryfalse-${{ hashFiles('openchemistry/cmake/External*.cmake', 'openchemistry/cmake/projects/*.cmake') }}
+
+    # Only avogadrolibs' dependencies and its configure step; see the Linux
+    # job for why the stamp is named directly.
+    - name: Build dependencies
+      run: |
+        CC=cl CXX=cl cmake --build . --target avogadrolibs-prefix/src/avogadrolibs-stamp/avogadrolibs-configure --parallel
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build
+
+    # As on Linux, the static scene plugins are inside AvogadroQtPlugins.dll.
+    - name: Build the rendering benchmark
+      shell: bash
+      working-directory: ${{ runner.workspace }}/build/avogadrolibs
+      run: |
+        cmake -DENABLE_RENDERING_BENCHMARKS=ON .
+        cmake --build . --target AvogadroRenderBenchmark --parallel
+        exe="${{ runner.workspace }}/build/avogadrolibs/bin/AvogadroRenderBenchmark.exe"
+        if [ ! -f "$exe" ]; then
+          echo "::error::$exe was not found after the build"
+          find "${{ runner.workspace }}/build/avogadrolibs" -maxdepth 3 -name '*.exe' | head -50
+          exit 1
+        fi
+        {
+          echo "BENCH_EXE=$(cygpath -m "$exe")"
+          echo "DATA_FILE=$(cygpath -m "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb")"
+        } >> "$GITHUB_ENV"
+        # The PATH build_windows.yml's test step uses (Qt, vcpkg and the
+        # superbuild prefix), plus the build tree where our own DLLs sit.
+        for p in "$QT_ROOT_DIR/bin" "C:/vcpkg/installed/x64-windows/bin" \
+                 "${{ runner.workspace }}/build/prefix/bin" \
+                 "${{ runner.workspace }}/build/avogadrolibs/bin"; do
+          cygpath -w "$p" >> "$GITHUB_PATH"
+        done
+        ls -l "$GITHUB_WORKSPACE/openchemistry/avogadrodata/data/pdb/1CRN.pdb"
+
+    # The archive is cached on the Mesa version and checksum, so a new release
+    # (or a replaced archive) is downloaded once. The checksum is
+    # verified on every run, cached or not.
+    - name: Cache Mesa
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/mesa-download
+        key: mesa-${{ runner.os }}-${{ env.MESA_VERSION }}-${{ env.MESA_SHA256 }}
+
+    # Mesa llvmpipe. opengl32.dll is not a KnownDLL, so a copy in the
+    # application directory is found before System32's GDI one, for Qt and for
+    # the executable's own (GLEW) imports alike. libgallium_wgl.dll holds the
+    # drivers and is selected with GALLIUM_DRIVER; dxil.dll only matters for
+    # the d3d12 driver, but is cheap.
+    - name: Place Mesa (llvmpipe) beside the benchmark
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/mesa-download"
+        archive="$RUNNER_TEMP/mesa-download/mesa3d-${MESA_VERSION}-release-msvc.7z"
+        if [ ! -f "$archive" ]; then
+          url="https://github.com/pal1000/mesa-dist-win/releases/download/${MESA_VERSION}/mesa3d-${MESA_VERSION}-release-msvc.7z"
+          curl -fsSL --retry 3 -o "$archive" "$url"
+        fi
+        echo "${MESA_SHA256}  ${archive}" | sha256sum -c -
+        SEVENZ=$(command -v 7z || echo "/c/Program Files/7-Zip/7z.exe")
+        "$SEVENZ" x "$archive" -o"$RUNNER_TEMP/mesa" -y x64/opengl32.dll x64/libgallium_wgl.dll x64/dxil.dll > /dev/null
+        exedir=$(dirname "$BENCH_EXE")
+        for f in opengl32.dll libgallium_wgl.dll libglapi.dll dxil.dll; do
+          if [ -f "$RUNNER_TEMP/mesa/x64/$f" ]; then cp -f "$RUNNER_TEMP/mesa/x64/$f" "$exedir/"; fi
+        done
+        mkdir -p "$GITHUB_WORKSPACE/results/windows-mesa-llvmpipe"
+        echo "Mesa ${MESA_VERSION} (mesa-dist-win release-msvc, sha256 ${MESA_SHA256})" \
+          | tee "$GITHUB_WORKSPACE/results/windows-mesa-llvmpipe/mesa-version.txt"
+
+    - name: Benchmark - windows-mesa-llvmpipe
+      timeout-minutes: 45
+      shell: bash
+      run: |
+        bash "$GITHUB_WORKSPACE/$BENCH_CI_DIR/run_workloads.sh" windows-mesa-llvmpipe
+
+    # Fails the job on a failed workload or a changed exact count.
+    - name: Summarize and check results
+      if: always()
+      shell: bash
+      run: |
+        PY=$(command -v python3 || command -v python)
+        "$PY" "$GITHUB_WORKSPACE/$BENCH_CI_DIR/summarize.py" \
+          --results "$GITHUB_WORKSPACE/results" \
+          --baselines "$GITHUB_WORKSPACE/$BENCH_CI_DIR/baselines" \
+          --workloads "$GITHUB_WORKSPACE/$BENCH_CI_DIR/workloads.txt" \
+          --configs windows-mesa-llvmpipe
+
+    - name: Upload results
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: render-benchmark-windows
+        path: ${{ github.workspace }}/results
+        if-no-files-found: warn

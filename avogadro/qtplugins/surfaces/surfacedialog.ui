@@ -36,6 +36,9 @@
        <property name="text">
         <string>Surface:</string>
        </property>
+       <property name="buddy">
+        <cstring>surfaceCombo</cstring>
+       </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
@@ -94,6 +97,9 @@
        <property name="text">
         <string>Color by:</string>
        </property>
+       <property name="buddy">
+        <cstring>propertyCombo</cstring>
+       </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
@@ -141,6 +147,9 @@
       <widget class="QLabel" name="label_7">
        <property name="text">
         <string>Colormap:</string>
+       </property>
+       <property name="buddy">
+        <cstring>colormapCombo</cstring>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -200,6 +209,9 @@
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Resolution:</string>
+       </property>
+       <property name="buddy">
+        <cstring>resolutionCombo</cstring>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -298,6 +310,9 @@
        <property name="text">
         <string>Isosurface Value:</string>
        </property>
+       <property name="buddy">
+        <cstring>isosurfaceDoubleSpinBox</cstring>
+       </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
@@ -346,6 +361,9 @@
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Smoothing:</string>
+       </property>
+       <property name="buddy">
+        <cstring>smoothingCombo</cstring>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -430,6 +448,9 @@
       <widget class="QLabel" name="frameLabel">
        <property name="text">
         <string>Frame:</string>
+       </property>
+       <property name="buddy">
+        <cstring>stepValue</cstring>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>

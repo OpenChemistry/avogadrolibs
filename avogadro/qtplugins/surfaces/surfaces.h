@@ -10,6 +10,7 @@
 
 #include <tinycolormap.hpp>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/color3f.h>
 
@@ -96,7 +97,6 @@ private slots:
   void surfacesActivated();
   void calculateSurface();
   void calculateEDT(Type type = Unknown, float defaultResolution = 0.0);
-  void performEDTStep(); // EDT step for SolventExcluded
   void edtFinished();
   void calculateQM(Type type = Unknown, int index = -1, bool betaSpin = false,
                    float isoValue = 0.0, float defaultResolution = 0.0);
@@ -107,6 +107,7 @@ private slots:
 
   void displayMesh();
   void meshFinished();
+  void colorFinished();
 
   void recordMovie();
   void movieFrame();
@@ -151,7 +152,20 @@ private:
   /// Switch the MO set step; @return whether a calculation was interrupted.
   bool changeStep(int step);
 
-  void colorMesh(Core::Mesh& mesh);
+  /// Colour the pending mesh on a worker thread when the dialog asks for an
+  /// ESP colouring that can be computed from a snapshot.
+  /// @return false when the pending meshes can be published right away
+  /// (nothing to colour, or colouring was done synchronously).
+  bool startColoring();
+  /// Publish the pending meshes and finish the calculation (movie frame,
+  /// dialog, script command). The tail shared by both colouring paths.
+  void publishPendingMeshes();
+  /// Drop the pending meshes of a stale or interrupted job and report it.
+  void discardPendingMeshes();
+  /// Wait for a colouring job, dropping its result.
+  void waitForColoring();
+
+  /// Colour on the GUI thread through the shared charge model.
   void colorMeshByPotential(Core::Mesh& mesh);
 
   /**
@@ -161,8 +175,6 @@ private:
    * by @p padding Angstrom around the atoms.
    */
   float resolution(float specified = 0.0, double padding = 0.0);
-  Core::Color3f chargeGradient(double value, double clamp,
-                               tinycolormap::ColormapType colormap) const;
   tinycolormap::ColormapType getColormapFromString(const QString& name) const;
 
   QList<QAction*> m_actions;
@@ -195,8 +207,7 @@ private:
   bool m_cubeJobStale = false;
 
   /* One QFutureWatcher per asynchronous slot function, e.g.:*/
-  /* calculateEDT() -> [performEDTStep()] -> edtFinished() */
-  QFutureWatcher<void> m_performEDTStepWatcher;
+  /* calculateEDT() -> edtFinished() */
   QFutureWatcher<void> m_displayMeshWatcher;
 
   /* displayMesh() -> meshFinished() */
@@ -206,6 +217,11 @@ private:
   std::unique_ptr<Core::Mesh> m_pendingMesh1;
   std::unique_ptr<Core::Mesh> m_pendingMesh2;
   bool m_meshJobStale = false;
+  /// meshFinished() -> colorFinished(): the potentials and colours of the
+  /// pending mesh, computed from a snapshot on a worker thread. The pending
+  /// meshes stay owned by the GUI thread meanwhile.
+  QFutureWatcher<Core::Array<Core::Color3f>> m_colorWatcher;
+  bool m_coloring = false;
   /// Indices of the published meshes, -1 for none.
   int m_mesh1Index = -1;
   int m_mesh2Index = -1;
@@ -218,9 +234,9 @@ private:
   /// Resolution used by the command currently running, reported back to the
   /// caller because resolution() picks one when the caller does not.
   float m_commandResolution = 0.0f;
-  /// Grid resolution calculateEDT() built its cube with, for the solvent-
-  /// excluded erosion step in performEDTStep().
-  float m_edtResolution = 0.0f;
+  /// Mesh smoothing passes asked for by the "smoothing" command option. Used
+  /// only when there is no dialog; 0 (none) unless the caller passes one.
+  int m_commandSmoothing = 0;
   /// True while a script command is waiting on a calculation to finish, so
   /// that an interrupted calculation can report failure rather than leave
   /// the caller waiting for a commandFinished() that will never come.

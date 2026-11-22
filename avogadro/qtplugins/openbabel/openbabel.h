@@ -15,8 +15,7 @@
 class QAction;
 class QProgressDialog;
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class OBProcess;
 
@@ -115,7 +114,6 @@ private:
   ConformerSearchDialog* m_conformerSearchDialog;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_OPENBABEL_H

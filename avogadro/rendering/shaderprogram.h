@@ -15,8 +15,7 @@
 #include <string> // For member variables.
 #include <vector> // For member variables.
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class Shader;
 class Texture2D;
@@ -153,7 +152,7 @@ public:
   /** @} */
 
 protected:
-  bool setAttributeArrayInternal(const std::string& name, void* buffer,
+  bool setAttributeArrayInternal(const std::string& name, const void* buffer,
                                  Avogadro::Type type, int tupleSize,
                                  NormalizeOption normalize);
   Index m_handle;
@@ -193,11 +192,11 @@ inline bool ShaderProgram::setAttributeArray(const std::string& name,
     m_error = "Refusing to upload empty array for attribute " + name + ".";
     return false;
   }
-  Type type = Avogadro::TypeTraits<typename ContainerT::value_type>::EnumValue;
+  const auto type = static_cast<Avogadro::Type>(
+    Avogadro::TypeTraits<typename ContainerT::value_type>::EnumValue);
   return setAttributeArrayInternal(name, &array[0], type, tupleSize, normalize);
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_SHADERPROGRAM_H

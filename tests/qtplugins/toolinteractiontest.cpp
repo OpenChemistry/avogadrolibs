@@ -129,10 +129,13 @@ TEST_F(ToolInteractionTest, editorClickInEmptySpaceAddsCarbon)
     EXPECT_EQ(h.molecule()->atomicNumber(i), Core::Hydrogen);
     EXPECT_TRUE(hasBond(n, i)) << "H " << i;
   }
-  // The new atom is where the click was.
-  const Rendering::Identifier hit = h.hitAt(h.emptyPoint());
-  EXPECT_EQ(hit.type, Rendering::AtomType);
-  EXPECT_EQ(hit.index, n);
+  // The new atom is where the click was. Compare positions, not hitAt(): the
+  // first hydrogen's direction is random, and one pointing at the camera
+  // covers the carbon.
+  const QPoint clicked = h.emptyPoint();
+  const QPoint placed = h.pointOnAtom(n);
+  EXPECT_EQ(placed.x(), clicked.x());
+  EXPECT_EQ(placed.y(), clicked.y());
   expectClean();
 
   // One user action, one undo step.

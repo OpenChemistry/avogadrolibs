@@ -28,7 +28,7 @@ Dihedral DihedralIterator::operator++()
   if (m_mol == nullptr || m_mol->atomCount() < 4 || m_mol->bondCount() < 3)
     return std::make_tuple(MaxIndex, MaxIndex, MaxIndex, MaxIndex);
 
-  Graph graph = m_mol->graph();
+  const Graph& graph = m_mol->graph();
   Index count = m_mol->bondCount();
 
   // true if we have a valid current state

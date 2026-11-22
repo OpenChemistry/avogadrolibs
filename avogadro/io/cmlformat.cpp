@@ -25,6 +25,7 @@
 #include <locale>
 #include <map>
 #include <sstream>
+#include <utility>
 
 namespace Avogadro::Io {
 
@@ -43,7 +44,8 @@ class CmlFormatPrivate
 {
 public:
   CmlFormatPrivate(Molecule* mol, xml_document& document, std::string filename_)
-    : success(false), molecule(mol), moleculeNode(nullptr), filename(filename_)
+    : success(false), molecule(mol), moleculeNode(nullptr),
+      filename(std::move(filename_))
   {
     // Parse the CML document, and create molecules/elements as necessary.
     moleculeNode = document.child("molecule");
@@ -753,8 +755,7 @@ bool CmlFormat::write(std::ostream& out, const Core::Molecule& mol)
     const std::string& name_ = (*it).first;
 
     // Skip names that are handled elsewhere:
-    if (name_ == "inchi" ||
-        name_ == Core::SpaceGroups::internationalNumberKey())
+    if (name_ == "inchi" || Core::SpaceGroups::isSpaceGroupDataKey(name_))
       continue;
 
     const Variant& var = (*it).second;

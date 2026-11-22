@@ -6,10 +6,12 @@
 #ifndef AVOGADRO_QTPLUGINS_FORCE_H
 #define AVOGADRO_QTPLUGINS_FORCE_H
 
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/sceneplugin.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+#include <QtGui/QColor>
+
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Render a molecule in the wireframe style.
@@ -33,16 +35,29 @@ public:
       "Render the force field visualizations for the atoms of the molecule.");
   }
 
+  QWidget* setupWidget() override;
+  bool hasSetupWidget() const override { return true; }
+
   DefaultBehavior defaultBehavior() const override
   {
     return DefaultBehavior::False;
   }
 
+private slots:
+  void setColor(const QColor& color);
+  void setLength(double scale);
+  void setArrowWidth(double width);
+
 private:
   std::string m_name = "Force";
+
+  QWidget* m_setupWidget;
+  float m_length;
+  float m_arrowWidth;
+  Vector3ub m_color;
 };
 
-} // end namespace QtPlugins
-} // end namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// end namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_FORCE_H

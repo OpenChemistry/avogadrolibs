@@ -17,8 +17,7 @@ namespace Ui {
 class VibrationDialog;
 }
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief The VibrationDialog presents vibrational modes.
@@ -74,7 +73,7 @@ private:
   Ui::VibrationDialog* m_ui;
 };
 
-} // End namespace QtPlugins
-} // End namespace Avogadro
+} // namespace Avogadro::QtPlugins
+// End namespace Avogadro
 
 #endif // AVOGADRO_QTPLUGINS_VibrationDialog_H

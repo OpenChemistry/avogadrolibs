@@ -13,8 +13,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 /**
  * @class JobObject jobobject.h <molequeue/client/jobobject.h>
@@ -158,7 +157,7 @@ protected:
   QJsonObject fileSpec(const QString& path);
 };
 
-} // End namespace MoleQueue
-} // End namespace Avogadro
+} // namespace Avogadro::MoleQueue
+// End namespace Avogadro
 
 #endif // AVOGADRO_MOLEQUEUE_JOBOBJECT_H

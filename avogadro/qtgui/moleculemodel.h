@@ -13,8 +13,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QPointer>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class Molecule;
 
@@ -81,7 +80,6 @@ private:
   QIcon m_closeIcon;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_MOLECULEMODEL_H

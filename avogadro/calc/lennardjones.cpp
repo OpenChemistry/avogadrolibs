@@ -63,8 +63,8 @@ Real evaluateLennardJonesPairs(const Eigen::VectorXd& x,
 } // namespace
 
 LennardJones::LennardJones()
-  : m_molecule(nullptr), m_cell(nullptr), m_radii(), m_vdw(true),
-    m_depth(100.0), m_exponent(6), m_elements()
+  : m_molecule(nullptr), m_cell(nullptr), m_vdw(true), m_depth(100.0),
+    m_exponent(6)
 {
   // defined for 1-118
   for (unsigned int i = 1; i <= 118; ++i) {

@@ -25,6 +25,9 @@
         <property name="text">
          <string>A unit:</string>
         </property>
+        <property name="buddy">
+         <cstring>monomerAButton</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="2">
@@ -38,6 +41,9 @@
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>B unit:</string>
+        </property>
+        <property name="buddy">
+         <cstring>monomerBButton</cstring>
         </property>
        </widget>
       </item>
@@ -55,6 +61,9 @@
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>C unit:</string>
+        </property>
+        <property name="buddy">
+         <cstring>monomerCButton</cstring>
         </property>
        </widget>
       </item>
@@ -220,6 +229,9 @@
      <property name="text">
       <string>Repeat Style:</string>
      </property>
+     <property name="buddy">
+      <cstring>monomerRepeatStyle</cstring>
+     </property>
     </widget>
    </item>
    <item row="5" column="2">
@@ -243,6 +255,9 @@
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Total Length:</string>
+     </property>
+     <property name="buddy">
+      <cstring>totalLengthSpinBox</cstring>
      </property>
     </widget>
    </item>
@@ -283,6 +298,9 @@
      </property>
      <property name="text">
       <string>Tacticity:</string>
+     </property>
+     <property name="buddy">
+      <cstring>tacticityComboBox</cstring>
      </property>
     </widget>
    </item>

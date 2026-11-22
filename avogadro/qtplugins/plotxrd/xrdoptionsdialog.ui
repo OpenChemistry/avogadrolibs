@@ -69,6 +69,9 @@
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>spin_numDataPoints</cstring>
+     </property>
     </widget>
    </item>
    <item row="1" column="0">
@@ -79,6 +82,9 @@
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>spin_peakWidth</cstring>
+     </property>
     </widget>
    </item>
    <item row="0" column="0">
@@ -88,6 +94,9 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>spin_wavelength</cstring>
      </property>
     </widget>
    </item>
@@ -134,14 +143,14 @@
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label_4">
-     <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
-     </property>
      <property name="text">
       <string>Max 2θ:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>spin_max2Theta</cstring>
      </property>
     </widget>
    </item>

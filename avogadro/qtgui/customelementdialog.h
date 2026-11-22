@@ -11,8 +11,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 class Molecule;
 
 namespace Ui {
@@ -51,6 +50,6 @@ private:
   void addRow(unsigned char customElementId, const QString& name);
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
+
 #endif // AVOGADRO_QTGUI_CUSTOMELEMENTDIALOG_H

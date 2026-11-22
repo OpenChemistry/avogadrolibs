@@ -8,9 +8,10 @@
 
 #include <QtCore/QObject>
 
-#include "inputgenerator.h"
+#include "avogadromolequeueexport.h"
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/qtgui/interfacescript.h>
 
 #include "client/jobobject.h"
 
@@ -27,7 +28,7 @@ namespace MoleQueue {
 
 /**
  * @brief The BatchJob class manages a collection of jobs that are configured
- * using the same InputGenerator and MoleQueue options. For use with
+ * using the same InterfaceScript and MoleQueue options. For use with
  * InputGeneratorDialog::configureBatchJob(BatchJob&).
  */
 class AVOGADROMOLEQUEUE_EXPORT BatchJob : public QObject
@@ -100,16 +101,16 @@ public:
   /**@}*/
 
   /**
-   * The internal InputGenerator.
+   * The internal InterfaceScript.
    * @{
    */
-  const InputGenerator& inputGenerator() const;
-  InputGenerator& inputGenerator();
+  const QtGui::InterfaceScript& inputGenerator() const;
+  QtGui::InterfaceScript& inputGenerator();
   /**@}*/
 
   /**
    * A string that will be used in the MoleQueue interface to identify this
-   * batch job. Taken from the InputGenerator configured title.
+   * batch job. Taken from the InterfaceScript configured title.
    */
   QString description() const;
 
@@ -221,7 +222,7 @@ private: // methods
   static QString stateToString(JobState state);
 
 private: // variables
-  InputGenerator m_inputGenerator;
+  QtGui::InterfaceScript m_inputGenerator;
   QJsonObject m_inputGeneratorOptions;
   QJsonObject m_moleQueueOptions;
 
@@ -264,12 +265,12 @@ inline JobObject BatchJob::moleQueueJobTemplate() const
   return result;
 }
 
-inline const InputGenerator& BatchJob::inputGenerator() const
+inline const QtGui::InterfaceScript& BatchJob::inputGenerator() const
 {
   return m_inputGenerator;
 }
 
-inline InputGenerator& BatchJob::inputGenerator()
+inline QtGui::InterfaceScript& BatchJob::inputGenerator()
 {
   return m_inputGenerator;
 }

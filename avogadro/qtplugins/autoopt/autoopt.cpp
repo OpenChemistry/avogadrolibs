@@ -44,6 +44,8 @@
 
 #include <QDebug>
 
+#include <memory>
+
 using Avogadro::QtGui::Molecule;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GroupNode;
@@ -117,7 +119,11 @@ void AutoOpt::cleanupWorker()
     m_workerThread->quit();
     // The worker deletes itself via the thread's finished() signal, but the
     // thread is parented to us, so one leaks per restart unless we drop it.
+#ifdef Q_OS_WASM
+    if (m_workerThread->isFinished()) {
+#else
     if (m_workerThread->wait(5000)) {
+#endif
       m_workerThread->deleteLater();
     } else {
       // Still chewing on a chunk. Deleting a running QThread is fatal and so
@@ -147,7 +153,8 @@ void AutoOpt::startWorker()
 
   auto constraints = m_molecule->molecule().constraints();
 
-  auto* calc = Calc::EnergyManager::instance().model(m_currentMethod);
+  std::unique_ptr<Calc::EnergyCalculator> calc(
+    Calc::EnergyManager::instance().model(m_currentMethod));
   if (calc == nullptr)
     return;
 
@@ -159,7 +166,6 @@ void AutoOpt::startWorker()
   m_worker->moveToThread(m_workerThread);
 
   connect(m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
-  m_workerThread->start();
 
   // Everything this worker emits is stamped with its generation. Results it
   // had already emitted when an edit retired it are still queued for us, and
@@ -197,12 +203,20 @@ void AutoOpt::startWorker()
             onWorkerReady();
           });
 
-  // Now invoke initCalculator after connections are established
+  // Keep ownership in the queued call until the worker accepts the calculator.
+  // An immediate stop can destroy this event before initialization runs.
   QMetaObject::invokeMethod(
-    m_worker, "initCalculator", Qt::QueuedConnection,
-    Q_ARG(Avogadro::Calc::EnergyCalculator*, calc),
-    Q_ARG(Avogadro::Core::Molecule, snapshot), Q_ARG(Eigen::VectorXd, mask),
-    Q_ARG(std::vector<Avogadro::Core::Constraint>, constraints));
+    m_worker,
+    [worker = m_worker, calc = std::move(calc), snapshot, mask,
+     constraints]() mutable {
+      worker->initCalculator(calc.release(), snapshot, mask, constraints);
+    },
+    Qt::QueuedConnection);
+
+  // Start the thread only after everything above is set up. Thread creation
+  // orders these writes before the worker runs in a way TSan can see; the
+  // queued event alone is ordered inside uninstrumented Qt.
+  m_workerThread->start();
 }
 
 void AutoOpt::setIcon(bool darkTheme)
@@ -227,14 +241,39 @@ void setMasses(Eigen::ArrayXd& masses, const QtGui::Molecule* mol)
 
 void AutoOpt::setMolecule(QtGui::Molecule* mol)
 {
-  if (mol != nullptr) {
-    m_molecule = mol->undoMolecule();
-    // connect to any molecule changes
-    connect(mol, SIGNAL(changed(unsigned int)),
-            SLOT(moleculeChanged(unsigned int)));
-
+  auto* next = mol ? mol->undoMolecule() : nullptr;
+  if (next == m_molecule)
+    return;
+  if (m_running)
+    stop();
+  if (m_molecule)
+    disconnect(&m_molecule->molecule(), nullptr, this, nullptr);
+  m_molecule = next;
+  m_object = Rendering::Identifier();
+  if (mol) {
+    connect(mol, &QtGui::Molecule::changed, this, &AutoOpt::moleculeChanged);
     setMasses(m_masses, mol);
   }
+}
+
+bool AutoOpt::handleCommand(const QString& command, const QVariantMap& options)
+{
+  if (command == "stopAutoOptimize") {
+    if (m_running)
+      stop();
+    return true;
+  }
+  if (command != "startAutoOptimize" || m_running || !m_molecule)
+    return false;
+
+  const auto method = options.value("method").toString().toStdString();
+  const auto methods = Calc::EnergyManager::instance().identifiersForMolecule(
+    m_molecule->molecule());
+  if (methods.find(method) == methods.end())
+    return false;
+  m_currentMethod = method;
+  start();
+  return m_running;
 }
 
 void AutoOpt::moleculeChanged(unsigned int changes)
@@ -278,7 +317,7 @@ QWidget* AutoOpt::toolWidget() const
     // check the methods for this molecule
     auto mol = m_molecule->molecule();
     auto list = Calc::EnergyManager::instance().identifiersForMolecule(mol);
-    for (auto option : list) {
+    for (const auto& option : list) {
       methodComboBox->addItem(option.c_str());
     }
 
@@ -326,9 +365,15 @@ QWidget* AutoOpt::toolWidget() const
     timeStepSpinBox->setEnabled(false);
 
     // start stop button
-    QPushButton* startStopButton = new QPushButton(tr("Start"));
+    QPushButton* startStopButton = new QPushButton();
     startStopButton->setObjectName("startStopButton");
-    startStopButton->setIcon(QIcon::fromTheme("go-down"));
+    auto updateButton = [this, startStopButton]() {
+      startStopButton->setText(m_running ? tr("Stop") : tr("Start"));
+      startStopButton->setIcon(
+        QIcon::fromTheme(m_running ? "process-stop" : "go-down"));
+    };
+    connect(this, &AutoOpt::runningChanged, startStopButton, updateButton);
+    updateButton();
     connect(startStopButton, &QPushButton::clicked, this, &AutoOpt::startStop);
     form->addRow(startStopButton);
 
@@ -375,29 +420,22 @@ void AutoOpt::startStop()
 {
   if (m_running)
     stop();
-  else
+  else {
+    if (m_toolWidget) {
+      auto* comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
+      m_currentMethod = comboBox->currentText().toStdString();
+    }
     start();
+  }
 }
 
 void AutoOpt::start()
 {
-  if (m_molecule == nullptr || m_toolWidget == nullptr ||
-      m_molecule->atomCount() == 0)
+  if (m_running || !m_molecule || m_molecule->atomCount() == 0 ||
+      m_molecule->atomPositions3d().size() != m_molecule->atomCount())
     return;
 
-  // get the button from the widget
-  QPushButton* startStopButton =
-    m_toolWidget->findChild<QPushButton*>("startStopButton");
-  startStopButton->setText(tr("Stop"));
-  startStopButton->setIcon(QIcon::fromTheme("process-stop"));
   m_running = true;
-
-  // make sure method is set
-  if (m_toolWidget) {
-    auto* comboBox = m_toolWidget->findChild<QComboBox*>("methodComboBox");
-    QString currentMethod = comboBox->currentText();
-    m_currentMethod = currentMethod.toStdString();
-  }
 
   m_molecule->beginMergeMode("AutoOpt");
 
@@ -443,7 +481,11 @@ void AutoOpt::start()
 
   // Start the worker thread — timer begins in onWorkerReady
   startWorker();
-
+  if (!m_worker) {
+    stop();
+    return;
+  }
+  emit runningChanged();
   emit drawablesChanged();
 }
 
@@ -465,19 +507,10 @@ void AutoOpt::stop()
 
   cleanupWorker();
 
-  // get the button from the widget
-  if (m_toolWidget) {
-    auto* startStopButton =
-      m_toolWidget->findChild<QPushButton*>("startStopButton");
-    if (startStopButton) {
-      startStopButton->setText(tr("Start"));
-      startStopButton->setIcon(QIcon::fromTheme("go-down"));
-    }
-  }
-
   if (m_molecule)
     m_molecule->endMergeMode();
 
+  emit runningChanged();
   emit drawablesChanged();
 }
 

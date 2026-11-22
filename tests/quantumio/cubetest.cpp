@@ -235,29 +235,15 @@ TEST(GaussianCubeTest, runTogetherDoesNotAcceptJunk)
   }
 }
 
-// Voxel axes that are not along x, y and z cannot be stored in a Core::Cube, so
-// the reader resamples them onto an axis-aligned grid. A linear function is
-// reproduced exactly by trilinear interpolation, so each resampled point inside
-// the original grid must equal the function there, and each point outside zero.
-TEST(GaussianCubeTest, skewedGridIsResampledExactly)
+namespace {
+
+// Writes a cube file whose grid has the given step vectors (columns, bohr)
+// and holds the linear function f (of the position in Angstrom).
+std::string makeSkewedCube(const Avogadro::Matrix3& steps,
+                           const Avogadro::Vector3i& n, const Vector3& origin,
+                           const Vector3& gradient, double offset)
 {
-  using Avogadro::Matrix3;
-  using Avogadro::Vector3i;
   constexpr double toAngstrom = Avogadro::BOHR_TO_ANGSTROM;
-
-  const Vector3i n(6, 7, 5);
-  // Step vectors (columns, bohr) shaped like a triclinic CP2K cell.
-  Matrix3 steps;
-  steps << 0.58, 0.21, -0.33, //
-    0.0, 0.52, -0.13,         //
-    0.0, 0.0, 0.50;
-  const Vector3 origin(0.1, -0.2, 0.3); // bohr
-  const Vector3 gradient(1.5, -0.75, 2.0);
-  const double offset = 0.25;
-  auto f = [&](const Vector3& rAngstrom) {
-    return gradient.dot(rAngstrom) + offset;
-  };
-
   std::ostringstream out;
   out << "Skewed test\nSecond line\n";
   char buffer[128];
@@ -275,17 +261,43 @@ TEST(GaussianCubeTest, skewedGridIsResampledExactly)
     for (int j = 0; j < n(1); ++j)
       for (int k = 0; k < n(2); ++k) {
         const Vector3 r = (origin + steps * Vector3(i, j, k)) * toAngstrom;
-        std::snprintf(buffer, sizeof(buffer), "% .8E", f(r));
+        std::snprintf(buffer, sizeof(buffer), "% .8E",
+                      gradient.dot(r) + offset);
         out << buffer << ((++count % 6 == 0) ? "\n" : " ");
       }
   out << "\n";
+  return out.str();
+}
+
+} // namespace
+
+// Voxel axes that are not along x, y and z are stored as they are: the step
+// vectors end up in the cube, the grid has the dimensions of the file (no
+// resampling) and the values are unchanged.
+TEST(GaussianCubeTest, skewedGridIsReadWithItsSteps)
+{
+  using Avogadro::Matrix3;
+  using Avogadro::Vector3i;
+  constexpr double toAngstrom = Avogadro::BOHR_TO_ANGSTROM;
+
+  const Vector3i n(6, 7, 5);
+  // Step vectors (columns, bohr) shaped like a triclinic CP2K cell.
+  Matrix3 steps;
+  steps << 0.58, 0.21, -0.33, //
+    0.0, 0.52, -0.13,         //
+    0.0, 0.0, 0.50;
+  const Vector3 origin(0.1, -0.2, 0.3); // bohr
+  const Vector3 gradient(1.5, -0.75, 2.0);
+  const double offset = 0.25;
 
   GaussianCube reader;
   Molecule molecule;
-  ASSERT_TRUE(reader.readString(out.str(), molecule)) << reader.error();
+  ASSERT_TRUE(reader.readString(
+    makeSkewedCube(steps, n, origin, gradient, offset), molecule))
+    << reader.error();
   ASSERT_EQ(reader.error(), std::string());
 
-  // The atom is not moved by the resampling.
+  // The atom is not moved.
   ASSERT_EQ(molecule.atomCount(), static_cast<size_t>(1));
   const Vector3 atom = molecule.atom(0).position3d();
   EXPECT_NEAR(atom(0), 1.0 * toAngstrom, 1.0e-9);
@@ -295,65 +307,69 @@ TEST(GaussianCubeTest, skewedGridIsResampledExactly)
   ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(1));
   const auto* cube = molecule.cube(0);
   ASSERT_NE(cube, nullptr);
+  EXPECT_FALSE(cube->isAxisAligned());
+  EXPECT_EQ(cube->dimensions(), n);
+  ASSERT_EQ(cube->data()->size(), static_cast<size_t>(6 * 7 * 5));
+  EXPECT_TRUE(cube->steps().isApprox(steps * toAngstrom, 1.0e-12));
+  EXPECT_TRUE(cube->min().isApprox(origin * toAngstrom, 1.0e-12));
+  for (int a = 0; a < 3; ++a)
+    EXPECT_NEAR(cube->spacing()(a), (steps.col(a) * toAngstrom).norm(),
+                1.0e-12);
 
-  // Axis-aligned bounding box of the eight corners, shortest step as spacing.
-  const Matrix3 stepsA = steps * toAngstrom;
-  const Vector3 originA = origin * toAngstrom;
-  Vector3 lo = originA, hi = originA;
-  for (int corner = 0; corner < 8; ++corner) {
-    const Vector3 idx((corner & 1) ? n(0) - 1 : 0, (corner & 2) ? n(1) - 1 : 0,
-                      (corner & 4) ? n(2) - 1 : 0);
-    const Vector3 r = originA + stepsA * idx;
-    lo = lo.cwiseMin(r);
-    hi = hi.cwiseMax(r);
-  }
-  const double h = std::min(
-    { stepsA.col(0).norm(), stepsA.col(1).norm(), stepsA.col(2).norm() });
-  EXPECT_NEAR(cube->spacing()(0), h, 1.0e-9);
-  EXPECT_NEAR(cube->spacing()(1), h, 1.0e-9);
-  EXPECT_NEAR(cube->spacing()(2), h, 1.0e-9);
-  EXPECT_NEAR(cube->min()(0), lo(0), 1.0e-9);
-  EXPECT_NEAR(cube->min()(1), lo(1), 1.0e-9);
-  EXPECT_NEAR(cube->min()(2), lo(2), 1.0e-9);
-  const Vector3i dim = cube->dimensions();
-  for (int a = 0; a < 3; ++a) {
-    EXPECT_EQ(dim(a),
-              static_cast<int>(std::floor((hi(a) - lo(a)) / h + 1e-6)) + 1);
-  }
-  ASSERT_EQ(cube->data()->size(),
-            static_cast<size_t>(dim(0)) * dim(1) * dim(2));
-
-  const Matrix3 inverse = stepsA.inverse();
-  size_t inside = 0, outside = 0;
-  for (int ix = 0; ix < dim(0); ++ix)
-    for (int iy = 0; iy < dim(1); ++iy)
-      for (int iz = 0; iz < dim(2); ++iz) {
-        const Vector3 r = lo + h * Vector3(ix, iy, iz);
-        const Vector3 u = inverse * (r - originA);
-        const float value = cube->value(ix, iy, iz);
-        bool surelyInside = true, surelyOutside = false;
-        for (int a = 0; a < 3; ++a) {
-          if (u(a) < 1.0e-6 || u(a) > n(a) - 1 - 1.0e-6)
-            surelyInside = false;
-          if (u(a) < -1.0e-3 || u(a) > n(a) - 1 + 1.0e-3)
-            surelyOutside = true;
-        }
-        if (surelyInside) {
-          ++inside;
-          EXPECT_NEAR(value, f(r), 1.0e-4) << ix << " " << iy << " " << iz;
-        } else if (surelyOutside) {
-          ++outside;
-          EXPECT_EQ(value, 0.0f) << ix << " " << iy << " " << iz;
-        }
+  // Every value is the function at its own grid point, and the cube
+  // interpolates the (linear) function between the points.
+  for (int i = 0; i < n(0); ++i)
+    for (int j = 0; j < n(1); ++j)
+      for (int k = 0; k < n(2); ++k) {
+        const Vector3 r = (origin + steps * Vector3(i, j, k)) * toAngstrom;
+        EXPECT_NEAR(cube->value(i, j, k), gradient.dot(r) + offset, 1.0e-4);
       }
-  // The test is only meaningful if both cases occur.
-  EXPECT_GT(inside, static_cast<size_t>(50));
-  EXPECT_GT(outside, static_cast<size_t>(50));
+  const Vector3 inside = (origin + steps * Vector3(2.3, 3.6, 1.4)) * toAngstrom;
+  EXPECT_NEAR(cube->value(inside), gradient.dot(inside) + offset, 1.0e-4);
 }
 
-// A grid whose first axis runs backwards along x is not skewed, but it cannot
-// be stored as is either (Core::Cube needs a positive spacing).
-TEST(GaussianCubeTest, negativeAxisIsResampled)
+// A skewed cube survives a write and a read with its off-diagonal steps.
+TEST(GaussianCubeTest, skewedGridRoundTrips)
+{
+  using Avogadro::Matrix3;
+  using Avogadro::Vector3i;
+
+  const Vector3i n(4, 3, 5);
+  Matrix3 steps;
+  steps << 0.60, 0.20, -0.10, //
+    0.05, 0.50, 0.15,         //
+    0.0, -0.25, 0.45;
+  const Vector3 origin(-0.4, 0.2, 0.9);
+  GaussianCube reader;
+  Molecule first;
+  ASSERT_TRUE(reader.readString(
+    makeSkewedCube(steps, n, origin, Vector3(1.0, 2.0, -1.0), 0.5), first))
+    << reader.error();
+
+  GaussianCube writer;
+  std::ostringstream written;
+  ASSERT_TRUE(writer.write(written, first)) << writer.error();
+
+  GaussianCube reader2;
+  Molecule second;
+  ASSERT_TRUE(reader2.readString(written.str(), second)) << reader2.error();
+  ASSERT_EQ(second.cubeCount(), static_cast<size_t>(1));
+  const auto* a = first.cube(0);
+  const auto* b = second.cube(0);
+  EXPECT_EQ(a->dimensions(), b->dimensions());
+  // The file holds six decimals of bohr.
+  EXPECT_TRUE(a->steps().isApprox(b->steps(), 1.0e-5));
+  EXPECT_NEAR((a->min() - b->min()).norm(), 0.0, 1.0e-5);
+  EXPECT_FALSE(b->isAxisAligned());
+  ASSERT_EQ(a->data()->size(), b->data()->size());
+  for (size_t i = 0; i < a->data()->size(); ++i)
+    EXPECT_NEAR((*a->data())[i], (*b->data())[i],
+                1.0e-4 * (1.0 + std::abs((*a->data())[i])));
+}
+
+// A grid whose first axis runs backwards along x is stored as it is, with a
+// negative step: the first value stays at the origin.
+TEST(GaussianCubeTest, negativeAxisIsKept)
 {
   GaussianCube reader;
   Molecule molecule;
@@ -371,13 +387,17 @@ TEST(GaussianCubeTest, negativeAxisIsResampled)
   const auto* cube = molecule.cube(0);
   ASSERT_NE(cube, nullptr);
   ASSERT_EQ(cube->dimensions()(0), 4);
-  EXPECT_NEAR(cube->min()(0), -0.3 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
-  EXPECT_NEAR(cube->spacing()(0), 0.1 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  EXPECT_NEAR(cube->min()(0), 0.0, 1.0e-9);
+  EXPECT_TRUE(cube->isAxisAligned());
+  EXPECT_NEAR(cube->spacing()(0), -0.1 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  EXPECT_NEAR(cube->max()(0), -0.3 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
   ASSERT_EQ(cube->data()->size(), static_cast<size_t>(4));
-  EXPECT_NEAR((*cube->data())[0], 4.0f, 1.0e-5);
-  EXPECT_NEAR((*cube->data())[1], 3.0f, 1.0e-5);
-  EXPECT_NEAR((*cube->data())[2], 2.0f, 1.0e-5);
-  EXPECT_NEAR((*cube->data())[3], 1.0f, 1.0e-5);
+  EXPECT_NEAR((*cube->data())[0], 1.0f, 1.0e-5);
+  EXPECT_NEAR((*cube->data())[3], 4.0f, 1.0e-5);
+  // Positions follow the step, so interpolation works backwards too.
+  EXPECT_NEAR(
+    cube->value(Vector3(-0.15 * Avogadro::BOHR_TO_ANGSTROM, 0.0, 0.0)), 2.5f,
+    1.0e-4);
 }
 
 // Linearly dependent voxel axes cannot be resampled, and must be refused.
@@ -424,9 +444,9 @@ TEST(GaussianCubeTest, singlePointAxisStepIgnored)
   EXPECT_NEAR((*cube->data())[3], 4.0f, 1.0e-5);
 }
 
-// A skewed plane with a zero (or short) step on its single-point axis is
-// still resampled, at the spacing of the axes it actually has.
-TEST(GaussianCubeTest, skewedPlaneWithZeroStepIsResampled)
+// A skewed plane with a zero step on its single-point axis keeps the steps
+// of the axes it has.
+TEST(GaussianCubeTest, skewedPlaneWithZeroStepIsRead)
 {
   GaussianCube reader;
   Molecule molecule;
@@ -443,15 +463,18 @@ TEST(GaussianCubeTest, skewedPlaneWithZeroStepIsResampled)
   ASSERT_TRUE(reader.readString(out.str(), molecule)) << reader.error();
   const auto* cube = molecule.cube(0);
   ASSERT_NE(cube, nullptr);
-  EXPECT_EQ(cube->dimensions()(2), 1);
-  EXPECT_NEAR(cube->spacing()(0), 0.2 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
-  // The corner at the origin is a source point, so it keeps its value.
-  ASSERT_FALSE(cube->data()->empty());
+  EXPECT_EQ(cube->dimensions(), Avogadro::Vector3i(3, 3, 1));
+  EXPECT_FALSE(cube->isAxisAligned());
+  const Avogadro::Matrix3 steps = cube->steps();
+  EXPECT_NEAR(steps(0, 0), 0.2 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  EXPECT_NEAR(steps(0, 1), 0.1 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  EXPECT_NEAR(steps(1, 1), 0.2 * Avogadro::BOHR_TO_ANGSTROM, 1.0e-9);
+  ASSERT_EQ(cube->data()->size(), static_cast<size_t>(9));
   EXPECT_NEAR((*cube->data())[0], 1.0f, 1.0e-5);
 }
 
-// A step that is almost zero must not make the resampled grid enormous: its
-// size is bounded by a multiple of the number of values in the file.
+// A step that is almost zero must not make the grid any larger than the
+// file says.
 TEST(GaussianCubeTest, skewedGridWithTinyStepStaysSmall)
 {
   GaussianCube reader;
@@ -474,7 +497,7 @@ TEST(GaussianCubeTest, skewedGridWithTinyStepStaysSmall)
   ASSERT_NE(cube, nullptr);
   const Avogadro::Vector3i dim = cube->dimensions();
   const size_t points = static_cast<size_t>(dim(0)) * dim(1) * dim(2);
-  EXPECT_LE(points, 8 * valueCount);
+  EXPECT_EQ(points, valueCount);
   EXPECT_EQ(cube->data()->size(), points);
 }
 

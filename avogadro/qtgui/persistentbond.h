@@ -8,8 +8,7 @@
 
 #include <avogadro/core/avogadrocore.h>
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 /**
  * @class PersistentBond persistentbond.h <avogadro/qtcore/persistentbond.h>
@@ -124,7 +123,6 @@ typename Molecule_T::BondType PersistentBond<Molecule_T>::bond() const
   return m_molecule ? m_molecule->bondByUniqueId(m_uniqueId) : BondType();
 }
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_PERSISTENTBOND_H

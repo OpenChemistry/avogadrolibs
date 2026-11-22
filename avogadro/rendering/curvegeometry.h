@@ -16,15 +16,7 @@
 #include <map>
 #include <vector>
 
-namespace Avogadro {
-namespace Rendering {
-
-struct ShaderInfo
-{
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram program;
-};
+namespace Avogadro::Rendering {
 
 struct Point
 {
@@ -155,8 +147,6 @@ public:
 protected:
   std::vector<Line*> m_lines;
   std::map<size_t, size_t> m_indexMap;
-  ShaderInfo m_shaderInfo;
-  bool m_dirty;
   bool m_canBeFlat;
   size_t m_segmentsPerResidue = 0;
   size_t m_sides = 0;
@@ -189,12 +179,13 @@ protected:
   virtual void fillRingTemplate(std::vector<Vector3f>& ring, bool flat) const;
   virtual float computeScale(size_t index, float t, float scale) const;
 
+  /** Report the shared shader program's error if @p error is true. */
   void processShaderError(bool error);
 
   Core::Array<Identifier> areaHits(const Frustrum& f) const override;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

@@ -18,6 +18,7 @@
 #include <fstream>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 using Avogadro::Core::Molecule;
@@ -55,7 +56,7 @@ class PatternFormat : public FileFormat
 public:
   PatternFormat(const std::string& id, const std::vector<std::string>& patterns,
                 std::shared_ptr<int> readCount)
-    : m_id(id), m_patterns(patterns), m_readCount(readCount)
+    : m_id(id), m_patterns(patterns), m_readCount(std::move(readCount))
   {
   }
 

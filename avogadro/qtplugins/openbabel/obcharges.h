@@ -9,8 +9,7 @@
 #include <avogadro/calc/chargemodel.h>
 #include <avogadro/io/cmlformat.h>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class OBCharges : public Avogadro::Calc::ChargeModel
 {
@@ -67,7 +66,6 @@ protected:
   mutable Io::CmlFormat m_cmlFormat;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_OBCHARGES_H

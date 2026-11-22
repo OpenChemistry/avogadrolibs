@@ -27,7 +27,7 @@ class InputGeneratorWidget;
  * <avogadro/molequeue/inputgeneratordialog.h>
  * @brief The InputGeneratorDialog class provides a thin wrapper around
  * InputGeneratorWidget for standalone use.
- * @sa InputGenerator InputGeneratorWidget
+ * @sa QtGui::InterfaceScript InputGeneratorWidget
  */
 class AVOGADROMOLEQUEUE_EXPORT InputGeneratorDialog : public QDialog
 {

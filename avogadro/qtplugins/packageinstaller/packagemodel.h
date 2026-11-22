@@ -12,8 +12,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 /**
  * @brief Table model combining online catalog packages with locally installed
@@ -180,7 +179,6 @@ private:
   int m_downloadWindowDays = 0;
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_PACKAGEMODEL_H

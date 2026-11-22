@@ -13,8 +13,7 @@
 
 #include <vector>
 
-namespace Avogadro {
-namespace QuantumIO {
+namespace Avogadro::QuantumIO {
 
 class AVOGADROQUANTUMIO_EXPORT NWChemLog : public Io::FileFormat
 {
@@ -91,7 +90,7 @@ private:
   void flushVibrationData();
 };
 
-} // End namespace QuantumIO
-} // End namespace Avogadro
+} // namespace Avogadro::QuantumIO
+// End namespace Avogadro
 
 #endif

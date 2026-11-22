@@ -8,8 +8,7 @@
 
 #include "curvegeometry.h"
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 class AVOGADRORENDERING_EXPORT BezierGeometry : public CurveGeometry
 {
@@ -34,7 +33,7 @@ protected:
                                const std::vector<Point>& points) const override;
 };
 
-} // End namespace Rendering
-} // End namespace Avogadro
+} // namespace Avogadro::Rendering
+// End namespace Avogadro
 
 #endif

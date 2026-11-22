@@ -25,8 +25,7 @@ namespace {
 const int ELEMENT_SELECTOR_TAG = 255;
 } // namespace
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 enum TabType
 {
@@ -706,5 +705,4 @@ std::vector<size_t>& TemplateToolWidget::selectedUIDs()
   return m_selectedUIDs;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

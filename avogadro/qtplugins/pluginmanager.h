@@ -12,8 +12,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class ScenePluginFactory;
 class ExtensionPluginFactory;
@@ -121,7 +120,6 @@ T* PluginManager::pluginFactory(const QString& id) const
   return nullptr;
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTGUI_PLUGINMANAGER_H

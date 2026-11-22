@@ -15,8 +15,7 @@
 
 #include <string>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 class TextRenderStrategy;
 
 /**
@@ -123,7 +122,6 @@ inline void swap(TextLabelBase& lhs, TextLabelBase& rhs)
   rhs.markDirty();
 }
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_TEXTLABELBASE_H

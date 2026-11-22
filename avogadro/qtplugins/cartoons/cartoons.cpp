@@ -294,8 +294,8 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
   size_t nextGroup = 0;
   for (const auto& residue : molecule.residues()) {
     if (!residue.isHeterogen()) {
-      Atom caAtom = residue.atomByName("CA");
-      Atom oAtom = residue.atomByName("O");
+      Atom caAtom = molecule.atom(residue.atomIndexByName("CA"));
+      Atom oAtom = molecule.atom(residue.atomIndexByName("O"));
       if (caAtom.isValid() && oAtom.isValid() &&
           m_layerManager.atomEnabled(layer, caAtom.index()) &&
           m_layerManager.atomEnabled(layer, oAtom.index())) {
@@ -306,8 +306,8 @@ map<size_t, AtomsPairList> Cartoons::getBackboneByResidues(
         addBackBone(result, previousAtom, caAtom, residue.color(), group,
                     residue.secondaryStructure());
       } else { // maybe DNA
-        Atom c3Atom = residue.atomByName("C3'");
-        Atom o3Atom = residue.atomByName("O3'");
+        Atom c3Atom = molecule.atom(residue.atomIndexByName("C3'"));
+        Atom o3Atom = molecule.atom(residue.atomIndexByName("O3'"));
         if (c3Atom.isValid() && o3Atom.isValid() &&
             m_layerManager.atomEnabled(layer, c3Atom.index()) &&
             m_layerManager.atomEnabled(layer, o3Atom.index())) {

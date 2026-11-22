@@ -1,0 +1,9 @@
+# One workload per line: NAME followed by the AvogadroRenderBenchmark
+# arguments. @DATA_FILE@ is replaced by the path of 1CRN.pdb. Both
+# run_workloads.sh and summarize.py read this file, so it is the only place
+# the list is written down. Synthetic water boxes use the benchmark's default
+# --seed, so their atom, bond and byte counts are deterministic.
+water3000-rebuild  --water 3000  --mode rebuild --frames 20 --warmup 3
+water3000-render   --water 3000  --mode render  --frames 20 --warmup 3
+water30000-rebuild --water 30000 --mode rebuild --frames 5  --warmup 1
+crambin-render     --file @DATA_FILE@ --mode render --frames 20 --warmup 3

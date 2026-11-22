@@ -12,8 +12,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-namespace Avogadro {
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 Index templateAttachmentDummy(const Core::Molecule& templateMolecule)
 {
@@ -79,5 +78,4 @@ int templateDenticity(const QString& fileName)
       .size());
 }
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins

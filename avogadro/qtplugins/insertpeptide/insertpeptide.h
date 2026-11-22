@@ -9,9 +9,7 @@
 #include <avogadro/core/internalcoordinates.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
-namespace Avogadro {
-
-namespace QtPlugins {
+namespace Avogadro::QtPlugins {
 
 class InsertPeptideDialog;
 
@@ -59,7 +57,6 @@ private:
   QString m_directory; // directory to amino acid fragments
 };
 
-} // namespace QtPlugins
-} // namespace Avogadro
+} // namespace Avogadro::QtPlugins
 
 #endif // AVOGADRO_QTPLUGINS_INSERTPEPTIDE_H

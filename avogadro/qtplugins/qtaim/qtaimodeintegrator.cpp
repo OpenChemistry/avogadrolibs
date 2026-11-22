@@ -163,7 +163,7 @@ QVector3D QTAIMODEIntegrator::integrate(QVector3D x0y0z0)
       return QVector3D(y[0], y[1], y[2]);
     }
 
-    if (m_betaSpheres.length() > 0) {
+    if (!m_betaSpheres.empty()) {
       for (qint64 n = 0; n < m_betaSpheres.length(); ++n) {
         Matrix<qreal, 3, 1> a(y[0], y[1], y[2]);
         Matrix<qreal, 3, 1> b(m_betaSpheres.at(n).first.x(),

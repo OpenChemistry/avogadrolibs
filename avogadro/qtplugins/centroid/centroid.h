@@ -7,6 +7,7 @@
 #define AVOGADRO_QTPLUGINS_CENTROID_H
 
 #include <avogadro/core/avogadrocore.h>
+#include <avogadro/core/vector.h>
 #include <avogadro/qtgui/extensionplugin.h>
 
 namespace Avogadro::QtPlugins {
@@ -35,8 +36,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -51,6 +50,16 @@ private:
   QAction* m_centroidAction;
   QAction* m_comAction;
   QAction* m_normalAction;
+
+  /// Add every scripting command to the command registry
+  void registerCentroidCommands();
+
+  bool computeCentroid(Index& newIndex, Vector3& newPos,
+                       QString* error = nullptr);
+  bool computeCenterOfMass(Index& newIndex, Vector3& newPos,
+                           QString* error = nullptr);
+  bool computeNormal(Index& newIndex, Vector3& newPos,
+                     QString* error = nullptr);
 };
 
 } // namespace Avogadro::QtPlugins

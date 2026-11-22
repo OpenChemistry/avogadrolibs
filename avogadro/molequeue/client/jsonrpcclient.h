@@ -13,8 +13,7 @@
 
 class QLocalSocket;
 
-namespace Avogadro {
-namespace MoleQueue {
+namespace Avogadro::MoleQueue {
 
 /**
  * @class JsonRpcClient jsonrpcclient.h <molequeue/client/jsonrpcclient.h>
@@ -137,7 +136,7 @@ protected:
   QLocalSocket* m_socket;
 };
 
-} // End namespace MoleQueue
-} // End namespace Avogadro
+} // namespace Avogadro::MoleQueue
+// End namespace Avogadro
 
 #endif // AVOGADRO_MOLEQUEUE_JSONRPCCLIENT_H

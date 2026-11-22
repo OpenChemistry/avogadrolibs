@@ -12,8 +12,7 @@
 
 #include "avogadroqtguiexport.h"
 
-namespace Avogadro {
-namespace QtGui {
+namespace Avogadro::QtGui {
 
 class AVOGADROQTGUI_EXPORT RichTextDelegate : public QStyledItemDelegate
 {
@@ -29,7 +28,6 @@ public:
              const QModelIndex& index) const override;
 };
 
-} // namespace QtGui
-} // namespace Avogadro
+} // namespace Avogadro::QtGui
 
 #endif // AVOGADRO_QTGUI_RICHTEXTDELEGATE_H

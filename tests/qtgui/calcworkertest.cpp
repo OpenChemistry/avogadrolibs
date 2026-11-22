@@ -58,6 +58,28 @@ bool waitForSignal(QSignalSpy& spy, int timeoutMs = 5000)
   return spy.wait(timeoutMs);
 }
 
+// An energy model with a constant energy and a constant, non-zero gradient:
+// the line search can never lower the energy, so the optimizer reports a stall
+// after a few iterations, as it does at the noise floor of a real model.
+class FlatEnergy : public EnergyCalculator
+{
+public:
+  EnergyCalculator* newInstance() const override { return new FlatEnergy; }
+  std::string identifier() const override { return "FlatEnergy"; }
+  std::string name() const override { return "FlatEnergy"; }
+  std::string description() const override { return "Test energy"; }
+  Molecule::ElementMask elements() const override
+  {
+    return Molecule::ElementMask();
+  }
+  void setMolecule(Molecule*) override {}
+  Real value(const Eigen::VectorXd&) override { return 1.0; }
+  void gradient(const Eigen::VectorXd& x, Eigen::VectorXd& grad) override
+  {
+    grad = Eigen::VectorXd::Ones(x.size());
+  }
+};
+
 } // namespace
 
 TEST(CalcWorkerTest, evaluateEnergy)
@@ -204,12 +226,68 @@ TEST(CalcWorkerTest, optimizeChunk)
   auto newPositions = args.at(0).value<Eigen::VectorXd>();
   auto gradient = args.at(1).value<Eigen::VectorXd>();
   double energy = args.at(2).toDouble();
+  // The chunk reports the iterations it really ran and whether it stalled.
+  const int iterationsRun = args.at(4).toInt();
+  const bool stalled = args.at(5).toBool();
+  // A 5-iteration L-BFGS chunk from a stretched H2 does not stall (a stall
+  // needs three consecutive steps below 1e-10 Angstrom), so it runs them all.
+  EXPECT_EQ(iterationsRun, 5);
+  EXPECT_FALSE(stalled);
 
   EXPECT_TRUE(std::isfinite(energy));
   EXPECT_EQ(newPositions.size(), 6);
   EXPECT_TRUE(newPositions.allFinite());
   // Energy should decrease after optimization
   EXPECT_LT(energy, initialEnergy);
+
+  thread->quit();
+  thread->wait(2000);
+}
+
+TEST(CalcWorkerTest, optimizeChunkReportsStall)
+{
+  ensureApp();
+  Molecule mol = buildH2();
+
+  auto* calc = new FlatEnergy();
+  Eigen::VectorXd mask = Eigen::VectorXd::Ones(6);
+
+  auto* thread = new QThread;
+  auto* worker = new CalcWorker;
+  worker->moveToThread(thread);
+  QObject::connect(thread, &QThread::finished, worker, &QObject::deleteLater);
+  QObject::connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+  thread->start();
+
+  QSignalSpy readySpy(worker, &CalcWorker::calculatorReady);
+  QSignalSpy optSpy(worker, &CalcWorker::optimizeFinished);
+
+  QMetaObject::invokeMethod(worker, "initCalculator", Qt::QueuedConnection,
+                            Q_ARG(Avogadro::Calc::EnergyCalculator*, calc),
+                            Q_ARG(Avogadro::Core::Molecule, mol),
+                            Q_ARG(Eigen::VectorXd, mask),
+                            Q_ARG(std::vector<Avogadro::Core::Constraint>,
+                                  std::vector<Avogadro::Core::Constraint>()));
+  ASSERT_TRUE(waitForSignal(readySpy));
+
+  Eigen::VectorXd positions(6);
+  positions << 0.0, 0.0, 0.0, 0.0, 0.0, 1.5;
+
+  OptimizationOptions options;
+  options.chunkIterations = 50;
+
+  QMetaObject::invokeMethod(
+    worker, "runOptimizeChunk", Qt::QueuedConnection,
+    Q_ARG(Eigen::VectorXd, positions),
+    Q_ARG(Avogadro::Calc::OptimizationOptions, options));
+  ASSERT_TRUE(waitForSignal(optSpy));
+
+  QList<QVariant> args = optSpy.takeFirst();
+  EXPECT_FALSE(args.at(3).toBool()); // ok
+  const int iterationsRun = args.at(4).toInt();
+  EXPECT_GT(iterationsRun, 0);
+  EXPECT_LE(iterationsRun, 50);
+  EXPECT_TRUE(args.at(5).toBool()); // stalled
 
   thread->quit();
   thread->wait(2000);
@@ -263,6 +341,8 @@ TEST(CalcWorkerTest, cancel)
   QList<QVariant> args = optSpy.takeFirst();
   bool converged = args.at(3).toBool();
   EXPECT_TRUE(converged);
+  EXPECT_EQ(args.at(4).toInt(), 0);
+  EXPECT_FALSE(args.at(5).toBool());
 
   thread->quit();
   thread->wait(2000);

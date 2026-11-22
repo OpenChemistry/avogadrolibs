@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "layermodel.h"
+#include "colortheme.h"
 #include "molecule.h"
 #include "rwmolecule.h"
 
@@ -14,7 +15,6 @@
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QIcon>
-#include <QtGui/QPalette>
 
 #include <limits>
 
@@ -30,11 +30,7 @@ LayerModel::LayerModel(QObject* p) : QAbstractItemModel(p), m_item(0)
 {
   // determine if need dark mode or light mode icons
   // e.g. https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5
-  const QPalette defaultPalette;
-  // i.e., the text is lighter than the background
-  bool darkMode = (defaultPalette.color(QPalette::WindowText).lightness() >
-                   defaultPalette.color(QPalette::Window).lightness());
-  loadIcons(darkMode);
+  loadIcons(colorTheme() == ColorTheme::Dark);
 }
 
 void LayerModel::loadIcons(bool darkMode)

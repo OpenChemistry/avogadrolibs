@@ -81,7 +81,7 @@ protected:
 TEST_F(EditorCommandTest, registersDocumentedCommands)
 {
   const QStringList expected = { "addAtom", "addBond", "removeBond",
-                                 "removeSelectedAtoms" };
+                                 "removeSelectedAtoms", "setDrawOptions" };
   const auto registered = m_harness.registerCommands();
   EXPECT_TRUE(m_harness.registrationViolations().isEmpty())
     << m_harness.registrationViolations().join("; ").toStdString();

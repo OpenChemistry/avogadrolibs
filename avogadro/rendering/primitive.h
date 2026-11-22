@@ -8,8 +8,7 @@
 
 #include <avogadro/core/vector.h>
 
-namespace Avogadro {
-namespace Rendering {
+namespace Avogadro::Rendering {
 
 /** Identifies the type of object a primitive represents. */
 enum Type
@@ -139,7 +138,6 @@ private:
   float m_radius;
 };
 
-} // namespace Rendering
-} // namespace Avogadro
+} // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_PRIMITIVE_H

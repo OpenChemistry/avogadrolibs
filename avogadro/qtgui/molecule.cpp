@@ -23,14 +23,13 @@ namespace Avogadro::QtGui {
 using std::swap;
 
 Molecule::Molecule(QObject* p)
-  : QObject(p), Core::Molecule(), m_undoMolecule(new RWMolecule(*this, this))
+  : QObject(p), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(false);
 }
 
 Molecule::Molecule(const Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : Core::Molecule(other), m_undoMolecule(new RWMolecule(*this, this))
 {
   m_undoMolecule->setInteractive(false);
   // Now assign the unique ids
@@ -42,8 +41,7 @@ Molecule::Molecule(const Molecule& other)
 }
 
 Molecule::Molecule(const Core::Molecule& other)
-  : QObject(), Core::Molecule(other),
-    m_undoMolecule(new RWMolecule(*this, this))
+  : Core::Molecule(other), m_undoMolecule(new RWMolecule(*this, this))
 {
   // As in the two constructors above: without this the undo molecule was
   // left uninitialized, so undoMolecule() handed back a wild pointer and the
