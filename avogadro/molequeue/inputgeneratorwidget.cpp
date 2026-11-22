@@ -76,8 +76,8 @@ QString moleculeFilenameBase(const QtGui::Molecule* molecule)
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
-    m_updatePending(false), m_resizeOnShow(false), m_previewWidth(0),
-    m_inputGenerator(QString())
+    m_updatePending(false), m_resizeOnShow(false), m_shownWidth(0),
+    m_hiddenWidth(0), m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
 
@@ -193,6 +193,8 @@ void InputGeneratorWidget::showEvent(QShowEvent* e)
     m_resizeOnShow = false;
     QWidget* topLevel = window();
     if (topLevel != nullptr && topLevel != this) {
+      // Keep the default size from the .ui file for when the preview opens.
+      m_shownWidth = topLevel->width();
       layout()->activate();
       topLevel->resize(topLevel->minimumSizeHint().width(), topLevel->height());
     }
@@ -746,8 +748,16 @@ void InputGeneratorWidget::setPreviewVisible(bool visible)
                             topLevel->isVisible() &&
                             m_ui->previewPane->isVisibleTo(this) != visible;
 
-  if (resizeWindow && !visible)
-    m_previewWidth = m_ui->previewPane->width() + m_ui->splitter->handleWidth();
+  // Remember the width of the state being left (including any resizing by
+  // the user), so each state returns to its own width instead of growing.
+  if (resizeWindow) {
+    if (visible) {
+      m_hiddenWidth = topLevel->width();
+    } else {
+      m_shownWidth = topLevel->width();
+      m_splitterSizes = m_ui->splitter->sizes();
+    }
+  }
 
   m_ui->previewPane->setVisible(visible);
   m_ui->previewButton->setText(visible ? tr("Hide &Preview")
@@ -760,12 +770,14 @@ void InputGeneratorWidget::setPreviewVisible(bool visible)
     layout()->activate();
     int width = 0;
     if (visible) {
-      const int shownWidth = m_previewWidth > 0 ? m_previewWidth : 500;
-      width = topLevel->width() + shownWidth;
+      width = m_shownWidth > 0 ? m_shownWidth : topLevel->width() + 500;
     } else {
-      width = topLevel->minimumSizeHint().width();
+      width =
+        m_hiddenWidth > 0 ? m_hiddenWidth : topLevel->minimumSizeHint().width();
     }
     topLevel->resize(width, topLevel->height());
+    if (visible && m_splitterSizes.size() == m_ui->splitter->count())
+      m_ui->splitter->setSizes(m_splitterSizes);
   }
 }
 

@@ -230,7 +230,11 @@ private:
   Ui::InputGeneratorWidget* m_ui;
   bool m_updatePending;
   bool m_resizeOnShow;
-  int m_previewWidth;
+  /** Window widths with the preview shown or hidden (0 = not yet known). */
+  int m_shownWidth;
+  int m_hiddenWidth;
+  /** Splitter sizes when the preview was last hidden. */
+  QList<int> m_splitterSizes;
   /** True while the overwrite prompt is open (blocks nested prompts). */
   bool m_promptingOverwrite = false;
   QList<QTextEdit*> m_dirtyTextEdits;
