@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-05 23:52+0000\n"
+"PO-Revision-Date: 2026-11-22 23:47+0000\n"
 "Last-Translator: Michal Várady <majkl82@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.11.2.dev0\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 "X-Launchpad-Export-Date: 2018-04-13 16:01+0000\n"
 
 #: molequeue/batchjob.cpp:66
@@ -2233,7 +2233,7 @@ msgstr "Osa:"
 
 #: qtplugins/aligntool/aligntool.cpp:154
 msgid "Align Molecule"
-msgstr ""
+msgstr "Zarovnat molekulu"
 
 #: qtplugins/aligntool/aligntool.cpp:174
 msgid "Align at Origin"
@@ -2249,23 +2249,24 @@ msgstr "Umístit atom do počátku."
 
 #: qtplugins/aligntool/aligntool.cpp:320
 msgid "Index of an atom"
-msgstr ""
+msgstr "Index atomu"
 
 #: qtplugins/aligntool/aligntool.cpp:333
 msgid "Align picked atoms."
-msgstr ""
+msgstr "Zarovnat zvolené atomy."
 
 #: qtplugins/aligntool/aligntool.cpp:336 qtplugins/aligntool/aligntool.cpp:364
 msgid "Target Cartesian axis."
-msgstr ""
+msgstr "Cílová kartézská osa."
 
 #: qtplugins/aligntool/aligntool.cpp:346
 msgid "No atoms have been picked for alignment. Pick 1 or 2 atoms first."
 msgstr ""
+"Pro zarovnání nebyly zvoleny žádné atomy. Nejprve zvolte 1 nebo 2 atomy."
 
 #: qtplugins/aligntool/aligntool.cpp:350
 msgid "Failed to align picked atoms."
-msgstr ""
+msgstr "Zvolené atomy se nepodařilo zarovnat."
 
 #: qtplugins/aligntool/aligntool.cpp:361
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -2273,12 +2274,12 @@ msgstr "Otočit molekulu tak, aby se atom zarovnal podle zadané osy."
 
 #: qtplugins/aligntool/aligntool.cpp:367
 msgid "Index of atom to be aligned."
-msgstr ""
+msgstr "Index atomu, který má být zarovnán."
 
 #: qtplugins/aligntool/aligntool.cpp:378
 #, qt-format
 msgid "Atom %1 is at the origin and cannot define an alignment axis."
-msgstr ""
+msgstr "Atom %1 je v počátku souřadnic a nemůže určovat osu zarovnání."
 
 #: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
@@ -2599,19 +2600,19 @@ msgstr "Použít barvy podle indexu"
 
 #: qtplugins/applycolors/applycolors.cpp:382
 msgid "No molecule available."
-msgstr ""
+msgstr "Není dostupná žádná molekula."
 
 #: qtplugins/applycolors/applycolors.cpp:388
 #: qtplugins/applycolors/applycolors.cpp:877
 #: qtplugins/applycolors/applycolors.cpp:904
 #: qtplugins/applycolors/applycolors.cpp:936
 msgid "Molecule has no atoms."
-msgstr ""
+msgstr "Molekula nemá žádné atomy."
 
 #: qtplugins/applycolors/applycolors.cpp:402
 #, qt-format
 msgid "Failed to compute partial charges for model \"%1\"."
-msgstr ""
+msgstr "Nepodařilo se vypočítat parciální náboje pro model \"%1\"."
 
 #: qtplugins/applycolors/applycolors.cpp:423
 msgid "Apply Charge Colors"
@@ -2682,12 +2683,16 @@ msgid ""
 "Color atoms along a colormap gradient by atomic index. Options: optional "
 "\"colormap\" (e.g. \"Turbo\", \"Viridis\", \"Magma\")."
 msgstr ""
+"Obarvit atomy podle indexu atomu s použitím přechodu barevné mapy. Možnosti: "
+"volitelná \"colormap\" (např. \"Turbo\", \"Viridis\", \"Magma\")."
 
 #: qtplugins/applycolors/applycolors.cpp:782
 msgid ""
 "Color atoms along a colormap gradient by distance from the first atom. "
 "Options: optional \"colormap\" (e.g. \"Turbo\", \"Viridis\")."
 msgstr ""
+"Obarvit atomy podle vzdálenosti od prvního atomu s použitím přechodu barevné "
+"mapy. Možnosti: volitelná \"colormap\" (např. \"Turbo\", \"Viridis\")."
 
 #: qtplugins/applycolors/applycolors.cpp:786
 msgid ""
@@ -2695,6 +2700,9 @@ msgid ""
 "\"colormap\" (e.g. \"Coolwarm\"), optional \"model\" (e.g. \"MMFF94\", "
 "\"Gasteiger\")."
 msgstr ""
+"Obarvit atomy podle parciálního náboje s použitím přechodu barevné mapy. "
+"Možnosti: volitelná \"colormap\" (např. \"Coolwarm\"), volitelný \"model\" "
+"(např. \"MMFF94\", \"Gasteiger\")."
 
 #: qtplugins/applycolors/applycolors.cpp:812
 msgid ""
@@ -2723,27 +2731,27 @@ msgstr ""
 #: qtplugins/applycolors/applycolors.cpp:946
 #, qt-format
 msgid "Unknown colormap \"%1\". Did you mean \"%2\"?"
-msgstr ""
+msgstr "Neznámá barevná mapa \"%1\". Měli jste na mysli \"%2\"?"
 
 #: qtplugins/applycolors/applycolors.cpp:890
 #: qtplugins/applycolors/applycolors.cpp:922
 #: qtplugins/applycolors/applycolors.cpp:949
 #, qt-format
 msgid "Unknown colormap \"%1\"."
-msgstr ""
+msgstr "Neznámá barevná mapa \"%1\"."
 
 #: qtplugins/applycolors/applycolors.cpp:909
 msgid "Molecule does not have 3D coordinates."
-msgstr ""
+msgstr "Molekula nemá 3D souřadnice."
 
 #: qtplugins/applycolors/applycolors.cpp:980
 #, qt-format
 msgid "Unknown or unavailable charge model \"%1\"."
-msgstr ""
+msgstr "Neznámý nebo nedostupný model náboje \"%1\"."
 
 #: qtplugins/applycolors/applycolors.cpp:989
 msgid "No charge models available for this molecule."
-msgstr ""
+msgstr "Pro tuto molekulu nejsou dostupné žádné modely náboje."
 
 #: qtplugins/applycolors/applycolors.h:31
 msgid "ApplyColors"
@@ -3039,19 +3047,24 @@ msgstr "Přidat kolmý bod"
 #: qtplugins/centroid/centroid.cpp:86
 msgid "No non-dummy atoms found to compute centroid."
 msgstr ""
+"Nebyly nalezeny žádné atomy jiné než pomocné pro výpočet geometrického "
+"středu."
 
 #: qtplugins/centroid/centroid.cpp:138
 msgid "No non-dummy atoms found to compute center of mass."
 msgstr ""
+"Nebyly nalezeny žádné atomy jiné než pomocné pro výpočet hmotného středu."
 
 #: qtplugins/centroid/centroid.cpp:179
 msgid "No non-dummy atoms found to compute perpendicular point."
-msgstr ""
+msgstr "Nebyly nalezeny žádné atomy jiné než pomocné pro výpočet kolmého bodu."
 
 #: qtplugins/centroid/centroid.cpp:181
 msgid ""
 "At least three non-dummy atoms are required to compute a best-fit plane."
 msgstr ""
+"Pro výpočet nejlépe proložené roviny jsou potřeba alespoň tři atomy jiné než "
+"pomocné."
 
 #: qtplugins/centroid/centroid.cpp:201
 msgid ""
@@ -3576,10 +3589,12 @@ msgid ""
 "Copy the molecule (or the selected atoms) to the clipboard as text in this "
 "format:"
 msgstr ""
+"Zkopírovat molekulu (nebo vybrané atomy) do schránky jako text v tomto "
+"formátu:"
 
 #: qtplugins/copypaste/copyasdialog.cpp:37
 msgid "Clipboard format"
-msgstr ""
+msgstr "Formát schránky"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:108
 #. i18n: ectx: property (text), widget (QToolButton, copy)
@@ -3595,7 +3610,7 @@ msgstr "SMILES s mapováním atomů"
 
 #: qtplugins/copypaste/copypaste.cpp:108
 msgid "Other Format…"
-msgstr ""
+msgstr "Jiný formát…"
 
 #. i18n: file: qtplugins/coordinateeditor/coordinateeditordialog.ui:101
 #. i18n: ectx: property (text), widget (QToolButton, cut)
