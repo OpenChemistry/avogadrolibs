@@ -192,6 +192,29 @@ void Graph::swapVertexIndices(size_t a, size_t b)
   }
 
   std::swap(m_edgeMap[a], m_edgeMap[b]);
+
+  // The subgraph bookkeeping is per vertex too, and travels with it. Without
+  // this a vertex with edges can be left listed as a lone vertex, or in no
+  // subgraph, after the swap.
+  const int subgraphA = m_vertexToSubgraph[a];
+  const int subgraphB = m_vertexToSubgraph[b];
+  if (subgraphA != subgraphB) {
+    if (subgraphA >= 0) {
+      m_subgraphToVertices[subgraphA].erase(a);
+      m_subgraphToVertices[subgraphA].insert(b);
+    }
+    if (subgraphB >= 0) {
+      m_subgraphToVertices[subgraphB].erase(b);
+      m_subgraphToVertices[subgraphB].insert(a);
+    }
+    std::swap(m_vertexToSubgraph[a], m_vertexToSubgraph[b]);
+  }
+  const bool loneA = m_loneVertices.count(a) > 0;
+  const bool loneB = m_loneVertices.count(b) > 0;
+  if (loneA != loneB) {
+    m_loneVertices.erase(loneA ? a : b);
+    m_loneVertices.insert(loneA ? b : a);
+  }
 }
 
 size_t Graph::vertexCount() const

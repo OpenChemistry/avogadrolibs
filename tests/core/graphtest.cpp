@@ -286,6 +286,25 @@ TEST(GraphTest, swapVertexIndicesBondedPair)
   expectConsistent(graph);
 }
 
+// The subgraph bookkeeping travels with the vertices, or a vertex with edges
+// can end up in no subgraph and be reported as lone.
+TEST(GraphTest, swapVertexIndicesKeepsConnectedComponents)
+{
+  Graph graph(5);
+  graph.addEdge(0, 1);
+  graph.addEdge(3, 4);
+  // Vertex 2 has no edges. Swap it with a bonded vertex.
+  graph.swapVertexIndices(2, 4);
+  expectConsistent(graph);
+
+  // Two pairs and a lone vertex.
+  EXPECT_EQ(graph.connectedComponents().size(), static_cast<size_t>(3));
+  const std::set<size_t> pair = graph.connectedComponent(2);
+  EXPECT_EQ(pair, (std::set<size_t>{ 2, 3 }));
+  EXPECT_EQ(graph.connectedComponent(0), (std::set<size_t>{ 0, 1 }));
+  EXPECT_EQ(graph.connectedComponent(4), (std::set<size_t>{ 4 }));
+}
+
 TEST(GraphTest, swapVertexIndicesBondedPairInARing)
 {
   Graph graph(4);
