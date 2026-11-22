@@ -505,7 +505,7 @@ public:
    * @param atom2 The second atom in the bond.
    * @param order The bond order.
    * @return The new bond object. Will be invalid if @a atom1 or @a atom2 does
-   * not exist.
+   * not exist, or if they are the same atom: an atom cannot bond to itself.
    * @{
    */
   virtual BondType addBond(Index atom1, Index atom2, unsigned char order = 1);

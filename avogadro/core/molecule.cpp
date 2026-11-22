@@ -1565,8 +1565,11 @@ Molecule::BondType Molecule::addBond(Index atom1, Index atom2,
                                      unsigned char order)
 {
   // See bond(): a released build has no assert, so refuse the bond rather
-  // than corrupting the graph.
-  if (atom1 >= m_atomicNumbers.size() || atom2 >= m_atomicNumbers.size())
+  // than corrupting the graph. An atom bonded to itself is refused as well:
+  // the graph has no self-edges, and setBondPair(), RWMolecule::addBond() and
+  // restoreBondSnapshot() all refuse one.
+  if (atom1 >= m_atomicNumbers.size() || atom2 >= m_atomicNumbers.size() ||
+      atom1 == atom2)
     return BondType();
   Index index = bond(atom1, atom2).index();
   if (index >= bondCount()) {
@@ -1683,7 +1686,9 @@ Molecule::BondType Molecule::bond(Index atomId1, Index atomId2) const
 {
   // Not assert(): NDEBUG removes it, and an out-of-range index from a file
   // reader then indexes the graph's edge map out of bounds instead.
-  if (atomId1 >= atomCount() || atomId2 >= atomCount())
+  // No atom is bonded to itself, and the search below would otherwise answer
+  // with any bond of atomId1, since every one of them has it as an endpoint.
+  if (atomId1 >= atomCount() || atomId2 >= atomCount() || atomId1 == atomId2)
     return BondType();
 
   const std::vector<Index>& edgeIndices = m_graph.edges(atomId1);

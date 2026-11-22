@@ -255,6 +255,35 @@ TEST_F(MoleculeTest, addBond)
   EXPECT_EQ(bond.atom2().index(), c.index());
 }
 
+// An atom cannot be bonded to itself. Before, bond(a, a) answered with any
+// bond of a, so addBond(a, a, order) overwrote the order of an unrelated bond
+// (or, for an atom without bonds, added a self-edge to the graph).
+TEST_F(MoleculeTest, addBondRefusesSelfBond)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(8);
+  molecule.addBond(0, 1, 2);
+  molecule.setPartialCharges("test", MatrixX::Constant(2, 1, 0.5));
+
+  EXPECT_FALSE(molecule.addBond(0, 0).isValid());
+  EXPECT_FALSE(molecule.addBond(1, 1, 3).isValid());
+
+  // Nothing changed, not even the charges a real addBond() discards.
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(molecule.bondOrder(0), 2);
+  EXPECT_FALSE(molecule.bond(0, 0).isValid());
+  EXPECT_EQ(molecule.graph().edges(0).size(), static_cast<size_t>(1));
+  EXPECT_FALSE(molecule.partialChargeTypes().empty());
+
+  // An ordinary bond removal still undoes through its snapshot.
+  const Avogadro::Core::BondSnapshot snapshot = molecule.bondSnapshot(0);
+  ASSERT_TRUE(molecule.removeBond(0));
+  ASSERT_TRUE(molecule.restoreBondSnapshot(0, snapshot));
+  EXPECT_EQ(molecule.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(molecule.bondOrder(0), 2);
+}
+
 TEST_F(MoleculeTest, removeBond)
 {
   Molecule molecule;
