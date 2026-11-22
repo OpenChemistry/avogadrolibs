@@ -485,7 +485,7 @@ public:
    * kept. A bond's two atoms come back in ascending order.
    * @return true on success. false, changing nothing, if @p snapshot is
    * empty, the molecule does not have one atom (or the snapshot's bonds) fewer
-   * than when it was taken, or @p atomId is past atomCount().
+   * than when it was taken, or @p atomId is not the index it was taken at.
    */
   bool restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot);
 

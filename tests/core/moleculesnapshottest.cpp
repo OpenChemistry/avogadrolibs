@@ -456,13 +456,44 @@ TEST(MoleculeSnapshotTest, atomRestoreRefusals)
   EXPECT_FALSE(mol.restoreAtomSnapshot(2, AtomSnapshot()));
   EXPECT_FALSE(mol.restoreAtomSnapshot(6, snapshot));
   EXPECT_FALSE(mol.restoreAtomSnapshot(MaxIndex, snapshot));
+  // In range, and the count matches, but not the index it was taken at.
+  EXPECT_FALSE(mol.restoreAtomSnapshot(0, snapshot));
+  EXPECT_FALSE(mol.restoreAtomSnapshot(1, snapshot));
   EXPECT_TRUE(sameMolecule(unchanged, mol));
+
+  // Still restores at its own index.
+  EXPECT_TRUE(mol.restoreAtomSnapshot(2, snapshot));
+  ASSERT_TRUE(mol.removeAtom(2));
+  unchanged = mol;
 
   // A second removal: the count is two less.
   ASSERT_TRUE(mol.removeAtom(0));
   unchanged = mol;
   EXPECT_FALSE(mol.restoreAtomSnapshot(2, snapshot));
   EXPECT_TRUE(sameMolecule(unchanged, mol));
+}
+
+TEST(MoleculeSnapshotTest, firstAtomWithItsBond)
+{
+  Molecule mol;
+  mol.addAtom(6);
+  mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addBond(0, 1, 2);
+  const Molecule before = mol;
+
+  const AtomSnapshot snapshot = mol.atomSnapshot(0);
+  ASSERT_TRUE(mol.removeAtom(0));
+  EXPECT_EQ(mol.bondCount(), static_cast<Index>(0));
+
+  const Molecule removed = mol;
+  EXPECT_FALSE(mol.restoreAtomSnapshot(1, snapshot));
+  EXPECT_TRUE(sameMolecule(removed, mol));
+
+  ASSERT_TRUE(mol.restoreAtomSnapshot(0, snapshot));
+  ASSERT_EQ(mol.bondCount(), static_cast<Index>(1));
+  EXPECT_EQ(mol.bondOrder(0), 2);
+  EXPECT_TRUE(sameMolecule(before, mol));
 }
 
 TEST(MoleculeSnapshotTest, bondsOfAnAtomRestoreWithTheirOwnState)

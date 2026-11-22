@@ -120,7 +120,8 @@ private:
     BondSnapshot bond;
   };
 
-  Index m_count = 0; //!< atomCount() when the snapshot was taken
+  Index m_count = 0;  //!< atomCount() when the snapshot was taken
+  Index m_atomId = 0; //!< the atom's index, the only one it restores at
   unsigned char m_atomicNumber = 0;
   AtomState m_state;
   PositionSlice m_position;

@@ -1243,6 +1243,7 @@ AtomSnapshot Molecule::atomSnapshot(Index atomId) const
     return snapshot;
 
   snapshot.m_count = count;
+  snapshot.m_atomId = atomId;
   snapshot.m_atomicNumber = m_atomicNumbers[atomId];
   snapshot.m_state = m_atomState.slice(atomId, count);
 
@@ -1360,8 +1361,10 @@ AtomSnapshot Molecule::atomSnapshot(Index atomId) const
 
 bool Molecule::restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot)
 {
+  // Every saved entry belongs at the index the snapshot was taken at; restored
+  // anywhere else, each would land in the wrong slot.
   if (snapshot.isEmpty() || snapshot.m_count != atomCount() + 1 ||
-      atomId >= snapshot.m_count)
+      atomId != snapshot.m_atomId)
     return false;
 
   const Index count = snapshot.m_count;
