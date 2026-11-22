@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-22 21:06+0000\n"
-"Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-11-22 21:54+0000\n"
+"Last-Translator: Jakob Blahusch <jabla@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
 "Language: de\n"
@@ -6250,7 +6250,7 @@ msgstr ""
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:753
 msgid "Select Plugin Directory"
-msgstr "Erweiterungspfad auswählen"
+msgstr "Wählen Sie Plugin Verzeichnis"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:759
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:772
