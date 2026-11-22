@@ -574,6 +574,11 @@ public:
     return std::string();
   }
 
+  // What removing something and restoring it from a snapshot leaves behind of
+  // the calculated results: nothing. Call it on a copy of the model from
+  // before the removal to get what the molecule should hold afterwards.
+  void discardCalculated() { clearCalculated(); }
+
 private:
   // What Molecule::clearCalculatedResults() drops.
   void partialChargesGone()

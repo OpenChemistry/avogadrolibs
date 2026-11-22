@@ -34,6 +34,7 @@ set(tests
   LayerManager
   Mesh
   Molecule
+  MoleculeSnapshot
   Mutex
   NeighborPerceiver
   PropertyMap

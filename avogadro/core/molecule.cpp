@@ -817,7 +817,9 @@ namespace {
 
 // Every member touched below is indexed by atom, kept in step with
 // m_atomicNumbers and m_graph. Molecule::swapAtom(), Molecule::removeAtom(),
-// and Molecule::clearAtoms() must each handle every atom-indexed member: a
+// and Molecule::clearAtoms() must each handle every atom-indexed member, and
+// atomSnapshot() and restoreAtomSnapshot() must save and put back whatever
+// removeAtom() drops or moves: a
 // member that is added to the class but missed in one of the three is a
 // real bug (e.g. a label silently ending up on the wrong atom after a
 // removal). The helpers below let each member cost one line per function,
@@ -1053,9 +1055,10 @@ void Molecule::swapAtom(Index a, Index b)
 
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with removeAtom() and clearAtoms(). m_atomState holds the rest of the
-  // optional per-atom columns and handles them all in one call. It reads
-  // m_atomicNumbers for the color fill, so it runs before they are swapped.
+  // with removeAtom(), clearAtoms() and restoreAtomSnapshot(). m_atomState
+  // holds the rest of the optional per-atom columns and handles them all in
+  // one call. It reads m_atomicNumbers for the color fill, so it runs before
+  // they are swapped.
   m_atomState.swapEntries(a, b, m_atomicNumbers);
   swapAtomEntry(m_positions3d, a, b, max,
                 [](Index) { return Vector3::Zero(); });
@@ -1119,10 +1122,10 @@ bool Molecule::removeAtom(Index index)
 
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with swapAtom() and clearAtoms(). m_atomState holds the rest of the
-  // optional per-atom columns and handles them all in one call. These must
-  // all run before m_atomicNumbers (and therefore atomCount()) is updated
-  // below; the color fill reads it.
+  // with swapAtom(), clearAtoms() and restoreAtomSnapshot(). m_atomState
+  // holds the rest of the optional per-atom columns and handles them all in
+  // one call. These must all run before m_atomicNumbers (and therefore
+  // atomCount()) is updated below; the color fill reads it.
   m_atomState.removeEntry(index, atomCount(), m_atomicNumbers);
   removeAtomEntry(m_positions3d, index, atomCount(),
                   [](Index) { return Vector3::Zero(); });
@@ -1219,11 +1222,302 @@ bool Molecule::removeAtom(const AtomType& atom_)
   return removeAtom(atom_.index());
 }
 
+namespace {
+
+// Does removeAtom() drop this constraint or scan coordinate when it removes
+// @p atom? Same rule as remapAtomReferences(), including the entries that were
+// already without a first or second atom, which it drops whatever @p atom is.
+bool droppedByRemoval(const Constraint& entry, Index atom)
+{
+  return entry.aIndex() == MaxIndex || entry.bIndex() == MaxIndex ||
+         entry.aIndex() == atom || entry.bIndex() == atom ||
+         entry.cIndex() == atom || entry.dIndex() == atom;
+}
+
+} // namespace
+
+AtomSnapshot Molecule::atomSnapshot(Index atomId) const
+{
+  AtomSnapshot snapshot;
+  const Index count = atomCount();
+  if (atomId >= count)
+    return snapshot;
+
+  snapshot.m_count = count;
+  snapshot.m_atomicNumber = m_atomicNumbers[atomId];
+  snapshot.m_state = m_atomState.slice(atomId, count);
+
+  // The three position arrays follow removeAtomEntry()'s rule: an array that
+  // covers every atom is swap-and-popped, a different length that reaches the
+  // atom has the entry overwritten by the fill, and one that does not reach it
+  // is left alone.
+  auto slicePositions = [atomId, count](const Array<Vector3>& values) {
+    using Removal = AtomSnapshot::PositionRemoval;
+    AtomSnapshot::PositionSlice slice;
+    if (values.size() == count) {
+      slice.removal = Removal::SwapAndPop;
+      slice.value = values[atomId];
+    } else if (atomId < values.size()) {
+      slice.removal = Removal::Overwritten;
+      slice.value = values[atomId];
+    }
+    return slice;
+  };
+  snapshot.m_position = slicePositions(m_positions3d);
+  snapshot.m_framePositions.reserve(m_coordinates3d.size());
+  for (const auto& frame : m_coordinates3d)
+    snapshot.m_framePositions.push_back(slicePositions(frame));
+
+  const Layer& atomLayers = layer();
+  snapshot.m_layerCount = atomLayers.atomCount();
+  snapshot.m_layer = atomLayers.getLayerID(atomId);
+  snapshot.m_lastLayer = atomLayers.getLayerID(snapshot.m_layerCount - 1);
+
+  for (size_t i = 0; i < m_constraints.size(); ++i) {
+    if (droppedByRemoval(m_constraints[i], atomId))
+      snapshot.m_constraints.push_back({ i, m_constraints[i] });
+  }
+  const std::vector<Constraint> scanned = scanCoordinates();
+  for (size_t i = 0; i < scanned.size(); ++i) {
+    if (droppedByRemoval(scanned[i], atomId))
+      snapshot.m_scanCoordinates.push_back({ i, scanned[i] });
+  }
+
+  // The residues go from the back, as removeAtom() removes them.
+  for (Index r = residueCount(); r > 0; --r) {
+    if (!m_residues[r - 1].hasAtomByIndex(atomId))
+      continue;
+    AtomSnapshot::DroppedResidue dropped;
+    dropped.index = r - 1;
+    dropped.residue = m_residues[r - 1];
+    dropped.label = residueLabel(r - 1);
+    dropped.properties = m_residueProperties.slice(r - 1, residueCount());
+    snapshot.m_residues.push_back(std::move(dropped));
+  }
+
+  // removeAtom() removes the first of the atom's bonds until none is left. Each
+  // removal moves the last bond into the hole, so the index of the next one
+  // (and what is at it) depends on the removals before it. Run that on the
+  // list of the atom's bonds and a copy of the bond columns, without touching
+  // the graph: the same rules as Graph::removeEdge() and the columns'
+  // removeEntry().
+  std::vector<size_t> incident = m_graph.edges(atomId);
+  if (!incident.empty()) {
+    BondState scratch = m_bondState;
+    // Where a bond that moved came from: current index -> index before any of
+    // the removals.
+    std::map<size_t, size_t> original;
+    auto originalOf = [&original](size_t index) {
+      const auto found = original.find(index);
+      return found == original.end() ? index : found->second;
+    };
+    Index bonds = static_cast<Index>(m_graph.edgeCount());
+    while (!incident.empty() && bonds > 0) {
+      const size_t bondId = incident.front();
+      if (bondId >= bonds)
+        break; // the graph and the bond columns disagree; take what we have
+      BondSnapshot bond;
+      bond.m_id = static_cast<Index>(bondId);
+      const auto pair = m_graph.endpoints(originalOf(bondId));
+      bond.m_pair = std::make_pair(static_cast<Index>(pair.first),
+                                   static_cast<Index>(pair.second));
+      bond.m_state = scratch.slice(bondId, bonds);
+      bond.m_count = bonds;
+      snapshot.m_bonds.push_back(std::move(bond));
+
+      scratch.removeEntry(bondId, bonds);
+      // The removed edge leaves the atom's own list by swap-and-pop too.
+      incident.front() = incident.back();
+      incident.pop_back();
+      const size_t lastBond = bonds - 1;
+      if (bondId != lastBond) {
+        for (auto& entry : incident) {
+          if (entry == lastBond)
+            entry = bondId;
+        }
+        original[bondId] = originalOf(lastBond);
+      }
+      --bonds;
+    }
+  }
+
+  return snapshot;
+}
+
+bool Molecule::restoreAtomSnapshot(Index atomId, const AtomSnapshot& snapshot)
+{
+  if (snapshot.isEmpty() || snapshot.m_count != atomCount() + 1 ||
+      atomId >= snapshot.m_count)
+    return false;
+
+  const Index count = snapshot.m_count;
+  const Index lastAtom = count - 1;
+
+  // Everything is checked before anything is changed. The layer array is
+  // swap-and-popped within its own length, which is not always the atom count.
+  Layer& atomLayers = layer();
+  const Index layerCount = snapshot.m_layerCount;
+  const bool layerTouched = atomId < layerCount;
+  if (atomLayers.atomCount() != (layerTouched ? layerCount - 1 : layerCount))
+    return false;
+
+  // The bonds go back in the opposite order to their removal, each into the
+  // state the one after it left.
+  Index bonds = bondCount();
+  for (auto it = snapshot.m_bonds.rbegin(); it != snapshot.m_bonds.rend();
+       ++it) {
+    if (it->isEmpty() || it->m_count != bonds + 1 ||
+        it->m_pair.first >= count || it->m_pair.second >= count ||
+        it->m_pair.first == it->m_pair.second)
+      return false;
+    ++bonds;
+  }
+
+  // The reverse of the removal, last step first.
+  if (layerTouched) {
+    if (atomId != layerCount - 1)
+      atomLayers.addAtom(snapshot.m_lastLayer, layerCount - 1);
+    atomLayers.addAtom(snapshot.m_layer, atomId);
+  }
+
+  if (atomId == lastAtom) {
+    m_atomicNumbers.push_back(snapshot.m_atomicNumber);
+  } else {
+    m_atomicNumbers.push_back(m_atomicNumbers[atomId]);
+    m_atomicNumbers[atomId] = snapshot.m_atomicNumber;
+  }
+  m_elements.set(snapshot.m_atomicNumber < element_count
+                   ? snapshot.m_atomicNumber
+                   : static_cast<unsigned char>(element_count - 1));
+
+  // The new vertex is at the end with no edges; the atom that took atomId's
+  // place goes back to the end, as removeVertex() moved it.
+  m_graph.addVertex();
+  if (atomId != lastAtom)
+    m_graph.swapVertexIndices(atomId, lastAtom);
+
+  for (auto it = snapshot.m_bonds.rbegin(); it != snapshot.m_bonds.rend();
+       ++it) {
+    // Checked above, and none of them can be a duplicate: the atom has no
+    // bonds yet and every one of these joins it to a different atom.
+    restoreBondSnapshot(it->m_id, *it);
+  }
+
+  // Everything below is the atom's and the user's state, in the reverse of
+  // the order removeAtom() takes it. The residues that named the last atom
+  // were repointed at atomId; they go back, and the same goes for the
+  // constraints and scan coordinates.
+  if (atomId != lastAtom) {
+    auto unfollow = [atomId, lastAtom](Index atom) {
+      return atom == atomId ? lastAtom : atom;
+    };
+    for (Index r = 0; r < residueCount(); ++r) {
+      if (!std::as_const(m_residues)[r].hasAtomByIndex(atomId))
+        continue;
+      for (auto& entry : m_residues[r].m_atomNameMap) {
+        if (entry.second.index() == atomId)
+          entry.second = AtomType(entry.second.molecule(), lastAtom);
+      }
+    }
+    remapAtomReferences(m_constraints, unfollow);
+    remapScanCoordinates(*this, unfollow);
+  }
+  // Removed from the back, so back in from the front.
+  for (auto it = snapshot.m_residues.rbegin(); it != snapshot.m_residues.rend();
+       ++it)
+    insertResidue(it->index, it->residue, it->label, it->properties);
+
+  for (const auto& dropped : snapshot.m_constraints) {
+    const size_t position = std::min(dropped.position, m_constraints.size());
+    m_constraints.insert(m_constraints.begin() + position, dropped.constraint);
+  }
+  if (!snapshot.m_scanCoordinates.empty()) {
+    std::vector<Constraint> coordinates = scanCoordinates();
+    for (const auto& dropped : snapshot.m_scanCoordinates) {
+      const size_t position = std::min(dropped.position, coordinates.size());
+      coordinates.insert(coordinates.begin() + position, dropped.constraint);
+    }
+    setScanCoordinates(coordinates);
+  }
+
+  // The position arrays, as Column::restore() does for the columns. After a
+  // swap-and-pop, the last atom's position is the one at atomId (unless the
+  // atom was the last), and it goes back to the end.
+  auto restorePositions = [atomId,
+                           count](Array<Vector3>& values,
+                                  const AtomSnapshot::PositionSlice& s) {
+    using Removal = AtomSnapshot::PositionRemoval;
+    if (s.removal == Removal::SwapAndPop) {
+      if (values.size() != count - 1)
+        return;
+      if (atomId == count - 1) {
+        values.push_back(s.value);
+      } else {
+        values.push_back(values[atomId]);
+        values[atomId] = s.value;
+      }
+    } else if (s.removal == Removal::Overwritten && atomId < values.size()) {
+      values[atomId] = s.value;
+    }
+  };
+  restorePositions(m_positions3d, snapshot.m_position);
+  const size_t frames =
+    std::min(m_coordinates3d.size(), snapshot.m_framePositions.size());
+  for (size_t i = 0; i < frames; ++i)
+    restorePositions(m_coordinates3d[i], snapshot.m_framePositions[i]);
+
+  m_atomState.restore(atomId, snapshot.m_state, count);
+
+  // Same reason as in addAtom(): the results are not about this structure.
+  clearCalculatedResults();
+  return true;
+}
+
+BondSnapshot Molecule::bondSnapshot(Index bondId) const
+{
+  BondSnapshot snapshot;
+  if (bondId >= bondCount())
+    return snapshot;
+
+  snapshot.m_id = bondId;
+  const auto pair = m_graph.endpoints(bondId);
+  snapshot.m_pair = std::make_pair(static_cast<Index>(pair.first),
+                                   static_cast<Index>(pair.second));
+  snapshot.m_state = m_bondState.slice(bondId, bondCount());
+  snapshot.m_count = bondCount();
+  return snapshot;
+}
+
+bool Molecule::restoreBondSnapshot(Index bondId, const BondSnapshot& snapshot)
+{
+  if (snapshot.isEmpty() || snapshot.m_count != bondCount() + 1 ||
+      bondId >= snapshot.m_count)
+    return false;
+
+  const Index a = snapshot.m_pair.first;
+  const Index b = snapshot.m_pair.second;
+  if (a >= atomCount() || b >= atomCount() || a == b || bond(a, b).isValid())
+    return false;
+
+  // The edge goes in at the end, the columns take their entries back as
+  // removeEntry() left them, and then the edge moves into place: the bond that
+  // the removal moved into bondId goes back to the end.
+  m_graph.addEdge(a, b);
+  m_bondState.restore(bondId, snapshot.m_state, snapshot.m_count);
+  if (bondId != snapshot.m_count - 1)
+    m_graph.swapEdgeIndices(bondId, snapshot.m_count - 1);
+
+  // As in addBond(): the charges depend on the bonds. Nothing else a removal
+  // discards is brought back.
+  m_partialCharges.clear();
+  return true;
+}
+
 void Molecule::clearAtoms()
 {
   // Atom-indexed members -- see the comment above the helpers in the
   // anonymous namespace at the top of this file. Keep this list parallel
-  // with swapAtom() and removeAtom().
+  // with swapAtom(), removeAtom() and restoreAtomSnapshot().
   m_atomState.clear();
   m_positions3d.clear();
   m_forceVectors.clear();
