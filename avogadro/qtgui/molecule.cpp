@@ -168,6 +168,40 @@ bool Molecule::removeAtom(const AtomType& atom_)
   return removeAtom(atom_.index());
 }
 
+bool Molecule::restoreAtomSnapshot(Index atomId,
+                                   const Core::AtomSnapshot& snapshot,
+                                   Index uniqueId)
+{
+  // The unique ids of an atom's bonds are not in the snapshot. RWMolecule
+  // removes the bonds with commands of their own first, so there are none.
+  if (snapshot.hasBonds())
+    return false;
+
+  // As addAtom(): a free slot, or the fresh id one past the end.
+  const auto uniqueCount = static_cast<Index>(m_atomUniqueIds.size());
+  if (uniqueId > uniqueCount ||
+      (uniqueId < uniqueCount && m_atomUniqueIds[uniqueId] != MaxIndex))
+    return false;
+
+  // The atom the removal moved into atomId is at atomId now and goes back to
+  // the end. Find its unique id before the restoration puts another atom there.
+  const Index lastAtom = atomCount(); // the last index after the restoration
+  Index movedUniqueId = MaxIndex;
+  if (atomId < lastAtom)
+    movedUniqueId = findAtomUniqueId(atomId);
+
+  if (!Core::Molecule::restoreAtomSnapshot(atomId, snapshot))
+    return false;
+
+  if (uniqueId == uniqueCount)
+    m_atomUniqueIds.push_back(atomId);
+  else
+    m_atomUniqueIds[uniqueId] = atomId;
+  if (movedUniqueId != MaxIndex)
+    m_atomUniqueIds[movedUniqueId] = lastAtom;
+  return true;
+}
+
 Molecule::AtomType Molecule::atomByUniqueId(Index uniqueId)
 {
   if (uniqueId >= static_cast<Index>(m_atomUniqueIds.size()) ||
@@ -307,6 +341,34 @@ bool Molecule::removeBond(Index index)
 bool Molecule::removeBond(const BondType& bond_)
 {
   return removeBond(bond_.index());
+}
+
+bool Molecule::restoreBondSnapshot(Index bondId,
+                                   const Core::BondSnapshot& snapshot,
+                                   Index uniqueId)
+{
+  const auto uniqueCount = static_cast<Index>(m_bondUniqueIds.size());
+  if (uniqueId > uniqueCount ||
+      (uniqueId < uniqueCount && m_bondUniqueIds[uniqueId] != MaxIndex))
+    return false;
+
+  // As for atoms: the bond that the removal moved into bondId goes back to
+  // the end.
+  const Index lastBond = bondCount();
+  Index movedUniqueId = MaxIndex;
+  if (bondId < lastBond)
+    movedUniqueId = findBondUniqueId(bondId);
+
+  if (!Core::Molecule::restoreBondSnapshot(bondId, snapshot))
+    return false;
+
+  if (uniqueId == uniqueCount)
+    m_bondUniqueIds.push_back(bondId);
+  else
+    m_bondUniqueIds[uniqueId] = bondId;
+  if (movedUniqueId != MaxIndex)
+    m_bondUniqueIds[movedUniqueId] = lastBond;
+  return true;
 }
 
 bool Molecule::removeBond(const AtomType& a, const AtomType& b)

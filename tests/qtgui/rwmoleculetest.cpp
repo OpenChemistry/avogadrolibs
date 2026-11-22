@@ -2206,19 +2206,14 @@ TEST(RWMoleculeTest, randomSequenceUndoRedoRoundTrip)
 // The order in which a removed atom's bonds are listed afterwards is
 // unspecified, so bonds are matched by their endpoints' unique ids.
 //
-// Constraints and scan coordinates are edited on the molecule directly, since
-// RWMolecule has no undoable API for them. They are compared straight after
-// an edit (so that swapAtom() and removeAtom() are held to their rules by
-// identity), but not after undo or redo, which do not restore them: removing
-// an atom drops every constraint and scan coordinate that names it, and
-// undoing the removal does not bring them back. Before the next edit the
-// shadow adopts whatever the molecule holds (Model::adoptReferences()).
-//
-// Residues are compared after every step, undo and redo included: removing an
-// atom removes the residues that name it, and undoing the removal puts them
-// back (plan section 4.6). RWMolecule has no undo for adding a residue, so
-// the test pushes its own command (AddResidueCommand), which makes the
-// residues part of each undo state.
+// Everything else is compared exactly after every undo, redo and jump:
+// removing an atom or bond and undoing it restores the custom atom and bond
+// properties, the bond label, the atom's position in every coordinate set,
+// the constraints and scan coordinates that named the atom, and the residues
+// (decision R4; plan sections 4.4 and 4.6). RWMolecule has no undoable API for
+// constraints, scan coordinates, custom properties, coordinate sets or
+// residues, so the test pushes commands of its own (SetExtrasCommand,
+// AddResidueCommand), which makes them part of each undo state.
 // ---------------------------------------------------------------------------
 
 namespace {
@@ -2261,14 +2256,64 @@ private:
   std::optional<double> m_property;
 };
 
-std::string compareWithShadow(RWMolecule& mol, Model expected,
-                              bool checkReferences)
+// What RWMolecule has no undoable edit for: constraints, scan coordinates,
+// custom atom and bond properties and coordinate sets. An edit made on the
+// molecule directly is wrapped in a SetExtrasCommand holding all of them
+// before and after, so that it is part of the undo history. The molecule is
+// in the same state each time the command is redone or undone, so storing the
+// whole of each is exact.
+struct Extras
 {
-  std::string error = expected.syncBondOrder(mol.molecule());
-  if (!error.empty())
-    return error;
+  std::vector<Avogadro::Core::Constraint> constraints;
+  std::vector<Avogadro::Core::Constraint> scanCoordinates;
+  Avogadro::Core::PropertyMap atomProperties;
+  Avogadro::Core::PropertyMap bondProperties;
+  std::vector<Array<Vector3>> coordinateSets;
+};
 
-  error = ShadowModel::verify(mol.molecule(), expected, false, checkReferences);
+Extras captureExtras(Molecule& m)
+{
+  Extras extras;
+  extras.constraints = m.constraints();
+  extras.scanCoordinates = m.scanCoordinates();
+  extras.atomProperties = m.atomProperties();
+  extras.bondProperties = m.bondProperties();
+  for (size_t i = 0; i < m.coordinate3dCount(); ++i)
+    extras.coordinateSets.push_back(m.coordinate3dRef(i));
+  return extras;
+}
+
+void applyExtras(Molecule& m, const Extras& extras)
+{
+  m.constraints() = extras.constraints;
+  m.setScanCoordinates(extras.scanCoordinates);
+  m.atomProperties() = extras.atomProperties;
+  m.bondProperties() = extras.bondProperties;
+  m.clearCoordinate3d();
+  for (size_t i = 0; i < extras.coordinateSets.size(); ++i)
+    m.setCoordinate3d(extras.coordinateSets[i], i);
+}
+
+class SetExtrasCommand : public QUndoCommand
+{
+public:
+  SetExtrasCommand(Molecule& m, Extras before, Extras after)
+    : m_molecule(m), m_before(std::move(before)), m_after(std::move(after))
+  {
+  }
+
+  void redo() override { applyExtras(m_molecule, m_after); }
+  void undo() override { applyExtras(m_molecule, m_before); }
+
+private:
+  Molecule& m_molecule;
+  Extras m_before;
+  Extras m_after;
+};
+
+std::string compareWithShadow(RWMolecule& mol, Model expected)
+{
+  std::string error = ShadowModel::verify(mol.molecule(), expected, false);
   if (!error.empty())
     return error;
 
@@ -2330,8 +2375,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
     int step = 0;
     std::string recent; // the last few operations, for a failure message
 
-    auto check = [&](const char* what, const Model& expected,
-                     bool references = false) {
+    auto check = [&](const char* what, const Model& expected) {
       const std::string entry = std::to_string(step) + ":" + op + ";";
       if (recent.compare(std::max<size_t>(recent.size(), entry.size()) -
                            entry.size(),
@@ -2339,7 +2383,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         recent += " " + entry;
       if (recent.size() > 500)
         recent.erase(0, recent.size() - 500);
-      const std::string error = compareWithShadow(mol, expected, references);
+      const std::string error = compareWithShadow(mol, expected);
       if (error.empty())
         return true;
       ADD_FAILURE() << "seed " << seed << ", step " << step << ", op " << op
@@ -2364,6 +2408,13 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
     };
     auto atIndex = [&]() {
       return static_cast<size_t>(mol.undoStack().index());
+    };
+    // An edit made on the molecule directly is undone and redone by a command
+    // holding what the molecule had before and has now.
+    auto pushExtras = [&](const Extras& before) {
+      Extras after = captureExtras(m);
+      applyExtras(m, before);
+      mol.undoStack().push(new SetExtrasCommand(m, before, std::move(after)));
     };
     // Every undo index, one command at a time, down and back up.
     auto walkWholeStack = [&]() {
@@ -2409,24 +2460,12 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         continue;
       }
 
-      // The edits. A new edit discards whatever could still be redone. After
-      // an undo or redo the bonds can be listed in a different order than the
-      // snapshot has them (see compareWithShadow()), so line the shadow up
-      // with the molecule before picking a bond by index.
-      model.syncBondOrder(mol.molecule());
-      {
-        const std::string error = model.adoptReferences(mol.molecule());
-        if (!error.empty()) {
-          ADD_FAILURE() << "seed " << seed << ", step " << step << ": "
-                        << error;
-          return;
-        }
-      }
+      // The edits. A new edit discards whatever could still be redone.
       pick = pickInt(0, 17);
-      // Constraints and scan coordinates, which are not undoable, and
-      // residues.
-      if (chance(12))
-        pick = pickInt(18, 21);
+      // Constraints, scan coordinates, residues, custom properties and
+      // coordinate sets, which RWMolecule has no undoable edits for.
+      if (chance(18))
+        pick = pickInt(18, 24);
       // 13 would be setIsotope(), which is not left out by accident:
       // RWMolecule::setIsotope() has no undo command (it says so in a TODO)
       // and edits the molecule silently, so there is no undo state to
@@ -2442,6 +2481,8 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       if (pick == 17 && (n < 2 || bonds == 0))
         pick = 0;
       if (pick >= 18 && n < 2)
+        pick = 0;
+      if (pick == 23 && bonds == 0)
         pick = 0;
       if (pick == 18 && model.constraints.size() >= 6)
         pick = 19;
@@ -2459,6 +2500,8 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
             op = "removeAtom (instead of adding)";
             mol.removeAtom(0);
             model.removeAtom(0);
+            // The order the removal leaves the bonds in is its own.
+            model.syncBondOrder(mol.molecule());
             break;
           }
           const auto z = static_cast<unsigned char>(pickInt(1, 10));
@@ -2469,8 +2512,14 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           } else {
             op = "addAtom(position)";
             const Vector3 p = pickVector();
+            // The position goes into the coordinate sets that have an entry
+            // for every atom, and only if the positions did too.
+            const bool covered = mol.molecule().atomPositions3d().size() == n;
+            std::vector<bool> fullFrames(model.frameCount);
+            for (size_t f = 0; f < model.frameCount; ++f)
+              fullFrames[f] = mol.molecule().coordinate3dRef(f).size() == n;
             mol.addAtom(z, p);
-            model.addAtom(z);
+            model.addAtom(z, &p, covered, fullFrames);
             model.atoms.back().position3d = p;
           }
           model.atoms.back().id = mol.atomUniqueId(mol.atomCount() - 1);
@@ -2641,14 +2690,17 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
         }
         case 18: {
           op = "addConstraint";
+          const Extras before = captureExtras(m);
           const std::array<Index, 4> atoms = pickAtoms(n, 2, 4);
           const double value = pickInt(1, 180);
           m.addConstraint(value, atoms[0], atoms[1], atoms[2], atoms[3]);
           model.addConstraint(value, atoms);
+          pushExtras(before);
           break;
         }
         case 19: {
           op = "removeConstraint";
+          const Extras before = captureExtras(m);
           std::array<Index, 4> atoms =
             model.indicesOf(model.constraints[pickIndex(
               static_cast<Index>(model.constraints.size()))]);
@@ -2660,10 +2712,12 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           }
           m.removeConstraint(atoms[0], atoms[1], atoms[2], atoms[3]);
           model.removeConstraint(atoms);
+          pushExtras(before);
           break;
         }
         case 20: {
           op = "setScanCoordinates";
+          const Extras before = captureExtras(m);
           std::vector<std::array<Index, 4>> coordinates;
           std::vector<Avogadro::Core::Constraint> constraints;
           const int count = pickInt(0, 3);
@@ -2674,6 +2728,60 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           }
           m.setScanCoordinates(constraints);
           model.setScanCoordinates(coordinates);
+          pushExtras(before);
+          break;
+        }
+        case 22: {
+          op = "atomProperties";
+          const Extras before = captureExtras(m);
+          const Index i = pickIndex(n);
+          const double d = pickInt(1, 99);
+          m.atomProperties().setDouble(ShadowModel::kAtomDoubleProperty, i, d);
+          model.atoms[i].doubleProperty = d;
+          if (chance(50)) {
+            const std::string text = "p" + std::to_string(step);
+            m.atomProperties().setString(ShadowModel::kAtomStringProperty, i,
+                                         text);
+            model.atoms[i].stringProperty = text;
+          }
+          pushExtras(before);
+          break;
+        }
+        case 23: {
+          op = "bondProperties";
+          const Extras before = captureExtras(m);
+          const Index i = pickIndex(bonds);
+          const double d = pickInt(1, 99);
+          m.bondProperties().setDouble(ShadowModel::kBondDoubleProperty, i, d);
+          model.bonds[i].doubleProperty = d;
+          if (chance(50)) {
+            const int v = pickInt(1, 99);
+            m.bondProperties().setInt(ShadowModel::kBondIntProperty, i, v);
+            model.bonds[i].intProperty = v;
+          }
+          pushExtras(before);
+          break;
+        }
+        case 24: {
+          // A new coordinate set (at most three), or a replacement of one.
+          // Sets usually have an entry for every atom, sometimes fewer.
+          op = "setCoordinate3d";
+          const Extras before = captureExtras(m);
+          const size_t sets = m.coordinate3dCount();
+          const size_t index =
+            (sets == 0 || (sets < 3 && chance(40)))
+              ? sets
+              : static_cast<size_t>(pickInt(0, static_cast<int>(sets) - 1));
+          const Index length = chance(70) ? n : pickIndex(n + 1);
+          Array<Vector3> coords;
+          std::vector<Vector3> values;
+          for (Index i = 0; i < length; ++i) {
+            values.push_back(pickVector());
+            coords.push_back(values.back());
+          }
+          m.setCoordinate3d(coords, index);
+          model.setCoordinateSet(index, values);
+          pushExtras(before);
           break;
         }
         case 21: {
@@ -2724,7 +2832,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       const auto after = static_cast<size_t>(mol.undoStack().index());
       states.resize(static_cast<size_t>(mol.undoStack().count()) + 1);
       states[after] = model;
-      if (!check("after the edit", model, true))
+      if (!check("after the edit", model))
         return;
 
       // One step back and forth, so every edit's undo is checked against the
@@ -3659,4 +3767,192 @@ TEST(RWMoleculeTest, removeAtomOutsideResiduesUndoRepointsTheLastAtom)
   EXPECT_EQ(snapshotResidues(m), before);
   EXPECT_EQ(m.atomicNumber(5), 6);
   EXPECT_EQ(m.atomicNumber(2), 3);
+}
+
+// Decision R4: undoing a removal restores the user's and the structure's
+// state exactly. Custom properties, constraints, scan coordinates, residues
+// and the atom's position in every coordinate set used to be lost.
+TEST(RWMoleculeTest, removeAtomUndoRestoresEverythingTheRemovalDrops)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6, Vector3(Real(i), 0.0, 0.0));
+  mol.addBond(static_cast<Index>(0), static_cast<Index>(1), 1);
+  mol.addBond(static_cast<Index>(1), static_cast<Index>(2), 2);
+  mol.addBond(static_cast<Index>(2), static_cast<Index>(3), 1);
+  mol.undoStack().clear();
+
+  // Atom 1 is the one removed; atom 3, the last, moves into its place.
+  m.atomProperties().setDouble("snap-atom", 1, 11.0);
+  m.atomProperties().setDouble("snap-atom", 3, 33.0);
+  m.bondProperties().setDouble("snap-bond", 0, 5.0);
+  m.bondProperties().setDouble("snap-bond", 1, 6.0);
+  m.setBondLabel(1, "double");
+  Array<Vector3> full;
+  Array<Vector3> partial;
+  for (int i = 0; i < 4; ++i) {
+    full.push_back(Vector3(10.0 + i, 0.0, 0.0));
+    if (i < 2)
+      partial.push_back(Vector3(20.0 + i, 0.0, 0.0));
+  }
+  m.setCoordinate3d(full, 1);
+  m.setCoordinate3d(partial, 2);
+  m.addConstraint(1.5, 0, 1);
+  m.addConstraint(1.4, 2, 3);
+  m.addConstraint(90.0, 3, 2, 0);
+  m.setScanCoordinates(
+    { Avogadro::Core::Constraint(1, 2), Avogadro::Core::Constraint(0, 3) });
+  std::string name = "AAA";
+  Index number = 1;
+  char chain = 'A';
+  m.addResidue(name, number, chain).addResidueAtom("C1", m.atom(1));
+  name = "BBB";
+  number = 2;
+  m.addResidue(name, number, chain).addResidueAtom("C3", m.atom(3));
+  m.setResidueLabel(0, "first");
+  m.residueProperties().setDouble("snap-res", 0, 7.0);
+
+  const Index uid = mol.atomUniqueId(static_cast<Index>(1));
+  const Index movedUid = mol.atomUniqueId(static_cast<Index>(3));
+  const Index lastBondUid = mol.bondUniqueId(static_cast<Index>(2));
+
+  auto expectOriginal = [&]() {
+    ASSERT_EQ(4u, m.atomCount());
+    ASSERT_EQ(3u, m.bondCount());
+    EXPECT_EQ(11.0, *m.atomProperties().getDouble("snap-atom", 1));
+    EXPECT_EQ(33.0, *m.atomProperties().getDouble("snap-atom", 3));
+    EXPECT_FALSE(m.atomProperties().getDouble("snap-atom", 0).has_value());
+    EXPECT_EQ(5.0, *m.bondProperties().getDouble("snap-bond", 0));
+    EXPECT_EQ(6.0, *m.bondProperties().getDouble("snap-bond", 1));
+    EXPECT_EQ("double", m.bondLabel(1));
+    EXPECT_EQ(Vector3(11.0, 0.0, 0.0), m.coordinate3dRef(1)[1]);
+    EXPECT_EQ(Vector3(13.0, 0.0, 0.0), m.coordinate3dRef(1)[3]);
+    ASSERT_EQ(2u, m.coordinate3dRef(2).size());
+    EXPECT_EQ(Vector3(21.0, 0.0, 0.0), m.coordinate3dRef(2)[1]);
+    ASSERT_EQ(3u, m.constraints().size());
+    EXPECT_EQ(1u, m.constraints()[0].bIndex());
+    EXPECT_EQ(3u, m.constraints()[1].bIndex());
+    EXPECT_EQ(3u, m.constraints()[2].aIndex());
+    ASSERT_EQ(2u, m.scanCoordinates().size());
+    EXPECT_EQ(1u, m.scanCoordinates()[0].aIndex());
+    EXPECT_EQ(3u, m.scanCoordinates()[1].bIndex());
+    ASSERT_EQ(2u, m.residueCount());
+    EXPECT_EQ(1u, m.residue(0).atomIndexByName("C1"));
+    EXPECT_EQ(3u, m.residue(1).atomIndexByName("C3"));
+    EXPECT_EQ("first", m.residueLabel(0));
+    EXPECT_EQ(7.0, *m.residueProperties().getDouble("snap-res", 0));
+    EXPECT_EQ(uid, mol.atomUniqueId(static_cast<Index>(1)));
+    EXPECT_EQ(movedUid, mol.atomUniqueId(static_cast<Index>(3)));
+    EXPECT_EQ(lastBondUid, mol.bondUniqueId(static_cast<Index>(2)));
+  };
+  expectOriginal();
+
+  auto expectRemoved = [&]() {
+    ASSERT_EQ(3u, m.atomCount());
+    ASSERT_EQ(1u, m.bondCount());
+    // The last atom now has the removed atom's index.
+    EXPECT_EQ(33.0, *m.atomProperties().getDouble("snap-atom", 1));
+    EXPECT_EQ(Vector3(13.0, 0.0, 0.0), m.coordinate3dRef(1)[1]);
+    // The constraint on atoms 0 and 1 goes. The others follow their atoms:
+    // 2-3 is 2-1 now, and 3-2-0 is 1-2-0.
+    ASSERT_EQ(2u, m.constraints().size());
+    EXPECT_EQ(1u, m.constraints()[0].bIndex());
+    EXPECT_EQ(1u, m.constraints()[1].aIndex());
+    // The scan coordinate on 1 and 2 goes; 0-3 is 0-1 now.
+    ASSERT_EQ(1u, m.scanCoordinates().size());
+    EXPECT_EQ(1u, m.scanCoordinates()[0].bIndex());
+    ASSERT_EQ(1u, m.residueCount());
+    EXPECT_EQ(1u, m.residue(0).atomIndexByName("C3"));
+    EXPECT_EQ(movedUid, mol.atomUniqueId(static_cast<Index>(1)));
+  };
+
+  ASSERT_TRUE(mol.removeAtom(1));
+  expectRemoved();
+  mol.undoStack().undo();
+  expectOriginal();
+  mol.undoStack().redo();
+  expectRemoved();
+  mol.undoStack().undo();
+  expectOriginal();
+}
+
+TEST(RWMoleculeTest, removeBondUndoRestoresPropertiesAndLabel)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 4; ++i)
+    mol.addAtom(6, Vector3(Real(i), 0.0, 0.0));
+  mol.addBond(static_cast<Index>(0), static_cast<Index>(1), 1);
+  mol.addBond(static_cast<Index>(1), static_cast<Index>(2), 2);
+  mol.addBond(static_cast<Index>(2), static_cast<Index>(3), 3);
+  mol.undoStack().clear();
+  for (Index b = 0; b < 3; ++b)
+    m.bondProperties().setDouble("snap-bond", b, 10.0 + double(b));
+  m.setBondLabel(0, "first");
+  m.setBondLabel(2, "last");
+  const Index uid = mol.bondUniqueId(static_cast<Index>(0));
+  const Index lastUid = mol.bondUniqueId(static_cast<Index>(2));
+
+  auto expectOriginal = [&]() {
+    ASSERT_EQ(3u, m.bondCount());
+    for (Index b = 0; b < 3; ++b)
+      EXPECT_EQ(10.0 + double(b),
+                *m.bondProperties().getDouble("snap-bond", b));
+    EXPECT_EQ("first", m.bondLabel(0));
+    EXPECT_EQ("", m.bondLabel(1));
+    EXPECT_EQ("last", m.bondLabel(2));
+    EXPECT_EQ(1, m.bondOrder(0));
+    EXPECT_EQ(2, m.bondOrder(1));
+    EXPECT_EQ(3, m.bondOrder(2));
+    EXPECT_EQ(uid, mol.bondUniqueId(static_cast<Index>(0)));
+    EXPECT_EQ(lastUid, mol.bondUniqueId(static_cast<Index>(2)));
+    EXPECT_EQ(0u, mol.bondPair(0).first);
+    EXPECT_EQ(3u, mol.bondPair(2).second);
+  };
+
+  // Removing the first bond moves the last one into its place.
+  ASSERT_TRUE(mol.removeBond(0));
+  ASSERT_EQ(2u, m.bondCount());
+  EXPECT_EQ("last", m.bondLabel(0));
+  EXPECT_EQ(13.0 - 1.0, *m.bondProperties().getDouble("snap-bond", 0));
+  mol.undoStack().undo();
+  expectOriginal();
+  mol.undoStack().redo();
+  ASSERT_EQ(2u, m.bondCount());
+  mol.undoStack().undo();
+  expectOriginal();
+}
+
+// Undoing the add of an atom and redoing it brings back what was done to it
+// in between, including its place in every coordinate set.
+TEST(RWMoleculeTest, addAtomRedoRestoresTheAtomExactly)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6, Vector3(0.0, 0.0, 0.0));
+  Array<Vector3> frame;
+  frame.push_back(Vector3(5.0, 0.0, 0.0));
+  m.setCoordinate3d(frame, 1);
+  mol.undoStack().clear();
+
+  mol.addAtom(8, Vector3(1.0, 2.0, 3.0));
+  const Index uid = mol.atomUniqueId(static_cast<Index>(1));
+  mol.setAtomLabel(1, "oxygen");
+  mol.setLayer(1, 1);
+  const Vector3 frameValue = m.coordinate3dRef(1)[1];
+
+  // Back to before the add, and forward again to after the layer edit.
+  const int end = mol.undoStack().index();
+  mol.undoStack().setIndex(0);
+  ASSERT_EQ(1u, m.atomCount());
+  mol.undoStack().setIndex(end);
+  ASSERT_EQ(2u, m.atomCount());
+  EXPECT_EQ(uid, mol.atomUniqueId(static_cast<Index>(1)));
+  EXPECT_EQ(8, m.atomicNumber(1));
+  EXPECT_EQ(Vector3(1.0, 2.0, 3.0), m.atomPosition3d(1));
+  EXPECT_EQ("oxygen", m.atomLabel(1));
+  EXPECT_EQ(1u, m.layer(1));
+  ASSERT_EQ(2u, m.coordinate3dRef(1).size());
+  EXPECT_EQ(frameValue, m.coordinate3dRef(1)[1]);
 }

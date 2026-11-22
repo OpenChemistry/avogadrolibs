@@ -396,50 +396,6 @@ public:
       residues.erase(residues.begin() + static_cast<std::ptrdiff_t>(index));
   }
 
-  // For tests where the molecule itself decides what is left (RWMolecule undo
-  // and redo drop constraints, and nothing puts them back): take the
-  // constraints and scan coordinates the molecule has now, naming atoms by
-  // this model's identities. Residues are not adopted: undo does restore
-  // them. Returns an error if a constraint names an atom that does not exist.
-  std::string adoptReferences(const Avogadro::Core::Molecule& mol)
-  {
-    auto convert = [this](const Avogadro::Core::Constraint& c, Reference& out,
-                          std::string& error) {
-      const Index in[4] = { c.aIndex(), c.bIndex(), c.cIndex(), c.dIndex() };
-      for (size_t k = 0; k < 4; ++k) {
-        if (in[k] == Avogadro::MaxIndex) {
-          out.atoms[k] = Avogadro::MaxIndex;
-        } else if (in[k] >= atomCount()) {
-          error = "a constraint or scan coordinate names atom " +
-                  std::to_string(in[k]) + ", which does not exist";
-          return;
-        } else {
-          out.atoms[k] = atoms[in[k]].id;
-        }
-      }
-      out.value = c.value();
-    };
-    std::string error;
-    constraints.clear();
-    for (const auto& c : mol.constraints()) {
-      Reference r;
-      convert(c, r, error);
-      if (!error.empty())
-        return error;
-      constraints.push_back(r);
-    }
-    scanCoordinates.clear();
-    for (const auto& c : mol.scanCoordinates()) {
-      Reference r;
-      convert(c, r, error);
-      if (!error.empty())
-        return error;
-      r.value = 0.0;
-      scanCoordinates.push_back(r);
-    }
-    return std::string();
-  }
-
   void addBond(Index a, Index b, unsigned char order)
   {
     partialChargesGone();
@@ -611,10 +567,8 @@ private:
 // @p checkCalculated says whether to compare the calculated results (forces,
 // partial charges, velocities, normal modes), which the library drops when
 // the structure changes and which undo therefore cannot be expected to bring
-// back. @p checkReferences says whether to compare constraints, scan
-// coordinates, which undo and redo do not restore (removing an atom drops the
-// constraints that name it, and undoing the removal does not bring them
-// back). Residues are always compared.
+// back. @p checkReferences says whether to compare constraints and scan
+// coordinates. Residues are always compared.
 inline std::string verify(const Avogadro::Core::Molecule& mol,
                           const Model& model, bool checkCalculated = true,
                           bool checkReferences = true)
