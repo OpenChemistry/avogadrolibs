@@ -14,6 +14,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QList>
+#include <QtCore/QMap>
 #include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -206,9 +207,39 @@ public:
                                       int timeoutMs = 5000);
 
   /**
+   * Write raw bytes to the asynchronous process' standard input without
+   * waiting for any reply.
+   *
+   * @return True if every byte was written; false if there is no process or
+   * the write failed (errorList() describes a failed write).
+   */
+  bool asyncWriteRaw(const QByteArray& input);
+
+  /**
+   * Wait up to @p timeoutMs for the asynchronous process to write to standard
+   * output, and return everything that is available. Returns an empty array on
+   * timeout or if the process has exited with nothing left to read.
+   */
+  QByteArray asyncReadRaw(int timeoutMs);
+
+  /**
    * Terminate the asynchronous process.
    */
   void asyncTerminate();
+
+  /**
+   * Set an environment variable for processes started after this call, in
+   * addition to the inherited environment. Nothing is set by default.
+   */
+  void setEnvironmentVariable(const QString& name, const QString& value)
+  {
+    m_extraEnvironment.insert(name, value);
+  }
+
+  /**
+   * Forget all variables added with setEnvironmentVariable().
+   */
+  void clearEnvironmentVariables() { m_extraEnvironment.clear(); }
 
   /**
    * Returns the standard output of the asynchronous process when finished.
@@ -276,6 +307,8 @@ private:
   // Scan the asynchronous process' stdout for progress envelopes, buffering
   // the rest for asyncResponse(). Off by default; see setProgressScanning().
   bool m_scanProgress = false;
+  // Extra variables for the child's environment; see setEnvironmentVariable().
+  QMap<QString, QString> m_extraEnvironment;
   // Standard output with any progress envelopes removed.
   QByteArray m_stdoutBuffer;
   // Standard error, kept for diagnostics (separate channels only).

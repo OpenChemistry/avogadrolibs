@@ -11,6 +11,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QFileInfo>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QLocale>
@@ -18,6 +19,8 @@
 #include <QtCore/QProcessEnvironment>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
+
+#include <algorithm>
 
 namespace Avogadro::QtGui {
 
@@ -66,6 +69,7 @@ PythonScript::~PythonScript()
     // deleteLater(), which never runs if no event loop outlives us.
     disconnect(m_process, nullptr, this, nullptr);
     m_process->kill();
+    m_process->waitForFinished(1000);
     delete m_process;
     m_process = nullptr;
   }
@@ -161,6 +165,12 @@ QString PythonScript::resolveCommand(QStringList& realArgs, QProcess& proc)
     // printing envelopes at a version of Avogadro that would choke on them.
     environment.insert(QLatin1String(progressEnvironmentVariable),
                        QLatin1String(progressProtocolVersion));
+    customEnvironment = true;
+  }
+
+  for (auto it = m_extraEnvironment.constBegin();
+       it != m_extraEnvironment.constEnd(); ++it) {
+    environment.insert(it.key(), it.value());
     customEnvironment = true;
   }
 
@@ -543,6 +553,9 @@ void PythonScript::asyncTerminate()
   if (m_process != nullptr) {
     disconnect(m_process, nullptr, nullptr, nullptr);
     m_process->kill();
+    // SIGKILL cannot be ignored; waiting keeps QProcess from complaining that
+    // it is destroyed while running, and guarantees the child is gone.
+    m_process->waitForFinished(1000);
     m_process->deleteLater();
     m_process = nullptr;
   }
@@ -562,6 +575,51 @@ QByteArray PythonScript::asyncWriteAndResponse(QByteArray input)
   return buffer;
 }
 
+bool PythonScript::asyncWriteRaw(const QByteArray& input)
+{
+  if (m_process == nullptr)
+    return false;
+  if (input.isEmpty())
+    return true;
+
+  const qint64 len = m_process->write(input);
+  if (len != static_cast<qint64>(input.size())) {
+    m_errors << tr("Error writing raw request to script stdin (len=%1, wrote "
+                   "%2 bytes, QProcess error: %3).")
+                  .arg(input.size())
+                  .arg(len)
+                  .arg(processErrorString(*m_process));
+    return false;
+  }
+  return true;
+}
+
+QByteArray PythonScript::asyncReadRaw(int timeoutMs)
+{
+  QByteArray buffer;
+  if (m_process == nullptr)
+    return buffer;
+
+  QElapsedTimer timer;
+  timer.start();
+  for (;;) {
+    const qint64 remaining = std::max<qint64>(timeoutMs - timer.elapsed(), 0);
+    if (!m_process->waitForReadyRead(static_cast<int>(remaining)))
+      break;
+    buffer += m_process->readAll();
+    if (!buffer.isEmpty() || remaining == 0)
+      break;
+  }
+  if (buffer.isEmpty())
+    return buffer;
+
+  // Keep draining while data arrives immediately (no artificial delay).
+  while (m_process->waitForReadyRead(0)) {
+    buffer += m_process->readAll();
+  }
+  return buffer;
+}
+
 QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
                                                   int timeoutMs)
 {
@@ -569,29 +627,10 @@ QByteArray PythonScript::asyncWriteAndResponseRaw(const QByteArray& input,
     return QByteArray(); // wait
   }
 
-  if (!input.isEmpty()) {
-    const qint64 len = m_process->write(input);
-    if (len != static_cast<qint64>(input.size())) {
-      m_errors << tr("Error writing raw request to script stdin (len=%1, wrote "
-                     "%2 bytes, QProcess error: %3).")
-                    .arg(input.size())
-                    .arg(len)
-                    .arg(processErrorString(*m_process));
-      return QByteArray();
-    }
-  }
+  if (!asyncWriteRaw(input))
+    return QByteArray();
 
-  QByteArray buffer;
-  if (!m_process->waitForReadyRead(timeoutMs)) {
-    return buffer;
-  }
-
-  buffer += m_process->readAll();
-  // Keep draining while data arrives immediately (no artificial delay).
-  while (m_process->waitForReadyRead(0)) {
-    buffer += m_process->readAll();
-  }
-  return buffer;
+  return asyncReadRaw(timeoutMs);
 }
 
 QByteArray PythonScript::asyncResponse()
