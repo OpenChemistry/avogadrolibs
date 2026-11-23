@@ -373,7 +373,8 @@ void Command::menuActivated()
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
   connect(buttonBox, &QDialogButtonBox::accepted, this, &Command::run);
-  connect(buttonBox, &QDialogButtonBox::rejected, m_currentDialog, &QDialog::reject);
+  connect(buttonBox, &QDialogButtonBox::rejected, m_currentDialog,
+          &QDialog::reject);
   vbox->addWidget(buttonBox);
   m_currentDialog->setLayout(vbox);
   m_currentDialog->exec();
@@ -395,7 +396,7 @@ void Command::run()
 
   if (m_currentScript) {
     disconnect(m_currentScript, &QtGui::InterfaceScript::finished, this,
-              &Command::processFinished);
+               &Command::processFinished);
     // Kill the child process so an abandoned xtb run does not keep going.
     m_currentScript->interpreter().asyncTerminate();
     m_currentScript->deleteLater();
@@ -427,7 +428,8 @@ void Command::run()
       m_currentScript->setScriptFilePath(iface.scriptFilePath());
       options = collected;
     }
-    connect(m_currentScript, &QtGui::InterfaceScript::finished, this, &Command::processFinished);
+    connect(m_currentScript, &QtGui::InterfaceScript::finished, this,
+            &Command::processFinished);
     connect(m_currentScript, &QtGui::InterfaceScript::progress, this,
             &Command::updateProgress);
 
