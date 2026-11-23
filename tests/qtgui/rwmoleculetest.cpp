@@ -4029,6 +4029,37 @@ TEST(RWMoleculeTest, setAtomPositions3dMergesOnlyWhenInteractive)
   EXPECT_TRUE(samePositions(mol, second));
 }
 
+// AutoOpt's pattern: one merge-mode macro around many whole-array position
+// updates, with interactive mode switched off partway by a mouse release.
+TEST(RWMoleculeTest, mergeModePositionUpdatesAreOneUndoStep)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildUndoChain(mol, 3);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  mol.beginMergeMode("AutoOpt");
+  Array<Vector3> step(3);
+  for (int i = 1; i <= 5; ++i) {
+    for (Index j = 0; j < step.size(); ++j)
+      step[j] = original[j] + Vector3(Real(i), Real(0), Real(0));
+    if (i == 3)
+      mol.setInteractive(false);
+    mol.setAtomPositions3d(step, "Optimize Geometry");
+    // No undo is offered while the macro is open.
+    EXPECT_FALSE(mol.undoStack().canUndo());
+  }
+  mol.endMergeMode();
+
+  EXPECT_EQ(1, mol.undoStack().count());
+  EXPECT_TRUE(mol.undoStack().canUndo());
+  EXPECT_TRUE(samePositions(mol, step));
+  mol.undoStack().undo();
+  EXPECT_TRUE(samePositions(mol, original));
+  mol.undoStack().redo();
+  EXPECT_TRUE(samePositions(mol, step));
+}
+
 // A drag moves many atoms, repeatedly and in no particular order, and is one
 // undo step that puts every atom back exactly where it started.
 TEST(RWMoleculeTest, interactiveSetAtomPosition3dSweepsAreOneStep)
