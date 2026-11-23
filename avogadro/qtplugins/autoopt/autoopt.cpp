@@ -297,7 +297,7 @@ QWidget* AutoOpt::toolWidget() const
   QSettings settings;
   if (!m_toolWidget && m_molecule) {
     m_toolWidget = new QWidget();
-    m_toolWidget->setWindowTitle(tr("AutoOptimization"));
+    m_toolWidget->setWindowTitle(tr("Auto Optimize"));
 
     // set up a form layout
     QFormLayout* form = new QFormLayout(m_toolWidget);
@@ -437,7 +437,7 @@ void AutoOpt::start()
 
   m_running = true;
 
-  m_molecule->beginMergeMode("AutoOpt");
+  m_molecule->beginMergeMode(tr("Auto Optimize"));
 
   m_energy = 0.0;
   m_deltaE = 0.0;
