@@ -11,6 +11,8 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstdint>
+#include <limits>
 #include <utility>
 #include <vector>
 
@@ -142,16 +144,26 @@ private:
 // keeps its old value and takes the other's new value. The entries are kept
 // sorted by index, so a sweep over the atoms in ascending order appends. A
 // command only merges with one made for the same number of atoms.
+//
+// Indices are held as 32 bits, which halves the memory of a large command
+// (select all keeps one entry per atom). Callers check canStore() first.
 template <typename T>
 class SetEntriesCommand : public RWMolecule::UndoCommand
 {
 public:
   using Setter = void (*)(Molecule&, Index, const T&);
+  using StoredIndex = std::uint32_t;
+
+  static bool canStore(Index index)
+  {
+    return index <= std::numeric_limits<StoredIndex>::max();
+  }
 
   SetEntriesCommand(RWMolecule& m, Setter setter, Index index,
                     const T& oldValue, const T& newValue)
     : UndoCommand(m), m_setter(setter), m_atomCount(m_molecule.atomCount()),
-      m_ids(1, index), m_old(1, oldValue), m_new(1, newValue)
+      m_ids(1, static_cast<StoredIndex>(index)), m_old(1, oldValue),
+      m_new(1, newValue)
   {
   }
 
@@ -189,7 +201,7 @@ private:
 
   Setter m_setter;
   Index m_atomCount;
-  std::vector<Index> m_ids; // sorted, ascending
+  std::vector<StoredIndex> m_ids; // sorted, ascending
   std::vector<T> m_old;
   std::vector<T> m_new;
 };

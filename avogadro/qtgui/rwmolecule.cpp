@@ -285,7 +285,7 @@ bool RWMolecule::setBondLabel(Index bondId, const std::string& label,
 bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
                                    const QString& undoText)
 {
-  if (atomId >= atomCount())
+  if (atomId >= atomCount() || !SetEntriesCommand<Vector3>::canStore(atomId))
     return false;
 
   auto* comm = new SetEntriesCommand<Vector3>(
@@ -312,7 +312,7 @@ void RWMolecule::setAtomSelected(Index atomId, bool selected,
   // A caller holding an index from before an atom was removed would other-
   // wise write past the end of the selection bitfield, corrupting whatever
   // follows it rather than failing where the mistake was made.
-  if (atomId >= atomCount())
+  if (atomId >= atomCount() || !SetEntriesCommand<bool>::canStore(atomId))
     return;
 
   // Selecting an already-selected atom (or deselecting an unselected one)
