@@ -34,6 +34,7 @@
 #include <memory>
 #include <numeric>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace {
@@ -446,6 +447,30 @@ SplitSum splitCurrent(const std::string& text)
   return sum;
 }
 
+SplitSum splitTokenize(const std::string& text)
+{
+  SplitSum sum;
+  std::vector<std::string_view> tokens;
+  const std::string_view all(text);
+  std::size_t pos = 0;
+  while (pos < all.size()) {
+    std::size_t end = all.find('\n', pos);
+    if (end == std::string_view::npos)
+      end = all.size();
+    const std::string_view line = all.substr(pos, end - pos);
+    pos = end + 1;
+    Avogadro::Core::tokenize(line, tokens);
+    sum.tokens += tokens.size();
+    ++sum.lines;
+    if (tokens.size() < 4)
+      continue;
+    for (std::size_t i = 1; i < 4; ++i)
+      sum.coordSum +=
+        Avogadro::Core::lexicalCast<double>(tokens[i]).value_or(0.0);
+  }
+  return sum;
+}
+
 struct SplitVariant
 {
   const char* name;
@@ -454,7 +479,8 @@ struct SplitVariant
 
 std::vector<SplitVariant> splitVariants()
 {
-  return { { "split+lexicalCast", splitCurrent } };
+  return { { "split+lexicalCast", splitCurrent },
+           { "tokenize", splitTokenize } };
 }
 
 double toMs(Clock::time_point a, Clock::time_point b)

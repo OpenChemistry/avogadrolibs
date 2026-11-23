@@ -13,6 +13,7 @@
 #include <cstring>
 #include <limits>
 #include <string>
+#include <string_view>
 #include <vector>
 
 using Avogadro::Core::caseInsensitiveEquals;
@@ -23,6 +24,7 @@ using Avogadro::Core::parseFloat;
 using Avogadro::Core::split;
 using Avogadro::Core::splitWhitespace;
 using Avogadro::Core::startsWith;
+using Avogadro::Core::tokenize;
 using Avogadro::Core::toLower;
 using Avogadro::Core::trimmed;
 using std::string;
@@ -556,4 +558,151 @@ TEST(UtilitiesTest, unpackDouble)
               -std::numeric_limits<double>::infinity());
     EXPECT_TRUE(std::isnan(decodeDouble(0x7ff8000000000000ull, endian)));
   }
+}
+
+TEST(UtilitiesTest, tokenizeMatchesSplitWhitespace)
+{
+  const std::vector<string> inputs = { "",
+                                       " ",
+                                       " \t\r\n  \n",
+                                       "token",
+                                       "  lead",
+                                       "trail  ",
+                                       "  a   b  c  ",
+                                       "a\tb",
+                                       "a\r\nb\n",
+                                       "\t a \t\r\n b \n\n",
+                                       "  -P   2yn \n",
+                                       "a\tb c",
+                                       "C   1.0\t2.0 3.0\r\n",
+                                       "x\vy" };
+  std::vector<std::string_view> tokens;
+  for (const string& input : inputs) {
+    tokenize(input, tokens);
+    const auto expected = splitWhitespace(input);
+    ASSERT_EQ(tokens.size(), expected.size()) << "input: " << input;
+    for (std::size_t i = 0; i < tokens.size(); ++i) {
+      EXPECT_EQ(tokens[i], expected[i]);
+      EXPECT_FALSE(tokens[i].empty());
+    }
+  }
+}
+
+TEST(UtilitiesTest, tokenizeReusesVector)
+{
+  std::vector<std::string_view> tokens;
+  const string longLine = "a b c d e f";
+  tokenize(longLine, tokens);
+  EXPECT_EQ(tokens.size(), 6u);
+  const string shortLine = "  x ";
+  tokenize(shortLine, tokens);
+  ASSERT_EQ(tokens.size(), 1u);
+  EXPECT_EQ(tokens[0], "x");
+  // Views point into the input.
+  EXPECT_EQ(tokens[0].data(), shortLine.data() + 2);
+  tokenize(std::string_view(), tokens);
+  EXPECT_TRUE(tokens.empty());
+}
+
+TEST(UtilitiesTest, lexicalCastStringViewMatchesString)
+{
+  const std::vector<string> inputs = { "5.3",
+                                       "-5.3E-10",
+                                       "1.0D-03",
+                                       "9.293354777E-39",
+                                       "1.0E+500",
+                                       "-1.0E+500",
+                                       "2.61793E-500",
+                                       "nan",
+                                       "inf",
+                                       "1.5abc",
+                                       "+5",
+                                       "+-5",
+                                       " 12",
+                                       "12abc",
+                                       "",
+                                       "1.5 2.0",
+                                       "1-5",
+                                       ".5",
+                                       "1.",
+                                       "five" };
+  for (const string& input : inputs) {
+    const std::string_view view(input);
+    EXPECT_EQ(lexicalCast<double>(view), lexicalCast<double>(input)) << input;
+    EXPECT_EQ(lexicalCast<float>(view), lexicalCast<float>(input)) << input;
+    EXPECT_EQ(lexicalCast<int>(view), lexicalCast<int>(input)) << input;
+  }
+  EXPECT_EQ(lexicalCast<double>(std::string_view("1.0D-03")), 0.001);
+  EXPECT_EQ(lexicalCast<double>(std::string_view("nan")), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>(std::string_view("1.5abc")), std::nullopt);
+  EXPECT_EQ(lexicalCast<double>(std::string_view("2.61793E-500")), 0.0);
+  EXPECT_EQ(lexicalCast<double>(std::string_view("1.0E+500")),
+            std::numeric_limits<double>::max());
+  EXPECT_NE(lexicalCast<float>(std::string_view("9.293354777E-39")),
+            std::nullopt);
+  // A view of part of a longer buffer stops at its own end.
+  const string buffer = "12.5abc";
+  EXPECT_EQ(lexicalCast<double>(std::string_view(buffer).substr(0, 4)), 12.5);
+  EXPECT_EQ(lexicalCast<int>(std::string_view(buffer).substr(0, 2)), 12);
+}
+
+TEST(UtilitiesTest, lexicalCastIntegers)
+{
+  EXPECT_EQ(lexicalCast<int>("12"), 12);
+  EXPECT_EQ(lexicalCast<int>("-12"), -12);
+  EXPECT_EQ(lexicalCast<int>("+5"), 5);
+  EXPECT_EQ(lexicalCast<int>("+-5"), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>("-+5"), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>("--5"), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>(" 12"), 12);
+  EXPECT_EQ(lexicalCast<int>("\t\n 12"), 12);
+  EXPECT_EQ(lexicalCast<int>("12abc"), 12);
+  EXPECT_EQ(lexicalCast<int>("1.5"), 1);
+  EXPECT_EQ(lexicalCast<int>("0x10"), 0);
+  EXPECT_EQ(lexicalCast<int>(""), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>(" "), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>("-"), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>("abc"), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>(".5"), std::nullopt);
+
+  EXPECT_EQ(lexicalCast<int>("2147483647"), std::numeric_limits<int>::max());
+  EXPECT_EQ(lexicalCast<int>("2147483648"), std::nullopt);
+  EXPECT_EQ(lexicalCast<int>("-2147483648"), std::numeric_limits<int>::min());
+  EXPECT_EQ(lexicalCast<int>("-2147483649"), std::nullopt);
+  EXPECT_EQ(lexicalCast<short int>("32767"), 32767);
+  EXPECT_EQ(lexicalCast<short int>("32768"), std::nullopt);
+  EXPECT_EQ(lexicalCast<std::size_t>("42"), 42u);
+  EXPECT_EQ(lexicalCast<unsigned int>("4294967295"), 4294967295u);
+  EXPECT_EQ(lexicalCast<unsigned int>("4294967296"), std::nullopt);
+
+  // Deliberately unlike a stream extractor, which wraps "-1" around.
+  EXPECT_EQ(lexicalCast<unsigned int>("-1"), std::nullopt);
+  EXPECT_EQ(lexicalCast<std::size_t>("-1"), std::nullopt);
+  EXPECT_EQ(lexicalCast<unsigned int>("+1"), 1u);
+
+  // Characters and other types still go through a stream.
+  EXPECT_EQ(lexicalCast<char>("Hx"), 'H');
+  EXPECT_EQ(lexicalCast<std::string>("word rest"), std::string("word"));
+
+  // The three argument spellings all work.
+  const string text = "17";
+  EXPECT_EQ(lexicalCast<int>(text), 17);
+  EXPECT_EQ(lexicalCast<int>(std::string_view(text)), 17);
+  EXPECT_EQ(lexicalCast<int>(text.c_str()), 17);
+  bool ok = false;
+  EXPECT_EQ(lexicalCast<int>(std::string_view("9"), ok), 9);
+  EXPECT_TRUE(ok);
+  EXPECT_EQ(lexicalCast<int>(text, ok), 17);
+  lexicalCast<int>("x", ok);
+  EXPECT_FALSE(ok);
+}
+
+TEST(UtilitiesTest, lexicalCastRangeOverStringViews)
+{
+  std::vector<std::string_view> tokens;
+  tokenize("C 1.0 -2.5 3e2", tokens);
+  const auto values = lexicalCast<double>(tokens.begin() + 1, tokens.end());
+  ASSERT_TRUE(values.has_value());
+  EXPECT_EQ(*values, (std::vector<double>{ 1.0, -2.5, 300.0 }));
+  EXPECT_EQ(lexicalCast<double>(tokens.begin(), tokens.end()), std::nullopt);
 }
