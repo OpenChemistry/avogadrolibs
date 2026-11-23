@@ -121,12 +121,14 @@ int runDrag(long atoms, long moves)
   start = Clock::now();
   editable.undoStack().redo();
   const double redo = elapsedMs(start);
-  const Vector3 expected =
-    original[0] + Vector3(0.01 * static_cast<double>(moves), 0.0, 0.0);
-  const bool redone = molecule.atomPosition3d(0) == expected;
+  const Vector3 shift(0.01 * static_cast<double>(moves), 0.0, 0.0);
+  bool redone = true;
+  for (long i = 0; i < atoms; ++i)
+    redone = redone && molecule.atomPosition3d(i) == original[i] + shift;
 
-  std::printf("drag %ld atoms x %ld sweeps (%ld calls)\n", atoms, moves,
-              atoms * moves);
+  // long is 32 bits on Windows, so the call count is computed as 64 bits.
+  std::printf("drag %ld atoms x %ld sweeps (%lld calls)\n", atoms, moves,
+              static_cast<long long>(atoms) * moves);
   std::printf("drag %.1f ms, undo %.1f ms, redo %.1f ms\n", drag, undo, redo);
   std::printf("undo stack count %d\n", count);
   const bool ok = restored && redone && count == 1;
