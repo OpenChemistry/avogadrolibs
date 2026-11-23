@@ -82,7 +82,15 @@ QString OBProcess::version()
 
 bool OBProcess::waitForFinished(int msTimeout)
 {
-  return m_process->waitForFinished(msTimeout);
+  // waitForFinished() also returns false for a process that has already
+  // exited (or never started), so only a process still running timed out.
+  if (m_process->waitForFinished(msTimeout) ||
+      m_process->state() == QProcess::NotRunning)
+    return true;
+
+  // Don't leave obabel running; the operation's slot then emits nothing.
+  abort();
+  return false;
 }
 
 void OBProcess::abort()

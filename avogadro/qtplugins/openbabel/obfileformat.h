@@ -63,8 +63,6 @@ public:
   bool fileOnly() const { return m_fileOnly; }
   /** @} */
 
-  class ProcessListener;
-
 private:
   Operations m_rwFlags;
   std::string m_description;

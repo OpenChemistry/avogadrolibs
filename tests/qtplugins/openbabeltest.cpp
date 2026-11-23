@@ -5,11 +5,11 @@
 
 #include "obcharges.h"
 #include "obfileformat.h"
+#include "obprocess.h"
 
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QStandardPaths>
 #include <QtCore/QString>
 #include <QtCore/QThread>
 #include <QtCore/QTimer>
@@ -22,11 +22,10 @@ using Avogadro::QtPlugins::OBCharges;
 
 namespace {
 
+// Ask OBProcess, so the test finds obabel exactly where the plugin would.
 bool haveObabel()
 {
-  if (!qEnvironmentVariableIsEmpty("AVO_OBABEL_EXECUTABLE"))
-    return true;
-  return !QStandardPaths::findExecutable("obabel").isEmpty();
+  return !Avogadro::QtPlugins::OBProcess().version().isEmpty();
 }
 
 } // namespace
@@ -72,13 +71,10 @@ TEST(OpenBabelCommandTest, ChargesDoNotRunTheEventLoop)
   EXPECT_TRUE(timerFired);
 }
 
-// With no atoms there is no first charge to adjust, and whatever obabel
-// reports must not be written past the end.
+// With no atoms there is nothing to run obabel on, and no first charge to
+// adjust.
 TEST(OpenBabelCommandTest, ChargesForAnEmptyMolecule)
 {
-  if (!haveObabel())
-    GTEST_SKIP() << "obabel is not available";
-
   const Avogadro::Core::Molecule mol;
   const OBCharges model("gasteiger");
   const Avogadro::MatrixX charges = model.partialCharges(mol);

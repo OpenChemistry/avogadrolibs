@@ -33,55 +33,6 @@ bool isCifFormat(const std::vector<std::string>& extensions)
 
 } // namespace
 
-/**
- * @brief The ProcessListener class allows synchronous use of OBProcess.
- */
-class OBFileFormat::ProcessListener : public QObject
-{
-  Q_OBJECT
-public:
-  ProcessListener() : m_finished(false) {}
-
-  bool waitForOutput(OBProcess& process, QByteArray& output,
-                     int msTimeout = 120000)
-  {
-    if (!wait(process, msTimeout))
-      return false;
-
-    // success!
-    output = m_output;
-    return true;
-  }
-
-public slots:
-  void responseReceived(const QByteArray& output)
-  {
-    m_finished = true;
-    m_output = output;
-  }
-
-private:
-  // Block on the process rather than running the event loop. This can be
-  // called from a worker thread (BackgroundFileFormat), where the process and
-  // this listener both live, and from code that is itself called from an
-  // event handler or paint; processEvents() would re-enter both. QProcess
-  // emits finished() (or errorOccurred()) from inside waitForFinished(), which
-  // runs OBProcess's slot and so responseReceived() before this returns.
-  bool wait(OBProcess& process, int msTimeout)
-  {
-    if (!m_finished && !process.waitForFinished(msTimeout) && !m_finished) {
-      // timed out (or never started): don't leave obabel running
-      process.abort();
-    }
-
-    return m_finished;
-  }
-
-  OBProcess* m_process;
-  bool m_finished;
-  QByteArray m_output;
-};
-
 OBFileFormat::OBFileFormat(const std::string& name_,
                            const std::string& identifier_,
                            const std::string& description_,
@@ -102,9 +53,13 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
   // Allow blocking until the read is completed.
   OBProcess proc;
-  ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
-                   SLOT(responseReceived(QByteArray)));
+  bool finished = false;
+  QByteArray output;
+  QObject::connect(&proc, &OBProcess::convertFinished, &proc,
+                   [&finished, &output](const QByteArray& result) {
+                     output = result;
+                     finished = true;
+                   });
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -206,8 +161,11 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
-  QByteArray output;
-  if (!listener.waitForOutput(proc, output)) {
+  // Block without running the event loop: this runs on BackgroundFileFormat's
+  // worker thread and from event handlers, and processEvents() would re-enter
+  // both. The result arrives through the connection above before this returns.
+  proc.waitForFinished(120000);
+  if (!finished) {
     appendError("Conversion timed out."s);
     return false;
   }
@@ -290,9 +248,13 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
 
   // Block until the OpenBabel conversion finishes:
   OBProcess proc;
-  ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
-                   SLOT(responseReceived(QByteArray)));
+  bool finished = false;
+  QByteArray output;
+  QObject::connect(&proc, &OBProcess::convertFinished, &proc,
+                   [&finished, &output](const QByteArray& result) {
+                     output = result;
+                     finished = true;
+                   });
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -304,8 +266,11 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
   proc.convert(QByteArray(outputString.c_str()), m_defaultFormat.c_str(),
                QString::fromStdString(m_fileExtensions.front()), options);
 
-  QByteArray output;
-  if (!listener.waitForOutput(proc, output)) {
+  // Block without running the event loop: this runs on BackgroundFileFormat's
+  // worker thread and from event handlers, and processEvents() would re-enter
+  // both. The result arrives through the connection above before this returns.
+  proc.waitForFinished(120000);
+  if (!finished) {
     appendError("Conversion timed out."s);
     return false;
   }
@@ -333,5 +298,3 @@ Io::FileFormat* OBFileFormat::newInstance() const
 }
 
 } // namespace Avogadro::QtPlugins
-
-#include "obfileformat.moc"

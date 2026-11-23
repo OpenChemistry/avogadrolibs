@@ -53,9 +53,11 @@ public:
 
   /**
    * Block until the running process has finished, without running the event
-   * loop. QProcess emits finished() from inside this call, so the slot for the
-   * current operation (e.g., chargesFinished()) runs before it returns.
-   * @return True if the process finished, false on timeout or error.
+   * loop, so it is safe to call from a paint or a worker thread. QProcess
+   * emits finished() from inside this call, so the current operation's
+   * result signal (e.g., chargesFinished()) is emitted before it returns.
+   * On timeout the process is aborted, and no result signal follows.
+   * @return False on timeout.
    */
   bool waitForFinished(int msTimeout);
 

@@ -203,7 +203,7 @@ bool PropertyModel::addCustomProperty(const QString& name,
   // The new column changes the column set; invalidate so the view rebuilds it
   // lazily on the next query.
   m_validCache = false;
-  m_chargeCacheValid = false;
+  m_chargeCache.reset();
   beginResetModel();
   endResetModel();
 
@@ -338,17 +338,15 @@ MatrixX partialCharges(Molecule* molecule, const QString& overrideType)
 // the molecule or the charge type changes.
 QString PropertyModel::partialCharge(int atom) const
 {
-  if (!m_chargeCacheValid) {
+  if (!m_chargeCache)
     m_chargeCache = partialCharges(m_molecule, m_chargeType);
-    m_chargeCacheValid = true;
-  }
+  const MatrixX& charges = *m_chargeCache;
 
   // a failed calculation returns fewer rows than atoms
-  if (atom < 0 || atom >= m_chargeCache.rows() || m_chargeCache.cols() < 1)
+  if (atom < 0 || atom >= charges.rows() || charges.cols() < 1)
     return QString();
 
-  return QString("%L1").arg(static_cast<float>(m_chargeCache(atom, 0)), 0, 'f',
-                            3);
+  return QString("%L1").arg(static_cast<float>(charges(atom, 0)), 0, 'f', 3);
 }
 
 // Qt calls this for multiple "roles" across row / columns in the index
@@ -1007,7 +1005,7 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   // We can still use the cached data -- we just invalidate now
   // So that we can call "return" and have the cache invalid when we leave
   m_validCache = false;
-  m_chargeCacheValid = false;
+  m_chargeCache.reset();
   auto* undoMolecule = m_molecule->undoMolecule();
 
   // Custom property columns
@@ -1325,7 +1323,7 @@ QStringList PropertyModel::availableChargeTypes() const
 void PropertyModel::setChargeType(const QString& type)
 {
   m_chargeType = type;
-  m_chargeCacheValid = false;
+  m_chargeCache.reset();
   // refresh the partial charge column and header
   beginResetModel();
   endResetModel();
@@ -1340,7 +1338,7 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
       m_molecule->disconnect(this);
 
     m_molecule = molecule;
-    m_chargeCacheValid = false;
+    m_chargeCache.reset();
 
     // Initialize structure tracking for change detection
     m_lastAtomCount = molecule->atomCount();
@@ -1364,8 +1362,7 @@ void PropertyModel::moleculeDestroyed()
 {
   beginResetModel();
   m_molecule = nullptr;
-  m_chargeCacheValid = false;
-  m_chargeCache.resize(0, 0);
+  m_chargeCache.reset();
   // Everything cached describes a molecule that no longer exists;
   // updateCache() empties all of it when there is none.
   updateCache();
@@ -1399,7 +1396,7 @@ QString PropertyModel::secStructure(unsigned int type) const
 void PropertyModel::updateTable(unsigned int flags)
 {
   // Any change (even coordinates alone) can change the partial charges.
-  m_chargeCacheValid = false;
+  m_chargeCache.reset();
 
   // During animation/vibration, coordinates change rapidly but the table
   // structure (number of atoms, bonds, etc.) remains the same. We can skip
