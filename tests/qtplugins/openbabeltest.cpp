@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
 #include <string>
 
 using Avogadro::QtPlugins::OBCharges;
@@ -117,22 +118,31 @@ TEST(OpenBabelCommandTest, FileReadOnWorkerThread)
   if (!haveObabel())
     GTEST_SKIP() << "obabel is not available";
 
-  const std::string input = "3\nwater\n"
-                            "O 0.000 0.000 0.000\n"
-                            "H 0.960 0.000 0.000\n"
-                            "H -0.240 0.930 0.000\n";
-  Avogadro::Core::Molecule mol;
-  bool ok = false;
-  QThread* thread = QThread::create([&]() {
+  // The worker owns its data, so it stays valid if the test gives up on it.
+  struct Result
+  {
+    Avogadro::Core::Molecule mol;
+    bool ok = false;
+  };
+  auto result = std::make_shared<Result>();
+  QThread* thread = QThread::create([result]() {
+    const std::string input = "3\nwater\n"
+                              "O 0.000 0.000 0.000\n"
+                              "H 0.960 0.000 0.000\n"
+                              "H -0.240 0.930 0.000\n";
     Avogadro::QtPlugins::OBFileFormat format(
       "XYZ via Open Babel", "Avogadro: OBXYZ", "XYZ", "", { "xyz" },
       { "chemical/x-xyz" }, "cml", false);
-    ok = format.readString(input, mol);
+    result->ok = format.readString(input, result->mol);
   });
   thread->start();
-  EXPECT_TRUE(thread->wait(30000));
+  if (!thread->wait(30000)) {
+    // Deleting a running QThread aborts, and terminate() is unsafe, so leave
+    // it running; the read gives up on obabel by itself.
+    FAIL() << "reading on the worker thread did not finish within 30 s";
+  }
   delete thread;
 
-  EXPECT_TRUE(ok);
-  EXPECT_EQ(mol.atomCount(), 3u);
+  EXPECT_TRUE(result->ok);
+  EXPECT_EQ(result->mol.atomCount(), 3u);
 }
