@@ -1334,8 +1334,8 @@ void PropertyModel::setMolecule(QtGui::Molecule* molecule)
 
     updateCache();
 
-    connect(m_molecule, SIGNAL(changed(unsigned int)), this,
-            SLOT(updateTable(unsigned int)));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &PropertyModel::updateTable);
     // The molecule's own signals stop arriving when it is destroyed, but this
     // model is also woken by the application-wide energy unit, which knows
     // nothing about either. Without this the next such change would walk a
