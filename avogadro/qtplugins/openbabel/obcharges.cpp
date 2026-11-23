@@ -13,6 +13,8 @@
 
 #include <QtCore/QDebug>
 
+#include <algorithm>
+
 namespace Avogadro {
 
 using Core::Array;
@@ -198,13 +200,17 @@ MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
     return charges;
   }
 
-  // push the output into our charges array
-  for (unsigned int i = 0; i < output.size(); ++i) {
-    charges(i, 0) = output[i];
-  }
+  // Push the output into our charges array. obabel may report a different
+  // number of atoms than we sent, so never write past the molecule's.
+  const auto atomCount = static_cast<Eigen::Index>(molecule.atomCount());
+  charges = MatrixX::Zero(atomCount, 1);
+  const auto count =
+    std::min(static_cast<Eigen::Index>(output.size()), atomCount);
+  for (Eigen::Index i = 0; i < count; ++i)
+    charges(i, 0) = output[static_cast<size_t>(i)];
 
   // workaround failed runs causing the code to freeze
-  if (abs(charges(0, 0)) < 0.00001)
+  if (atomCount > 0 && abs(charges(0, 0)) < 0.00001)
     charges(0, 0) = 0.0001;
 
   // check the size

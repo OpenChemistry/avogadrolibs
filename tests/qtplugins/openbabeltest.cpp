@@ -72,6 +72,19 @@ TEST(OpenBabelCommandTest, ChargesDoNotRunTheEventLoop)
   EXPECT_TRUE(timerFired);
 }
 
+// With no atoms there is no first charge to adjust, and whatever obabel
+// reports must not be written past the end.
+TEST(OpenBabelCommandTest, ChargesForAnEmptyMolecule)
+{
+  if (!haveObabel())
+    GTEST_SKIP() << "obabel is not available";
+
+  const Avogadro::Core::Molecule mol;
+  const OBCharges model("gasteiger");
+  const Avogadro::MatrixX charges = model.partialCharges(mol);
+  EXPECT_EQ(0, charges.rows());
+}
+
 // Same for reading through Open Babel: file formats are called from code that
 // is itself running in an event handler (or a worker thread).
 TEST(OpenBabelCommandTest, FileReadDoesNotRunTheEventLoop)
