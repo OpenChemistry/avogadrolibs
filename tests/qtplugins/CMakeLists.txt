@@ -156,9 +156,10 @@ foreach(plugin ${testNames})
     set(filter "VibrationsCommandTest.*:VibrationsPluginTest.*")
   elseif(plugin STREQUAL "Surfaces")
     # surfacestest.cpp also defines SurfacesResolutionTest and
-    # SurfacesDistanceFieldTest and SurfacesSolventExcludedTest.
+    # SurfacesDistanceFieldTest. SurfacesSolventExcludedTest runs separately
+    # as QtPlugins-SurfacesSES below.
     set(filter
-      "SurfacesCommandTest.*:SurfacesResolutionTest.*:SurfacesDistanceFieldTest.*:SurfacesSolventExcludedTest.*")
+      "SurfacesCommandTest.*:SurfacesResolutionTest.*:SurfacesDistanceFieldTest.*")
   else()
     set(filter "${plugin}CommandTest.*")
   endif()
@@ -168,6 +169,18 @@ foreach(plugin ${testNames})
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     TIMEOUT 120)
 endforeach()
+
+# Under the coverage build (-O0, atomic gcov counters) the Surfaces tests run
+# several hundred times slower than optimized, so they are split to run in
+# parallel and given the same 600 s limit as the QtPlugins-Smoke tests.
+if("Surfaces" IN_LIST testNames)
+  set_tests_properties("QtPlugins-Surfaces" PROPERTIES TIMEOUT 600)
+  add_test(NAME "QtPlugins-SurfacesSES"
+    COMMAND AvogadroQtPluginsTests "--gtest_filter=SurfacesSolventExcludedTest.*")
+  set_tests_properties("QtPlugins-SurfacesSES" PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+    TIMEOUT 600)
+endif()
 
 if(haveGLWidgetTest)
   add_test(NAME "QtPlugins-GLWidgetReentry"
