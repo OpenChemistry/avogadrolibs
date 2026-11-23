@@ -348,13 +348,14 @@ std::string lowerExtension(const fs::path& path)
 }
 
 bool readInto(Kind kind, const std::string& text, Molecule& mol,
-              std::string& error)
+              const std::string& options, std::string& error)
 {
   bool ok = false;
   switch (kind) {
     case Kind::Xyz:
     case Kind::Traj: {
       Avogadro::Io::XyzFormat format;
+      format.setOptions(options);
       ok = format.readString(text, mol);
       if (!ok)
         error = format.error();
@@ -461,17 +462,19 @@ double toMs(Clock::time_point a, Clock::time_point b)
   return std::chrono::duration<double, std::milli>(b - a).count();
 }
 
-Result runReader(Input& input, const Options& o)
+Result runReader(Input& input, const Options& o, bool perceiveBonds)
 {
   Result r;
   r.input = &input;
-  r.caseName = input.caseName;
+  r.caseName = perceiveBonds ? input.caseName : input.caseName + ":nobonds";
+  const std::string options =
+    perceiveBonds ? std::string() : std::string(R"({"perceiveBonds": false})");
   std::unique_ptr<Molecule> last;
   for (std::size_t i = 0; i < o.warmup + o.iterations; ++i) {
     auto mol = std::make_unique<Molecule>();
     std::string error;
     const auto start = Clock::now();
-    const bool ok = readInto(input.kind, input.text, *mol, error);
+    const bool ok = readInto(input.kind, input.text, *mol, options, error);
     const auto stop = Clock::now();
     if (!ok) {
       r.error = error.empty() ? "read failed" : error;
@@ -629,7 +632,10 @@ int main(int argc, char** argv)
         results.push_back(runSplit(input, v, o));
       }
     } else {
-      results.push_back(runReader(input, o));
+      results.push_back(runReader(input, o, true));
+      // XYZ readers perceive bonds by default; also time the parse alone.
+      if (input.kind == Kind::Xyz || input.kind == Kind::Traj)
+        results.push_back(runReader(input, o, false));
     }
     std::cout << " done\n";
   }
