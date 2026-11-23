@@ -317,8 +317,20 @@ public:
    */
   bool atomSelected(Index atomId) const;
 
-  bool setAtomPosition2d(Index, const Vector2&) { return false; }
-  Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
+  /**
+   * Set the 2D position of a single atom, as an undoable step.
+   * @param atomId The index of the atom to modify.
+   * @param pos The new 2D position of the atom.
+   * @return True on success, false if @p atomId is out of range.
+   */
+  bool setAtomPosition2d(Index atomId, const Vector2& pos);
+
+  /**
+   * @return The 2D position of the atom at @p atomId, or (0, 0) if it has
+   * none.
+   */
+  Vector2 atomPosition2d(Index atomId) const;
+
   const Core::Array<Vector2>& atomPositions2d() const
   {
     return m_molecule.m_atomState.positions2d.array();
@@ -800,14 +812,13 @@ public:
 
   /**
    * Set the force vector on a single atom.
+   * Needed by Core::AtomTemplate<RWMolecule>: MSVC instantiates every member
+   * of the exported RWAtom base, so removing this breaks the Windows build.
    * @param atomId The index of the atom.
    * @param force The new force vector for the atom.
-   * @param undoText The undo text to be displayed for undo commands.
    * @return True on success, false otherwise.
    */
-  bool setForceVector(
-    Index atomId, const Vector3& force,
-    const QString& undoText = QStringLiteral("Change Force Vectors"));
+  bool setForceVector(Index atomId, const Vector3& force);
 
 public slots:
   /**
@@ -947,6 +958,11 @@ inline signed char RWMolecule::formalCharge(Index atomId) const
 inline unsigned short RWMolecule::isotope(Index atomId) const
 {
   return m_molecule.isotope(atomId);
+}
+
+inline Vector2 RWMolecule::atomPosition2d(Index atomId) const
+{
+  return m_molecule.atomPosition2d(atomId);
 }
 
 inline Vector3ub RWMolecule::color(Index atomId) const

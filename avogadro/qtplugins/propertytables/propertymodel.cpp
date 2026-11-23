@@ -1038,8 +1038,6 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   }
 
   if (m_type == AtomType) {
-    Vector3 v = m_molecule->atomPosition3d(index.row());
-
     switch (static_cast<AtomColumn>(index.column())) {
       case AtomDataFormalCharge: {
         bool ok;
@@ -1067,27 +1065,17 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         } // not a number
         break;
       }
-      case AtomDataX: {
-        bool ok;
-        double x = value.toDouble(&ok);
-        if (ok) {
-          v[0] = x;
-        }
-        break;
-      }
-      case AtomDataY: {
-        bool ok;
-        double y = value.toDouble(&ok);
-        if (ok) {
-          v[1] = y;
-        }
-        break;
-      }
+      case AtomDataX:
+      case AtomDataY:
       case AtomDataZ: {
+        // Only a coordinate edit moves the atom; other columns must not
+        // leave a position step on the undo stack.
         bool ok;
-        double z = value.toDouble(&ok);
+        double coordinate = value.toDouble(&ok);
         if (ok) {
-          v[2] = z;
+          Vector3 v = m_molecule->atomPosition3d(index.row());
+          v[index.column() - AtomDataX] = coordinate;
+          undoMolecule->setAtomPosition3d(index.row(), v);
         }
         break;
       }
@@ -1097,8 +1085,14 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       case AtomDataIsotope: {
         bool ok;
         int isotope = value.toInt(&ok);
-        if (ok) {
-          m_molecule->setIsotope(index.row(), isotope);
+        // Isotopes are stored as unsigned short; a value outside that range
+        // would wrap around instead of being refused.
+        if (ok && isotope >= 0 &&
+            isotope <= std::numeric_limits<unsigned short>::max()) {
+          undoMolecule->setIsotope(index.row(),
+                                   static_cast<unsigned short>(isotope));
+        } else {
+          return false;
         }
         break;
       }
@@ -1120,7 +1114,6 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       default:
         return false;
     }
-    undoMolecule->setAtomPosition3d(index.row(), v);
 
     // cleanup atom changes
     emit dataChanged(index, index);
@@ -1421,10 +1414,11 @@ void PropertyModel::updateTable(unsigned int flags)
     // This avoids race conditions during rapid animation updates
     m_validCache = false;
 
-    // A constraint change adds no rows and moves no atoms, so a reset would
-    // be wasted -- but the lock a constrained value carries is part of what
-    // the cell says, so the cells still have to be repainted.
-    if (flags & Molecule::Constraints) {
+    // A constraint or property change (e.g. an isotope, including its undo)
+    // adds no rows and moves no atoms, so a reset would be wasted -- but the
+    // lock a constrained value carries, or the property itself, is part of
+    // what the cell says, so the cells still have to be repainted.
+    if (flags & (Molecule::Constraints | Molecule::Properties)) {
       const int rows = rowCount(QModelIndex());
       const int columns = columnCount(QModelIndex());
       if (rows > 0 && columns > 0)

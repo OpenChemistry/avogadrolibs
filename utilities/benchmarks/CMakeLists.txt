@@ -32,6 +32,9 @@ if(ENABLE_CALC_BENCHMARKS)
     add_executable(AvogadroUndoMemoryBenchmark undomemorybenchmark.cpp)
     target_link_libraries(AvogadroUndoMemoryBenchmark
       PRIVATE Avogadro::QtGui Avogadro::QuantumIO)
+
+    add_executable(AvogadroUndoMergeBenchmark undomergebenchmark.cpp)
+    target_link_libraries(AvogadroUndoMergeBenchmark PRIVATE Avogadro::QtGui)
   endif()
 endif()
 
