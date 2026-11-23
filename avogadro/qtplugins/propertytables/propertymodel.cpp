@@ -1038,8 +1038,6 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   }
 
   if (m_type == AtomType) {
-    Vector3 v = m_molecule->atomPosition3d(index.row());
-
     switch (static_cast<AtomColumn>(index.column())) {
       case AtomDataFormalCharge: {
         bool ok;
@@ -1067,27 +1065,17 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         } // not a number
         break;
       }
-      case AtomDataX: {
-        bool ok;
-        double x = value.toDouble(&ok);
-        if (ok) {
-          v[0] = x;
-        }
-        break;
-      }
-      case AtomDataY: {
-        bool ok;
-        double y = value.toDouble(&ok);
-        if (ok) {
-          v[1] = y;
-        }
-        break;
-      }
+      case AtomDataX:
+      case AtomDataY:
       case AtomDataZ: {
+        // Only a coordinate edit moves the atom; other columns must not
+        // leave a position step on the undo stack.
         bool ok;
-        double z = value.toDouble(&ok);
+        double coordinate = value.toDouble(&ok);
         if (ok) {
-          v[2] = z;
+          Vector3 v = m_molecule->atomPosition3d(index.row());
+          v[index.column() - AtomDataX] = coordinate;
+          undoMolecule->setAtomPosition3d(index.row(), v);
         }
         break;
       }
@@ -1124,7 +1112,6 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       default:
         return false;
     }
-    undoMolecule->setAtomPosition3d(index.row(), v);
 
     // cleanup atom changes
     emit dataChanged(index, index);
