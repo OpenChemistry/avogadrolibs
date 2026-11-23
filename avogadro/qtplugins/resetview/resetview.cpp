@@ -5,6 +5,7 @@
 
 #include "resetview.h"
 
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/camera.h>
@@ -44,36 +45,47 @@ ResetView::ResetView(QObject* parent_)
 
   connect(m_centerAction, SIGNAL(triggered()), SLOT(centerView()));
   connect(m_viewToAxesAction, SIGNAL(triggered()), SLOT(alignToAxes()));
+
+  registerResetViewCommands();
 }
 
 ResetView::~ResetView() {}
 
-void ResetView::registerCommands()
+void ResetView::registerResetViewCommands()
 {
-  emit registerCommand("alignView", tr("Align view to axes."));
+  QtGui::CommandSpec alignView;
+  alignView.name = "alignView";
+  alignView.description =
+    tr("Align the camera view to the Cartesian axes. Optional \"axis\" chooses "
+       "the view axis (\"x\", \"y\", or \"z\", default \"z\").");
+  alignView.needsMolecule = true;
+  alignView.arguments = {
+    QtGui::CommandArgumentSpec::enumeration(
+      "axis",
+      tr("Target Cartesian axis to align the view to (\"x\", \"y\", "
+         "or \"z\")."),
+      { "x", "y", "z" })
+      .withDefault("z")
+  };
+  alignView.handler = [this](const QtGui::CommandArguments& args) {
+    if (m_camera == nullptr) {
+      emit commandFailed(tr("No camera"));
+      return;
+    }
+    const QString axis = args.string("axis");
+    if (!animationCameraDefault(axis, false)) {
+      emit commandFailed(tr("Invalid axis: %1").arg(axis));
+      return;
+    }
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(alignView));
 }
 
 bool ResetView::handleCommand(const QString& command,
-                              [[maybe_unused]] const QVariantMap& options)
+                              const QVariantMap& options)
 {
-  if (command != "alignView")
-    return false; // not one of our commands
-
-  if (m_molecule == nullptr) {
-    emit commandFailed(tr("No molecule"));
-    return true;
-  }
-
-  if (m_camera == nullptr) {
-    emit commandFailed(tr("No camera"));
-    return true;
-  }
-
-  if (command == "alignView") {
-    animationCameraDefault(false);
-    return true;
-  }
-  return false;
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 QList<QAction*> ResetView::actions() const
@@ -116,7 +128,7 @@ bool ResetView::defaultChecks()
 
   // no need to animate when there are no atoms
   if (m_molecule->atomCount() == 0) {
-    animationCameraDefault(false);
+    animationCameraDefault(QStringLiteral("z"), false);
     return true;
   }
   return false;
@@ -154,25 +166,51 @@ inline void getBB(const Array<Vector3>& mols, Vector3& min, Vector3& max)
   }
 } // namespace QtPlugins
 
-void ResetView::animationCameraDefault(bool animate)
+bool ResetView::animationCameraDefault(const QString& axis, bool animate)
 {
   Matrix3f linearGoal;
-  linearGoal.row(0) = Vector3f::UnitX();
-  linearGoal.row(1) = Vector3f::UnitY();
-  linearGoal.row(2) = Vector3f::UnitZ();
-  // calculate the translation matrix
-  auto goal = Affine3f(linearGoal);
-
-  const Array<Vector3>& mols = m_molecule->atomPositions3d();
+  float extent = 0.0f;
   Vector3 min, max;
+  const Array<Vector3>& mols = m_molecule->atomPositions3d();
   getBB(mols, min, max);
   Vector3f mid = (max.cast<float>() + min.cast<float>()) / 2.0f;
-  float d = getZDistance(m_camera->projection(), max.x() - min.x(),
-                         m_camera->projectionType());
+  Vector3f forward = Vector3f::UnitZ();
 
-  Vector3f eye = -mid + (Vector3f::UnitZ() * -d);
+  char axisChar = axis.length() == 1 ? axis.at(0).toLower().toLatin1() : '\0';
+  switch (axisChar) {
+    case 'x':
+      linearGoal.row(0) = Vector3f::UnitY();
+      linearGoal.row(1) = Vector3f::UnitZ();
+      linearGoal.row(2) = Vector3f::UnitX();
+      forward = Vector3f::UnitX();
+      extent = max.y() - min.y();
+      break;
+    case 'y':
+      linearGoal.row(0) = Vector3f::UnitZ();
+      linearGoal.row(1) = Vector3f::UnitX();
+      linearGoal.row(2) = Vector3f::UnitY();
+      forward = Vector3f::UnitY();
+      extent = max.z() - min.z();
+      break;
+    case 'z':
+      linearGoal.row(0) = Vector3f::UnitX();
+      linearGoal.row(1) = Vector3f::UnitY();
+      linearGoal.row(2) = Vector3f::UnitZ();
+      forward = Vector3f::UnitZ();
+      extent = max.x() - min.x();
+      break;
+    default:
+      return false;
+  }
+
+  auto goal = Affine3f(linearGoal);
+  float d =
+    getZDistance(m_camera->projection(), extent, m_camera->projectionType());
+
+  Vector3f eye = -mid + (forward * -d);
   goal.translate(eye);
   animationCamera(goal, animate);
+  return true;
 }
 
 float ResetView::calculateOptimalOrthographicScale(
