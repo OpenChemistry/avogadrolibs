@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 from dataclasses import dataclass
+import os
 import struct
 from typing import TYPE_CHECKING
 
@@ -24,7 +25,14 @@ FLAG_REQUEST_GRADIENT = 0x0001
 FLAG_BATCH_MODE = 0x0002
 FLAG_REQUEST_ENERGY_AND_GRADIENT = 0x0004
 FLAG_REQUEST_HESSIAN = 0x0008
+# Server -> Avogadro only: the server has loaded its model and is ready for
+# requests. Zero payload; atom_count is the server's num_atoms. Never valid in
+# a request, so it is deliberately absent from VALID_REQUEST_FLAGS.
+FLAG_READY = 0x0010
 FLAG_RESPONSE_ERROR = 0x8000
+# Avogadro sets this to "1" in the plugin's environment if it understands
+# FLAG_READY. Without it an older Avogadro would choke on the extra frame.
+READY_ENVIRONMENT_VARIABLE = "AVOGADRO_ENERGY_READY"
 VALID_REQUEST_FLAGS = (
     FLAG_REQUEST_GRADIENT
     | FLAG_BATCH_MODE
@@ -421,7 +429,7 @@ class EnergyServer:
                     request.send_energy(energy)
     """
 
-    __slots__ = ("input", "output", "atom_count", "auto_flush")
+    __slots__ = ("input", "output", "atom_count", "auto_flush", "_ready_sent")
 
     def __init__(
         self,
@@ -434,9 +442,29 @@ class EnergyServer:
         self.output = output_stream
         self.atom_count = atom_count
         self.auto_flush = auto_flush
+        self._ready_sent = False
 
     def __enter__(self) -> "EnergyServer":
+        self.send_ready()
         return self
+
+    def send_ready(self) -> None:
+        """
+        Tell Avogadro the model is loaded and requests can be answered.
+
+        Sent at most once, and only when Avogadro asked for it by setting
+        AVOGADRO_ENERGY_READY=1 (older Avogadro versions cannot handle the
+        extra frame). Called automatically on entering the context manager,
+        so construct the server after the model has loaded.
+        """
+        if self._ready_sent:
+            return
+        self._ready_sent = True
+        if os.environ.get(READY_ENVIRONMENT_VARIABLE) != "1":
+            return
+        write_frame(
+            self.output, FLAG_READY, self.atom_count, b"", flush=True
+        )
 
     def __exit__(self, *args) -> None:
         try:
@@ -458,6 +486,7 @@ class EnergyServer:
           - send_hessian(hessian): Hessian matrix response
           - send_error(message): send error response
         """
+        self.send_ready()  # no-op if already sent by __enter__
         while True:
             request_frame = read_coordinates(self.input, self.atom_count)
             if request_frame is None:

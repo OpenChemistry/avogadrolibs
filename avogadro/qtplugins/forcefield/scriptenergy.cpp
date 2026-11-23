@@ -50,6 +50,63 @@ constexpr quint16 FLAG_REQUEST_GRADIENT = 0x0001;
 constexpr quint16 FLAG_BATCH_MODE = 0x0002;
 constexpr quint16 FLAG_REQUEST_ENERGY_AND_GRADIENT = 0x0004;
 constexpr quint16 FLAG_REQUEST_HESSIAN = 0x0008;
+// Sent once by the server (zero payload, atom_count = its num_atoms) when it
+// has finished loading and is ready for requests. Only sent when the
+// environment variable below is set; older servers never send it.
+constexpr quint16 FLAG_READY = 0x0010;
+
+constexpr char READY_ENVIRONMENT_VARIABLE[] = "AVOGADRO_ENERGY_READY";
+
+// The first exchange after the process starts has to cover importing a deep
+// learning framework and loading its model, which takes 7-16 s for the plugins
+// we know of. Model weights are fetched when the plugin is set up, not here.
+constexpr int STARTUP_TIMEOUT_MS = 60000;
+
+// QByteArray cannot hold more than this, and no sane frame comes close.
+constexpr qint64 MAX_FRAME_BYTES = 0x7fffffff - BINARY_HEADER_SIZE;
+
+enum class FrameState
+{
+  NeedMore, // a valid prefix of a frame; wait for more bytes
+  Complete, // buffer holds at least one whole frame
+  Invalid   // bad magic or version, or an absurd size
+};
+
+// Examine the start of @p buffer without consuming it. On Complete, @p total
+// is the byte length of the first frame and @p flags/@p atomCount/@p payload
+// describe it; on Invalid, @p why says what is wrong.
+FrameState inspectFrame(const QByteArray& buffer, qint64& total, quint16& flags,
+                        quint32& atomCount, quint32& payloadBytes,
+                        const char*& why)
+{
+  // Judge the magic as soon as any of it has arrived so that garbage fails
+  // fast rather than waiting out a timeout for a header that will never come.
+  const auto prefix =
+    static_cast<int>(std::min<qsizetype>(buffer.size(), sizeof(BINARY_MAGIC)));
+  if (std::memcmp(buffer.constData(), BINARY_MAGIC, prefix) != 0) {
+    why = "Invalid binary response magic.";
+    return FrameState::Invalid;
+  }
+  if (buffer.size() < BINARY_HEADER_SIZE)
+    return FrameState::NeedMore;
+
+  const auto* header = reinterpret_cast<const uchar*>(buffer.constData());
+  const quint16 version = qFromLittleEndian<quint16>(header + 4);
+  flags = qFromLittleEndian<quint16>(header + 6);
+  atomCount = qFromLittleEndian<quint32>(header + 8);
+  payloadBytes = qFromLittleEndian<quint32>(header + 12);
+  if (version != BINARY_VERSION) {
+    why = "Unsupported binary response version.";
+    return FrameState::Invalid;
+  }
+  if (static_cast<qint64>(payloadBytes) > MAX_FRAME_BYTES) {
+    why = "Binary response is too large.";
+    return FrameState::Invalid;
+  }
+
+  total = BINARY_HEADER_SIZE + static_cast<qint64>(payloadBytes);
+  return buffer.size() >= total ? FrameState::Complete : FrameState::NeedMore;
+}
 
 void appendFloat64LE(QByteArray& out, double value)
 {
@@ -238,6 +295,8 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
 
   // Always reset the running server before validating/restarting.
   m_interpreter->asyncTerminate();
+  m_needsRestart = false;
+  m_processStarted = false;
 
   if (!m_unitCells && mol->unitCell()) {
     appendError("Unit cell not supported for this script.");
@@ -252,19 +311,61 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
     return;
   }
 
+  startProcess();
+}
+
+bool ScriptEnergy::startProcess()
+{
+  if (m_interpreter == nullptr || m_molecule == nullptr)
+    return false;
+
+  // Always begin from a clean slate: a fresh QProcess has fresh pipes, so no
+  // byte written by an earlier process can ever be read from the new one.
+  m_interpreter->asyncTerminate();
+  m_needsRestart = false;
+  m_processStarted = false;
+
   QByteArray bootstrapInput;
   if (!buildBootstrapInput(bootstrapInput))
-    return;
+    return false;
 
   // construct the command line options
   QStringList options;
-  if (m_protocol == Protocol::BinaryV1)
+  m_interpreter->clearEnvironmentVariables();
+  if (m_protocol == Protocol::BinaryV1) {
     options << "--protocol"
             << "binary-v1";
+    // Ask the server to announce when it has loaded its model. Older servers
+    // ignore the variable, and the variable keeps newer servers from sending
+    // a frame an older Avogadro would not understand.
+    m_interpreter->setEnvironmentVariable(
+      QString::fromLatin1(READY_ENVIRONMENT_VARIABLE), QStringLiteral("1"));
+  }
 
   // Start the long-running interpreter and keep stdin open for coordinate
   // requests after bootstrapping the model from JSON.
-  m_interpreter->asyncExecute(options, bootstrapInput, false, false);
+  m_awaitingStartup = true;
+  if (!m_interpreter->asyncExecute(options, bootstrapInput, false, false)) {
+    m_interpreter->asyncTerminate();
+    return false;
+  }
+  m_processStarted = true;
+  return true;
+}
+
+void ScriptEnergy::discardProcess()
+{
+  if (m_interpreter == nullptr)
+    return;
+
+  // Kill the process outright. Whatever it still has in flight (a late reply
+  // to a request we gave up on, say) dies with it, and the next request
+  // starts a new process whose pipes cannot contain it.
+  m_interpreter->asyncTerminate();
+  if (m_processStarted)
+    m_needsRestart = true;
+  m_processStarted = false;
+  m_awaitingStartup = true;
 }
 
 QByteArray ScriptEnergy::writeCoordinatesText(const Eigen::VectorXd& x)
@@ -348,14 +449,14 @@ bool ScriptEnergy::parseResponseBinary(const QByteArray& response,
   const char* payload = raw + BINARY_HEADER_SIZE;
   const char* payloadEnd = payload + payloadBytes;
 
-  if (m_molecule != nullptr &&
-      atomCount != static_cast<quint32>(m_molecule->atomCount()))
-    return false;
-
   if ((flags & FLAG_RESPONSE_ERROR) != 0) {
     appendError(std::string(payload, payloadEnd), false);
     return false;
   }
+
+  if (m_molecule != nullptr &&
+      atomCount != static_cast<quint32>(m_molecule->atomCount()))
+    return false;
 
   const auto readDoubles = [](const char* src, const char* srcEnd, double* dest,
                               Eigen::Index count) -> bool {
@@ -435,68 +536,106 @@ bool ScriptEnergy::parseResponseBinary(const QByteArray& response,
 bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
                                    int timeoutMs)
 {
+  frame.clear();
   if (m_interpreter == nullptr)
     return false;
 
+  // A previous exchange failed and the process was killed: start a new one
+  // (re-bootstrapping the model) before sending anything.
+  if (m_needsRestart && !startProcess()) {
+    appendError("Could not restart the script after an earlier failure.");
+    return false;
+  }
+  if (!m_processStarted) {
+    appendError("The script is not running.");
+    return false;
+  }
+
+  if (!m_interpreter->asyncWriteRaw(input)) {
+    appendError("Could not send the request to the script.");
+    discardProcess();
+    return false;
+  }
+
+  // The first exchange also waits out the script's startup. Once a READY
+  // frame says startup is over, the real reply gets the normal timeout.
+  int budgetMs =
+    m_awaitingStartup ? std::max(timeoutMs, STARTUP_TIMEOUT_MS) : timeoutMs;
   QElapsedTimer timer;
   timer.start();
 
-  frame = m_interpreter->asyncWriteAndResponseRaw(input, timeoutMs);
-  if (frame.isEmpty()) {
-    appendError("No binary response received from script.");
-    return false;
-  }
+  QByteArray buffer;
+  for (;;) {
+    qint64 total = 0;
+    quint16 flags = 0;
+    quint32 atomCount = 0;
+    quint32 payloadBytes = 0;
+    const char* why = nullptr;
 
-  while (frame.size() < BINARY_HEADER_SIZE && timer.elapsed() < timeoutMs) {
-    const int remainingMs =
-      std::max(1, timeoutMs - static_cast<int>(timer.elapsed()));
+    // Frames are peeled off the front of the buffer one at a time, so bytes
+    // that arrive together with a READY frame are never lost.
+    const FrameState state =
+      inspectFrame(buffer, total, flags, atomCount, payloadBytes, why);
+
+    if (state == FrameState::Invalid) {
+      appendError(why);
+      discardProcess();
+      return false;
+    }
+
+    if (state == FrameState::Complete) {
+      if ((flags & FLAG_READY) != 0) {
+        // Only a server that has just started may announce itself, once, and
+        // it must describe the molecule we gave it.
+        const bool expected = m_awaitingStartup;
+        const bool sizeOk =
+          m_molecule == nullptr ||
+          atomCount == static_cast<quint32>(m_molecule->atomCount());
+        if (!expected || payloadBytes != 0 || !sizeOk) {
+          appendError(expected
+                        ? "Script's ready message does not match the molecule."
+                        : "Unexpected ready message from script.");
+          discardProcess();
+          return false;
+        }
+        m_awaitingStartup = false;
+        budgetMs = timeoutMs;
+        timer.restart();
+        buffer.remove(0, static_cast<qsizetype>(total));
+        continue;
+      }
+
+      if (buffer.size() != total) {
+        // One request, one reply: anything more means we are out of step.
+        appendError("Binary response contained trailing bytes.");
+        discardProcess();
+        return false;
+      }
+
+      // An old script sends no READY; its first reply ends the startup too.
+      m_awaitingStartup = false;
+      frame = buffer;
+      return true;
+    }
+
+    const qint64 remainingMs = budgetMs - timer.elapsed();
     const QByteArray chunk =
-      m_interpreter->asyncWriteAndResponseRaw(QByteArray(), remainingMs);
-    if (chunk.isEmpty())
-      break;
-    frame += chunk;
+      remainingMs > 0
+        ? m_interpreter->asyncReadRaw(static_cast<int>(remainingMs))
+        : QByteArray();
+    if (chunk.isEmpty()) {
+      if (buffer.isEmpty())
+        appendError(
+          m_awaitingStartup
+            ? "Timed out waiting for the script to start, or it exited."
+            : "No binary response received from script.");
+      else
+        appendError("Truncated binary response from script.");
+      discardProcess();
+      return false;
+    }
+    buffer += chunk;
   }
-
-  if (frame.size() < BINARY_HEADER_SIZE) {
-    appendError("Truncated binary header from script response.");
-    return false;
-  }
-
-  const auto* header = reinterpret_cast<const uchar*>(frame.constData());
-  if (std::memcmp(frame.constData(), BINARY_MAGIC, sizeof(BINARY_MAGIC)) != 0) {
-    appendError("Invalid binary response magic.");
-    return false;
-  }
-
-  const quint16 version = qFromLittleEndian<quint16>(header + 4);
-  const quint32 payloadBytes = qFromLittleEndian<quint32>(header + 12);
-  if (version != BINARY_VERSION) {
-    appendError("Unsupported binary response version.");
-    return false;
-  }
-
-  const qint64 totalBytes =
-    BINARY_HEADER_SIZE + static_cast<qint64>(payloadBytes);
-  while (frame.size() < totalBytes && timer.elapsed() < timeoutMs) {
-    const int remainingMs =
-      std::max(1, timeoutMs - static_cast<int>(timer.elapsed()));
-    const QByteArray chunk =
-      m_interpreter->asyncWriteAndResponseRaw(QByteArray(), remainingMs);
-    if (chunk.isEmpty())
-      break;
-    frame += chunk;
-  }
-
-  if (frame.size() < totalBytes) {
-    appendError("Truncated binary response payload.");
-    return false;
-  }
-  if (frame.size() > totalBytes) {
-    appendError("Binary response contained trailing bytes.");
-    return false;
-  }
-
-  return true;
 }
 
 bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
@@ -513,7 +652,10 @@ bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
   if (!readBinaryFrame(input, response))
     return false;
 
-  return parseResponseBinary(response, requestFlags, energy, grad, hess);
+  if (parseResponseBinary(response, requestFlags, energy, grad, hess))
+    return true;
+  rejectResponse(response);
+  return false;
 }
 
 QByteArray ScriptEnergy::writeBatchCoordinatesBinary(
@@ -684,8 +826,28 @@ bool ScriptEnergy::evaluateBatchBinary(
   if (!readBinaryFrame(input, response, timeoutMs))
     return false;
 
-  return parseBatchResponseBinary(response, requestFlags, coords.size(),
-                                  energies, grads);
+  if (parseBatchResponseBinary(response, requestFlags, coords.size(), energies,
+                               grads))
+    return true;
+  rejectResponse(response);
+  return false;
+}
+
+void ScriptEnergy::rejectResponse(const QByteArray& response)
+{
+  // A well-formed error frame is the script saying "I could not do that"; the
+  // stream is still in step, so the process is kept. Anything else that did
+  // not parse (wrong size, wrong atom count) means we no longer know what the
+  // script is answering, so start over rather than risk misreading later ones.
+  const bool isError =
+    response.size() >= BINARY_HEADER_SIZE &&
+    (qFromLittleEndian<quint16>(
+       reinterpret_cast<const uchar*>(response.constData()) + 6) &
+     FLAG_RESPONSE_ERROR) != 0;
+  if (!isError) {
+    appendError("Malformed response from script.");
+    discardProcess();
+  }
 }
 
 std::vector<Real> ScriptEnergy::valueBatch(
