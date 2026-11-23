@@ -1097,8 +1097,12 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       case AtomDataIsotope: {
         bool ok;
         int isotope = value.toInt(&ok);
-        if (ok) {
-          m_molecule->setIsotope(index.row(), isotope);
+        // Isotopes are stored as unsigned short; a value outside that range
+        // would wrap around instead of being refused.
+        if (ok && isotope >= 0 &&
+            isotope <= std::numeric_limits<unsigned short>::max()) {
+          undoMolecule->setIsotope(index.row(),
+                                   static_cast<unsigned short>(isotope));
         }
         break;
       }
