@@ -14,6 +14,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <string_view>
 
 using std::cout;
 using std::endl;
@@ -173,14 +174,17 @@ void MoldenFile::processLine(std::istream& in)
     return;
   }
 
-  vector<string> list = Core::split(line, ' ');
+  // The tokens are views into line: use them before line is read or
+  // assigned again, and tokenize again afterwards.
+  auto& list = m_tokens;
+  Core::tokenize(line, list);
 
   // Big switch statement checking for various things we are interested in. The
   // Molden file format uses sections, each starts with a header line of the
   // form [Atoms], and the beginning of a new section denotes the end of the
   // last.
   if (Core::contains(line, "[Atoms]") || Core::contains(line, "[ATOMS]")) {
-    if (list.size() > 1 && Core::contains(list[1], "AU"))
+    if (list.size() > 1 && list[1].find("AU") != std::string_view::npos)
       m_coordFactor = BOHR_TO_ANGSTROM_D;
     m_mode = Atoms;
   } else if (Core::contains(line, "[Title]") ||
@@ -233,11 +237,11 @@ void MoldenFile::processLine(std::istream& in)
         Core::getLine(in, line);
         line = Core::trimmed(line);
         while (!line.empty()) { // Read the shell types in this GTO.
-          list = Core::split(line, ' ');
+          Core::tokenize(line, list);
           // a shell line is "<type> <numGTOs> ...", so both are required
           if (list.size() < 2)
             break;
-          shell = list[0];
+          shell = string(list[0]);
           shell = Core::toLower(shell);
           shellType = GaussianSet::UU;
           if (shell == "sp")
@@ -280,7 +284,7 @@ void MoldenFile::processLine(std::istream& in)
             if (!Core::getLine(in, line))
               break;
             line = Core::trimmed(line);
-            list = Core::split(line, ' ');
+            Core::tokenize(line, list);
             if (list.size() > 1) {
               m_a.push_back(Core::lexicalCast<double>(list[0]).value_or(0.0));
               m_c.push_back(Core::lexicalCast<double>(list[1]).value_or(0.0));
@@ -323,12 +327,12 @@ void MoldenFile::processLine(std::istream& in)
               pendingSpinBeta = false;
             }
           } else if (Core::contains(line, "Sym")) {
-            pendingSymmetry = list.back();
+            pendingSymmetry = string(list.back());
             havePendingSymmetry = true;
           }
           Core::getLine(in, line);
           line = Core::trimmed(line);
-          list = Core::split(line, ' ');
+          Core::tokenize(line, list);
         }
 
         // Set the correct spin before reading coefficients; the legacy
@@ -362,7 +366,7 @@ void MoldenFile::processLine(std::istream& in)
         unsigned int sequentialIndex = 0;
         while (!line.empty() && !Core::contains(line, "=") &&
                !Core::contains(line, "[")) {
-          list = Core::split(line, ' ');
+          Core::tokenize(line, list);
           if (list.size() < 2)
             break;
 
@@ -387,7 +391,7 @@ void MoldenFile::processLine(std::istream& in)
           currentPos = in.tellg();
           Core::getLine(in, line);
           line = Core::trimmed(line);
-          list = Core::split(line, ' ');
+          Core::tokenize(line, list);
         }
         if (numBasisFunctions > 0) {
           // Some codes pad the [MO] section out to the full basis dimension
@@ -458,7 +462,7 @@ void MoldenFile::processLine(std::istream& in)
             line = Core::trimmed(line);
             while (!line.empty() && !Core::contains(line, "[") &&
                    !Core::contains(line, "vibration")) {
-              list = Core::split(line, ' ');
+              Core::tokenize(line, list);
               if (list.size() < 3)
                 break;
 
@@ -493,7 +497,7 @@ void MoldenFile::processLine(std::istream& in)
       case Intensities:
         // could be just IR or two pieces including Raman
         while (!line.empty() && !Core::contains(line, "[")) {
-          list = Core::split(line, ' ');
+          Core::tokenize(line, list);
           if (list.empty())
             break;
           m_IRintensities.push_back(
@@ -518,7 +522,7 @@ void MoldenFile::processLine(std::istream& in)
   }
 }
 
-void MoldenFile::readAtom(const vector<string>& list)
+void MoldenFile::readAtom(const vector<std::string_view>& list)
 {
   // element_name number atomic_number x y z
   if (list.size() < 6)

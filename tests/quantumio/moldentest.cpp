@@ -995,3 +995,45 @@ TEST(MoldenTest, oversizedShellIsSkipped)
   EXPECT_EQ(normalizationOfString(moldenWithShells(shells.str(), 2)),
             Normalization::RadialIncluded);
 }
+
+// Tabs separate columns just as spaces do, in atom, shell, primitive and
+// orbital lines alike.
+TEST(MoldenTest, tabSeparatedColumns)
+{
+  static const char tabbed[] = "[Molden Format]\n"
+                               "[Atoms] Angs\n"
+                               "H\t1\t1\t0.0\t0.0\t0.0\n"
+                               "H\t2\t1\t0.0\t0.0\t0.74\n"
+                               "[GTO]\n"
+                               "1\t0\n"
+                               " s\t1\t1.00\n"
+                               "\t3.42525091\t0.15432897\n"
+                               "\n"
+                               "2\t0\n"
+                               " s\t1\t1.00\n"
+                               "\t3.42525091\t0.15432897\n"
+                               "\n"
+                               "[MO]\n"
+                               "Sym=\tA\n"
+                               "Ene=\t-0.5\n"
+                               "Spin=\tAlpha\n"
+                               "Occup=\t2.0\n"
+                               "1\t0.5\n"
+                               "2\t0.25\n";
+  MoldenFile format;
+  Molecule molecule;
+  ASSERT_TRUE(format.readString(tabbed, molecule)) << format.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  EXPECT_NEAR(molecule.atom(1).position3d().z(), 0.74, 1e-9);
+
+  const auto* basis = dynamic_cast<const GaussianSet*>(molecule.basisSet());
+  ASSERT_NE(basis, nullptr);
+  const auto moMatrix = basis->moMatrix();
+  ASSERT_EQ(moMatrix.rows(), 2);
+  ASSERT_EQ(moMatrix.cols(), 1);
+  EXPECT_NEAR(moMatrix(0, 0), 0.5, 1e-9);
+  EXPECT_NEAR(moMatrix(1, 0), 0.25, 1e-9);
+  ASSERT_EQ(basis->moEnergy().size(), 1u);
+  EXPECT_NEAR(basis->moEnergy()[0], -0.5 * 27.211386, 1e-4);
+}
