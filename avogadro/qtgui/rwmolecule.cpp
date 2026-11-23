@@ -379,6 +379,9 @@ bool RWMolecule::setIsotope(Index atomId, unsigned short isotope)
     *this,
     [](Molecule& mol, Index index, const unsigned short& value) {
       mol.setIsotope(index, value);
+      // An undo or redo has no other notice that would refresh a view of
+      // the isotope, such as the atom property table.
+      mol.emitChanged(Molecule::Atoms | Molecule::Properties);
     },
     atomId, m_molecule.isotope(atomId), isotope);
   comm->setText(tr("Change Atom Isotope"));
@@ -392,7 +395,27 @@ bool RWMolecule::setAtomPosition2d(Index atomId, const Vector2& pos)
     return false;
 
   // The 2D positions may be shorter than the atom count (or empty); the
-  // molecule's setter and getter treat a missing entry as the origin.
+  // molecule's setter and getter treat a missing entry as the origin. Setting
+  // one entry of such an array grows it to the atom count, and undoing only
+  // that entry would leave the grown array behind: a molecule without 2D
+  // coordinates would then seem to have them, all at the origin. So the
+  // first edit keeps the whole array, and undo puts back its shape as well.
+  const Array<Vector2>& current = m_molecule.atomPositions2d();
+  if (current.size() != atomCount()) {
+    Array<Vector2> grown(current);
+    grown.resize(atomCount(), Vector2::Zero());
+    grown[atomId] = pos;
+    auto* comm = new SetArrayCommand<Vector2>(
+      *this,
+      [](Molecule& mol, const Array<Vector2>& values) {
+        mol.atomPositions2d() = values;
+      },
+      current, grown);
+    comm->setText(tr("Change 2D Position"));
+    m_undoStack.push(comm);
+    return true;
+  }
+
   auto* comm = new SetEntryCommand<Vector2>(
     *this,
     [](Molecule& mol, Index index, const Vector2& value) {

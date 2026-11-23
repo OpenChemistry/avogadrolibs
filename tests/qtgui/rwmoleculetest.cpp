@@ -4284,10 +4284,16 @@ TEST(RWMoleculeTest, setIsotopeIsUndoable)
   EXPECT_EQ(0, mol.isotope(0));
   EXPECT_EQ(1, mol.undoStack().count());
 
-  mol.undoStack().undo();
+  // Undo and redo each say so, with the Properties flag the property table
+  // repaints its cells on.
+  const auto undone = captureChanges(m, [&]() { mol.undoStack().undo(); });
   EXPECT_EQ(0, mol.isotope(1));
-  mol.undoStack().redo();
+  ASSERT_EQ(1u, undone.size());
+  EXPECT_TRUE(undone[0] & Molecule::Properties);
+  const auto redone = captureChanges(m, [&]() { mol.undoStack().redo(); });
   EXPECT_EQ(13, mol.isotope(1));
+  ASSERT_EQ(1u, redone.size());
+  EXPECT_TRUE(redone[0] & Molecule::Properties);
 
   // A second change keeps its own step and restores the first value.
   ASSERT_TRUE(mol.setIsotope(1, 14));
@@ -4330,4 +4336,38 @@ TEST(RWMoleculeTest, setAtomPosition2dIsUndoable)
 
   EXPECT_FALSE(mol.setAtomPosition2d(3, p));
   EXPECT_EQ(2, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, setAtomPosition2dUndoRestoresEmptyArray)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+  ASSERT_TRUE(mol.atomPositions2d().empty());
+
+  const Avogadro::Vector2 p(Real(1.5), Real(-2));
+  ASSERT_TRUE(mol.setAtomPosition2d(1, p));
+  EXPECT_EQ(2, mol.atomPositions2d().size());
+
+  // Undo takes the molecule back to having no 2D coordinates at all, not to
+  // a full array of origins.
+  mol.undoStack().undo();
+  EXPECT_TRUE(mol.atomPositions2d().empty());
+  EXPECT_TRUE(m.atomPositions2d().empty());
+
+  mol.undoStack().redo();
+  ASSERT_EQ(2, mol.atomPositions2d().size());
+  EXPECT_EQ(p, mol.atomPosition2d(1));
+  EXPECT_EQ(Avogadro::Vector2(0, 0), mol.atomPosition2d(0));
+
+  // With the array full, a later edit undoes to the earlier value and keeps
+  // the array full.
+  const Avogadro::Vector2 q(Real(3), Real(4));
+  ASSERT_TRUE(mol.setAtomPosition2d(0, q));
+  mol.undoStack().undo();
+  ASSERT_EQ(2, mol.atomPositions2d().size());
+  EXPECT_EQ(Avogadro::Vector2(0, 0), mol.atomPosition2d(0));
+  EXPECT_EQ(p, mol.atomPosition2d(1));
 }
