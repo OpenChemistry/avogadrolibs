@@ -53,11 +53,6 @@ public:
   MatrixX partialCharges(Core::Molecule& mol) const override;
   MatrixX partialCharges(const Core::Molecule& mol) const override;
 
-  /**
-   * @brief Synchronous use of the OBProcess.
-   */
-  class ProcessListener;
-
 protected:
   std::string m_identifier;
   std::string m_name;

@@ -11,9 +11,9 @@
 
 #include <nlohmann/json.hpp>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QTimer>
+
+#include <algorithm>
 
 namespace Avogadro {
 
@@ -21,46 +21,6 @@ using Core::Array;
 using Core::Molecule;
 
 namespace QtPlugins {
-
-class OBCharges::ProcessListener : public QObject
-{
-  Q_OBJECT
-public:
-  ProcessListener() : m_finished(false) {}
-
-  bool waitForOutput(Array<double>& output, int msTimeout = 120000)
-  {
-    if (!wait(msTimeout))
-      return false;
-
-    // success!
-    output = m_output;
-    return true;
-  }
-
-public slots:
-  void responseReceived(const Array<double> output)
-  {
-    m_finished = true;
-    m_output = output;
-  }
-
-private:
-  bool wait(int msTimeout)
-  {
-    QTimer timer;
-    timer.start(msTimeout);
-
-    while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::ExcludeUserInputEvents, 500);
-
-    return m_finished;
-  }
-
-  // OBProcess* m_process;
-  bool m_finished;
-  Array<double> m_output;
-};
 
 OBCharges::OBCharges(const std::string& id) : m_identifier(id)
 {
@@ -164,6 +124,8 @@ MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
     // no identifier, so we can't get the charges
     return charges;
   }
+  if (molecule.atomCount() == 0)
+    return charges; // nothing to run obabel on
 
   // check to see if we already have them in the molecule
   charges = molecule.partialCharges(m_identifier);
@@ -176,11 +138,18 @@ MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
     }
   }
 
-  // otherwise, we're going to run obprocess to get the charges
+  // Otherwise run obabel. This is synchronous and is called from data() while
+  // a view is painting, so it must not run the event loop (a nested paint of
+  // the same window crashes): waitForFinished() blocks instead, and the
+  // result arrives through this direct connection before it returns.
   OBProcess process;
-  ProcessListener listener;
-  QObject::connect(&process, &OBProcess::chargesFinished, &listener,
-                   &ProcessListener::responseReceived);
+  bool finished = false;
+  Core::Array<double> output;
+  QObject::connect(&process, &OBProcess::chargesFinished, &process,
+                   [&finished, &output](const Core::Array<double>& result) {
+                     output = result;
+                     finished = true;
+                   });
 
   std::string outputString;
   // todo - check for failure, append errors, etc.
@@ -189,26 +158,28 @@ MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
   process.calculateCharges(QByteArray(outputString.c_str()), "cml",
                            m_identifier);
 
-  Core::Array<double> output;
-  if (!listener.waitForOutput(output)) {
+  process.waitForFinished(120000);
+  if (!finished) {
     qDebug() << "Charges timed out.";
     return charges;
   }
 
-  // push the output into our charges array
-  for (unsigned int i = 0; i < output.size(); ++i) {
-    charges(i, 0) = output[i];
-  }
+  // Push the output into our charges array. obabel may report a different
+  // number of atoms than we sent, so never write past the molecule's.
+  const auto atomCount = static_cast<Eigen::Index>(molecule.atomCount());
+  charges = MatrixX::Zero(atomCount, 1);
+  const auto count =
+    std::min(static_cast<Eigen::Index>(output.size()), atomCount);
+  for (Eigen::Index i = 0; i < count; ++i)
+    charges(i, 0) = output[static_cast<size_t>(i)];
 
-  // workaround failed runs causing the code to freeze
-  if (abs(charges(0, 0)) < 0.00001)
+  // Mark an all-zero result as computed, or the check above would run obabel
+  // again on every request.
+  if (atomCount > 0 && abs(charges(0, 0)) < 0.00001)
     charges(0, 0) = 0.0001;
 
-  // check the size
-  if (output.size() != molecule.atomCount()) {
+  if (output.size() != molecule.atomCount())
     qDebug() << "Charges size mismatch.";
-    return charges;
-  }
   return charges;
 }
 
@@ -223,5 +194,3 @@ MatrixX OBCharges::partialCharges(Core::Molecule& molecule) const
 
 } // namespace QtPlugins
 } // namespace Avogadro
-
-#include "obcharges.moc"

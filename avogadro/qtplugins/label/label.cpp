@@ -550,7 +550,7 @@ void Label::calculatePartialCharges()
     return;
   }
 
-  // This can run a nested event loop (Open Babel), so check afterwards that
+  // This can block on an external program (Open Babel); check afterwards that
   // the molecule is still there and still the same size.
   MatrixX charges =
     Calc::ChargeManager::instance().partialCharges(type, *molecule);
@@ -573,8 +573,8 @@ void Label::processAtom(const QtGui::Molecule& molecule,
   node.addChild(geometry);
 
   // Use only the charges the molecule already has. Calculating them here can
-  // run an external program and a nested event loop in the middle of a scene
-  // rebuild, so that is deferred instead (see requestPartialCharges()).
+  // block on an external program in the middle of a scene rebuild, so that is
+  // deferred instead (see requestPartialCharges()).
   MatrixX charges;
   if (m_layerManager.getSetting<LayerLabel>(layer)->atomOptions &
       LayerLabel::LabelOptions::PartialCharge) {

@@ -12,11 +12,9 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/io/cifsymmetry.h>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
-#include <QtCore/QTimer>
 
 using namespace std::string_literals;
 
@@ -34,49 +32,6 @@ bool isCifFormat(const std::vector<std::string>& extensions)
 }
 
 } // namespace
-
-/**
- * @brief The ProcessListener class allows synchronous use of OBProcess.
- */
-class OBFileFormat::ProcessListener : public QObject
-{
-  Q_OBJECT
-public:
-  ProcessListener() : m_finished(false) {}
-
-  bool waitForOutput(QByteArray& output, int msTimeout = 120000)
-  {
-    if (!wait(msTimeout))
-      return false;
-
-    // success!
-    output = m_output;
-    return true;
-  }
-
-public slots:
-  void responseReceived(const QByteArray& output)
-  {
-    m_finished = true;
-    m_output = output;
-  }
-
-private:
-  bool wait(int msTimeout)
-  {
-    QTimer timer;
-    timer.start(msTimeout);
-
-    while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::ExcludeUserInputEvents, 500);
-
-    return m_finished;
-  }
-
-  OBProcess* m_process;
-  bool m_finished;
-  QByteArray m_output;
-};
 
 OBFileFormat::OBFileFormat(const std::string& name_,
                            const std::string& identifier_,
@@ -98,9 +53,13 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
 {
   // Allow blocking until the read is completed.
   OBProcess proc;
-  ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
-                   SLOT(responseReceived(QByteArray)));
+  bool finished = false;
+  QByteArray output;
+  QObject::connect(&proc, &OBProcess::convertFinished, &proc,
+                   [&finished, &output](const QByteArray& result) {
+                     output = result;
+                     finished = true;
+                   });
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -202,8 +161,11 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
     }
   }
 
-  QByteArray output;
-  if (!listener.waitForOutput(output)) {
+  // Block without running the event loop: this runs on BackgroundFileFormat's
+  // worker thread and from event handlers, and processEvents() would re-enter
+  // both. The result arrives through the connection above before this returns.
+  proc.waitForFinished(120000);
+  if (!finished) {
     appendError("Conversion timed out."s);
     return false;
   }
@@ -286,9 +248,13 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
 
   // Block until the OpenBabel conversion finishes:
   OBProcess proc;
-  ProcessListener listener;
-  QObject::connect(&proc, SIGNAL(convertFinished(QByteArray)), &listener,
-                   SLOT(responseReceived(QByteArray)));
+  bool finished = false;
+  QByteArray output;
+  QObject::connect(&proc, &OBProcess::convertFinished, &proc,
+                   [&finished, &output](const QByteArray& result) {
+                     output = result;
+                     finished = true;
+                   });
 
   // Just grab the first file extension from the list -- all extensions for a
   // given format map to the same parsers in OB.
@@ -300,8 +266,11 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
   proc.convert(QByteArray(outputString.c_str()), m_defaultFormat.c_str(),
                QString::fromStdString(m_fileExtensions.front()), options);
 
-  QByteArray output;
-  if (!listener.waitForOutput(output)) {
+  // Block without running the event loop: this runs on BackgroundFileFormat's
+  // worker thread and from event handlers, and processEvents() would re-enter
+  // both. The result arrives through the connection above before this returns.
+  proc.waitForFinished(120000);
+  if (!finished) {
     appendError("Conversion timed out."s);
     return false;
   }
@@ -329,5 +298,3 @@ Io::FileFormat* OBFileFormat::newInstance() const
 }
 
 } // namespace Avogadro::QtPlugins
-
-#include "obfileformat.moc"

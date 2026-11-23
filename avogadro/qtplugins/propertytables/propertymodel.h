@@ -14,7 +14,10 @@
 #include <avogadro/core/angleiterator.h>
 #include <avogadro/core/conformerquantity.h>
 #include <avogadro/core/dihedraliterator.h>
+#include <avogadro/core/matrix.h>
 #include <avogadro/qtgui/rwmolecule.h>
+
+#include <optional>
 
 namespace Avogadro {
 
@@ -126,6 +129,10 @@ private:
   };
 
   mutable bool m_validCache;
+  // The partial charge column, computed once for the whole molecule rather
+  // than once per cell. Reset whenever the molecule or charge type changes;
+  // a failed calculation is cached too (as fewer rows than atoms).
+  mutable std::optional<MatrixX> m_chargeCache;
   // The conformer table's columns are not fixed: they are whatever Core says
   // this molecule can be measured for, so the table and the conformer plot
   // offer the same list. Frame is left out -- the row headers already number
@@ -154,6 +161,9 @@ private:
   mutable size_t m_lastConformerCount = 0;
 
   QString secStructure(unsigned int type) const;
+
+  // Formatted partial charge for one atom, from the cached charge column.
+  QString partialCharge(int atom) const;
 
   // Each returns false when the edit could not be carried out -- a value
   // that is not a number, or a geometry that cannot reach it, such as an
