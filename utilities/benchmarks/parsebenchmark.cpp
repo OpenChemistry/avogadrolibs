@@ -3,9 +3,11 @@
   This source code is released under the 3-Clause BSD License, (see "LICENSE").
 ******************************************************************************/
 
-// Benchmarks the text parsing path of the XYZ, FCHK and cube readers. Input
-// files are read into memory once and only FileFormat::readString() is timed,
-// so disk I/O is excluded. Synthetic inputs come from an explicit integer
+// Benchmarks the text parsing path of the XYZ, FCHK and cube readers, plus a
+// split micro-case that tokenizes the XYZ text line by line with
+// Core::split() and with Core::tokenize(). Input files are read into memory
+// once and only FileFormat::readString() (or the split loop) is timed, so
+// disk I/O is excluded. Synthetic inputs come from an explicit integer
 // generator and fixed-precision snprintf output, so they are byte-identical
 // across platforms and runs. A result checksum is printed for each input so a
 // parser change can be shown to give identical results.
@@ -28,11 +30,9 @@
 #include <cstdint>
 #include <cstdio>
 #include <filesystem>
-#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <memory>
-#include <numeric>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -41,6 +41,7 @@ namespace {
 
 namespace fs = std::filesystem;
 
+using Avogadro::Benchmarks::computeStats;
 using Avogadro::Benchmarks::parseUnsigned;
 using Avogadro::Benchmarks::resolvePath;
 using Avogadro::Core::GaussianSet;
@@ -416,8 +417,9 @@ Checksum checksumOf(const Molecule& mol)
   return c;
 }
 
-// Tokenizing variants for the "split" case. Each takes the whole XYZ text and
-// returns a checksum; add a new entry to the table to compare another path.
+// The "split" case: the XYZ text one line at a time. perLine(line) returns the
+// tokens of a line (a vector of strings or of views); the loop and the
+// checksum are shared, so the rows differ only in how a line is tokenized.
 struct SplitSum
 {
   std::size_t tokens = 0;
@@ -425,33 +427,10 @@ struct SplitSum
   double coordSum = 0.0;
 };
 
-SplitSum splitCurrent(const std::string& text)
+template <typename PerLine>
+SplitSum scanLines(std::string_view all, PerLine&& perLine)
 {
   SplitSum sum;
-  std::size_t pos = 0;
-  while (pos < text.size()) {
-    std::size_t end = text.find('\n', pos);
-    if (end == std::string::npos)
-      end = text.size();
-    const std::string line = text.substr(pos, end - pos);
-    pos = end + 1;
-    const auto tokens = Avogadro::Core::split(line, ' ');
-    sum.tokens += tokens.size();
-    ++sum.lines;
-    if (tokens.size() < 4)
-      continue;
-    for (std::size_t i = 1; i < 4; ++i)
-      sum.coordSum +=
-        Avogadro::Core::lexicalCast<double>(tokens[i]).value_or(0.0);
-  }
-  return sum;
-}
-
-SplitSum splitTokenize(const std::string& text)
-{
-  SplitSum sum;
-  std::vector<std::string_view> tokens;
-  const std::string_view all(text);
   std::size_t pos = 0;
   while (pos < all.size()) {
     std::size_t end = all.find('\n', pos);
@@ -459,7 +438,7 @@ SplitSum splitTokenize(const std::string& text)
       end = all.size();
     const std::string_view line = all.substr(pos, end - pos);
     pos = end + 1;
-    Avogadro::Core::tokenize(line, tokens);
+    auto&& tokens = perLine(line);
     sum.tokens += tokens.size();
     ++sum.lines;
     if (tokens.size() < 4)
@@ -471,21 +450,28 @@ SplitSum splitTokenize(const std::string& text)
   return sum;
 }
 
-struct SplitVariant
-{
-  const char* name;
-  std::function<SplitSum(const std::string&)> run;
-};
-
-std::vector<SplitVariant> splitVariants()
-{
-  return { { "split+lexicalCast", splitCurrent },
-           { "tokenize", splitTokenize } };
-}
-
 double toMs(Clock::time_point a, Clock::time_point b)
 {
   return std::chrono::duration<double, std::milli>(b - a).count();
+}
+
+// Runs prepare() untimed and then run() timed, warmup + iterations times, and
+// returns the timed samples. Stops early if run() returns false.
+template <typename Prepare, typename Run>
+std::vector<double> timeRuns(const Options& o, Prepare&& prepare, Run&& run)
+{
+  std::vector<double> samplesMs;
+  for (std::size_t i = 0; i < o.warmup + o.iterations; ++i) {
+    prepare();
+    const auto start = Clock::now();
+    const bool ok = run();
+    const auto stop = Clock::now();
+    if (!ok)
+      break;
+    if (i >= o.warmup)
+      samplesMs.push_back(toMs(start, stop));
+  }
+  return samplesMs;
 }
 
 Result runReader(Input& input, const Options& o, bool perceiveBonds)
@@ -495,22 +481,18 @@ Result runReader(Input& input, const Options& o, bool perceiveBonds)
   r.caseName = perceiveBonds ? input.caseName : input.caseName + ":nobonds";
   const std::string options =
     perceiveBonds ? std::string() : std::string(R"({"perceiveBonds": false})");
-  std::unique_ptr<Molecule> last;
-  for (std::size_t i = 0; i < o.warmup + o.iterations; ++i) {
-    auto mol = std::make_unique<Molecule>();
-    std::string error;
-    const auto start = Clock::now();
-    const bool ok = readInto(input.kind, input.text, *mol, options, error);
-    const auto stop = Clock::now();
-    if (!ok) {
-      r.error = error.empty() ? "read failed" : error;
-      return r;
-    }
-    if (i >= o.warmup)
-      r.samplesMs.push_back(toMs(start, stop));
-    last = std::move(mol);
-  }
-  r.checksum = checksumOf(*last);
+  std::unique_ptr<Molecule> mol; // the last one read is checksummed
+  r.samplesMs = timeRuns(
+    o, [&] { mol = std::make_unique<Molecule>(); },
+    [&] {
+      const bool ok = readInto(input.kind, input.text, *mol, options, r.error);
+      if (!ok && r.error.empty())
+        r.error = "read failed";
+      return ok;
+    });
+  if (!r.error.empty())
+    return r;
+  r.checksum = checksumOf(*mol);
   r.count = input.kind == Kind::Cube
               ? r.checksum.values
               : std::max<std::size_t>(r.checksum.frames, 1);
@@ -518,43 +500,26 @@ Result runReader(Input& input, const Options& o, bool perceiveBonds)
   return r;
 }
 
-Result runSplit(Input& input, const SplitVariant& variant, const Options& o)
+template <typename PerLine>
+Result runSplit(Input& input, const char* name, const Options& o,
+                PerLine&& perLine)
 {
   Result r;
   r.input = &input;
-  r.caseName = std::string("split:") + variant.name;
+  r.caseName = std::string("split:") + name;
   SplitSum sum;
-  for (std::size_t i = 0; i < o.warmup + o.iterations; ++i) {
-    const auto start = Clock::now();
-    sum = variant.run(input.text);
-    const auto stop = Clock::now();
-    if (i >= o.warmup)
-      r.samplesMs.push_back(toMs(start, stop));
-  }
+  r.samplesMs = timeRuns(
+    o, [] {},
+    [&] {
+      sum = scanLines(input.text, perLine);
+      return true;
+    });
   r.checksum.atoms = sum.lines;
   r.checksum.values = sum.tokens;
   r.checksum.coordSum = sum.coordSum;
   r.count = sum.lines;
   r.ok = true;
   return r;
-}
-
-struct Stats
-{
-  double best = 0.0, median = 0.0, mean = 0.0;
-};
-
-Stats computeStats(std::vector<double> s)
-{
-  Stats st;
-  if (s.empty())
-    return st;
-  std::sort(s.begin(), s.end());
-  st.best = s.front();
-  const std::size_t n = s.size();
-  st.median = n % 2 == 0 ? (s[n / 2 - 1] + s[n / 2]) * 0.5 : s[n / 2];
-  st.mean = std::accumulate(s.begin(), s.end(), 0.0) / static_cast<double>(n);
-  return st;
 }
 
 } // namespace
@@ -594,15 +559,15 @@ int main(int argc, char** argv)
     inputs.push_back({ caseName, path.filename().string(), kind, text });
   };
 
-  std::string xyzText;
   if (wants("xyz") || wants("split")) {
-    xyzText = makeXyz(o.xyzAtoms, 1);
-    std::string staged = xyzText;
+    std::string xyzText = makeXyz(o.xyzAtoms, 1);
     const std::string name = "synthetic-" + std::to_string(o.xyzAtoms) + ".xyz";
+    // Only copy the text when both cases need it.
     if (wants("xyz"))
-      addSynthetic("xyz", name, Kind::Xyz, staged);
+      addSynthetic("xyz", name, Kind::Xyz,
+                   wants("split") ? xyzText : std::move(xyzText));
     if (wants("split"))
-      inputs.push_back({ "split", name, Kind::Split, xyzText });
+      inputs.push_back({ "split", name, Kind::Split, std::move(xyzText) });
   }
   if (wants("traj"))
     addSynthetic("traj",
@@ -649,14 +614,21 @@ int main(int argc, char** argv)
             << o.iterations << ", data root " << o.dataRoot << "\n";
 
   std::vector<Result> results;
-  const auto variants = splitVariants();
   for (auto& input : inputs) {
     std::cout << "  running " << input.label << " (" << input.caseName << ")..."
               << std::flush;
     if (input.kind == Kind::Split) {
-      for (const auto& v : variants) {
-        results.push_back(runSplit(input, v, o));
-      }
+      results.push_back(
+        runSplit(input, "split+lexicalCast", o, [](std::string_view line) {
+          return Avogadro::Core::split(std::string(line), ' ');
+        }));
+      std::vector<std::string_view> tokens;
+      results.push_back(runSplit(input, "tokenize", o,
+                                 [&tokens](std::string_view line)
+                                   -> const std::vector<std::string_view>& {
+                                   Avogadro::Core::tokenize(line, tokens);
+                                   return tokens;
+                                 }));
     } else {
       results.push_back(runReader(input, o, true));
       // XYZ readers perceive bonds by default; also time the parse alone.
@@ -682,15 +654,15 @@ int main(int argc, char** argv)
       exitCode = 2;
       continue;
     }
-    const Stats st = computeStats(r.samplesMs);
+    const auto st = computeStats(r.samplesMs);
     const double mb = static_cast<double>(in.text.size()) / 1.0e6;
-    const double mbps = st.best > 0.0 ? mb / (st.best / 1000.0) : 0.0;
+    const double mbps = st.bestMs > 0.0 ? mb / (st.bestMs / 1000.0) : 0.0;
     std::cout << std::left << std::setw(26) << r.caseName << std::setw(28)
               << in.label << std::right << std::fixed << std::setprecision(2)
               << std::setw(9) << mb << std::setw(10) << r.checksum.atoms
               << std::setw(12) << r.count << std::setprecision(1)
-              << std::setw(11) << st.best << std::setw(11) << st.median
-              << std::setw(11) << st.mean << std::setw(10) << mbps << "\n";
+              << std::setw(11) << st.bestMs << std::setw(11) << st.medianMs
+              << std::setw(11) << st.meanMs << std::setw(10) << mbps << "\n";
   }
 
   std::cout << "\nChecksums\n";

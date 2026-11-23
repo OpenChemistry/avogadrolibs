@@ -11,15 +11,47 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstddef>
 #include <filesystem>
 #include <fstream>
+#include <numeric>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace Avogadro::Benchmarks {
 
 namespace fs = std::filesystem;
+
+// Summary of repeated timings in milliseconds. The median of an even count is
+// the mean of the two middle samples; p95 is the nearest-rank percentile.
+struct TimingStats
+{
+  double bestMs = 0.0;
+  double medianMs = 0.0;
+  double meanMs = 0.0;
+  double p95Ms = 0.0;
+};
+
+inline TimingStats computeStats(std::vector<double> samplesMs)
+{
+  TimingStats stats;
+  if (samplesMs.empty())
+    return stats;
+
+  std::sort(samplesMs.begin(), samplesMs.end());
+  const std::size_t n = samplesMs.size();
+  stats.bestMs = samplesMs.front();
+  stats.medianMs = n % 2 == 0 ? (samplesMs[n / 2 - 1] + samplesMs[n / 2]) * 0.5
+                              : samplesMs[n / 2];
+  stats.meanMs = std::accumulate(samplesMs.begin(), samplesMs.end(), 0.0) /
+                 static_cast<double>(n);
+  const auto p95Index =
+    static_cast<std::size_t>(std::ceil(0.95 * static_cast<double>(n))) - 1;
+  stats.p95Ms = samplesMs[std::min(p95Index, n - 1)];
+  return stats;
+}
 
 inline bool parseUnsigned(const std::string& text, std::size_t& value)
 {
