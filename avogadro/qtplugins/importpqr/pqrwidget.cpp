@@ -18,10 +18,12 @@ PQRWidget::PQRWidget(QWidget* parent, ImportPQR* p)
   ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
   ui->tableWidget->setSortingEnabled(true);
-  connect(ui->searchButton, SIGNAL(clicked(bool)), this, SLOT(searchAction()));
-  connect(ui->downloadButton, SIGNAL(clicked(bool)), this, SLOT(downloadMol()));
-  connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this,
-          SLOT(molSelected(int, int)));
+  connect(ui->searchButton, &QPushButton::clicked, this,
+          &PQRWidget::searchAction);
+  connect(ui->downloadButton, &QPushButton::clicked, this,
+          &PQRWidget::downloadMol);
+  connect(ui->tableWidget, &QTableWidget::cellClicked, this,
+          &PQRWidget::molSelected);
 
   request = new PQRRequest(ui->tableWidget, ui->pngPreview, ui->nameDisplay,
                            ui->formulaDisplay, this);
