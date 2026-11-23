@@ -35,7 +35,6 @@ using Core::Elements;
 using Core::lexicalCast;
 using Core::Molecule;
 using Core::SpaceGroups;
-using Core::split;
 using Core::trimmed;
 using Core::UnitCell;
 
@@ -183,7 +182,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
   // u stands for unwrapped coordinates
   // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
   Core::getLine(inStream, buffer);
-  std::vector<string> labels(split(buffer, ' '));
+  std::vector<string> labels(Core::splitWhitespace(buffer));
   // The column indices below are positions in this header line, and atom
   // rows lack its two leading "ITEM:" "ATOMS" words -- hence the "- 2" when
   // indexing a row. Without that prefix the subtraction would underflow.
@@ -246,19 +245,12 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
 
     // If parsed coordinates are fractional, the corresponding unscaling is
     // done. Else the positions are assigned as parsed.
-    Vector3 pos(
-      (1 - scale_x) * lexicalCast<double>(tokens[x_idx - 2]).value_or(0.0) +
-        scale_x *
-          (x_min + (x_max - x_min) *
-                     lexicalCast<double>(tokens[x_idx - 2]).value_or(0.0)),
-      (1 - scale_y) * lexicalCast<double>(tokens[y_idx - 2]).value_or(0.0) +
-        scale_y *
-          (y_min + (y_max - y_min) *
-                     lexicalCast<double>(tokens[y_idx - 2]).value_or(0.0)),
-      (1 - scale_z) * lexicalCast<double>(tokens[z_idx - 2]).value_or(0.0) +
-        scale_z *
-          (z_min + (z_max - z_min) *
-                     lexicalCast<double>(tokens[z_idx - 2]).value_or(0.0)));
+    const double x = lexicalCast<double>(tokens[x_idx - 2]).value_or(0.0);
+    const double y = lexicalCast<double>(tokens[y_idx - 2]).value_or(0.0);
+    const double z = lexicalCast<double>(tokens[z_idx - 2]).value_or(0.0);
+    Vector3 pos((1 - scale_x) * x + scale_x * (x_min + (x_max - x_min) * x),
+                (1 - scale_y) * y + scale_y * (y_min + (y_max - y_min) * y),
+                (1 - scale_z) * z + scale_z * (z_min + (z_max - z_min) * z));
 
     auto it = atomTypes.find(to_string(atomicNum));
     if (it == atomTypes.end()) {
@@ -445,7 +437,7 @@ bool LammpsTrajectoryFormat::read(std::istream& inStream, Core::Molecule& mol)
     // u stands for unwrapped coordinates
     // scale_x = 0. if coordinates are cartesian and 1 if fractional (scaled)
     Core::getLine(inStream, buffer);
-    labels = std::vector<string>(split(buffer, ' '));
+    labels = Core::splitWhitespace(buffer);
     // See the first frame: row indices are header indices minus two.
     if (labels.size() < 2 || labels[0] != "ITEM:" || labels[1] != "ATOMS") {
       appendError("No 'ITEM: ATOMS' header found: " + buffer);

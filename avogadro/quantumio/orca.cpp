@@ -88,10 +88,11 @@ void extractOrcaCoefficients(std::string_view line,
   }
 }
 
-// Return the whitespace-delimited token at position @p index (0-based) of
-// @p line, without allocating a vector of every token. Matches the semantics
-// of Core::split(line, ' ') with skipEmpty = true (runs of spaces are
-// collapsed). Returns an empty string if there is no such token.
+// Return the space-delimited token at position @p index (0-based) of
+// @p line, without allocating a vector of every token. Tokens are separated by
+// runs of spaces only (the old Core::split(line, ' ') behavior), not by every
+// kind of white space as in Core::tokenize(); orbital keys only contain
+// spaces. Returns an empty string if there is no such token.
 std::string nthSpaceToken(const std::string& line, std::size_t index)
 {
   const std::size_t n = line.size();

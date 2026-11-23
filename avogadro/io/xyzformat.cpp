@@ -35,6 +35,22 @@ using Core::trimmed;
 using std::isalpha;
 #endif
 
+namespace {
+// Reads the x, y and z columns (tokens 1 to 3) of an atom line without
+// copying them. Returns false if any of them is not a number. The caller
+// guarantees at least four tokens.
+bool parsePosition(const std::vector<std::string_view>& tokens, Vector3& pos)
+{
+  const auto px = lexicalCast<double>(tokens[1]);
+  const auto py = lexicalCast<double>(tokens[2]);
+  const auto pz = lexicalCast<double>(tokens[3]);
+  if (!px || !py || !pz)
+    return false;
+  pos << *px, *py, *pz;
+  return true;
+}
+} // namespace
+
 std::optional<double> findEnergy(const std::string& buffer)
 {
   // Check for energy in the comment line
@@ -64,7 +80,8 @@ std::optional<double> findEnergy(const std::string& buffer)
 
   // also check if the comment just starts with a number
   // try to split out the first token and look for a number
-  std::vector<string> tokens(split(buffer, ' '));
+  std::vector<std::string_view> tokens;
+  Core::tokenize(buffer, tokens);
   if (!tokens.empty()) {
     return lexicalCast<double>(tokens[0]);
   }
@@ -111,7 +128,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     std::size_t end = buffer.find('\"', start);
     std::string lattice = buffer.substr(start, (end - start));
 
-    std::vector<string> tokens(split(lattice, ' '));
+    std::vector<string> tokens(Core::splitWhitespace(lattice));
 
     if (tokens.size() >= 9) {
       if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 9)) {
@@ -213,12 +230,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         lexicalCast<short int>(tokens[0]).value_or(0));
 
     Vector3 pos;
-    const auto px = lexicalCast<double>(tokens[1]);
-    const auto py = lexicalCast<double>(tokens[2]);
-    const auto pz = lexicalCast<double>(tokens[3]);
-    if (px && py && pz) {
-      pos << *px, *py, *pz;
-    } else {
+    if (!parsePosition(tokens, pos)) {
       appendError("Error reading atom position");
       return false;
     }
@@ -297,15 +309,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
           appendError("Not enough tokens in this line: " + buffer);
           return false;
         }
-        const auto px = lexicalCast<double>(tokens[1]);
-        const auto py = lexicalCast<double>(tokens[2]);
-        const auto pz = lexicalCast<double>(tokens[3]);
-        if (px && py && pz) {
-          positions.push_back(Vector3(*px, *py, *pz));
-        } else {
+        Vector3 pos;
+        if (!parsePosition(tokens, pos)) {
           appendError("Error reading position");
           return false;
         }
+        positions.push_back(pos);
       }
 
       if (!done)
