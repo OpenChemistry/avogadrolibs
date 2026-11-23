@@ -17,7 +17,6 @@
 namespace Avogadro::QtGui {
 
 using Core::Array;
-using Core::AtomHybridization;
 using Core::UnitCell;
 
 // Base class for all undo commands used by this class.
@@ -35,13 +34,19 @@ public:
   {
   }
 
+  // Consecutive commands with the same merge id (see MergeIds) are offered to
+  // mergeWith(). The default, -1, never merges.
+  void setMergeId(int mergeId) { m_mergeId = mergeId; }
+  int id() const override { return m_mergeId; }
+
 protected:
-  Array<Vector3>& positions3d() { return m_molecule.atomPositions3d(); }
-  Array<Index>& atomUniqueIds() { return m_mol.m_molecule.atomUniqueIds(); }
   Array<Index>& bondUniqueIds() { return m_mol.m_molecule.bondUniqueIds(); }
 
   RWMolecule& m_mol;
   QtGui::Molecule& m_molecule;
+
+private:
+  int m_mergeId = -1;
 };
 
 namespace {
@@ -75,10 +80,6 @@ public:
   {
   }
 
-  // The default, -1, means the command never merges.
-  void setMergeId(int mergeId) { m_mergeId = mergeId; }
-  int id() const override { return m_mergeId; }
-
   void redo() override { m_setter(m_molecule, m_index, m_new); }
   void undo() override { m_setter(m_molecule, m_index, m_old); }
 
@@ -97,7 +98,6 @@ private:
   Index m_index;
   T m_old;
   T m_new;
-  int m_mergeId = -1;
 };
 
 // Sets a whole array of a molecule through a setter. With a merge id set,
@@ -115,10 +115,6 @@ public:
   {
   }
 
-  // The default, -1, means the command never merges.
-  void setMergeId(int mergeId) { m_mergeId = mergeId; }
-  int id() const override { return m_mergeId; }
-
   void redo() override { m_setter(m_molecule, m_new); }
   void undo() override { m_setter(m_molecule, m_old); }
 
@@ -128,7 +124,10 @@ public:
     if (o == nullptr || o->m_setter != m_setter)
       return false;
 
-    m_new = o->m_new;
+    // Share the other command's array (QUndoStack deletes it next) rather
+    // than deep-copying it, as Array's copy assignment would.
+    Array<T> shared(o->m_new);
+    m_new.swap(shared);
     return true;
   }
 
@@ -136,7 +135,6 @@ private:
   Setter m_setter;
   Array<T> m_old;
   Array<T> m_new;
-  int m_mergeId = -1;
 };
 
 // Sets some entries of a molecule's atoms through a setter, and stores only
@@ -156,10 +154,6 @@ public:
       m_ids(1, index), m_old(1, oldValue), m_new(1, newValue)
   {
   }
-
-  // The default, -1, means the command never merges.
-  void setMergeId(int mergeId) { m_mergeId = mergeId; }
-  int id() const override { return m_mergeId; }
 
   void redo() override { apply(m_new); }
   void undo() override { apply(m_old); }
@@ -198,7 +192,6 @@ private:
   std::vector<Index> m_ids; // sorted, ascending
   std::vector<T> m_old;
   std::vector<T> m_new;
-  int m_mergeId = -1;
 };
 } // namespace
 

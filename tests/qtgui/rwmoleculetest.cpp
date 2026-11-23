@@ -3942,7 +3942,7 @@ TEST(RWMoleculeTest, addAtomRedoRestoresTheAtomExactly)
 // Characterization of the undo commands that merge, and of the single-entry
 // setters, so that the commands behind them can be restructured safely.
 namespace {
-void buildChain(RWMolecule& mol, Index count)
+void buildUndoChain(RWMolecule& mol, Index count)
 {
   for (Index i = 0; i < count; ++i)
     mol.addAtom(6, Vector3(Real(i), Real(2 * i), Real(3 * i)));
@@ -3963,7 +3963,7 @@ TEST(RWMoleculeTest, setBondOrderMergesOnTheSameBondOnly)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 4);
+  buildUndoChain(mol, 4);
 
   mol.setBondOrder(0, 2);
   mol.setBondOrder(0, 3);
@@ -3992,7 +3992,7 @@ TEST(RWMoleculeTest, setBondOrderDoesNotMergeWithOtherCommands)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 3);
+  buildUndoChain(mol, 3);
 
   mol.setBondOrder(0, 2);
   mol.setAtomicNumber(0, 8);
@@ -4004,7 +4004,7 @@ TEST(RWMoleculeTest, setAtomPositions3dMergesOnlyWhenInteractive)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 3);
+  buildUndoChain(mol, 3);
   const Array<Vector3> original = mol.atomPositions3d();
 
   Array<Vector3> first(3, Vector3(Real(1), Real(1), Real(1)));
@@ -4036,7 +4036,7 @@ TEST(RWMoleculeTest, interactiveSetAtomPosition3dSweepsAreOneStep)
   Molecule m;
   RWMolecule mol(m);
   const Index n = 8;
-  buildChain(mol, n);
+  buildUndoChain(mol, n);
   const Array<Vector3> original = mol.atomPositions3d();
 
   mol.setInteractive(true);
@@ -4074,7 +4074,7 @@ TEST(RWMoleculeTest, interactiveSetAtomPosition3dAddsAnAtomMidDrag)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 5);
+  buildUndoChain(mol, 5);
   const Array<Vector3> original = mol.atomPositions3d();
 
   mol.setInteractive(true);
@@ -4100,7 +4100,7 @@ TEST(RWMoleculeTest, nonInteractiveSetAtomPosition3dDoesNotMerge)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 3);
+  buildUndoChain(mol, 3);
   const Array<Vector3> original = mol.atomPositions3d();
 
   mol.setAtomPosition3d(1, Vector3(Real(5), Real(5), Real(5)));
@@ -4120,7 +4120,7 @@ TEST(RWMoleculeTest, setAtomSelectedOverManyAtomsIsOneStep)
   Molecule m;
   RWMolecule mol(m);
   const Index n = 40;
-  buildChain(mol, n);
+  buildUndoChain(mol, n);
   mol.setAtomSelected(3, true);
   mol.setAtomSelected(10, true);
   // End the merge chain so the sweep below is a step of its own.
@@ -4154,7 +4154,7 @@ TEST(RWMoleculeTest, setAtomSelectedDoesNotMergeAfterTheAtomCountChanges)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 4);
+  buildUndoChain(mol, 4);
 
   mol.setAtomSelected(0, true);
   mol.setAtomSelected(1, true);
@@ -4180,7 +4180,7 @@ TEST(RWMoleculeTest, singleEntrySettersUndoAndRedo)
 {
   Molecule m;
   RWMolecule mol(m);
-  buildChain(mol, 4);
+  buildUndoChain(mol, 4);
   std::string resName = "ALA";
   Index resNumber = 1;
   char chain = 'A';

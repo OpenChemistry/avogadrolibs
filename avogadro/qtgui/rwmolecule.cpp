@@ -288,24 +288,18 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
   if (atomId >= atomCount())
     return false;
 
-  if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
-    m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
-
   auto* comm = new SetEntriesCommand<Vector3>(
     *this,
     [](Molecule& mol, Index index, const Vector3& value) {
-      // RWMolecule::setAtomPosition3d() grows the position array to
-      // atomCount() before pushing this command, outside the undo history.
-      // Redoing after an undone position-less AddAtomCommand must repeat
-      // that growth, or the array is shorter than the atom ids (found by
-      // fuzzing).
+      // The array may be shorter than the atom count (an atom added without
+      // a position, possibly by a redo); setting a position fills it out.
       Array<Vector3>& positions = mol.atomPositions3d();
       if (positions.size() < mol.atomCount())
         positions.resize(mol.atomCount(), Vector3::Zero());
       if (index < positions.size())
         positions[index] = value;
     },
-    atomId, m_molecule.m_positions3d[atomId], pos);
+    atomId, m_molecule.atomPosition3d(atomId), pos);
   comm->setText(undoText);
   comm->setMergeId(m_interactive ? SetPosition3dMergeId : -1);
   m_undoStack.push(comm);
@@ -330,16 +324,13 @@ void RWMolecule::setAtomSelected(Index atomId, bool selected,
   auto* comm = new SetEntriesCommand<bool>(
     *this,
     [](Molecule& mol, Index index, const bool& value) {
-      // Guarded as well as at the call: an index past the end has no atom to
-      // select.
-      if (index < mol.atomCount())
-        mol.setAtomSelected(index, value);
+      // Out-of-range indices are refused by the molecule.
+      mol.setAtomSelected(index, value);
     },
     atomId, m_molecule.atomSelected(atomId), selected);
   comm->setText(undoText);
   comm->setMergeId(ModifySelectionMergeId);
   m_undoStack.push(comm);
-  //  m_molecule.setAtomSelected(atomId, selected);
 }
 
 bool RWMolecule::atomSelected(Index atomId) const
