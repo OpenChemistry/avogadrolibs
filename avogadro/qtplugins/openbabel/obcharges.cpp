@@ -11,9 +11,7 @@
 
 #include <nlohmann/json.hpp>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QTimer>
 
 namespace Avogadro {
 
@@ -28,9 +26,10 @@ class OBCharges::ProcessListener : public QObject
 public:
   ProcessListener() : m_finished(false) {}
 
-  bool waitForOutput(Array<double>& output, int msTimeout = 120000)
+  bool waitForOutput(OBProcess& process, Array<double>& output,
+                     int msTimeout = 120000)
   {
-    if (!wait(msTimeout))
+    if (!wait(process, msTimeout))
       return false;
 
     // success!
@@ -46,13 +45,17 @@ public slots:
   }
 
 private:
-  bool wait(int msTimeout)
+  // partialCharges() is synchronous and is called from data() while a view is
+  // painting, so it must not re-enter the event loop: a nested paint of the
+  // same window crashes. Block on the process instead. QProcess emits
+  // finished() (or errorOccurred()) from inside waitForFinished(), which runs
+  // OBProcess's slot and so responseReceived() before this returns.
+  bool wait(OBProcess& process, int msTimeout)
   {
-    QTimer timer;
-    timer.start(msTimeout);
-
-    while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::ExcludeUserInputEvents, 500);
+    if (!m_finished && !process.waitForFinished(msTimeout) && !m_finished) {
+      // timed out (or never started): don't leave obabel running
+      process.abort();
+    }
 
     return m_finished;
   }
@@ -190,7 +193,7 @@ MatrixX OBCharges::partialCharges(const Core::Molecule& molecule) const
                            m_identifier);
 
   Core::Array<double> output;
-  if (!listener.waitForOutput(output)) {
+  if (!listener.waitForOutput(process, output)) {
     qDebug() << "Charges timed out.";
     return charges;
   }

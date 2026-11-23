@@ -26,7 +26,9 @@ set(plugins
   Forcefield
   GLTF
   MeasureTool
+  OpenBabel
   PlayerTool
+  PropertyTables
   ScriptFileFormats
   Select
   SpaceGroup
@@ -102,7 +104,7 @@ target_include_directories(AvogadroQtPluginsTests PRIVATE ${pluginIncludes})
 # Our own main() creates the QApplication, so link gtest without gtest_main.
 target_link_libraries(AvogadroQtPluginsTests
   ${pluginTargets}
-  Avogadro::QtGui
+  Avogadro::QtGui Avogadro::Calc
   ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB}
   Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
 
@@ -142,6 +144,10 @@ foreach(plugin ${testNames})
   elseif(plugin STREQUAL "MeasureTool")
     # measuretooltest.cpp also defines MeasureWidgetTest.
     set(filter "MeasureToolCommandTest.*:MeasureWidgetTest.*")
+  elseif(plugin STREQUAL "OpenBabel")
+    set(filter "OpenBabelCommandTest.*")
+  elseif(plugin STREQUAL "PropertyTables")
+    set(filter "PropertyTablesChargeTest.*")
   elseif(plugin STREQUAL "PlayerTool")
     # playertooltest.cpp also defines PlayerToolSourceTest.
     set(filter "PlayerToolCommandTest.*:PlayerToolSourceTest.*")

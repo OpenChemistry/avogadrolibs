@@ -51,6 +51,14 @@ public:
    */
   bool inUse() const { return m_processLocked; }
 
+  /**
+   * Block until the running process has finished, without running the event
+   * loop. QProcess emits finished() from inside this call, so the slot for the
+   * current operation (e.g., chargesFinished()) runs before it returns.
+   * @return True if the process finished, false on timeout or error.
+   */
+  bool waitForFinished(int msTimeout);
+
 public slots:
   /**
    * Abort any currently running processes.

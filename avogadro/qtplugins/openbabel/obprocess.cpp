@@ -80,6 +80,11 @@ QString OBProcess::version()
   return result;
 }
 
+bool OBProcess::waitForFinished(int msTimeout)
+{
+  return m_process->waitForFinished(msTimeout);
+}
+
 void OBProcess::abort()
 {
   m_aborted = true;
