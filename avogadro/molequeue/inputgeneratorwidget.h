@@ -180,6 +180,11 @@ private slots:
   void resetWarningDisplay();
 
   /**
+   * Show or hide the input file preview, and remember the choice.
+   */
+  void setPreviewVisible(bool visible);
+
+  /**
    * Show the user an error message. These are errors that have occurred
    * in this extension, not necessarily in the input generator script.
    */
@@ -224,6 +229,12 @@ private:
 
   Ui::InputGeneratorWidget* m_ui;
   bool m_updatePending;
+  bool m_resizeOnShow;
+  /** Window widths with the preview shown or hidden (0 = not yet known). */
+  int m_shownWidth;
+  int m_hiddenWidth;
+  /** Splitter sizes when the preview was last hidden. */
+  QList<int> m_splitterSizes;
   /** True while the overwrite prompt is open (blocks nested prompts). */
   bool m_promptingOverwrite = false;
   QList<QTextEdit*> m_dirtyTextEdits;

@@ -22,6 +22,7 @@
 #include <QGuiApplication>
 #include <QStyleHints>
 #include <QColor>
+#include <QFontDatabase>
 #include <QPalette>
 #include <unordered_map>
 
@@ -804,7 +805,9 @@ bool InputGenerator::parseFormat(const QJsonObject& json,
 
     HighlightPreset presetType = mapStringToPreset[preset];
 
-    format.setFontFamily(QStringLiteral("mono"));
+    // "mono" is a fontconfig alias that macOS and Windows do not resolve.
+    format.setFontFamily(
+      QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
 
     /// @todo Store presets in a singleton that can be configured in the GUI,
     /// rather than hardcoding them.

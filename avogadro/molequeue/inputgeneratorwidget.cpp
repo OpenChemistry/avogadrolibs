@@ -13,6 +13,7 @@
 #include <avogadro/qtgui/generichighlighter.h>
 #include <avogadro/qtgui/molecule.h>
 
+#include <QtGui/QFontDatabase>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
@@ -76,12 +77,30 @@ QString moleculeFilenameBase(const QtGui::Molecule* molecule)
 
 InputGeneratorWidget::InputGeneratorWidget(QWidget* parent_)
   : QtGui::JsonWidget(parent_), m_ui(new Ui::InputGeneratorWidget),
-    m_updatePending(false), m_inputGenerator(QString())
+    m_updatePending(false), m_resizeOnShow(false), m_shownWidth(0),
+    m_hiddenWidth(0), m_inputGenerator(QString())
 {
   m_ui->setupUi(this);
+
+  // Options on one side, file preview on the other. The splitter and boxes
+  // mirror automatically for right-to-left layouts. Neither side collapses
+  // by dragging, so the preview button always matches the preview state.
+  m_ui->splitter->setCollapsible(0, false);
+  m_ui->splitter->setCollapsible(1, false);
+  m_ui->splitter->setStretchFactor(0, 0);
+  m_ui->splitter->setStretchFactor(1, 1);
   m_ui->warningTextButton->setIcon(QIcon::fromTheme("dialog-warning"));
 
   connectButtons();
+
+  // Applied directly: setChecked() emits nothing if the state is unchanged.
+  QSettings settings;
+  const bool showPreview =
+    settings.value("quantumInput/showPreview", true).toBool();
+  m_ui->previewButton->setChecked(showPreview);
+  setPreviewVisible(showPreview);
+  // The dialog opens at the size from the .ui file, so shrink it when shown.
+  m_resizeOnShow = !showPreview;
 }
 
 InputGeneratorWidget::~InputGeneratorWidget()
@@ -170,6 +189,17 @@ void InputGeneratorWidget::setBatchMode(bool m)
 void InputGeneratorWidget::showEvent(QShowEvent* e)
 {
   QWidget::showEvent(e);
+
+  if (m_resizeOnShow) {
+    m_resizeOnShow = false;
+    QWidget* topLevel = window();
+    if (topLevel != nullptr && topLevel != this) {
+      // Keep the default size from the .ui file for when the preview opens.
+      m_shownWidth = topLevel->width();
+      layout()->activate();
+      topLevel->resize(topLevel->minimumSizeHint().width(), topLevel->height());
+    }
+  }
 
   if (m_molecule != nullptr) {
     int charge = static_cast<int>(m_molecule->totalCharge());
@@ -295,7 +325,14 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
       continue;
     auto* edit = new QTextEdit(this);
     edit->setObjectName(fileName);
-    edit->setFontFamily("monospace");
+    // Input files are plain text laid out in columns. Only the family is set,
+    // so the size still follows the application font (e.g., larger text).
+    QFont fixedFamily;
+    fixedFamily.setFamily(
+      QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
+    fixedFamily.setStyleHint(QFont::TypeWriter);
+    edit->setFont(fixedFamily);
+    edit->setAcceptRichText(false);
     connect(edit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
     m_ui->tabWidget->addTab(edit, fileName);
     m_textEdits.insert(fileName, edit);
@@ -318,7 +355,7 @@ void InputGeneratorWidget::updatePreviewTextImmediately()
       highlighter->setDocument(edit->document());
     }
 
-    edit->setText(m_inputGenerator.fileContents(fileName));
+    edit->setPlainText(m_inputGenerator.fileContents(fileName));
     edit->document()->setModified(false);
     ++index;
   }
@@ -700,6 +737,8 @@ void InputGeneratorWidget::connectButtons()
   connect(m_ui->closeButton, SIGNAL(clicked()), SIGNAL(closeClicked()));
   connect(m_ui->warningTextButton, SIGNAL(clicked()),
           SLOT(toggleWarningText()));
+  connect(m_ui->previewButton, SIGNAL(toggled(bool)),
+          SLOT(setPreviewVisible(bool)));
 
   // disable the compute button if Molequeue is not running
   MoleQueueManager& mqManager = MoleQueueManager::instance();
@@ -707,6 +746,46 @@ void InputGeneratorWidget::connectButtons()
     m_ui->computeButton->setEnabled(false);
   } else {
     connect(m_ui->computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
+  }
+}
+
+void InputGeneratorWidget::setPreviewVisible(bool visible)
+{
+  QWidget* topLevel = window();
+  const bool resizeWindow = topLevel != nullptr && topLevel != this &&
+                            topLevel->isVisible() &&
+                            m_ui->previewPane->isVisibleTo(this) != visible;
+
+  // Remember the width of the state being left (including any resizing by
+  // the user), so each state returns to its own width instead of growing.
+  if (resizeWindow) {
+    if (visible) {
+      m_hiddenWidth = topLevel->width();
+    } else {
+      m_shownWidth = topLevel->width();
+      m_splitterSizes = m_ui->splitter->sizes();
+    }
+  }
+
+  m_ui->previewPane->setVisible(visible);
+  m_ui->previewButton->setText(visible ? tr("Hide &Preview")
+                                       : tr("Show &Preview"));
+
+  QSettings settings;
+  settings.setValue("quantumInput/showPreview", visible);
+
+  if (resizeWindow) {
+    layout()->activate();
+    int width = 0;
+    if (visible) {
+      width = m_shownWidth > 0 ? m_shownWidth : topLevel->width() + 500;
+    } else {
+      width =
+        m_hiddenWidth > 0 ? m_hiddenWidth : topLevel->minimumSizeHint().width();
+    }
+    topLevel->resize(width, topLevel->height());
+    if (visible && m_splitterSizes.size() == m_ui->splitter->count())
+      m_ui->splitter->setSizes(m_splitterSizes);
   }
 }
 
