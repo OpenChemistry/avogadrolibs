@@ -422,27 +422,6 @@ std::optional<T> lexicalCast(std::string_view input)
 }
 
 /**
- * @brief Cast the inputString to the specified type; see the string_view
- * overload for the semantics.
- */
-template <typename T>
-std::optional<T> lexicalCast(const std::string& inputString)
-{
-  return lexicalCast<T>(std::string_view(inputString));
-}
-
-/**
- * @brief Cast a C string to the specified type; a null pointer fails.
- */
-template <typename T>
-std::optional<T> lexicalCast(const char* input)
-{
-  if (input == nullptr)
-    return std::nullopt;
-  return lexicalCast<T>(std::string_view(input));
-}
-
-/**
  * @brief Cast the inputString to the specified type.
  * @param inputString String to cast to the specified type.
  * @param ok Set to true on success, and false if the string could not be
