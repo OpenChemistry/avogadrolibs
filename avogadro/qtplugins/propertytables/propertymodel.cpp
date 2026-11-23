@@ -1091,6 +1091,8 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
             isotope <= std::numeric_limits<unsigned short>::max()) {
           undoMolecule->setIsotope(index.row(),
                                    static_cast<unsigned short>(isotope));
+        } else {
+          return false;
         }
         break;
       }
@@ -1403,10 +1405,11 @@ void PropertyModel::updateTable(unsigned int flags)
     // This avoids race conditions during rapid animation updates
     m_validCache = false;
 
-    // A constraint change adds no rows and moves no atoms, so a reset would
-    // be wasted -- but the lock a constrained value carries is part of what
-    // the cell says, so the cells still have to be repainted.
-    if (flags & Molecule::Constraints) {
+    // A constraint or property change (e.g. an isotope, including its undo)
+    // adds no rows and moves no atoms, so a reset would be wasted -- but the
+    // lock a constrained value carries, or the property itself, is part of
+    // what the cell says, so the cells still have to be repainted.
+    if (flags & (Molecule::Constraints | Molecule::Properties)) {
       const int rows = rowCount(QModelIndex());
       const int columns = columnCount(QModelIndex());
       if (rows > 0 && columns > 0)
