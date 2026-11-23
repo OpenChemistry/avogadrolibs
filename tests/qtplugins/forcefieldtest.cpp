@@ -199,18 +199,29 @@ def read_request():
 
 inp.readline()  # the bootstrap JSON
 
+if mode == "die":
+    with open(marker + ".launches", "a") as f:
+        f.write("x\n")
+    sys.exit(1)
+
 if mode in ("slow_ready", "slow_noready"):
     time.sleep(8)
-if wants_ready and mode in ("slow_ready", "late_once", "garbage", "env_probe"):
+if wants_ready and mode in ("slow_ready", "late_once", "garbage", "env_probe",
+                            "ready_then_slow"):
     out.write(frame(0x10)); out.flush()
 
 first = True
+requests = 0
 while True:
     total = read_request()
+    requests += 1
     if mode == "same_chunk" and first:
         first = False
         out.write(frame(0x10) + energy(total)); out.flush()
-    elif mode == "late_once" and first_here():
+    elif mode == "ready_then_slow" and first_here():
+        time.sleep(8)
+        out.write(energy(total)); out.flush()
+    elif mode == "late_once" and requests == 2 and first_here():
         time.sleep(7)
         out.write(energy(total)); out.flush()
     elif mode == "garbage" and first_here():
@@ -278,6 +289,15 @@ public:
     ok = true;
   }
 
+  // Number of times the "die" plugin was launched.
+  int launches() const
+  {
+    QFile f(m_dir.filePath("marker.launches"));
+    if (!f.open(QIODevice::ReadOnly))
+      return 0;
+    return f.readAll().count('\n');
+  }
+
   ~FakePlugin()
   {
     // Let the deleteLater() of killed processes run.
@@ -336,6 +356,8 @@ TEST(ForcefieldCommandTest, scriptEnergyLateReplyIsNeverReused)
   FakePlugin plugin("late_once");
   if (!plugin.ok)
     GTEST_SKIP() << "needs python3 on PATH";
+  // Warm-up: the first reply ends the startup phase and its long budget.
+  EXPECT_DOUBLE_EQ(plugin.energy.value(FakePlugin::coords(3.0)), 63.0);
   EXPECT_TRUE(std::isnan(plugin.energy.value(FakePlugin::coords(1.0))));
   // The plugin was killed and restarted; the new process answers this call
   // for these coordinates, not the old 21.0.
@@ -374,5 +396,39 @@ TEST(ForcefieldCommandTest, scriptEnergyAdvertisesReadyFrame)
   if (!plugin.ok)
     GTEST_SKIP() << "needs python3 on PATH";
   EXPECT_DOUBLE_EQ(plugin.energy.value(FakePlugin::coords(1.0)), 1.0);
+}
+
+// A model that announces READY and then compiles for longer than the normal
+// timeout on its first evaluation must not be killed and restarted.
+TEST(ForcefieldCommandTest, scriptEnergyStartupBudgetCoversFirstReply)
+{
+  FakePlugin plugin("ready_then_slow");
+  if (!plugin.ok)
+    GTEST_SKIP() << "needs python3 on PATH";
+  QElapsedTimer timer;
+  timer.start();
+  EXPECT_DOUBLE_EQ(plugin.energy.value(FakePlugin::coords(1.0)), 21.0);
+  EXPECT_GE(timer.elapsed(), 7000);
+  EXPECT_DOUBLE_EQ(plugin.energy.value(FakePlugin::coords(2.0)), 42.0);
+}
+
+// A plugin that never starts is launched twice, then calls fail at once.
+TEST(ForcefieldCommandTest, scriptEnergyStopsRestartingBrokenPlugin)
+{
+  FakePlugin plugin("die");
+  if (!plugin.ok)
+    GTEST_SKIP() << "needs python3 on PATH";
+  // setMolecule() launched it once.
+  for (int i = 0; i < 4; ++i)
+    EXPECT_TRUE(std::isnan(plugin.energy.value(FakePlugin::coords(1.0))));
+  // First launch plus one restart; the third and fourth calls did not launch.
+  EXPECT_EQ(plugin.launches(), 2);
+
+  // Selecting the molecule again resets the cap.
+  plugin.energy.setMolecule(&plugin.molecule);
+  EXPECT_TRUE(std::isnan(plugin.energy.value(FakePlugin::coords(1.0))));
+  EXPECT_TRUE(std::isnan(plugin.energy.value(FakePlugin::coords(1.0))));
+  EXPECT_TRUE(std::isnan(plugin.energy.value(FakePlugin::coords(1.0))));
+  EXPECT_EQ(plugin.launches(), 4);
 }
 #endif

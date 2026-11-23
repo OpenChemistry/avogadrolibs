@@ -60,7 +60,13 @@ constexpr char READY_ENVIRONMENT_VARIABLE[] = "AVOGADRO_ENERGY_READY";
 // The first exchange after the process starts has to cover importing a deep
 // learning framework and loading its model, which takes 7-16 s for the plugins
 // we know of. Model weights are fetched when the plugin is set up, not here.
+// The budget covers everything from launch to the first successful reply,
+// including a JIT compile on the first evaluation, and is not per wait.
 constexpr int STARTUP_TIMEOUT_MS = 60000;
+
+// Consecutive launches that never produced a successful reply before we stop
+// restarting the plugin on every request.
+constexpr int MAX_FAILED_STARTS = 2;
 
 // QByteArray cannot hold more than this, and no sane frame comes close.
 constexpr qint64 MAX_FRAME_BYTES = 0x7fffffff - BINARY_HEADER_SIZE;
@@ -297,6 +303,7 @@ void ScriptEnergy::setMolecule(Core::Molecule* mol)
   m_interpreter->asyncTerminate();
   m_needsRestart = false;
   m_processStarted = false;
+  m_failedStarts = 0;
 
   if (!m_unitCells && mol->unitCell()) {
     appendError("Unit cell not supported for this script.");
@@ -345,6 +352,8 @@ bool ScriptEnergy::startProcess()
   // Start the long-running interpreter and keep stdin open for coordinate
   // requests after bootstrapping the model from JSON.
   m_awaitingStartup = true;
+  m_readySeen = false;
+  m_launchTimer.start();
   if (!m_interpreter->asyncExecute(options, bootstrapInput, false, false)) {
     m_interpreter->asyncTerminate();
     return false;
@@ -362,6 +371,10 @@ void ScriptEnergy::discardProcess()
   // to a request we gave up on, say) dies with it, and the next request
   // starts a new process whose pipes cannot contain it.
   m_interpreter->asyncTerminate();
+  // A launch that dies before answering anything counts toward the restart
+  // cap; a long-running plugin that later fails does not.
+  if (m_processStarted && m_awaitingStartup)
+    ++m_failedStarts;
   if (m_processStarted)
     m_needsRestart = true;
   m_processStarted = false;
@@ -542,6 +555,13 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
 
   // A previous exchange failed and the process was killed: start a new one
   // (re-bootstrapping the model) before sending anything.
+  if (m_needsRestart && m_failedStarts >= MAX_FAILED_STARTS) {
+    // Do not pay for another model load on every optimizer step.
+    appendError("Energy plugin " + (m_name.empty() ? m_identifier : m_name) +
+                " failed to start twice; see its error output. Select the "
+                "model again to retry.");
+    return false;
+  }
   if (m_needsRestart && !startProcess()) {
     appendError("Could not restart the script after an earlier failure.");
     return false;
@@ -557,10 +577,14 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
     return false;
   }
 
-  // The first exchange also waits out the script's startup. Once a READY
-  // frame says startup is over, the real reply gets the normal timeout.
-  int budgetMs =
-    m_awaitingStartup ? std::max(timeoutMs, STARTUP_TIMEOUT_MS) : timeoutMs;
+  // Until the first successful reply, everything is measured against one
+  // budget from launch (READY does not shorten it: the first evaluation may
+  // still compile). Never allow less than the normal timeout.
+  const int budgetMs =
+    m_awaitingStartup
+      ? static_cast<int>(std::max<qint64>(
+          STARTUP_TIMEOUT_MS - m_launchTimer.elapsed(), timeoutMs))
+      : timeoutMs;
   QElapsedTimer timer;
   timer.start();
 
@@ -587,7 +611,7 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
       if ((flags & FLAG_READY) != 0) {
         // Only a server that has just started may announce itself, once, and
         // it must describe the molecule we gave it.
-        const bool expected = m_awaitingStartup;
+        const bool expected = m_awaitingStartup && !m_readySeen;
         const bool sizeOk =
           m_molecule == nullptr ||
           atomCount == static_cast<quint32>(m_molecule->atomCount());
@@ -598,9 +622,7 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
           discardProcess();
           return false;
         }
-        m_awaitingStartup = false;
-        budgetMs = timeoutMs;
-        timer.restart();
+        m_readySeen = true;
         buffer.remove(0, static_cast<qsizetype>(total));
         continue;
       }
@@ -612,8 +634,6 @@ bool ScriptEnergy::readBinaryFrame(const QByteArray& input, QByteArray& frame,
         return false;
       }
 
-      // An old script sends no READY; its first reply ends the startup too.
-      m_awaitingStartup = false;
       frame = buffer;
       return true;
     }
@@ -652,8 +672,10 @@ bool ScriptEnergy::evaluateBinary(const Eigen::VectorXd& x,
   if (!readBinaryFrame(input, response))
     return false;
 
-  if (parseResponseBinary(response, requestFlags, energy, grad, hess))
+  if (parseResponseBinary(response, requestFlags, energy, grad, hess)) {
+    noteResponseOk();
     return true;
+  }
   rejectResponse(response);
   return false;
 }
@@ -827,10 +849,20 @@ bool ScriptEnergy::evaluateBatchBinary(
     return false;
 
   if (parseBatchResponseBinary(response, requestFlags, coords.size(), energies,
-                               grads))
+                               grads)) {
+    noteResponseOk();
     return true;
+  }
   rejectResponse(response);
   return false;
+}
+
+void ScriptEnergy::noteResponseOk()
+{
+  // The plugin has loaded and answered: startup is over and it is trusted
+  // again, whatever happened to earlier launches.
+  m_awaitingStartup = false;
+  m_failedStarts = 0;
 }
 
 void ScriptEnergy::rejectResponse(const QByteArray& response)

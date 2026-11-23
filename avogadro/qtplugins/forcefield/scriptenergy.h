@@ -11,6 +11,7 @@
 #include <avogadro/core/avogadrocore.h>
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QJsonObject>
 #include <QtCore/QString>
 #include <QtCore/QVariantMap>
@@ -145,6 +146,8 @@ private:
   // Called when a complete frame could not be used: discard the process unless
   // the frame was a well-formed error report.
   void rejectResponse(const QByteArray& response);
+  // A response parsed: end the startup phase and reset the restart cap.
+  void noteResponseOk();
 
 private:
   QtGui::PythonScript* m_interpreter;
@@ -157,6 +160,11 @@ private:
   bool m_processStarted = false;
   // True from launch until the first frame arrives, which may be slow.
   bool m_awaitingStartup = true;
+  // A READY frame has been consumed since the last launch.
+  bool m_readySeen = false;
+  // Launches in a row that failed before any successful reply.
+  int m_failedStarts = 0;
+  QElapsedTimer m_launchTimer;
   // The process was killed after a failure; the next request starts a new one.
   bool m_needsRestart = false;
 
