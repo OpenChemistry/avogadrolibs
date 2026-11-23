@@ -12,7 +12,10 @@
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QAbstractItemModel>
+#include <QtCore/QSignalBlocker>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 
 #include <algorithm>
 
@@ -35,6 +38,10 @@ VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
 
   connect(m_ui->amplitudeSlider, SIGNAL(sliderMoved(int)),
           SIGNAL(amplitudeChanged(int)));
+  connect(m_ui->framesSpinBox, &QSpinBox::valueChanged, this,
+          &VibrationDialog::framesPerCycleChanged);
+  connect(m_ui->goToFrameButton, &QPushButton::clicked, this,
+          &VibrationDialog::requestGoToFrame);
   connect(m_ui->startButton, SIGNAL(clicked(bool)), this,
           SLOT(changeAnimation()));
 }
@@ -86,15 +93,59 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
   connect(m_ui->tableView->selectionModel(),
           SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
           SLOT(selectRow(QModelIndex)));
+}
 
-  Core::Array<double> freqs = molecule->vibrationFrequencies();
-  for (size_t i = 0; i < freqs.size(); ++i) {
-    if (freqs[i] > 0.5) {
-      m_ui->tableView->selectRow(static_cast<int>(i));
-      emit modeChanged(i);
-      break;
-    }
-  }
+void VibrationDialog::setCurrentMode(int mode)
+{
+  QItemSelectionModel* selection = m_ui->tableView->selectionModel();
+  if (selection == nullptr)
+    return;
+  const QSignalBlocker blocker(selection);
+  m_ui->tableView->selectRow(mode);
+}
+
+void VibrationDialog::setAmplitude(int amplitude)
+{
+  const QSignalBlocker blocker(m_ui->amplitudeSlider);
+  m_ui->amplitudeSlider->setValue(amplitude);
+}
+
+void VibrationDialog::setFramesPerCycle(int frames)
+{
+  const QSignalBlocker blocker(m_ui->framesSpinBox);
+  m_ui->framesSpinBox->setValue(frames);
+}
+
+void VibrationDialog::showModes()
+{
+  m_goToFrame = -1;
+  m_ui->stack->setCurrentWidget(m_ui->modesPage);
+  m_ui->amplitudeSlider->setEnabled(true);
+  m_ui->framesSpinBox->setEnabled(true);
+  m_ui->startButton->setEnabled(true);
+}
+
+void VibrationDialog::showNoModes(const std::vector<int>& framesWithModes,
+                                  int nearestFrame)
+{
+  QStringList numbers;
+  for (int frame : framesWithModes)
+    numbers << QString::number(frame + 1); // shown one-based
+  m_goToFrame = nearestFrame;
+  m_ui->noModesLabel->setText(
+    tr("Vibrations available at frame(s): %1").arg(numbers.join(", ")));
+  m_ui->goToFrameButton->setText(tr("Go to frame %1").arg(nearestFrame + 1));
+  m_ui->goToFrameButton->setEnabled(nearestFrame >= 0);
+  m_ui->stack->setCurrentWidget(m_ui->noModesPage);
+  m_ui->amplitudeSlider->setEnabled(false);
+  m_ui->framesSpinBox->setEnabled(false);
+  m_ui->startButton->setEnabled(false);
+}
+
+void VibrationDialog::requestGoToFrame()
+{
+  if (m_goToFrame >= 0)
+    emit goToFrame(m_goToFrame);
 }
 
 int VibrationDialog::currentMode() const

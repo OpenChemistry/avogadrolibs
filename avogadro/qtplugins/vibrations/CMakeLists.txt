@@ -1,6 +1,7 @@
 set(plugin_srcs
   displacementdialog.cpp
   vibrationdialog.cpp
+  vibrationframes.cpp
   vibrationmodel.cpp
   vibrations.cpp
 )

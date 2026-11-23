@@ -2198,6 +2198,12 @@ bool Molecule::hasVibrations() const
   return hasVibrations(vibrationKey(m_coordinate3dIndex));
 }
 
+bool Molecule::hasAnyVibrations() const
+{
+  return std::any_of(m_vibrations.begin(), m_vibrations.end(),
+                     [](const auto& entry) { return !entry.second.isEmpty(); });
+}
+
 size_t Molecule::vibrationConformerCount() const
 {
   return vibrationConformers().size();
