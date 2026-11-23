@@ -74,6 +74,9 @@ QWidget* SelectionTool::toolWidget() const
 {
   if (m_toolWidget == nullptr) {
     m_toolWidget = new SelectionToolWidget(qobject_cast<QWidget*>(parent()));
+    // Stay hidden until the tool dock takes the panel: a child of a GLWidget
+    // that is not yet shown would otherwise appear inside the view.
+    m_toolWidget->hide();
     connect(m_toolWidget, SIGNAL(colorApplied(Vector3ub)), this,
             SLOT(applyColor(Vector3ub)));
     connect(m_toolWidget, SIGNAL(changeLayer(int)), this,

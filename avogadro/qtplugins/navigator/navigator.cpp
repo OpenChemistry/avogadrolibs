@@ -126,6 +126,9 @@ QWidget* Navigator::toolWidget() const
 {
   if (!m_toolWidget) {
     m_toolWidget = new QWidget(qobject_cast<QWidget*>(parent()));
+    // Stay hidden until the tool dock takes the panel: a child of a GLWidget
+    // that is not yet shown would otherwise appear inside the view.
+    m_toolWidget->hide();
     auto* layout = new QVBoxLayout;
 
     auto* swapZoom = new QCheckBox(tr("Reverse Direction of Zoom on Scroll"));
