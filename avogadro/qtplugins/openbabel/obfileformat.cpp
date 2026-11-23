@@ -12,11 +12,9 @@
 #include <avogadro/core/utilities.h>
 #include <avogadro/io/cifsymmetry.h>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
-#include <QtCore/QTimer>
 
 using namespace std::string_literals;
 
@@ -44,9 +42,10 @@ class OBFileFormat::ProcessListener : public QObject
 public:
   ProcessListener() : m_finished(false) {}
 
-  bool waitForOutput(QByteArray& output, int msTimeout = 120000)
+  bool waitForOutput(OBProcess& process, QByteArray& output,
+                     int msTimeout = 120000)
   {
-    if (!wait(msTimeout))
+    if (!wait(process, msTimeout))
       return false;
 
     // success!
@@ -62,13 +61,18 @@ public slots:
   }
 
 private:
-  bool wait(int msTimeout)
+  // Block on the process rather than running the event loop. This can be
+  // called from a worker thread (BackgroundFileFormat), where the process and
+  // this listener both live, and from code that is itself called from an
+  // event handler or paint; processEvents() would re-enter both. QProcess
+  // emits finished() (or errorOccurred()) from inside waitForFinished(), which
+  // runs OBProcess's slot and so responseReceived() before this returns.
+  bool wait(OBProcess& process, int msTimeout)
   {
-    QTimer timer;
-    timer.start(msTimeout);
-
-    while (timer.isActive() && !m_finished)
-      qApp->processEvents(QEventLoop::ExcludeUserInputEvents, 500);
+    if (!m_finished && !process.waitForFinished(msTimeout) && !m_finished) {
+      // timed out (or never started): don't leave obabel running
+      process.abort();
+    }
 
     return m_finished;
   }
@@ -203,7 +207,7 @@ bool OBFileFormat::read(std::istream& in, Core::Molecule& molecule)
   }
 
   QByteArray output;
-  if (!listener.waitForOutput(output)) {
+  if (!listener.waitForOutput(proc, output)) {
     appendError("Conversion timed out."s);
     return false;
   }
@@ -301,7 +305,7 @@ bool OBFileFormat::write(std::ostream& out, const Core::Molecule& molecule)
                QString::fromStdString(m_fileExtensions.front()), options);
 
   QByteArray output;
-  if (!listener.waitForOutput(output)) {
+  if (!listener.waitForOutput(proc, output)) {
     appendError("Conversion timed out."s);
     return false;
   }

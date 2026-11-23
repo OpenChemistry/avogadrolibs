@@ -4,15 +4,19 @@
 ******************************************************************************/
 
 #include "obcharges.h"
+#include "obfileformat.h"
 
 #include <avogadro/core/molecule.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
+#include <QtCore/QThread>
 #include <QtCore/QTimer>
 
 #include <gtest/gtest.h>
+
+#include <string>
 
 using Avogadro::QtPlugins::OBCharges;
 
@@ -66,4 +70,60 @@ TEST(OpenBabelCommandTest, ChargesDoNotRunTheEventLoop)
   // The timer is still pending, not lost.
   QCoreApplication::processEvents();
   EXPECT_TRUE(timerFired);
+}
+
+// Same for reading through Open Babel: file formats are called from code that
+// is itself running in an event handler (or a worker thread).
+TEST(OpenBabelCommandTest, FileReadDoesNotRunTheEventLoop)
+{
+  if (!haveObabel())
+    GTEST_SKIP() << "obabel is not available";
+
+  Avogadro::QtPlugins::OBFileFormat format(
+    "XYZ via Open Babel", "Avogadro: OBXYZ", "XYZ", "", { "xyz" },
+    { "chemical/x-xyz" }, "cml", false);
+
+  const std::string input = "3\nwater\n"
+                            "O 0.000 0.000 0.000\n"
+                            "H 0.960 0.000 0.000\n"
+                            "H -0.240 0.930 0.000\n";
+
+  bool timerFired = false;
+  QTimer::singleShot(0, [&timerFired]() { timerFired = true; });
+
+  Avogadro::Core::Molecule mol;
+  EXPECT_TRUE(format.readString(input, mol)) << format.error();
+
+  EXPECT_FALSE(timerFired) << "read() ran the event loop";
+  EXPECT_EQ(mol.atomCount(), 3u);
+
+  QCoreApplication::processEvents();
+  EXPECT_TRUE(timerFired);
+}
+
+// BackgroundFileFormat reads on a worker thread, where the process, its
+// listener, and the wait all have to stay on that thread.
+TEST(OpenBabelCommandTest, FileReadOnWorkerThread)
+{
+  if (!haveObabel())
+    GTEST_SKIP() << "obabel is not available";
+
+  const std::string input = "3\nwater\n"
+                            "O 0.000 0.000 0.000\n"
+                            "H 0.960 0.000 0.000\n"
+                            "H -0.240 0.930 0.000\n";
+  Avogadro::Core::Molecule mol;
+  bool ok = false;
+  QThread* thread = QThread::create([&]() {
+    Avogadro::QtPlugins::OBFileFormat format(
+      "XYZ via Open Babel", "Avogadro: OBXYZ", "XYZ", "", { "xyz" },
+      { "chemical/x-xyz" }, "cml", false);
+    ok = format.readString(input, mol);
+  });
+  thread->start();
+  EXPECT_TRUE(thread->wait(30000));
+  delete thread;
+
+  EXPECT_TRUE(ok);
+  EXPECT_EQ(mol.atomCount(), 3u);
 }
