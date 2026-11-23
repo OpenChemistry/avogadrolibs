@@ -223,6 +223,30 @@ TEST(XyzTest, readAtomLabelsDoesNotOverreach)
   EXPECT_EQ(molecule.atom(3).atomicNumber(), Avogadro::InvalidElement);
 }
 
+// Columns may be separated by tabs or spaces, in any mix, with CRLF endings,
+// in the first frame and in every following one.
+TEST(XyzTest, readMixedSeparatorsAndTrajectory)
+{
+  const std::string text = "2\r\nframe 0\r\n"
+                           "O\t0.0\t0.0\t0.0\r\n"
+                           "H  1.0 \t 0.0\t  0.5\r\n"
+                           "2\r\nframe 1\r\n"
+                           "O\t0.1\t0.2\t0.3\r\n"
+                           "H 1.1\t0.2   0.8\r\n";
+  XyzFormat xyz;
+  xyz.setOptions(R"({"perceiveBonds": false})");
+  Molecule molecule;
+  ASSERT_TRUE(xyz.readString(text, molecule)) << xyz.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  ASSERT_EQ(molecule.coordinate3dCount(), 2);
+  const auto first = molecule.coordinate3d(0);
+  const auto second = molecule.coordinate3d(1);
+  EXPECT_EQ(first[1], Vector3(1.0, 0.0, 0.5));
+  EXPECT_EQ(second[0], Vector3(0.1, 0.2, 0.3));
+  EXPECT_EQ(second[1], Vector3(1.1, 0.2, 0.8));
+}
+
 TEST(XyzTest, write)
 {
   XyzFormat xyz;
