@@ -72,19 +72,26 @@ inline float hydrogenBondDistance(unsigned char otherAtomicNumber)
 
 namespace Avogadro::QtGui {
 
-void HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
+Index HydrogenTools::removeAllHydrogens(RWMolecule& molecule)
 {
+  Index removed = 0;
   const Array<unsigned char> atomicNums(molecule.atomicNumbers());
   size_t atomIndex = molecule.atomCount() - 1;
   for (auto it = atomicNums.rbegin(), itEnd = atomicNums.rend(); it != itEnd;
        ++it, --atomIndex) {
-    if (*it == 1)
+    if (*it == 1) {
       molecule.removeAtom(atomIndex);
+      ++removed;
+    }
   }
+  return removed;
 }
 
-void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
+HydrogenTools::HydrogenCounts HydrogenTools::adjustHydrogens(
+  RWMolecule& molecule, Adjustment adjustment)
 {
+  HydrogenCounts counts;
+
   // This vector stores indices of hydrogens that need to be removed. Additions
   // are made first, followed by removals to keep indexing sane.
   std::vector<size_t> badHIndices;
@@ -112,6 +119,7 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
         RWAtom newH(molecule.addAtom(1));
         newH.setPosition3d(newHPo);
         molecule.addBond(atom, newH, 1);
+        ++counts.added;
       }
     }
     // Add bad hydrogens to our list of hydrogens to remove:
@@ -129,8 +137,11 @@ void HydrogenTools::adjustHydrogens(RWMolecule& molecule, Adjustment adjustment)
     for (auto it = badHIndices.rbegin(), itEnd = badHIndices.rend();
          it != itEnd; ++it) {
       molecule.removeAtom(*it);
+      ++counts.removed;
     }
   }
+
+  return counts;
 }
 
 void HydrogenTools::adjustHydrogens(RWAtom& atom, Adjustment adjustment)

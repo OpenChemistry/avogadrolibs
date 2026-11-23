@@ -29,6 +29,7 @@ set(plugins
   Focus
   Forcefield
   GLTF
+  Hydrogens
   MeasureTool
   Navigator
   OpenBabel

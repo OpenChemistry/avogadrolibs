@@ -7,6 +7,7 @@
 #define AVOGADRO_QTPLUGINS_HYDROGENS_H
 
 #include <avogadro/qtgui/extensionplugin.h>
+#include <avogadro/qtgui/hydrogentools.h>
 
 namespace Avogadro::QtPlugins {
 
@@ -28,8 +29,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -40,6 +39,15 @@ private slots:
   void removeAllHydrogens();
 
 private:
+  void registerHydrogensCommands();
+
+  /** Apply @p adjustment as one undo step and emit the changes.
+   *  @return How many hydrogens were added and removed. */
+  QtGui::HydrogenTools::HydrogenCounts applyAdjustment(
+    QtGui::HydrogenTools::Adjustment adjustment);
+  /** Remove every hydrogen as one undo step and emit the changes. */
+  QtGui::HydrogenTools::HydrogenCounts applyRemoveAll();
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
 };

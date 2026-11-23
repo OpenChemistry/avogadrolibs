@@ -24,9 +24,20 @@ public:
   ~HydrogenTools() = delete; // Not implemented
 
   /**
-   * Remove all hydrogen atoms from @a molecule.
+   * Structure returned by adjustHydrogens reporting how many hydrogens were
+   * added and/or removed.
    */
-  static void removeAllHydrogens(RWMolecule& molecule);
+  struct HydrogenCounts
+  {
+    Index added = 0;
+    Index removed = 0;
+  };
+
+  /**
+   * Remove all hydrogen atoms from @a molecule.
+   * @return The number of hydrogen atoms removed.
+   */
+  static Index removeAllHydrogens(RWMolecule& molecule);
 
   /**
    * Enum values that control the adjustHydrogen function's behavior.
@@ -44,9 +55,10 @@ public:
 
   /**
    * Add/remove hydrogens on @a molecule to satisfy valency.
+   * @return The counts of hydrogens added and removed.
    */
-  static void adjustHydrogens(RWMolecule& molecule,
-                              Adjustment adjustment = AddAndRemove);
+  static HydrogenCounts adjustHydrogens(RWMolecule& molecule,
+                                        Adjustment adjustment = AddAndRemove);
 
   /**
    * Add/remove hydrogens on @a atom to satisfy valency.
