@@ -70,36 +70,15 @@ inline std::vector<std::string> split(const std::string& string, char delimiter,
 }
 
 /**
- * @brief Split @p input into tokens separated by runs of white space.
- * @param input The string to be split up.
- * @return A vector containing the tokens, never any empty ones.
+ * @brief Whether @p c is white space: ' ', '\t', '\n', '\v', '\f' or '\r'.
  *
- * Unlike split(), which takes one delimiter character, any run of ' ', '\t',
- * '\r' or '\n' (the set trimmed() uses) separates tokens, so tabs and line
- * endings never end up inside them. split(s, ' ') leaves "2yn\n" as a token
- * and keeps "a\tb" whole; split() also keeps the empty field between adjacent
- * delimiters when skipEmpty is false, which suits delimited formats. Use
- * splitWhitespace() for free-format, whitespace-separated text such as
- * symbols, keywords and columns that may be separated by tabs.
- *
- * For example, "  -P   2yn \n" gives {"-P", "2yn"}, and "a\tb c" gives
- * {"a", "b", "c"} where split("a\tb c", ' ') gives {"a\tb", "c"}.
+ * The C locale's isspace() set, independent of the current locale. It is the
+ * one definition used by tokenize(), splitWhitespace() and the integer
+ * parsing in lexicalCast().
  */
-inline std::vector<std::string> splitWhitespace(const std::string& input)
+constexpr bool isWhitespace(char c) noexcept
 {
-  constexpr const char* whitespace = " \t\r\n";
-  std::vector<std::string> tokens;
-  std::string::size_type start = input.find_first_not_of(whitespace);
-  while (start != std::string::npos) {
-    std::string::size_type end = input.find_first_of(whitespace, start);
-    if (end == std::string::npos) {
-      tokens.push_back(input.substr(start));
-      break;
-    }
-    tokens.push_back(input.substr(start, end - start));
-    start = input.find_first_not_of(whitespace, end);
-  }
-  return tokens;
+  return c == ' ' || (c >= '\t' && c <= '\r');
 }
 
 /**
@@ -108,10 +87,16 @@ inline std::vector<std::string> splitWhitespace(const std::string& input)
  * @param input The text to be split up.
  * @param tokens Cleared, then filled with the tokens; never any empty ones.
  *
- * The same tokens as splitWhitespace() (any run of ' ', '\t', '\r' or '\n'
- * separates them), but they are views into @p input, and nothing is
- * allocated once @p tokens has grown to its working size. Keep one vector per
- * reader and reuse it for every line.
+ * Any run of white space (see isWhitespace()) separates tokens, so tabs and
+ * line endings never end up inside them. Unlike split(), which takes one
+ * delimiter character, "a\tb c" gives {"a", "b", "c"} where
+ * split("a\tb c", ' ') gives {"a\tb", "c"}, and "2yn\n" is a token without
+ * the newline. Use this for free-format, whitespace-separated text such as
+ * symbols, keywords and columns that may be separated by tabs.
+ *
+ * The tokens are views into @p input, and nothing is allocated once
+ * @p tokens has grown to its working size. Keep one vector per reader and
+ * reuse it for every line.
  *
  * The views dangle if the buffer behind @p input is modified, reallocated or
  * destroyed, which includes reading the next line into the same std::string.
@@ -123,19 +108,31 @@ inline void tokenize(std::string_view input,
   tokens.clear();
   const char* pos = input.data();
   const char* const last = pos + input.size();
-  const auto isSpace = [](char c) {
-    return c == ' ' || c == '\t' || c == '\r' || c == '\n';
-  };
   while (pos != last) {
-    while (pos != last && isSpace(*pos))
+    while (pos != last && isWhitespace(*pos))
       ++pos;
     if (pos == last)
       break;
     const char* start = pos;
-    while (pos != last && !isSpace(*pos))
+    while (pos != last && !isWhitespace(*pos))
       ++pos;
     tokens.emplace_back(start, static_cast<std::size_t>(pos - start));
   }
+}
+
+/**
+ * @brief Split @p input into tokens separated by runs of white space.
+ * @param input The string to be split up.
+ * @return A vector containing the tokens, never any empty ones.
+ *
+ * The same tokens as tokenize(), as copies. For example, "  -P   2yn \n"
+ * gives {"-P", "2yn"}.
+ */
+inline std::vector<std::string> splitWhitespace(const std::string& input)
+{
+  std::vector<std::string_view> views;
+  tokenize(input, views);
+  return std::vector<std::string>(views.begin(), views.end());
 }
 
 /**
@@ -397,8 +394,7 @@ std::optional<T> lexicalCast(std::string_view input)
       return std::nullopt;
     return value;
   } else if constexpr (isParsedInteger<T>) {
-    while (first != last &&
-           (*first == ' ' || (*first >= '\t' && *first <= '\r')))
+    while (first != last && isWhitespace(*first))
       ++first;
     const char* digits = first;
     if (digits != last && *digits == '+') {

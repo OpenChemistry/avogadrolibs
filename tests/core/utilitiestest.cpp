@@ -18,6 +18,7 @@
 
 using Avogadro::Core::caseInsensitiveEquals;
 using Avogadro::Core::contains;
+using Avogadro::Core::isWhitespace;
 using Avogadro::Core::lexicalCast;
 using Avogadro::Core::parseDouble;
 using Avogadro::Core::parseFloat;
@@ -106,6 +107,20 @@ TEST(UtilitiesTest, splitWhitespace)
   // split() takes a single delimiter, so tabs stay inside the tokens.
   EXPECT_EQ(split("a\tb c", ' '), Tokens({ "a\tb", "c" }));
   EXPECT_EQ(splitWhitespace("a\tb c"), Tokens({ "a", "b", "c" }));
+
+  // Vertical tab and form feed are white space too.
+  EXPECT_EQ(splitWhitespace("a\vb\fc"), Tokens({ "a", "b", "c" }));
+}
+
+TEST(UtilitiesTest, isWhitespace)
+{
+  for (char c : std::string(" \t\n\v\f\r"))
+    EXPECT_TRUE(isWhitespace(c));
+  for (char c : std::string("a0.-+\0\x1f\x7f", 8))
+    EXPECT_FALSE(isWhitespace(c));
+  // Bytes outside ASCII are never white space, whatever the locale.
+  EXPECT_FALSE(isWhitespace(static_cast<char>(0xa0)));
+  EXPECT_FALSE(isWhitespace(static_cast<char>(0x85)));
 }
 
 TEST(UtilitiesTest, trimmed)

@@ -9,6 +9,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -16,6 +17,30 @@
 
 using namespace Avogadro::Core;
 using namespace Avogadro::FuzzHelpers;
+
+namespace {
+// An independent whitespace splitter to check tokenize() against: it
+// classifies bytes by number, not through isWhitespace().
+std::vector<std::string> referenceSplit(const std::string& input)
+{
+  std::vector<std::string> tokens;
+  std::string current;
+  for (char c : input) {
+    const int code = static_cast<unsigned char>(c);
+    const bool space = code == 32 || (code >= 9 && code <= 13);
+    if (space) {
+      if (!current.empty())
+        tokens.push_back(current);
+      current.clear();
+    } else {
+      current.push_back(c);
+    }
+  }
+  if (!current.empty())
+    tokens.push_back(current);
+  return tokens;
+}
+} // namespace
 
 // Fuzz string parsing and conversion utilities
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
@@ -40,7 +65,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
   // differ between standard libraries.
   std::vector<std::string_view> tokens;
   tokenize(input, tokens);
-  const auto expected = splitWhitespace(input);
+  const auto expected = referenceSplit(input);
+  if (splitWhitespace(input) != expected)
+    std::abort();
   if (tokens.size() != expected.size())
     std::abort();
   for (std::size_t i = 0; i < tokens.size(); ++i) {

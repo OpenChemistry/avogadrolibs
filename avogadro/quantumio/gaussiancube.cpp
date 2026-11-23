@@ -102,8 +102,6 @@ public:
   }
 
 private:
-  static bool isSpace(char c) { return c == ' ' || (c >= '\t' && c <= '\r'); }
-
   // Moves to the next white space separated token, reading lines as needed.
   // A token never spans lines, and blank lines are skipped. The token is
   // [m_pos, m_end) inside m_line, which stays valid until the next line is
@@ -112,11 +110,11 @@ private:
   {
     for (;;) {
       const char* p = m_end;
-      while (p != m_lineEnd && isSpace(*p))
+      while (p != m_lineEnd && Core::isWhitespace(*p))
         ++p;
       if (p != m_lineEnd) {
         m_pos = p;
-        while (p != m_lineEnd && !isSpace(*p))
+        while (p != m_lineEnd && !Core::isWhitespace(*p))
           ++p;
         m_end = p;
         return true;
