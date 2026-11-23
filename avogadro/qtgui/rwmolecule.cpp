@@ -205,8 +205,12 @@ bool RWMolecule::setAtomicNumbers(const Core::Array<unsigned char>& nums)
   if (nums.size() != m_molecule.atomCount())
     return false;
 
-  auto* comm =
-    new SetAtomicNumbersCommand(*this, m_molecule.atomicNumbers(), nums);
+  auto* comm = new SetArrayCommand<unsigned char>(
+    *this,
+    [](Molecule& mol, const Array<unsigned char>& values) {
+      mol.setAtomicNumbers(values);
+    },
+    m_molecule.atomicNumbers(), nums);
   comm->setText(tr("Change Elements"));
   m_undoStack.push(comm);
   return true;
@@ -230,9 +234,16 @@ bool RWMolecule::setAtomPositions3d(const Core::Array<Vector3>& pos,
   if (pos.size() != m_molecule.atomCount())
     return false;
 
-  auto* comm = new SetPositions3dCommand(*this, m_molecule.m_positions3d, pos);
+  // This assigns the array rather than calling a Molecule setter, which
+  // would check the size and emit a change.
+  auto* comm = new SetArrayCommand<Vector3>(
+    *this,
+    [](Molecule& mol, const Array<Vector3>& values) {
+      mol.atomPositions3d() = values;
+    },
+    m_molecule.m_positions3d, pos);
   comm->setText(undoText);
-  comm->setCanMerge(m_interactive);
+  comm->setMergeId(m_interactive ? SetPositions3dMergeId : -1);
   m_undoStack.push(comm);
   return true;
 }
@@ -243,7 +254,12 @@ bool RWMolecule::setAtomLabel(Index atomId, const std::string& label,
   if (atomId >= atomCount())
     return false;
 
-  auto* comm = new ModifyAtomLabelCommand(*this, atomId, label);
+  auto* comm = new SetEntryCommand<std::string>(
+    *this,
+    [](Molecule& mol, Index index, const std::string& value) {
+      mol.setAtomLabel(index, value);
+    },
+    atomId, m_molecule.atomLabel(atomId), label);
   comm->setText(undoText);
   m_undoStack.push(comm);
   return true;
@@ -255,7 +271,12 @@ bool RWMolecule::setBondLabel(Index bondId, const std::string& label,
   if (bondId >= bondCount())
     return false;
 
-  auto* comm = new ModifyBondLabelCommand(*this, bondId, label);
+  auto* comm = new SetEntryCommand<std::string>(
+    *this,
+    [](Molecule& mol, Index index, const std::string& value) {
+      mol.setBondLabel(index, value);
+    },
+    bondId, m_molecule.bondLabel(bondId), label);
   comm->setText(undoText);
   m_undoStack.push(comm);
   return true;
@@ -270,10 +291,23 @@ bool RWMolecule::setAtomPosition3d(Index atomId, const Vector3& pos,
   if (m_molecule.m_positions3d.size() != m_molecule.atomCount())
     m_molecule.m_positions3d.resize(m_molecule.atomCount(), Vector3::Zero());
 
-  auto* comm = new SetPosition3dCommand(*this, atomId,
-                                        m_molecule.m_positions3d[atomId], pos);
+  auto* comm = new SetEntriesCommand<Vector3>(
+    *this,
+    [](Molecule& mol, Index index, const Vector3& value) {
+      // RWMolecule::setAtomPosition3d() grows the position array to
+      // atomCount() before pushing this command, outside the undo history.
+      // Redoing after an undone position-less AddAtomCommand must repeat
+      // that growth, or the array is shorter than the atom ids (found by
+      // fuzzing).
+      Array<Vector3>& positions = mol.atomPositions3d();
+      if (positions.size() < mol.atomCount())
+        positions.resize(mol.atomCount(), Vector3::Zero());
+      if (index < positions.size())
+        positions[index] = value;
+    },
+    atomId, m_molecule.m_positions3d[atomId], pos);
   comm->setText(undoText);
-  comm->setCanMerge(m_interactive);
+  comm->setMergeId(m_interactive ? SetPosition3dMergeId : -1);
   m_undoStack.push(comm);
   return true;
 }
@@ -293,9 +327,17 @@ void RWMolecule::setAtomSelected(Index atomId, bool selected,
   if (m_molecule.atomSelected(atomId) == selected)
     return;
 
-  auto* comm = new ModifySelectionCommand(*this, atomId, selected);
+  auto* comm = new SetEntriesCommand<bool>(
+    *this,
+    [](Molecule& mol, Index index, const bool& value) {
+      // Guarded as well as at the call: an index past the end has no atom to
+      // select.
+      if (index < mol.atomCount())
+        mol.setAtomSelected(index, value);
+    },
+    atomId, m_molecule.atomSelected(atomId), selected);
   comm->setText(undoText);
-  comm->setCanMerge(true);
+  comm->setMergeId(ModifySelectionMergeId);
   m_undoStack.push(comm);
   //  m_molecule.setAtomSelected(atomId, selected);
 }
@@ -310,8 +352,12 @@ bool RWMolecule::setHybridization(Index atomId, Core::AtomHybridization hyb)
   if (atomId >= atomCount())
     return false;
 
-  auto* comm = new SetAtomHybridizationCommand(
-    *this, atomId, m_molecule.hybridization(atomId), hyb);
+  auto* comm = new SetEntryCommand<Core::AtomHybridization>(
+    *this,
+    [](Molecule& mol, Index index, const Core::AtomHybridization& value) {
+      mol.setHybridization(index, value);
+    },
+    atomId, m_molecule.hybridization(atomId), hyb);
   comm->setText(tr("Change Atom Hybridization"));
   m_undoStack.push(comm);
   return true;
@@ -322,8 +368,12 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
   if (atomId >= atomCount())
     return false;
 
-  auto* comm = new SetAtomFormalChargeCommand(
-    *this, atomId, m_molecule.formalCharge(atomId), charge);
+  auto* comm = new SetEntryCommand<signed char>(
+    *this,
+    [](Molecule& mol, Index index, const signed char& value) {
+      mol.setFormalCharge(index, value);
+    },
+    atomId, m_molecule.formalCharge(atomId), charge);
   comm->setText(tr("Change Atom Formal Charge"));
   m_undoStack.push(comm);
   return true;
@@ -344,8 +394,12 @@ bool RWMolecule::setColor(Index atomId, Vector3ub color)
   if (atomId >= atomCount())
     return false;
 
-  auto* comm =
-    new SetAtomColorCommand(*this, atomId, m_molecule.color(atomId), color);
+  auto* comm = new SetEntryCommand<Vector3ub>(
+    *this,
+    [](Molecule& mol, Index index, const Vector3ub& value) {
+      mol.setColor(index, value);
+    },
+    atomId, m_molecule.color(atomId), color);
   comm->setText(tr("Change Atom Color"));
   m_undoStack.push(comm);
   return true;
@@ -356,8 +410,12 @@ bool RWMolecule::setResidueColor(Index residueId, Vector3ub color)
   if (residueId >= m_molecule.residueCount())
     return false;
 
-  auto* comm = new SetResidueColorCommand(
-    *this, residueId, m_molecule.residue(residueId).color(), color);
+  auto* comm = new SetEntryCommand<Vector3ub>(
+    *this,
+    [](Molecule& mol, Index index, const Vector3ub& value) {
+      mol.residue(index).setColor(value);
+    },
+    residueId, m_molecule.residue(residueId).color(), color);
   comm->setText(tr("Change Residue Color"));
   m_undoStack.push(comm);
   return true;
@@ -368,8 +426,12 @@ bool RWMolecule::setLayer(Index atomId, size_t layer)
   if (atomId >= atomCount())
     return false;
 
-  auto* comm =
-    new SetLayerCommand(*this, atomId, m_molecule.layer(atomId), layer);
+  auto* comm = new SetEntryCommand<size_t>(
+    *this,
+    [](Molecule& mol, Index index, const size_t& value) {
+      mol.setLayer(index, value);
+    },
+    atomId, m_molecule.layer(atomId), layer);
   comm->setText(tr("Change Atom Layer"));
   m_undoStack.push(comm);
   return true;
@@ -442,7 +504,12 @@ bool RWMolecule::setBondOrders(const Core::Array<unsigned char>& orders)
   if (orders.size() != m_molecule.bondCount())
     return false;
 
-  auto* comm = new SetBondOrdersCommand(*this, m_molecule.bondOrders(), orders);
+  auto* comm = new SetArrayCommand<unsigned char>(
+    *this,
+    [](Molecule& mol, const Array<unsigned char>& values) {
+      mol.setBondOrders(values);
+    },
+    m_molecule.bondOrders(), orders);
   comm->setText(tr("Set Bond Orders"));
   m_undoStack.push(comm);
   return true;
@@ -453,11 +520,15 @@ bool RWMolecule::setBondOrder(Index bondId, unsigned char order)
   if (bondId >= bondCount())
     return false;
 
-  auto* comm =
-    new SetBondOrderCommand(*this, bondId, m_molecule.bondOrder(bondId), order);
+  auto* comm = new SetEntryCommand<unsigned char>(
+    *this,
+    [](Molecule& mol, Index index, const unsigned char& value) {
+      mol.setBondOrder(index, value);
+    },
+    bondId, m_molecule.bondOrder(bondId), order);
   comm->setText(tr("Change Bond Order"));
   // Always allow merging, but only if bondId is the same.
-  comm->setCanMerge(true);
+  comm->setMergeId(SetBondOrderMergeId);
   m_undoStack.push(comm);
   return true;
 }
@@ -482,7 +553,12 @@ bool RWMolecule::setBondPairs(const Array<std::pair<Index, Index>>& pairs)
       return false;
   }
 
-  auto* comm = new SetBondPairsCommand(*this, m_molecule.bondPairs(), p);
+  auto* comm = new SetArrayCommand<BondPair>(
+    *this,
+    [](Molecule& mol, const Array<BondPair>& values) {
+      mol.setBondPairs(values);
+    },
+    m_molecule.bondPairs(), p);
   comm->setText(tr("Update Bonds"));
   m_undoStack.push(comm);
   return true;
@@ -505,7 +581,12 @@ bool RWMolecule::setBondPair(Index bondId, const std::pair<Index, Index>& pair)
   if (m_molecule.graph().containsEdge(newPair.first, newPair.second))
     return false;
 
-  auto* comm = new SetBondPairCommand(*this, bondId, oldPair, newPair);
+  auto* comm = new SetEntryCommand<std::pair<Index, Index>>(
+    *this,
+    [](Molecule& mol, Index index, const std::pair<Index, Index>& value) {
+      mol.setBondPair(index, value);
+    },
+    bondId, oldPair, newPair);
   comm->setText(tr("Update Bond"));
   m_undoStack.push(comm);
   return true;

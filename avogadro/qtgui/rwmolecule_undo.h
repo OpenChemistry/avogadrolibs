@@ -8,8 +8,11 @@
 #include "rwmolecule.h"
 
 #include <QUndoCommand>
+
+#include <algorithm>
 #include <cassert>
 #include <utility>
+#include <vector>
 
 namespace Avogadro::QtGui {
 
@@ -20,8 +23,8 @@ using Core::UnitCell;
 // Base class for all undo commands used by this class.
 // Used to expose molecule internals without needing to add explicit friendships
 // between all undo commands and the container.
-// Subclasses that want to support automatic merging should use the
-// MergeUndoCommand interface below.
+// Most commands just set a value, an array or some entries through a setter and
+// are the templates below. They merge when given a merge id (see MergeIds).
 // Subclass implementations are inline in the code below. Specific undo
 // operations are kept near the RWMolecule methods that use them.
 class RWMolecule::UndoCommand : public QUndoCommand
@@ -68,6 +71,151 @@ public:
   void setCanMerge(bool merge) { m_canMerge = merge; }
   bool canMerge() const { return m_canMerge; }
   int id() const override { return m_canMerge ? Id : -1; }
+};
+} // namespace
+
+namespace {
+// Sets one entry (an atom, bond or residue) of a molecule through a setter.
+// The old and new values are read by the caller. With a merge id set,
+// consecutive commands on the same entry (and the same setter) merge: the
+// merged command keeps the first old value and takes the last new value.
+template <typename T>
+class SetEntryCommand : public RWMolecule::UndoCommand
+{
+public:
+  using Setter = void (*)(Molecule&, Index, const T&);
+
+  SetEntryCommand(RWMolecule& m, Setter setter, Index index, T oldValue,
+                  T newValue)
+    : UndoCommand(m), m_setter(setter), m_index(index),
+      m_old(std::move(oldValue)), m_new(std::move(newValue))
+  {
+  }
+
+  // The default, -1, means the command never merges.
+  void setMergeId(int mergeId) { m_mergeId = mergeId; }
+  int id() const override { return m_mergeId; }
+
+  void redo() override { m_setter(m_molecule, m_index, m_new); }
+  void undo() override { m_setter(m_molecule, m_index, m_old); }
+
+  bool mergeWith(const QUndoCommand* other) override
+  {
+    const auto* o = dynamic_cast<const SetEntryCommand<T>*>(other);
+    if (o == nullptr || o->m_setter != m_setter || o->m_index != m_index)
+      return false;
+
+    m_new = o->m_new;
+    return true;
+  }
+
+private:
+  Setter m_setter;
+  Index m_index;
+  T m_old;
+  T m_new;
+  int m_mergeId = -1;
+};
+
+// Sets a whole array of a molecule through a setter. With a merge id set,
+// consecutive commands with the same setter merge: the merged command keeps
+// the first old array and takes the last new one.
+template <typename T>
+class SetArrayCommand : public RWMolecule::UndoCommand
+{
+public:
+  using Setter = void (*)(Molecule&, const Array<T>&);
+
+  SetArrayCommand(RWMolecule& m, Setter setter, const Array<T>& oldValues,
+                  const Array<T>& newValues)
+    : UndoCommand(m), m_setter(setter), m_old(oldValues), m_new(newValues)
+  {
+  }
+
+  // The default, -1, means the command never merges.
+  void setMergeId(int mergeId) { m_mergeId = mergeId; }
+  int id() const override { return m_mergeId; }
+
+  void redo() override { m_setter(m_molecule, m_new); }
+  void undo() override { m_setter(m_molecule, m_old); }
+
+  bool mergeWith(const QUndoCommand* other) override
+  {
+    const auto* o = dynamic_cast<const SetArrayCommand<T>*>(other);
+    if (o == nullptr || o->m_setter != m_setter)
+      return false;
+
+    m_new = o->m_new;
+    return true;
+  }
+
+private:
+  Setter m_setter;
+  Array<T> m_old;
+  Array<T> m_new;
+  int m_mergeId = -1;
+};
+
+// Sets some entries of a molecule's atoms through a setter, and stores only
+// those entries. Merging adds the other command's entries: one already held
+// keeps its old value and takes the other's new value. The entries are kept
+// sorted by index, so a sweep over the atoms in ascending order appends. A
+// command only merges with one made for the same number of atoms.
+template <typename T>
+class SetEntriesCommand : public RWMolecule::UndoCommand
+{
+public:
+  using Setter = void (*)(Molecule&, Index, const T&);
+
+  SetEntriesCommand(RWMolecule& m, Setter setter, Index index,
+                    const T& oldValue, const T& newValue)
+    : UndoCommand(m), m_setter(setter), m_atomCount(m_molecule.atomCount()),
+      m_ids(1, index), m_old(1, oldValue), m_new(1, newValue)
+  {
+  }
+
+  // The default, -1, means the command never merges.
+  void setMergeId(int mergeId) { m_mergeId = mergeId; }
+  int id() const override { return m_mergeId; }
+
+  void redo() override { apply(m_new); }
+  void undo() override { apply(m_old); }
+
+  bool mergeWith(const QUndoCommand* other) override
+  {
+    const auto* o = dynamic_cast<const SetEntriesCommand<T>*>(other);
+    if (o == nullptr || o->m_setter != m_setter ||
+        o->m_atomCount != m_atomCount)
+      return false;
+
+    for (size_t i = 0; i < o->m_ids.size(); ++i) {
+      auto it = std::lower_bound(m_ids.begin(), m_ids.end(), o->m_ids[i]);
+      const auto offset = it - m_ids.begin();
+      if (it != m_ids.end() && *it == o->m_ids[i]) {
+        // Overwrite the existing entry's new value.
+        m_new[offset] = o->m_new[i];
+      } else {
+        m_ids.insert(it, o->m_ids[i]);
+        m_old.insert(m_old.begin() + offset, o->m_old[i]);
+        m_new.insert(m_new.begin() + offset, o->m_new[i]);
+      }
+    }
+    return true;
+  }
+
+private:
+  void apply(const std::vector<T>& values)
+  {
+    for (size_t i = 0; i < m_ids.size(); ++i)
+      m_setter(m_molecule, m_ids[i], values[i]);
+  }
+
+  Setter m_setter;
+  Index m_atomCount;
+  std::vector<Index> m_ids; // sorted, ascending
+  std::vector<T> m_old;
+  std::vector<T> m_new;
+  int m_mergeId = -1;
 };
 } // namespace
 
@@ -205,27 +353,6 @@ public:
 } // namespace
 
 namespace {
-class SetAtomicNumbersCommand : public RWMolecule::UndoCommand
-{
-  Core::Array<unsigned char> m_oldAtomicNumbers;
-  Core::Array<unsigned char> m_newAtomicNumbers;
-
-public:
-  SetAtomicNumbersCommand(RWMolecule& m,
-                          const Core::Array<unsigned char>& oldAtomicNumbers,
-                          const Core::Array<unsigned char>& newAtomicNumbers)
-    : UndoCommand(m), m_oldAtomicNumbers(oldAtomicNumbers),
-      m_newAtomicNumbers(newAtomicNumbers)
-  {
-  }
-
-  void redo() override { m_molecule.setAtomicNumbers(m_newAtomicNumbers); }
-
-  void undo() override { m_molecule.setAtomicNumbers(m_oldAtomicNumbers); }
-};
-} // namespace
-
-namespace {
 class SetAtomicNumberCommand : public RWMolecule::UndoCommand
 {
   Index m_atomId;
@@ -264,230 +391,6 @@ public:
 } // namespace
 
 namespace {
-class SetPositions3dCommand : public MergeUndoCommand<SetPositions3dMergeId>
-{
-  Core::Array<Vector3> m_oldPositions3d;
-  Core::Array<Vector3> m_newPositions3d;
-
-public:
-  SetPositions3dCommand(RWMolecule& m,
-                        const Core::Array<Vector3>& oldPositions3d,
-                        const Core::Array<Vector3>& newPositions3d)
-    : MergeUndoCommand<SetPositions3dMergeId>(m),
-      m_oldPositions3d(oldPositions3d), m_newPositions3d(newPositions3d)
-  {
-  }
-
-  void redo() override { positions3d() = m_newPositions3d; }
-
-  void undo() override { positions3d() = m_oldPositions3d; }
-
-  bool mergeWith(const QUndoCommand* other) override
-  {
-    const SetPositions3dCommand* o =
-      dynamic_cast<const SetPositions3dCommand*>(other);
-    if (o) {
-      m_newPositions3d = o->m_newPositions3d;
-      return true;
-    }
-    return false;
-  }
-};
-} // namespace
-
-namespace {
-class SetPosition3dCommand : public MergeUndoCommand<SetPosition3dMergeId>
-{
-  Array<Index> m_atomIds;
-  Array<Vector3> m_oldPosition3ds;
-  Array<Vector3> m_newPosition3ds;
-
-public:
-  SetPosition3dCommand(RWMolecule& m, Index atomId,
-                       const Vector3& oldPosition3d,
-                       const Vector3& newPosition3d)
-    : MergeUndoCommand<SetPosition3dMergeId>(m), m_atomIds(1, atomId),
-      m_oldPosition3ds(1, oldPosition3d), m_newPosition3ds(1, newPosition3d)
-  {
-  }
-
-  void redo() override
-  {
-    growPositions();
-    write(m_newPosition3ds);
-  }
-
-  void undo() override
-  {
-    growPositions();
-    write(m_oldPosition3ds);
-  }
-
-private:
-  // RWMolecule::setAtomPosition3d() grows the position array to atomCount()
-  // before pushing this command, outside the undo history. Redoing after an
-  // undone position-less AddAtomCommand must repeat that growth, or the
-  // array is shorter than the atom ids (found by fuzzing).
-  void growPositions()
-  {
-    if (positions3d().size() < m_molecule.atomCount())
-      positions3d().resize(m_molecule.atomCount(), Vector3::Zero());
-  }
-
-  void write(const Array<Vector3>& values)
-  {
-    for (size_t i = 0; i < m_atomIds.size(); ++i) {
-      if (m_atomIds[i] < positions3d().size())
-        positions3d()[m_atomIds[i]] = values[i];
-    }
-  }
-
-public:
-  bool mergeWith(const QUndoCommand* o) override
-  {
-    const SetPosition3dCommand* other =
-      dynamic_cast<const SetPosition3dCommand*>(o);
-    if (!other)
-      return false;
-
-    size_t numAtoms = other->m_atomIds.size();
-    if (numAtoms != other->m_oldPosition3ds.size() ||
-        numAtoms != other->m_newPosition3ds.size()) {
-      return false;
-    }
-
-    for (size_t i = 0; i < numAtoms; ++i) {
-      const Index& atomId = other->m_atomIds[i];
-      const Vector3& oldPos = other->m_oldPosition3ds[i];
-      const Vector3& newPos = other->m_newPosition3ds[i];
-
-      Array<Index>::const_iterator idsBegin = m_atomIds.begin();
-      Array<Index>::const_iterator idsEnd = m_atomIds.end();
-      Array<Index>::const_iterator match = std::find(idsBegin, idsEnd, atomId);
-
-      if (match == idsEnd) {
-        // Append a new atom:
-        m_atomIds.push_back(atomId);
-        m_oldPosition3ds.push_back(oldPos);
-        m_newPosition3ds.push_back(newPos);
-      } else {
-        // Overwrite the existing movement:
-        size_t offset = std::distance(idsBegin, match);
-        assert(m_atomIds[offset] == atomId);
-        m_newPosition3ds[offset] = newPos;
-      }
-    }
-
-    return true;
-  }
-};
-} // namespace
-
-namespace {
-class SetAtomHybridizationCommand : public RWMolecule::UndoCommand
-{
-  Index m_atomId;
-  AtomHybridization m_oldHybridization;
-  AtomHybridization m_newHybridization;
-
-public:
-  SetAtomHybridizationCommand(RWMolecule& m, Index atomId,
-                              AtomHybridization oldHybridization,
-                              AtomHybridization newHybridization)
-    : UndoCommand(m), m_atomId(atomId), m_oldHybridization(oldHybridization),
-      m_newHybridization(newHybridization)
-  {
-  }
-
-  void redo() override
-  {
-    m_molecule.setHybridization(m_atomId, m_newHybridization);
-  }
-
-  void undo() override
-  {
-    m_molecule.setHybridization(m_atomId, m_oldHybridization);
-  }
-};
-} // namespace
-
-namespace {
-class SetAtomFormalChargeCommand : public RWMolecule::UndoCommand
-{
-  Index m_atomId;
-  signed char m_oldCharge;
-  signed char m_newCharge;
-
-public:
-  SetAtomFormalChargeCommand(RWMolecule& m, Index atomId, signed char oldCharge,
-                             signed char newCharge)
-    : UndoCommand(m), m_atomId(atomId), m_oldCharge(oldCharge),
-      m_newCharge(newCharge)
-  {
-  }
-
-  void redo() override { m_molecule.setFormalCharge(m_atomId, m_newCharge); }
-
-  void undo() override { m_molecule.setFormalCharge(m_atomId, m_oldCharge); }
-};
-} // namespace
-
-namespace {
-class SetAtomColorCommand : public RWMolecule::UndoCommand
-{
-  Index m_atomId;
-  Vector3ub m_oldColor;
-  Vector3ub m_newColor;
-
-public:
-  SetAtomColorCommand(RWMolecule& m, Index atomId, Vector3ub oldColor,
-                      Vector3ub newColor)
-    : UndoCommand(m), m_atomId(atomId), m_oldColor(std::move(oldColor)),
-      m_newColor(std::move(newColor))
-  {
-  }
-
-  void redo() override { m_molecule.setColor(m_atomId, m_newColor); }
-
-  void undo() override { m_molecule.setColor(m_atomId, m_oldColor); }
-};
-
-class SetResidueColorCommand : public RWMolecule::UndoCommand
-{
-  Index m_residueId;
-  Vector3ub m_oldColor;
-  Vector3ub m_newColor;
-
-public:
-  SetResidueColorCommand(RWMolecule& m, Index residueId, Vector3ub oldColor,
-                         Vector3ub newColor)
-    : UndoCommand(m), m_residueId(residueId), m_oldColor(std::move(oldColor)),
-      m_newColor(std::move(newColor))
-  {
-  }
-
-  void redo() override { m_molecule.residue(m_residueId).setColor(m_newColor); }
-
-  void undo() override { m_molecule.residue(m_residueId).setColor(m_oldColor); }
-};
-
-class SetLayerCommand : public RWMolecule::UndoCommand
-{
-  Index m_atomId;
-  size_t m_oldLayer;
-  size_t m_newLayer;
-
-public:
-  SetLayerCommand(RWMolecule& m, Index atomId, size_t oldLayer, size_t newLayer)
-    : UndoCommand(m), m_atomId(atomId), m_oldLayer(oldLayer),
-      m_newLayer(newLayer)
-  {
-  }
-
-  void redo() override { m_molecule.setLayer(m_atomId, m_newLayer); }
-
-  void undo() override { m_molecule.setLayer(m_atomId, m_oldLayer); }
-};
 
 class AddBondCommand : public RWMolecule::UndoCommand
 {
@@ -566,101 +469,6 @@ public:
     // atoms gone. The molecule is then left as it was.
     m_molecule.restoreBondSnapshot(m_bondId, m_snapshot, m_bondUid);
   }
-};
-} // namespace
-
-namespace {
-class SetBondOrdersCommand : public RWMolecule::UndoCommand
-{
-  Array<unsigned char> m_oldBondOrders;
-  Array<unsigned char> m_newBondOrders;
-
-public:
-  SetBondOrdersCommand(RWMolecule& m, const Array<unsigned char>& oldBondOrders,
-                       const Array<unsigned char>& newBondOrders)
-    : UndoCommand(m), m_oldBondOrders(oldBondOrders),
-      m_newBondOrders(newBondOrders)
-  {
-  }
-
-  void redo() override { m_molecule.setBondOrders(m_newBondOrders); }
-
-  void undo() override { m_molecule.setBondOrders(m_oldBondOrders); }
-};
-} // namespace
-
-namespace {
-class SetBondOrderCommand : public MergeUndoCommand<SetBondOrderMergeId>
-{
-  Index m_bondId;
-  unsigned char m_oldBondOrder;
-  unsigned char m_newBondOrder;
-
-public:
-  SetBondOrderCommand(RWMolecule& m, Index bondId, unsigned char oldBondOrder,
-                      unsigned char newBondOrder)
-    : MergeUndoCommand<SetBondOrderMergeId>(m), m_bondId(bondId),
-      m_oldBondOrder(oldBondOrder), m_newBondOrder(newBondOrder)
-  {
-  }
-
-  void redo() override { m_molecule.setBondOrder(m_bondId, m_newBondOrder); }
-
-  void undo() override { m_molecule.setBondOrder(m_bondId, m_oldBondOrder); }
-
-  bool mergeWith(const QUndoCommand* other) override
-  {
-    const SetBondOrderCommand* o =
-      dynamic_cast<const SetBondOrderCommand*>(other);
-    // Only merge when the bondIds match.
-    if (o && o->m_bondId == this->m_bondId) {
-      this->m_newBondOrder = o->m_newBondOrder;
-      return true;
-    }
-    return false;
-  }
-};
-} // namespace
-
-namespace {
-class SetBondPairsCommand : public RWMolecule::UndoCommand
-{
-  Array<std::pair<Index, Index>> m_oldBondPairs;
-  Array<std::pair<Index, Index>> m_newBondPairs;
-
-public:
-  SetBondPairsCommand(RWMolecule& m,
-                      const Array<std::pair<Index, Index>>& oldBondPairs,
-                      const Array<std::pair<Index, Index>>& newBondPairs)
-    : UndoCommand(m), m_oldBondPairs(oldBondPairs), m_newBondPairs(newBondPairs)
-  {
-  }
-
-  void redo() override { m_molecule.setBondPairs(m_newBondPairs); }
-
-  void undo() override { m_molecule.setBondPairs(m_oldBondPairs); }
-};
-} // namespace
-
-namespace {
-class SetBondPairCommand : public RWMolecule::UndoCommand
-{
-  Index m_bondId;
-  std::pair<Index, Index> m_oldBondPair;
-  std::pair<Index, Index> m_newBondPair;
-
-public:
-  SetBondPairCommand(RWMolecule& m, Index bondId,
-                     const std::pair<Index, Index>& oldBondPair,
-                     const std::pair<Index, Index>& newBondPair)
-    : UndoCommand(m), m_bondId(bondId), m_oldBondPair(oldBondPair),
-      m_newBondPair(newBondPair)
-  {
-  }
-
-  void redo() override { m_molecule.setBondPair(m_bondId, m_newBondPair); }
-
-  void undo() override { m_molecule.setBondPair(m_bondId, m_oldBondPair); }
 };
 } // namespace
 
@@ -808,108 +616,6 @@ public:
       }
     }
 
-    return true;
-  }
-};
-} // namespace
-
-namespace {
-class ModifyAtomLabelCommand : public RWMolecule::UndoCommand
-{
-  Index m_atomId;
-  std::string m_newLabel;
-  std::string m_oldLabel;
-
-public:
-  ModifyAtomLabelCommand(RWMolecule& m, Index atomId, const std::string& label)
-    : UndoCommand(m), m_atomId(atomId), m_newLabel(label)
-  {
-    m_oldLabel = m_mol.molecule().atomLabel(m_atomId);
-  }
-
-  void redo() override { m_mol.molecule().setAtomLabel(m_atomId, m_newLabel); }
-
-  void undo() override { m_mol.molecule().setAtomLabel(m_atomId, m_oldLabel); }
-};
-} // namespace
-
-namespace {
-class ModifyBondLabelCommand : public RWMolecule::UndoCommand
-{
-  Index m_bondId;
-  std::string m_newLabel;
-  std::string m_oldLabel;
-
-public:
-  ModifyBondLabelCommand(RWMolecule& m, Index bondId, const std::string& label)
-    : UndoCommand(m), m_bondId(bondId), m_newLabel(label)
-  {
-    m_oldLabel = m_mol.molecule().bondLabel(m_bondId);
-  }
-
-  void redo() override { m_mol.molecule().setBondLabel(m_bondId, m_newLabel); }
-
-  void undo() override { m_mol.molecule().setBondLabel(m_bondId, m_oldLabel); }
-};
-} // namespace
-
-namespace {
-class ModifySelectionCommand : public MergeUndoCommand<ModifySelectionMergeId>
-{
-  std::vector<bool> m_newSelectedAtoms;
-  std::vector<bool> m_oldSelectedAtoms;
-
-public:
-  ModifySelectionCommand(RWMolecule& m, Index atomId, bool selected)
-    : MergeUndoCommand<ModifySelectionMergeId>(m)
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    m_oldSelectedAtoms.resize(atomCount);
-    m_newSelectedAtoms.resize(atomCount);
-
-    for (Index i = 0; i < atomCount; ++i) {
-      m_oldSelectedAtoms[i] = m_molecule.atomSelected(i);
-      m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
-    }
-
-    // Guarded here as well as at the call, since these vectors are sized to
-    // the atom count and operator[] on std::vector<bool> writes into a word
-    // computed from the index -- an out-of-range one lands somewhere else
-    // entirely.
-    if (atomId < atomCount)
-      m_newSelectedAtoms[atomId] = selected;
-  }
-
-  void redo() override
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    for (Index i = 0; i < atomCount; ++i)
-      m_mol.molecule().setAtomSelected(i, m_newSelectedAtoms[i]);
-  }
-
-  void undo() override
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    for (Index i = 0; i < atomCount; ++i)
-      m_mol.molecule().setAtomSelected(i, m_oldSelectedAtoms[i]);
-  }
-
-  bool mergeWith(const QUndoCommand* other) override
-  {
-    const ModifySelectionCommand* o =
-      dynamic_cast<const ModifySelectionCommand*>(other);
-    if (!o)
-      return false;
-
-    // check if the atom count matches
-    Index numAtoms = m_oldSelectedAtoms.size();
-
-    if (numAtoms != o->m_oldSelectedAtoms.size() ||
-        numAtoms != o->m_newSelectedAtoms.size())
-      return false;
-
-    // merge these, by grabbing the new selected atoms
-    m_newSelectedAtoms = o->m_newSelectedAtoms;
     return true;
   }
 };
