@@ -384,8 +384,32 @@ bool RWMolecule::setIsotope(Index atomId, unsigned short isotope)
   if (atomId >= atomCount())
     return false;
 
-  // TODO: implement an undo command
-  m_molecule.setIsotope(atomId, isotope);
+  auto* comm = new SetEntryCommand<unsigned short>(
+    *this,
+    [](Molecule& mol, Index index, const unsigned short& value) {
+      mol.setIsotope(index, value);
+    },
+    atomId, m_molecule.isotope(atomId), isotope);
+  comm->setText(tr("Change Atom Isotope"));
+  m_undoStack.push(comm);
+  return true;
+}
+
+bool RWMolecule::setAtomPosition2d(Index atomId, const Vector2& pos)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  // The 2D positions may be shorter than the atom count (or empty); the
+  // molecule's setter and getter treat a missing entry as the origin.
+  auto* comm = new SetEntryCommand<Vector2>(
+    *this,
+    [](Molecule& mol, Index index, const Vector2& value) {
+      mol.setAtomPosition2d(index, value);
+    },
+    atomId, m_molecule.atomPosition2d(atomId), pos);
+  comm->setText(tr("Change 2D Position"));
+  m_undoStack.push(comm);
   return true;
 }
 

@@ -317,8 +317,20 @@ public:
    */
   bool atomSelected(Index atomId) const;
 
-  bool setAtomPosition2d(Index, const Vector2&) { return false; }
-  Vector2 atomPosition2d(Index) { return Vector2(0, 0); }
+  /**
+   * Set the 2D position of a single atom, as an undoable step.
+   * @param atomId The index of the atom to modify.
+   * @param pos The new 2D position of the atom.
+   * @return True on success, false if @p atomId is out of range.
+   */
+  bool setAtomPosition2d(Index atomId, const Vector2& pos);
+
+  /**
+   * @return The 2D position of the atom at @p atomId, or (0, 0) if it has
+   * none.
+   */
+  Vector2 atomPosition2d(Index atomId) const;
+
   const Core::Array<Vector2>& atomPositions2d() const
   {
     return m_molecule.m_atomState.positions2d.array();
@@ -936,6 +948,11 @@ inline signed char RWMolecule::formalCharge(Index atomId) const
 inline unsigned short RWMolecule::isotope(Index atomId) const
 {
   return m_molecule.isotope(atomId);
+}
+
+inline Vector2 RWMolecule::atomPosition2d(Index atomId) const
+{
+  return m_molecule.atomPosition2d(atomId);
 }
 
 inline Vector3ub RWMolecule::color(Index atomId) const

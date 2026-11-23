@@ -4239,3 +4239,64 @@ TEST(RWMoleculeTest, singleEntrySettersUndoAndRedo)
     mol.undoStack().redo();
   expectNew();
 }
+
+TEST(RWMoleculeTest, setIsotopeIsUndoable)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.setIsotope(1, 13));
+  EXPECT_EQ(13, mol.isotope(1));
+  EXPECT_EQ(0, mol.isotope(0));
+  EXPECT_EQ(1, mol.undoStack().count());
+
+  mol.undoStack().undo();
+  EXPECT_EQ(0, mol.isotope(1));
+  mol.undoStack().redo();
+  EXPECT_EQ(13, mol.isotope(1));
+
+  // A second change keeps its own step and restores the first value.
+  ASSERT_TRUE(mol.setIsotope(1, 14));
+  EXPECT_EQ(2, mol.undoStack().count());
+  mol.undoStack().undo();
+  EXPECT_EQ(13, mol.isotope(1));
+
+  EXPECT_FALSE(mol.setIsotope(2, 13));
+  EXPECT_EQ(2, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, setAtomPosition2dIsUndoable)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  // No 2D positions have been set, so every atom reads as the origin.
+  EXPECT_EQ(Avogadro::Vector2(0, 0), mol.atomPosition2d(2));
+
+  const Avogadro::Vector2 p(Real(1.5), Real(-2));
+  ASSERT_TRUE(mol.setAtomPosition2d(2, p));
+  EXPECT_EQ(p, mol.atomPosition2d(2));
+  EXPECT_EQ(p, m.atomPosition2d(2));
+  EXPECT_EQ(Avogadro::Vector2(0, 0), mol.atomPosition2d(0));
+  EXPECT_EQ(1, mol.undoStack().count());
+
+  mol.undoStack().undo();
+  EXPECT_EQ(Avogadro::Vector2(0, 0), mol.atomPosition2d(2));
+  mol.undoStack().redo();
+  EXPECT_EQ(p, mol.atomPosition2d(2));
+
+  const Avogadro::Vector2 q(Real(3), Real(4));
+  ASSERT_TRUE(mol.setAtomPosition2d(2, q));
+  mol.undoStack().undo();
+  EXPECT_EQ(p, mol.atomPosition2d(2));
+
+  EXPECT_FALSE(mol.setAtomPosition2d(3, p));
+  EXPECT_EQ(2, mol.undoStack().count());
+}
