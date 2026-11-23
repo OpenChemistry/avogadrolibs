@@ -3956,3 +3956,304 @@ TEST(RWMoleculeTest, addAtomRedoRestoresTheAtomExactly)
   ASSERT_EQ(2u, m.coordinate3dRef(1).size());
   EXPECT_EQ(frameValue, m.coordinate3dRef(1)[1]);
 }
+
+// Characterization of the undo commands that merge, and of the single-entry
+// setters, so that the commands behind them can be restructured safely.
+namespace {
+void buildChain(RWMolecule& mol, Index count)
+{
+  for (Index i = 0; i < count; ++i)
+    mol.addAtom(6, Vector3(Real(i), Real(2 * i), Real(3 * i)));
+  for (Index i = 0; i + 1 < count; ++i)
+    mol.addBond(i, i + 1, 1);
+  mol.undoStack().clear();
+}
+
+bool samePositions(const RWMolecule& mol, const Array<Vector3>& expected)
+{
+  const auto& actual = mol.atomPositions3d();
+  return std::equal(actual.begin(), actual.end(), expected.begin(),
+                    expected.end());
+}
+} // namespace
+
+TEST(RWMoleculeTest, setBondOrderMergesOnTheSameBondOnly)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 4);
+
+  mol.setBondOrder(0, 2);
+  mol.setBondOrder(0, 3);
+  EXPECT_EQ(1, mol.undoStack().count());
+  EXPECT_EQ(3, mol.bondOrder(0));
+  mol.undoStack().undo();
+  EXPECT_EQ(1, mol.bondOrder(0));
+  mol.undoStack().redo();
+  EXPECT_EQ(3, mol.bondOrder(0));
+
+  // A different bond is a step of its own, and so is going back to the first.
+  mol.setBondOrder(1, 2);
+  EXPECT_EQ(2, mol.undoStack().count());
+  mol.setBondOrder(0, 1);
+  EXPECT_EQ(3, mol.undoStack().count());
+
+  mol.undoStack().undo();
+  EXPECT_EQ(3, mol.bondOrder(0));
+  mol.undoStack().undo();
+  EXPECT_EQ(1, mol.bondOrder(1));
+  mol.undoStack().undo();
+  EXPECT_EQ(1, mol.bondOrder(0));
+}
+
+TEST(RWMoleculeTest, setBondOrderDoesNotMergeWithOtherCommands)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 3);
+
+  mol.setBondOrder(0, 2);
+  mol.setAtomicNumber(0, 8);
+  mol.setBondOrder(0, 3);
+  EXPECT_EQ(3, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, setAtomPositions3dMergesOnlyWhenInteractive)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 3);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  Array<Vector3> first(3, Vector3(Real(1), Real(1), Real(1)));
+  Array<Vector3> second(3, Vector3(Real(2), Real(2), Real(2)));
+
+  mol.setAtomPositions3d(first);
+  mol.setAtomPositions3d(second);
+  EXPECT_EQ(2, mol.undoStack().count());
+  mol.undoStack().clear();
+  mol.setAtomPositions3d(original);
+  mol.undoStack().clear();
+
+  mol.setInteractive(true);
+  mol.setAtomPositions3d(first);
+  mol.setAtomPositions3d(second);
+  mol.setInteractive(false);
+  EXPECT_EQ(1, mol.undoStack().count());
+  EXPECT_TRUE(samePositions(mol, second));
+  mol.undoStack().undo();
+  EXPECT_TRUE(samePositions(mol, original));
+  mol.undoStack().redo();
+  EXPECT_TRUE(samePositions(mol, second));
+}
+
+// A drag moves many atoms, repeatedly and in no particular order, and is one
+// undo step that puts every atom back exactly where it started.
+TEST(RWMoleculeTest, interactiveSetAtomPosition3dSweepsAreOneStep)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  const Index n = 8;
+  buildChain(mol, n);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  mol.setInteractive(true);
+  // Ascending sweeps.
+  for (int sweep = 1; sweep <= 3; ++sweep)
+    for (Index i = 0; i < n; ++i)
+      mol.setAtomPosition3d(i, original[i] + Vector3(Real(sweep), 0, 0));
+  // A sweep in descending order.
+  for (Index i = n; i-- > 0;)
+    mol.setAtomPosition3d(i, original[i] + Vector3(0, Real(10), 0));
+  // A scattered order, touching a few atoms twice.
+  const Index order[] = { 5, 2, 7, 2, 0, 5 };
+  for (Index i : order)
+    mol.setAtomPosition3d(i, original[i] + Vector3(0, 0, Real(20 + i)));
+  mol.setInteractive(false);
+
+  EXPECT_EQ(1, mol.undoStack().count());
+  Array<Vector3> expected;
+  for (Index i = 0; i < n; ++i)
+    expected.push_back(original[i] + Vector3(0, Real(10), 0));
+  for (Index i : order)
+    expected[i] = original[i] + Vector3(0, 0, Real(20 + i));
+  EXPECT_TRUE(samePositions(mol, expected));
+
+  mol.undoStack().undo();
+  EXPECT_TRUE(samePositions(mol, original));
+  mol.undoStack().redo();
+  EXPECT_TRUE(samePositions(mol, expected));
+  mol.undoStack().undo();
+  EXPECT_TRUE(samePositions(mol, original));
+}
+
+// A drag that starts on one atom and picks up another part way through.
+TEST(RWMoleculeTest, interactiveSetAtomPosition3dAddsAnAtomMidDrag)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 5);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  mol.setInteractive(true);
+  mol.setAtomPosition3d(3, Vector3(Real(7), Real(7), Real(7)));
+  mol.setAtomPosition3d(3, Vector3(Real(8), Real(8), Real(8)));
+  mol.setAtomPosition3d(1, Vector3(Real(9), Real(9), Real(9)));
+  mol.setAtomPosition3d(3, Vector3(Real(10), Real(10), Real(10)));
+  mol.setAtomPosition3d(4, Vector3(Real(11), Real(11), Real(11)));
+  mol.setInteractive(false);
+
+  EXPECT_EQ(1, mol.undoStack().count());
+  mol.undoStack().undo();
+  EXPECT_TRUE(samePositions(mol, original));
+  mol.undoStack().redo();
+  EXPECT_EQ(Vector3(Real(10), Real(10), Real(10)), mol.atomPosition3d(3));
+  EXPECT_EQ(Vector3(Real(9), Real(9), Real(9)), mol.atomPosition3d(1));
+  EXPECT_EQ(Vector3(Real(11), Real(11), Real(11)), mol.atomPosition3d(4));
+  EXPECT_EQ(original[0], mol.atomPosition3d(0));
+  EXPECT_EQ(original[2], mol.atomPosition3d(2));
+}
+
+TEST(RWMoleculeTest, nonInteractiveSetAtomPosition3dDoesNotMerge)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 3);
+  const Array<Vector3> original = mol.atomPositions3d();
+
+  mol.setAtomPosition3d(1, Vector3(Real(5), Real(5), Real(5)));
+  mol.setAtomPosition3d(1, Vector3(Real(6), Real(6), Real(6)));
+  mol.setAtomPosition3d(2, Vector3(Real(7), Real(7), Real(7)));
+  EXPECT_EQ(3, mol.undoStack().count());
+
+  mol.undoStack().undo();
+  mol.undoStack().undo();
+  EXPECT_EQ(Vector3(Real(5), Real(5), Real(5)), mol.atomPosition3d(1));
+  mol.undoStack().undo();
+  EXPECT_TRUE(samePositions(mol, original));
+}
+
+TEST(RWMoleculeTest, setAtomSelectedOverManyAtomsIsOneStep)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  const Index n = 40;
+  buildChain(mol, n);
+  mol.setAtomSelected(3, true);
+  mol.setAtomSelected(10, true);
+  // End the merge chain so the sweep below is a step of its own.
+  mol.setAtomicNumber(0, 8);
+  const int count = mol.undoStack().count();
+  const std::vector<bool> before = selectionOf(mol);
+
+  // Odd atoms first, then the rest, out of order.
+  for (Index i = 1; i < n; i += 2)
+    mol.setAtomSelected(i, true);
+  for (Index i = 0; i < n; i += 2)
+    mol.setAtomSelected(i, true);
+  EXPECT_EQ(count + 1, mol.undoStack().count());
+  EXPECT_EQ(std::vector<bool>(n, true), selectionOf(mol));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(before, selectionOf(mol));
+  mol.undoStack().redo();
+  EXPECT_EQ(std::vector<bool>(n, true), selectionOf(mol));
+
+  // Deselecting is merged the same way.
+  mol.undoStack().undo();
+  for (Index i = 0; i < n; ++i)
+    mol.setAtomSelected(i, false);
+  EXPECT_EQ(std::vector<bool>(n, false), selectionOf(mol));
+  mol.undoStack().undo();
+  EXPECT_EQ(before, selectionOf(mol));
+}
+
+TEST(RWMoleculeTest, setAtomSelectedDoesNotMergeAfterTheAtomCountChanges)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 4);
+
+  mol.setAtomSelected(0, true);
+  mol.setAtomSelected(1, true);
+  EXPECT_EQ(1, mol.undoStack().count());
+
+  // An atom added behind the undo stack's back leaves the selection command
+  // on top, but it no longer describes the whole molecule.
+  m.addAtom(6);
+  ASSERT_EQ(static_cast<Index>(5), mol.atomCount());
+  mol.setAtomSelected(2, true);
+  mol.setAtomSelected(4, true);
+  EXPECT_EQ(2, mol.undoStack().count());
+
+  mol.undoStack().undo();
+  EXPECT_EQ((std::vector<bool>{ true, true, false, false, false }),
+            selectionOf(mol));
+  mol.undoStack().redo();
+  EXPECT_EQ((std::vector<bool>{ true, true, true, false, true }),
+            selectionOf(mol));
+}
+
+TEST(RWMoleculeTest, singleEntrySettersUndoAndRedo)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  buildChain(mol, 4);
+  std::string resName = "ALA";
+  Index resNumber = 1;
+  char chain = 'A';
+  m.addResidue(resName, resNumber, chain);
+  mol.undoStack().clear();
+
+  const auto oldHyb = mol.hybridization(1);
+  const auto oldCharge = mol.formalCharge(1);
+  const auto oldColor = mol.color(1);
+  const auto oldResidueColor = m.residue(0).color();
+  const auto oldLayer = mol.layer(1);
+  const auto oldPair = mol.bondPair(1);
+  const auto oldAtomLabel = mol.atomLabel(1);
+  const auto oldBondLabel = mol.bondLabel(1);
+
+  const Avogadro::Vector3ub newColor(11, 22, 33);
+  const Avogadro::Vector3ub newResidueColor(44, 55, 66);
+  const std::pair<Index, Index> newPair(0, 2);
+
+  ASSERT_TRUE(mol.setHybridization(1, Avogadro::Core::SP2));
+  ASSERT_TRUE(mol.setFormalCharge(1, 2));
+  ASSERT_TRUE(mol.setColor(1, newColor));
+  ASSERT_TRUE(mol.setResidueColor(0, newResidueColor));
+  ASSERT_TRUE(mol.setLayer(1, 2));
+  ASSERT_TRUE(mol.setBondPair(1, newPair));
+  ASSERT_TRUE(mol.setAtomLabel(1, "alpha"));
+  ASSERT_TRUE(mol.setBondLabel(1, "beta"));
+  EXPECT_EQ(8, mol.undoStack().count());
+
+  auto expectNew = [&]() {
+    EXPECT_EQ(Avogadro::Core::SP2, mol.hybridization(1));
+    EXPECT_EQ(2, mol.formalCharge(1));
+    EXPECT_EQ(newColor, mol.color(1));
+    EXPECT_EQ(newResidueColor, m.residue(0).color());
+    EXPECT_EQ(2u, mol.layer(1));
+    EXPECT_EQ(newPair, mol.bondPair(1));
+    EXPECT_EQ("alpha", mol.atomLabel(1));
+    EXPECT_EQ("beta", mol.bondLabel(1));
+  };
+  auto expectOld = [&]() {
+    EXPECT_EQ(oldHyb, mol.hybridization(1));
+    EXPECT_EQ(oldCharge, mol.formalCharge(1));
+    EXPECT_EQ(oldColor, mol.color(1));
+    EXPECT_EQ(oldResidueColor, m.residue(0).color());
+    EXPECT_EQ(oldLayer, mol.layer(1));
+    EXPECT_EQ(oldPair, mol.bondPair(1));
+    EXPECT_EQ(oldAtomLabel, mol.atomLabel(1));
+    EXPECT_EQ(oldBondLabel, mol.bondLabel(1));
+  };
+
+  expectNew();
+  for (int i = 0; i < 8; ++i)
+    mol.undoStack().undo();
+  expectOld();
+  for (int i = 0; i < 8; ++i)
+    mol.undoStack().redo();
+  expectNew();
+}
