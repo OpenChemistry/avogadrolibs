@@ -370,6 +370,22 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
   return true;
 }
 
+bool RWMolecule::setForceVector(Index atomId, const Vector3& force)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  auto* comm = new SetEntryCommand<Vector3>(
+    *this,
+    [](Molecule& mol, Index index, const Vector3& value) {
+      mol.setForceVector(index, value);
+    },
+    atomId, m_molecule.forceVector(atomId), force);
+  comm->setText(tr("Change Force Vector"));
+  m_undoStack.push(comm);
+  return true;
+}
+
 bool RWMolecule::setIsotope(Index atomId, unsigned short isotope)
 {
   if (atomId >= atomCount())

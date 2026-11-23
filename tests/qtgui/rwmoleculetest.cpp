@@ -32,6 +32,13 @@ using Avogadro::Core::Array;
 using Avogadro::QtGui::Molecule;
 using Avogadro::QtGui::RWMolecule;
 
+#ifndef _MSC_VER
+// MSVC instantiates every member of these through the exported RWAtom/RWBond;
+// do the same here so a missing RWMolecule method fails on every compiler.
+template class Avogadro::Core::AtomTemplate<Avogadro::QtGui::RWMolecule>;
+template class Avogadro::Core::BondTemplate<Avogadro::QtGui::RWMolecule>;
+#endif
+
 // TODO move this to an algorithms header
 #include <avogadro/core/elements.h>
 #include <map>
@@ -3044,6 +3051,24 @@ TEST(RWMoleculeTest, redoPositionAfterPositionlessAddAtomSecondAtom)
   EXPECT_EQ(static_cast<size_t>(2), mol.atomPositions3d().size());
   EXPECT_EQ(p, mol.atomPosition3d(1));
   EXPECT_EQ(Vector3::Zero(), mol.atomPosition3d(0));
+}
+
+TEST(RWMoleculeTest, undoSetForceVectorRestoresOldForce)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6, Vector3(1.0, 2.0, 3.0));
+
+  const Vector3 f(0.5, -0.5, 0.25);
+  EXPECT_TRUE(mol.setForceVector(0, f));
+  EXPECT_EQ(f, m.forceVector(0));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(Vector3::Zero(), m.forceVector(0));
+  EXPECT_EQ(Vector3(1.0, 2.0, 3.0), mol.atomPosition3d(0));
+
+  mol.undoStack().redo();
+  EXPECT_EQ(f, m.forceVector(0));
 }
 
 namespace {

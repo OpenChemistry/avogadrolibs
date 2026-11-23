@@ -810,6 +810,16 @@ public:
   /** Returns a vector of forces for the atoms in the molecule. */
   const Core::Array<Vector3>& forceVectors() const;
 
+  /**
+   * Set the force vector on a single atom.
+   * Needed by Core::AtomTemplate<RWMolecule>: MSVC instantiates every member
+   * of the exported RWAtom base, so removing this breaks the Windows build.
+   * @param atomId The index of the atom.
+   * @param force The new force vector for the atom.
+   * @return True on success, false otherwise.
+   */
+  bool setForceVector(Index atomId, const Vector3& force);
+
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
