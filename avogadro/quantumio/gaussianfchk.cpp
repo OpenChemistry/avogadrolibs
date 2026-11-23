@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <iostream>
 #include <limits>
+#include <string_view>
 
 using std::cout;
 using std::endl;
@@ -156,8 +157,9 @@ void GaussianFchk::processLine(std::istream& in)
   // cout << "Key:\t" << key << endl;
   key = Core::trimmed(key);
 
-  string tmp = line.substr(43);
-  vector<string> list = Core::split(tmp, ' ');
+  // Views into line, which stays unchanged for the rest of this function.
+  vector<std::string_view> list;
+  Core::tokenize(std::string_view(line).substr(43), list);
   std::vector<double> tmpVec;
 
   // Big switch statement checking for various things we are interested in
@@ -652,18 +654,19 @@ vector<int> GaussianFchk::readArrayI(std::istream& in, unsigned int n)
   }
   tmp.reserve(n);
   bool ok(false);
+  string line;
+  vector<std::string_view> list; // views into line
   while (tmp.size() < n) {
     if (in.eof()) {
       cout << "GaussianFchk::readArrayI could not read all elements " << n
            << " expected " << tmp.size() << " parsed.\n";
       return tmp;
     }
-    string line;
     if (!Core::getLine(in, line) || line.empty())
       return tmp;
 
-    vector<string> list = Core::split(line, ' ');
-    for (auto& i : list) {
+    Core::tokenize(line, list);
+    for (const auto& i : list) {
       if (tmp.size() >= n) {
         cout << "Too many variables read in. File may be inconsistent. "
              << tmp.size() << " of " << n << '\n';
@@ -703,19 +706,20 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
   }
   tmp.reserve(n);
   bool ok(false);
+  string line;
+  vector<std::string_view> list; // views into line
   while (tmp.size() < n) {
     if (in.eof()) {
       cout << "GaussianFchk::readArrayD could not read all elements " << n
            << " expected " << tmp.size() << " parsed.\n";
       return tmp;
     }
-    string line;
     if (!Core::getLine(in, line) || line.empty())
       return tmp;
 
     if (width == 0) { // we can split by spaces
-      vector<string> list = Core::split(line, ' ');
-      for (auto& i : list) {
+      Core::tokenize(line, list);
+      for (const auto& i : list) {
         if (tmp.size() >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << tmp.size() << " of " << n << '\n';
@@ -731,7 +735,8 @@ vector<double> GaussianFchk::readArrayD(std::istream& in, unsigned int n,
     } else { // Q-Chem files use 16 character fields
       size_t maxColumns = 80 / width;
       for (size_t i = 0; i < maxColumns; ++i) {
-        string substring = line.substr(i * width, width);
+        const std::string_view substring =
+          std::string_view(line).substr(i * width, width);
         if (static_cast<int>(substring.length()) != width)
           break;
         if (tmp.size() >= n) {
@@ -807,19 +812,20 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
   bool ok = false;
+  string line;
+  vector<std::string_view> list; // views into line
   while (cnt < n) {
     if (in.eof()) {
       cout << "GaussianFchk::readDensityMatrix could not read all elements "
            << n << " expected " << cnt << " parsed.\n";
       return false;
     }
-    string line;
     if (!Core::getLine(in, line) || line.empty())
       return false;
 
     if (width == 0) { // we can split by spaces
-      vector<string> list = Core::split(line, ' ');
-      for (auto& k : list) {
+      Core::tokenize(line, list);
+      for (const auto& k : list) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << cnt << " of " << n << '\n';
@@ -845,7 +851,8 @@ bool GaussianFchk::readDensityMatrix(std::istream& in, unsigned int n,
     } else { // Q-Chem files use 16-character fields
       size_t maxColumns = 80 / width;
       for (size_t c = 0; c < maxColumns; ++c) {
-        string substring = line.substr(c * width, width);
+        const std::string_view substring =
+          std::string_view(line).substr(c * width, width);
         if (static_cast<int>(substring.length()) != width) {
           break;
         } else if (cnt >= n) {
@@ -928,19 +935,20 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
   unsigned int i = 0, j = 0;
   unsigned int f = 1;
   bool ok = false;
+  string line;
+  vector<std::string_view> list; // views into line
   while (cnt < n) {
     if (in.eof()) {
       cout << "GaussianFchk::readSpinDensityMatrix could not read all elements "
            << n << " expected " << cnt << " parsed.\n";
       return false;
     }
-    string line;
     if (!Core::getLine(in, line) || line.empty())
       return false;
 
     if (width == 0) { // we can split by spaces
-      vector<string> list = Core::split(line, ' ');
-      for (auto& k : list) {
+      Core::tokenize(line, list);
+      for (const auto& k : list) {
         if (cnt >= n) {
           cout << "Too many variables read in. File may be inconsistent. "
                << cnt << " of " << n << '\n';
@@ -966,7 +974,8 @@ bool GaussianFchk::readSpinDensityMatrix(std::istream& in, unsigned int n,
     } else { // Q-Chem files use 16-character fields
       size_t maxColumns = 80 / width;
       for (size_t c = 0; c < maxColumns; ++c) {
-        string substring = line.substr(c * width, width);
+        const std::string_view substring =
+          std::string_view(line).substr(c * width, width);
         if (static_cast<int>(substring.length()) != width) {
           break;
         } else if (cnt >= n) {
