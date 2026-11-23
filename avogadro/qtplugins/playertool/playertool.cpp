@@ -101,13 +101,14 @@ QWidget* PlayerTool::toolWidget() const
     sourceLabel->setBuddy(m_sourceCombo);
     sourceLayout->addWidget(sourceLabel);
     sourceLayout->addWidget(m_sourceCombo, 1);
-    connect(m_sourceCombo, SIGNAL(activated(int)), SLOT(sourceActivated(int)));
+    connect(m_sourceCombo, &QComboBox::activated, this,
+            &PlayerTool::sourceActivated);
     layout->addWidget(m_sourceRow);
 
     auto* controls = new QHBoxLayout;
     controls->addStretch(1);
     auto* leftButton = new QPushButton("<");
-    connect(leftButton, SIGNAL(clicked()), SLOT(back()));
+    connect(leftButton, &QPushButton::clicked, this, &PlayerTool::back);
     controls->addWidget(leftButton);
 
     const int maxFrame = std::max(frameTotal(), 1);
@@ -120,12 +121,12 @@ QWidget* PlayerTool::toolWidget() const
     m_frameIdx->setMaximum(maxFrame);
     m_frameIdx->setValue(frame + 1);
     m_frameIdx->setSuffix("/" + QString::number(maxFrame));
-    connect(m_frameIdx, SIGNAL(valueChanged(int)),
-            SLOT(spinnerPositionChanged(int)));
+    connect(m_frameIdx, &QSpinBox::valueChanged, this,
+            &PlayerTool::spinnerPositionChanged);
     controls->addWidget(m_frameIdx);
 
     auto* rightButton = new QPushButton(">");
-    connect(rightButton, SIGNAL(clicked()), SLOT(forward()));
+    connect(rightButton, &QPushButton::clicked, this, &PlayerTool::forward);
     controls->addWidget(rightButton);
     controls->addStretch(1);
     layout->addLayout(controls);
@@ -136,8 +137,8 @@ QWidget* PlayerTool::toolWidget() const
     m_slider->setMaximum(maxFrame - 1);
     m_slider->setTickInterval(1);
     m_slider->setValue(frame);
-    connect(m_slider, SIGNAL(valueChanged(int)),
-            SLOT(sliderPositionChanged(int)));
+    connect(m_slider, &QSlider::valueChanged, this,
+            &PlayerTool::sliderPositionChanged);
     sliderLayout->addWidget(m_slider);
     layout->addLayout(sliderLayout);
 
@@ -148,8 +149,8 @@ QWidget* PlayerTool::toolWidget() const
     m_firstFrameIdx->setMinimum(1);
     m_firstFrameIdx->setMaximum(maxFrame);
     m_firstFrameIdx->setValue(1);
-    connect(m_firstFrameIdx, SIGNAL(valueChanged(int)),
-            SLOT(firstFramePositionChanged(int)));
+    connect(m_firstFrameIdx, &QSpinBox::valueChanged, this,
+            &PlayerTool::firstFramePositionChanged);
     frameLayout->addWidget(label3);
     frameLayout->addWidget(m_firstFrameIdx);
 
@@ -159,8 +160,8 @@ QWidget* PlayerTool::toolWidget() const
     m_lastFrameIdx->setMinimum(1);
     m_lastFrameIdx->setMaximum(maxFrame);
     m_lastFrameIdx->setValue(maxFrame);
-    connect(m_lastFrameIdx, SIGNAL(valueChanged(int)),
-            SLOT(lastFramePositionChanged(int)));
+    connect(m_lastFrameIdx, &QSpinBox::valueChanged, this,
+            &PlayerTool::lastFramePositionChanged);
     frameLayout->addWidget(label5);
     frameLayout->addWidget(m_lastFrameIdx);
 
@@ -192,12 +193,13 @@ QWidget* PlayerTool::toolWidget() const
 
     playButton = new QPushButton(tr("Play"));
     playButton->setIcon(QIcon::fromTheme("media-playback-start"));
-    connect(playButton, SIGNAL(clicked()), SLOT(play()));
+    connect(playButton, &QPushButton::clicked, this, &PlayerTool::play);
     recordLayout->addWidget(playButton);
 
     auto* recordButton = new QPushButton(tr("Record…"));
     recordButton->setIcon(QIcon::fromTheme("media-record"));
-    connect(recordButton, SIGNAL(clicked()), SLOT(recordMovie()));
+    connect(recordButton, &QPushButton::clicked, this,
+            &PlayerTool::recordMovie);
     recordLayout->addWidget(recordButton);
     recordLayout->addStretch(1);
     layout->addLayout(recordLayout);
@@ -207,7 +209,7 @@ QWidget* PlayerTool::toolWidget() const
     m_keepButton = new QPushButton(tr("Keep This Frame"));
     m_keepButton->setToolTip(
       tr("Add the displayed geometry as a new coordinate set"));
-    connect(m_keepButton, SIGNAL(clicked()), SLOT(keepFrame()));
+    connect(m_keepButton, &QPushButton::clicked, this, &PlayerTool::keepFrame);
     keepLayout->addWidget(m_keepButton);
     keepLayout->addStretch(1);
     layout->addLayout(keepLayout);
