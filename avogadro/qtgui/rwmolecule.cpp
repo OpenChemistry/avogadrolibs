@@ -1106,18 +1106,4 @@ Index RWMolecule::findBondUniqueId(Index bondId) const
   return m_molecule.findBondUniqueId(bondId);
 }
 
-bool RWMolecule::setForceVector(Index atomId, const Vector3& forces,
-                                const QString& undoText)
-{
-  if (atomId >= atomCount())
-    return false;
-
-  auto* comm = new SetForceVectorCommand(
-    *this, atomId, m_molecule.forceVector(atomId), forces);
-  comm->setText(undoText);
-  comm->setCanMerge(m_interactive);
-  m_undoStack.push(comm);
-  return true;
-}
-
 } // namespace Avogadro::QtGui

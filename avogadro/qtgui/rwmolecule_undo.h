@@ -45,32 +45,15 @@ protected:
 };
 
 namespace {
+// Ids that let QUndoStack merge consecutive commands of one kind. A command
+// that does not merge has the id -1. To add one, add an entry here and give it
+// to the command with setMergeId().
 enum MergeIds
 {
   SetPositions3dMergeId = 0,
   SetPosition3dMergeId,
-  SetForceVectorMergeId,
   SetBondOrderMergeId,
-  ModifySelectionMergeId,
-  ModifyColorsMergeId
-};
-
-// Base class for undo commands that can be merged together, overriding the
-// "after" state of an old command with that of the new command.
-// Intended for use with RWMolecule's interactive mode.
-// To add a new class, add a new entry to the MergeIds enum above and use that
-// symbolic value as the template parameter. Implement the mergeWith() method
-// to update the "after" state. See SetPositions3dCommand for an example.
-template <int Id>
-class MergeUndoCommand : public RWMolecule::UndoCommand
-{
-  bool m_canMerge;
-
-public:
-  MergeUndoCommand(RWMolecule& m) : UndoCommand(m), m_canMerge(false) {}
-  void setCanMerge(bool merge) { m_canMerge = merge; }
-  bool canMerge() const { return m_canMerge; }
-  int id() const override { return m_canMerge ? Id : -1; }
+  ModifySelectionMergeId
 };
 } // namespace
 
@@ -552,135 +535,6 @@ public:
   }
 };
 } // namespace
-
-namespace {
-class SetForceVectorCommand : public MergeUndoCommand<SetForceVectorMergeId>
-{
-  Array<Index> m_atomIds;
-  Array<Vector3> m_oldForceVectors;
-  Array<Vector3> m_newForceVectors;
-
-public:
-  SetForceVectorCommand(RWMolecule& m, Index atomId,
-                        const Vector3& oldForceVector,
-                        const Vector3& newForceVector)
-    : MergeUndoCommand<SetForceVectorMergeId>(m), m_atomIds(1, atomId),
-      m_oldForceVectors(1, oldForceVector), m_newForceVectors(1, newForceVector)
-  {
-  }
-
-  void redo() override
-  {
-    for (size_t i = 0; i < m_atomIds.size(); ++i)
-      m_molecule.setForceVector(m_atomIds[i], m_newForceVectors[i]);
-  }
-
-  void undo() override
-  {
-    for (size_t i = 0; i < m_atomIds.size(); ++i)
-      m_molecule.setForceVector(m_atomIds[i], m_oldForceVectors[i]);
-  }
-
-  bool mergeWith(const QUndoCommand* o) override
-  {
-    const SetForceVectorCommand* other =
-      dynamic_cast<const SetForceVectorCommand*>(o);
-    if (!other)
-      return false;
-
-    size_t numAtoms = other->m_atomIds.size();
-    if (numAtoms != other->m_oldForceVectors.size() ||
-        numAtoms != other->m_newForceVectors.size()) {
-      return false;
-    }
-
-    for (size_t i = 0; i < numAtoms; ++i) {
-      const Index& atomId = other->m_atomIds[i];
-      const Vector3& oldPos = other->m_oldForceVectors[i];
-      const Vector3& newPos = other->m_newForceVectors[i];
-
-      Array<Index>::const_iterator idsBegin = m_atomIds.begin();
-      Array<Index>::const_iterator idsEnd = m_atomIds.end();
-      Array<Index>::const_iterator match = std::find(idsBegin, idsEnd, atomId);
-
-      if (match == idsEnd) {
-        // Append a new atom:
-        m_atomIds.push_back(atomId);
-        m_oldForceVectors.push_back(oldPos);
-        m_newForceVectors.push_back(newPos);
-      } else {
-        // Overwrite the existing movement:
-        size_t offset = std::distance(idsBegin, match);
-        assert(m_atomIds[offset] == atomId);
-        m_newForceVectors[offset] = newPos;
-      }
-    }
-
-    return true;
-  }
-};
-} // namespace
-
-/*
-namespace {
-class ModifyColorCommand : public MergeUndoCommand<ModifyColorMergeId>
-{
-  Array<Vector3ub> m_newSelectedAtoms;
-  Array<Vector3ub> m_oldSelectedAtoms;
-
-public:
-  ModifySelectionCommand(RWMolecule& m, Index atomId, bool selected)
-    : MergeUndoCommand<ModifySelectionMergeId>(m)
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    m_oldSelectedAtoms.reserve(atomCount);
-    m_newSelectedAtoms.reserve(atomCount);
-
-    for (Index i = 0; i < atomCount; ++i) {
-      m_oldSelectedAtoms[i] = m_molecule.atomSelected(i);
-      m_newSelectedAtoms[i] = m_molecule.atomSelected(i);
-    }
-
-    m_newSelectedAtoms[atomId] = selected;
-  }
-
-  void redo() override
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    for (Index i = 0; i < atomCount; ++i)
-      m_mol.molecule().setAtomSelected(i, m_newSelectedAtoms[i]);
-  }
-
-  void undo() override
-  {
-    Index atomCount = m_mol.molecule().atomCount();
-    for (Index i = 0; i < atomCount; ++i)
-      m_mol.molecule().setAtomSelected(i, m_oldSelectedAtoms[i]);
-  }
-
-  bool mergeWith(const QUndoCommand* other) override
-  {
-    const ModifySelectionCommand* o =
-      dynamic_cast<const ModifySelectionCommand*>(other);
-    if (o) {
-      // check if the atom count matches
-      Index numAtoms = m_oldSelectedAtoms.size();
-      if (numAtoms != o->m_oldSelectedAtoms.size() ||
-          numAtoms != o->m_newSelectedAtoms.size()) {
-        return false;
-      }
-
-      // merge these, by grabbing the new selected atoms
-      for (Index i = 0; i < numAtoms; ++i)
-        m_newSelectedAtoms[i] = o->m_newSelectedAtoms[i];
-
-      return true;
-    }
-    return false;
-  }
-};
-} // namespace
-*/
 
 } // namespace Avogadro::QtGui
 

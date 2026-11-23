@@ -798,17 +798,6 @@ public:
   /** Returns a vector of forces for the atoms in the molecule. */
   const Core::Array<Vector3>& forceVectors() const;
 
-  /**
-   * Set the force vector on a single atom.
-   * @param atomId The index of the atom.
-   * @param force The new force vector for the atom.
-   * @param undoText The undo text to be displayed for undo commands.
-   * @return True on success, false otherwise.
-   */
-  bool setForceVector(
-    Index atomId, const Vector3& force,
-    const QString& undoText = QStringLiteral("Change Force Vectors"));
-
 public slots:
   /**
    * @brief Force the molecule to emit the changed() signal.
