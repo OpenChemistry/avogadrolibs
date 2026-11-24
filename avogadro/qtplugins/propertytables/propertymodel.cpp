@@ -94,6 +94,62 @@ inline QString comparableText(double value, int decimals)
   return text;
 }
 
+// A whole number in [low, high], from a number or from text read in the user's
+// locale and then with the C locale. A fraction is refused rather than rounded.
+std::optional<long long> parseInteger(const QVariant& value, long long low,
+                                      long long high)
+{
+  auto inRange = [&](long long number) -> std::optional<long long> {
+    if (number < low || number > high)
+      return std::nullopt;
+    return number;
+  };
+
+  switch (value.typeId()) {
+    case QMetaType::Int:
+    case QMetaType::Long:
+    case QMetaType::LongLong:
+    case QMetaType::Short:
+    case QMetaType::SChar:
+      return inRange(value.toLongLong());
+    case QMetaType::UInt:
+    case QMetaType::ULong:
+    case QMetaType::ULongLong:
+    case QMetaType::UShort:
+    case QMetaType::UChar: {
+      const qulonglong number = value.toULongLong();
+      if (number > static_cast<qulonglong>(high))
+        return std::nullopt;
+      return inRange(static_cast<long long>(number));
+    }
+    case QMetaType::Double:
+    case QMetaType::Float: {
+      const double number = value.toDouble();
+      if (!std::isfinite(number) || number != std::floor(number) ||
+          number < static_cast<double>(low) ||
+          number > static_cast<double>(high))
+        return std::nullopt;
+      return static_cast<long long>(number);
+    }
+    case QMetaType::QString:
+      break;
+    default:
+      return std::nullopt;
+  }
+
+  const QString text = value.toString().trimmed();
+  if (text.isEmpty())
+    return std::nullopt;
+  for (QLocale locale : { QLocale(), QLocale::c() }) {
+    locale.setNumberOptions(QLocale::RejectGroupSeparator);
+    bool ok = false;
+    const long long number = locale.toLongLong(text, &ok);
+    if (ok)
+      return inRange(number);
+  }
+  return std::nullopt;
+}
+
 // A number typed into a cell, or handed over directly. Text is read in the
 // user's locale first and then with a period, so either spelling works; group
 // separators are refused, since "1,5" would otherwise be 15 in en_US.
@@ -1141,11 +1197,16 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   if (m_type == AtomType) {
     switch (static_cast<AtomColumn>(index.column())) {
       case AtomDataFormalCharge: {
-        bool ok;
-        int charge = value.toInt(&ok);
-        if (!ok)
+        // Stored as a signed char, so anything wider would wrap.
+        const auto charge =
+          parseInteger(value, std::numeric_limits<signed char>::min(),
+                       std::numeric_limits<signed char>::max());
+        if (!charge)
           return false;
-        undoMolecule->setFormalCharge(index.row(), charge);
+        if (*charge == m_molecule->formalCharge(index.row()))
+          return true;
+        undoMolecule->setFormalCharge(index.row(),
+                                      static_cast<signed char>(*charge));
         break;
       }
       case AtomDataElement: { // atomic number
@@ -1227,11 +1288,13 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   } else if (m_type == BondType) {
     switch (static_cast<BondColumn>(index.column())) {
       case BondDataOrder: {
-        bool ok;
-        int order = value.toInt(&ok);
-        if (!ok || order < 1 || order > 6)
+        const auto order = parseInteger(value, 1, 6);
+        if (!order)
           return false;
-        undoMolecule->setBondOrder(index.row(), order);
+        if (*order == m_molecule->bondOrder(index.row()))
+          return true;
+        undoMolecule->setBondOrder(index.row(),
+                                   static_cast<unsigned char>(*order));
         break;
       }
       case BondDataLength: {

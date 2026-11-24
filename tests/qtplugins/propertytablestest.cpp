@@ -599,9 +599,120 @@ TEST(PropertyTablesEditTest, RejectedEditsChangeNothing)
   }
 
   // The accepted ends of the bond order range still work.
-  for (const char* order : { "1", "6" }) {
+  for (const char* order : { "2", "6" }) {
     EditSession session(PropertyType::BondType);
     EXPECT_TRUE(session.model->setData(session.model->index(0, 3), order));
     EXPECT_EQ(session.undoCount(), 1);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PropertyTablesIntegerEditTest: formal charge and bond order.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+constexpr int kFormalCharge = 2;
+constexpr int kBondOrder = 3;
+
+struct IntegerEditResult
+{
+  bool accepted;
+  int value;
+  int undoSteps;
+  int emissions;
+};
+
+IntegerEditResult editInteger(PropertyType type, int column,
+                              const QVariant& value)
+{
+  EditSession session(type);
+  SignalCounter counter(session.model.get(), session.molecule.get());
+  IntegerEditResult result;
+  result.accepted =
+    session.model->setData(session.model->index(0, column), value);
+  result.value = type == PropertyType::AtomType
+                   ? session.molecule->formalCharge(0)
+                   : session.molecule->bondOrder(0);
+  result.undoSteps = session.undoCount();
+  result.emissions = counter.total();
+  return result;
+}
+
+} // namespace
+
+TEST(PropertyTablesIntegerEditTest, FormalChargeRange)
+{
+  struct Case
+  {
+    QVariant value;
+    int expected;
+  };
+  const std::vector<Case> accepted = {
+    { 127, 127 }, { -128, -128 }, { "127", 127 }, { "-128", -128 },
+    { 2.0, 2 },   { "2", 2 },     { " -1 ", -1 }, { 3LL, 3 },
+  };
+  for (const Case& c : accepted) {
+    SCOPED_TRACE(c.value.toString().toStdString());
+    const auto result =
+      editInteger(PropertyType::AtomType, kFormalCharge, c.value);
+    EXPECT_TRUE(result.accepted);
+    EXPECT_EQ(result.value, c.expected);
+    EXPECT_EQ(result.undoSteps, 1);
+  }
+
+  const std::vector<QVariant> rejected = {
+    128,   -129, 1000,       1.5,          "1.5", "128",        "-129",
+    "abc", "",   QVariant(), std::nan(""), 1e30,  quint64(300),
+  };
+  for (const QVariant& value : rejected) {
+    SCOPED_TRACE(value.toString().toStdString());
+    const auto result =
+      editInteger(PropertyType::AtomType, kFormalCharge, value);
+    EXPECT_FALSE(result.accepted);
+    EXPECT_EQ(result.value, 0);
+    EXPECT_EQ(result.undoSteps, 0);
+    EXPECT_EQ(result.emissions, 0);
+  }
+}
+
+TEST(PropertyTablesIntegerEditTest, UnchangedValuesAreNotEdits)
+{
+  // The fixture has neutral atoms and single bonds.
+  for (const QVariant& value : { QVariant(0), QVariant("0"), QVariant(0.0) }) {
+    const auto result =
+      editInteger(PropertyType::AtomType, kFormalCharge, value);
+    EXPECT_TRUE(result.accepted);
+    EXPECT_EQ(result.undoSteps, 0);
+    EXPECT_EQ(result.emissions, 0);
+  }
+  for (const QVariant& value : { QVariant(1), QVariant("1") }) {
+    const auto result = editInteger(PropertyType::BondType, kBondOrder, value);
+    EXPECT_TRUE(result.accepted);
+    EXPECT_EQ(result.undoSteps, 0);
+    EXPECT_EQ(result.emissions, 0);
+  }
+}
+
+TEST(PropertyTablesIntegerEditTest, ChangedValuesAreOneEdit)
+{
+  const auto charge = editInteger(PropertyType::AtomType, kFormalCharge, -1);
+  EXPECT_TRUE(charge.accepted);
+  EXPECT_EQ(charge.value, -1);
+  EXPECT_EQ(charge.undoSteps, 1);
+  EXPECT_GT(charge.emissions, 0);
+
+  const auto order = editInteger(PropertyType::BondType, kBondOrder, "2");
+  EXPECT_TRUE(order.accepted);
+  EXPECT_EQ(order.value, 2);
+  EXPECT_EQ(order.undoSteps, 1);
+  EXPECT_GT(order.emissions, 0);
+
+  for (const QVariant& value : { QVariant(0), QVariant(7), QVariant("1.5"),
+                                 QVariant(2.5), QVariant("x") }) {
+    const auto bad = editInteger(PropertyType::BondType, kBondOrder, value);
+    EXPECT_FALSE(bad.accepted);
+    EXPECT_EQ(bad.undoSteps, 0);
+    EXPECT_EQ(bad.emissions, 0);
   }
 }
