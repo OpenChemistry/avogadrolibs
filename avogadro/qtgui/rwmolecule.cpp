@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <set>
 
 #ifdef USE_SPGLIB
@@ -366,6 +367,22 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
     },
     atomId, m_molecule.formalCharge(atomId), charge);
   comm->setText(tr("Change Atom Formal Charge"));
+  m_undoStack.push(comm);
+  return true;
+}
+
+bool RWMolecule::setOccupancy(Index atomId, double occupancy)
+{
+  if (atomId >= atomCount() || !std::isfinite(occupancy) || occupancy < 0.0)
+    return false;
+
+  auto* comm = new SetEntryCommand<double>(
+    *this,
+    [](Molecule& mol, Index index, const double& value) {
+      mol.setOccupancy(index, value);
+    },
+    atomId, m_molecule.occupancy(atomId), occupancy);
+  comm->setText(tr("Change Atom Occupancy"));
   m_undoStack.push(comm);
   return true;
 }

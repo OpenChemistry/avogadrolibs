@@ -72,6 +72,7 @@ void expectSame(const AtomState& expected, const AtomState& actual, Index count)
   EXPECT_EQ(expected.hybridizations.size(), actual.hybridizations.size());
   EXPECT_EQ(expected.formalCharges.size(), actual.formalCharges.size());
   EXPECT_EQ(expected.isotopes.size(), actual.isotopes.size());
+  EXPECT_EQ(expected.occupancies.size(), actual.occupancies.size());
   EXPECT_EQ(expected.colors.size(), actual.colors.size());
   EXPECT_EQ(expected.selection.size(), actual.selection.size());
   EXPECT_EQ(expected.frozenMask.size(), actual.frozenMask.size());
@@ -198,6 +199,7 @@ TEST(AtomStateTest, clearEmptiesEverything)
   EXPECT_TRUE(state.hybridizations.empty());
   EXPECT_TRUE(state.formalCharges.empty());
   EXPECT_TRUE(state.isotopes.empty());
+  EXPECT_TRUE(state.occupancies.empty());
   EXPECT_TRUE(state.colors.empty());
   EXPECT_TRUE(state.selection.empty());
   EXPECT_TRUE(state.frozenMask.empty());
@@ -249,5 +251,5 @@ TEST(AtomStateTest, forEachColumnVisitsEveryColumn)
   AtomState state = makeState();
   int visited = 0;
   state.forEachColumn(nullptr, [&](auto&, const auto&) { ++visited; });
-  EXPECT_EQ(visited, 9);
+  EXPECT_EQ(visited, 10);
 }

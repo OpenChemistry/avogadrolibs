@@ -171,6 +171,14 @@ public:
   /** @} */
 
   /**
+   * The crystallographic site occupancy of this atom (default 1)
+   * @{
+   */
+  void setOccupancy(double occupancy);
+  double occupancy() const;
+  /** @} */
+
+  /**
    * The color of this atom
    * @{
    */
@@ -388,6 +396,18 @@ template <class Molecule_T>
 unsigned short AtomTemplate<Molecule_T>::isotope() const
 {
   return m_molecule->isotope(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setOccupancy(double occupancy)
+{
+  m_molecule->setOccupancy(m_index, occupancy);
+}
+
+template <class Molecule_T>
+double AtomTemplate<Molecule_T>::occupancy() const
+{
+  return m_molecule->occupancy(m_index);
 }
 
 template <class Molecule_T>

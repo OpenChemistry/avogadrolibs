@@ -8,6 +8,7 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
+#include <cmath>
 
 #include <map>
 #include <memory>
@@ -973,6 +974,7 @@ static void expectLikeDefault(const Molecule& m)
   EXPECT_EQ(m.hybridizations().size(), d.hybridizations().size());
   EXPECT_EQ(m.formalCharges().size(), d.formalCharges().size());
   EXPECT_EQ(m.isotopes().size(), d.isotopes().size());
+  EXPECT_EQ(m.occupancies().size(), d.occupancies().size());
   EXPECT_EQ(m.colors().size(), d.colors().size());
   EXPECT_EQ(m.forceVectors().size(), d.forceVectors().size());
   EXPECT_EQ(m.isSelectionEmpty(), d.isSelectionEmpty());
@@ -1179,6 +1181,112 @@ TEST_F(MoleculeTest, isotopesFollowTheirAtoms)
   molecule.clearAtoms();
   molecule.addAtom(6);
   EXPECT_EQ(molecule.isotope(0), 0);
+}
+
+TEST_F(MoleculeTest, occupancyDefaultsToOne)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(8);
+  EXPECT_TRUE(molecule.occupancies().empty());
+  EXPECT_EQ(molecule.occupancy(0), 1.0);
+  EXPECT_EQ(molecule.occupancy(1), 1.0);
+  EXPECT_EQ(molecule.occupancy(99), 1.0);
+  EXPECT_EQ(molecule.atom(1).occupancy(), 1.0);
+}
+
+TEST_F(MoleculeTest, setOccupancy)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+  ASSERT_TRUE(molecule.setOccupancy(1, 0.5));
+  EXPECT_EQ(molecule.occupancy(0), 1.0);
+  EXPECT_EQ(molecule.occupancy(1), 0.5);
+  EXPECT_EQ(molecule.occupancy(2), 1.0);
+  EXPECT_EQ(molecule.occupancies().size(), 3u);
+
+  // Zero is a valid (empty) site, and values above one are kept as given.
+  EXPECT_TRUE(molecule.setOccupancy(0, 0.0));
+  EXPECT_TRUE(molecule.setOccupancy(2, 1.0001));
+  EXPECT_EQ(molecule.occupancy(0), 0.0);
+  EXPECT_EQ(molecule.occupancy(2), 1.0001);
+
+  // Out of range, not finite and negative values change nothing.
+  EXPECT_FALSE(molecule.setOccupancy(3, 0.5));
+  EXPECT_FALSE(molecule.setOccupancy(1, std::nan("")));
+  EXPECT_FALSE(
+    molecule.setOccupancy(1, std::numeric_limits<double>::infinity()));
+  EXPECT_FALSE(molecule.setOccupancy(1, -0.1));
+  EXPECT_EQ(molecule.occupancy(1), 0.5);
+
+  molecule.atom(1).setOccupancy(0.75);
+  EXPECT_EQ(molecule.occupancy(1), 0.75);
+}
+
+TEST_F(MoleculeTest, setOccupancies)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+  Array<double> values;
+  values.push_back(0.25);
+  values.push_back(1.0);
+  values.push_back(0.5);
+  ASSERT_TRUE(molecule.setOccupancies(values));
+  EXPECT_EQ(molecule.occupancy(0), 0.25);
+  EXPECT_EQ(molecule.occupancy(2), 0.5);
+
+  // A wrong length or a bad value rejects the whole array.
+  Array<double> bad = values;
+  bad[1] = -1.0;
+  EXPECT_FALSE(molecule.setOccupancies(bad));
+  bad[1] = std::nan("");
+  EXPECT_FALSE(molecule.setOccupancies(bad));
+  bad[1] = std::numeric_limits<double>::infinity();
+  EXPECT_FALSE(molecule.setOccupancies(bad));
+  Array<double> shortArray;
+  shortArray.push_back(0.5);
+  EXPECT_FALSE(molecule.setOccupancies(shortArray));
+  EXPECT_EQ(molecule.occupancy(0), 0.25);
+  EXPECT_EQ(molecule.occupancy(1), 1.0);
+  EXPECT_EQ(molecule.occupancy(2), 0.5);
+}
+
+TEST_F(MoleculeTest, occupanciesFollowTheirAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.setOccupancy(1, 0.1);
+  molecule.setOccupancy(2, 0.2);
+  molecule.setOccupancy(3, 0.3);
+
+  // removeAtom() swaps the last atom into the hole.
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.atomCount(), 3);
+  EXPECT_EQ(molecule.occupancy(0), 1.0);
+  EXPECT_EQ(molecule.occupancy(1), 0.3);
+  EXPECT_EQ(molecule.occupancy(2), 0.2);
+
+  // Copies and moves keep them.
+  Molecule copy(molecule);
+  EXPECT_EQ(copy.occupancy(1), 0.3);
+  Molecule moved(std::move(copy));
+  EXPECT_EQ(moved.occupancy(2), 0.2);
+  EXPECT_TRUE(copy.occupancies().empty()); // NOLINT: moved-from is empty
+  Molecule assigned;
+  assigned = molecule;
+  EXPECT_EQ(assigned.occupancy(1), 0.3);
+
+  // A new atom after a short column starts at a full site.
+  molecule.addAtom(8);
+  EXPECT_EQ(molecule.occupancy(3), 1.0);
+
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_EQ(molecule.occupancy(0), 1.0);
+  EXPECT_TRUE(molecule.occupancies().empty());
 }
 
 TEST_F(MoleculeTest, atomLabelsFollowTheirAtoms)
@@ -3309,6 +3417,7 @@ private:
     SetFormalCharge,
     SetHybridization,
     SetIsotope,
+    SetOccupancy,
     SetColor,
     SetSelected,
     SetFrozenAtom,
@@ -3365,6 +3474,7 @@ private:
       "setFormalCharge",
       "setHybridization",
       "setIsotope",
+      "setOccupancy",
       "setColor",
       "setAtomSelected",
       "setFrozenAtom",
@@ -4062,6 +4172,13 @@ bool ShadowRunner::step(int stepNumber)
       const auto isotope = static_cast<unsigned short>(pickInt(1, 300));
       mol.setIsotope(i, isotope);
       model.atoms[i].isotope = isotope;
+      break;
+    }
+    case SetOccupancy: {
+      const Index i = pickIndex(n);
+      const double occupancy = 0.25 * pickInt(0, 4);
+      mol.setOccupancy(i, occupancy);
+      model.atoms[i].occupancy = occupancy;
       break;
     }
     case SetColor: {
