@@ -821,11 +821,11 @@ void ORCAOutput::processLine(std::istream& in,
           if (list.size() != 3) {
             break;
           }
-          unsigned index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
-          if (index >= m_frequencies.size()) {
+          auto index = Core::lexicalCast<std::size_t>(list[0]);
+          if (!index || *index >= m_frequencies.size()) {
             break;
           }
-          m_vcdIntensities[index] =
+          m_vcdIntensities[*index] =
             Core::lexicalCast<double>(list[2]).value_or(0.0);
 
           Core::getLine(in, key);
@@ -858,12 +858,12 @@ void ORCAOutput::processLine(std::istream& in,
           // e.g. 1  2  3  4  5  6  7  8  9 10
           modeIndex.clear();
           for (const auto& index_str : list) {
-            auto index = Core::lexicalCast<std::size_t>(index_str).value_or(0);
-            if (index >= m_frequencies.size()) {
+            auto index = Core::lexicalCast<std::size_t>(index_str);
+            if (!index || *index >= m_frequencies.size()) {
               invalid_index = true;
               break;
             }
-            modeIndex.push_back(index);
+            modeIndex.push_back(*index);
           }
           // invalid column index
           if (invalid_index)
@@ -928,13 +928,13 @@ void ORCAOutput::processLine(std::istream& in,
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          auto index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
+          auto index = Core::lexicalCast<std::size_t>(list[0]);
           // invalid index
-          if (index >= m_frequencies.size())
+          if (!index || *index >= m_frequencies.size())
             break;
 
           double intensity = Core::lexicalCast<double>(list[3]).value_or(0.0);
-          m_IRintensities[index] = intensity;
+          m_IRintensities[*index] = intensity;
 
           Core::getLine(in, key);
           key = Core::trimmed(key);
@@ -955,12 +955,12 @@ void ORCAOutput::processLine(std::istream& in,
           }
           // the first entry might be 5 or 6 because of removed rotations /
           // translations
-          auto index = Core::lexicalCast<std::size_t>(list[0]).value_or(0);
+          auto index = Core::lexicalCast<std::size_t>(list[0]);
           // invalid index
-          if (index >= m_frequencies.size())
+          if (!index || *index >= m_frequencies.size())
             break;
           if (m_RamanIntensities.empty()) {
-            while (m_RamanIntensities.size() < index) {
+            while (m_RamanIntensities.size() < *index) {
               m_RamanIntensities.push_back(0.0);
             }
           }
