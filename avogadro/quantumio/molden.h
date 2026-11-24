@@ -11,6 +11,7 @@
 #include <avogadro/core/gaussianset.h>
 #include <avogadro/io/fileformat.h>
 
+#include <string_view>
 #include <vector>
 
 namespace Avogadro::QuantumIO {
@@ -47,7 +48,7 @@ private:
   void outputAll();
 
   void processLine(std::istream& in);
-  void readAtom(const std::vector<std::string>& list);
+  void readAtom(const std::vector<std::string_view>& list);
   bool load(Core::GaussianSet* basis, size_t atomCount);
   unsigned int basisFunctionCount() const;
 
@@ -67,6 +68,9 @@ private:
   void writeMO(std::ostream& out, const Core::GaussianSet* basis);
   void writeFrequencies(std::ostream& out, const Core::Molecule& molecule);
   void writeGeometries(std::ostream& out, const Core::Molecule& molecule);
+
+  // Reused for every line; holds views into the line being processed.
+  std::vector<std::string_view> m_tokens;
 
   bool m_cartesianD = true;
   bool m_cartesianF = true;

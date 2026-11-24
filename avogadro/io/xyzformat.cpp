@@ -17,6 +17,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <string_view>
 
 using std::endl;
 using std::string;
@@ -33,6 +34,22 @@ using Core::trimmed;
 #ifndef _WIN32
 using std::isalpha;
 #endif
+
+namespace {
+// Reads the x, y and z columns (tokens 1 to 3) of an atom line without
+// copying them. Returns false if any of them is not a number. The caller
+// guarantees at least four tokens.
+bool parsePosition(const std::vector<std::string_view>& tokens, Vector3& pos)
+{
+  const auto px = lexicalCast<double>(tokens[1]);
+  const auto py = lexicalCast<double>(tokens[2]);
+  const auto pz = lexicalCast<double>(tokens[3]);
+  if (!px || !py || !pz)
+    return false;
+  pos << *px, *py, *pz;
+  return true;
+}
+} // namespace
 
 std::optional<double> findEnergy(const std::string& buffer)
 {
@@ -63,7 +80,8 @@ std::optional<double> findEnergy(const std::string& buffer)
 
   // also check if the comment just starts with a number
   // try to split out the first token and look for a number
-  std::vector<string> tokens(split(buffer, ' '));
+  std::vector<std::string_view> tokens;
+  Core::tokenize(buffer, tokens);
   if (!tokens.empty()) {
     return lexicalCast<double>(tokens[0]);
   }
@@ -110,7 +128,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     std::size_t end = buffer.find('\"', start);
     std::string lattice = buffer.substr(start, (end - start));
 
-    std::vector<string> tokens(split(lattice, ' '));
+    std::vector<string> tokens(Core::splitWhitespace(lattice));
 
     if (tokens.size() >= 9) {
       if (auto tmp = lexicalCast<double>(tokens.begin(), tokens.begin() + 9)) {
@@ -137,6 +155,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   unsigned int chargeColumn = 0;
   unsigned int forceColumn = 0;
   std::vector<double> charges;
+  // per-atom forces; collected here since adding atoms clears them
+  Array<Vector3> forces;
+  bool haveForces = false;
   if (start != std::string::npos) {
     start = start + 11; // skip over "Properties="
     unsigned int stop = buffer.find(' ', start);
@@ -170,7 +191,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     return false;
   }
 
-  // Parse atoms
+  // Parse atoms; one token vector is reused for every line.
+  std::vector<std::string_view> tokens;
   for (size_t i = 0; i < numAtoms; ++i) {
     // Core::getLine, not std::getline: std::getline erases its target only
     // after its sentry succeeds, so at end of input it leaves the previous
@@ -184,12 +206,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       return false;
     }
 
-    std::vector<string> tokens;
-    // check for tabs PR#1512
-    if (buffer.find('\t') != std::string::npos)
-      tokens = split(buffer, '\t');
-    else
-      tokens = split(buffer, ' ');
+    // Tabs and spaces both separate columns (PR#1512). The tokens are views
+    // into buffer, so use them before the next getLine.
+    Core::tokenize(buffer, tokens);
 
     if (tokens.size() < 4) {
       appendError("Not enough tokens in this line: " + buffer);
@@ -197,13 +216,14 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
     }
 
     unsigned char atomicNum(0);
-    if (isalpha(tokens[0][0])) {
-      atomicNum = Elements::atomicNumberFromSymbol(tokens[0]);
+    if (isalpha(static_cast<unsigned char>(tokens[0][0]))) {
+      const string symbol(tokens[0]);
+      atomicNum = Elements::atomicNumberFromSymbol(symbol);
       // Crystallography tools (e.g. Mercury) often write atom labels rather
       // than plain symbols, i.e. "N1" instead of "N". Fall back to trimming
       // the label down to the longest leading symbol we recognize.
       if (atomicNum == InvalidElement)
-        atomicNum = Elements::guessAtomicNumber(tokens[0]);
+        atomicNum = Elements::guessAtomicNumber(symbol);
       if (tokens[0] == "D")
         atomicNum = 1;
       else if (tokens[0] == "T")
@@ -213,10 +233,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
         lexicalCast<short int>(tokens[0]).value_or(0));
 
     Vector3 pos;
-    if (auto tmp =
-          lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
-      pos << tmp->at(0), tmp->at(1), tmp->at(2);
-    } else {
+    if (!parsePosition(tokens, pos)) {
       appendError("Error reading atom position");
       return false;
     }
@@ -238,10 +255,16 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       // we set the charges after all atoms are added
     }
     if (forceColumn > 0 && forceColumn < tokens.size()) {
+      forces.resize(mol.atomCount(), Vector3::Zero());
+      if (tokens.size() - forceColumn < 3) {
+        appendError("Not enough force components in this line: " + buffer);
+        return false;
+      }
       if (auto tmp = lexicalCast<double>(tokens.begin() + forceColumn,
                                          tokens.begin() + forceColumn + 3)) {
         Vector3 force(tmp->at(0), tmp->at(1), tmp->at(2));
-        newAtom.setForceVector(force);
+        forces[mol.atomCount() - 1] = force;
+        haveForces = true;
       } else {
         appendError("Error reading force");
       }
@@ -290,19 +313,17 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
           break; // break this inner loop
         }
 
-        std::vector<string> tokens(split(buffer, ' '));
+        Core::tokenize(buffer, tokens);
         if (tokens.size() < 4) {
           appendError("Not enough tokens in this line: " + buffer);
           return false;
         }
-        if (auto tmp =
-              lexicalCast<double>(tokens.begin() + 1, tokens.begin() + 4)) {
-          Vector3 pos(tmp->at(0), tmp->at(1), tmp->at(2));
-          positions.push_back(pos);
-        } else {
+        Vector3 pos;
+        if (!parsePosition(tokens, pos)) {
           appendError("Error reading position");
           return false;
         }
+        positions.push_back(pos);
       }
 
       if (!done)
@@ -354,6 +375,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       chargesMatrix(i, 0) = charges[i];
     }
     mol.setPartialCharges("From File", chargesMatrix);
+  }
+
+  // adding atoms clears per-atom results, so set the forces at the end
+  if (haveForces) {
+    forces.resize(mol.atomCount(), Vector3::Zero());
+    mol.setForceVectors(forces);
   }
 
   if (energies.size() > 1)

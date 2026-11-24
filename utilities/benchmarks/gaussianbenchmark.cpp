@@ -11,13 +11,13 @@
 
 #include <avogadro/quantumio/gaussianfchk.h>
 
+#include "benchmark_common.h"
+
 #include <algorithm>
 #include <chrono>
-#include <cmath>
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
-#include <numeric>
 #include <string>
 #include <vector>
 
@@ -25,6 +25,8 @@ namespace fs = std::filesystem;
 
 namespace {
 
+using Avogadro::Benchmarks::computeStats;
+using Avogadro::Benchmarks::TimingStats;
 using Avogadro::Core::BasisSet;
 using Avogadro::Core::Cube;
 using Avogadro::Core::GaussianSet;
@@ -41,13 +43,6 @@ struct Options
   float spacing = 0.2f;
   float padding = 3.0f;
   std::vector<std::string> inputFiles;
-};
-
-struct TimingStats
-{
-  double medianMs = 0.0;
-  double meanMs = 0.0;
-  double p95Ms = 0.0;
 };
 
 struct BenchmarkResult
@@ -178,32 +173,6 @@ fs::path resolvePath(const std::string& dataRoot, const std::string& file)
 {
   const fs::path p(file);
   return p.is_absolute() ? p : fs::path(dataRoot) / p;
-}
-
-TimingStats computeStats(const std::vector<double>& samplesMs)
-{
-  TimingStats stats;
-  if (samplesMs.empty())
-    return stats;
-
-  std::vector<double> sorted(samplesMs);
-  std::sort(sorted.begin(), sorted.end());
-
-  const std::size_t n = sorted.size();
-  if (n % 2 == 0)
-    stats.medianMs = (sorted[n / 2 - 1] + sorted[n / 2]) * 0.5;
-  else
-    stats.medianMs = sorted[n / 2];
-
-  const double sum =
-    std::accumulate(sorted.begin(), sorted.end(), 0.0, std::plus<double>());
-  stats.meanMs = sum / static_cast<double>(n);
-
-  const std::size_t p95Index =
-    static_cast<std::size_t>(std::ceil(0.95 * static_cast<double>(n))) - 1;
-  stats.p95Ms = sorted[std::min(p95Index, n - 1)];
-
-  return stats;
 }
 
 BenchmarkResult benchmarkFile(const fs::path& moleculePath,

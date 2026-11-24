@@ -398,3 +398,29 @@ TEST(LammpsTest, boxBoundsColumns)
   // The cell from the last frame read is the triclinic one.
   EXPECT_EQ(molecule.unitCell()->bVector(), Vector3(0.5, 4.0, 0.0));
 }
+
+// Box bounds and atom columns may be separated by tabs as well as spaces,
+// in the first frame and in every following one.
+TEST(LammpsTest, tabSeparatedColumns)
+{
+  const std::string frame0 = "ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n2\n"
+                             "ITEM: BOX BOUNDS pp pp pp\n0.0\t5.0\n"
+                             "0.0\t6.0\n0.0 \t 7.0\n"
+                             "ITEM: ATOMS id type x y z\n"
+                             "1\t1\t0.5\t1.5\t2.5\n"
+                             "2 1\t1.0 \t2.0\t3.0\n";
+  const std::string frame1 = "ITEM: TIMESTEP\n10\nITEM: NUMBER OF ATOMS\n2\n"
+                             "ITEM: BOX BOUNDS pp pp pp\n0.0\t5.0\n"
+                             "0.0\t6.0\n0.0\t7.0\n"
+                             "ITEM: ATOMS id type x y z\n"
+                             "1\t1\t0.6\t1.6\t2.6\n"
+                             "2\t1\t1.1\t2.1\t3.1\n";
+  LammpsTrajectoryFormat format;
+  Molecule molecule;
+  ASSERT_TRUE(format.readString(frame0 + frame1, molecule)) << format.error();
+  ASSERT_EQ(molecule.coordinate3dCount(), 2);
+  EXPECT_EQ(molecule.coordinate3d(0)[1], Vector3(1.0, 2.0, 3.0));
+  EXPECT_EQ(molecule.coordinate3d(1)[0], Vector3(0.6, 1.6, 2.6));
+  ASSERT_NE(molecule.unitCell(), nullptr);
+  EXPECT_EQ(molecule.unitCell()->cVector(), Vector3(0.0, 0.0, 7.0));
+}

@@ -223,6 +223,56 @@ TEST(XyzTest, readAtomLabelsDoesNotOverreach)
   EXPECT_EQ(molecule.atom(3).atomicNumber(), Avogadro::InvalidElement);
 }
 
+// Columns may be separated by tabs or spaces, in any mix, with CRLF endings,
+// in the first frame and in every following one.
+TEST(XyzTest, readMixedSeparatorsAndTrajectory)
+{
+  const std::string text = "2\r\nframe 0\r\n"
+                           "O\t0.0\t0.0\t0.0\r\n"
+                           "H  1.0 \t 0.0\t  0.5\r\n"
+                           "2\r\nframe 1\r\n"
+                           "O\t0.1\t0.2\t0.3\r\n"
+                           "H 1.1\t0.2   0.8\r\n";
+  XyzFormat xyz;
+  xyz.setOptions(R"({"perceiveBonds": false})");
+  Molecule molecule;
+  ASSERT_TRUE(xyz.readString(text, molecule)) << xyz.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  ASSERT_EQ(molecule.coordinate3dCount(), 2);
+  const auto first = molecule.coordinate3d(0);
+  const auto second = molecule.coordinate3d(1);
+  EXPECT_EQ(first[1], Vector3(1.0, 0.0, 0.5));
+  EXPECT_EQ(second[0], Vector3(0.1, 0.2, 0.3));
+  EXPECT_EQ(second[1], Vector3(1.1, 0.2, 0.8));
+}
+
+// A row with fewer than three force components must be rejected, not read
+// past the end of its tokens.
+TEST(XyzTest, readTruncatedForceColumns)
+{
+  const std::string header = "2\n"
+                             "Properties=species:S:1:pos:R:3:forces:R:3\n";
+  XyzFormat xyz;
+  xyz.setOptions(R"({"perceiveBonds": false})");
+  Molecule truncated;
+  EXPECT_FALSE(xyz.readString(header + "O\t0.0 0.0\t0.0\t0.1 0.2\t0.3\n"
+                                       "H 1.0\t0.0 0.5\t0.4\n",
+                              truncated));
+
+  XyzFormat control;
+  control.setOptions(R"({"perceiveBonds": false})");
+  Molecule molecule;
+  ASSERT_TRUE(control.readString(header + "O\t0.0 0.0\t0.0\t0.1 0.2\t0.3\n"
+                                          "H 1.0\t0.0 0.5\t0.4 0.5\t0.6\n",
+                                 molecule))
+    << control.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  ASSERT_EQ(molecule.forceVectors().size(), 2);
+  EXPECT_EQ(molecule.forceVectors()[0], Vector3(0.1, 0.2, 0.3));
+  EXPECT_EQ(molecule.forceVectors()[1], Vector3(0.4, 0.5, 0.6));
+}
+
 TEST(XyzTest, write)
 {
   XyzFormat xyz;

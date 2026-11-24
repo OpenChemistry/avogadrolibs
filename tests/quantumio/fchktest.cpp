@@ -169,3 +169,37 @@ TEST(GaussianFchkTest, unsupportedShellTypeRejected)
     EXPECT_TRUE(basis->atomIndices().empty()) << bad;
   }
 }
+
+// Whitespace-separated arrays (the dipole moment, the atomic numbers) accept
+// tabs as well as spaces between the values.
+TEST(GaussianFchkTest, tabSeparatedArrays)
+{
+  std::ostringstream out;
+  out << "Header line 1\nHeader line 2\n";
+  out << std::left << std::setw(42) << "Number of atoms"
+      << " I 2\n";
+  out << std::left << std::setw(42) << "Atomic numbers"
+      << " I   N=           2\n"
+      << "\t1\t 1\n";
+  out << std::left << std::setw(42) << "Current cartesian coordinates"
+      << " R   N=           6\n"
+      << std::right << std::setw(16) << "0.0" << std::setw(16) << "0.0"
+      << std::setw(16) << "0.0"
+      << "\n"
+      << std::setw(16) << "0.0" << std::setw(16) << "0.0" << std::setw(16)
+      << "1.0"
+      << "\n";
+  out << std::left << std::setw(42) << "Dipole Moment"
+      << " R   N=           3\n"
+      << "\t1.0\t 2.0   3.0\n";
+
+  GaussianFchk format;
+  Molecule molecule;
+  ASSERT_TRUE(format.readString(out.str(), molecule)) << format.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.atom(1).atomicNumber(), 1);
+  const Avogadro::Vector3 dipole = molecule.data("dipoleMoment").toVector3();
+  EXPECT_NEAR(dipole.x(), 2.541746, 1e-9);
+  EXPECT_NEAR(dipole.y(), 2 * 2.541746, 1e-9);
+  EXPECT_NEAR(dipole.z(), 3 * 2.541746, 1e-9);
+}

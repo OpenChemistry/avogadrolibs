@@ -28,6 +28,12 @@ if(ENABLE_CALC_BENCHMARKS)
   target_compile_definitions(AvogadroGaussianBenchmark
     PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
 
+  add_executable(AvogadroParseBenchmark parsebenchmark.cpp)
+  target_link_libraries(AvogadroParseBenchmark
+    PRIVATE Avogadro::Core Avogadro::IO Avogadro::QuantumIO)
+  target_compile_definitions(AvogadroParseBenchmark
+    PRIVATE AVOGADRO_BENCHMARK_DATA_ROOT="${_benchmark_data_root}")
+
   if(USE_QT)
     add_executable(AvogadroUndoMemoryBenchmark undomemorybenchmark.cpp)
     target_link_libraries(AvogadroUndoMemoryBenchmark

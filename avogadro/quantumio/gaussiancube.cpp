@@ -14,6 +14,7 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <string_view>
 
 namespace Avogadro::QuantumIO {
 
@@ -75,12 +76,8 @@ public:
 
   bool read(float& value)
   {
-    if (m_pos == m_end) {
-      if (!(m_in >> m_token))
-        return false;
-      m_pos = m_token.data();
-      m_end = m_pos + m_token.size();
-    }
+    if (m_pos == m_end && !nextToken())
+      return false;
 
     // Reject anything that is not a number, or that stopped short of the end
     // of the token other than at a run-together sign ("1.5abc", the "*******"
@@ -105,11 +102,38 @@ public:
   }
 
 private:
+  // Moves to the next white space separated token, reading lines as needed.
+  // A token never spans lines, and blank lines are skipped. The token is
+  // [m_pos, m_end) inside m_line, which stays valid until the next line is
+  // read; nothing is copied.
+  bool nextToken()
+  {
+    for (;;) {
+      const char* p = m_end;
+      while (p != m_lineEnd && Core::isWhitespace(*p))
+        ++p;
+      if (p != m_lineEnd) {
+        m_pos = p;
+        while (p != m_lineEnd && !Core::isWhitespace(*p))
+          ++p;
+        m_end = p;
+        return true;
+      }
+      if (!Core::getLine(m_in, m_line))
+        return false;
+      m_end = m_line.data();
+      m_lineEnd = m_end + m_line.size();
+      m_pos = m_end;
+    }
+  }
+
   std::istream& m_in;
-  std::string m_token;
+  std::string m_line;
   const char* m_pos = nullptr;
   const char* m_end = nullptr;
+  const char* m_lineEnd = nullptr;
 };
+
 /**
  * Replaces the step of each single-point axis with a unit vector (Angstrom)
  * orthogonal to the steps of the other axes, so that whatever the file wrote
@@ -177,7 +201,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
 {
   // Variables we will need
   std::string line;
-  std::vector<std::string> list;
+  std::vector<std::string_view> list; // views into line; use before getLine
 
   int nAtoms;
   Vector3 min;
@@ -236,7 +260,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
       appendError("Invalid cube header.");
       return false;
     }
-    list = Core::split(line, ' ');
+    Core::tokenize(line, list);
     if (list.size() < 4) {
       appendError("Invalid cube grid specification.");
       return false;
@@ -278,7 +302,7 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
       appendError("Invalid cube atom data.");
       return false;
     }
-    list = Core::split(line, ' ');
+    Core::tokenize(line, list);
     if (list.size() < 5) {
       appendError("Invalid cube atom data.");
       return false;
@@ -379,11 +403,8 @@ bool GaussianCube::read(std::istream& in, Core::Molecule& molecule)
       appendError("Invalid cube data.");
       return false;
     }
-    // clear buffer, if more than one cube
-    if (!Core::getLine(in, line) && i + 1 < nCubes) {
-      appendError("Invalid cube data.");
-      return false;
-    }
+    // The reader works a line at a time, so the line holding the last value
+    // is already used up and the next cube starts on the line after it.
   }
 
   return true;

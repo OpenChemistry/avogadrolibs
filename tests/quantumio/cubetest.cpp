@@ -200,6 +200,55 @@ TEST(GaussianCubeTest, runTogetherValuesAreRead)
   EXPECT_FLOAT_EQ((*values)[9], 0.3f);
 }
 
+// Values are read a line at a time: blank and white space only lines, tabs,
+// CRLF endings and a missing final newline all just move on.
+TEST(GaussianCubeTest, blankLinesAndOddWhiteSpaceAreSkipped)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  const std::string input = makeCubeWithData(
+    6, "\n  \t \r\n 1.0\t2.0  3.0\r\n\n\n  4.0 \r\n5.0\n   6.0");
+  ASSERT_TRUE(cube.readString(input, molecule)) << cube.error();
+  const auto* values = molecule.cube(0)->data();
+  ASSERT_EQ(values->size(), static_cast<size_t>(6));
+  for (size_t i = 0; i < 6; ++i)
+    EXPECT_FLOAT_EQ((*values)[i], static_cast<float>(i + 1));
+}
+
+TEST(GaussianCubeTest, truncatedGridIsRejected)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  EXPECT_FALSE(
+    cube.readString(makeCubeWithData(6, "1.0 2.0 3.0\n4.0 5.0\n"), molecule));
+  EXPECT_NE(cube.error().find("Invalid cube data."), std::string::npos);
+}
+
+// With a negative atom count the header lists several cubes; each one starts
+// on a new line.
+TEST(GaussianCubeTest, severalCubesEachStartOnANewLine)
+{
+  GaussianCube cube;
+  Molecule molecule;
+
+  std::ostringstream out;
+  out << "Comment line\nSecond comment line\n";
+  out << "   -1    0.000000    0.000000    0.000000\n";
+  out << "    3    0.100000    0.000000    0.000000\n";
+  out << "    1    0.000000    0.100000    0.000000\n";
+  out << "    1    0.000000    0.000000    0.100000\n";
+  out << "    1    1.000000    0.000000    0.000000    0.000000\n";
+  out << "    2    1    2\n";
+  out << "1.0 2.0 3.0\n4.0 5.0 6.0\n";
+  ASSERT_TRUE(cube.readString(out.str(), molecule)) << cube.error();
+  ASSERT_EQ(molecule.cubeCount(), static_cast<size_t>(2));
+  EXPECT_FLOAT_EQ((*molecule.cube(0)->data())[2], 3.0f);
+  EXPECT_FLOAT_EQ((*molecule.cube(1)->data())[0], 4.0f);
+  EXPECT_FLOAT_EQ((*molecule.cube(1)->data())[2], 6.0f);
+}
+
 // A subnormal value followed by a run-together negative value.
 TEST(GaussianCubeTest, runTogetherSubnormalIsRead)
 {
