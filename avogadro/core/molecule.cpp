@@ -681,6 +681,16 @@ const Array<unsigned short>& Molecule::isotopes() const
   return m_atomState.isotopes.array();
 }
 
+Array<double>& Molecule::occupancies()
+{
+  return m_atomState.occupancies.array();
+}
+
+const Array<double>& Molecule::occupancies() const
+{
+  return m_atomState.occupancies.array();
+}
+
 Array<signed char>& Molecule::formalCharges()
 {
   return m_atomState.formalCharges.array();

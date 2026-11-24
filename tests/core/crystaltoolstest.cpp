@@ -369,3 +369,25 @@ TEST(CrystalToolsTest, buildSupercellPackingLeavesOuterFacesCut)
   EXPECT_EQ(mol.bondCount(), 2);
   EXPECT_NEAR(longestBond(mol), 1.0, 1e-6);
 }
+
+TEST(CrystalToolsTest, buildSupercellCarriesOccupancy)
+{
+  Molecule mol = cubicCell();
+  ASSERT_TRUE(mol.setOccupancy(1, 0.5));
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  ASSERT_EQ(mol.atomCount(), 4);
+  Index oxygens = 0;
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    EXPECT_EQ(mol.occupancy(i), mol.atomicNumber(i) == 8 ? 0.5 : 1.0) << i;
+    if (mol.atomicNumber(i) == 8)
+      ++oxygens;
+  }
+  EXPECT_EQ(oxygens, 2);
+}
+
+TEST(CrystalToolsTest, buildSupercellWithoutOccupancyStoresNone)
+{
+  Molecule mol = cubicCell();
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  EXPECT_TRUE(mol.occupancies().empty());
+}

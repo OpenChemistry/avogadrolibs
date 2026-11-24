@@ -838,6 +838,20 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     }
   }
 
+  // Crystallographic site occupancies. All or nothing: an array of the wrong
+  // length, or with an entry that is not a finite number >= 0, is ignored
+  // whole rather than partly applied (setOccupancies() checks the values).
+  if (atoms.contains("occupancies")) {
+    const json& occupancies = atoms["occupancies"];
+    if (isNumericArray(occupancies) && occupancies.size() == atomCount) {
+      Array<double> values;
+      values.reserve(atomCount);
+      for (Index i = 0; i < atomCount; ++i)
+        values.push_back(occupancies[i].get<double>());
+      molecule.setOccupancies(values);
+    }
+  }
+
   // Bonds are optional, but if present should be loaded.
   if (jsonRoot.contains("bonds")) {
     json bonds = jsonRoot["bonds"];
@@ -2308,6 +2322,14 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
         isotopes.push_back(isotopeList[i]);
       }
       atoms["isotopes"] = isotopes;
+    }
+
+    // site occupancies (if present)
+    if (!molecule.occupancies().empty()) {
+      json occupancies;
+      for (Index i = 0; i < molecule.atomCount(); ++i)
+        occupancies.push_back(molecule.occupancy(i));
+      atoms["occupancies"] = occupancies;
     }
 
     auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;

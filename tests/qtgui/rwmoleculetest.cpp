@@ -6,6 +6,7 @@
 #include "shadowmolecule.h"
 
 #include <gtest/gtest.h>
+#include <cmath>
 
 #include <avogadro/core/cube.h>
 #include <avogadro/core/gaussianset.h>
@@ -2473,12 +2474,7 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       // coordinate sets, which RWMolecule has no undoable edits for.
       if (chance(18))
         pick = pickInt(18, 24);
-      // 13 would be setIsotope(), which is not left out by accident:
-      // RWMolecule::setIsotope() has no undo command (it says so in a TODO)
-      // and edits the molecule silently, so there is no undo state to
-      // compare it against. Bias towards label edits instead.
-      if (pick == 13)
-        pick = 9;
+      // 13 is setOccupancy(). setIsotope() is left out: it has no case here.
       if (n == 0 && pick != 0 && pick != 1)
         pick = 0;
       if ((pick == 2 || pick == 3) && (n < 2 || (pick == 3 && bonds == 0)))
@@ -2676,6 +2672,14 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           const auto charge = static_cast<signed char>(pickInt(-3, 3));
           mol.setFormalCharge(i, charge);
           model.atoms[i].formalCharge = charge;
+          break;
+        }
+        case 13: {
+          op = "setOccupancy";
+          const Index i = pickIndex(n);
+          const double occupancy = 0.25 * pickInt(0, 4);
+          mol.setOccupancy(i, occupancy);
+          model.atoms[i].occupancy = occupancy;
           break;
         }
         case 14: {
@@ -4330,6 +4334,76 @@ TEST(RWMoleculeTest, setIsotopeIsUndoable)
   EXPECT_EQ(2, mol.undoStack().count());
 }
 
+TEST(RWMoleculeTest, setOccupancyIsUndoable)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  ASSERT_TRUE(mol.setOccupancy(1, 0.5));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+  EXPECT_EQ(1.0, mol.occupancy(0));
+  EXPECT_EQ(1, mol.undoStack().count());
+  EXPECT_EQ(QString("Change Atom Occupancy"), mol.undoStack().undoText());
+
+  mol.undoStack().undo();
+  EXPECT_EQ(1.0, mol.occupancy(1));
+  mol.undoStack().redo();
+  EXPECT_EQ(0.5, mol.occupancy(1));
+
+  EXPECT_FALSE(mol.setOccupancy(2, 0.5));
+  EXPECT_FALSE(mol.setOccupancy(1, -1.0));
+  EXPECT_FALSE(mol.setOccupancy(1, std::nan("")));
+  EXPECT_EQ(1, mol.undoStack().count());
+  EXPECT_EQ(0.5, mol.occupancy(1));
+}
+
+TEST(RWMoleculeTest, setOccupancyEmitsChanges)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  const unsigned int change = Molecule::Atoms | Molecule::Properties;
+  const std::vector<unsigned int> expected{ change };
+  // the first edit grows the empty column, a later one sets an entry
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.setOccupancy(1, 0.5); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.setOccupancy(0, 0.25); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().undo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().undo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
+}
+
+TEST(RWMoleculeTest, undoRemoveAtomRestoresOccupancy)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(7);
+  mol.addAtom(8);
+  mol.setOccupancy(0, 0.25);
+  mol.setOccupancy(1, 0.5);
+  mol.setOccupancy(2, 0.75);
+  mol.undoStack().clear();
+
+  mol.removeAtom(0);
+  EXPECT_EQ(2u, mol.atomCount());
+  EXPECT_EQ(0.75, mol.occupancy(0));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+
+  mol.undoStack().undo();
+  ASSERT_EQ(3u, mol.atomCount());
+  EXPECT_EQ(0.25, mol.occupancy(0));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+  EXPECT_EQ(0.75, mol.occupancy(2));
+  EXPECT_EQ(6, mol.atomicNumber(0));
+}
+
 TEST(RWMoleculeTest, setAtomPosition2dIsUndoable)
 {
   Molecule m;
@@ -4361,6 +4435,57 @@ TEST(RWMoleculeTest, setAtomPosition2dIsUndoable)
 
   EXPECT_FALSE(mol.setAtomPosition2d(3, p));
   EXPECT_EQ(2, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, setOccupancyUndoRestoresEmptyArray)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+  ASSERT_TRUE(m.occupancies().empty());
+
+  ASSERT_TRUE(mol.setOccupancy(1, 0.5));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+  EXPECT_EQ(1.0, mol.occupancy(0));
+  EXPECT_EQ(2u, m.occupancies().size());
+
+  // undo puts back the shape, not just the value
+  mol.undoStack().undo();
+  EXPECT_TRUE(m.occupancies().empty());
+  mol.undoStack().redo();
+  EXPECT_EQ(0.5, mol.occupancy(1));
+
+  // once the column is whole, edits are single entries again
+  ASSERT_TRUE(mol.setOccupancy(0, 0.25));
+  mol.undoStack().undo();
+  EXPECT_EQ(2u, m.occupancies().size());
+  EXPECT_EQ(1.0, mol.occupancy(0));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+}
+
+TEST(RWMoleculeTest, appendMoleculeOccupancyUndoLeavesNone)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  Molecule source;
+  source.addAtom(8);
+  source.addAtom(8);
+  source.setOccupancy(1, 0.5);
+  mol.appendMolecule(source, "Append");
+  ASSERT_EQ(3u, mol.atomCount());
+  EXPECT_EQ(0.5, mol.occupancy(2));
+  EXPECT_EQ(1.0, mol.occupancy(1));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(1u, mol.atomCount());
+  EXPECT_TRUE(m.occupancies().empty());
+  mol.undoStack().redo();
+  EXPECT_EQ(0.5, mol.occupancy(2));
 }
 
 TEST(RWMoleculeTest, setAtomPosition2dUndoRestoresEmptyArray)

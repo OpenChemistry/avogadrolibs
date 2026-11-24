@@ -25,8 +25,12 @@ namespace Avogadro::Io {
  * with stored operations) is filled out to all the atoms of its cell first, and
  * no bonds are written (a bond across a cell face needs a symmetry code).
  *
- * The read option "disorder" chooses what to do with disordered sites. Avogadro
- * stores no occupancy per atom yet, so with "major" (the default) only one
+ * The site occupancy of each atom is stored (see Core::Molecule::occupancy()),
+ * but only when some site is not a full one, and a missing or unreadable value
+ * counts as 1. The disorder groups are not stored.
+ *
+ * The read option "disorder" chooses what to do with disordered sites. Because
+ * the groups are not stored, with "major" (the default) only one
  * configuration is read: in each disorder assembly the group with the highest
  * mean occupancy is kept (the first in the file on a tie; a lone group needs
  * 0.5 or more) and the atoms of the other groups are dropped. Groups with a
@@ -34,8 +38,8 @@ namespace Avogadro::Io {
  * are always kept. With "all" every atom of every group is read; bonds between
  * alternatives are never perceived.
  *
- * Displacement parameters are not stored, and occupancies are used only to
- * choose the major group.
+ * Displacement parameters are not stored. The occupancies also choose the major
+ * group.
  */
 class AVOGADROIO_EXPORT CifFormat : public FileFormat
 {

@@ -17,6 +17,7 @@
 #include <cmath>  // for floor()
 #include <functional>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -1007,14 +1008,17 @@ void removeIdentity(std::vector<SymmetryOperation>& ops)
 }
 
 // Add an atom of the given element at a cartesian position, with its isotope
-// (0 for the default).
+// (0 for the default) and its site occupancy (none if the molecule stores no
+// occupancies, so that it does not start to).
 void addImage(Molecule& mol, unsigned char atomicNum, unsigned short isotope,
-              const Vector3& position)
+              std::optional<double> occupancy, const Vector3& position)
 {
   Atom newAtom = mol.addAtom(atomicNum);
   newAtom.setPosition3d(position);
   if (isotope != 0)
     newAtom.setIsotope(isotope);
+  if (occupancy)
+    newAtom.setOccupancy(*occupancy);
 }
 
 // Remove every atom that is the image of an earlier atom of the same element
@@ -1080,6 +1084,7 @@ void fillWithTransforms(
 
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   Array<unsigned short> isotopes = mol.isotopes(); // may be empty
+  Array<double> occupancies = mol.occupancies();   // may be empty
   Array<Vector3> positions = mol.atomPositions3d();
   Index numAtoms = mol.atomCount();
 
@@ -1088,6 +1093,9 @@ void fillWithTransforms(
   for (Index i = 0; i < numAtoms; ++i) {
     unsigned char atomicNum = atomicNumbers[i];
     unsigned short isotope = i < isotopes.size() ? isotopes[i] : 0;
+    std::optional<double> occupancy;
+    if (!occupancies.empty())
+      occupancy = mol.occupancy(i);
     Vector3 pos = uc->toFractional(positions[i]);
 
     Array<Vector3> newAtoms = transformsOf(pos);
@@ -1116,7 +1124,7 @@ void fillWithTransforms(
         continue;
 
       // If we got this far, add the atom!
-      addImage(mol, atomicNum, isotope, newCandidate);
+      addImage(mol, atomicNum, isotope, occupancy, newCandidate);
     }
   }
 
@@ -1302,11 +1310,15 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
 
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   Array<unsigned short> isotopes = mol.isotopes(); // may be empty
+  Array<double> occupancies = mol.occupancies();   // may be empty
   Array<Vector3> positions = mol.atomPositions3d();
   Index numAtoms = mol.atomCount();
   for (Index i = 0; i < numAtoms; ++i) {
     unsigned char atomicNum = atomicNumbers[i];
     unsigned short isotope = i < isotopes.size() ? isotopes[i] : 0;
+    std::optional<double> occupancy;
+    if (!occupancies.empty())
+      occupancy = mol.occupancy(i);
     Vector3 pos = uc->toFractional(positions[i]);
 
     Array<Vector3> newAtoms;
@@ -1366,7 +1378,7 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
         continue;
 
       // If we got this far, add the atom!
-      addImage(mol, atomicNum, isotope, newCandidate);
+      addImage(mol, atomicNum, isotope, occupancy, newCandidate);
     }
   }
 }

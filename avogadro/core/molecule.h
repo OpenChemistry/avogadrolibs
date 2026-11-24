@@ -27,6 +27,7 @@
 
 #include <bitset>
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <list>
 #include <map>
@@ -273,6 +274,44 @@ public:
    * @return True on success, false otherwise.
    */
   bool setIsotope(Index atomId, unsigned short isotope);
+
+  /**
+   * @return an array of the crystallographic site occupancies of the atoms in
+   * the molecule. This is the fraction of the site the atom occupies (0 to 1,
+   * default 1), as in the CIF @c _atom_site_occupancy and the PDB occupancy
+   * field. It is not the molecular orbital occupation (see
+   * BasisSet::moOccupancy()). The array is empty unless some occupancy has
+   * been set.
+   */
+  Array<double>& occupancies();
+
+  /** \overload */
+  const Array<double>& occupancies() const;
+
+  /**
+   * Get the crystallographic site occupancy for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The occupancy of the atom indexed at @a atomId, or 1.0 if none has
+   * been set or @a atomId is invalid.
+   */
+  double occupancy(Index atomId) const;
+
+  /**
+   * Replace the current array of site occupancies. Values above 1 are kept as
+   * given (files round, e.g. 1.0001).
+   * @param occupancies The new array. Must be of length atomCount(), with
+   * every value finite and not negative.
+   * @return True on success, false (changing nothing) otherwise.
+   */
+  bool setOccupancies(const Core::Array<double>& occupancies);
+
+  /**
+   * Set the crystallographic site occupancy of a single atom.
+   * @param atomId The index of the atom to modify.
+   * @param occupancy The new occupancy, finite and not negative.
+   * @return True on success, false (changing nothing) otherwise.
+   */
+  bool setOccupancy(Index atomId, double occupancy);
 
   /** \returns a vector of colors for the atoms in the moleucle. */
   Array<Vector3ub>& colors();
@@ -1709,6 +1748,27 @@ inline bool Molecule::setIsotopes(const Core::Array<unsigned short>& isotopes)
 inline bool Molecule::setIsotope(Index atomId, unsigned short isotope)
 {
   return m_atomState.isotopes.set(atomId, isotope, atomCount(), 0);
+}
+
+inline double Molecule::occupancy(Index atomId) const
+{
+  return m_atomState.occupancies.value(atomId, 1.0);
+}
+
+inline bool Molecule::setOccupancies(const Core::Array<double>& occupancies)
+{
+  for (double value : occupancies) {
+    if (!std::isfinite(value) || value < 0.0)
+      return false;
+  }
+  return m_atomState.occupancies.setAll(occupancies, atomCount(), false);
+}
+
+inline bool Molecule::setOccupancy(Index atomId, double occupancy)
+{
+  if (!std::isfinite(occupancy) || occupancy < 0.0)
+    return false;
+  return m_atomState.occupancies.set(atomId, occupancy, atomCount(), 1.0);
 }
 
 inline const Molecule::ElementMask Molecule::elements() const

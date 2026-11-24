@@ -1635,3 +1635,90 @@ TEST(CjsonTest, invalidCubeStepsRejectTheCube)
     EXPECT_EQ(molecule.cubeCount(), static_cast<size_t>(0)) << member;
   }
 }
+
+namespace {
+std::string occupancyDocument(const std::string& occupancies)
+{
+  return R"({"chemicalJson": 1,
+  "atoms": {
+    "coords": { "3d": [ 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 2.0, 0.0, 0.0 ] },
+    "elements": { "number": [ 6, 6, 8 ] })" +
+         occupancies + "}}";
+}
+} // namespace
+
+TEST(CjsonTest, occupanciesRoundTrip)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(
+    occupancyDocument(R"(, "occupancies": [ 1.0, 0.25, 0.0 ])"), molecule))
+    << cjson.error();
+  ASSERT_EQ(molecule.atomCount(), 3);
+  EXPECT_EQ(molecule.occupancy(0), 1.0);
+  EXPECT_EQ(molecule.occupancy(1), 0.25);
+  EXPECT_EQ(molecule.occupancy(2), 0.0);
+
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  ASSERT_TRUE(root["atoms"].contains("occupancies"));
+  ASSERT_EQ(root["atoms"]["occupancies"].size(), 3u);
+
+  Molecule readBack;
+  ASSERT_TRUE(cjson.readString(output, readBack)) << cjson.error();
+  ASSERT_EQ(readBack.atomCount(), 3);
+  EXPECT_EQ(readBack.occupancy(0), 1.0);
+  EXPECT_EQ(readBack.occupancy(1), 0.25);
+  EXPECT_EQ(readBack.occupancy(2), 0.0);
+}
+
+TEST(CjsonTest, badOccupanciesAreIgnoredWhole)
+{
+  const char* const bad[] = {
+    R"(, "occupancies": [ 0.5, 0.5 ])",           // too short
+    R"(, "occupancies": [ 0.5, 0.5, 0.5, 0.5 ])", // too long
+    R"(, "occupancies": [ 0.5, "0.5", 0.5 ])",    // a string entry
+    R"(, "occupancies": [ 0.5, null, 0.5 ])",     // a null entry
+    R"(, "occupancies": [ 0.5, -0.5, 0.5 ])",     // negative
+    R"(, "occupancies": 0.5)",                    // not an array
+    R"(, "occupancies": [])",                     // empty
+  };
+  for (const char* occupancies : bad) {
+    SCOPED_TRACE(occupancies);
+    CjsonFormat cjson;
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(occupancyDocument(occupancies), molecule))
+      << cjson.error();
+    EXPECT_EQ(molecule.atomCount(), 3);
+    EXPECT_TRUE(molecule.occupancies().empty());
+    EXPECT_EQ(molecule.occupancy(0), 1.0);
+  }
+}
+
+TEST(CjsonTest, noOccupanciesWritesNoKey)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(occupancyDocument(""), molecule))
+    << cjson.error();
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  EXPECT_FALSE(root["atoms"].contains("occupancies"));
+}
+
+TEST(CjsonTest, shortOccupancyColumnWritesFullLength)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6).setPosition3d(Avogadro::Vector3(i, 0.0, 0.0));
+  ASSERT_TRUE(molecule.setOccupancy(0, 0.5)); // grows the column to 3
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  ASSERT_EQ(root["atoms"]["occupancies"].size(), 3u);
+  EXPECT_EQ(root["atoms"]["occupancies"][0].get<double>(), 0.5);
+  EXPECT_EQ(root["atoms"]["occupancies"][2].get<double>(), 1.0);
+}

@@ -83,6 +83,7 @@ struct AtomState
   Column<AtomHybridization> hybridizations;
   Column<signed char> formalCharges;
   Column<unsigned short> isotopes;
+  Column<double> occupancies; // crystallographic site occupancy, 0-1
   Column<Vector3ub> colors;
   Column<unsigned char> selection; // 0 = not selected, 1 = selected
   FrozenMaskColumn frozenMask;
@@ -106,6 +107,8 @@ struct AtomState
     f(hybridizations, NoFill(), others.hybridizations...);
     f(formalCharges, NoFill(), others.formalCharges...);
     f(isotopes, NoFill(), others.isotopes...);
+    // an atom with no stored occupancy fills the site completely
+    f(occupancies, 1.0, others.occupancies...);
     f(colors, ColorFill{ atomicNumbers }, others.colors...);
     f(selection, NoFill(), others.selection...);
     f(frozenMask, NoFill(), others.frozenMask...);

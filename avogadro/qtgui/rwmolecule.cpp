@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <set>
 
 #ifdef USE_SPGLIB
@@ -366,6 +367,45 @@ bool RWMolecule::setFormalCharge(Index atomId, signed char charge)
     },
     atomId, m_molecule.formalCharge(atomId), charge);
   comm->setText(tr("Change Atom Formal Charge"));
+  m_undoStack.push(comm);
+  return true;
+}
+
+bool RWMolecule::setOccupancy(Index atomId, double occupancy)
+{
+  if (atomId >= atomCount() || !std::isfinite(occupancy) || occupancy < 0.0)
+    return false;
+
+  // As for the 2D positions: the first edit of a short or empty column grows
+  // it to the atom count, so keep the whole array to let undo restore its
+  // shape (a molecule without occupancies must not seem to have them). The
+  // values come only from here, already validated.
+  const Array<double>& current = m_molecule.occupancies();
+  if (current.size() != atomCount()) {
+    Array<double> grown(current);
+    grown.resize(atomCount(), 1.0);
+    grown[atomId] = occupancy;
+    auto* comm = new SetArrayCommand<double>(
+      *this,
+      [](Molecule& mol, const Array<double>& values) {
+        mol.occupancies() = values;
+        // as for the isotope: nothing else refreshes a view of the occupancy
+        mol.emitChanged(Molecule::Atoms | Molecule::Properties);
+      },
+      current, grown);
+    comm->setText(tr("Change Atom Occupancy"));
+    m_undoStack.push(comm);
+    return true;
+  }
+
+  auto* comm = new SetEntryCommand<double>(
+    *this,
+    [](Molecule& mol, Index index, const double& value) {
+      mol.setOccupancy(index, value);
+      mol.emitChanged(Molecule::Atoms | Molecule::Properties);
+    },
+    atomId, m_molecule.occupancy(atomId), occupancy);
+  comm->setText(tr("Change Atom Occupancy"));
   m_undoStack.push(comm);
   return true;
 }
@@ -725,10 +765,13 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   beginMergeMode(undoText);
   // loop through and add the atoms
   Index offset = atomCount();
+  const bool hasOccupancies = !mol.occupancies().empty();
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
     AtomType new_atom = addAtom(atom.atomicNumber(), atom.position3d());
     new_atom.setFormalCharge(atom.formalCharge());
+    if (hasOccupancies)
+      new_atom.setOccupancy(atom.occupancy());
 
     setAtomSelected(atomCount() - 1, true);
   }

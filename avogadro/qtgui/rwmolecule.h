@@ -385,6 +385,22 @@ public:
   bool setIsotope(Index atomId, unsigned short isotope);
 
   /**
+   * Get the crystallographic site occupancy for the requested atom.
+   * @param atomId The index of the atom.
+   * @return The occupancy of the atom indexed at @a atomId, or 1.0 if none has
+   * been set or @a atomId is invalid.
+   */
+  double occupancy(Index atomId) const;
+
+  /**
+   * Set the crystallographic site occupancy of a single atom (undoable).
+   * @param atomId The index of the atom to modify.
+   * @param occupancy The new occupancy, finite and not negative.
+   * @return True on success, false (changing nothing) otherwise.
+   */
+  bool setOccupancy(Index atomId, double occupancy);
+
+  /**
    * Get the color for the requested atom.
    * @param atomId The index of the atom.
    * @return The color of the atom indexed at @a atomId, or
@@ -953,6 +969,11 @@ inline Core::AtomHybridization RWMolecule::hybridization(Index atomId) const
 inline signed char RWMolecule::formalCharge(Index atomId) const
 {
   return m_molecule.formalCharge(atomId);
+}
+
+inline double RWMolecule::occupancy(Index atomId) const
+{
+  return m_molecule.occupancy(atomId);
 }
 
 inline unsigned short RWMolecule::isotope(Index atomId) const
