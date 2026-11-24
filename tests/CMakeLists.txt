@@ -77,6 +77,11 @@ add_subdirectory(io)
 add_subdirectory(quantumio)
 if(USE_QT)
   add_subdirectory(qtgui)
+  # GLWidget lives in QtOpenGL, which is only built with USE_OPENGL. In a
+  # standalone build the target comes from the installed AvogadroLibs package.
+  if(TARGET Avogadro::QtOpenGL)
+    add_subdirectory(qtopengl)
+  endif()
   # The command-boundary tests link plugin targets directly, which only works
   # when they are static libraries built in this tree.
   if(BUILD_STATIC_PLUGINS AND USE_OPENGL AND NOT PROJECT_IS_TOP_LEVEL AND NOT EMSCRIPTEN)
