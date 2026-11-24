@@ -83,7 +83,7 @@ ConstraintsExtension::ConstraintsExtension(QObject* p) : ExtensionPlugin(p)
   QAction* action = new QAction(this);
   action->setEnabled(true);
   action->setText(tr("Constraints…"));
-  connect(action, SIGNAL(triggered()), SLOT(openDialog()));
+  connect(action, &QAction::triggered, this, &ConstraintsExtension::openDialog);
   m_actions.push_back(action);
 
   registerConstraintCommands();

@@ -25,13 +25,13 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
 
   connect(ui->comboType, &QComboBox::currentIndexChanged, this,
           &ConstraintsDialog::changeType);
-  connect(ui->okButton, &QPushButton::Clicked, this, 
+  connect(ui->okButton, &QPushButton::clicked, this,
           &ConstraintsDialog::acceptConstraints);
-  connect(ui->addConstraint, &QPushButton::clicked, this, 
+  connect(ui->addConstraint, &QPushButton::clicked, this,
           &ConstraintsDialog::addConstraint);
-  connect(ui->getConstraint, &QPushButton::clicked, this, 
+  connect(ui->getConstraint, &QPushButton::clicked, this,
           &ConstraintsDialog::getConstraint);
-  connect(ui->deleteConstraint,  &QPushButton::clicked, this,
+  connect(ui->deleteConstraint, &QPushButton::clicked, this,
           &ConstraintsDialog::deleteConstraint);
   connect(ui->deleteAllConstraints, &QPushButton::clicked, this,
           &ConstraintsDialog::deleteAllConstraints);
@@ -55,8 +55,7 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
   // TODO: Allow sorting the table
   // requires remapping
 
-  connect(view->selectionModel(),
-          &QItemSelectionModel::currentChanged, this,
+  connect(view->selectionModel(), &QItemSelectionModel::currentChanged, this,
           &ConstraintsDialog::highlightSelected);
 }
 
