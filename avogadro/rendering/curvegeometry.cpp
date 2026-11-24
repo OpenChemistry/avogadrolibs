@@ -11,8 +11,8 @@
 #include "visitor.h"
 
 namespace {
+#include "curves_vs.h"
 #include "cylinders_fs.h"
-#include "cylinders_vs.h"
 } // namespace
 #include "avogadrogl.h"
 
@@ -39,7 +39,7 @@ ShaderProgram& sharedProgram()
   if (curveProgram == nullptr) {
     curveVertexShader = new Shader;
     curveVertexShader->setType(Shader::Vertex);
-    curveVertexShader->setSource(cylinders_vs);
+    curveVertexShader->setSource(curves_vs);
     curveFragmentShader = new Shader;
     curveFragmentShader->setType(Shader::Fragment);
     curveFragmentShader->setSource(cylinders_fs);
