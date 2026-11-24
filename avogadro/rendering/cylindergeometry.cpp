@@ -6,7 +6,6 @@
 #include "cylindergeometry.h"
 
 #include "camera.h"
-#include "geometrytiming.h"
 #include "scene.h"
 #include "visitor.h"
 
@@ -27,12 +26,40 @@ namespace {
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <iostream>
+#include <type_traits>
+#include <vector>
 
 using std::cout;
 using std::endl;
 
 namespace Avogadro::Rendering {
+
+// m_cylinders is uploaded as the per-instance buffer, so the layout of
+// CylinderColor is a contract with cylinders_vs.glsl. The two colors are
+// bytes 28..33 and the shader reads them as two 4-byte aligned ubyte x 4
+// attributes at offsets 28 and 32.
+static_assert(std::is_standard_layout_v<CylinderColor>,
+              "CylinderColor is uploaded to the GPU as is");
+static_assert(sizeof(CylinderColor) == 36, "CylinderColor must be 36 bytes");
+static_assert(offsetof(CylinderColor, end1) == 0, "end1 offset");
+static_assert(offsetof(CylinderColor, end2) == 12, "end2 offset");
+static_assert(offsetof(CylinderColor, radius) == 24, "radius offset");
+static_assert(offsetof(CylinderColor, color) == 28, "color offset");
+static_assert(offsetof(CylinderColor, color2) == 31, "color2 offset");
+
+namespace {
+constexpr unsigned int tubeSides = 8;
+constexpr unsigned int tubeIndexCount = 6 * tubeSides;
+constexpr int end1Offset = static_cast<int>(offsetof(CylinderColor, end1));
+constexpr int end2Offset = static_cast<int>(offsetof(CylinderColor, end2));
+constexpr int radiusOffset = static_cast<int>(offsetof(CylinderColor, radius));
+constexpr int colorsAOffset = static_cast<int>(offsetof(CylinderColor, color));
+constexpr int colorsBOffset = colorsAOffset + 4;
+static_assert(colorsBOffset + 4 <= static_cast<int>(sizeof(CylinderColor)),
+              "colorsB must stay inside one instance");
+} // namespace
 
 class CylinderGeometry::Private
 {
@@ -47,8 +74,7 @@ public:
   inline static Shader* fragmentShader = nullptr;
   inline static ShaderProgram* program = nullptr;
 
-  size_t numberOfVertices;
-  size_t numberOfIndices;
+  size_t numberOfInstances = 0;
 };
 
 CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
@@ -73,6 +99,9 @@ void CylinderGeometry::accept(Visitor& visitor)
   visitor.visit(*this);
 }
 
+// render() no longer calls this: the tube is built in cylinders_vs.glsl. This
+// is the CPU reference for that construction (and what tests and exporters
+// can still use), so keep the two in step.
 void CylinderGeometry::tessellate(std::vector<ColorNormalVertex>& vertices,
                                   std::vector<unsigned int>& indices) const
 {
@@ -167,48 +196,80 @@ void CylinderGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    std::vector<ColorNormalVertex> cylinderVertices;
-    std::vector<unsigned int> cylinderIndices;
-    {
-      GeometryTiming::Scope timer;
-      tessellate(cylinderVertices, cylinderIndices);
-    }
+    // The per-instance data is m_cylinders itself: no CPU vertex build.
+    if (!d->vbo.upload(m_cylinders, BufferObject::ArrayBuffer))
+      cout << d->vbo.error() << '\n';
 
-    d->vbo.upload(cylinderVertices, BufferObject::ArrayBuffer);
-    d->ibo.upload(cylinderIndices, BufferObject::ElementArrayBuffer);
+    // Every cylinder draws the same 8-sided tube, so this never changes.
+    if (!d->ibo.ready()) {
+      std::vector<unsigned int> tubeIndices;
+      tubeIndices.reserve(tubeIndexCount);
+      for (unsigned int j = 0; j < tubeSides; ++j) {
+        unsigned int r1 = j + j;
+        unsigned int r2 = (j != 0 ? r1 : tubeSides + tubeSides) - 2;
+        tubeIndices.push_back(r1);
+        tubeIndices.push_back(r1 + 1);
+        tubeIndices.push_back(r2);
+
+        tubeIndices.push_back(r2);
+        tubeIndices.push_back(r1 + 1);
+        tubeIndices.push_back(r2 + 1);
+      }
+      if (!d->ibo.upload(tubeIndices, BufferObject::ElementArrayBuffer))
+        cout << d->ibo.error() << '\n';
+    }
 
     // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
-    d->vao.bind();
-    d->vbo.bind();
-    d->ibo.bind();
+    // Check bind() return values - if binding fails (e.g., no GL context),
+    // early-return without clearing m_dirty so geometry will be retried later.
+    if (!d->vao.bind()) {
+      cout << "CylinderGeometry: VAO bind failed" << '\n';
+      return;
+    }
+    if (!d->vbo.bind()) {
+      cout << "CylinderGeometry: VBO bind failed" << '\n';
+      d->vao.release();
+      return;
+    }
+    if (!d->ibo.bind()) {
+      cout << "CylinderGeometry: IBO bind failed" << '\n';
+      d->vao.release();
+      return;
+    }
 
+    // All attributes advance once per cylinder (instance).
     ShaderProgram* program = d->program;
-    if (!program->enableAttributeArray("vertex"))
-      cout << program->error() << '\n';
-    if (!program->useAttributeArray("vertex", ColorNormalVertex::vertexOffset(),
-                                    sizeof(ColorNormalVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-      cout << program->error() << '\n';
-    }
-    if (!program->enableAttributeArray("color"))
-      cout << program->error() << '\n';
-    if (!program->useAttributeArray("color", ColorNormalVertex::colorOffset(),
-                                    sizeof(ColorNormalVertex), UCharType, 3,
-                                    ShaderProgram::Normalize)) {
-      cout << program->error() << '\n';
-    }
-    if (!program->enableAttributeArray("normal"))
-      cout << program->error() << '\n';
-    if (!program->useAttributeArray("normal", ColorNormalVertex::normalOffset(),
-                                    sizeof(ColorNormalVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
-      cout << program->error() << '\n';
+    const auto stride = sizeof(CylinderColor);
+    struct Attribute
+    {
+      const char* name;
+      int offset;
+      Avogadro::Type type;
+      int size;
+      ShaderProgram::NormalizeOption normalize;
+    };
+    const Attribute attributes[] = {
+      { "end1", end1Offset, FloatType, 3, ShaderProgram::NoNormalize },
+      { "end2", end2Offset, FloatType, 3, ShaderProgram::NoNormalize },
+      { "cylRadius", radiusOffset, FloatType, 1, ShaderProgram::NoNormalize },
+      { "colorsA", colorsAOffset, UCharType, 4, ShaderProgram::Normalize },
+      { "colorsB", colorsBOffset, UCharType, 4, ShaderProgram::Normalize }
+    };
+    for (const Attribute& attribute : attributes) {
+      if (!program->enableAttributeArray(attribute.name))
+        cout << program->error() << '\n';
+      if (!program->useAttributeArray(attribute.name, attribute.offset, stride,
+                                      attribute.type, attribute.size,
+                                      attribute.normalize)) {
+        cout << program->error() << '\n';
+      }
+      if (!program->setAttributeDivisor(attribute.name, 1))
+        cout << program->error() << '\n';
     }
 
     d->vao.release();
 
-    d->numberOfVertices = cylinderVertices.size();
-    d->numberOfIndices = cylinderIndices.size();
+    d->numberOfInstances = std::min(m_indices.size(), m_cylinders.size());
 
     m_dirty = false;
   }
@@ -226,7 +287,11 @@ void CylinderGeometry::render(const Camera& camera)
     cout << d->program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
-  d->vao.bind();
+  // If bind fails (e.g., no GL context), skip rendering to avoid GL errors.
+  if (!d->vao.bind()) {
+    d->program->release();
+    return;
+  }
 
   // Set up our uniforms (model-view and projection matrices right now).
   if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
@@ -244,9 +309,11 @@ void CylinderGeometry::render(const Camera& camera)
     std::cout << d->program->error() << '\n';
 
   // Render the loaded cylinders using the shader and VAO.
-  glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
-                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      reinterpret_cast<const GLvoid*>(0));
+  if (d->numberOfInstances > 0) {
+    glDrawElementsInstanced(GL_TRIANGLES, tubeIndexCount, GL_UNSIGNED_INT,
+                            nullptr,
+                            static_cast<GLsizei>(d->numberOfInstances));
+  }
 
   d->vao.release();
   d->program->release();
