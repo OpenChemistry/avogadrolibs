@@ -55,6 +55,9 @@ inline TimingStats computeStats(std::vector<double> samplesMs)
 
 inline bool parseUnsigned(const std::string& text, std::size_t& value)
 {
+  // stoull accepts "-1", whitespace and '+'; require a leading digit.
+  if (text.empty() || text[0] < '0' || text[0] > '9')
+    return false;
   try {
     std::size_t consumed = 0;
     const auto parsed = std::stoull(text, &consumed);

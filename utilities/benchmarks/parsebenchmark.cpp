@@ -121,7 +121,8 @@ void printUsage(const char* argv0)
     << "  --traj-frames N    Trajectory frames (default 500)\n"
     << "  --cube-points N    Cube grid points per axis (default 200)\n"
     << "  --file PATH        Extra input (.xyz, .fchk/.fch, .cube/.cub)\n"
-    << "  --work-dir PATH    Directory for synthetic files\n"
+    << "  --work-dir PATH    New subdirectory of PATH for synthetic\n"
+    << "                     files (default: system temp dir)\n"
     << "  --keep-files       Do not delete synthetic files\n"
     << "  --help             Show this help\n";
 }
@@ -199,8 +200,7 @@ bool parseArgs(int argc, char** argv, Options& o)
     return false;
   }
   if (o.workDir.empty())
-    o.workDir =
-      (fs::temp_directory_path() / "avogadro-parsebenchmark").string();
+    o.workDir = fs::temp_directory_path().string();
   return true;
 }
 
@@ -288,10 +288,11 @@ std::string makeCube(std::size_t n)
   }
   for (std::size_t i = 0; i < atoms; ++i) {
     const auto e = static_cast<std::size_t>(rng.next() % 4);
+    const double x = rng.range(0.0, 8.0);
+    const double y = rng.range(0.0, 8.0);
+    const double z = rng.range(0.0, 8.0);
     std::snprintf(line, sizeof(line), "%5d %12.6f %12.6f %12.6f %12.6f\n",
-                  kNumbers[e], static_cast<double>(kNumbers[e]),
-                  rng.range(0.0, 8.0), rng.range(0.0, 8.0),
-                  rng.range(0.0, 8.0));
+                  kNumbers[e], static_cast<double>(kNumbers[e]), x, y, z);
     out += line;
   }
   for (std::size_t i = 0; i < n * n; ++i) {
@@ -319,11 +320,27 @@ bool readFile(const fs::path& path, std::string& text)
 // Writes synthetic text to the work directory, then reads it back so the
 // benchmark input is exactly what is on disk.
 bool stageSynthetic(const Options& o, const std::string& name,
-                    std::string& text, std::vector<fs::path>& created)
+                    std::string& text, std::vector<fs::path>& created,
+                    fs::path& runDir)
 {
-  std::error_code ec;
-  fs::create_directories(o.workDir, ec);
-  const fs::path path = fs::path(o.workDir) / name;
+  if (runDir.empty()) {
+    // Create a fresh directory that this run exclusively owns.
+    std::error_code ec;
+    const fs::path base(o.workDir);
+    fs::create_directories(base, ec);
+    for (std::size_t n = 0; n < 10000; ++n) {
+      const fs::path candidate =
+        base / ("avogadro-parsebenchmark-" + std::to_string(n));
+      ec.clear();
+      if (fs::create_directory(candidate, ec) && !ec) {
+        runDir = candidate;
+        break;
+      }
+    }
+    if (runDir.empty())
+      return false;
+  }
+  const fs::path path = runDir / name;
   {
     std::ofstream out(path, std::ios::out | std::ios::binary);
     if (!out)
@@ -537,13 +554,16 @@ int main(int argc, char** argv)
 
   std::vector<Input> inputs;
   std::vector<fs::path> created;
+  fs::path runDir;
   std::vector<std::string> skipped;
   int exitCode = 0;
 
   auto addSynthetic = [&](const char* caseName, const std::string& name,
                           Kind kind, std::string text) {
-    if (!stageSynthetic(o, name, text, created)) {
-      std::cerr << "Unable to stage " << name << " in " << o.workDir << "\n";
+    if (!stageSynthetic(o, name, text, created, runDir)) {
+      std::cerr << "Unable to stage " << name << " in "
+                << (runDir.empty() ? fs::path(o.workDir) : runDir).string()
+                << "\n";
       exitCode = 3;
       return;
     }
@@ -696,9 +716,10 @@ int main(int argc, char** argv)
     std::error_code ec;
     for (const auto& p : created)
       fs::remove(p, ec);
-    fs::remove(o.workDir, ec); // only succeeds if empty
-  } else if (!created.empty()) {
-    std::cout << "\nKept synthetic files in " << o.workDir << "\n";
+    if (!runDir.empty())
+      fs::remove(runDir, ec); // only succeeds if empty
+  } else if (!runDir.empty()) {
+    std::cout << "\nKept synthetic files in " << runDir.string() << "\n";
   }
   return exitCode;
 }
