@@ -17,6 +17,7 @@ target_sources(Headers PUBLIC
   FILES
     angletools.h
     angleiterator.h
+    atomtuple.h
   aromaticity.h
     array.h
     avogadrocore.h

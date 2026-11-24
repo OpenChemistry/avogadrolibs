@@ -6,6 +6,7 @@ set(tests
   Array
   Atom
   AtomState
+  AtomTuple
   AtomTyper
   AtomUtilities
   BasisSet
