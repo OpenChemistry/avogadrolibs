@@ -147,7 +147,7 @@ foreach(plugin ${testNames})
   elseif(plugin STREQUAL "OpenBabel")
     set(filter "OpenBabelCommandTest.*")
   elseif(plugin STREQUAL "PropertyTables")
-    set(filter "PropertyTablesChargeTest.*")
+    set(filter "PropertyTables*")
   elseif(plugin STREQUAL "PlayerTool")
     # playertooltest.cpp also defines PlayerToolSourceTest.
     set(filter "PlayerToolCommandTest.*:PlayerToolSourceTest.*")
