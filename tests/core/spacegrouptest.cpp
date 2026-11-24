@@ -1722,3 +1722,29 @@ TEST(SpaceGroupTest, fillKeepsIsotopes)
   for (Avogadro::Index i = 0; i < plain.atomCount(); ++i)
     EXPECT_EQ(plain.isotope(i), 0);
 }
+
+TEST(SpaceGroupTest, fillKeepsOccupancy)
+{
+  // Every image of a half-occupied atom is half occupied, in the fill of a
+  // table entry and in the boundary copies
+  Molecule mol = triclinicWithAtom(0.1, 0.2, 0.3, 1);
+  mol.setOccupancy(0, 0.5);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(mol, bodyCentredInversion,
+                                                      0.25, true, false));
+  ASSERT_EQ(mol.atomCount(), 4);
+  for (Avogadro::Index i = 0; i < mol.atomCount(); ++i)
+    EXPECT_EQ(mol.occupancy(i), 0.5) << i;
+
+  Molecule edge = triclinicWithAtom(0.0, 0.0, 0.0, 1);
+  edge.setOccupancy(0, 0.5);
+  SpaceGroups::fillTranslationalCopies(edge, 0.25);
+  ASSERT_GT(edge.atomCount(), 1);
+  for (Avogadro::Index i = 0; i < edge.atomCount(); ++i)
+    EXPECT_EQ(edge.occupancy(i), 0.5) << i;
+
+  // No occupancy column at all stays that way
+  Molecule plain = triclinicWithAtom(0.1, 0.2, 0.3, 1);
+  ASSERT_TRUE(SpaceGroups::fillUnitCellFromOperations(
+    plain, bodyCentredInversion, 0.25, true, false));
+  EXPECT_TRUE(plain.occupancies().empty());
+}

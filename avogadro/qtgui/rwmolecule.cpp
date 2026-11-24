@@ -742,10 +742,13 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   beginMergeMode(undoText);
   // loop through and add the atoms
   Index offset = atomCount();
+  const bool hasOccupancies = !mol.occupancies().empty();
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
     AtomType new_atom = addAtom(atom.atomicNumber(), atom.position3d());
     new_atom.setFormalCharge(atom.formalCharge());
+    if (hasOccupancies)
+      new_atom.setOccupancy(atom.occupancy());
 
     setAtomSelected(atomCount() - 1, true);
   }

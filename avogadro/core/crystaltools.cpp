@@ -909,6 +909,9 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
   const Index numAtoms = molecule.atomCount();
   const Array<Vector3> atoms = molecule.atomPositions3d();
   const Array<unsigned char> atomicNums = molecule.atomicNumbers();
+  // Only carry site occupancies into the copies if there are any to carry
+  const bool hasOccupancies = !molecule.occupancies().empty();
+  const Array<double> occupancies = molecule.occupancies();
 
   // Fractional coordinates of the original atoms, used to decide which
   // translations of each atom land inside the requested range.
@@ -989,6 +992,9 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
           } else {
             Atom newAtom = molecule.addAtom(atomicNums.at(i));
             newAtom.setPosition3d(newPos);
+            if (hasOccupancies)
+              newAtom.setOccupancy(i < occupancies.size() ? occupancies[i]
+                                                          : 1.0);
             copyMap[i] = newAtom.index();
             grid.insert(newPos, newAtom.index());
           }

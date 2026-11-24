@@ -39,6 +39,9 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
 {
   auto copy = std::make_unique<QtGui::Molecule>();
 
+  // only carry site occupancies if the source has them
+  const bool hasOccupancies = !mol.occupancies().empty();
+
   // MaxIndex marks an atom that was not copied
   std::vector<Index> atomIndex(mol.atomCount(), MaxIndex);
   for (Index i = 0; i < mol.atomCount(); ++i) {
@@ -48,6 +51,8 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
     a.setPosition3d(mol.atomPosition3d(i));
     a.setFormalCharge(mol.formalCharge(i));
     a.setIsotope(mol.isotope(i));
+    if (hasOccupancies)
+      a.setOccupancy(mol.occupancy(i));
     const std::string label = mol.atomLabel(i);
     if (!label.empty())
       copy->setAtomLabel(a.index(), label);
