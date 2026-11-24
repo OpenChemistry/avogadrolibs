@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: _avogadro-de\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-22 23:47+0000\n"
+"PO-Revision-Date: 2026-11-25 08:05+0000\n"
 "Last-Translator: Norwid Behrnd <nbehrnd@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/de/>\n"
@@ -2722,7 +2722,7 @@ msgstr ""
 
 #: qtplugins/applycolors/applycolors.cpp:909
 msgid "Molecule does not have 3D coordinates."
-msgstr ""
+msgstr "Das Molekül weist keine 3D-Koordinaten auf."
 
 #: qtplugins/applycolors/applycolors.cpp:980
 #, qt-format
@@ -3325,7 +3325,7 @@ msgstr "Der Wert muss ein Winkel zwischen 0 bis 180 Grad sein."
 #. i18n: ectx: property (windowTitle), widget (QDialog, Avogadro::QtPlugins::ConstraintsDialog)
 #: qtplugins/constraints/constraintsextension.h:33:226
 msgid "Constraints"
-msgstr "Zwänge"
+msgstr "Nebenbedingungen"
 
 #: qtplugins/constraints/constraintsextension.h:37
 msgid "Set constraints for geometry optimizations"
@@ -3572,13 +3572,15 @@ msgstr "Turbomole-Format"
 #: qtplugins/copypaste/copyasdialog.cpp:27
 #: qtplugins/copypaste/copypaste.cpp:123
 msgid "Copy As"
-msgstr "Kopieren als"
+msgstr "Kopieren &als"
 
 #: qtplugins/copypaste/copyasdialog.cpp:30
 msgid ""
 "Copy the molecule (or the selected atoms) to the clipboard as text in this "
 "format:"
 msgstr ""
+"Kopiere das Molekül (oder die ausgewählten Atome) in die Zwischenablage als "
+"Text in einem dieser Formate:"
 
 #: qtplugins/copypaste/copyasdialog.cpp:37
 msgid "Clipboard format"
@@ -3731,9 +3733,8 @@ msgstr "EWALD"
 #. i18n: ectx: property (text), item, widget (QComboBox, waterPotentialCombo)
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:357
 #: qtplugins/cp2kinput/cp2kinputdialog.cpp:392:1047
-#, fuzzy
 msgid "NONE"
-msgstr "Keine"
+msgstr "Kein"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:333
 #. i18n: ectx: property (text), item, widget (QComboBox, nonBondedMethodCombo)
@@ -4268,7 +4269,7 @@ msgstr "Kräfte"
 #: qtplugins/forcefield/forcefield.cpp:104
 #: qtplugins/forcefield/forcefield.cpp:1519
 msgid "Energies (All Conformers)"
-msgstr "Energie (Alle Konformere)"
+msgstr "Energie (alle Konformere)"
 
 #: qtplugins/forcefield/forcefield.cpp:112
 #: qtplugins/forcefield/forcefield.cpp:1518
@@ -5986,7 +5987,7 @@ msgstr "Mit OpenBabel-Dienstprogrammen interagieren."
 
 #: qtplugins/openmminput/openmminput.cpp:30
 msgid "&OpenMM Script…"
-msgstr "&ÖffneMM-Skript…"
+msgstr "&OpenMM-Skript…"
 
 #: qtplugins/openmminput/openmminput.h:31
 msgid "OpenMM input"
@@ -8881,7 +8882,7 @@ msgstr "Distanztoleranz:"
 #. i18n: file: qtplugins/bonding/bondingdialog.ui:30
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 msgid "Minimum Distance:"
-msgstr "Minimale Distanz:"
+msgstr "Minimaler Abstand:"
 
 #. i18n: file: qtplugins/configurepython/condadialog.ui:29
 #. i18n: ectx: property (text), widget (QLabel, textLabel)
@@ -8947,7 +8948,7 @@ msgstr "Optionen"
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:206
 #. i18n: ectx: property (text), widget (QPushButton, getConstraint)
 msgid "Get Constraint"
-msgstr "Zwang erhalten"
+msgstr "Bedingung beibehalten"
 
 #. i18n: file: qtplugins/constraints/constraintsdialog.ui:225
 #. i18n: ectx: property (text), widget (QPushButton, deleteConstraint)
@@ -9251,17 +9252,17 @@ msgstr "Maximum"
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:48
 #. i18n: ectx: property (text), widget (QLabel, aRepeatLabel)
 msgid "A range:"
-msgstr ""
+msgstr "A-Intervall:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:93
 #. i18n: ectx: property (text), widget (QLabel, bRepeatLabel)
 msgid "B range:"
-msgstr ""
+msgstr "B-Intervall:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:138
 #. i18n: ectx: property (text), widget (QLabel, cRepeatLabel)
 msgid "C range:"
-msgstr ""
+msgstr "C-Intervall:"
 
 #. i18n: file: qtplugins/crystal/supercelldialog.ui:183
 #. i18n: ectx: property (text), widget (QCheckBox, periodicBondsCheckBox)
@@ -9282,6 +9283,8 @@ msgid ""
 "Whole-number ranges build a supercell; fractional ranges keep the original "
 "cell and pack copies around it."
 msgstr ""
+"Ganzzahlige Intervalle erzeugen eine Superzelle; gebrochene Intervalle "
+"erhalten die originale Zelle und setzen Kopien um diese herum."
 
 #. i18n: file: qtplugins/crystal/unitcelldialog.ui:27
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -11797,7 +11800,7 @@ msgstr "Skalierungsfaktor:"
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:42
 #. i18n: ectx: property (toolTip), widget (QDoubleSpinBox, scaleSpinBox)
 msgid "Multiplier applied to the normal mode displacements."
-msgstr ""
+msgstr "Multiplikator, der auf die Auslenkung der Normalmoden angewandt wird."
 
 #. i18n: file: qtplugins/vibrations/displacementdialog.ui:64
 #. i18n: ectx: property (text), widget (QLabel, countLabel)
@@ -11974,6 +11977,13 @@ msgid ""
 "p><p>If this is set to 3, the material will be periodic along the A, B, and "
 "C vectors of the crystal.</p><p><br/></p></body></html>"
 msgstr ""
+"<html><head/><body><p>Die Anzahl der periodischen Dimensionen.</p><p><br/></"
+"p><p>Wenn diese 1 ist, wird das Material einzig entlang des A-Vektoren des "
+"Kristalls periodisch sein.</p><p><br/></p><p>Wenn diese 2 ist, wird das "
+"Material sowohl entlang des A-Vektoren als auch entlang des B-Vektoren des "
+"Kristalls periodisch sein.</p><p><br/></p><p>Wenn diese 3 ist, wird das "
+"Material entlang der Vektoren A, B und C des Kristalls periodisch sein.</p>"
+"<p><br/></p></body></html>"
 
 #. i18n: file: qtplugins/yaehmop/banddialog.ui:226
 #. i18n: ectx: property (text), widget (QLabel, label_3)
