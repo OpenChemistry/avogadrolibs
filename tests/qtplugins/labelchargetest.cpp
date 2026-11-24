@@ -211,6 +211,27 @@ TEST_F(LabelChargeTest, processDoesNotCalculateCharges)
   EXPECT_EQ(changed.count(), 1);
 }
 
+TEST_F(LabelChargeTest, computingPicksTheRecommendedModel)
+{
+  auto& manager = Avogadro::Calc::ChargeManager::instance();
+  // The fake model is installed next to the built-in EEQ model.
+  const auto available = manager.identifiersForMolecule(*m_harness.molecule());
+  ASSERT_EQ(available.count("eeq"), 1u);
+  ASSERT_EQ(available.count(kModelId), 1u);
+  const std::string expected = manager.recommendedModel(*m_harness.molecule());
+  EXPECT_EQ(expected, kModelId);
+
+  Label label;
+  label.setEnabled(true);
+  process(label);
+  QTest::qWait(kSettle);
+
+  const auto types = m_harness.molecule()->partialChargeTypes();
+  ASSERT_EQ(types.size(), 1u);
+  EXPECT_EQ(*types.begin(), expected);
+  EXPECT_EQ(CountingModel::calls, 1);
+}
+
 TEST_F(LabelChargeTest, chargesAreRecalculatedAfterAnEditKeepingAtomCount)
 {
   Label label;
