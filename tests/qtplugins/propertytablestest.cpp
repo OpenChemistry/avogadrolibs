@@ -257,3 +257,37 @@ TEST(PropertyTablesLifetimeTest, ViewRepaintsAfterMoleculeDestruction)
 
   Avogadro::Calc::ChargeManager::unregisterModel("lifetimefake");
 }
+
+namespace {
+
+// Sorts before every real identifier, and is none of the preferred ones.
+class FirstChargeModel : public LifetimeChargeModel
+{
+public:
+  FirstChargeModel* newInstance() const override
+  {
+    return new FirstChargeModel;
+  }
+  std::string identifier() const override { return "aaafake"; }
+  std::string name() const override { return "AaaFake"; }
+};
+
+} // namespace
+
+TEST(PropertyTablesChargeTest, HeaderNamesTheFallbackChargeType)
+{
+  Avogadro::Calc::ChargeManager::registerModel(new FirstChargeModel);
+
+  Molecule mol;
+  mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addAtom(1);
+
+  // No charge type chosen and none stored: the header picks one itself.
+  PropertyModel model(PropertyType::AtomType);
+  model.setMolecule(&mol);
+  const QString header = model.headerData(3, Qt::Horizontal).toString();
+  EXPECT_TRUE(header.startsWith("aaafake ")) << header.toStdString();
+
+  Avogadro::Calc::ChargeManager::unregisterModel("aaafake");
+}

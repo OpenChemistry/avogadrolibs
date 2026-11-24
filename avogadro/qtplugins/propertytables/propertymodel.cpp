@@ -277,7 +277,7 @@ QString partialChargeType(Molecule* molecule)
       else if (options.find("gasteiger") != options.end())
         type = "gasteiger";
       else
-        type = *options.begin()->c_str();
+        type = QString::fromStdString(*options.begin());
     }
   }
 
