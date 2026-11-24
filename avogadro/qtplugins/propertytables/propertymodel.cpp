@@ -383,32 +383,12 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
 
 QString partialChargeType(Molecule* molecule)
 {
-  QString type;
+  // The dialog can outlive the molecule, and its header still asks.
+  if (molecule == nullptr)
+    return QString();
 
-  std::set<std::string> types = molecule->partialChargeTypes();
-
-  if (!types.empty()) {
-    type = QString(types.cbegin()->c_str());
-  } else {
-    // find something
-    const auto options =
-      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
-    if (!options.empty()) {
-      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
-      if (options.find("GFN2") != options.end())
-        type = "GFN2";
-      else if (options.find("am1bcc") != options.end())
-        type = "am1bcc";
-      else if (options.find("mmff94") != options.end())
-        type = "mmff94";
-      else if (options.find("gasteiger") != options.end())
-        type = "gasteiger";
-      else
-        type = *options.begin()->c_str();
-    }
-  }
-
-  return type;
+  return QString::fromStdString(
+    Calc::ChargeManager::instance().recommendedModel(*molecule));
 }
 
 QString formatChargeType(QString type)
@@ -452,6 +432,9 @@ QString formatChargeType(QString type)
 // the charge manager. A failed calculation returns fewer rows than atoms.
 MatrixX partialCharges(Molecule* molecule, const QString& overrideType)
 {
+  if (molecule == nullptr)
+    return MatrixX();
+
   std::string type = overrideType.isEmpty()
                        ? partialChargeType(molecule).toStdString()
                        : overrideType.toStdString();
@@ -468,6 +451,9 @@ MatrixX partialCharges(Molecule* molecule, const QString& overrideType)
 // the molecule or the charge type changes.
 QString PropertyModel::partialCharge(int atom) const
 {
+  if (m_molecule == nullptr)
+    return QString();
+
   if (!m_chargeCache)
     m_chargeCache = partialCharges(m_molecule, m_chargeType);
   const MatrixX& charges = *m_chargeCache;
@@ -1691,7 +1677,7 @@ Core::Angle PropertyModel::getAngle(unsigned int angle) const
 
 Real PropertyModel::getAngleValue(unsigned int angle) const
 {
-  if (angle >= m_angles.size())
+  if (m_molecule == nullptr || angle >= m_angles.size())
     return 0.0;
 
   auto a = m_angles[angle];
@@ -1714,7 +1700,7 @@ Core::Dihedral PropertyModel::getTorsion(unsigned int torsion) const
 
 Real PropertyModel::getTorsionValue(unsigned int torsion) const
 {
-  if (torsion >= m_torsions.size())
+  if (m_molecule == nullptr || torsion >= m_torsions.size())
     return 0.0;
 
   auto t = m_torsions[torsion];

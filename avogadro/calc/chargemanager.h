@@ -95,11 +95,20 @@ public:
     const Core::Molecule& molecule) const;
 
   /**
-   * @brief Get a recommended model for this molecule.
+   * @brief Get the default charge model for this molecule.
    *
-   * This returns the identifier for a model that works,
-   * given the charge, unit cell, spin states, etc.
-   * @return The recommended model identifier
+   * In order of preference:
+   *  1. the first charge type stored in the molecule (read from a file, or
+   *     computed earlier)
+   *  2. the first compatible model that is not a built-in method, i.e.,
+   *     installed by a user
+   *  3. the built-in methods, eem > mmff94 > gasteiger > eeq
+   *     (compared without regard to case)
+   *
+   * This never computes charges, so it is cheap enough to call while
+   * rebuilding a scene.
+   * @return The identifier as spelled by the molecule or the registered
+   *         model, or an empty string if nothing is available
    */
   std::string recommendedModel(const Core::Molecule& molecule) const;
 
