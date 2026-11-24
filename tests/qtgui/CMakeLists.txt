@@ -45,7 +45,11 @@ set(tests
 
 # GLWidget lives in QtOpenGL, which is only built with USE_OPENGL.
 if(TARGET Avogadro::QtOpenGL)
-  list(APPEND tests GLWidgetMolecule GLWidgetRenderImage ImageSizeDialog)
+  list(APPEND tests GLWidgetMolecule ImageSizeDialog)
+  # On WASM, GLWidget's makeCurrent(), doneCurrent() and context() are private.
+  if(NOT EMSCRIPTEN)
+    list(APPEND tests GLWidgetRenderImage)
+  endif()
   set(QtOpenGLLink Avogadro::QtOpenGL)
 endif()
 
