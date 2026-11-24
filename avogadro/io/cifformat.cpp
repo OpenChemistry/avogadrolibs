@@ -355,7 +355,7 @@ void readSites(cif::Block& block, CifData& data)
     // a missing or unreadable occupancy counts as a full one
     if (row.has(8)) {
       const std::optional<double> occupancy = parseCifNumber(row[8]);
-      if (occupancy)
+      if (occupancy && std::isfinite(*occupancy) && *occupancy >= 0.0)
         site.occupancy = *occupancy;
     }
 
@@ -422,9 +422,10 @@ bool areAlternatives(const Site& a, const Site& b)
 }
 
 // Which sites to keep when only the major configuration of each disorder
-// assembly is read. Avogadro stores no occupancy per atom yet, so keeping every
-// group would put all the alternatives on the same atoms (six Cl on one carbon
-// for a CHCl3 split over two groups). Within an assembly the group with the
+// assembly is read. Avogadro stores an occupancy per atom but not the disorder
+// groups, so keeping every group would put all the alternatives on the same
+// atoms (six Cl on one carbon for a CHCl3 split over two groups) with nothing
+// to say which belong together. Within an assembly the group with the
 // highest mean occupancy is kept, the first one in the file on a tie. The only
 // group of an assembly is kept only at a mean occupancy of 0.5 or more,
 // otherwise it is the minor part of a disorder whose other part is labeled
@@ -600,6 +601,15 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
   Core::Molecule& mol = molecule;
   mol.setUnitCell(cell.release());
   std::map<std::string, Index> indexOfLabel;
+  // The site occupancy is stored on every atom, but only if some site is not a
+  // full one, so an ordinary file does not start to write occupancies.
+  Core::Array<double> occupancies;
+  bool anyPartialOccupancy = false;
+  for (std::size_t i = 0; i < sites.size(); ++i) {
+    occupancies.push_back(sites[i].occupancy);
+    if (sites[i].occupancy != 1.0)
+      anyPartialOccupancy = true;
+  }
   for (std::size_t i = 0; i < sites.size(); ++i) {
     Core::Atom atom = mol.addAtom(sites[i].atomicNumber);
     atom.setPosition3d(positions[i]);
@@ -608,6 +618,8 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     mol.setAtomLabel(atom.index(), sites[i].label);
     indexOfLabel.emplace(sites[i].label, atom.index());
   }
+  if (anyPartialOccupancy)
+    mol.setOccupancies(occupancies);
   if (!data.name.empty())
     mol.setData("name", data.name);
 
@@ -790,9 +802,13 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
       block.init_loop("_space_group_symop_", { "id", "operation_xyz" });
     operations.add_row({ "1", "x,y,z" });
 
-    cif::Loop& sites =
-      block.init_loop("_atom_site_", { "label", "type_symbol", "fract_x",
-                                       "fract_y", "fract_z" });
+    // The occupancy column is only written for a molecule that has them
+    const bool writeOccupancy = !source->occupancies().empty();
+    std::vector<std::string> siteTags = { "label", "type_symbol", "fract_x",
+                                          "fract_y", "fract_z" };
+    if (writeOccupancy)
+      siteTags.push_back("occupancy");
+    cif::Loop& sites = block.init_loop("_atom_site_", siteTags);
     const std::vector<std::string> labels = uniqueLabels(*source);
     for (std::size_t i = 0; i < source->atomCount(); ++i) {
       const Vector3 fractional = cell->toFractional(source->atomPosition3d(i));
@@ -803,10 +819,14 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
         symbol = "D";
       else if (source->atomicNumber(i) == 1 && source->isotope(i) == 3)
         symbol = "T";
-      sites.add_row({ cif::quote(labels[i]), cif::quote(symbol),
-                      formatNumber(fractional.x(), 8),
-                      formatNumber(fractional.y(), 8),
-                      formatNumber(fractional.z(), 8) });
+      std::vector<std::string> row = { cif::quote(labels[i]),
+                                       cif::quote(symbol),
+                                       formatNumber(fractional.x(), 8),
+                                       formatNumber(fractional.y(), 8),
+                                       formatNumber(fractional.z(), 8) };
+      if (writeOccupancy)
+        row.push_back(formatNumber(source->occupancy(i), 4));
+      sites.add_row(row);
     }
 
     cif::write_cif_to_stream(outStream, document);

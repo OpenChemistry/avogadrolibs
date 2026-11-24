@@ -1354,3 +1354,155 @@ TEST(CifTest, malformedInputWithoutAnotherReaderIsAnError)
 }
 
 #endif // !AVOGADRO_MSAN_BUILD
+
+namespace {
+Molecule readOccupancyCif(const std::string& rows,
+                          const std::string& options = std::string())
+{
+  Molecule molecule;
+  CifFormat format;
+  if (!options.empty())
+    format.setOptions(options);
+  EXPECT_TRUE(format.readString(
+    cubicCif(std::string(siteColumns) + "_atom_site_occupancy\n", rows),
+    molecule))
+    << format.error();
+  return molecule;
+}
+} // namespace
+
+TEST(CifTest, readsOccupancies)
+{
+  const Molecule molecule = readOccupancyCif("C1 C 0.1 0.1 0.1 0.5(2)\n"
+                                             "O1 O 0.5 0.5 0.5 1\n"
+                                             "N1 N 0.7 0.7 0.7 ?\n");
+  ASSERT_EQ(molecule.atomCount(), 3);
+  ASSERT_EQ(molecule.occupancies().size(), 3u);
+  EXPECT_EQ(molecule.occupancy(0), 0.5);
+  EXPECT_EQ(molecule.occupancy(1), 1.0);
+  EXPECT_EQ(molecule.occupancy(2), 1.0);
+}
+
+TEST(CifTest, occupanciesInBothDisorderModes)
+{
+  const std::string columns = std::string(siteColumns) +
+                              "_atom_site_disorder_assembly\n"
+                              "_atom_site_disorder_group\n"
+                              "_atom_site_occupancy\n";
+  const std::string text =
+    cubicCif(columns, "C1 C 0.1 0.1 0.1 . 1 0.3\nC2 C 0.3 0.1 0.1 . 2 0.7\n");
+
+  Molecule major;
+  CifFormat majorFormat;
+  ASSERT_TRUE(majorFormat.readString(text, major)) << majorFormat.error();
+  ASSERT_EQ(major.atomCount(), 1);
+  EXPECT_EQ(major.atomLabel(0), "C2");
+  EXPECT_EQ(major.occupancy(0), 0.7);
+
+  Molecule all;
+  CifFormat allFormat;
+  allFormat.setOptions(R"({"disorder": "all"})");
+  ASSERT_TRUE(allFormat.readString(text, all)) << allFormat.error();
+  ASSERT_EQ(all.atomCount(), 2);
+  EXPECT_EQ(all.occupancy(0), 0.3);
+  EXPECT_EQ(all.occupancy(1), 0.7);
+}
+
+TEST(CifTest, plainCifStoresNoOccupancies)
+{
+  EXPECT_TRUE(readOccupancyCif("C1 C 0.1 0.1 0.1 1.0\nO1 O 0.5 0.5 0.5 1\n")
+                .occupancies()
+                .empty());
+  // no occupancy column at all
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(
+    format.readString(cubicCif(siteColumns, "C1 C 0.1 0.1 0.1\n"), molecule))
+    << format.error();
+  EXPECT_TRUE(molecule.occupancies().empty());
+}
+
+TEST(CifTest, negativeOccupancyCountsAsOne)
+{
+  const Molecule molecule =
+    readOccupancyCif("C1 C 0.1 0.1 0.1 -0.5\nO1 O 0.5 0.5 0.5 0.5\n");
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.occupancy(0), 1.0);
+  EXPECT_EQ(molecule.occupancy(1), 0.5);
+}
+
+TEST(CifTest, symmetryExpansionCarriesOccupancy)
+{
+  const std::string text =
+    cubicCif(std::string(siteColumns) + "_atom_site_occupancy\n",
+             "C1 C 0.1 0.2 0.3 0.5\n",
+             "_symmetry_space_group_name_H-M 'P -1'\nloop_\n"
+             "_symmetry_equiv_pos_as_xyz\n'x, y, z'\n'-x, -y, -z'\n");
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
+  // the reader keeps the asymmetric unit; filling the cell makes the images
+  ASSERT_EQ(molecule.atomCount(), 1);
+  ASSERT_NE(molecule.hallNumber(), 0);
+  EXPECT_EQ(molecule.occupancy(0), 0.5);
+  SpaceGroups::fillUnitCell(molecule, molecule.hallNumber());
+  ASSERT_EQ(molecule.atomCount(), 2);
+  ASSERT_EQ(molecule.occupancies().size(), 2u);
+  EXPECT_EQ(molecule.occupancy(0), 0.5);
+  EXPECT_EQ(molecule.occupancy(1), 0.5);
+}
+
+TEST(CifTest, writeKeepsOccupancy)
+{
+  Molecule original;
+  original.setUnitCell(new UnitCell(8.0, 9.0, 10.0, 1.5707963267948966,
+                                    1.5707963267948966, 1.5707963267948966));
+  original.addAtom(6).setPosition3d(Vector3(1.0, 2.0, 3.0));
+  original.addAtom(8).setPosition3d(Vector3(4.0, 5.0, 6.0));
+  original.setHallNumber(1);
+  ASSERT_TRUE(original.setOccupancy(1, 0.25));
+
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, original)) << writer.error();
+  EXPECT_NE(text.find("_atom_site_occupancy"), std::string::npos);
+
+  Molecule readBack;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+  ASSERT_EQ(readBack.atomCount(), 2);
+  EXPECT_EQ(readBack.occupancy(0), 1.0);
+  EXPECT_EQ(readBack.occupancy(1), 0.25);
+
+  // A molecule without occupancies writes no column
+  Molecule plain;
+  plain.setUnitCell(new UnitCell(8.0, 9.0, 10.0, 1.5707963267948966,
+                                 1.5707963267948966, 1.5707963267948966));
+  plain.addAtom(6).setPosition3d(Vector3(1.0, 2.0, 3.0));
+  plain.setHallNumber(1);
+  std::string plainText;
+  ASSERT_TRUE(writer.writeString(plainText, plain)) << writer.error();
+  EXPECT_EQ(plainText.find("occupancy"), std::string::npos);
+}
+
+TEST(CifTest, writeExpandsToP1WithOccupancy)
+{
+  // P -1 stored as a Hall number: the writer fills the cell, and every image
+  // keeps the occupancy
+  Molecule original;
+  original.setUnitCell(new UnitCell(8.0, 9.0, 10.0, 1.5707963267948966,
+                                    1.5707963267948966, 1.5707963267948966));
+  original.addAtom(6).setPosition3d(Vector3(1.0, 2.0, 3.0));
+  ASSERT_TRUE(original.setOccupancy(0, 0.5));
+  ASSERT_TRUE(SpaceGroups::setSpaceGroup(original, "P -1"));
+
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, original)) << writer.error();
+  Molecule readBack;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+  ASSERT_EQ(readBack.atomCount(), 2);
+  EXPECT_EQ(readBack.occupancy(0), 0.5);
+  EXPECT_EQ(readBack.occupancy(1), 0.5);
+}
