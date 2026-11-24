@@ -124,23 +124,23 @@ TemplateToolWidget::TemplateToolWidget(QWidget* parent_)
            << "phosphate"
            << "sulfonate" << tr("Other…");
 
-  connect(m_ui->tabWidget, SIGNAL(currentChanged(int)), this,
-          SLOT(tabChanged(int)));
+  connect(m_ui->tabWidget, &QTabWidget::currentChanged, this,
+          &TemplateToolWidget::tabChanged);
 
-  connect(m_ui->elementComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(elementChanged(int)));
+  connect(m_ui->elementComboBox, &QComboBox::currentIndexChanged, this,
+          &TemplateToolWidget::elementChanged);
 
-  connect(m_ui->coordinationComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(coordinationChanged(int)));
+  connect(m_ui->coordinationComboBox, &QComboBox::currentIndexChanged, this,
+          &TemplateToolWidget::coordinationChanged);
 
-  connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(typeChanged(int)));
+  connect(m_ui->typeComboBox, &QComboBox::currentIndexChanged, this,
+          &TemplateToolWidget::typeChanged);
 
-  connect(m_ui->ligandComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(ligandChanged(int)));
+  connect(m_ui->ligandComboBox, &QComboBox::currentIndexChanged, this,
+          &TemplateToolWidget::ligandChanged);
 
-  connect(m_ui->groupComboBox, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(groupChanged(int)));
+  connect(m_ui->groupComboBox, &QComboBox::currentIndexChanged, this,
+          &TemplateToolWidget::groupChanged);
 
   // default coordination = octahedral
   QString currentCoord = settings.value("coordination", "6-oct").toString();
@@ -391,8 +391,8 @@ void TemplateToolWidget::groupChanged(int index)
       m_fragmentDialog->deleteLater();
 
     m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
-    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
-            SLOT(otherLigandInsert(const QString&, bool)));
+    connect(m_fragmentDialog, &QtGui::InsertFragmentDialog::performInsert, this,
+            &TemplateToolWidget::otherLigandInsert);
     m_fragmentDialog->show();
     m_fragmentDialog->raise();
     m_fragmentDialog->activateWindow();
@@ -444,8 +444,8 @@ void TemplateToolWidget::ligandChanged(int index)
       m_fragmentDialog->deleteLater();
 
     m_fragmentDialog = new QtGui::InsertFragmentDialog(this, path);
-    connect(m_fragmentDialog, SIGNAL(performInsert(const QString&, bool)), this,
-            SLOT(otherLigandInsert(const QString&, bool)));
+    connect(m_fragmentDialog, &QtGui::InsertFragmentDialog::performInsert, this,
+            &TemplateToolWidget::otherLigandInsert);
     m_fragmentDialog->show();
     m_fragmentDialog->raise();
     m_fragmentDialog->activateWindow();
@@ -564,8 +564,8 @@ void TemplateToolWidget::elementChanged(int index)
     if (itemData.toInt() == ELEMENT_SELECTOR_TAG) {
       if (!m_elementSelector) {
         m_elementSelector = new QtGui::PeriodicTableView(this);
-        connect(m_elementSelector, SIGNAL(elementChanged(int)), this,
-                SLOT(elementSelectedFromTable(int)));
+        connect(m_elementSelector, &QtGui::PeriodicTableView::elementChanged,
+                this, &TemplateToolWidget::elementSelectedFromTable);
       }
       m_elementSelector->setElement(m_currentElement);
       m_elementSelector->show();
