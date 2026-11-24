@@ -155,6 +155,9 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
   unsigned int chargeColumn = 0;
   unsigned int forceColumn = 0;
   std::vector<double> charges;
+  // per-atom forces; collected here since adding atoms clears them
+  Array<Vector3> forces;
+  bool haveForces = false;
   if (start != std::string::npos) {
     start = start + 11; // skip over "Properties="
     unsigned int stop = buffer.find(' ', start);
@@ -252,6 +255,7 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       // we set the charges after all atoms are added
     }
     if (forceColumn > 0 && forceColumn < tokens.size()) {
+      forces.resize(mol.atomCount(), Vector3::Zero());
       if (tokens.size() - forceColumn < 3) {
         appendError("Not enough force components in this line: " + buffer);
         return false;
@@ -259,7 +263,8 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       if (auto tmp = lexicalCast<double>(tokens.begin() + forceColumn,
                                          tokens.begin() + forceColumn + 3)) {
         Vector3 force(tmp->at(0), tmp->at(1), tmp->at(2));
-        newAtom.setForceVector(force);
+        forces[mol.atomCount() - 1] = force;
+        haveForces = true;
       } else {
         appendError("Error reading force");
       }
@@ -370,6 +375,12 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       chargesMatrix(i, 0) = charges[i];
     }
     mol.setPartialCharges("From File", chargesMatrix);
+  }
+
+  // adding atoms clears per-atom results, so set the forces at the end
+  if (haveForces) {
+    forces.resize(mol.atomCount(), Vector3::Zero());
+    mol.setForceVectors(forces);
   }
 
   if (energies.size() > 1)

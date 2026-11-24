@@ -269,8 +269,7 @@ TEST(XyzTest, readTruncatedForceColumns)
     << control.error();
   ASSERT_EQ(molecule.atomCount(), 2);
   ASSERT_EQ(molecule.forceVectors().size(), 2);
-  // Adding an atom clears the force array, so the reader currently keeps only
-  // the force of the last atom; check that one.
+  EXPECT_EQ(molecule.forceVectors()[0], Vector3(0.1, 0.2, 0.3));
   EXPECT_EQ(molecule.forceVectors()[1], Vector3(0.4, 0.5, 0.6));
 }
 
