@@ -92,6 +92,19 @@ public:
    */
   bool disableAttributeArray(const std::string& name);
 
+  /**
+   * Set how often the named attribute array advances for instanced drawing.
+   * A divisor of 0 (the default) advances the attribute once per vertex; a
+   * divisor of 1 advances it once per instance. This is VAO state, so call it
+   * while the vertex array object that uses the attribute is bound. Needs
+   * OpenGL 3.3 or OpenGL ES 3.0.
+   * @param name of the attribute (as seen in the shader program).
+   * @param divisor The number of instances between attribute updates.
+   * @return false if the attribute array is not contained in the linked
+   * shader program.
+   */
+  bool setAttributeDivisor(const std::string& name, unsigned int divisor);
+
   /** Use the named attribute array with the bound BufferObject.
    * @param name of the attribute (as seen in the shader program).
    * @param offset into the bound BufferObject.

@@ -255,6 +255,19 @@ bool ShaderProgram::disableAttributeArray(const std::string& name)
   return true;
 }
 
+bool ShaderProgram::setAttributeDivisor(const std::string& name,
+                                        unsigned int divisor)
+{
+  auto location = static_cast<GLint>(findAttributeArray(name));
+  if (location == -1) {
+    m_error =
+      "Could not set the divisor of attribute " + name + ". No such attribute.";
+    return false;
+  }
+  glVertexAttribDivisor(static_cast<GLuint>(location), divisor);
+  return true;
+}
+
 bool ShaderProgram::useAttributeArray(const std::string& name, int offset,
                                       size_t stride, Type elementType,
                                       int elementTupleSize,

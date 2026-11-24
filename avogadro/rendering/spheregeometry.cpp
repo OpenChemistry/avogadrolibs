@@ -6,7 +6,6 @@
 #include "spheregeometry.h"
 
 #include "camera.h"
-#include "geometrytiming.h"
 #include "scene.h"
 
 #include "bufferobject.h"
@@ -24,7 +23,11 @@ namespace {
 
 #include "avogadrogl.h"
 
+#include <algorithm>
+#include <cstddef>
 #include <iostream>
+#include <type_traits>
+#include <vector>
 
 using std::cout;
 using std::endl;
@@ -32,6 +35,21 @@ using std::endl;
 namespace Avogadro::Rendering {
 
 using Core::Array;
+
+// m_spheres is uploaded as the per-instance buffer, so the layout of
+// SphereColor is a contract with spheres_vs.glsl.
+static_assert(std::is_standard_layout_v<SphereColor>,
+              "SphereColor is uploaded to the GPU as is");
+static_assert(sizeof(SphereColor) == 20, "SphereColor must be 20 bytes");
+static_assert(offsetof(SphereColor, center) == 0, "center offset");
+static_assert(offsetof(SphereColor, radius) == 12, "radius offset");
+static_assert(offsetof(SphereColor, color) == 16, "color offset");
+
+namespace {
+constexpr int centerOffset = static_cast<int>(offsetof(SphereColor, center));
+constexpr int radiusOffset = static_cast<int>(offsetof(SphereColor, radius));
+constexpr int colorOffset = static_cast<int>(offsetof(SphereColor, color));
+} // namespace
 
 class SphereGeometry::Private
 {
@@ -46,8 +64,7 @@ public:
   inline static Shader* fragmentShader = nullptr;
   inline static ShaderProgram* program = nullptr;
 
-  size_t numberOfVertices;
-  size_t numberOfIndices;
+  size_t numberOfInstances = 0;
 };
 
 SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
@@ -103,47 +120,16 @@ void SphereGeometry::update()
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
-    std::vector<unsigned int> sphereIndices;
-    std::vector<ColorTextureVertex> sphereVertices;
-    {
-      GeometryTiming::Scope timer;
-      sphereIndices.reserve(m_indices.size() * 4);
-      sphereVertices.reserve(m_spheres.size() * 4);
-
-      auto itIndex = m_indices.begin();
-      auto itSphere = m_spheres.begin();
-
-      for (size_t i = 0;
-           itIndex != m_indices.end() && itSphere != m_spheres.end();
-           ++i, ++itIndex, ++itSphere) {
-        // Use our packed data structure...
-        float r = itSphere->radius;
-        unsigned int index = 4 * static_cast<unsigned int>(i);
-        ColorTextureVertex vert(itSphere->center, itSphere->color,
-                                Vector2f(-r, -r));
-        sphereVertices.push_back(vert);
-        vert.textureCoord = Vector2f(-r, r);
-        sphereVertices.push_back(vert);
-        vert.textureCoord = Vector2f(r, -r);
-        sphereVertices.push_back(vert);
-        vert.textureCoord = Vector2f(r, r);
-        sphereVertices.push_back(vert);
-
-        // 6 indexed vertices to draw a quad...
-        sphereIndices.push_back(index + 0);
-        sphereIndices.push_back(index + 1);
-        sphereIndices.push_back(index + 2);
-        sphereIndices.push_back(index + 3);
-        sphereIndices.push_back(index + 2);
-        sphereIndices.push_back(index + 1);
-      }
-    }
-
-    if (!d->vbo.upload(sphereVertices, BufferObject::ArrayBuffer))
+    // The per-instance data is m_spheres itself: no CPU vertex build.
+    if (!d->vbo.upload(m_spheres, BufferObject::ArrayBuffer))
       cout << d->vbo.error() << '\n';
 
-    if (!d->ibo.upload(sphereIndices, BufferObject::ElementArrayBuffer))
-      cout << d->ibo.error() << '\n';
+    // Every sphere draws the same quad, so this never changes.
+    if (!d->ibo.ready()) {
+      const std::vector<unsigned int> quadIndices = { 0, 1, 2, 3, 2, 1 };
+      if (!d->ibo.upload(quadIndices, BufferObject::ElementArrayBuffer))
+        cout << d->ibo.error() << '\n';
+    }
 
     // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
     // Check bind() return values - if binding fails (e.g., no GL context),
@@ -163,35 +149,37 @@ void SphereGeometry::update()
       return;
     }
 
+    // The three attributes advance once per sphere (instance).
     ShaderProgram* program = d->program;
-    if (!program->enableAttributeArray("vertex"))
+    const auto stride = sizeof(SphereColor);
+    if (!program->enableAttributeArray("center"))
       cout << program->error() << '\n';
-    if (!program->useAttributeArray("vertex",
-                                    ColorTextureVertex::vertexOffset(),
-                                    sizeof(ColorTextureVertex), FloatType, 3,
-                                    ShaderProgram::NoNormalize)) {
+    if (!program->useAttributeArray("center", centerOffset, stride, FloatType,
+                                    3, ShaderProgram::NoNormalize)) {
       cout << program->error() << '\n';
     }
+    if (!program->setAttributeDivisor("center", 1))
+      cout << program->error() << '\n';
+    if (!program->enableAttributeArray("sphereRadius"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray("sphereRadius", radiusOffset, stride,
+                                    FloatType, 1, ShaderProgram::NoNormalize)) {
+      cout << program->error() << '\n';
+    }
+    if (!program->setAttributeDivisor("sphereRadius", 1))
+      cout << program->error() << '\n';
     if (!program->enableAttributeArray("color"))
       cout << program->error() << '\n';
-    if (!program->useAttributeArray("color", ColorTextureVertex::colorOffset(),
-                                    sizeof(ColorTextureVertex), UCharType, 3,
+    if (!program->useAttributeArray("color", colorOffset, stride, UCharType, 3,
                                     ShaderProgram::Normalize)) {
       cout << program->error() << '\n';
     }
-    if (!program->enableAttributeArray("texCoordinate"))
+    if (!program->setAttributeDivisor("color", 1))
       cout << program->error() << '\n';
-    if (!program->useAttributeArray("texCoordinate",
-                                    ColorTextureVertex::textureCoordOffset(),
-                                    sizeof(ColorTextureVertex), FloatType, 2,
-                                    ShaderProgram::NoNormalize)) {
-      cout << program->error() << '\n';
-    }
 
     d->vao.release();
 
-    d->numberOfVertices = sphereVertices.size();
-    d->numberOfIndices = sphereIndices.size();
+    d->numberOfInstances = std::min(m_indices.size(), m_spheres.size());
 
     m_dirty = false;
   }
@@ -228,9 +216,10 @@ void SphereGeometry::render(const Camera& camera)
   }
 
   // Render the loaded spheres using the shader and VAO.
-  glDrawRangeElements(GL_TRIANGLES, 0, static_cast<GLuint>(d->numberOfVertices),
-                      static_cast<GLsizei>(d->numberOfIndices), GL_UNSIGNED_INT,
-                      (const GLvoid*)nullptr);
+  if (d->numberOfInstances > 0) {
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr,
+                            static_cast<GLsizei>(d->numberOfInstances));
+  }
 
   d->vao.release();
   d->program->release();
