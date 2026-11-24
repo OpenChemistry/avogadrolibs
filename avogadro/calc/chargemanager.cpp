@@ -10,7 +10,9 @@
 
 #include <avogadro/core/utilities.h>
 
+#include <algorithm>
 #include <optional>
+#include <vector>
 
 namespace Avogadro::Calc {
 
@@ -156,28 +158,35 @@ std::set<std::string> ChargeManager::identifiersForMolecule(
 // order of preference for the built-in methods
 // (EEQ is always available, so it is the last resort and never displaces
 // a model read from a file or installed by a user)
-const std::vector<std::string> METHOD_TIER_LIST = { "eem", "mmff94",
-                                                    "gasteiger", "eeq" };
+static const std::vector<std::string> METHOD_TIER_LIST = { "eem", "mmff94",
+                                                           "gasteiger", "eeq" };
 
 std::string ChargeManager::recommendedModel(
   const Core::Molecule& molecule) const
 {
-  auto identifiers = identifiersForMolecule(molecule);
+  // charges already stored in the molecule (read from a file, or computed
+  // earlier) win; this never computes anything
+  const auto& stored = molecule.partialChargeTypes();
+  if (!stored.empty())
+    return *stored.begin();
 
-  // first, we look through the identifiers to see if there's
-  // something not in the built-in list
-  // i.e., read from a file or installed by a user, try that first
-  for (auto option : identifiers) {
-    if (std::find(METHOD_TIER_LIST.begin(), METHOD_TIER_LIST.end(), option) ==
-        METHOD_TIER_LIST.end())
+  const auto identifiers = identifiersForMolecule(molecule);
+
+  // next, anything not in the built-in list, i.e., installed by a user
+  // (identifiers keep their original case, the tier list is lowercase)
+  for (const auto& option : identifiers) {
+    const std::string lowerOption = toLower(option);
+    if (std::find(METHOD_TIER_LIST.begin(), METHOD_TIER_LIST.end(),
+                  lowerOption) == METHOD_TIER_LIST.end())
       return option;
   }
 
-  // if not, we look through the built-in list in order
-  // of preference (e.g., eem > mmff94 > gasteiger > eeq)
-  for (auto option : METHOD_TIER_LIST) {
-    if (identifiers.find(option) != identifiers.end()) {
-      return option;
+  // finally, the built-in list in order of preference
+  // (e.g., eem > mmff94 > gasteiger > eeq)
+  for (const auto& tier : METHOD_TIER_LIST) {
+    for (const auto& option : identifiers) {
+      if (toLower(option) == tier)
+        return option;
     }
   }
   return "";

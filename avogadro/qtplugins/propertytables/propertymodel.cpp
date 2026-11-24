@@ -253,35 +253,12 @@ int PropertyModel::columnCount(const QModelIndex& parent) const
 
 QString partialChargeType(Molecule* molecule)
 {
-  QString type;
   // The dialog can outlive the molecule, and its header still asks.
   if (molecule == nullptr)
-    return type;
+    return QString();
 
-  std::set<std::string> types = molecule->partialChargeTypes();
-
-  if (!types.empty()) {
-    type = QString(types.cbegin()->c_str());
-  } else {
-    // find something
-    const auto options =
-      Calc::ChargeManager::instance().identifiersForMolecule(*molecule);
-    if (!options.empty()) {
-      // look for GFN2 or AM1BCC, then MMFF94 then Gasteiger
-      if (options.find("GFN2") != options.end())
-        type = "GFN2";
-      else if (options.find("am1bcc") != options.end())
-        type = "am1bcc";
-      else if (options.find("mmff94") != options.end())
-        type = "mmff94";
-      else if (options.find("gasteiger") != options.end())
-        type = "gasteiger";
-      else
-        type = QString::fromStdString(*options.begin());
-    }
-  }
-
-  return type;
+  return QString::fromStdString(
+    Calc::ChargeManager::instance().recommendedModel(*molecule));
 }
 
 QString formatChargeType(QString type)

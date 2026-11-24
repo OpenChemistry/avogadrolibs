@@ -13,6 +13,9 @@
 #include <avogadro/core/molecule.h>
 
 #include <algorithm>
+#include <string>
+#include <utility>
+#include <vector>
 
 using namespace Avogadro::Calc;
 using namespace Avogadro::Core;
@@ -307,4 +310,143 @@ TEST_F(ChargeManagerTest, StoredChargeTypesKeepTheirCase)
   // dipole uses the same lookup
   EXPECT_NE(m_chargeManager->dipoleMoment("Mulliken", m_testMolecule).norm(),
             0.0);
+}
+
+namespace {
+/// A charge model with a configurable identifier and element coverage.
+class FakeChargeModel : public ChargeModel
+{
+public:
+  explicit FakeChargeModel(std::string id, bool coversAll = true)
+    : m_id(std::move(id)), m_coversAll(coversAll)
+  {
+  }
+  ChargeModel* newInstance() const override
+  {
+    return new FakeChargeModel(m_id, m_coversAll);
+  }
+  std::string identifier() const override { return m_id; }
+  std::string name() const override { return m_id; }
+  Molecule::ElementMask elements() const override
+  {
+    Molecule::ElementMask mask;
+    if (m_coversAll)
+      mask.set();
+    else
+      mask.set(6); // carbon only
+    return mask;
+  }
+  MatrixX partialCharges(Molecule& mol) const override
+  {
+    return MatrixX::Zero(static_cast<Eigen::Index>(mol.atomCount()), 1);
+  }
+  MatrixX partialCharges(const Molecule& mol) const override
+  {
+    return MatrixX::Zero(static_cast<Eigen::Index>(mol.atomCount()), 1);
+  }
+
+private:
+  std::string m_id;
+  bool m_coversAll;
+};
+
+/// Registers fake models and removes them again, even if a test fails.
+class FakeModels
+{
+public:
+  ~FakeModels()
+  {
+    for (const auto& id : m_ids)
+      ChargeManager::instance().removeModel(id);
+  }
+  void add(const std::string& id, bool coversAll = true)
+  {
+    ASSERT_TRUE(
+      ChargeManager::instance().addModel(new FakeChargeModel(id, coversAll)));
+    m_ids.push_back(id);
+  }
+  void remove(const std::string& id)
+  {
+    ASSERT_TRUE(ChargeManager::instance().removeModel(id));
+    m_ids.erase(std::remove(m_ids.begin(), m_ids.end(), id), m_ids.end());
+  }
+
+private:
+  std::vector<std::string> m_ids;
+};
+} // namespace
+
+TEST_F(ChargeManagerTest, RecommendedStoredTypeWins)
+{
+  FakeModels fakes;
+  fakes.add("zzfake");
+  fakes.add("eem");
+  fakes.add("mmff94");
+  MatrixX charges(3, 1);
+  charges << -0.8, 0.4, 0.4;
+  m_testMolecule.setPartialCharges("Mulliken", charges);
+
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "Mulliken");
+}
+
+TEST_F(ChargeManagerTest, RecommendedInstalledModelBeatsTiers)
+{
+  FakeModels fakes;
+  fakes.add("eem");
+  fakes.add("mmff94");
+  fakes.add("gasteiger");
+  fakes.add("zzfake");
+
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "zzfake");
+}
+
+TEST_F(ChargeManagerTest, RecommendedFollowsTierOrder)
+{
+  FakeModels fakes;
+  fakes.add("gasteiger");
+  fakes.add("mmff94");
+  fakes.add("eem");
+
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "eem");
+  fakes.remove("eem");
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "mmff94");
+  fakes.remove("mmff94");
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "gasteiger");
+  fakes.remove("gasteiger");
+  // only the built-in EEQ is left
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "eeq");
+}
+
+TEST_F(ChargeManagerTest, RecommendedTierComparisonIgnoresCase)
+{
+  FakeModels fakes;
+  fakes.add("MMFF94");
+
+  // a tier model, even though spelled in upper case, and kept as spelled
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "MMFF94");
+
+  fakes.add("zzfake");
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "zzfake");
+}
+
+TEST_F(ChargeManagerTest, RecommendedSkipsModelsThatDoNotCoverTheMolecule)
+{
+  FakeModels fakes;
+  fakes.add("zzcarbononly", false);
+  fakes.add("eem", false);
+
+  // water has no carbon: only the built-in EEQ remains
+  EXPECT_EQ(m_chargeManager->recommendedModel(m_testMolecule), "eeq");
+}
+
+TEST_F(ChargeManagerTest, RecommendedForEmptyMolecule)
+{
+  Molecule empty;
+  // every model trivially covers a molecule with no elements
+  EXPECT_EQ(m_chargeManager->identifiersForMolecule(empty).count("eeq"), 1u);
+  EXPECT_EQ(m_chargeManager->recommendedModel(empty), "eeq");
+
+  FakeModels fakes;
+  fakes.add("zzfake");
+  EXPECT_EQ(m_chargeManager->recommendedModel(empty), "zzfake");
 }

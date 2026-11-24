@@ -291,3 +291,30 @@ TEST(PropertyTablesChargeTest, HeaderNamesTheFallbackChargeType)
 
   Avogadro::Calc::ChargeManager::unregisterModel("aaafake");
 }
+
+TEST(PropertyTablesChargeTest, HeaderPrefersStoredChargesOverInstalledModels)
+{
+  Avogadro::Calc::ChargeManager::registerModel(new FirstChargeModel);
+
+  Molecule mol;
+  mol.addAtom(8);
+  mol.addAtom(1);
+  mol.addAtom(1);
+
+  PropertyModel model(PropertyType::AtomType);
+  model.setMolecule(&mol);
+  // nothing stored: the installed model is the default
+  EXPECT_TRUE(
+    model.headerData(3, Qt::Horizontal).toString().startsWith("aaafake "));
+
+  // charges read from a file win over the installed model
+  MatrixX charges(3, 1);
+  charges << -0.8, 0.4, 0.4;
+  mol.setPartialCharges("Mulliken", charges);
+  PropertyModel stored(PropertyType::AtomType);
+  stored.setMolecule(&mol);
+  const QString header = stored.headerData(3, Qt::Horizontal).toString();
+  EXPECT_TRUE(header.startsWith("Mulliken ")) << header.toStdString();
+
+  Avogadro::Calc::ChargeManager::unregisterModel("aaafake");
+}
