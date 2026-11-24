@@ -4368,8 +4368,8 @@ TEST(RWMoleculeTest, setOccupancyEmitsChanges)
   mol.addAtom(6);
   mol.undoStack().clear();
 
-  const std::vector<unsigned int> expected{ Molecule::Atoms |
-                                            Molecule::Properties };
+  const unsigned int change = Molecule::Atoms | Molecule::Properties;
+  const std::vector<unsigned int> expected{ change };
   // the first edit grows the empty column, a later one sets an entry
   EXPECT_EQ(expected, captureChanges(m, [&] { mol.setOccupancy(1, 0.5); }));
   EXPECT_EQ(expected, captureChanges(m, [&] { mol.setOccupancy(0, 0.25); }));
