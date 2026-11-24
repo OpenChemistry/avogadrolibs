@@ -482,26 +482,6 @@ void Label::processResidue(const Core::Molecule& molecule,
   }
 }
 
-namespace {
-// Choose a charge type: GFN2 or AM1BCC, then MMFF94, then Gasteiger, else
-// whatever comes first, keeping the always-available EEQ model as the last
-// resort. Returns an empty string for an empty set.
-std::string preferredChargeType(const std::set<std::string>& types)
-{
-  if (types.empty())
-    return std::string();
-  for (const char* preferred : { "GFN2", "am1bcc", "mmff94", "gasteiger" }) {
-    if (types.find(preferred) != types.end())
-      return preferred;
-  }
-  for (const std::string& type : types) {
-    if (type != "eeq")
-      return type;
-  }
-  return *types.begin();
-}
-} // namespace
-
 void Label::requestPartialCharges(const QtGui::Molecule& molecule)
 {
   auto* mol = const_cast<QtGui::Molecule*>(&molecule);
@@ -543,8 +523,7 @@ void Label::calculatePartialCharges()
   const std::string type =
     !m_recomputeType.empty()
       ? m_recomputeType
-      : preferredChargeType(
-          Calc::ChargeManager::instance().identifiersForMolecule(*molecule));
+      : Calc::ChargeManager::instance().recommendedModel(*molecule);
   if (type.empty()) {
     recordFailure();
     return;
@@ -578,7 +557,12 @@ void Label::processAtom(const QtGui::Molecule& molecule,
   MatrixX charges;
   if (m_layerManager.getSetting<LayerLabel>(layer)->atomOptions &
       LayerLabel::LabelOptions::PartialCharge) {
-    const std::string type = preferredChargeType(molecule.partialChargeTypes());
+    // The same choice as when computing, but only from charges the molecule
+    // already stores: anything else is requested, never computed here.
+    std::string type =
+      Calc::ChargeManager::instance().recommendedModel(molecule);
+    if (molecule.partialChargeTypes().count(type) == 0)
+      type.clear();
     if (type.empty()) {
       requestPartialCharges(molecule);
       // Keep showing the last values while the new ones are calculated, so
