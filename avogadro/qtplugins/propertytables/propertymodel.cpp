@@ -24,10 +24,12 @@
 #include <avogadro/core/dihedraliterator.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QColor>
 #include <QtWidgets/QColorDialog>
 
 #include <array>
+#include <optional>
 #include <limits>
 
 namespace Avogadro {
@@ -61,6 +63,60 @@ inline double distance(Vector3 v1, Vector3 v2)
 {
   Vector3 v3 = v1 - v2;
   return v3.norm();
+}
+
+// The atomic number for what was typed into the element column: a number, a
+// symbol in any case, a name, or one of the dummy atom's spellings (0 is
+// deliberate). Custom elements are not offered here.
+std::optional<int> parseElement(const QVariant& value)
+{
+  const int elementCount = Core::Elements::elementCount();
+  auto inRange = [&](int number) -> std::optional<int> {
+    if (number < 0 || number >= elementCount)
+      return std::nullopt;
+    return number;
+  };
+
+  switch (value.typeId()) {
+    case QMetaType::Int:
+    case QMetaType::UInt:
+    case QMetaType::Long:
+    case QMetaType::ULong:
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
+    case QMetaType::Short:
+    case QMetaType::UShort:
+    case QMetaType::UChar:
+      return inRange(value.toInt());
+    case QMetaType::QString:
+      break;
+    default:
+      return std::nullopt;
+  }
+
+  const QString text = value.toString().trimmed();
+  if (text.isEmpty())
+    return std::nullopt;
+
+  static const QRegularExpression digits("^[0-9]+$");
+  if (digits.match(text).hasMatch()) {
+    bool ok = false;
+    const int number = text.toInt(&ok);
+    return ok ? inRange(number) : std::nullopt;
+  }
+
+  // The same dummy spellings as the CIF reader, plus the table's own.
+  const QString upper = text.toUpper();
+  if (upper == "X" || upper == "XX" || upper == "DU" || upper == "Q" ||
+      upper == "*")
+    return 0;
+
+  const QString normalized = text.left(1).toUpper() + text.mid(1).toLower();
+  const std::string key = normalized.toStdString();
+  int number = Core::Elements::atomicNumberFromSymbol(key);
+  if (!inRange(number))
+    number = Core::Elements::atomicNumberFromName(key);
+  return inRange(number);
 }
 
 inline QString angleTypeString(unsigned char a, unsigned char b,
@@ -1059,21 +1115,14 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         break;
       }
       case AtomDataElement: { // atomic number
-        // Try first as a number
-        bool ok;
-        int atomicNumber = value.toInt(&ok);
-        if (ok)
-          undoMolecule->setAtomicNumber(index.row(), atomicNumber);
-        else {
-          // try a symbol
-          atomicNumber = Core::Elements::atomicNumberFromSymbol(
-            value.toString().toStdString());
-
-          if (atomicNumber != Avogadro::InvalidElement) {
-            undoMolecule->setAtomicNumber(index.row(), atomicNumber);
-          } else
-            return false;
-        } // not a number
+        const auto atomicNumber = parseElement(value);
+        if (!atomicNumber)
+          return false;
+        // The same element is not an edit.
+        if (*atomicNumber == m_molecule->atomicNumber(index.row()))
+          return true;
+        undoMolecule->setAtomicNumber(
+          index.row(), static_cast<unsigned char>(*atomicNumber));
         break;
       }
       case AtomDataX:
