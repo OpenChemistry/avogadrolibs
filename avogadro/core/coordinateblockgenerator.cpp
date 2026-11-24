@@ -5,7 +5,6 @@
 
 #include "coordinateblockgenerator.h"
 
-#include <avogadro/core/atom.h>
 #include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/internalcoordinates.h>
@@ -34,10 +33,23 @@ enum
   elementSymbolWidth = 3,
   gamessAtomicNumberPrecision = 1,
   gamessAtomicNumberWidth = 5,
-  // Wide enough for a signed dihedral: "-180.000000" is eleven characters.
   anglePrecision = 6,
+  // Wide enough for a signed dihedral: "-180.000000" is eleven characters.
   angleWidth = 11
 };
+
+// Right-aligned fixed-point number in a field of @p width.
+void writeReal(std::ostream& stream, int width, int precision, Real value)
+{
+  stream << std::right << std::setw(width) << std::setprecision(precision)
+         << value;
+}
+
+// The factor that converts angstrom to the requested output unit.
+Real distanceScaleFor(CoordinateBlockGenerator::DistanceUnit unit)
+{
+  return (unit == CoordinateBlockGenerator::Bohr) ? ANGSTROM_TO_BOHR_F : 1.0;
+}
 
 // The number of columns the one-based index of an atom or row needs.
 int indexWidthFor(Index count)
@@ -61,6 +73,158 @@ void writeSeparator(std::ostream& stream, char current, bool haveNext,
     stream << std::setw(1) << ' ';
 }
 
+// Which pieces of per-atom data a specification needs, so that the lookups
+// are only done when something will print them.
+struct SpecNeeds
+{
+  bool elementSymbol = false;
+  bool elementName = false;
+  bool position = false;
+  bool fractionalPosition = false;
+};
+
+SpecNeeds scanSpecification(const std::string& specification)
+{
+  SpecNeeds needs;
+  for (char specChar : specification) {
+    switch (specChar) {
+      case 'S':
+      case 'L':
+        needs.elementSymbol = true;
+        break;
+      case 'N':
+        needs.elementName = true;
+        break;
+      case 'x':
+      case 'y':
+      case 'z':
+        needs.position = true;
+        break;
+      case 'a':
+      case 'b':
+      case 'c':
+        needs.fractionalPosition = true;
+        break;
+    }
+  }
+  return needs;
+}
+
+// What one line of either kind of block can print about its atom.
+struct AtomFields
+{
+  int number = 0;                 // one-based atom or row number, for '#'
+  unsigned char atomicNumber = 0; // 'Z' and 'G'
+  unsigned int elementCount = 0;  // running count of this element, for 'L'
+  const char* symbol = "\0";
+  const char* name = "\0";
+  Vector3 pos3d = Vector3::Zero(); // already scaled to the output unit
+  Vector3 fpos3d = Vector3::Zero();
+  const UnitCell* cell = nullptr; // null prints "N/A" for 'a', 'b' and 'c'
+};
+
+/**
+ * Gather what a line prints about the atom at @p position, looking up only
+ * what @p needs asks for. @p cell is null unless a fractional field is
+ * wanted and the molecule has a unit cell.
+ */
+AtomFields makeAtomFields(const SpecNeeds& needs, int number,
+                          unsigned char atomicNumber, unsigned int elementCount,
+                          const Vector3& position, const UnitCell* cell,
+                          Real distanceScale)
+{
+  AtomFields fields;
+  fields.number = number;
+  fields.atomicNumber = atomicNumber;
+  fields.elementCount = elementCount;
+  if (needs.elementSymbol)
+    fields.symbol = Core::Elements::symbol(atomicNumber);
+  if (needs.elementName)
+    fields.name = Core::Elements::name(atomicNumber);
+  if (needs.position)
+    fields.pos3d = position * distanceScale;
+  fields.cell = cell;
+  if (cell)
+    fields.fpos3d = cell->toFractional(position);
+  return fields;
+}
+
+/**
+ * Write the field for @p specChar if it is one both kinds of block share,
+ * and nothing for any other character. The separator that follows the
+ * field is the caller's to write.
+ */
+void writeAtomField(std::ostream& stream, char specChar,
+                    const AtomFields& fields, int indexWidth, bool haveNext)
+{
+  const auto writeFractional = [&](Real value) {
+    if (fields.cell)
+      writeReal(stream, coordinateWidth, coordinatePrecision, value);
+    else
+      stream << std::right << std::setw(coordinateWidth) << "N/A";
+  };
+
+  switch (specChar) {
+    case '_':
+      // Space character. A space is added by default after the field unless
+      // this ends the line, in which case add it here, before the newline.
+      if (!haveNext)
+        stream << std::setw(1) << " ";
+      break;
+    case ',':
+      stream << std::setw(1) << ',';
+      break;
+    case '#':
+      stream << std::left << std::setw(indexWidth) << fields.number;
+      break;
+    case 'Z':
+      stream << std::left << std::setw(atomicNumberWidth)
+             << std::setprecision(atomicNumberPrecision)
+             << static_cast<int>(fields.atomicNumber);
+      break;
+    case 'G':
+      stream << std::right << std::setw(gamessAtomicNumberWidth)
+             << std::setprecision(gamessAtomicNumberPrecision)
+             << static_cast<float>(fields.atomicNumber);
+      break;
+    case 'S':
+      stream << std::left << std::setw(elementSymbolWidth) << fields.symbol;
+      break;
+    case 'L':
+      stream << std::left << fields.symbol << fields.elementCount << " ";
+      break;
+    case 'N':
+      stream << std::left << std::setw(elementNameWidth) << fields.name;
+      break;
+    case 'x':
+      writeReal(stream, coordinateWidth, coordinatePrecision, fields.pos3d.x());
+      break;
+    case 'y':
+      writeReal(stream, coordinateWidth, coordinatePrecision, fields.pos3d.y());
+      break;
+    case 'z':
+      writeReal(stream, coordinateWidth, coordinatePrecision, fields.pos3d.z());
+      break;
+    case '0':
+      stream << std::left << std::setw(1) << 0;
+      break;
+    case '1':
+      stream << std::left << std::setw(1) << 1;
+      break;
+    case 'a':
+      writeFractional(fields.fpos3d.x());
+      break;
+    case 'b':
+      writeFractional(fields.fpos3d.y());
+      break;
+    case 'c':
+      writeFractional(fields.fpos3d.z());
+      break;
+    default:
+      break;
+  }
+}
+
 } // namespace
 
 std::string CoordinateBlockGenerator::generateCoordinateBlock()
@@ -78,48 +242,13 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   m_stream.str("");
   m_stream.clear();
 
-  // Create/cache some iterators for the specification string.
-  std::string::const_iterator it;
-  const std::string::const_iterator begin = m_specification.begin();
-  const std::string::const_iterator end = m_specification.end();
-
-  // Check the spec to see if certain items are needed.
-  bool needElementSymbol(false);
-  bool needElementName(false);
-  bool needPosition(false);
-  bool needFractionalPosition(false);
-  for (it = begin; it != end; ++it) {
-    switch (*it) {
-      case 'S':
-      case 'L':
-        needElementSymbol = true;
-        break;
-      case 'N':
-        needElementName = true;
-        break;
-      case 'x':
-      case 'y':
-      case 'z':
-        needPosition = true;
-        break;
-      case 'a':
-      case 'b':
-      case 'c':
-        needFractionalPosition = true;
-        break;
-    }
-  }
+  const SpecNeeds needs = scanSpecification(m_specification);
 
   // Variables for loops below
   const Index numAtoms = m_molecule->atomCount();
-  Atom atom;
-  unsigned char atomicNumber;
-  const char* symbol = "\0";
-  const char* name = "\0";
-  Vector3 pos3d = Vector3::Zero();
-  Vector3 fpos3d = Vector3::Zero();
   const UnitCell* cell =
-    needFractionalPosition ? molecule()->unitCell() : nullptr;
+    needs.fractionalPosition ? molecule()->unitCell() : nullptr;
+  const Real distanceScale = distanceScaleFor(m_distanceUnit);
 
   const int indexWidth(indexWidthFor(numAtoms));
 
@@ -132,112 +261,26 @@ std::string CoordinateBlockGenerator::generateCoordinateBlock()
   std::vector<unsigned int> elementCounts(
     std::numeric_limits<unsigned char>::max() + 1, 0);
 
+  const size_t specSize = m_specification.size();
+
   // Iterate through the atoms
   for (Index atomI = 0; atomI < numAtoms; ++atomI) {
-    atom = m_molecule->atom(atomI);
-    atomicNumber = atom.atomicNumber();
+    const unsigned char atomicNumber = m_molecule->atomicNumber(atomI);
     elementCounts[atomicNumber]++;
-    if (needElementSymbol)
-      symbol = Core::Elements::symbol(atomicNumber);
-    if (needElementName)
-      name = Core::Elements::name(atomicNumber);
-    if (needPosition)
-      pos3d = atom.position3d();
-    if (needFractionalPosition)
-      fpos3d = cell ? cell->toFractional(atom.position3d()) : Vector3::Zero();
+    const AtomFields fields =
+      makeAtomFields(needs, static_cast<int>(atomI + 1), atomicNumber,
+                     elementCounts[atomicNumber],
+                     m_molecule->atomPosition3d(atomI), cell, distanceScale);
 
-    switch (m_distanceUnit) {
-      case Bohr:
-        pos3d *= ANGSTROM_TO_BOHR_F;
-        break;
-      default:
-      case Angstrom:
-        break;
-    }
-
-    for (it = begin; it != end; ++it) {
-      switch (*it) {
-        case '_':
-          // Space character. If we are not at the end of the spec, a space will
-          // be added by default after the switch clause. If we are at the end,
-          // add a space before the newline that will be added.
-          if (it + 1 == end)
-            m_stream << std::setw(1) << " ";
-          break;
-        case ',':
-          m_stream << std::setw(1) << ',';
-          break;
-        case '#':
-          m_stream << std::left << std::setw(indexWidth)
-                   << static_cast<int>(atomI + 1);
-          break;
-        case 'Z':
-          m_stream << std::left << std::setw(atomicNumberWidth)
-                   << std::setprecision(atomicNumberPrecision)
-                   << static_cast<int>(atomicNumber);
-          break;
-        case 'G':
-          m_stream << std::right << std::setw(gamessAtomicNumberWidth)
-                   << std::setprecision(gamessAtomicNumberPrecision)
-                   << static_cast<float>(atomicNumber);
-          break;
-        case 'S':
-          m_stream << std::left << std::setw(elementSymbolWidth) << symbol;
-          break;
-        case 'L':
-          m_stream << std::left << symbol << elementCounts[atomicNumber] << " ";
-          break;
-        case 'N':
-          m_stream << std::left << std::setw(elementNameWidth) << name;
-          break;
-        case 'x':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision) << pos3d.x();
-          break;
-        case 'y':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision) << pos3d.y();
-          break;
-        case 'z':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision) << pos3d.z();
-          break;
-        case '0':
-          m_stream << std::left << std::setw(1) << 0;
-          break;
-        case '1':
-          m_stream << std::left << std::setw(1) << 1;
-          break;
-        case 'a':
-          if (cell) {
-            m_stream << std::right << std::setw(coordinateWidth)
-                     << std::setprecision(coordinatePrecision) << fpos3d.x();
-          } else {
-            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
-          }
-          break;
-        case 'b':
-          if (cell) {
-            m_stream << std::right << std::setw(coordinateWidth)
-                     << std::setprecision(coordinatePrecision) << fpos3d.y();
-          } else {
-            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
-          }
-          break;
-        case 'c':
-          if (cell) {
-            m_stream << std::right << std::setw(coordinateWidth)
-                     << std::setprecision(coordinatePrecision) << fpos3d.z();
-          } else {
-            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
-          }
-          break;
-      } // end switch
+    for (size_t i = 0; i < specSize; ++i) {
+      const char specChar = m_specification[i];
+      const bool haveNext = (i + 1 != specSize);
+      writeAtomField(m_stream, specChar, fields, indexWidth, haveNext);
 
       // Prepare for next value. Push a space into the output stream if we are
       // not at the end of the line, or a newline if we are.
-      const bool haveNext = (it + 1 != end);
-      writeSeparator(m_stream, *it, haveNext, haveNext ? *(it + 1) : '\0');
+      writeSeparator(m_stream, specChar, haveNext,
+                     haveNext ? m_specification[i + 1] : '\0');
     } // end spec char
   }   // end for atom
 
@@ -271,39 +314,13 @@ std::string CoordinateBlockGenerator::generateZMatrixBlock()
       m_atomsReordered = true;
   }
 
-  // Check the spec to see if certain items are needed.
-  bool needElementSymbol(false);
-  bool needElementName(false);
-  bool needPosition(false);
-  bool needFractionalPosition(false);
-  for (char specChar : m_specification) {
-    switch (specChar) {
-      case 'S':
-      case 'L':
-        needElementSymbol = true;
-        break;
-      case 'N':
-        needElementName = true;
-        break;
-      case 'x':
-      case 'y':
-      case 'z':
-        needPosition = true;
-        break;
-      case 'a':
-      case 'b':
-      case 'c':
-        needFractionalPosition = true;
-        break;
-    }
-  }
+  const SpecNeeds needs = scanSpecification(m_specification);
 
   const UnitCell* cell =
-    needFractionalPosition ? molecule()->unitCell() : nullptr;
+    needs.fractionalPosition ? molecule()->unitCell() : nullptr;
   const int indexWidth(indexWidthFor(numAtoms));
   const bool padded = (m_mode == Mode::ZMatrixPadded);
-  const Real distanceScale =
-    (m_distanceUnit == Bohr) ? ANGSTROM_TO_BOHR_F : 1.0;
+  const Real distanceScale = distanceScaleFor(m_distanceUnit);
 
   // Use fixed number format.
   m_stream << std::fixed;
@@ -350,17 +367,10 @@ std::string CoordinateBlockGenerator::generateZMatrixBlock()
     const Index atomIndex = rowToAtom[row];
     const unsigned char atomicNumber = m_molecule->atomicNumber(atomIndex);
     elementCounts[atomicNumber]++;
-
-    const char* symbol =
-      needElementSymbol ? Core::Elements::symbol(atomicNumber) : "\0";
-    const char* name =
-      needElementName ? Core::Elements::name(atomicNumber) : "\0";
-    Vector3 pos3d =
-      needPosition ? m_molecule->atomPosition3d(atomIndex) : Vector3::Zero();
-    pos3d *= distanceScale;
-    const Vector3 fpos3d =
-      cell ? cell->toFractional(m_molecule->atomPosition3d(atomIndex))
-           : Vector3::Zero();
+    const AtomFields fields = makeAtomFields(
+      needs, static_cast<int>(row + 1), atomicNumber,
+      elementCounts[atomicNumber], m_molecule->atomPosition3d(atomIndex), cell,
+      distanceScale);
 
     // Work out which characters this row prints. In the padded mode every
     // field is printed, with a zero standing in for one the row does not
@@ -394,39 +404,6 @@ std::string CoordinateBlockGenerator::generateZMatrixBlock()
 
       const char specChar = m_specification[i];
       switch (specChar) {
-        case '_':
-          // Space character. A space is added by default after the switch
-          // clause unless this ends the line, in which case add it here,
-          // before the newline.
-          if (!haveNext)
-            m_stream << std::setw(1) << " ";
-          break;
-        case ',':
-          m_stream << std::setw(1) << ',';
-          break;
-        case '#':
-          m_stream << std::left << std::setw(indexWidth)
-                   << static_cast<int>(row + 1);
-          break;
-        case 'Z':
-          m_stream << std::left << std::setw(atomicNumberWidth)
-                   << std::setprecision(atomicNumberPrecision)
-                   << static_cast<int>(atomicNumber);
-          break;
-        case 'G':
-          m_stream << std::right << std::setw(gamessAtomicNumberWidth)
-                   << std::setprecision(gamessAtomicNumberPrecision)
-                   << static_cast<float>(atomicNumber);
-          break;
-        case 'S':
-          m_stream << std::left << std::setw(elementSymbolWidth) << symbol;
-          break;
-        case 'L':
-          m_stream << std::left << symbol << elementCounts[atomicNumber] << " ";
-          break;
-        case 'N':
-          m_stream << std::left << std::setw(elementNameWidth) << name;
-          break;
         case 'I':
           m_stream << std::right << std::setw(indexWidth)
                    << referenceRow(coord.a);
@@ -440,62 +417,19 @@ std::string CoordinateBlockGenerator::generateZMatrixBlock()
                    << referenceRow(coord.c);
           break;
         case 'R':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision)
-                   << (coord.a == MaxIndex ? 0.0
-                                           : coord.length * distanceScale);
+          writeReal(m_stream, coordinateWidth, coordinatePrecision,
+                    coord.a == MaxIndex ? 0.0 : coord.length * distanceScale);
           break;
         case 'A':
-          m_stream << std::right << std::setw(angleWidth)
-                   << std::setprecision(anglePrecision)
-                   << (coord.b == MaxIndex ? 0.0 : coord.angle);
+          writeReal(m_stream, angleWidth, anglePrecision,
+                    coord.b == MaxIndex ? 0.0 : coord.angle);
           break;
         case 'T':
-          m_stream << std::right << std::setw(angleWidth)
-                   << std::setprecision(anglePrecision)
-                   << (coord.c == MaxIndex ? 0.0 : coord.dihedral);
+          writeReal(m_stream, angleWidth, anglePrecision,
+                    coord.c == MaxIndex ? 0.0 : coord.dihedral);
           break;
-        case 'x':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision) << pos3d.x();
-          break;
-        case 'y':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision) << pos3d.y();
-          break;
-        case 'z':
-          m_stream << std::right << std::setw(coordinateWidth)
-                   << std::setprecision(coordinatePrecision) << pos3d.z();
-          break;
-        case '0':
-          m_stream << std::left << std::setw(1) << 0;
-          break;
-        case '1':
-          m_stream << std::left << std::setw(1) << 1;
-          break;
-        case 'a':
-          if (cell) {
-            m_stream << std::right << std::setw(coordinateWidth)
-                     << std::setprecision(coordinatePrecision) << fpos3d.x();
-          } else {
-            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
-          }
-          break;
-        case 'b':
-          if (cell) {
-            m_stream << std::right << std::setw(coordinateWidth)
-                     << std::setprecision(coordinatePrecision) << fpos3d.y();
-          } else {
-            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
-          }
-          break;
-        case 'c':
-          if (cell) {
-            m_stream << std::right << std::setw(coordinateWidth)
-                     << std::setprecision(coordinatePrecision) << fpos3d.z();
-          } else {
-            m_stream << std::right << std::setw(coordinateWidth) << "N/A";
-          }
+        default:
+          writeAtomField(m_stream, specChar, fields, indexWidth, haveNext);
           break;
       } // end switch
 
