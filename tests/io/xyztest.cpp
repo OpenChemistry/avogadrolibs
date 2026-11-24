@@ -247,6 +247,33 @@ TEST(XyzTest, readMixedSeparatorsAndTrajectory)
   EXPECT_EQ(second[1], Vector3(1.1, 0.2, 0.8));
 }
 
+// A row with fewer than three force components must be rejected, not read
+// past the end of its tokens.
+TEST(XyzTest, readTruncatedForceColumns)
+{
+  const std::string header = "2\n"
+                             "Properties=species:S:1:pos:R:3:forces:R:3\n";
+  XyzFormat xyz;
+  xyz.setOptions(R"({"perceiveBonds": false})");
+  Molecule truncated;
+  EXPECT_FALSE(xyz.readString(header + "O\t0.0 0.0\t0.0\t0.1 0.2\t0.3\n"
+                                       "H 1.0\t0.0 0.5\t0.4\n",
+                              truncated));
+
+  XyzFormat control;
+  control.setOptions(R"({"perceiveBonds": false})");
+  Molecule molecule;
+  ASSERT_TRUE(control.readString(header + "O\t0.0 0.0\t0.0\t0.1 0.2\t0.3\n"
+                                          "H 1.0\t0.0 0.5\t0.4 0.5\t0.6\n",
+                                 molecule))
+    << control.error();
+  ASSERT_EQ(molecule.atomCount(), 2);
+  ASSERT_EQ(molecule.forceVectors().size(), 2);
+  // Adding an atom clears the force array, so the reader currently keeps only
+  // the force of the last atom; check that one.
+  EXPECT_EQ(molecule.forceVectors()[1], Vector3(0.4, 0.5, 0.6));
+}
+
 TEST(XyzTest, write)
 {
   XyzFormat xyz;

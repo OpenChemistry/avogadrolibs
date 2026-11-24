@@ -252,6 +252,10 @@ bool XyzFormat::read(std::istream& inStream, Core::Molecule& mol)
       // we set the charges after all atoms are added
     }
     if (forceColumn > 0 && forceColumn < tokens.size()) {
+      if (tokens.size() - forceColumn < 3) {
+        appendError("Not enough force components in this line: " + buffer);
+        return false;
+      }
       if (auto tmp = lexicalCast<double>(tokens.begin() + forceColumn,
                                          tokens.begin() + forceColumn + 3)) {
         Vector3 force(tmp->at(0), tmp->at(1), tmp->at(2));
