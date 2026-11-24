@@ -58,6 +58,9 @@ public:
    * @param vertices Output vertices (cleared first): for each cylinder, two
    * rings of 8 vertices, interleaved end1/end2 per point on the circle.
    * @param indices Output triangle list into @p vertices (cleared first).
+   *
+   * render() no longer calls this; it draws instances and builds the tube in
+   * the vertex shader. This is the CPU reference for that construction.
    */
   void tessellate(std::vector<ColorNormalVertex>& vertices,
                   std::vector<unsigned int>& indices) const;

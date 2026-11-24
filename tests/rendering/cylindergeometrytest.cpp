@@ -10,6 +10,9 @@
 #include <avogadro/rendering/scene.h>
 
 #include <cmath>
+#include <cstddef>
+#include <cstring>
+#include <type_traits>
 #include <vector>
 
 using Avogadro::Vector3f;
@@ -186,4 +189,47 @@ TEST(CylinderGeometryTest, hitsUseExplicitIndexWhenPresent)
     copy.hits(Vector3f(0.5f, 0, -5), Vector3f(0.5f, 0, 5), Vector3f(0, 0, 1));
   ASSERT_EQ(hits.size(), 1u);
   EXPECT_EQ(hits.begin()->second.index, 0u);
+}
+
+// cylinders() is uploaded as the per-instance buffer, so the byte layout is a
+// contract with the vertex shader: end1 @0, end2 @12, radius @24, color @28,
+// color2 @31, stride 36. The shader reads bytes 28..35 as two aligned
+// ubyte x 4 attributes.
+TEST(CylinderGeometryTest, instanceLayout)
+{
+  using Avogadro::Rendering::CylinderColor;
+  static_assert(std::is_standard_layout_v<CylinderColor>);
+  EXPECT_EQ(sizeof(CylinderColor), static_cast<size_t>(36));
+  EXPECT_EQ(offsetof(CylinderColor, end1), static_cast<size_t>(0));
+  EXPECT_EQ(offsetof(CylinderColor, end2), static_cast<size_t>(12));
+  EXPECT_EQ(offsetof(CylinderColor, radius), static_cast<size_t>(24));
+  EXPECT_EQ(offsetof(CylinderColor, color), static_cast<size_t>(28));
+  EXPECT_EQ(offsetof(CylinderColor, color2), static_cast<size_t>(31));
+}
+
+TEST(CylinderGeometryTest, instanceBytes)
+{
+  CylinderGeometry node;
+  node.addCylinder(Vector3f(1.0f, 2.0f, 3.0f), Vector3f(4.0f, 5.0f, 6.0f), 0.5f,
+                   Vector3ub(10, 20, 30), Vector3ub(40, 50, 60));
+  node.addCylinder(Vector3f(-1.0f, 0.0f, 1.0f), Vector3f(7.0f, 8.0f, 9.0f),
+                   2.0f, Vector3ub(1, 2, 3), Vector3ub(4, 5, 6));
+  const auto& cylinders = node.cylinders();
+  ASSERT_EQ(cylinders.size(), static_cast<size_t>(2));
+  const auto* bytes = reinterpret_cast<const unsigned char*>(cylinders.data());
+  const size_t second = sizeof(Avogadro::Rendering::CylinderColor);
+  float values[7];
+  std::memcpy(values, bytes + second, sizeof(values));
+  EXPECT_EQ(values[0], -1.0f);
+  EXPECT_EQ(values[3], 7.0f);
+  EXPECT_EQ(values[6], 2.0f);
+  // colorsA = (r1, g1, b1, r2), colorsB = (g2, b2, ...)
+  EXPECT_EQ(bytes[28], 10);
+  EXPECT_EQ(bytes[30], 30);
+  EXPECT_EQ(bytes[31], 40);
+  EXPECT_EQ(bytes[32], 50);
+  EXPECT_EQ(bytes[33], 60);
+  EXPECT_EQ(bytes[second + 28], 1);
+  EXPECT_EQ(bytes[second + 31], 4);
+  EXPECT_EQ(bytes[second + 33], 6);
 }
