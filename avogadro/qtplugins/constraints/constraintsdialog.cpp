@@ -23,15 +23,18 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
 {
   ui->setupUi(this);
 
-  connect(ui->comboType, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(changeType(int)));
-  connect(ui->okButton, SIGNAL(clicked()), this, SLOT(acceptConstraints()));
-  connect(ui->addConstraint, SIGNAL(clicked()), this, SLOT(addConstraint()));
-  connect(ui->getConstraint, SIGNAL(clicked()), this, SLOT(getConstraint()));
-  connect(ui->deleteConstraint, SIGNAL(clicked()), this,
-          SLOT(deleteConstraint()));
-  connect(ui->deleteAllConstraints, SIGNAL(clicked()), this,
-          SLOT(deleteAllConstraints()));
+  connect(ui->comboType, &QComboBox::currentIndexChanged, this,
+          &ConstraintsDialog::changeType);
+  connect(ui->okButton, &QPushButton::Clicked, this, 
+          &ConstraintsDialog::acceptConstraints);
+  connect(ui->addConstraint, &QPushButton::clicked, this, 
+          &ConstraintsDialog::addConstraint);
+  connect(ui->getConstraint, &QPushButton::clicked, this, 
+          &ConstraintsDialog::getConstraint);
+  connect(ui->deleteConstraint,  &QPushButton::clicked, this,
+          &ConstraintsDialog::deleteConstraint);
+  connect(ui->deleteAllConstraints, &QPushButton::clicked, this,
+          &ConstraintsDialog::deleteAllConstraints);
 
   changeType(0);
 
@@ -53,8 +56,8 @@ ConstraintsDialog::ConstraintsDialog(QWidget* parent_, Qt::WindowFlags f)
   // requires remapping
 
   connect(view->selectionModel(),
-          SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), this,
-          SLOT(highlightSelected(const QModelIndex&, const QModelIndex&)));
+          &QItemSelectionModel::currentChanged, this,
+          &ConstraintsDialog::highlightSelected);
 }
 
 ConstraintsDialog::~ConstraintsDialog()
