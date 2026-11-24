@@ -600,3 +600,94 @@ TEST(PdbTest, altLocWithoutPrecedingAtom)
   EXPECT_FLOAT_EQ(molecule.coordinate3d(1)[0].x(), 46.434)
     << "the B conformer belongs in its own coordinate set";
 }
+
+TEST(PdbTest, occupancyColumn)
+{
+  std::string contents;
+  contents +=
+    "ATOM      1  N   ALA A   1       0.000   0.000   0.000  0.50 10.00"
+    "           N  \n";
+  contents +=
+    "ATOM      2  CA  ALA A   1       1.000   0.000   0.000  1.00 10.00"
+    "           C  \n";
+  // a blank field and an unreadable one are full sites, not errors
+  contents +=
+    "ATOM      3  C   ALA A   1       2.000   0.000   0.000       10.00"
+    "           C  \n";
+  contents +=
+    "ATOM      4  O   ALA A   1       3.000   0.000   0.000  abcd 10.00"
+    "           O  \n";
+  // the record ends at the coordinates
+  contents += "ATOM      5  CB  ALA A   1       4.000   0.000   0.000\n";
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 5);
+  ASSERT_EQ(molecule.occupancies().size(), 5u);
+  EXPECT_EQ(molecule.occupancy(0), 0.5);
+  EXPECT_EQ(molecule.occupancy(1), 1.0);
+  EXPECT_EQ(molecule.occupancy(2), 1.0);
+  EXPECT_EQ(molecule.occupancy(3), 1.0);
+  EXPECT_EQ(molecule.occupancy(4), 1.0);
+}
+
+TEST(PdbTest, noOccupancyStoresNone)
+{
+  std::string contents;
+  contents += pdbAtomRecord(1, " N  ", "ALA", 1, 0.0);
+  contents += pdbAtomRecord(2, " CA ", "ALA", 1, 1.0);
+  contents += "ATOM      3  C   ALA A   1       2.000   0.000   0.000\n";
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 3);
+  EXPECT_TRUE(molecule.occupancies().empty());
+}
+
+TEST(PdbTest, occupancyStaysWithItsAtomAcrossSkippedRecords)
+{
+  std::string contents;
+  contents +=
+    "ATOM      1  N   ALA A   1       0.000   0.000   0.000  0.40 10.00"
+    "           N  \n";
+  // an element that cannot be read is skipped and must not shift the rest
+  contents +=
+    "ATOM      2  QQ  ALA A   1       1.000   0.000   0.000  0.10 10.00"
+    "           QQ \n";
+  contents +=
+    "ATOM      3  C   ALA A   1       2.000   0.000   0.000  0.70 10.00"
+    "           C  \n";
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule));
+  ASSERT_EQ(molecule.atomCount(), 2);
+  EXPECT_EQ(molecule.occupancy(0), 0.4);
+  EXPECT_EQ(molecule.occupancy(1), 0.7);
+}
+
+// The alternate locations are coordinate sets, so only the occupancy of the
+// atom itself (the first location) is kept.
+TEST(PdbTest, altLocOccupancyIsNotStored)
+{
+  std::string contents;
+  contents +=
+    "ATOM      1  C  AVAL A 196      45.365  -7.308  44.414  0.60 45.48"
+    "           C  \n";
+  contents +=
+    "ATOM      2  C  BVAL A 196      45.465  -7.408  44.514  0.40 45.48"
+    "           C  \n";
+  contents += "END\n";
+
+  PdbFormat pdb;
+  Molecule molecule;
+  ASSERT_TRUE(pdb.readString(contents, molecule)) << pdb.error();
+  ASSERT_EQ(molecule.atomCount(), 1);
+  ASSERT_EQ(molecule.occupancies().size(), 1u);
+  EXPECT_EQ(molecule.occupancy(0), 0.6);
+}

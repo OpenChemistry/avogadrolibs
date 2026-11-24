@@ -16,6 +16,7 @@
 #include <avogadro/core/vector.h>
 
 #include <cctype>
+#include <cmath>
 #include <iostream>
 #include <istream>
 #include <map>
@@ -49,6 +50,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   bool ok(false);
   int coordSet = 0;
   Array<Vector3> positions;
+  // The site occupancy of every atom added in coordinate set 0, in step with
+  // the atoms. Alternate-location records become coordinate sets, not atoms,
+  // so their occupancies are not stored.
+  Array<double> occupancies;
+  bool anyPartialOccupancy = false;
   Array<size_t> rawToAtomId;
   Array<size_t> altAtomIds;
   Array<int> altAtomCoordSets;
@@ -266,6 +272,18 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
 
       auto altLoc = lexicalCast<string>(buffer.substr(16, 1), ok);
 
+      // Columns 55-60 are the occupancy. The field is optional (old and
+      // PDB-like files end the record at the coordinates), so anything that
+      // is missing, blank or unreadable is a full site rather than an error.
+      double occupancy = 1.0;
+      if (buffer.size() > 54) {
+        bool occupancyOk = false;
+        const double value =
+          lexicalCast<double>(buffer.substr(54, 6), occupancyOk);
+        if (occupancyOk && std::isfinite(value) && value >= 0.0)
+          occupancy = value;
+      }
+
       // Columns 77-78 are the element symbol, right justified, and are
       // authoritative whenever they hold one: the atom name only has to be
       // guessed at when they do not.
@@ -421,6 +439,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           r->addResidueAtom(atomName, newAtom);
         }
         rawToAtomId.push_back(mol.atomCount() - 1);
+        occupancies.push_back(occupancy);
+        if (occupancy != 1.0)
+          anyPartialOccupancy = true;
       } else {
         positions.push_back(pos);
       }
@@ -556,6 +577,11 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
           coordinateSet, mol.coordinate3dCount() ? mol.coordinate3dCount() : 1);
     }
   }
+
+  // Only store occupancies when some atom is not a full site, so an ordinary
+  // file does not grow the column.
+  if (anyPartialOccupancy && occupancies.size() == mol.atomCount())
+    mol.setOccupancies(occupancies);
 
   mol.perceiveBondsSimple();
   mol.perceiveBondsFromResidueData();
