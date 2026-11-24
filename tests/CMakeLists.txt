@@ -79,7 +79,8 @@ if(USE_QT)
   add_subdirectory(qtgui)
   # GLWidget lives in QtOpenGL, which is only built with USE_OPENGL. In a
   # standalone build the target comes from the installed AvogadroLibs package.
-  if(TARGET Avogadro::QtOpenGL)
+  # On WASM, GLWidget's makeCurrent(), doneCurrent() and context() are private.
+  if(TARGET Avogadro::QtOpenGL AND NOT EMSCRIPTEN)
     add_subdirectory(qtopengl)
   endif()
   # The command-boundary tests link plugin targets directly, which only works
