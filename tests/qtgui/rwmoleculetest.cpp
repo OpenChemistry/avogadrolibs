@@ -4418,6 +4418,57 @@ TEST(RWMoleculeTest, setAtomPosition2dIsUndoable)
   EXPECT_EQ(2, mol.undoStack().count());
 }
 
+TEST(RWMoleculeTest, setOccupancyUndoRestoresEmptyArray)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+  ASSERT_TRUE(m.occupancies().empty());
+
+  ASSERT_TRUE(mol.setOccupancy(1, 0.5));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+  EXPECT_EQ(1.0, mol.occupancy(0));
+  EXPECT_EQ(2u, m.occupancies().size());
+
+  // undo puts back the shape, not just the value
+  mol.undoStack().undo();
+  EXPECT_TRUE(m.occupancies().empty());
+  mol.undoStack().redo();
+  EXPECT_EQ(0.5, mol.occupancy(1));
+
+  // once the column is whole, edits are single entries again
+  ASSERT_TRUE(mol.setOccupancy(0, 0.25));
+  mol.undoStack().undo();
+  EXPECT_EQ(2u, m.occupancies().size());
+  EXPECT_EQ(1.0, mol.occupancy(0));
+  EXPECT_EQ(0.5, mol.occupancy(1));
+}
+
+TEST(RWMoleculeTest, appendMoleculeOccupancyUndoLeavesNone)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  Molecule source;
+  source.addAtom(8);
+  source.addAtom(8);
+  source.setOccupancy(1, 0.5);
+  mol.appendMolecule(source, "Append");
+  ASSERT_EQ(3u, mol.atomCount());
+  EXPECT_EQ(0.5, mol.occupancy(2));
+  EXPECT_EQ(1.0, mol.occupancy(1));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(1u, mol.atomCount());
+  EXPECT_TRUE(m.occupancies().empty());
+  mol.undoStack().redo();
+  EXPECT_EQ(0.5, mol.occupancy(2));
+}
+
 TEST(RWMoleculeTest, setAtomPosition2dUndoRestoresEmptyArray)
 {
   Molecule m;

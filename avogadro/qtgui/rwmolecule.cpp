@@ -376,6 +376,26 @@ bool RWMolecule::setOccupancy(Index atomId, double occupancy)
   if (atomId >= atomCount() || !std::isfinite(occupancy) || occupancy < 0.0)
     return false;
 
+  // As for the 2D positions: the first edit of a short or empty column grows
+  // it to the atom count, so keep the whole array to let undo restore its
+  // shape (a molecule without occupancies must not seem to have them). The
+  // values come only from here, already validated.
+  const Array<double>& current = m_molecule.occupancies();
+  if (current.size() != atomCount()) {
+    Array<double> grown(current);
+    grown.resize(atomCount(), 1.0);
+    grown[atomId] = occupancy;
+    auto* comm = new SetArrayCommand<double>(
+      *this,
+      [](Molecule& mol, const Array<double>& values) {
+        mol.occupancies() = values;
+      },
+      current, grown);
+    comm->setText(tr("Change Atom Occupancy"));
+    m_undoStack.push(comm);
+    return true;
+  }
+
   auto* comm = new SetEntryCommand<double>(
     *this,
     [](Molecule& mol, Index index, const double& value) {
