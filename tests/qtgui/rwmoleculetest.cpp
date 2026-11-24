@@ -4360,6 +4360,25 @@ TEST(RWMoleculeTest, setOccupancyIsUndoable)
   EXPECT_EQ(0.5, mol.occupancy(1));
 }
 
+TEST(RWMoleculeTest, setOccupancyEmitsChanges)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  const std::vector<unsigned int> expected{ Molecule::Atoms |
+                                            Molecule::Properties };
+  // the first edit grows the empty column, a later one sets an entry
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.setOccupancy(1, 0.5); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.setOccupancy(0, 0.25); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().undo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().undo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
+}
+
 TEST(RWMoleculeTest, undoRemoveAtomRestoresOccupancy)
 {
   Molecule m;

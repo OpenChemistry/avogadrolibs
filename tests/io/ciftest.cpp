@@ -1485,6 +1485,34 @@ TEST(CifTest, writeKeepsOccupancy)
   EXPECT_EQ(plainText.find("occupancy"), std::string::npos);
 }
 
+TEST(CifTest, writeKeepsTinyOccupancy)
+{
+  Molecule original;
+  original.setUnitCell(new UnitCell(8.0, 9.0, 10.0, 1.5707963267948966,
+                                    1.5707963267948966, 1.5707963267948966));
+  original.addAtom(6).setPosition3d(Vector3(1.0, 2.0, 3.0));
+  original.addAtom(8).setPosition3d(Vector3(4.0, 5.0, 6.0));
+  original.addAtom(7).setPosition3d(Vector3(2.0, 3.0, 4.0));
+  original.setHallNumber(1);
+  // below 0.00005, four fixed decimals would write zero
+  ASSERT_TRUE(original.setOccupancy(0, 0.00002));
+  ASSERT_TRUE(original.setOccupancy(1, 0.0));
+  ASSERT_TRUE(original.setOccupancy(2, 0.375));
+
+  std::string text;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(text, original)) << writer.error();
+
+  Molecule readBack;
+  CifFormat reader;
+  ASSERT_TRUE(reader.readString(text, readBack)) << reader.error();
+  ASSERT_EQ(readBack.atomCount(), 3);
+  EXPECT_GT(readBack.occupancy(0), 0.0);
+  EXPECT_NEAR(readBack.occupancy(0), 0.00002, 1e-9);
+  EXPECT_EQ(readBack.occupancy(1), 0.0);
+  EXPECT_EQ(readBack.occupancy(2), 0.375);
+}
+
 TEST(CifTest, writeExpandsToP1WithOccupancy)
 {
   // P -1 stored as a Hall number: the writer fills the cell, and every image

@@ -685,6 +685,21 @@ std::string formatNumber(double value, int decimals)
   return text;
 }
 
+// An occupancy with four decimals, but one so small that it would round to
+// zero or nearly so keeps four significant digits instead, so that it still
+// reads back as a partial site.
+std::string formatOccupancy(double value)
+{
+  if (value == 0.0 || std::abs(value) >= 0.001)
+    return formatNumber(value, 4);
+  std::ostringstream stream;
+  stream.imbue(std::locale::classic());
+  stream.setf(std::ios::scientific, std::ios::floatfield);
+  stream.precision(4);
+  stream << value;
+  return stream.str();
+}
+
 // A data block name has no white space; keep it readable.
 std::string blockName(const std::string& name)
 {
@@ -825,7 +840,7 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
                                        formatNumber(fractional.y(), 8),
                                        formatNumber(fractional.z(), 8) };
       if (writeOccupancy)
-        row.push_back(formatNumber(source->occupancy(i), 4));
+        row.push_back(formatOccupancy(source->occupancy(i)));
       sites.add_row(row);
     }
 

@@ -389,6 +389,8 @@ bool RWMolecule::setOccupancy(Index atomId, double occupancy)
       *this,
       [](Molecule& mol, const Array<double>& values) {
         mol.occupancies() = values;
+        // as for the isotope: nothing else refreshes a view of the occupancy
+        mol.emitChanged(Molecule::Atoms | Molecule::Properties);
       },
       current, grown);
     comm->setText(tr("Change Atom Occupancy"));
@@ -400,6 +402,7 @@ bool RWMolecule::setOccupancy(Index atomId, double occupancy)
     *this,
     [](Molecule& mol, Index index, const double& value) {
       mol.setOccupancy(index, value);
+      mol.emitChanged(Molecule::Atoms | Molecule::Properties);
     },
     atomId, m_molecule.occupancy(atomId), occupancy);
   comm->setText(tr("Change Atom Occupancy"));
