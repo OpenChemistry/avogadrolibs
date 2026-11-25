@@ -7,18 +7,26 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/qtopengl/renderoptions.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
+#include <avogadro/rendering/camera.h>
+#include <avogadro/rendering/cylindergeometry.h>
+#include <avogadro/rendering/dashedlinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/shader.h>
 #include <avogadro/rendering/shaderprogram.h>
 #include <avogadro/rendering/solidpipeline.h>
 #include <avogadro/rendering/spheregeometry.h>
+#include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/texture2d.h>
+#include <avogadro/rendering/widelinegeometry.h>
 
 #include <QtGui/QImage>
 #include <QtGui/QOpenGLContext>
@@ -38,20 +46,109 @@ using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::QtOpenGL::RenderOptions;
 using Avogadro::Rendering::ArrowGeometry;
 using Avogadro::Rendering::BSplineGeometry;
+using Avogadro::Rendering::Camera;
+using Avogadro::Rendering::CylinderGeometry;
+using Avogadro::Rendering::DashedLineGeometry;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GLRenderer;
+using Avogadro::Rendering::LineStripGeometry;
+using Avogadro::Rendering::MeshGeometry;
 using Avogadro::Rendering::Orthographic;
 using Avogadro::Rendering::Perspective;
 using Avogadro::Rendering::Shader;
 using Avogadro::Rendering::ShaderProgram;
 using Avogadro::Rendering::SphereGeometry;
+using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::Texture2D;
 using Avogadro::Rendering::TranslucentPass;
+using Avogadro::Rendering::WideLineGeometry;
 using namespace Avogadro::TestGL;
 
 namespace {
 
 const Vector4ub Background(40, 80, 120, 255);
+
+// The error GL has recorded since the last drain, with the widget's context
+// current. Goes through QOpenGLFunctions: the test binary does not link
+// opengl32 on Windows.
+GLenum currentGLError()
+{
+  return QOpenGLContext::currentContext()->functions()->glGetError();
+}
+
+// One drawable of every kind that takes its shader program from the
+// renderer's per-context cache, spread over the view.
+GeometryNode* makeEveryProgramScene()
+{
+  auto* geometry = new GeometryNode;
+
+  auto* spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f(-3, 2, 0), Vector3ub(255, 0, 0), 0.5f);
+  geometry->addDrawable(spheres);
+
+  auto* cylinders = new CylinderGeometry;
+  cylinders->addCylinder(Vector3f(-1, 2, 0), Vector3f(1, 2, 0), 0.25f,
+                         Vector3ub(0, 255, 0));
+  geometry->addDrawable(cylinders);
+
+  auto* mesh = new MeshGeometry;
+  Avogadro::Core::Array<Vector3f> vertices;
+  Avogadro::Core::Array<Vector3f> normals;
+  vertices.push_back(Vector3f(2, 1.5f, 0));
+  vertices.push_back(Vector3f(3, 1.5f, 0));
+  vertices.push_back(Vector3f(2.5f, 2.5f, 0));
+  for (int i = 0; i < 3; ++i)
+    normals.push_back(Vector3f(0, 0, 1));
+  mesh->setColor(Vector3ub(0, 0, 255));
+  mesh->addVertices(vertices, normals);
+  mesh->addTriangle(0, 1, 2);
+  geometry->addDrawable(mesh);
+
+  auto* wide = new WideLineGeometry;
+  wide->addLine(Vector3f(-3, 0, 0), Vector3f(-1, 0, 0), Vector3ub(255, 255, 0),
+                0.1f);
+  geometry->addDrawable(wide);
+
+  auto* strip = new LineStripGeometry;
+  Avogadro::Core::Array<Vector3f> stripPoints;
+  stripPoints.push_back(Vector3f(0, -0.5f, 0));
+  stripPoints.push_back(Vector3f(1, 0.5f, 0));
+  stripPoints.push_back(Vector3f(2, -0.5f, 0));
+  // glLineWidth() above 1 is an error in a core profile on macOS.
+  strip->addLineStrip(stripPoints, Vector3ub(255, 0, 255), 1.0f);
+  geometry->addDrawable(strip);
+
+  // DashedLineGeometry is deprecated but still shipped, and still uses a
+  // program from the cache.
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+  auto* dashed = new DashedLineGeometry;
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+  dashed->addDashedLine(Vector3f(-3, -2, 0), Vector3f(-1, -2, 0),
+                        Vector3ub(0, 255, 255), 6);
+  geometry->addDrawable(dashed);
+
+  auto* arrow = new ArrowGeometry;
+  arrow->addSingleArrow(Vector3f(0, -2, 0), Vector3f(2, -2, 0),
+                        Vector3ub(255, 128, 0));
+  geometry->addDrawable(arrow);
+
+  auto* label = new TextLabel3D;
+  label->setText("Label");
+  label->setAnchor(Vector3f(3, -2, 0));
+  geometry->addDrawable(label);
+
+  return geometry;
+}
 
 class GLWidgetTest : public ::testing::Test
 {
@@ -545,4 +642,75 @@ TEST_F(GLWidgetTest, reparentToAnotherWindowKeepsRendering)
   // Destroy the widget with its window still alive and the renderer clean.
   delete moving;
   settle();
+}
+
+// Every drawable type draws with a shader program from the renderer's
+// per-context cache, and none of that leaves a GL error behind.
+TEST_F(GLWidgetTest, everyProgramRendersWithoutGLErrors)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(makeEveryProgramScene());
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  // A second frame reuses the cached programs and the uploaded buffers.
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 20); // the red sphere
+  EXPECT_GT(dominantBounds(image, 1, 90, 60).count, 20); // the cylinder
+}
+
+// cleanup() deletes the cached programs; initialize() on the same context
+// must rebuild them on demand.
+TEST_F(GLWidgetTest, cleanupThenInitializeRendersAgain)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(makeEveryProgramScene());
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 20);
+  EXPECT_GT(dominantBounds(image, 1, 90, 60).count, 20);
+}
+
+// A drawable rendered directly, outside GLRenderer::render(), builds its
+// program in a temporary context and deletes it again.
+TEST_F(GLWidgetTest, drawableRendersOutsideTheRenderer)
+{
+  widget->makeCurrent();
+  drainGLErrors();
+  {
+    SphereGeometry spheres;
+    spheres.addSphere(Vector3f(0, 0, -5), Vector3ub(255, 255, 255), 1.0f);
+    Camera camera;
+    camera.calculatePerspective(40.0f, 0.1f, 100.0f);
+    spheres.render(camera);
+    EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+    // Again: the first call's program is gone, so this builds a new one.
+    spheres.render(camera);
+    EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  }
+  widget->doneCurrent();
 }

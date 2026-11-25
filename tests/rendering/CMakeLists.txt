@@ -13,6 +13,7 @@ set(tests
   GltfVisitor
   Node
   PLYVisitor
+  RenderContext
   SphereGeometry
   TessellatingVisitor
   Texture2D
@@ -37,7 +38,9 @@ message(STATUS "Test source files: ${testSrcs}")
 add_executable(AvogadroRenderingTests ${testSrcs})
 # cartoondetail.h is a Qt-free header of the Cartoons plugin.
 target_include_directories(AvogadroRenderingTests PRIVATE
-  "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/cartoons")
+  "${AvogadroLibs_SOURCE_DIR}/avogadro/qtplugins/cartoons"
+  # rendercontext_p.h is private to the library and not installed.
+  "${AvogadroLibs_SOURCE_DIR}/avogadro/rendering")
 target_compile_definitions(AvogadroRenderingTests PRIVATE
   AVOGADRO_DATA="${AVOGADRO_DATA_ROOT}")
 target_link_libraries(AvogadroRenderingTests Avogadro::Rendering Avogadro::IO

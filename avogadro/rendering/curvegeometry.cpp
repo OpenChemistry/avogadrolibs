@@ -7,13 +7,10 @@
 
 #include "camera.h"
 #include "geometrytiming.h"
+#include "rendercontext_p.h"
 #include "scene.h"
 #include "visitor.h"
 
-namespace {
-#include "curves_vs.h"
-#include "cylinders_fs.h"
-} // namespace
 #include "avogadrogl.h"
 
 #include <algorithm>
@@ -26,36 +23,6 @@ using std::cout;
 namespace Avogadro::Rendering {
 
 using Core::Array;
-
-namespace {
-// One program shared by every curve geometry (like SphereGeometry and
-// CylinderGeometry), compiled the first time any of them needs it.
-Shader* curveVertexShader = nullptr;
-Shader* curveFragmentShader = nullptr;
-ShaderProgram* curveProgram = nullptr;
-
-ShaderProgram& sharedProgram()
-{
-  if (curveProgram == nullptr) {
-    curveVertexShader = new Shader;
-    curveVertexShader->setType(Shader::Vertex);
-    curveVertexShader->setSource(curves_vs);
-    curveFragmentShader = new Shader;
-    curveFragmentShader->setType(Shader::Fragment);
-    curveFragmentShader->setSource(cylinders_fs);
-    if (!curveVertexShader->compile())
-      cout << curveVertexShader->error() << '\n';
-    if (!curveFragmentShader->compile())
-      cout << curveFragmentShader->error() << '\n';
-    curveProgram = new ShaderProgram;
-    curveProgram->attachShader(*curveVertexShader);
-    curveProgram->attachShader(*curveFragmentShader);
-    if (!curveProgram->link())
-      cout << curveProgram->error() << '\n';
-  }
-  return *curveProgram;
-}
-} // namespace
 
 CurveGeometry::CurveGeometry() : m_canBeFlat(true)
 {
@@ -320,6 +287,12 @@ void CurveGeometry::tessellate(size_t lineIndex,
 
 void CurveGeometry::update(int index)
 {
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* programPtr =
+    RenderContext::current()->shaders().program(ShaderId::Curves);
+  if (programPtr == nullptr)
+    return;
+
   Line* line = m_lines[index];
   line->numberOfVertices = 0;
   line->numberOfIndices = 0;
@@ -343,7 +316,7 @@ void CurveGeometry::update(int index)
   }
 
   // Set up VAO with vertex attribute bindings (OpenGL 4.0 core profile)
-  ShaderProgram& program = sharedProgram();
+  ShaderProgram& program = *programPtr;
   line->vao.bind();
   line->vbo.bind();
   if (!indices.empty()) {
@@ -383,13 +356,22 @@ void CurveGeometry::accept(Visitor& visitor)
 void CurveGeometry::processShaderError(bool error)
 {
   if (error) {
-    cout << sharedProgram().error() << '\n';
+    RenderContext* context = RenderContext::current();
+    ShaderProgram* program =
+      context ? context->shaders().program(ShaderId::Curves) : nullptr;
+    if (program != nullptr)
+      cout << program->error() << '\n';
   }
 }
 
 void CurveGeometry::render(const Camera& camera)
 {
-  ShaderProgram& program = sharedProgram();
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* programPtr =
+    RenderContext::current()->shaders().program(ShaderId::Curves);
+  if (programPtr == nullptr)
+    return;
+  ShaderProgram& program = *programPtr;
 
   processShaderError(!program.bind());
   processShaderError(

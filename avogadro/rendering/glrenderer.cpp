@@ -12,6 +12,7 @@
 #include "geometrynode.h"
 #include "geometrytiming.h"
 #include "glrendervisitor.h"
+#include "rendercontext_p.h"
 #include "rendertimings.h"
 #include "shader.h"
 #include "shaderprogram.h"
@@ -226,6 +227,9 @@ public:
   RenderTimings timings;
   bool timingEnabled = false;
   bool timingSync = false;
+  // Shader programs shared by the drawables, tied to the GL context that
+  // initialize() was called in.
+  RenderContext context;
 };
 
 GLRenderer::GLRenderer()
@@ -294,6 +298,9 @@ void GLRenderer::initialize()
   d->timing = TimingState();
   d->timings = RenderTimings();
 
+  // A new context life: drawables see a new id and rebuild their GL buffers.
+  d->context.initialize();
+
 #ifdef __EMSCRIPTEN__
   m_valid = true;
 #else
@@ -328,6 +335,7 @@ void GLRenderer::cleanup()
   d->timing = TimingState();
   d->timings = RenderTimings();
   d->timingEnabled = false;
+  d->context.releaseResources();
   m_solidPipeline.releaseResources();
 }
 
@@ -362,6 +370,9 @@ void GLRenderer::render()
 {
   if (!m_valid)
     return;
+
+  // Drawables find their shader programs through the current context.
+  ScopedRenderContext renderContext(&d->context);
 
   TimingState* timing = d->timingEnabled ? &d->timing : nullptr;
   if (timing) {

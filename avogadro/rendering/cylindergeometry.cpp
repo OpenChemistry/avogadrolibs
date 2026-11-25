@@ -12,13 +12,8 @@
 #include "bufferobject.h"
 #include "vertexarrayobject.h"
 
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
-
-namespace {
-#include "cylinders_fs.h"
-#include "cylinders_vs.h"
-} // namespace
 
 #include "avogadrogl.h"
 
@@ -69,10 +64,6 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
-
-  inline static Shader* vertexShader = nullptr;
-  inline static Shader* fragmentShader = nullptr;
-  inline static ShaderProgram* program = nullptr;
 
   size_t numberOfInstances = 0;
 };
@@ -170,29 +161,13 @@ void CylinderGeometry::update()
   if (m_indices.empty() || m_cylinders.empty())
     return;
 
-  // Build and link the shader if it has not been used yet.
-  // Must be done before VAO setup since we need the program for attribute
+  // The program must exist before VAO setup since we need it for attribute
   // setup.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(cylinders_vs);
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(cylinders_fs);
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << '\n';
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << '\n';
-
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << '\n';
-  }
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* program =
+    RenderContext::current()->shaders().program(ShaderId::Cylinders);
+  if (program == nullptr)
+    return;
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
@@ -238,7 +213,6 @@ void CylinderGeometry::update()
     }
 
     // All attributes advance once per cylinder (instance).
-    ShaderProgram* program = d->program;
     const auto stride = sizeof(CylinderColor);
     struct Attribute
     {
@@ -280,33 +254,39 @@ void CylinderGeometry::render(const Camera& camera)
   if (m_indices.empty() || m_cylinders.empty())
     return;
 
+  FallbackRenderContext fallbackContext;
+
   // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
-  if (!d->program->bind())
-    cout << d->program->error() << '\n';
+  ShaderProgram* program =
+    RenderContext::current()->shaders().program(ShaderId::Cylinders);
+  if (program == nullptr)
+    return;
+
+  if (!program->bind())
+    cout << program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   // If bind fails (e.g., no GL context), skip rendering to avoid GL errors.
   if (!d->vao.bind()) {
-    d->program->release();
+    program->release();
     return;
   }
 
   // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program->error() << '\n';
+  if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
+    cout << program->error() << '\n';
   }
-  if (!d->program->setUniformValue("projection",
-                                   camera.projection().matrix())) {
-    cout << d->program->error() << '\n';
+  if (!program->setUniformValue("projection", camera.projection().matrix())) {
+    cout << program->error() << '\n';
   }
-  if (!d->program->setUniformValue("opacity", m_opacity)) {
-    cout << d->program->error() << '\n';
+  if (!program->setUniformValue("opacity", m_opacity)) {
+    cout << program->error() << '\n';
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
-  if (!d->program->setUniformValue("normalMatrix", normalMatrix))
-    std::cout << d->program->error() << '\n';
+  if (!program->setUniformValue("normalMatrix", normalMatrix))
+    std::cout << program->error() << '\n';
 
   // Render the loaded cylinders using the shader and VAO.
   if (d->numberOfInstances > 0) {
@@ -316,7 +296,7 @@ void CylinderGeometry::render(const Camera& camera)
   }
 
   d->vao.release();
-  d->program->release();
+  program->release();
 }
 
 std::multimap<float, Identifier> CylinderGeometry::hits(

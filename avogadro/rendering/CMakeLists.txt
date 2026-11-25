@@ -101,8 +101,10 @@ target_sources(Rendering PRIVATE
   povrayvisitor.cpp
   quad.cpp
   quadoutline.cpp
+  rendercontext.cpp
   scene.cpp
   shader.cpp
+  shaderlibrary.cpp
   shaderprogram.cpp
   solidpipeline.cpp
   spheregeometry.cpp
