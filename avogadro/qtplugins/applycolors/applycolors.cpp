@@ -82,7 +82,8 @@ ApplyColors::ApplyColors(QObject* parent_)
 
   action = new QAction(tr("By Partial Charge…"), this);
   action->setData(atomColors);
-  connect(action, &QAction::triggered, this, &ApplyColors::applyChargeColors);
+  connect(action, &QAction::triggered, this,
+          qOverload<>(&ApplyColors::applyChargeColors));
   m_actions.append(action);
 
   action = new QAction(tr("By Secondary Structure"), this);
