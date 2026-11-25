@@ -181,8 +181,6 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   if (vboInvalid)
     uploadVbo(*shaderProgram);
 
-  const Matrix4f mv(cam.modelView().matrix());
-  const Matrix4f proj(cam.projection().matrix());
   const Vector2i vpDims(static_cast<int>(cam.width() * pixelRatio),
                         static_cast<int>(cam.height() * pixelRatio));
 
@@ -193,8 +191,8 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   }
 
   // Setup shaders and uniforms
-  if (!shaderProgram->bind() || !shaderProgram->setUniformValue("mv", mv) ||
-      !shaderProgram->setUniformValue("proj", proj) ||
+  if (!shaderProgram->bind() ||
+      !RenderContext::current()->cameraBuffer().use(cam) ||
       !shaderProgram->setUniformValue("vpDims", vpDims) ||
       !shaderProgram->setUniformValue("anchor", anchor) ||
       !shaderProgram->setUniformValue("radius", radius) ||

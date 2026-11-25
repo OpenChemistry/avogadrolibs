@@ -6,8 +6,6 @@ in vec4 color;
 
 out vec4 outColor;
 
-uniform mat4 modelView;
-uniform mat4 projection;
 
 void main()
 {

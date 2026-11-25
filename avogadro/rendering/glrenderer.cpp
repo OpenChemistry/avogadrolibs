@@ -389,6 +389,13 @@ void GLRenderer::render()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   applyProjection();
 
+  // Put this frame's camera and scene bounds in the shared camera buffer.
+  // Drawables rendered with another camera (the 2D overlay) switch it
+  // themselves and keep these frame parameters.
+  CameraBuffer& cameraBuffer = d->context.cameraBuffer();
+  cameraBuffer.setFrameParameters(m_pixelRatio, m_center, m_radius);
+  cameraBuffer.use(m_camera);
+
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   visitor.setPixelRatio(m_pixelRatio);
   // One walk of the scene sorts the drawables by pass. Each pass then hands

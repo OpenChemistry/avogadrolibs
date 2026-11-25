@@ -194,13 +194,10 @@ void SphereGeometry::render(const Camera& camera)
     return;
   }
 
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << program->error() << '\n';
-  }
-  if (!program->setUniformValue("projection", camera.projection().matrix())) {
-    cout << program->error() << '\n';
-  }
+  // Set up our uniforms.
+  // The camera lives in the shared uniform buffer.
+  if (!RenderContext::current()->cameraBuffer().use(camera))
+    cout << "Could not update the camera buffer." << '\n';
   if (!program->setUniformValue("opacity", m_opacity)) {
     cout << program->error() << '\n';
   }

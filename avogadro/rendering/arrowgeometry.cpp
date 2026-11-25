@@ -322,16 +322,10 @@ void ArrowGeometry::render(const Camera& camera)
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << program->error() << '\n';
-  }
-  if (!program->setUniformValue("projection", camera.projection().matrix())) {
-    cout << program->error() << '\n';
-  }
-  Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
-  if (!program->setUniformValue("normalMatrix", normalMatrix))
-    cout << program->error() << '\n';
+  // Set up our uniforms.
+  // The camera lives in the shared uniform buffer.
+  if (!RenderContext::current()->cameraBuffer().use(camera))
+    cout << "Could not update the camera buffer." << '\n';
   if (!program->setUniformValue("normalSign", 1.0f))
     cout << program->error() << '\n';
 

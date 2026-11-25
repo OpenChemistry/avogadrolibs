@@ -387,14 +387,9 @@ void CurveGeometry::render(const Camera& camera)
   ShaderProgram& program = *programPtr;
 
   processShaderError(!program.bind());
-  processShaderError(
-    !program.setUniformValue("modelView", camera.modelView().matrix()));
-  processShaderError(
-    !program.setUniformValue("projection", camera.projection().matrix()));
+  // The camera lives in the shared uniform buffer.
+  processShaderError(!RenderContext::current()->cameraBuffer().use(camera));
   processShaderError(!program.setUniformValue("opacity", 1.0f));
-  Eigen::Matrix3f normalMatrix =
-    camera.modelView().linear().inverse().transpose();
-  processShaderError(!program.setUniformValue("normalMatrix", normalMatrix));
 
   for (size_t i = 0; i < m_lines.size(); ++i) {
     Line* line = m_lines[i];

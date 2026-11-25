@@ -7,8 +7,6 @@ in vec4 color;        // RGBA color at this endpoint
 in float widthSide;   // half-width * side (-1 or +1)
 in float lineParam;   // dash parameter (0 for solid lines)
 
-uniform mat4 modelView;
-uniform mat4 projection;
 
 out vec4 outColor;
 out float fragLineParam;

@@ -974,3 +974,172 @@ TEST_F(GLWidgetTest, curveGeometryRebuildsAfterContextReplaced)
   ASSERT_FALSE(image.isNull());
   EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 50);
 }
+
+// The main camera and the 2D overlay camera share one uniform buffer: a
+// drawable rendered with the overlay camera must land where that camera puts
+// it, and the main scene must stay put in the frames before and after.
+TEST_F(GLWidgetTest, overlayDrawableUsesItsOwnCamera)
+{
+  using namespace Avogadro::Rendering;
+  // A gray quad (flat 0.4 * 255 shading) in overlay coordinates: logical
+  // pixels, origin at the bottom left.
+  const float left = 20.0f, right = 100.0f, bottom = 30.0f, top = 70.0f;
+  auto* node = new GeometryNode;
+  auto* quad = new MeshGeometry;
+  Avogadro::Core::Array<Vector3f> vertices;
+  Avogadro::Core::Array<Vector3f> normals;
+  vertices.push_back(Vector3f(left, bottom, 0));
+  vertices.push_back(Vector3f(right, bottom, 0));
+  vertices.push_back(Vector3f(right, top, 0));
+  vertices.push_back(Vector3f(left, top, 0));
+  for (int i = 0; i < 4; ++i)
+    normals.push_back(Vector3f(0, 0, 1));
+  quad->setColor(Vector3ub(255, 255, 255));
+  quad->addVertices(vertices, normals);
+  // Both windings, so the quad shows whatever the face culling is.
+  quad->addTriangle(0, 1, 2);
+  quad->addTriangle(0, 2, 3);
+  quad->addTriangle(0, 2, 1);
+  quad->addTriangle(0, 3, 2);
+  quad->setRenderPass(Overlay2DPass);
+  node->addDrawable(quad);
+
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(node);
+  widget->doneCurrent();
+  settle();
+
+  const QImage first = widget->grabFramebuffer();
+  ASSERT_FALSE(first.isNull());
+  saveForInspection(first, "glwidget-overlay.png");
+
+  // The overlay quad, where the overlay camera puts it.
+  const Camera& camera = widget->renderer().camera();
+  const double sx = static_cast<double>(first.width()) / camera.width();
+  const double sy = static_cast<double>(first.height()) / camera.height();
+  const Bounds gray = colorBounds(first, 102, 102, 102, 6);
+  ASSERT_GT(gray.count, 100);
+  EXPECT_NEAR(gray.minX, left * sx, 2.0 * sx);
+  EXPECT_NEAR(gray.maxX + 1, right * sx, 2.0 * sx);
+  EXPECT_NEAR(gray.minY, first.height() - top * sy, 2.0 * sy);
+  EXPECT_NEAR(gray.maxY + 1, first.height() - bottom * sy, 2.0 * sy);
+
+  // The spheres of the main camera are where the scene puts them.
+  const Bounds red = dominantBounds(first, 0, 90, 60);
+  ASSERT_GT(red.count, 20);
+  const QPointF redCenter = screenPoint(*widget, first, Vector3f(0, 0, 0));
+  EXPECT_GE(redCenter.x(), red.minX);
+  EXPECT_LE(redCenter.x(), red.maxX + 1);
+  EXPECT_GE(redCenter.y(), red.minY);
+  EXPECT_LE(redCenter.y(), red.maxY + 1);
+
+  // The next frame starts from the overlay camera in the buffer, and
+  // renders the same picture.
+  widget->makeCurrent();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage second = widget->grabFramebuffer();
+  ASSERT_FALSE(second.isNull());
+  EXPECT_EQ(first, second);
+}
+
+// A drawable rendered outside GLRenderer::render() with a camera of its own
+// lands where that camera puts it, also right after the renderer drew a frame
+// with a different camera, and the renderer is unharmed afterwards.
+TEST_F(GLWidgetTest, standaloneDrawableUsesTheCameraItIsGiven)
+{
+  const QImage before = widget->grabFramebuffer();
+  ASSERT_FALSE(before.isNull());
+
+  widget->makeCurrent();
+  ContextGuard guard(widget);
+  QOpenGLFunctions* gl = QOpenGLContext::currentContext()->functions();
+  gl->glBindFramebuffer(GL_FRAMEBUFFER, widget->defaultFramebufferObject());
+  GLint viewport[4] = { 0, 0, 0, 0 };
+  gl->glGetIntegerv(GL_VIEWPORT, viewport);
+  const int width = viewport[2];
+  const int height = viewport[3];
+  ASSERT_GT(width, 0);
+  ASSERT_GT(height, 0);
+
+  SphereGeometry sphere;
+  sphere.addSphere(Vector3f(0, 0, 0), Vector3ub(255, 255, 255), 1.0f);
+
+  // The eye-space position of the sphere's center decides where it lands in
+  // this orthographic view, which spans -5..5 in x and y.
+  auto pixelAt = [&](float ndcX) {
+    unsigned char rgba[4] = { 0, 0, 0, 0 };
+    const int x = static_cast<int>((0.5f + 0.5f * ndcX) * width);
+    gl->glReadPixels(x, height / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+    return Vector3ub(rgba[0], rgba[1], rgba[2]);
+  };
+  auto drawAt = [&](float eyeX) {
+    Camera camera;
+    camera.setViewport(width, height);
+    camera.calculateOrthographic(-5.0f, 5.0f, -5.0f, 5.0f, -10.0f, 10.0f);
+    camera.translate(Vector3f(eyeX, 0.0f, -5.0f));
+    gl->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    gl->glEnable(GL_DEPTH_TEST);
+    drainGLErrors();
+    sphere.render(camera);
+    EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  };
+  auto isLit = [](const Vector3ub& c) { return c[0] > 100 && c[1] > 100; };
+
+  drawAt(2.0f); // ndc x = 0.4
+  EXPECT_TRUE(isLit(pixelAt(0.4f)));
+  EXPECT_FALSE(isLit(pixelAt(0.0f)));
+  EXPECT_FALSE(isLit(pixelAt(-0.4f)));
+  drawAt(-2.0f); // A different camera: ndc x = -0.4
+  EXPECT_TRUE(isLit(pixelAt(-0.4f)));
+  EXPECT_FALSE(isLit(pixelAt(0.4f)));
+  gl->glDisable(GL_DEPTH_TEST);
+
+  // The renderer still draws its scene with its own camera.
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage after = widget->grabFramebuffer();
+  ASSERT_FALSE(after.isNull());
+  EXPECT_EQ(before, after);
+}
+
+// The camera buffer belongs to the GL context: after cleanup() and
+// initialize() it is made again and the overlay and main cameras still work.
+TEST_F(GLWidgetTest, cameraBufferIsRecreatedAfterCleanupAndInitialize)
+{
+  using namespace Avogadro::Rendering;
+  auto* node = new GeometryNode;
+  auto* spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f(40, 40, 0), Vector3ub(255, 255, 255), 0.5f);
+  spheres->setRenderPass(Overlay2DPass);
+  node->addDrawable(spheres);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(node);
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage first = widget->grabFramebuffer();
+  ASSERT_FALSE(first.isNull());
+
+  widget->makeCurrent();
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage second = widget->grabFramebuffer();
+  ASSERT_FALSE(second.isNull());
+  EXPECT_EQ(first, second);
+  EXPECT_GT(dominantBounds(second, 0, 90, 60).count, 20);
+}

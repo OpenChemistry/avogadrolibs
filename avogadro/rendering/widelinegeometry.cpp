@@ -158,10 +158,9 @@ void WideLineGeometry::render(const Camera& camera)
   d->vao.bind();
 
   // Set up our uniforms
-  if (!program->setUniformValue("modelView", camera.modelView().matrix()))
-    cout << program->error() << '\n';
-  if (!program->setUniformValue("projection", camera.projection().matrix()))
-    cout << program->error() << '\n';
+  // The camera lives in the shared uniform buffer.
+  if (!RenderContext::current()->cameraBuffer().use(camera))
+    cout << "Could not update the camera buffer." << '\n';
 
   // Render the quads
   glDrawRangeElements(GL_TRIANGLES, 0,

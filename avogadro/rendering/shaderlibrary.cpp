@@ -5,6 +5,7 @@
 
 #include "shaderlibrary_p.h"
 
+#include "camerabuffer_p.h"
 #include "shader.h"
 #include "shaderprogram.h"
 
@@ -91,8 +92,10 @@ ShaderProgram* ShaderLibrary::program(ShaderId id)
     return nullptr;
   }
 
-  Shader vertexShader(Shader::Vertex, sources.vertex);
-  Shader fragmentShader(Shader::Fragment, sources.fragment);
+  // Every shader gets the CameraBuffer block declaration; a program whose
+  // shaders never read it simply has no active block.
+  Shader vertexShader(Shader::Vertex, insertCameraBlock(sources.vertex));
+  Shader fragmentShader(Shader::Fragment, insertCameraBlock(sources.fragment));
   auto program = std::make_unique<ShaderProgram>();
 
   bool ok = true;
@@ -113,6 +116,11 @@ ShaderProgram* ShaderLibrary::program(ShaderId id)
     std::cout << program->error() << '\n';
     ok = false;
   }
+
+  // GLSL 400 and ES 3.0 cannot set layout(binding=), so point the block at its
+  // binding point here. Not every program reads the camera.
+  if (ok)
+    program->bindUniformBlock("CameraBuffer", CameraBufferBindingPoint);
 
   // The linked program no longer needs the shader objects. Detach them so the
   // driver can free them, and delete them (cleanup() ignores a shader that
