@@ -11,6 +11,8 @@
 #include <QtCore/QPointF>
 #include <QtCore/QString>
 #include <QtGui/QImage>
+#include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLFunctions>
 
 #include <string>
 
@@ -34,6 +36,20 @@ QApplication* ensureApp();
  * In that case skipReason is set to a message suitable for GTEST_SKIP().
  */
 QtOpenGL::GLWidget* sharedWidget(std::string& skipReason);
+
+/**
+ * Discard pending GL errors, with the widget's context current. Bounded
+ * because some drivers report an error forever. Goes through QOpenGLFunctions:
+ * the test binary does not link opengl32 on Windows.
+ */
+inline void drainGLErrors()
+{
+  QOpenGLContext* context = QOpenGLContext::currentContext();
+  if (context == nullptr)
+    return;
+  QOpenGLFunctions* gl = context->functions();
+  for (int i = 0; i < 32 && gl->glGetError() != GL_NO_ERROR; ++i) {}
+}
 
 /** Let queued scene updates and repaints run. */
 void settle();

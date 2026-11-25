@@ -83,6 +83,10 @@ vec3 getNormalAt(vec2 normalUV, float radius)
 // same size is exactly what cancels the pattern.
 const int AO_BLUR_TILE = 4;
 
+// Distances at or above this are background; just below BACKGROUND_DISTANCE in
+// solid_ao_fs.glsl, the sentinel written there.
+const float BACKGROUND_THRESHOLD = 65000.0;
+
 // The steepest surface, in scene units of depth per pixel, still treated as one
 // surface by the blur. Anything steeper is taken to be a different surface.
 const float AO_BLUR_SLOPE_LIMIT = 16.0;
@@ -120,7 +124,9 @@ float blurredAo(vec2 texCoord)
         continue;
       vec2 tapUV = texCoord + vec2(float(x) / width, float(y) / height);
       vec2 tap = texture(inAoTex, tapUV).xy;
-      if (abs(tap.y - centerZ) < tolerance) {
+      // Reject background pixels as well as taps on a different foreground
+      // surface.
+      if (tap.y < BACKGROUND_THRESHOLD && abs(tap.y - centerZ) < tolerance) {
         total += tap.x;
         weight += 1.0;
       }
@@ -188,6 +194,12 @@ float computeEdgeLuminosity(vec3 normal)
 }
 
 void main() {
+    float depth = texture(inDepthTex, UV).x;
+    // Background pixels (depth == 1.0) would fail the GL_LESS depth test
+    // anyway; discarding upfront skips AO blur, edge detection, fog and DoF.
+    if (depth >= 1.0)
+        discard;
+
     float luminosity = 1.0;
     vec4 color = texture(inRGBTex, UV);
     vec4 finalColor = color; // Initialize finalColor with base color
@@ -232,5 +244,5 @@ void main() {
 
     // Set the final fragment color
     outColor = finalColor;
-    gl_FragDepth = texture(inDepthTex, UV).x;
+    gl_FragDepth = depth;
 }

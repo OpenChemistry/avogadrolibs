@@ -6,11 +6,12 @@
 #ifndef AVOGADRO_RENDERING_SOLIDPIPELINE_H
 #define AVOGADRO_RENDERING_SOLIDPIPELINE_H
 
+#include "avogadrorenderingexport.h"
 #include "camera.h"
 
 namespace Avogadro::Rendering {
 
-class SolidPipeline
+class AVOGADRORENDERING_EXPORT SolidPipeline
 {
 public:
   SolidPipeline();
@@ -28,7 +29,27 @@ public:
   void initialize();
 
   /**
-   * @brief Begin solid geometry rendering. Returns false if unavailable.
+   * @brief Release OpenGL objects while the owning context is current.
+   *
+   * Safe to call repeatedly; it deletes only non-zero names. The owner must
+   * call it with the context current before that context goes away.
+   */
+  void releaseResources();
+
+  /**
+   * @brief True if any screen-space post-processing effect is enabled.
+   *
+   * When false, begin() returns false so solid geometry renders directly to
+   * the active framebuffer without an offscreen pass.
+   */
+  bool hasActiveEffects() const
+  {
+    return m_aoEnabled || m_edEnabled || m_fogEnabled || m_dofEnabled;
+  }
+
+  /**
+   * @brief Begin solid geometry rendering. Returns false if unavailable or if
+   * no post-processing effect is enabled.
    */
   bool begin();
 

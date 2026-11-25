@@ -309,7 +309,9 @@ void GLRenderer::initialize()
   // reject working contexts.
   GLint major = 0;
   glGetIntegerv(GL_MAJOR_VERSION, &major);
-  glGetError(); // pre-3.0 contexts raise GL_INVALID_ENUM; major stays 0
+  // Drain errors left by glewInit() and the query above; bounded because some
+  // drivers report an error forever when there is no context.
+  for (int i = 0; i < 32 && glGetError() != GL_NO_ERROR; ++i) {}
   if (major < 4) {
     m_error += "GL version 4.0 is not supported by your graphics driver.\n";
     m_valid = false;
@@ -318,6 +320,15 @@ void GLRenderer::initialize()
 #endif
 
   m_solidPipeline.initialize();
+}
+
+void GLRenderer::cleanup()
+{
+  d->timing.releaseQueries();
+  d->timing = TimingState();
+  d->timings = RenderTimings();
+  d->timingEnabled = false;
+  m_solidPipeline.releaseResources();
 }
 
 void GLRenderer::resize(int width, int height)
