@@ -26,34 +26,10 @@ using Avogadro::QtGui::RWMolecule;
 
 namespace {
 
-// LayerModel loads icons in its constructor, and QIcon needs a
-// QGuiApplication. Same pattern as timedprogressdialogtest.cpp: create one on
-// the offscreen platform so this runs headless, and skip only if another test
-// in this process already made a plain QCoreApplication that can't be
-// upgraded.
-QGuiApplication* ensureApp()
-{
-  if (QCoreApplication::instance() != nullptr)
-    return qobject_cast<QGuiApplication*>(QCoreApplication::instance());
-
-  static int argc = 1;
-  static char arg0[] = "layermodeltest";
-  static char* argv[] = { arg0, nullptr };
-  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM"))
-    qputenv("QT_QPA_PLATFORM", "offscreen");
-  static QGuiApplication app(argc, argv);
-  return &app;
-}
-
 class LayerModelTest : public ::testing::Test, protected LayerManager
 {
 protected:
-  void SetUp() override
-  {
-    m_activeInfo.reset();
-    if (ensureApp() == nullptr)
-      GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
-  }
+  void SetUp() override { m_activeInfo.reset(); }
 };
 
 // 3 layers (ids 0,1,2); "Plugin" is enabled only on layer 0. So

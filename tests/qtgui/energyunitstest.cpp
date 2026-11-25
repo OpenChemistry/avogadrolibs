@@ -17,45 +17,8 @@
 using Avogadro::QtGui::EnergyUnits;
 using Unit = EnergyUnits::Unit;
 
-namespace {
-
-// QSettings needs an organization and application name to write anywhere
-// sensible, QSignalSpy needs a QCoreApplication, and fillCombo()/
-// unitFromCombo() build a real QComboBox, which needs a QApplication rather
-// than a plain QCoreApplication. The test binary uses gtest_main, which
-// creates none of that, so build a QApplication up front -- nothing in this
-// binary runs before it when ctest filters this file's tests on their own,
-// which is how the CMakeLists here registers every test file.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "EnergyUnitsTest";
-  static char* argv[] = { name, nullptr };
-  // Run without a display so this works in CI.
-  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM"))
-    qputenv("QT_QPA_PLATFORM", "offscreen");
-  static QApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("OpenChemistry");
-  QCoreApplication::setApplicationName("EnergyUnitsTest");
-  return QCoreApplication::instance();
-}
-
-// A combo box needs a QApplication. When the whole binary runs unfiltered,
-// another test file may already have made a plain QCoreApplication, which
-// cannot be upgraded -- so the combo tests skip rather than abort.
-bool widgetsAvailable()
-{
-  return qobject_cast<QApplication*>(ensureApp()) != nullptr;
-}
-
-} // namespace
-
 TEST(EnergyUnitsTest, symbols)
 {
-  ensureApp();
-
   EXPECT_EQ(EnergyUnits::symbol(Unit::Hartree), QString("Hartree"));
   EXPECT_EQ(EnergyUnits::symbol(Unit::ElectronVolt), QString("eV"));
   EXPECT_EQ(EnergyUnits::symbol(Unit::KcalPerMol), QString("kcal/mol"));
@@ -67,8 +30,6 @@ TEST(EnergyUnitsTest, symbols)
 
 TEST(EnergyUnitsTest, knownConversions)
 {
-  ensureApp();
-
   // CODATA: 1 Hartree = 627.5094740631 kcal/mol = 27.211386245988 eV.
   EXPECT_NEAR(EnergyUnits::convert(1.0, Unit::Hartree, Unit::KcalPerMol),
               627.5094740631, 1e-9);
@@ -86,8 +47,6 @@ TEST(EnergyUnitsTest, knownConversions)
 
 TEST(EnergyUnitsTest, conversionRoundTrips)
 {
-  ensureApp();
-
   for (Unit from : EnergyUnits::units()) {
     for (Unit to : EnergyUnits::units()) {
       const double there = EnergyUnits::convert(2.5, from, to);
@@ -107,8 +66,6 @@ TEST(EnergyUnitsTest, conversionRoundTrips)
 // so a change has to be announced.
 TEST(EnergyUnitsTest, changingUnitsEmitsOnce)
 {
-  ensureApp();
-
   auto* units = EnergyUnits::instance();
   units->setUnits(Unit::Hartree, Unit::KcalPerMol);
 
@@ -135,8 +92,6 @@ TEST(EnergyUnitsTest, changingUnitsEmitsOnce)
 
 TEST(EnergyUnitsTest, instanceConvertsWithTheCurrentPair)
 {
-  ensureApp();
-
   auto* units = EnergyUnits::instance();
   units->setUnits(Unit::Hartree, Unit::KcalPerMol);
   EXPECT_NEAR(units->convert(1.0), 627.5094740631, 1e-9);
@@ -147,8 +102,6 @@ TEST(EnergyUnitsTest, instanceConvertsWithTheCurrentPair)
 
 TEST(EnergyUnitsTest, symbolsParseBack)
 {
-  ensureApp();
-
   // Whatever symbol() writes, fromSymbol() has to read.
   for (Unit unit : EnergyUnits::units()) {
     bool ok = false;
@@ -173,8 +126,6 @@ TEST(EnergyUnitsTest, symbolsParseBack)
 // silent fall back to Hartree would scale a kcal/mol energy by 627.
 TEST(EnergyUnitsTest, unknownSymbolIsReported)
 {
-  ensureApp();
-
   bool ok = true;
   EnergyUnits::fromSymbol("furlongs per fortnight", &ok);
   EXPECT_FALSE(ok);
@@ -189,8 +140,6 @@ TEST(EnergyUnitsTest, unknownSymbolIsReported)
 // file the user opened.
 TEST(EnergyUnitsTest, moleculeUnitBeatsTheSetting)
 {
-  ensureApp();
-
   auto* units = EnergyUnits::instance();
   units->setUnits(Unit::KcalPerMol, Unit::KjPerMol);
 
@@ -212,8 +161,6 @@ TEST(EnergyUnitsTest, moleculeUnitBeatsTheSetting)
 
 TEST(EnergyUnitsTest, unrecognisedMoleculeUnitFallsBackToTheSetting)
 {
-  ensureApp();
-
   auto* units = EnergyUnits::instance();
   units->setUnits(Unit::ElectronVolt, Unit::KcalPerMol);
 
@@ -231,8 +178,6 @@ TEST(EnergyUnitsTest, unrecognisedMoleculeUnitFallsBackToTheSetting)
 // that makes that matter, and the failure it prevents.
 TEST(EnergyUnitsTest, replacedEnergiesMustNotKeepTheOldUnit)
 {
-  ensureApp();
-
   auto* units = EnergyUnits::instance();
   units->setUnits(Unit::Hartree, Unit::KcalPerMol);
 
@@ -254,8 +199,6 @@ TEST(EnergyUnitsTest, replacedEnergiesMustNotKeepTheOldUnit)
 // user, rather than leaving the previous file's answer standing.
 TEST(EnergyUnitsTest, clearingTheUnitReturnsToTheSetting)
 {
-  ensureApp();
-
   auto* units = EnergyUnits::instance();
   units->setUnits(Unit::KcalPerMol, Unit::KjPerMol);
 
@@ -272,9 +215,6 @@ TEST(EnergyUnitsTest, clearingTheUnitReturnsToTheSetting)
 // the current selection landing on the unit that was already in force.
 TEST(EnergyUnitsTest, fillComboListsEveryUnitAndSelectsCurrent)
 {
-  if (!widgetsAvailable())
-    GTEST_SKIP() << "needs a QApplication";
-
   QComboBox combo;
   EnergyUnits::fillCombo(&combo, Unit::KcalPerMol);
 
@@ -294,9 +234,6 @@ TEST(EnergyUnitsTest, fillComboListsEveryUnitAndSelectsCurrent)
 // source unit is, so a second call has to start clean rather than growing.
 TEST(EnergyUnitsTest, fillComboReplacesExistingItems)
 {
-  if (!widgetsAvailable())
-    GTEST_SKIP() << "needs a QApplication";
-
   QComboBox combo;
   combo.addItem("stale", 12345);
   EnergyUnits::fillCombo(&combo, Unit::Hartree);
@@ -311,9 +248,6 @@ TEST(EnergyUnitsTest, fillComboReplacesExistingItems)
 // spurious signal for a selection the user never made.
 TEST(EnergyUnitsTest, fillComboDoesNotEmitCurrentIndexChanged)
 {
-  if (!widgetsAvailable())
-    GTEST_SKIP() << "needs a QApplication";
-
   QComboBox combo;
   combo.addItem("stale", 12345);
 
@@ -327,9 +261,6 @@ TEST(EnergyUnitsTest, fillComboDoesNotEmitCurrentIndexChanged)
 
 TEST(EnergyUnitsTest, unitFromComboRoundTripsEveryUnit)
 {
-  if (!widgetsAvailable())
-    GTEST_SKIP() << "needs a QApplication";
-
   QComboBox combo;
   for (Unit unit : EnergyUnits::units()) {
     EnergyUnits::fillCombo(&combo, unit);
@@ -342,9 +273,6 @@ TEST(EnergyUnitsTest, unitFromComboRoundTripsEveryUnit)
 // so the fallback stands rather than the code guessing or crashing.
 TEST(EnergyUnitsTest, unitFromComboFallsBackWhenNothingUsableIsSelected)
 {
-  if (!widgetsAvailable())
-    GTEST_SKIP() << "needs a QApplication";
-
   QComboBox empty;
   EXPECT_EQ(EnergyUnits::unitFromCombo(&empty, Unit::KjPerMol), Unit::KjPerMol);
 
@@ -360,8 +288,5 @@ TEST(EnergyUnitsTest, unitFromComboFallsBackWhenNothingUsableIsSelected)
 // yet built its widget must not crash the whole dialog.
 TEST(EnergyUnitsTest, fillComboToleratesNullCombo)
 {
-  if (!widgetsAvailable())
-    GTEST_SKIP() << "needs a QApplication";
-
   EnergyUnits::fillCombo(nullptr, Unit::Hartree);
 }

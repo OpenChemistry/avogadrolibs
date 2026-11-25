@@ -93,11 +93,19 @@ foreach(TestName ${tests})
 endforeach()
 
 # Add a single executable for all of our tests.
-add_executable(AvogadroQtGuiTests ${testSrcs})
+# main.cpp creates the one QApplication, so link gtest without gtest_main.
+add_executable(AvogadroQtGuiTests main.cpp ${testSrcs})
 target_link_libraries(AvogadroQtGuiTests Avogadro::QtGui ${QtOpenGLLink}
  ${MoleQueueLink}
- ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB}
+ ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB}
  Qt${QT_VERSION}::Widgets Qt${QT_VERSION}::Test)
+
+# Regression: colorTheme() must work under a plain QCoreApplication, which the
+# QApplication in main.cpp rules out, so this one test has a binary of its own.
+add_executable(AvogadroQtGuiCoreAppTests colorthemecoreapptest.cpp)
+target_link_libraries(AvogadroQtGuiCoreAppTests Avogadro::QtGui
+ ${GTEST_LIBRARIES} ${EXTRA_LINK_LIB} Qt${QT_VERSION}::Core)
+add_test(NAME "QtGui-ColorThemeCoreApp" COMMAND AvogadroQtGuiCoreAppTests)
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
