@@ -1,3 +1,6 @@
+# Fail any registered test that runs no gtest cases (see tests/CMakeLists.txt).
+cmake_language(DEFER CALL avogadro_fail_on_empty_gtest)
+
 include_directories("${CMAKE_CURRENT_BINARY_DIR}"
   "${AvogadroLibs_BINARY_DIR}/avogadro/qtgui"
   "${AvogadroLibs_BINARY_DIR}/avogadro/molequeue"

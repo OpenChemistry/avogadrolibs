@@ -1,3 +1,6 @@
+# Fail any registered test that runs no gtest cases (see tests/CMakeLists.txt).
+cmake_language(DEFER CALL avogadro_fail_on_empty_gtest)
+
 # Command-boundary tests for qtplugins: each plugin's handleCommand() driven
 # in-process through CommandTestHarness, with no MainWindow. See the 2.1
 # release plan, section 4.2.
