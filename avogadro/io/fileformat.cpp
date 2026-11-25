@@ -11,6 +11,7 @@
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
+#include <cctype>
 #include <exception>
 #include <fstream>
 #include <locale>
@@ -107,18 +108,24 @@ bool FileFormat::validateFileName(const std::string& fileName)
   // .. we do this on all platforms because CON.cif, for example
   // is problematic to send to a Windows user.
   if (valid) {
-    static std::string forbiddenNames(
-      "CON PRN AUX NUL COM1 COM2 COM3 COM4 COM5 "
-      "COM6 COM7 COM8 COM9 LPT1 LPT2 LPT3 LPT4 "
-      "LPT5 LPT6 LPT7 LPT8 LPT9");
-    // case insensitive search, since con.txt is also a problem
+    // Windows reserves the device name no matter what extension follows
+    // (CON.tar.gz is as bad as CON), so compare the part before the first dot.
+    // Case insensitive, since con.txt is also a problem
     // https://stackoverflow.com/a/19839371/131896
-    auto it = std::search(fileName.begin(), fileName.end(),
-                          forbiddenNames.begin(), forbiddenNames.end(),
-                          [](unsigned char ch1, unsigned char ch2) {
-                            return std::toupper(ch1) == std::toupper(ch2);
-                          });
-    valid = (it == fileName.end());
+    static const char* const forbiddenNames[] = {
+      "CON",  "PRN",  "AUX",  "NUL",  "COM1", "COM2", "COM3", "COM4",
+      "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3",
+      "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+    };
+    std::string stem = fileName.substr(0, fileName.find('.'));
+    for (char& ch : stem)
+      ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
+    for (const char* name : forbiddenNames) {
+      if (stem == name) {
+        valid = false;
+        break;
+      }
+    }
   }
 
   return valid;
