@@ -29,7 +29,11 @@ enum class ShaderId : unsigned char
   LineStrip,
   WideLine,
   DashedLine,
-  Count // Not a shader: the number of ids.
+  SolidFirst, // SolidPipeline's compositing stage.
+  SolidAo,    // SolidPipeline's ambient occlusion stage.
+  SolidFxaa,  // SolidPipeline's FXAA stage.
+  Volume,     // VolumeGeometry's ray marcher.
+  Count       // Not a shader: the number of ids.
 };
 
 /**

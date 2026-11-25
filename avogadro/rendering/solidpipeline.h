@@ -59,7 +59,10 @@ public:
    * @brief End solid geometry rendering and apply screen-space shaders.
    *
    * The camera is needed by the ambient occlusion blur, which turns window
-   * depth back into scene units to tell surfaces apart.
+   * depth back into scene units to tell surfaces apart. The stages' shader
+   * programs belong to the current RenderContext, so call it, like begin(),
+   * while one is current (GLRenderer::render() does); otherwise a temporary
+   * context builds the programs and deletes them again.
    */
   void end(const Camera& camera);
 

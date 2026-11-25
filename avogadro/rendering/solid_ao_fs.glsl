@@ -39,8 +39,8 @@ uniform sampler2D inDepthTex;
 uniform float inAoStrength;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
-// Projection matrix, used to turn window depth into a distance in scene units
-uniform mat4 inProjection;
+// The projection matrix, used to turn window depth into a distance in scene
+// units, comes from the CameraBuffer block that the shader library declares.
 
 // Window depth to distance from the camera, in scene units. Derived from the
 // projection so it holds for both the perspective and the orthographic camera,
@@ -48,8 +48,8 @@ uniform mat4 inProjection;
 float linearDepth(float depth)
 {
   float ndc = depth * 2.0 - 1.0;
-  float viewZ = (inProjection[3][2] - ndc * inProjection[3][3]) /
-                (ndc * inProjection[2][3] - inProjection[2][2]);
+  float viewZ = (projection[3][2] - ndc * projection[3][3]) /
+                (ndc * projection[2][3] - projection[2][2]);
   return -viewZ;
 }
 

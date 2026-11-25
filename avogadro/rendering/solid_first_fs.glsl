@@ -56,8 +56,8 @@ uniform float width, height;
 // sampling pattern, and the distance to the surface in scene units in y.
 // blurredAo() below removes the pattern.
 uniform sampler2D inAoTex;
-// Projection matrix, used to size the blur's surface test.
-uniform mat4 inProjection;
+// The camera's projection matrix comes from the CameraBuffer block that the
+// shader library declares; the blur uses it to size its surface test.
 
 // Screen-space normal from the depth gradient, sampled `radius` pixels either
 // side of the fragment. The radius is what sets the outline's width: a pixel
@@ -112,10 +112,10 @@ float blurredAo(vec2 texCoord)
   // rather than by a fixed number of Angstroms. A fixed distance is only right
   // at one zoom level: it rejects every tap on a steep surface when zoomed out,
   // which brings the dither back in exactly the places the blur exists for.
-  // inProjection[2][3] and [3][3] give the perspective divide, which is the
+  // projection[2][3] and [3][3] give the perspective divide, which is the
   // view distance for a perspective camera and 1 for an orthographic one.
-  float wClip = inProjection[2][3] * -centerZ + inProjection[3][3];
-  float pixelSize = 2.0 * wClip / (height * inProjection[1][1]);
+  float wClip = projection[2][3] * -centerZ + projection[3][3];
+  float pixelSize = 2.0 * wClip / (height * projection[1][1]);
   float tolerance = AO_BLUR_SLOPE_LIMIT * pixelSize;
 
   // The centre tap always belongs, so seed with it and skip it in the loop.

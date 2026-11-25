@@ -8,20 +8,14 @@
 #include "avogadrogl.h"
 #include "blendstateguard_p.h"
 #include "camera.h"
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
 #include "visitor.h"
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 #include <memory>
 #include <vector>
-
-namespace {
-#include "volume_fs.h"
-#include "volume_vs.h"
-} // namespace
 
 namespace Avogadro::Rendering {
 
@@ -145,10 +139,6 @@ class VolumeGeometry::Private
 {
 public:
   Private() = default;
-
-  std::unique_ptr<Shader> vertexShader;
-  std::unique_ptr<Shader> fragmentShader;
-  std::unique_ptr<ShaderProgram> program;
 
   // Empty VAO for the procedural fullscreen triangle (required by Core
   // Profile).
@@ -332,22 +322,6 @@ void VolumeGeometry::initialize()
   if (d->vao == 0)
     glGenVertexArrays(1, &d->vao);
 
-  if (!d->program) {
-    d->vertexShader = std::make_unique<Shader>(Shader::Vertex, volume_vs);
-    if (!d->vertexShader->compile())
-      std::cerr << "VolumeGeometry: " << d->vertexShader->error() << '\n';
-
-    d->fragmentShader = std::make_unique<Shader>(Shader::Fragment, volume_fs);
-    if (!d->fragmentShader->compile())
-      std::cerr << "VolumeGeometry: " << d->fragmentShader->error() << '\n';
-
-    d->program = std::make_unique<ShaderProgram>();
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      std::cerr << "VolumeGeometry: " << d->program->error() << '\n';
-  }
-
   m_dirty = false;
 }
 
@@ -355,6 +329,8 @@ void VolumeGeometry::render(const Camera& camera)
 {
   if (!m_cube)
     return;
+
+  FallbackRenderContext fallbackContext;
 
   // The box the volume fills in world space: the unit cube [0,1]^3 (the
   // texture coordinates) maps to origin + S * diag(n - 1) * u. It is a
@@ -392,8 +368,11 @@ void VolumeGeometry::render(const Camera& camera)
   if (m_dirty)
     initialize();
 
-  if (!d->volumeReady || d->volumeTexture == 0 || !d->program || d->vao == 0)
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Volume);
+  if (!d->volumeReady || d->volumeTexture == 0 || program == nullptr ||
+      d->vao == 0) {
     return;
+  }
 
   GLint activeFBO = 0;
   GLint previousReadFBO = 0;
@@ -446,15 +425,15 @@ void VolumeGeometry::render(const Camera& camera)
   glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
                       GL_ONE_MINUS_SRC_ALPHA);
 
-  if (d->program->bind()) {
+  if (program->bind()) {
     glActiveTexture(GL_TEXTURE0 + TextureUnitVolume);
     glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
-    d->program->setUniformValue("uVolumeData", TextureUnitVolume);
+    program->setUniformValue("uVolumeData", TextureUnitVolume);
 
     glActiveTexture(GL_TEXTURE0 + TextureUnitSceneDepth);
     glBindTexture(GL_TEXTURE_2D, hasSceneDepth ? d->depthCopyTexture : 0);
-    d->program->setUniformValue("uSceneDepthTex", TextureUnitSceneDepth);
-    d->program->setUniformValue("uHasSceneDepth", hasSceneDepth ? 1 : 0);
+    program->setUniformValue("uSceneDepthTex", TextureUnitSceneDepth);
+    program->setUniformValue("uHasSceneDepth", hasSceneDepth ? 1 : 0);
 
     const Eigen::Vector3f posCol(m_positiveColor[0] / 255.0f,
                                  m_positiveColor[1] / 255.0f,
@@ -462,20 +441,20 @@ void VolumeGeometry::render(const Camera& camera)
     const Eigen::Vector3f negCol(m_negativeColor[0] / 255.0f,
                                  m_negativeColor[1] / 255.0f,
                                  m_negativeColor[2] / 255.0f);
-    d->program->setUniformValue("numSteps", 150);
-    d->program->setUniformValue("alphaScale", m_alphaScale);
-    d->program->setUniformValue("positiveColor", posCol);
-    d->program->setUniformValue("negativeColor", negCol);
-    d->program->setUniformValue("uInvViewProj", invViewProj);
-    d->program->setUniformValue("uBoxInverse", boxInverse);
-    d->program->setUniformValue("uBoxDiagonal", boxDiagonal);
+    program->setUniformValue("numSteps", 150);
+    program->setUniformValue("alphaScale", m_alphaScale);
+    program->setUniformValue("positiveColor", posCol);
+    program->setUniformValue("negativeColor", negCol);
+    program->setUniformValue("uInvViewProj", invViewProj);
+    program->setUniformValue("uBoxInverse", boxInverse);
+    program->setUniformValue("uBoxDiagonal", boxDiagonal);
 
     glBindVertexArray(d->vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
 
     glActiveTexture(GL_TEXTURE0);
-    d->program->release();
+    program->release();
   }
 
   glDepthMask(GL_TRUE);
@@ -503,16 +482,6 @@ void VolumeGeometry::end()
     d->depthCopyTexture = 0;
   }
   d->depthCopyReady = false;
-
-  d->program.reset();
-  if (d->vertexShader) {
-    d->vertexShader->cleanup();
-    d->vertexShader.reset();
-  }
-  if (d->fragmentShader) {
-    d->fragmentShader->cleanup();
-    d->fragmentShader.reset();
-  }
 }
 
 } // End namespace Avogadro::Rendering
