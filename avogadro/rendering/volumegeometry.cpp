@@ -7,214 +7,147 @@
 
 #include "avogadrogl.h"
 #include "blendstateguard_p.h"
-#include "bufferobject.h"
 #include "camera.h"
-#include "scene.h"
 #include "shader.h"
 #include "shaderprogram.h"
 #include "visitor.h"
 
 #include <algorithm>
 #include <cmath>
-#include <string>
-#include <fstream>
-#include <sstream>
 #include <iostream>
+#include <memory>
+#include <vector>
 
-#include "volume_box_fs.h" //  bounding‐box fragment shader
-#include "volume_box_vs.h" //  bounding‐box vertex shader
-#include "volume_fs.h"     //  main volume fragment shader
-#include "volume_vs.h"     //  main volume vertex shader
+namespace {
+#include "volume_fs.h"
+#include "volume_vs.h"
+} // namespace
 
 namespace Avogadro::Rendering {
 
 namespace {
-// A simple fullscreen quad (two triangles).
-static const GLfloat s_fullscreenQuad[] = {
-  -1.0f, -1.0f, 0.0f, // Bottom-left
-  1.0f,  -1.0f, 0.0f, // Bottom-right
-  -1.0f, 1.0f,  0.0f, // Top-left
 
-  -1.0f, 1.0f,  0.0f, // Top-left
-  1.0f,  -1.0f, 0.0f, // Bottom-right
-  1.0f,  1.0f,  0.0f  // Top-right
-};
+constexpr int TextureUnitVolume = 0;
+constexpr int TextureUnitSceneDepth = 1;
 
-// A simple box (cube) for front/back passes
-static const GLfloat boxVertices[] = {
-  // x      y      z
-  // Front face
-  -1.0f,
-  -1.0f,
-  1.0f,
-  1.0f,
-  -1.0f,
-  1.0f,
-  1.0f,
-  1.0f,
-  1.0f,
-  -1.0f,
-  1.0f,
-  1.0f,
-
-  // Back face
-  -1.0f,
-  -1.0f,
-  -1.0f,
-  1.0f,
-  -1.0f,
-  -1.0f,
-  1.0f,
-  1.0f,
-  -1.0f,
-  -1.0f,
-  1.0f,
-  -1.0f,
-};
-
-static const GLuint boxIndices[] = {
-  // front
-  0,
-  1,
-  2,
-  0,
-  2,
-  3,
-  // right
-  1,
-  5,
-  6,
-  1,
-  6,
-  2,
-  // back
-  5,
-  4,
-  7,
-  5,
-  7,
-  6,
-  // left
-  4,
-  0,
-  3,
-  4,
-  3,
-  7,
-  // top
-  2,
-  6,
-  7,
-  2,
-  7,
-  3,
-  // bottom
-  4,
-  5,
-  1,
-  4,
-  1,
-  0,
-};
-
-// Create a colour + depth framebuffer sized to the viewport. The callers
-// differ only in what the colour attachment holds: the render target takes
-// 8-bit RGB, while the entry and exit point targets hold world positions and
-// need floats to be of any use.
-void initializeFramebuffer(GLuint* outFBO, GLuint* texColor, GLuint* texDepth,
-                           int width, int height, GLint colorInternalFormat,
-                           GLenum colorFormat, GLenum colorType,
-                           const char* label)
+struct DepthAttachmentFormat
 {
-  glGenFramebuffers(1, outFBO);
-  glBindFramebuffer(GL_FRAMEBUFFER, *outFBO);
+  GLint internalFormat = GL_DEPTH_COMPONENT24;
+  GLenum format = GL_DEPTH_COMPONENT;
+  GLenum type = GL_UNSIGNED_INT;
 
-  // Colour attachment.
-  glGenTextures(1, texColor);
-  glBindTexture(GL_TEXTURE_2D, *texColor);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexImage2D(GL_TEXTURE_2D, 0, colorInternalFormat, width, height, 0,
-               colorFormat, colorType, nullptr);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         *texColor, 0);
-
-  // Depth attachment.
-  glGenTextures(1, texDepth);
-  glBindTexture(GL_TEXTURE_2D, *texDepth);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0,
-               GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-                         *texDepth, 0);
-
-  // Check for completeness.
-  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-  if (status != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "Error: " << label << " framebuffer incomplete: 0x" << std::hex
-              << status << '\n';
+  bool operator==(const DepthAttachmentFormat& other) const
+  {
+    return internalFormat == other.internalFormat && format == other.format &&
+           type == other.type;
   }
+  bool operator!=(const DepthAttachmentFormat& other) const
+  {
+    return !(*this == other);
+  }
+};
 
-  // Unbind the FBO:
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+// Query the currently bound read framebuffer's depth/stencil configuration so
+// the depth-copy texture matches it (required for glBlitFramebuffer on WebGL 2
+// and strict desktop drivers).
+DepthAttachmentFormat detectDepthFormat(GLuint readFBO)
+{
+  DepthAttachmentFormat fmt;
+  GLint depthSize = 0;
+  GLint stencilSize = 0;
+  GLint depthType = GL_UNSIGNED_NORMALIZED;
+
+  if (readFBO == 0) {
+    glGetFramebufferAttachmentParameteriv(GL_READ_FRAMEBUFFER, GL_DEPTH,
+                                          GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE,
+                                          &depthSize);
+    glGetFramebufferAttachmentParameteriv(
+      GL_READ_FRAMEBUFFER, GL_STENCIL, GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE,
+      &stencilSize);
+    glGetFramebufferAttachmentParameteriv(
+      GL_READ_FRAMEBUFFER, GL_DEPTH, GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE,
+      &depthType);
+  } else {
+    GLint depthObj = GL_NONE;
+    glGetFramebufferAttachmentParameteriv(
+      GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+      GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &depthObj);
+    if (depthObj != GL_NONE) {
+      glGetFramebufferAttachmentParameteriv(
+        GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+        GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE, &depthSize);
+      glGetFramebufferAttachmentParameteriv(
+        GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+        GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE, &depthType);
+    }
+    GLint stencilObj = GL_NONE;
+    glGetFramebufferAttachmentParameteriv(
+      GL_READ_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+      GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &stencilObj);
+    if (stencilObj != GL_NONE) {
+      glGetFramebufferAttachmentParameteriv(
+        GL_READ_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+        GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE, &stencilSize);
+    }
+  }
+  // Drain any GL error from querying an absent attachment (e.g. stencil on a
+  // depth-only FBO).
+  for (int i = 0; i < 8 && glGetError() != GL_NO_ERROR; ++i) {}
+
+  const bool isFloat = (depthType == GL_FLOAT);
+  if (stencilSize > 0) {
+    if (isFloat) {
+      fmt.internalFormat = GL_DEPTH32F_STENCIL8;
+      fmt.format = GL_DEPTH_STENCIL;
+      fmt.type = GL_FLOAT_32_UNSIGNED_INT_24_8_REV;
+    } else {
+      fmt.internalFormat = GL_DEPTH24_STENCIL8;
+      fmt.format = GL_DEPTH_STENCIL;
+      fmt.type = GL_UNSIGNED_INT_24_8;
+    }
+  } else if (isFloat) {
+    fmt.internalFormat = GL_DEPTH_COMPONENT32F;
+    fmt.format = GL_DEPTH_COMPONENT;
+    fmt.type = GL_FLOAT;
+  } else if (depthSize == 16) {
+    fmt.internalFormat = GL_DEPTH_COMPONENT16;
+    fmt.format = GL_DEPTH_COMPONENT;
+    fmt.type = GL_UNSIGNED_SHORT;
+  } else {
+    fmt.internalFormat = GL_DEPTH_COMPONENT24;
+    fmt.format = GL_DEPTH_COMPONENT;
+    fmt.type = GL_UNSIGNED_INT;
+  }
+  return fmt;
 }
 
-} // end anonymous namespace
+} // namespace
 
 class VolumeGeometry::Private
 {
 public:
-  Private()
-    : vertexShader(nullptr), fragmentShader(nullptr), program(nullptr), vao(0),
-      vbo(0), frontFBO(0), frontColorTexture(0), frontDepthTexture(0),
-      backFBO(0), backColorTexture(0), backDepthTexture(0),
-      boxVertexShader(nullptr), boxFragmentShader(nullptr), boxShaders(nullptr),
-      transferTexture(0), volumeBoxVao(0), volumeBoxVbo(0), volumeBoxEbo(0),
-      volumeTexture(0), defaultFBO(0), renderFBO(0), renderTexture(0),
-      depthTexture(0)
-  {
-  }
+  Private() = default;
 
-  // GL resources
-  Shader* vertexShader;
-  Shader* fragmentShader;
-  ShaderProgram* program;
+  std::unique_ptr<Shader> vertexShader;
+  std::unique_ptr<Shader> fragmentShader;
+  std::unique_ptr<ShaderProgram> program;
 
-  GLuint vao;
-  GLuint vbo;
+  // Empty VAO for the procedural fullscreen triangle (required by Core
+  // Profile).
+  GLuint vao = 0;
+  GLuint volumeTexture = 0;
 
-  GLuint frontFBO;
-  GLuint frontColorTexture;
-  GLuint frontDepthTexture;
-
-  GLuint backFBO;
-  GLuint backColorTexture;
-  GLuint backDepthTexture;
-
-  Shader* boxVertexShader;
-  Shader* boxFragmentShader;
-  ShaderProgram* boxShaders;
-
-  GLuint transferTexture;
-  GLuint volumeBoxVao;
-  GLuint volumeBoxVbo;
-  GLuint volumeBoxEbo;
-  GLuint volumeTexture;
-
-  GLuint defaultFBO;
-  GLuint renderFBO;
-  GLuint renderTexture;
-  GLuint depthTexture;
+  // Single-attachment FBO used to snapshot the opaque scene's depth buffer via
+  // glBlitFramebuffer so volume raymarching can stop at atoms and bonds.
+  GLuint depthCopyFBO = 0;
+  GLuint depthCopyTexture = 0;
+  DepthAttachmentFormat depthFormat;
+  bool depthCopyReady = false;
 };
 
 VolumeGeometry::VolumeGeometry()
   : m_positiveColor(255, 0, 0), m_negativeColor(0, 0, 255), m_cube(nullptr),
-    m_dirty(true), d(new Private)
+    m_dirty(true), d(new Private), m_width(0), m_height(0)
 {
 }
 
@@ -226,9 +159,8 @@ VolumeGeometry::~VolumeGeometry()
 
 VolumeGeometry::VolumeGeometry(const VolumeGeometry& other)
   : Drawable(other), m_positiveColor(other.m_positiveColor),
-    m_negativeColor(other.m_negativeColor), m_cube(other.m_cube),
-    m_dirty(other.m_dirty), d(new Private(*other.d)), m_width(other.m_width),
-    m_height(other.m_height)
+    m_negativeColor(other.m_negativeColor), m_cube(other.m_cube), m_dirty(true),
+    d(new Private), m_width(0), m_height(0)
 {
 }
 
@@ -272,59 +204,51 @@ void VolumeGeometry::resizeFBO(int newWidth, int newHeight)
 {
   m_width = newWidth;
   m_height = newHeight;
+  d->depthCopyReady = false;
 
-  if (d->renderFBO) {
-    glDeleteFramebuffers(1, &d->renderFBO);
-    d->renderFBO = 0;
-  }
-  if (d->renderTexture) {
-    glDeleteTextures(1, &d->renderTexture);
-    d->renderTexture = 0;
-  }
-  if (d->depthTexture) {
-    glDeleteTextures(1, &d->depthTexture);
-    d->depthTexture = 0;
-  }
+  if (m_width <= 0 || m_height <= 0)
+    return;
 
-  if (d->frontFBO) {
-    glDeleteFramebuffers(1, &d->frontFBO);
-    d->frontFBO = 0;
-  }
-  if (d->frontColorTexture) {
-    glDeleteTextures(1, &d->frontColorTexture);
-    d->frontColorTexture = 0;
-  }
-  if (d->frontDepthTexture) {
-    glDeleteTextures(1, &d->frontDepthTexture);
-    d->frontDepthTexture = 0;
-  }
+  GLint previousDrawFBO = 0;
+  GLint previousReadFBO = 0;
+  glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &previousDrawFBO);
+  glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &previousReadFBO);
 
-  if (d->backFBO) {
-    glDeleteFramebuffers(1, &d->backFBO);
-    d->backFBO = 0;
-  }
-  if (d->backColorTexture) {
-    glDeleteTextures(1, &d->backColorTexture);
-    d->backColorTexture = 0;
-  }
-  if (d->backDepthTexture) {
-    glDeleteTextures(1, &d->backDepthTexture);
-    d->backDepthTexture = 0;
-  }
+  if (d->depthCopyFBO == 0)
+    glGenFramebuffers(1, &d->depthCopyFBO);
+  if (d->depthCopyTexture == 0)
+    glGenTextures(1, &d->depthCopyTexture);
 
-  initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture,
-                        m_width, m_height, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE,
-                        "Render");
+  glBindTexture(GL_TEXTURE_2D, d->depthCopyTexture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexImage2D(GL_TEXTURE_2D, 0, d->depthFormat.internalFormat, m_width,
+               m_height, 0, d->depthFormat.format, d->depthFormat.type,
+               nullptr);
 
-  // The ray's entry and exit points are world positions, so these two need to
-  // hold floats rather than colours.
-  initializeFramebuffer(&d->backFBO, &d->backColorTexture, &d->backDepthTexture,
-                        m_width, m_height, GL_RGB32F, GL_RGB, GL_FLOAT,
-                        "Back position");
+  // Bind both read and draw targets to depthCopyFBO so glReadBuffer(GL_NONE)
+  // applies to depthCopyFBO and never mutates the caller's read framebuffer.
+  glBindFramebuffer(GL_FRAMEBUFFER, d->depthCopyFBO);
+  const GLenum attachment = (d->depthFormat.format == GL_DEPTH_STENCIL)
+                              ? GL_DEPTH_STENCIL_ATTACHMENT
+                              : GL_DEPTH_ATTACHMENT;
+  // Clear whichever attachment might have been bound previously if the format
+  // switched between depth-only and depth-stencil.
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                         GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
+                         d->depthCopyTexture, 0);
+  const GLenum none = GL_NONE;
+  glDrawBuffers(1, &none);
+  glReadBuffer(GL_NONE);
 
-  initializeFramebuffer(&d->frontFBO, &d->frontColorTexture,
-                        &d->frontDepthTexture, m_width, m_height, GL_RGB32F,
-                        GL_RGB, GL_FLOAT, "Front position");
+  d->depthCopyReady =
+    (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, static_cast<GLuint>(previousDrawFBO));
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, static_cast<GLuint>(previousReadFBO));
 }
 
 void VolumeGeometry::initialize()
@@ -332,154 +256,63 @@ void VolumeGeometry::initialize()
   if (!m_cube || !m_dirty)
     return;
 
-  GLint vp[4];
-  glGetIntegerv(GL_VIEWPORT, vp);
-  int currentW = vp[2];
-  int currentH = vp[3];
+  const int nx = m_cube->nx();
+  const int ny = m_cube->ny();
+  const int nz = m_cube->nz();
+  if (nx <= 0 || ny <= 0 || nz <= 0 || !m_cube->data() ||
+      m_cube->data()->size() < static_cast<size_t>(nx) *
+                                 static_cast<size_t>(ny) *
+                                 static_cast<size_t>(nz)) {
+    m_dirty = false;
+    return;
+  }
 
-  // Build (or rebuild) the volume texture if needed:
-  {
-    int nx = m_cube->nx();
-    int ny = m_cube->ny();
-    int nz = m_cube->nz();
-    std::vector<float> volumeData(nx * ny * nz);
-    const float* src = m_cube->data()->data();
-
-    // Reorder data to x‐fastest if needed
-    for (int z = 0; z < nz; ++z) {
-      for (int y = 0; y < ny; ++y) {
-        for (int x = 0; x < nx; ++x) {
-          int oldIndex = z + nz * (y + ny * x);
-          int newIndex = x + nx * (y + ny * z);
-          volumeData[newIndex] = src[oldIndex];
-        }
+  // Reorder cube data from z-fastest to x-fastest for 3D texture upload.
+  std::vector<float> volumeData(static_cast<size_t>(nx) *
+                                static_cast<size_t>(ny) *
+                                static_cast<size_t>(nz));
+  const float* src = m_cube->data()->data();
+  for (int z = 0; z < nz; ++z) {
+    for (int y = 0; y < ny; ++y) {
+      for (int x = 0; x < nx; ++x) {
+        const size_t oldIndex = static_cast<size_t>(z + nz * (y + ny * x));
+        const size_t newIndex = static_cast<size_t>(x + nx * (y + ny * z));
+        volumeData[newIndex] = src[oldIndex];
       }
     }
+  }
 
+  if (d->volumeTexture == 0)
     glGenTextures(1, &d->volumeTexture);
-    glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F, nx, ny, nz, 0, GL_RED, GL_FLOAT,
+               volumeData.data());
 
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F, nx, ny, nz, 0, GL_RED, GL_FLOAT,
-                 volumeData.data());
-  }
-
-  // Simple 1D transfer function texture:
-  {
-    std::vector<unsigned char> tfData(256 * 4);
-    for (int i = 0; i < 256; ++i) {
-      float t = float(i) / 255.0f;
-      tfData[i * 4 + 0] = static_cast<unsigned char>(128.0f * t); // R
-      tfData[i * 4 + 1] = static_cast<unsigned char>(128.0f);     // G
-      tfData[i * 4 + 2] = static_cast<unsigned char>(0.0f);       // B
-      tfData[i * 4 + 3] = static_cast<unsigned char>(255.0f * t); // A
-    }
-
-    glGenTextures(1, &d->transferTexture);
-    glBindTexture(GL_TEXTURE_2D, d->transferTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 1, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, tfData.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-  }
-
-  // Box geometry for front/back pass:
-  {
-    glGenVertexArrays(1, &d->volumeBoxVao);
-    glBindVertexArray(d->volumeBoxVao);
-
-    glGenBuffers(1, &d->volumeBoxVbo);
-    glBindBuffer(GL_ARRAY_BUFFER, d->volumeBoxVbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices,
-                 GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
-                          (GLvoid*)nullptr);
-
-    glGenBuffers(1, &d->volumeBoxEbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d->volumeBoxEbo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(boxIndices), boxIndices,
-                 GL_STATIC_DRAW);
-
-    glBindVertexArray(0);
-  }
-
-  // Fullscreen quad geometry:
-  {
-    glGenBuffers(1, &d->vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
-                 GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+  if (d->vao == 0)
     glGenVertexArrays(1, &d->vao);
-    glBindVertexArray(d->vao);
-    glBindBuffer(GL_ARRAY_BUFFER, d->vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0,
-                          reinterpret_cast<void*>(0));
-    glEnableVertexAttribArray(0);
-    glBindVertexArray(0);
-  }
-
-  // Create (or re‐create) our FBOs at this newly detected size:
-  resizeFBO(currentW, currentH);
-
-  // Main volume shaders:
-  if (!d->vertexShader) {
-    d->vertexShader = new Shader(Shader::Vertex);
-    d->vertexShader->setSource(volume_vs);
-    if (!d->vertexShader->compile())
-      std::cerr << "VolumeGeometry: Vertex shader compile failed.\n";
-  }
-
-  if (!d->fragmentShader) {
-    d->fragmentShader = new Shader(Shader::Fragment);
-    d->fragmentShader->setSource(volume_fs);
-    if (!d->fragmentShader->compile())
-      std::cout << d->fragmentShader->error() << '\n';
-  }
 
   if (!d->program) {
-    d->program = new ShaderProgram();
+    d->vertexShader = std::make_unique<Shader>(Shader::Vertex, volume_vs);
+    if (!d->vertexShader->compile())
+      std::cerr << "VolumeGeometry: " << d->vertexShader->error() << '\n';
+
+    d->fragmentShader = std::make_unique<Shader>(Shader::Fragment, volume_fs);
+    if (!d->fragmentShader->compile())
+      std::cerr << "VolumeGeometry: " << d->fragmentShader->error() << '\n';
+
+    d->program = std::make_unique<ShaderProgram>();
     d->program->attachShader(*d->vertexShader);
     d->program->attachShader(*d->fragmentShader);
     if (!d->program->link())
-      std::cerr << "VolumeGeometry: Shader program linking failed.\n";
+      std::cerr << "VolumeGeometry: " << d->program->error() << '\n';
   }
 
-  // Box pass shaders (for front/back):
-  if (!d->boxVertexShader) {
-    d->boxVertexShader = new Shader(Shader::Vertex);
-    d->boxVertexShader->setSource(volume_box_vs);
-    if (!d->boxVertexShader->compile())
-      std::cerr << "VolumeGeometry: Box vertex shader compile failed.\n";
-  }
-
-  if (!d->boxFragmentShader) {
-    d->boxFragmentShader = new Shader(Shader::Fragment);
-    d->boxFragmentShader->setSource(volume_box_fs);
-    if (!d->boxFragmentShader->compile())
-      std::cerr << "VolumeGeometry: Box fragment shader compile failed.\n";
-  }
-
-  if (!d->boxShaders) {
-    d->boxShaders = new ShaderProgram();
-    d->boxShaders->attachShader(*d->boxVertexShader);
-    d->boxShaders->attachShader(*d->boxFragmentShader);
-    if (!d->boxShaders->link())
-      std::cerr << "VolumeGeometry: Box shader program linking failed.\n";
-  }
-
-  // Done initializing:
   m_dirty = false;
 }
 
@@ -497,14 +330,20 @@ void VolumeGeometry::render(const Camera& camera)
   Eigen::Matrix4d boxD = Eigen::Matrix4d::Identity();
   boxD.block<3, 3>(0, 0) = linear;
   boxD.block<3, 1>(0, 3) = m_cube->min();
-  const bool mirrored = linear.determinant() < 0.0;
-  const Eigen::Matrix4f boxMatrix = boxD.cast<float>();
   const Eigen::Matrix4f boxInverse = boxD.inverse().cast<float>();
-  // Valid steps cannot give this; bail out rather than draw garbage. This is
-  // done before initialize() so the caller's framebuffer binding is intact.
   if (!boxInverse.allFinite())
     return;
-  // Longest of the four body diagonals bounds any ray inside the box.
+
+  // Inverse of (projection * modelView) in double precision for accurate
+  // screen-ray unprojection across wide depth ranges.
+  const Eigen::Matrix4d viewProjD =
+    camera.projection().matrix().cast<double>() *
+    camera.modelView().matrix().cast<double>();
+  const Eigen::Matrix4f invViewProj = viewProjD.inverse().cast<float>();
+  if (!invViewProj.allFinite())
+    return;
+
+  // Longest of the four body diagonals sets the world-space step scale.
   float boxDiagonal = 0.0f;
   for (int corner = 0; corner < 4; ++corner) {
     Eigen::Vector3d u((corner & 1) ? -1.0 : 1.0, (corner & 2) ? -1.0 : 1.0,
@@ -512,277 +351,129 @@ void VolumeGeometry::render(const Camera& camera)
     boxDiagonal =
       std::max(boxDiagonal, static_cast<float>((linear * u).norm()));
   }
-  // Capture the default FBO before initialize() which may change it
-  // (resizeFBO creates new framebuffers and unbinds to FBO 0, losing
-  // the Qt widget's actual default FBO)
-  glGetIntegerv(GL_FRAMEBUFFER_BINDING,
-                reinterpret_cast<GLint*>(&d->defaultFBO));
+  if (!(boxDiagonal > 0.0f))
+    return;
 
   if (m_dirty)
     initialize();
 
-  GLint vp[4];
+  if (d->volumeTexture == 0 || !d->program || d->vao == 0)
+    return;
+
+  GLint activeFBO = 0;
+  GLint previousReadFBO = 0;
+  glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &activeFBO);
+  glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &previousReadFBO);
+  GLint vp[4] = { 0, 0, 0, 0 };
   glGetIntegerv(GL_VIEWPORT, vp);
-  int newW = vp[2];
-  int newH = vp[3];
-  if (newW != m_width || newH != m_height) {
-    m_dirty = true;
-    initialize();
+  const int vpX = vp[0];
+  const int vpY = vp[1];
+  const int vpW = vp[2];
+  const int vpH = vp[3];
+  if (vpW <= 0 || vpH <= 0)
+    return;
+
+  // Snapshot the active framebuffer's depth buffer so opaque atoms, bonds, and
+  // surfaces occlude volume lobes behind them.
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, static_cast<GLuint>(activeFBO));
+  const DepthAttachmentFormat currentFormat =
+    detectDepthFormat(static_cast<GLuint>(activeFBO));
+  if (vpW != m_width || vpH != m_height || currentFormat != d->depthFormat ||
+      !d->depthCopyReady) {
+    d->depthFormat = currentFormat;
+    resizeFBO(vpW, vpH);
   }
 
-  Eigen::Matrix4f mv = camera.modelView().matrix();
-  Eigen::Matrix4f proj = camera.projection().matrix();
-
-  // Compute camera position in world space from inverse modelView
-  Eigen::Matrix4f mvInv = mv.inverse();
-  Eigen::Vector3f cameraPos = mvInv.block<3, 1>(0, 3);
-
-  // Compute view direction (for orthographic projection)
-  // View direction in camera space is -Z, transform to world space
-  Eigen::Vector3f viewDirWorld =
-    (mvInv.block<3, 3>(0, 0) * Eigen::Vector3f(0, 0, -1)).normalized();
-
-  // Get projection type (0 = perspective, 1 = orthographic)
-  int projType = (camera.projectionType() == Projection::Orthographic) ? 1 : 0;
-
-  // The box passes change the cull mode; put the caller's back afterwards.
-  GLint savedCullMode = GL_BACK;
-  glGetIntegerv(GL_CULL_FACE_MODE, &savedCullMode);
-
-  // 2) Render the BACK faces of bounding box (exit points):
-  {
-    glBindFramebuffer(GL_FRAMEBUFFER, d->backFBO);
-    glViewport(0, 0, m_width, m_height);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
-    // A mirrored (left-handed) box has its triangle winding reversed, so
-    // which faces are the front ones swaps.
-    glCullFace(mirrored ? GL_BACK : GL_FRONT);
-    // Use sentinel value for clear color to detect "no hit" pixels
-    glClearColor(-1e6f, -1e6f, -1e6f, 0.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    d->boxShaders->bind();
-
-    d->boxShaders->setUniformValue("uModelView", mv);
-    d->boxShaders->setUniformValue("uProjection", proj);
-    d->boxShaders->setUniformValue("uBoxMatrix", boxMatrix);
-
-    glBindVertexArray(d->volumeBoxVao);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
-
-    d->boxShaders->release();
-
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
+  bool hasSceneDepth = false;
+  if (d->depthCopyReady) {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, static_cast<GLuint>(activeFBO));
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, d->depthCopyFBO);
+    // Drain pre-existing errors so we only test the blit itself.
+    for (int i = 0; i < 8 && glGetError() != GL_NO_ERROR; ++i) {}
+    glBlitFramebuffer(vpX, vpY, vpX + vpW, vpY + vpH, 0, 0, vpW, vpH,
+                      GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    hasSceneDepth = (glGetError() == GL_NO_ERROR);
   }
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, static_cast<GLuint>(activeFBO));
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, static_cast<GLuint>(previousReadFBO));
 
-  // 3) Render the FRONT faces of bounding box (entry points):
-  {
-    glBindFramebuffer(GL_FRAMEBUFFER, d->frontFBO);
-    glViewport(0, 0, m_width, m_height);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
-    glCullFace(mirrored ? GL_FRONT : GL_BACK);
-    // Use sentinel value for clear color to detect "no hit" pixels
-    glClearColor(-1e6f, -1e6f, -1e6f, 0.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    d->boxShaders->bind();
-
-    d->boxShaders->setUniformValue("uModelView", mv);
-    d->boxShaders->setUniformValue("uProjection", proj);
-    d->boxShaders->setUniformValue("uBoxMatrix", boxMatrix);
-
-    glBindVertexArray(d->volumeBoxVao);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
-
-    d->boxShaders->release();
-
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glCullFace(static_cast<GLenum>(savedCullMode));
-  }
-
-  // 4) Final pass: ray marching into the default framebuffer:
-  glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
-  glViewport(0, 0, m_width, m_height);
-
-  // Disable depth test and depth write - the fullscreen quad should always draw
-  // (ray marching handles occlusion internally) but shouldn't corrupt depth
-  // buffer
+  // Ray marching handles occlusion internally via uSceneDepthTex; disable
+  // depth test/write so the fullscreen triangle always runs without altering
+  // the depth buffer.
+  const bool depthTestWasEnabled = (glIsEnabled(GL_DEPTH_TEST) == GL_TRUE);
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
 
-  // The guard puts the caller's blend state back when we return.
   BlendStateGuard blendState;
-
-  // Enable premultiplied alpha blending so volume composites over existing
-  // scene
   glEnable(GL_BLEND);
-  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                      GL_ONE_MINUS_SRC_ALPHA);
 
-  d->program->bind();
+  if (d->program->bind()) {
+    glActiveTexture(GL_TEXTURE0 + TextureUnitVolume);
+    glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
+    d->program->setUniformValue("uVolumeData", TextureUnitVolume);
 
-  GLint pId = 0;
-  glGetIntegerv(GL_CURRENT_PROGRAM, &pId);
+    glActiveTexture(GL_TEXTURE0 + TextureUnitSceneDepth);
+    glBindTexture(GL_TEXTURE_2D, hasSceneDepth ? d->depthCopyTexture : 0);
+    d->program->setUniformValue("uSceneDepthTex", TextureUnitSceneDepth);
+    d->program->setUniformValue("uHasSceneDepth", hasSceneDepth ? 1 : 0);
 
-  // inFrontPosTex -> unit 0
-  {
-    GLint loc = glGetUniformLocation(pId, "inFrontPosTex");
-    if (loc >= 0) {
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, d->frontColorTexture);
-      glUniform1i(loc, 0);
-    }
+    const Eigen::Vector3f posCol(m_positiveColor[0] / 255.0f,
+                                 m_positiveColor[1] / 255.0f,
+                                 m_positiveColor[2] / 255.0f);
+    const Eigen::Vector3f negCol(m_negativeColor[0] / 255.0f,
+                                 m_negativeColor[1] / 255.0f,
+                                 m_negativeColor[2] / 255.0f);
+    d->program->setUniformValue("numSteps", 150);
+    d->program->setUniformValue("alphaScale", 0.6f);
+    d->program->setUniformValue("positiveColor", posCol);
+    d->program->setUniformValue("negativeColor", negCol);
+    d->program->setUniformValue("uInvViewProj", invViewProj);
+    d->program->setUniformValue("uBoxInverse", boxInverse);
+    d->program->setUniformValue("uBoxDiagonal", boxDiagonal);
+
+    glBindVertexArray(d->vao);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
+    d->program->release();
   }
 
-  // inBackPosTex -> unit 1
-  {
-    GLint loc = glGetUniformLocation(pId, "inBackPosTex");
-    if (loc >= 0) {
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, d->backColorTexture);
-      glUniform1i(loc, 1);
-    }
-  }
-
-  // uVolumeData -> unit 2
-  {
-    GLint loc = glGetUniformLocation(pId, "uVolumeData");
-    if (loc >= 0) {
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_3D, d->volumeTexture);
-      glUniform1i(loc, 2);
-    }
-  }
-
-  // Colors, etc.
-  Eigen::Vector3f posCol(m_positiveColor[0] / 255.0f,
-                         m_positiveColor[1] / 255.0f,
-                         m_positiveColor[2] / 255.0f);
-  Eigen::Vector3f negCol(m_negativeColor[0] / 255.0f,
-                         m_negativeColor[1] / 255.0f,
-                         m_negativeColor[2] / 255.0f);
-  d->program->setUniformValue("width", float(m_width));
-  d->program->setUniformValue("height", float(m_height));
-  d->program->setUniformValue("numSteps", 150);
-  d->program->setUniformValue("alphaScale", 0.6f);
-  d->program->setUniformValue("positiveColor", posCol);
-  d->program->setUniformValue("negativeColor", negCol);
-  d->program->setUniformValue("uBoxMatrix", boxMatrix);
-  d->program->setUniformValue("uBoxInverse", boxInverse);
-  d->program->setUniformValue("uBoxDiagonal", boxDiagonal);
-  d->program->setUniformValue("uCameraPos", cameraPos);
-  d->program->setUniformValue("uViewDir", viewDirWorld);
-  d->program->setUniformValue("uProjectionType", projType);
-
-  glBindVertexArray(d->vao);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
-  glBindVertexArray(0);
-
-  d->program->release();
-
-  // Blend state is restored by blendState; restore the rest by hand.
   glDepthMask(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
+  if (depthTestWasEnabled)
+    glEnable(GL_DEPTH_TEST);
 }
 
 void VolumeGeometry::end()
 {
-  if (d->vbo) {
-    glDeleteBuffers(1, &d->vbo);
-    d->vbo = 0;
-  }
-  if (d->vao) {
+  if (d->vao != 0) {
     glDeleteVertexArrays(1, &d->vao);
     d->vao = 0;
   }
-  if (d->renderTexture) {
-    glDeleteTextures(1, &d->renderTexture);
-    d->renderTexture = 0;
-  }
-  if (d->depthTexture) {
-    glDeleteTextures(1, &d->depthTexture);
-    d->depthTexture = 0;
-  }
-  if (d->renderFBO) {
-    glDeleteFramebuffers(1, &d->renderFBO);
-    d->renderFBO = 0;
-  }
-  if (d->backFBO) {
-    glDeleteFramebuffers(1, &d->backFBO);
-    d->backFBO = 0;
-  }
-  if (d->backColorTexture) {
-    glDeleteTextures(1, &d->backColorTexture);
-    d->backColorTexture = 0;
-  }
-  if (d->backDepthTexture) {
-    glDeleteTextures(1, &d->backDepthTexture);
-    d->backDepthTexture = 0;
-  }
-  if (d->frontFBO) {
-    glDeleteFramebuffers(1, &d->frontFBO);
-    d->frontFBO = 0;
-  }
-  if (d->frontColorTexture) {
-    glDeleteTextures(1, &d->frontColorTexture);
-    d->frontColorTexture = 0;
-  }
-  if (d->frontDepthTexture) {
-    glDeleteTextures(1, &d->frontDepthTexture);
-    d->frontDepthTexture = 0;
-  }
-  if (d->volumeBoxVbo) {
-    glDeleteBuffers(1, &d->volumeBoxVbo);
-    d->volumeBoxVbo = 0;
-  }
-  if (d->volumeBoxEbo) {
-    glDeleteBuffers(1, &d->volumeBoxEbo);
-    d->volumeBoxEbo = 0;
-  }
-  if (d->volumeBoxVao) {
-    glDeleteVertexArrays(1, &d->volumeBoxVao);
-    d->volumeBoxVao = 0;
-  }
-  if (d->volumeTexture) {
+  if (d->volumeTexture != 0) {
     glDeleteTextures(1, &d->volumeTexture);
     d->volumeTexture = 0;
   }
-  if (d->transferTexture) {
-    glDeleteTextures(1, &d->transferTexture);
-    d->transferTexture = 0;
+  if (d->depthCopyFBO != 0) {
+    glDeleteFramebuffers(1, &d->depthCopyFBO);
+    d->depthCopyFBO = 0;
   }
+  if (d->depthCopyTexture != 0) {
+    glDeleteTextures(1, &d->depthCopyTexture);
+    d->depthCopyTexture = 0;
+  }
+  d->depthCopyReady = false;
 
-  if (d->boxShaders) {
-    delete d->boxShaders;
-    d->boxShaders = nullptr;
-  }
-  if (d->boxVertexShader) {
-    delete d->boxVertexShader;
-    d->boxVertexShader = nullptr;
-  }
-  if (d->boxFragmentShader) {
-    delete d->boxFragmentShader;
-    d->boxFragmentShader = nullptr;
-  }
-
-  if (d->program) {
-    delete d->program;
-    d->program = nullptr;
-  }
+  d->program.reset();
   if (d->vertexShader) {
-    delete d->vertexShader;
-    d->vertexShader = nullptr;
+    d->vertexShader->cleanup();
+    d->vertexShader.reset();
   }
   if (d->fragmentShader) {
-    delete d->fragmentShader;
-    d->fragmentShader = nullptr;
+    d->fragmentShader->cleanup();
+    d->fragmentShader.reset();
   }
 }
 

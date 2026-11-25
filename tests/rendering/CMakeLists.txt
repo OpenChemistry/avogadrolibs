@@ -15,6 +15,7 @@ set(tests
   PLYVisitor
   SphereGeometry
   TessellatingVisitor
+  VolumeGeometry
   )
 
 find_package(OpenGL REQUIRED)

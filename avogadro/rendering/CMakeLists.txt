@@ -134,8 +134,6 @@ set(shader_files
   "solid_vs.glsl"
   "solid_first_fs.glsl"
   "solid_ao_fs.glsl"
-  "volume_box_fs.glsl"
-  "volume_box_vs.glsl"
   "volume_fs.glsl"
   "volume_vs.glsl"
   "wideline_fs.glsl"
