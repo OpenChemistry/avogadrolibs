@@ -285,6 +285,18 @@ void CurveGeometry::tessellate(size_t lineIndex,
   }
 }
 
+// The GL context was replaced: the line's objects belong to the dead one, so
+// forget them without deleting and rebuild.
+void CurveGeometry::forgetStaleObjects(Line& line)
+{
+  if (ContextStamp::replaced(line.contextId)) {
+    line.vbo.abandon();
+    line.ibo.abandon();
+    line.vao.abandon();
+    line.dirty = true;
+  }
+}
+
 void CurveGeometry::update(int index)
 {
   FallbackRenderContext fallbackContext;
@@ -294,6 +306,7 @@ void CurveGeometry::update(int index)
     return;
 
   Line* line = m_lines[index];
+  forgetStaleObjects(*line);
   line->numberOfVertices = 0;
   line->numberOfIndices = 0;
 
@@ -385,6 +398,7 @@ void CurveGeometry::render(const Camera& camera)
 
   for (size_t i = 0; i < m_lines.size(); ++i) {
     Line* line = m_lines[i];
+    forgetStaleObjects(*line);
     if (line->dirty) {
       update(i);
     }

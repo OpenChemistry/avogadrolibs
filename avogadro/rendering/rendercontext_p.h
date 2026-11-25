@@ -115,14 +115,21 @@ public:
    * them (abandon(), never delete) and build new ones. Returns true only once
    * per replacement.
    */
-  bool replaced()
+  bool replaced() { return replaced(m_id); }
+
+  /**
+   * The same check for a drawable that keeps the id itself, because its GL
+   * objects live in a public struct that cannot include this header (such as
+   * Line). @p storedId is 0 until a real context has been seen.
+   */
+  static bool replaced(std::uint64_t& storedId)
   {
     const RenderContext* context = RenderContext::current();
     const std::uint64_t id = context ? context->id() : 0;
     if (id == 0)
       return false;
-    const bool changed = m_id != 0 && m_id != id;
-    m_id = id;
+    const bool changed = storedId != 0 && storedId != id;
+    storedId = id;
     return changed;
   }
 

@@ -855,3 +855,48 @@ TEST_F(GLWidgetTest, abandonForgetsGLObjectsWithoutDeletingThem)
 
   EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
 }
+
+// A curve keeps its GL objects in its Line structs. After the renderer's
+// context life ends and a new one starts, the curve forgets the old buffers
+// (it never deletes them) and builds new ones.
+TEST_F(GLWidgetTest, curveGeometryRebuildsAfterContextReplaced)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* geometry = new GeometryNode;
+  auto* curve = new BSplineGeometry(false);
+  curve->addPoint(Vector3f(-2.0f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0,
+                  0);
+  curve->addPoint(Vector3f(0.0f, 0.5f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0, 1);
+  curve->addPoint(Vector3f(2.0f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0, 2);
+  geometry->addDrawable(curve);
+  widget->renderer().scene().rootNode().addChild(geometry);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  ASSERT_EQ(curve->lines().size(), 1u);
+  const auto oldVbo = static_cast<GLuint>(curve->lines()[0]->vbo.handle());
+  ASSERT_NE(oldVbo, 0u);
+
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  const auto newVbo = static_cast<GLuint>(curve->lines()[0]->vbo.handle());
+  EXPECT_NE(newVbo, 0u);
+  // The old name was abandoned, not deleted, so it is still alive here.
+  EXPECT_NE(newVbo, oldVbo);
+  QOpenGLContext* context = QOpenGLContext::currentContext();
+  EXPECT_EQ(context->functions()->glIsBuffer(oldVbo), GL_TRUE);
+  context->functions()->glDeleteBuffers(1, &oldVbo);
+  widget->doneCurrent();
+  settle();
+
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 50);
+}

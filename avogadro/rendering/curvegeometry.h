@@ -13,6 +13,7 @@
 #include "vertexarrayobject.h"
 #include <avogadro/core/vector.h>
 #include <algorithm>
+#include <cstdint>
 #include <map>
 #include <vector>
 
@@ -56,6 +57,8 @@ struct Line
   VertexArrayObject vao;
   size_t numberOfVertices;
   size_t numberOfIndices;
+  /** Private: the render context the GL objects above were created in. */
+  std::uint64_t contextId = 0;
 };
 
 class AVOGADRORENDERING_EXPORT CurveGeometry : public Drawable
@@ -152,6 +155,8 @@ protected:
   size_t m_sides = 0;
 
   virtual void update(int index);
+  /** Abandon @p line's GL objects if the GL context was replaced. */
+  static void forgetStaleObjects(Line& line);
   /**
    * The curve has one segment per control point, running from the first
    * control point to the last. Segment k (0 <= k < points.size()) belongs to
