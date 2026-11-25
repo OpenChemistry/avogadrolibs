@@ -29,37 +29,37 @@ GLRenderVisitor::~GLRenderVisitor() {}
 
 void GLRenderVisitor::visit(Drawable& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(SphereGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CurveGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CylinderGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(MeshGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(TextLabel2D& geometry)
 {
-  if (geometry.renderPass() == m_renderPass) {
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass) {
     if (m_textRenderStrategy) {
       geometry.setPixelRatio(m_pixelRatio);
       geometry.buildTexture(*m_textRenderStrategy);
@@ -70,7 +70,7 @@ void GLRenderVisitor::visit(TextLabel2D& geometry)
 
 void GLRenderVisitor::visit(TextLabel3D& geometry)
 {
-  if (geometry.renderPass() == m_renderPass) {
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass) {
     if (m_textRenderStrategy) {
       geometry.setPixelRatio(m_pixelRatio);
       geometry.buildTexture(*m_textRenderStrategy);
@@ -81,31 +81,31 @@ void GLRenderVisitor::visit(TextLabel3D& geometry)
 
 void GLRenderVisitor::visit(LineStripGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(WideLineGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(DashedLineGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(ArrowGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(VolumeGeometry& geometry)
 {
-  if (geometry.renderPass() == m_renderPass)
+  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
     geometry.render(m_camera);
 }
 

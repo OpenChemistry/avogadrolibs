@@ -1,12 +1,11 @@
-#version 400 
-precision highp float; 
-   
+#version 400
+precision highp float;
+
 in vec2 v_texCoord;
 in vec4 eyePosition;
 in vec3 fColor;
 in float radius;
 
-uniform mat3 normal;
 uniform float opacity;
 uniform mat4 projection;
 

@@ -396,6 +396,7 @@ void CurveGeometry::render(const Camera& camera)
     !program.setUniformValue("modelView", camera.modelView().matrix()));
   processShaderError(
     !program.setUniformValue("projection", camera.projection().matrix()));
+  processShaderError(!program.setUniformValue("opacity", 1.0f));
   Eigen::Matrix3f normalMatrix =
     camera.modelView().linear().inverse().transpose();
   processShaderError(!program.setUniformValue("normalMatrix", normalMatrix));

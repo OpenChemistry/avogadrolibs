@@ -6,9 +6,17 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/rendering/camera.h>
+#include <avogadro/rendering/drawable.h>
+#include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/glrendervisitor.h>
 
+using Avogadro::Rendering::Camera;
+using Avogadro::Rendering::Drawable;
+using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GLRenderer;
+using Avogadro::Rendering::GLRenderVisitor;
+using Avogadro::Rendering::OpaquePass;
 using Avogadro::Rendering::Orthographic;
 using Avogadro::Rendering::Perspective;
 
@@ -103,4 +111,50 @@ TEST(GLRendererTest, scaleKeepsAspectRatio)
   Eigen::Matrix4f m = renderer.camera().projection().matrix();
   // x/y focal ratio is the inverse aspect ratio whatever the scale.
   EXPECT_NEAR(m(1, 1) / m(0, 0), 4.0f, 1e-4f);
+}
+
+TEST(GLRendererTest, overlayCameraIsDistinctFromMainCamera)
+{
+  GLRenderer renderer;
+  const GLRenderer& constRenderer = renderer;
+  EXPECT_NE(&renderer.overlayCamera(), &renderer.camera());
+  EXPECT_NE(&constRenderer.overlayCamera(), &constRenderer.camera());
+  EXPECT_EQ(&constRenderer.overlayCamera(), &renderer.overlayCamera());
+
+  renderer.camera().setViewport(640, 480);
+  renderer.overlayCamera().setViewport(320, 200);
+  EXPECT_EQ(renderer.camera().width(), 640);
+  EXPECT_EQ(renderer.camera().height(), 480);
+  EXPECT_EQ(renderer.overlayCamera().width(), 320);
+  EXPECT_EQ(renderer.overlayCamera().height(), 200);
+
+  renderer.applyProjection();
+  EXPECT_TRUE(renderer.overlayCamera().isOrthographic());
+  EXPECT_FALSE(renderer.camera().isOrthographic());
+}
+
+TEST(GLRendererTest, renderVisitorSkipsHiddenDrawables)
+{
+  class CountingDrawable : public Drawable
+  {
+  public:
+    int renderCalls = 0;
+    void render(const Camera&) override { ++renderCalls; }
+  };
+
+  GeometryNode node;
+  auto* visible = new CountingDrawable;
+  visible->setRenderPass(OpaquePass);
+  auto* hidden = new CountingDrawable;
+  hidden->setRenderPass(OpaquePass);
+  hidden->setVisible(false);
+  node.addDrawable(visible);
+  node.addDrawable(hidden);
+
+  GLRenderVisitor visitor;
+  visitor.setRenderPass(OpaquePass);
+  node.accept(visitor);
+
+  EXPECT_EQ(visible->renderCalls, 1);
+  EXPECT_EQ(hidden->renderCalls, 0);
 }

@@ -122,7 +122,6 @@ target_sources(Rendering PRIVATE
 )
 
 set(shader_files
-  "arrow_vs.glsl"
   "curves_vs.glsl"
   "cylinders_fs.glsl"
   "cylinders_vs.glsl"

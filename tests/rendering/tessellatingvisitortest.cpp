@@ -496,6 +496,13 @@ TEST(TessellatingVisitorTest, centerOnMolecule)
   EXPECT_TRUE(visitor.offset().isApprox(Vector3f(1, 2, 3), 1e-6f));
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
 TEST(TessellatingVisitorTest, dashedLinesOneTubePerDash)
 {
   DashedLineGeometry dashed;
@@ -532,6 +539,11 @@ TEST(TessellatingVisitorTest, lineRadiusScalesTubes)
     maxRadius = std::max(maxRadius, std::hypot(p[0], p[1]));
   EXPECT_NEAR(maxRadius, 0.1f, 1e-5f); // the cap centres lie on the axis
 }
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 TEST(TessellatingVisitorTest, arrow)
 {
