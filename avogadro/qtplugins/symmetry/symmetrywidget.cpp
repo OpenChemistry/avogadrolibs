@@ -120,8 +120,7 @@ void SymmetryWidget::setMolecule(QtGui::Molecule* molecule)
   }
 }
 
-  void
-  SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
+void SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   /*
   if (changes & Molecule::UnitCell)
