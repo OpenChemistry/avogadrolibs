@@ -19,6 +19,7 @@
 #include <avogadro/rendering/dashedlinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/groupnode.h>
 #include <avogadro/rendering/linestripgeometry.h>
 #include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/shader.h>
@@ -55,6 +56,7 @@ using Avogadro::Rendering::CylinderGeometry;
 using Avogadro::Rendering::DashedLineGeometry;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GLRenderer;
+using Avogadro::Rendering::GroupNode;
 using Avogadro::Rendering::LineStripGeometry;
 using Avogadro::Rendering::MeshGeometry;
 using Avogadro::Rendering::Orthographic;
@@ -80,6 +82,23 @@ GLenum currentGLError()
 {
   return QOpenGLContext::currentContext()->functions()->glGetError();
 }
+
+// A drawable that does no GL and records which pass it is rendered in.
+class CountingDrawable : public Avogadro::Rendering::Drawable
+{
+public:
+  CountingDrawable(int id, Avogadro::Rendering::RenderPass pass,
+                   std::vector<int>& log)
+    : m_id(id), m_log(log)
+  {
+    setRenderPass(pass);
+  }
+  void render(const Camera&) override { m_log.push_back(m_id); }
+
+private:
+  int m_id;
+  std::vector<int>& m_log;
+};
 
 // One drawable of every kind that takes its shader program from the
 // renderer's per-context cache, spread over the view.
@@ -670,6 +689,67 @@ TEST_F(GLWidgetTest, everyProgramRendersWithoutGLErrors)
   ASSERT_FALSE(image.isNull());
   EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 20); // the red sphere
   EXPECT_GT(dominantBounds(image, 1, 90, 60).count, 20); // the cylinder
+}
+
+// The renderer walks the scene once and sorts the drawables by pass: each
+// visible drawable renders once, in its own pass, in scene order.
+TEST_F(GLWidgetTest, drawablesRenderOnceInTheirPassInSceneOrder)
+{
+  using namespace Avogadro::Rendering;
+  std::vector<int> log;
+  auto* outer = new GroupNode;
+  auto* first = new GeometryNode;
+  auto* inner = new GroupNode;
+  auto* second = new GeometryNode;
+  auto* hiddenGroup = new GroupNode;
+  auto* third = new GeometryNode;
+  outer->addChild(first);
+  outer->addChild(inner);
+  inner->addChild(second);
+  hiddenGroup->setVisible(false);
+  outer->addChild(hiddenGroup);
+  hiddenGroup->addChild(third);
+
+  // Ids are in scene order within each pass; the passes are interleaved.
+  first->addDrawable(new CountingDrawable(20, Overlay2DPass, log));
+  first->addDrawable(new CountingDrawable(10, TranslucentPass, log));
+  first->addDrawable(new CountingDrawable(1, SolidPass, log));
+  first->addDrawable(new CountingDrawable(30, NotRendering, log));
+  second->addDrawable(new CountingDrawable(11, OpaquePass, log));
+  auto* hidden = new CountingDrawable(99, SolidPass, log);
+  hidden->setVisible(false);
+  second->addDrawable(hidden);
+  second->addDrawable(new CountingDrawable(2, SolidPass, log));
+  second->addDrawable(new CountingDrawable(15, Overlay3DPass, log));
+  third->addDrawable(new CountingDrawable(3, SolidPass, log));
+  // Real geometry in other passes next to the counting ones.
+  auto* sphere = new SphereGeometry;
+  sphere->addSphere(Vector3f(0, 0, 0), Vector3ub(255, 0, 0), 1.0f);
+  second->addDrawable(sphere);
+  auto* translucent = new SphereGeometry;
+  translucent->addSphere(Vector3f(1, 0, 0), Vector3ub(0, 255, 0), 1.0f);
+  translucent->setRenderPass(TranslucentPass);
+  second->addDrawable(translucent);
+
+  clearScene(*widget);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(outer);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  log.clear();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  // Only the drawable itself is hidden: GroupNode visibility is not used by
+  // the traversal, so the drawable in hiddenGroup (3) still renders.
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 3, 11, 10, 15, 20 }));
+
+  // The buckets are reused: a second frame gives the same result.
+  log.clear();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 3, 11, 10, 15, 20 }));
+  widget->doneCurrent();
 }
 
 // cleanup() deletes the cached programs; initialize() on the same context

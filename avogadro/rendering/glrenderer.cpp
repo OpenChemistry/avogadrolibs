@@ -9,6 +9,7 @@
 
 #include "bufferobject.h"
 
+#include "drawablecollector_p.h"
 #include "geometrynode.h"
 #include "geometrytiming.h"
 #include "glrendervisitor.h"
@@ -230,6 +231,9 @@ public:
   // Shader programs shared by the drawables, tied to the GL context that
   // initialize() was called in.
   RenderContext context;
+  // The drawables of the frame being rendered, by pass. Kept so that the
+  // buckets' capacity persists from frame to frame.
+  DrawableCollector collector;
 };
 
 GLRenderer::GLRenderer()
@@ -387,12 +391,23 @@ void GLRenderer::render()
 
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   visitor.setPixelRatio(m_pixelRatio);
+  // One walk of the scene sorts the drawables by pass. Each pass then hands
+  // its drawables back to the GLRenderVisitor through accept(), so the
+  // per-type work in GLRenderVisitor (text labels build their textures, for
+  // example) is the same as when the visitor walked the scene itself. The
+  // scene must not change until render() returns.
+  d->collector.clear();
+  m_scene.rootNode().accept(d->collector);
+  auto renderPass = [&](RenderPass pass) {
+    visitor.setRenderPass(pass);
+    for (Drawable* drawable : d->collector.bucket(pass))
+      drawable->accept(visitor);
+  };
   // Setup for solid geometry
-  visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   const bool useSolidPipeline = m_solidPipeline.begin();
-  m_scene.rootNode().accept(visitor);
+  renderPass(SolidPass);
   if (timing)
     timing->beginSection(PostSection);
   if (useSolidPipeline) {
@@ -404,13 +419,11 @@ void GLRenderer::render()
     timing->beginSection(OpaqueSection);
 
   // Setup for opaque geometry
-  visitor.setRenderPass(OpaquePass);
-  m_scene.rootNode().accept(visitor);
+  renderPass(OpaquePass);
   if (timing)
     timing->beginSection(TranslucentSection);
 
   // Setup for transparent geometry
-  visitor.setRenderPass(TranslucentPass);
   glEnable(GL_BLEND);
   // Thanks to Giuseppe D'Angelo for a related comment:
   // https://bugreports.qt.io/browse/QTBUG-36739
@@ -421,22 +434,20 @@ void GLRenderer::render()
   // holds a valid premultiplied image.
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
                       GL_ONE_MINUS_SRC_ALPHA);
-  m_scene.rootNode().accept(visitor);
+  renderPass(TranslucentPass);
   if (timing)
     timing->beginSection(Overlay3DSection);
 
   // Setup for 3d overlay rendering
-  visitor.setRenderPass(Overlay3DPass);
   glClear(GL_DEPTH_BUFFER_BIT);
-  m_scene.rootNode().accept(visitor);
+  renderPass(Overlay3DPass);
   if (timing)
     timing->beginSection(Overlay2DSection);
 
   // Setup for 2d overlay rendering
-  visitor.setRenderPass(Overlay2DPass);
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
-  m_scene.rootNode().accept(visitor);
+  renderPass(Overlay2DPass);
   if (timing)
     timing->endFrame(d->timings, d->timingSync);
 

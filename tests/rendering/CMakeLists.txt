@@ -8,6 +8,7 @@ set(tests
   CurveGeometry
   CurveTessellation
   CylinderGeometry
+  DrawableCollector
   GLRenderer
   GeometryVisitor
   GltfVisitor
