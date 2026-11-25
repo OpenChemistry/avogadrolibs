@@ -311,6 +311,11 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
     // textures.
     if (m_boundTextureUnits.empty())
       initializeTextureUnits();
+    if (m_boundTextureUnits.size() <= 1) {
+      m_error = "Could not set sampler " + name +
+                ". No remaining texture units available.";
+      return false;
+    }
     auto begin = m_boundTextureUnits.begin() + 1;
     auto end = m_boundTextureUnits.end();
     auto available = std::find(begin, end, false);
@@ -321,7 +326,7 @@ bool ShaderProgram::setTextureSampler(const std::string& name,
       return false;
     }
 
-    textureUnitId = static_cast<GLint>(available - begin);
+    textureUnitId = static_cast<GLint>(available - m_boundTextureUnits.begin());
 
     GLenum textureUnit = lookupTextureUnit(textureUnitId);
     if (textureUnit == 0) {

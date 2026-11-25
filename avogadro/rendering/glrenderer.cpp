@@ -304,8 +304,8 @@ void GLRenderer::initialize()
     return;
   }
 
-  if (!GLEW_VERSION_2_0) {
-    m_error += "GL version 2.0 is not supported by your graphics driver.\n";
+  if (!GLEW_VERSION_4_0) {
+    m_error += "GL version 4.0 is not supported by your graphics driver.\n";
     m_valid = false;
     return;
   }
@@ -326,7 +326,6 @@ void GLRenderer::resize(int width, int height, int deviceWidth,
   if (!m_valid)
     return;
 
-  // m_volume.resize(width, height);
   // The viewport is in device pixels, while the cameras work in logical pixels
   // as they are used to project and unproject Qt mouse coordinates.
   glViewport(0, 0, static_cast<GLsizei>(deviceWidth),
@@ -361,7 +360,6 @@ void GLRenderer::render()
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   visitor.setPixelRatio(m_pixelRatio);
   // Setup for solid geometry
-  // m_volume.begin()
   visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);

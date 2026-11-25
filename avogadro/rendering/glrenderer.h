@@ -150,8 +150,18 @@ public:
   const SolidPipeline& solidPipeline() const { return m_solidPipeline; }
   SolidPipeline& solidPipeline() { return m_solidPipeline; }
 
-  const VolumeGeometry& volume() const { return m_volume; }
-  VolumeGeometry& volume() { return m_volume; }
+  [[deprecated("VolumeGeometry is rendered as a scene Drawable; this member "
+               "is unused.")]] const VolumeGeometry&
+  volume() const
+  {
+    return m_volume;
+  }
+  [[deprecated("VolumeGeometry is rendered as a scene Drawable; this member "
+               "is unused.")]] VolumeGeometry&
+  volume()
+  {
+    return m_volume;
+  }
   /**
    * Get/set the text rendering strategy for this object. The renderer takes
    * ownership of the strategy object. @{
@@ -229,12 +239,12 @@ inline Camera& GLRenderer::camera()
 
 inline const Camera& GLRenderer::overlayCamera() const
 {
-  return m_camera;
+  return m_overlayCamera;
 }
 
 inline Camera& GLRenderer::overlayCamera()
 {
-  return m_camera;
+  return m_overlayCamera;
 }
 
 inline const TextRenderStrategy* GLRenderer::textRenderStrategy() const
