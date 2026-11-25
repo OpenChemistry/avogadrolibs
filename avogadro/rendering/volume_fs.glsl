@@ -71,7 +71,8 @@ void main()
   vec2 tBox = rayBox(boxOrigin, boxDir);
   // Start at the near clip plane (t = 0) if the camera is inside the volume.
   float tEntry = max(tBox.x, 0.0);
-  float tExit = tBox.y;
+  // Stop at the far clip plane even if the volume extends past it.
+  float tExit = min(tBox.y, raySpan);
 
   // Stop at opaque geometry (atoms, bonds, opaque surfaces) so volume lobes
   // behind them are occluded while lobes in front still tint them.
@@ -88,17 +89,15 @@ void main()
   if (!(rayLength > 1e-4) || !(uBoxDiagonal > 0.0))
     discard;
 
-  // Step at a consistent world-space spacing so truncating a ray at an atom
-  // preserves physical optical depth instead of concentrating all samples into
-  // a short segment.
+  // Step at a fixed world-space spacing anchored at the ray entry, so
+  // truncating a ray at an atom keeps the full-step sample positions and only
+  // shortens (and down-weights) the final partial step.
   float refStep = uBoxDiagonal / float(numSteps);
-  int steps = clamp(int(ceil(rayLength / refStep)), 1, numSteps);
-  float actualStep = rayLength / float(steps);
-  float stepWeight = actualStep / refStep;
-
-  // Step directly in volume texture space (no per-step matrix multiply).
-  vec3 volumeUV = boxOrigin + boxDir * (tEntry + 0.5 * actualStep);
-  vec3 uvStep = boxDir * actualStep;
+  int fullSteps = int(min(rayLength / refStep, float(numSteps)));
+  float lastStep = rayLength - float(fullSteps) * refStep;
+  int steps = fullSteps;
+  if (lastStep > 0.0 && steps < numSteps)
+    ++steps;
 
   vec3 accumulatedColor = vec3(0.0);
   float accumulatedAlpha = 0.0;
@@ -107,19 +106,22 @@ void main()
     if (accumulatedAlpha > 0.95)
       break;
 
-    vec3 sampleUV = clamp(volumeUV, vec3(0.0), vec3(1.0));
+    // Full steps have unit weight; the last partial step is weighted by its
+    // length. Sample at the midpoint of each step, in volume texture space.
+    float stepLength = (i < fullSteps) ? refStep : lastStep;
+    float t = tEntry + float(i) * refStep + 0.5 * stepLength;
+    vec3 sampleUV = clamp(boxOrigin + boxDir * t, vec3(0.0), vec3(1.0));
     float psi = texture(uVolumeData, sampleUV).r;
 
     float amplitude = abs(psi);
     vec3 color = (psi >= 0.0) ? positiveColor : negativeColor;
-    float alphaSample = clamp(amplitude * alphaScale * stepWeight, 0.0, 1.0);
+    float alphaSample =
+      clamp(amplitude * alphaScale * (stepLength / refStep), 0.0, 1.0);
 
     // Front-to-back premultiplied alpha compositing.
     float contrib = (1.0 - accumulatedAlpha) * alphaSample;
     accumulatedColor += contrib * color;
     accumulatedAlpha += contrib;
-
-    volumeUV += uvStep;
   }
 
   if (accumulatedAlpha <= 0.0)

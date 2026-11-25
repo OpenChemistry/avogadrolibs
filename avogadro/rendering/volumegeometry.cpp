@@ -56,8 +56,12 @@ DepthAttachmentFormat detectDepthFormat(GLuint readFBO)
   GLint depthSize = 0;
   GLint stencilSize = 0;
   GLint depthType = GL_UNSIGNED_NORMALIZED;
+  GLint depthObj = GL_FRAMEBUFFER_DEFAULT; // kept if the query fails
 
   if (readFBO == 0) {
+    glGetFramebufferAttachmentParameteriv(GL_READ_FRAMEBUFFER, GL_DEPTH,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
+                                          &depthObj);
     glGetFramebufferAttachmentParameteriv(GL_READ_FRAMEBUFFER, GL_DEPTH,
                                           GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE,
                                           &depthSize);
@@ -68,7 +72,6 @@ DepthAttachmentFormat detectDepthFormat(GLuint readFBO)
       GL_READ_FRAMEBUFFER, GL_DEPTH, GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE,
       &depthType);
   } else {
-    GLint depthObj = GL_NONE;
     glGetFramebufferAttachmentParameteriv(
       GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
       GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &depthObj);
@@ -94,6 +97,15 @@ DepthAttachmentFormat detectDepthFormat(GLuint readFBO)
   // depth-only FBO).
   for (int i = 0; i < 8 && glGetError() != GL_NO_ERROR; ++i) {}
 
+  // No depth buffer: a depth blit would be silently ignored, leaving the copy
+  // uninitialized. GL_NONE never matches a cached format.
+  if (depthObj == GL_NONE) {
+    fmt.internalFormat = GL_NONE;
+    fmt.format = GL_NONE;
+    fmt.type = GL_NONE;
+    return fmt;
+  }
+
   const bool isFloat = (depthType == GL_FLOAT);
   if (stencilSize > 0) {
     if (isFloat) {
@@ -113,6 +125,12 @@ DepthAttachmentFormat detectDepthFormat(GLuint readFBO)
     fmt.internalFormat = GL_DEPTH_COMPONENT16;
     fmt.format = GL_DEPTH_COMPONENT;
     fmt.type = GL_UNSIGNED_SHORT;
+#ifdef GL_DEPTH_COMPONENT32
+  } else if (depthSize == 32) {
+    fmt.internalFormat = GL_DEPTH_COMPONENT32;
+    fmt.format = GL_DEPTH_COMPONENT;
+    fmt.type = GL_UNSIGNED_INT;
+#endif
   } else {
     fmt.internalFormat = GL_DEPTH_COMPONENT24;
     fmt.format = GL_DEPTH_COMPONENT;
@@ -136,6 +154,8 @@ public:
   // Profile).
   GLuint vao = 0;
   GLuint volumeTexture = 0;
+  // True once volumeTexture holds the current cube's data.
+  bool volumeReady = false;
 
   // Single-attachment FBO used to snapshot the opaque scene's depth buffer via
   // glBlitFramebuffer so volume raymarching can stop at atoms and bonds.
@@ -194,12 +214,14 @@ void VolumeGeometry::clear()
 {
   m_cube = nullptr;
   m_dirty = true;
+  d->volumeReady = false;
 }
 
 void VolumeGeometry::setCube(const Core::Cube& cube)
 {
   m_cube = &cube;
   m_dirty = true;
+  d->volumeReady = false;
 }
 
 void VolumeGeometry::setAlphaScale(float scale)
@@ -264,6 +286,7 @@ void VolumeGeometry::initialize()
 {
   if (!m_cube || !m_dirty)
     return;
+  d->volumeReady = false;
 
   const int nx = m_cube->nx();
   const int ny = m_cube->ny();
@@ -300,8 +323,11 @@ void VolumeGeometry::initialize()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  // Drain earlier errors so only the upload itself is checked.
+  for (int i = 0; i < 8 && glGetError() != GL_NO_ERROR; ++i) {}
   glTexImage3D(GL_TEXTURE_3D, 0, GL_R32F, nx, ny, nz, 0, GL_RED, GL_FLOAT,
                volumeData.data());
+  d->volumeReady = (glGetError() == GL_NO_ERROR);
 
   if (d->vao == 0)
     glGenVertexArrays(1, &d->vao);
@@ -366,7 +392,7 @@ void VolumeGeometry::render(const Camera& camera)
   if (m_dirty)
     initialize();
 
-  if (d->volumeTexture == 0 || !d->program || d->vao == 0)
+  if (!d->volumeReady || d->volumeTexture == 0 || !d->program || d->vao == 0)
     return;
 
   GLint activeFBO = 0;
@@ -387,14 +413,16 @@ void VolumeGeometry::render(const Camera& camera)
   glBindFramebuffer(GL_READ_FRAMEBUFFER, static_cast<GLuint>(activeFBO));
   const DepthAttachmentFormat currentFormat =
     detectDepthFormat(static_cast<GLuint>(activeFBO));
-  if (vpW != m_width || vpH != m_height || currentFormat != d->depthFormat ||
-      !d->depthCopyReady) {
+  const bool framebufferHasDepth = (currentFormat.internalFormat != GL_NONE);
+  if (framebufferHasDepth &&
+      (vpW != m_width || vpH != m_height || currentFormat != d->depthFormat ||
+       !d->depthCopyReady)) {
     d->depthFormat = currentFormat;
     resizeFBO(vpW, vpH);
   }
 
   bool hasSceneDepth = false;
-  if (d->depthCopyReady) {
+  if (framebufferHasDepth && d->depthCopyReady) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, static_cast<GLuint>(activeFBO));
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, d->depthCopyFBO);
     // Drain pre-existing errors so we only test the blit itself.
@@ -464,6 +492,7 @@ void VolumeGeometry::end()
   if (d->volumeTexture != 0) {
     glDeleteTextures(1, &d->volumeTexture);
     d->volumeTexture = 0;
+    d->volumeReady = false;
   }
   if (d->depthCopyFBO != 0) {
     glDeleteFramebuffers(1, &d->depthCopyFBO);
