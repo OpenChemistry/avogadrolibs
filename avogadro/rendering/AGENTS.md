@@ -44,8 +44,7 @@ rules that apply everywhere.
 ## Tests
 
 `tests/rendering/` runs **without a GL context**, so it can only test code
-that makes no GL calls: cameras, nodes, geometry generation, curves and
-visitors. Some classes (text labels, for example) call GL from their
-constructors and cannot be tested there. Keep GL calls out of constructors
-and geometry generation where you can, so the logic stays testable. GL-context
-tests live in `tests/qtopengl/`.
+that makes no GL calls: cameras, nodes, geometry generation, curves, text
+label setup, and visitors. Keep GL calls out of constructors and geometry
+generation so the logic stays testable. GL-context tests live in
+`tests/qtopengl/`.

@@ -22,18 +22,6 @@ GLint convertFilterOptionToGL(Texture2D::FilterOption opt)
   }
 }
 
-Texture2D::FilterOption convertFilterOptionFromGL(GLint opt)
-{
-  switch (opt) {
-    case GL_NEAREST:
-      return Texture2D::Nearest;
-    case GL_LINEAR:
-      return Texture2D::Linear;
-    default:
-      return Texture2D::InvalidFilter;
-  }
-}
-
 GLint convertWrappingOptionToGL(Texture2D::WrappingOption opt)
 {
   switch (opt) {
@@ -45,20 +33,6 @@ GLint convertWrappingOptionToGL(Texture2D::WrappingOption opt)
       return GL_REPEAT;
     default:
       return -1;
-  }
-}
-
-Texture2D::WrappingOption convertWrappingOptionFromGL(GLint opt)
-{
-  switch (opt) {
-    case GL_CLAMP_TO_EDGE:
-      return Texture2D::ClampToEdge;
-    case GL_MIRRORED_REPEAT:
-      return Texture2D::MirroredRepeat;
-    case GL_REPEAT:
-      return Texture2D::Repeat;
-    default:
-      return Texture2D::InvalidWrapping;
   }
 }
 
@@ -145,14 +119,18 @@ GLenum convertTypeToGL(Type type)
 class Texture2D::Private
 {
 public:
-  Private() : textureId(0) {}
+  Private() = default;
   ~Private()
   {
     if (textureId > 0)
       glDeleteTextures(1, &textureId);
   }
 
-  mutable GLuint textureId;
+  mutable GLuint textureId = 0;
+  Texture2D::FilterOption minFilter = Texture2D::Linear;
+  Texture2D::FilterOption magFilter = Texture2D::Linear;
+  Texture2D::WrappingOption wrappingS = Texture2D::Repeat;
+  Texture2D::WrappingOption wrappingT = Texture2D::Repeat;
 };
 
 Texture2D::Texture2D() : d(new Private), m_dirty(true) {}
@@ -169,74 +147,74 @@ Index Texture2D::handle() const
 
 void Texture2D::setMinFilter(Texture2D::FilterOption opt)
 {
-  Index old = pushTexture();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                  convertFilterOptionToGL(opt));
-  popTexture(old);
+  const GLint glOpt = convertFilterOptionToGL(opt);
+  if (glOpt == -1)
+    return;
+  d->minFilter = opt;
+  if (d->textureId != 0) {
+    Index old = pushTexture();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glOpt);
+    popTexture(old);
+  }
 }
 
 Texture2D::FilterOption Texture2D::minFilter() const
 {
-  Index old = pushTexture();
-  GLint result;
-  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &result);
-  popTexture(old);
-
-  return convertFilterOptionFromGL(result);
+  return d->minFilter;
 }
 
 void Texture2D::setMagFilter(Texture2D::FilterOption opt)
 {
-  Index old = pushTexture();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                  convertFilterOptionToGL(opt));
-  popTexture(old);
+  const GLint glOpt = convertFilterOptionToGL(opt);
+  if (glOpt == -1)
+    return;
+  d->magFilter = opt;
+  if (d->textureId != 0) {
+    Index old = pushTexture();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glOpt);
+    popTexture(old);
+  }
 }
 
 Texture2D::FilterOption Texture2D::magFilter() const
 {
-  Index old = pushTexture();
-  GLint result;
-  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &result);
-  popTexture(old);
-
-  return convertFilterOptionFromGL(result);
+  return d->magFilter;
 }
 
 void Texture2D::setWrappingS(Texture2D::WrappingOption opt)
 {
-  Index old = pushTexture();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-                  convertWrappingOptionToGL(opt));
-  popTexture(old);
+  const GLint glOpt = convertWrappingOptionToGL(opt);
+  if (glOpt == -1)
+    return;
+  d->wrappingS = opt;
+  if (d->textureId != 0) {
+    Index old = pushTexture();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glOpt);
+    popTexture(old);
+  }
 }
 
 Texture2D::WrappingOption Texture2D::wrappingS() const
 {
-  Index old = pushTexture();
-  GLint result;
-  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, &result);
-  popTexture(old);
-
-  return convertWrappingOptionFromGL(result);
+  return d->wrappingS;
 }
 
 void Texture2D::setWrappingT(Texture2D::WrappingOption opt)
 {
-  Index old = pushTexture();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-                  convertWrappingOptionToGL(opt));
-  popTexture(old);
+  const GLint glOpt = convertWrappingOptionToGL(opt);
+  if (glOpt == -1)
+    return;
+  d->wrappingT = opt;
+  if (d->textureId != 0) {
+    Index old = pushTexture();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glOpt);
+    popTexture(old);
+  }
 }
 
 Texture2D::WrappingOption Texture2D::wrappingT() const
 {
-  Index old = pushTexture();
-  GLint result;
-  glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, &result);
-  popTexture(old);
-
-  return convertWrappingOptionFromGL(result);
+  return d->wrappingT;
 }
 
 bool Texture2D::bind() const
@@ -274,20 +252,23 @@ bool Texture2D::uploadInternal(const void* buffer, const Vector2i& dims,
                incomingFormat, type,
                static_cast<GLvoid*>(const_cast<void*>(buffer)));
   popTexture(old);
+  m_dirty = false;
   return true;
 }
 
 Index Texture2D::pushTexture() const
 {
-  GLint currentHandle;
+  GLint currentHandle = 0;
   glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentHandle);
 
   if (d->textureId == 0) {
-    if (!const_cast<Texture2D*>(this)->generateTextureHandle())
+    if (!const_cast<Texture2D*>(this)->generateTextureHandle()) {
+      glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(currentHandle));
       return MaxIndex;
+    }
+  } else {
+    glBindTexture(GL_TEXTURE_2D, d->textureId);
   }
-
-  glBindTexture(GL_TEXTURE_2D, d->textureId);
 
   return static_cast<Index>(currentHandle);
 }
@@ -311,11 +292,17 @@ bool Texture2D::generateTextureHandle()
     return false;
   }
 
-  // Set up defaults to match the documentation:
-  setMinFilter(Linear);
-  setMagFilter(Linear);
-  setWrappingS(Repeat);
-  setWrappingT(Repeat);
+  // Bind and apply cached filter/wrap options (defaults or values set before
+  // a GL context existed).
+  glBindTexture(GL_TEXTURE_2D, d->textureId);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  convertFilterOptionToGL(d->minFilter));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                  convertFilterOptionToGL(d->magFilter));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                  convertWrappingOptionToGL(d->wrappingS));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+                  convertWrappingOptionToGL(d->wrappingT));
 
   return true;
 }

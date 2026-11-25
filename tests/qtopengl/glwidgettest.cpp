@@ -11,17 +11,24 @@
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/spheregeometry.h>
+#include <avogadro/rendering/texture2d.h>
 
 #include <QtGui/QImage>
+#include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLFunctions>
 
+#include <memory>
 #include <string>
+#include <vector>
 
+using Avogadro::Vector2i;
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
 using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::SphereGeometry;
+using Avogadro::Rendering::Texture2D;
 using namespace Avogadro::TestGL;
 
 namespace {
@@ -142,4 +149,48 @@ TEST_F(GLWidgetTest, spherePositionsFollowTheScene)
     EXPECT_GE(p.y(), s.bounds.minY) << s.name;
     EXPECT_LE(p.y(), s.bounds.maxY + 1) << s.name;
   }
+}
+
+TEST_F(GLWidgetTest, texture2DAppliesDeferredParametersOnUpload)
+{
+  // Configure parameters before a GL context is current.
+  auto texture = std::make_unique<Texture2D>();
+  texture->setMinFilter(Texture2D::Nearest);
+  texture->setMagFilter(Texture2D::Nearest);
+  texture->setWrappingS(Texture2D::ClampToEdge);
+  texture->setWrappingT(Texture2D::MirroredRepeat);
+  EXPECT_EQ(texture->handle(), 0u);
+  EXPECT_FALSE(texture->ready());
+
+  widget->makeCurrent();
+  std::vector<unsigned char> pixel = { 255, 128, 64, 255 };
+  ASSERT_TRUE(texture->upload(pixel, Vector2i(1, 1), Texture2D::IncomingRGBA,
+                              Texture2D::InternalRGBA))
+    << texture->error();
+  EXPECT_GT(texture->handle(), 0u);
+  EXPECT_TRUE(texture->ready());
+
+  ASSERT_TRUE(texture->bind());
+  QOpenGLFunctions* gl = QOpenGLContext::currentContext()->functions();
+  GLint minFilter = 0, magFilter = 0, wrapS = 0, wrapT = 0;
+  gl->glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, &minFilter);
+  gl->glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &magFilter);
+  gl->glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, &wrapS);
+  gl->glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, &wrapT);
+  EXPECT_EQ(minFilter, GL_NEAREST);
+  EXPECT_EQ(magFilter, GL_NEAREST);
+  EXPECT_EQ(wrapS, GL_CLAMP_TO_EDGE);
+  EXPECT_EQ(wrapT, GL_MIRRORED_REPEAT);
+
+  // Updating a parameter after creation updates both cache and GL state.
+  texture->setMagFilter(Texture2D::Linear);
+  EXPECT_EQ(texture->magFilter(), Texture2D::Linear);
+  ASSERT_TRUE(texture->bind());
+  gl->glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, &magFilter);
+  EXPECT_EQ(magFilter, GL_LINEAR);
+
+  texture->release();
+  // Destroy the texture while the GL context is still current.
+  texture.reset();
+  widget->doneCurrent();
 }
