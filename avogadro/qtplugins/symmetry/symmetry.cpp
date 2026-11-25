@@ -39,7 +39,7 @@ Symmetry::Symmetry(QObject* parent_)
 
   m_viewSymmetryAction->setText(tr("Symmetry…"));
   m_viewSymmetryAction->setProperty("menu priority", -50);
-  connect(m_viewSymmetryAction, SIGNAL(triggered()), SLOT(viewSymmetry()));
+  connect(m_viewSymmetryAction, &QAction::triggered, this, &Symmetry::viewSymmetry);
   m_actions.push_back(m_viewSymmetryAction);
 
   /*
@@ -94,7 +94,7 @@ void Symmetry::setMolecule(QtGui::Molecule* mol)
     m_symmetryWidget->setMolecule(m_molecule);
 
   if (m_molecule)
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+    connect(m_molecule, &QtGui::Molecule::changed, this, &Symmetry::moleculeChanged);
 
   updateActions();
   m_dirty = true;
@@ -153,9 +153,9 @@ void Symmetry::viewSymmetry()
   if (!m_symmetryWidget) {
     m_symmetryWidget = new SymmetryWidget(qobject_cast<QWidget*>(parent()));
     m_symmetryWidget->setMolecule(m_molecule);
-    connect(m_symmetryWidget, SIGNAL(detectSymmetry()), SLOT(detectSymmetry()));
-    connect(m_symmetryWidget, SIGNAL(symmetrizeMolecule()),
-            SLOT(symmetrizeMolecule()));
+    connect(m_symmetryWidget, &SymmetryWidget::detectSymmetry, this, &Symmetry::detectSymmetry);
+    connect(m_symmetryWidget, &SymmetryWidget::symmetrizeMolecule, this,
+            &Symmetry::symmetrizeMolecule);
   }
 
   if (m_dirty) {
