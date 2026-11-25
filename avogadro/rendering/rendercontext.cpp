@@ -26,12 +26,16 @@ std::uint64_t RenderContext::nextId()
 
 void RenderContext::initialize()
 {
+  // A GL buffer left from an earlier life belongs to a context that is gone
+  // (or was cleaned up, which released it already): never delete it here.
+  m_camera.abandon();
   m_id = nextId();
 }
 
 void RenderContext::releaseResources()
 {
   m_shaders.releaseResources();
+  m_camera.release();
   m_id = 0;
 }
 

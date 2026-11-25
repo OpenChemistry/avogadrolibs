@@ -3,6 +3,7 @@ set(tests
   BezierGeometry
   BSplineGeometry
   Camera
+  CameraBuffer
   CartoonDetail
   CartoonProteins
   CurveGeometry

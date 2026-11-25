@@ -7,6 +7,7 @@
 #define AVOGADRO_RENDERING_RENDERCONTEXT_P_H
 
 #include "avogadrorenderingexport.h"
+#include "camerabuffer_p.h"
 #include "shaderlibrary_p.h"
 
 #include <cstdint>
@@ -49,6 +50,13 @@ public:
 
   ShaderLibrary& shaders() { return m_shaders; }
 
+  /**
+   * The uniform buffer that holds the camera for every program in this
+   * context. Created on first use, so a GL context must be current when
+   * cameraBuffer().use() is called.
+   */
+  CameraBuffer& cameraBuffer() { return m_camera; }
+
   /** Start a new context life: assigns a fresh id(). */
   void initialize();
 
@@ -73,6 +81,7 @@ private:
 
   std::uint64_t m_id = 0;
   ShaderLibrary m_shaders;
+  CameraBuffer m_camera;
 };
 
 /**

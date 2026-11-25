@@ -80,6 +80,7 @@ target_sources(Rendering PRIVATE
   arrowgeometry.cpp
   beziergeometry.cpp
   bufferobject.cpp
+  camerabuffer.cpp
   bsplinegeometry.cpp
   cartoongeometry.cpp
   camera.cpp

@@ -76,6 +76,15 @@ public:
    */
   bool bind();
 
+  /**
+   * Bind the uniform block called @p blockName to the uniform buffer binding
+   * point @p bindingPoint. The program must be linked.
+   * @return false if the program has no active block of that name (which is
+   * not an error: a block the shaders do not use is optimized away).
+   */
+  bool bindUniformBlock(const std::string& blockName,
+                        unsigned int bindingPoint);
+
   /** Releases the shader program from the current context. */
   void release();
 
