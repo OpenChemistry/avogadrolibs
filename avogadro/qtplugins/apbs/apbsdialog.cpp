@@ -31,15 +31,17 @@ ApbsDialog::ApbsDialog(QWidget* parent_)
 {
   m_ui->setupUi(this);
 
-  connect(m_ui->closeButton, SIGNAL(clicked()), this, SLOT(reject()));
-  connect(m_ui->openPdbFileButton, SIGNAL(clicked()), this,
-          SLOT(openPdbFile()));
-  connect(m_ui->openPqrFileButton, SIGNAL(clicked()), this,
-          SLOT(openPqrFile()));
-  connect(m_ui->runApbsButton, SIGNAL(clicked()), this, SLOT(runApbs()));
-  connect(m_ui->runPdb2PqrButton, SIGNAL(clicked()), this, SLOT(runPdb2Pqr()));
-  connect(m_ui->saveInputFileButton, SIGNAL(clicked()), this,
-          SLOT(saveInputFile()));
+  connect(m_ui->closeButton, &QPushButton::clicked, this, &QDialog::reject);
+  connect(m_ui->openPdbFileButton, &QPushButton::clicked, this,
+          &ApbsDialog::openPdbFile);
+  connect(m_ui->openPqrFileButton, &QPushButton::clicked, this,
+          &ApbsDialog::openPqrFile);
+  connect(m_ui->runApbsButton, &QPushButton::clicked, this,
+          &ApbsDialog::runApbs);
+  connect(m_ui->runPdb2PqrButton, &QPushButton::clicked, this,
+          &ApbsDialog::runPdb2Pqr);
+  connect(m_ui->saveInputFileButton, &QPushButton::clicked, this,
+          qOverload<>(&ApbsDialog::saveInputFile));
 }
 
 ApbsDialog::~ApbsDialog()
@@ -115,7 +117,7 @@ void ApbsDialog::runApbs()
     m_cubeFileName = "pot-PE0.dx";
 
     ApbsOutputDialog dialog(this);
-    connect(&dialog, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(&dialog, &QDialog::accepted, this, &QDialog::accept);
     int code = dialog.exec();
     if (code == QDialog::Accepted) {
       m_loadStructureFile = dialog.loadStructureFile();
