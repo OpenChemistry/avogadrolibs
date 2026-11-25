@@ -25,6 +25,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QLocale>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QColor>
 #include <QtWidgets/QColorDialog>
 
@@ -32,6 +33,7 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <optional>
 
 namespace Avogadro {
 
@@ -191,6 +193,47 @@ std::optional<double> parseNumber(const QVariant& value)
       return number;
   }
   return std::nullopt;
+}
+
+// The atomic number for what was typed into the element column: a number, a
+// symbol in any case, a name, or one of the dummy atom's spellings (0 is
+// deliberate). Custom elements are not offered here.
+std::optional<int> parseElement(const QVariant& value)
+{
+  const int elementCount = Core::Elements::elementCount();
+  auto fromInteger = [&](const QVariant& number) -> std::optional<int> {
+    const auto parsed = parseInteger(number, 0, elementCount - 1);
+    if (!parsed)
+      return std::nullopt;
+    return static_cast<int>(*parsed);
+  };
+
+  if (value.typeId() != QMetaType::QString)
+    return fromInteger(value);
+
+  const QString text = value.toString().trimmed();
+  if (text.isEmpty())
+    return std::nullopt;
+
+  // Only plain digits are a number here; "+6" or "1.5" are not elements.
+  static const QRegularExpression digits("^[0-9]+$");
+  if (digits.match(text).hasMatch())
+    return fromInteger(text);
+
+  // The same dummy spellings as the CIF reader, plus the table's own.
+  const QString upper = text.toUpper();
+  if (upper == "X" || upper == "XX" || upper == "DU" || upper == "Q" ||
+      upper == "*")
+    return 0;
+
+  const QString normalized = text.left(1).toUpper() + text.mid(1).toLower();
+  const std::string key = normalized.toStdString();
+  int number = Core::Elements::atomicNumberFromSymbol(key);
+  if (number < 0 || number >= elementCount)
+    number = Core::Elements::atomicNumberFromName(key);
+  if (number < 0 || number >= elementCount)
+    return std::nullopt;
+  return number;
 }
 
 inline QString angleTypeString(unsigned char a, unsigned char b,
@@ -1196,21 +1239,14 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
         break;
       }
       case AtomDataElement: { // atomic number
-        // Try first as a number
-        bool ok;
-        int atomicNumber = value.toInt(&ok);
-        if (ok)
-          undoMolecule->setAtomicNumber(index.row(), atomicNumber);
-        else {
-          // try a symbol
-          atomicNumber = Core::Elements::atomicNumberFromSymbol(
-            value.toString().toStdString());
-
-          if (atomicNumber != Avogadro::InvalidElement) {
-            undoMolecule->setAtomicNumber(index.row(), atomicNumber);
-          } else
-            return false;
-        } // not a number
+        const auto atomicNumber = parseElement(value);
+        if (!atomicNumber)
+          return false;
+        // The same element is not an edit.
+        if (*atomicNumber == m_molecule->atomicNumber(index.row()))
+          return true;
+        undoMolecule->setAtomicNumber(
+          index.row(), static_cast<unsigned char>(*atomicNumber));
         break;
       }
       case AtomDataX:

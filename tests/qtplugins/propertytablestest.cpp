@@ -7,6 +7,7 @@
 
 #include <avogadro/calc/chargemanager.h>
 #include <avogadro/calc/chargemodel.h>
+#include <avogadro/core/elements.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/qtgui/molecule.h>
 
@@ -25,6 +26,7 @@
 #include <cmath>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <avogadro/core/residue.h>
 
@@ -923,4 +925,111 @@ TEST(PropertyTablesIntegerEditTest, ChangedValuesAreOneEdit)
     EXPECT_EQ(bad.undoSteps, 0);
     EXPECT_EQ(bad.emissions, 0);
   }
+}
+
+// ---------------------------------------------------------------------------
+// PropertyTablesElementTest: what the element column accepts.
+// ---------------------------------------------------------------------------
+
+namespace {
+
+struct ElementEditResult
+{
+  bool accepted;
+  int atomicNumber;
+  int undoSteps;
+  int emissions;
+};
+
+// Edit a hydrogen's element cell and report what happened.
+ElementEditResult editElement(const QVariant& value)
+{
+  Molecule mol;
+  mol.addAtom(1);
+  PropertyModel model(PropertyType::AtomType);
+  model.setMolecule(&mol);
+
+  int count = 0;
+  QObject context;
+  QObject::connect(&model, &QAbstractItemModel::dataChanged, &context,
+                   [&count]() { ++count; });
+  QObject::connect(&mol, &Molecule::changed, &context, [&count]() { ++count; });
+
+  ElementEditResult result;
+  result.accepted = model.setData(model.index(0, 0), value);
+  result.atomicNumber = mol.atomicNumber(0);
+  result.undoSteps = mol.undoMolecule()->undoStack().count();
+  result.emissions = count;
+  return result;
+}
+
+} // namespace
+
+TEST(PropertyTablesElementTest, AcceptedSpellings)
+{
+  struct Case
+  {
+    const char* text;
+    int expected;
+  };
+  const Case cases[] = {
+    { "Xx", 0 },     { "xx", 0 },     { "X", 0 },      { "x", 0 },
+    { "du", 0 },     { "Du", 0 },     { "Q", 0 },      { "*", 0 },
+    { " Xx ", 0 },   { "cl", 17 },    { "CL", 17 },    { "Cl", 17 },
+    { "c", 6 },      { "6", 6 },      { "0", 0 },      { " 6 ", 6 },
+    { "carbon", 6 }, { "Carbon", 6 }, { "CARBON", 6 }, { "dummy", 0 },
+  };
+  for (const Case& c : cases) {
+    SCOPED_TRACE(c.text);
+    const auto result = editElement(QString::fromUtf8(c.text));
+    EXPECT_TRUE(result.accepted);
+    EXPECT_EQ(result.atomicNumber, c.expected);
+    EXPECT_EQ(result.undoSteps, 1);
+    EXPECT_GT(result.emissions, 0);
+  }
+
+  // A number handed over directly, as a spin box or script would.
+  const auto direct = editElement(8);
+  EXPECT_TRUE(direct.accepted);
+  EXPECT_EQ(direct.atomicNumber, 8);
+  EXPECT_EQ(direct.undoSteps, 1);
+}
+
+TEST(PropertyTablesElementTest, RejectedSpellings)
+{
+  const std::vector<QVariant> cases = {
+    "200",         "-5",         "119",          "Zz",
+    "Xaa",         "",           "  ",           "1.5",
+    "Hx",          "nonsense",   "999999999999", QVariant(),
+    QVariant(200), QVariant(-1), QVariant(1.5),
+  };
+  for (const QVariant& value : cases) {
+    SCOPED_TRACE(value.toString().toStdString());
+    const auto result = editElement(value);
+    EXPECT_FALSE(result.accepted);
+    EXPECT_EQ(result.atomicNumber, 1);
+    EXPECT_EQ(result.undoSteps, 0);
+    EXPECT_EQ(result.emissions, 0);
+  }
+}
+
+TEST(PropertyTablesElementTest, TheSameElementIsNotAnEdit)
+{
+  for (const char* text : { "H", "h", "1", "Hydrogen", "hydrogen" }) {
+    SCOPED_TRACE(text);
+    const auto result = editElement(QString::fromUtf8(text));
+    EXPECT_TRUE(result.accepted);
+    EXPECT_EQ(result.atomicNumber, 1);
+    EXPECT_EQ(result.undoSteps, 0);
+    EXPECT_EQ(result.emissions, 0);
+  }
+}
+
+TEST(PropertyTablesElementTest, ElementCountIsTheLimit)
+{
+  const int last = Avogadro::Core::Elements::elementCount() - 1;
+  const auto inside = editElement(QString::number(last));
+  EXPECT_TRUE(inside.accepted);
+  EXPECT_EQ(inside.atomicNumber, last);
+  EXPECT_FALSE(editElement(QString::number(last + 1)).accepted);
 }
