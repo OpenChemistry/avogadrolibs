@@ -8,6 +8,7 @@
 #include <avogadro/core/cube.h>
 #include <avogadro/rendering/volumegeometry.h>
 
+#include <limits>
 #include <vector>
 
 using Avogadro::Vector3;
@@ -64,4 +65,32 @@ TEST(VolumeGeometryTest, copyAndAssignSafeWithoutGLContext)
   EXPECT_EQ(assigned.cube(), &cube);
   assigned.setPositiveColor(Vector3ub(1, 2, 3));
   EXPECT_EQ(original.positiveColor(), Vector3ub(250, 10, 20));
+}
+
+TEST(VolumeGeometryTest, alphaScaleWithoutGLContext)
+{
+  VolumeGeometry volume;
+  EXPECT_FLOAT_EQ(volume.alphaScale(), 1.0f);
+
+  volume.setAlphaScale(2.5f);
+  EXPECT_FLOAT_EQ(volume.alphaScale(), 2.5f);
+
+  // NaN is ignored; negative and -inf clamp to zero.
+  volume.setAlphaScale(std::numeric_limits<float>::quiet_NaN());
+  EXPECT_FLOAT_EQ(volume.alphaScale(), 2.5f);
+  volume.setAlphaScale(-3.0f);
+  EXPECT_FLOAT_EQ(volume.alphaScale(), 0.0f);
+  volume.setAlphaScale(4.0f);
+  volume.setAlphaScale(-std::numeric_limits<float>::infinity());
+  EXPECT_FLOAT_EQ(volume.alphaScale(), 0.0f);
+
+  volume.setAlphaScale(7.0f);
+  VolumeGeometry copy(volume);
+  EXPECT_FLOAT_EQ(copy.alphaScale(), 7.0f);
+
+  VolumeGeometry assigned;
+  assigned = volume;
+  EXPECT_FLOAT_EQ(assigned.alphaScale(), 7.0f);
+  assigned.setAlphaScale(0.5f);
+  EXPECT_FLOAT_EQ(volume.alphaScale(), 7.0f);
 }

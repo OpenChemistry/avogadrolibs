@@ -24,8 +24,17 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include <algorithm>
+#include <cmath>
 
 namespace Avogadro::QtPlugins {
+
+namespace {
+// The volume intensity slider (0-255) maps logarithmically onto the shader's
+// alpha scale: 150 is the default (scale 1.0) and every 45 slider units
+// doubles the scale, giving about 0.1 at 0 and 5.0 at 255.
+constexpr int VolumeOpacityDefault = 150;
+constexpr float VolumeOpacityUnitsPerDoubling = 45.0f;
+} // namespace
 
 using Core::Mesh;
 using Rendering::GeometryNode;
@@ -42,6 +51,8 @@ SurfaceRender::SurfaceRender(QObject* p)
   QSettings settings;
   // out of 255
   m_opacity = settings.value("meshes/opacity", 150).toUInt();
+  m_volumeOpacity =
+    settings.value("meshes/volumeOpacity", VolumeOpacityDefault).toUInt();
 
   auto color = settings.value("meshes/color1", QColor(Qt::red)).value<QColor>();
   m_color1[0] = static_cast<unsigned char>(color.red());
@@ -186,19 +197,64 @@ void SurfaceRender::process(const QtGui::Molecule& mol, GroupNode& node)
       // TODO: better support for color ramps
       volume->setPositiveColor(m_color1);
       volume->setNegativeColor(m_color2);
+      volume->setAlphaScale(volumeAlphaScale());
 
       geometry->addDrawable(volume);
     }
   } // if meshCount != 0
 }
 
+float SurfaceRender::volumeAlphaScale() const
+{
+  return std::exp2(
+    (static_cast<float>(m_volumeOpacity) - VolumeOpacityDefault) /
+    VolumeOpacityUnitsPerDoubling);
+}
+
 void SurfaceRender::setOpacity(int opacity)
 {
-  m_opacity = opacity;
-  emit drawablesChanged();
-
   QSettings settings;
-  settings.setValue("meshes/opacity", m_opacity);
+  if (m_style == Volume) {
+    m_volumeOpacity = static_cast<unsigned char>(std::clamp(opacity, 0, 255));
+    settings.setValue("meshes/volumeOpacity", m_volumeOpacity);
+  } else {
+    m_opacity = opacity;
+    settings.setValue("meshes/opacity", m_opacity);
+  }
+  emit drawablesChanged();
+}
+
+// Load the slider with the value for the current style (without emitting)
+// and show the row that applies to that style.
+void SurfaceRender::updateOpacityControl()
+{
+  if (!m_setupWidget)
+    return;
+
+  auto* slide = m_setupWidget->findChild<QSlider*>("opacitySlider");
+  if (slide) {
+    const bool volume = m_style == Volume;
+    {
+      QSignalBlocker blocker(slide);
+      slide->setValue(volume ? m_volumeOpacity : m_opacity);
+    }
+    slide->setToolTip(volume ? tr("Intensity of the volume rendering")
+                             : tr("Transparency of the surface"));
+  }
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+  auto* form = qobject_cast<QFormLayout*>(m_setupWidget->layout());
+  auto* spin = m_setupWidget->findChild<QDoubleSpinBox*>("lineWidthSpin");
+  if (form && slide && spin) {
+    if (m_style == Surface || m_style == Volume) {
+      form->setRowVisible(slide, true);
+      form->setRowVisible(spin, false);
+    } else if (m_style == Wireframe) {
+      form->setRowVisible(slide, false);
+      form->setRowVisible(spin, true);
+    }
+  }
+#endif
 }
 
 void SurfaceRender::setLineWidth(double width)
@@ -239,22 +295,7 @@ void SurfaceRender::setStyle(int style)
   m_style = static_cast<Style>(style);
   emit drawablesChanged();
 
-  // get the form layout
-#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
-  auto* form = qobject_cast<QFormLayout*>(m_setupWidget->layout());
-  auto* slide = m_setupWidget->findChild<QSlider*>("opacitySlider");
-  auto* spin = m_setupWidget->findChild<QDoubleSpinBox*>("lineWidthSpin");
-
-  if (form && slide && spin) {
-    if (m_style == Surface) {
-      form->setRowVisible(slide, true);
-      form->setRowVisible(spin, false);
-    } else if (m_style == Wireframe) {
-      form->setRowVisible(slide, false);
-      form->setRowVisible(spin, true);
-    }
-  }
-#endif
+  updateOpacityControl();
 
   QSettings settings;
   settings.setValue("meshes/style", m_style);
@@ -280,7 +321,10 @@ QWidget* SurfaceRender::setupWidget()
     auto* slide = new QSlider(Qt::Horizontal);
     slide->setRange(0, 255);
     slide->setTickInterval(5);
-    slide->setValue(m_opacity);
+    slide->setValue(m_style == Volume ? m_volumeOpacity : m_opacity);
+    slide->setToolTip(m_style == Volume
+                        ? tr("Intensity of the volume rendering")
+                        : tr("Transparency of the surface"));
     slide->setObjectName("opacitySlider");
     connect(slide, SIGNAL(valueChanged(int)), SLOT(setOpacity(int)));
     form->addRow(tr("Opacity:"), slide);
@@ -297,7 +341,7 @@ QWidget* SurfaceRender::setupWidget()
     form->addRow(QObject::tr("Line width:"), spin);
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
-    if (m_style == Surface) {
+    if (m_style == Surface || m_style == Volume) {
       form->setRowVisible(slide, true);
       form->setRowVisible(spin, false);
     } else if (m_style == Wireframe) {

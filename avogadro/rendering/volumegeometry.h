@@ -13,8 +13,8 @@ namespace Avogadro::Rendering {
 
 /**
  * @class VolumeGeometry
- * @brief Demonstrates volume rendering with an offscreen pass and a fullscreen
- * quad.
+ * @brief Single-pass volume rendering by ray marching a 3D texture of the
+ * cube data in a fullscreen fragment shader.
  */
 class AVOGADRORENDERING_EXPORT VolumeGeometry : public Drawable
 {
@@ -37,7 +37,7 @@ public:
   void render(const Camera& camera) override;
 
   /**
-   * Destroy all GL resources (FBO, textures, etc.).
+   * Destroy all GL resources (volume texture, scene depth copy, shaders).
    */
   void end();
 
@@ -50,6 +50,11 @@ public:
    * Call once to initialize all GL objects/shaders.
    */
   void initialize();
+
+  /**
+   * Resize the copy of the scene depth buffer that stops rays at opaque
+   * geometry (atoms, bonds, surfaces).
+   */
   void resizeFBO(int width, int height);
 
   /**
@@ -62,23 +67,30 @@ public:
   Vector3ub negativeColor() const { return m_negativeColor; }
 
   /**
+   * Scale applied to the per-sample opacity of the ray march (intensity of
+   * the volume). Defaults to 1.0. Negative values are clamped to 0; NaN is
+   * ignored.
+   */
+  void setAlphaScale(float scale);
+  float alphaScale() const { return m_alphaScale; }
+
+  /**
    * Assign which Cube to render.
    */
   void setCube(const Core::Cube& cube);
   const Core::Cube* cube() const { return m_cube; }
 
 protected:
-  // We store bounding box vertices, for real volume rendering if needed:
-  float m_boundingVertices[24];
   Vector3ub m_positiveColor;
   Vector3ub m_negativeColor;
   const Core::Cube* m_cube = nullptr;
+  float m_alphaScale = 1.0f;
   bool m_dirty = false;
 
   class Private;
   Private* d;
 
-  // Size at which we create our offscreen buffer:
+  // Viewport size of the scene depth copy:
   int m_width;
   int m_height;
 };

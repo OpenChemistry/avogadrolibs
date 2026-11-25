@@ -159,8 +159,9 @@ VolumeGeometry::~VolumeGeometry()
 
 VolumeGeometry::VolumeGeometry(const VolumeGeometry& other)
   : Drawable(other), m_positiveColor(other.m_positiveColor),
-    m_negativeColor(other.m_negativeColor), m_cube(other.m_cube), m_dirty(true),
-    d(new Private), m_width(0), m_height(0)
+    m_negativeColor(other.m_negativeColor), m_cube(other.m_cube),
+    m_alphaScale(other.m_alphaScale), m_dirty(true), d(new Private), m_width(0),
+    m_height(0)
 {
 }
 
@@ -174,6 +175,7 @@ void swap(VolumeGeometry& lhs, VolumeGeometry& rhs)
 {
   using std::swap;
   swap(lhs.m_cube, rhs.m_cube);
+  swap(lhs.m_alphaScale, rhs.m_alphaScale);
   swap(lhs.m_dirty, rhs.m_dirty);
   swap(lhs.m_positiveColor, rhs.m_positiveColor);
   swap(lhs.m_negativeColor, rhs.m_negativeColor);
@@ -198,6 +200,13 @@ void VolumeGeometry::setCube(const Core::Cube& cube)
 {
   m_cube = &cube;
   m_dirty = true;
+}
+
+void VolumeGeometry::setAlphaScale(float scale)
+{
+  if (std::isnan(scale))
+    return;
+  m_alphaScale = std::max(scale, 0.0f);
 }
 
 void VolumeGeometry::resizeFBO(int newWidth, int newHeight)
@@ -426,7 +435,7 @@ void VolumeGeometry::render(const Camera& camera)
                                  m_negativeColor[1] / 255.0f,
                                  m_negativeColor[2] / 255.0f);
     d->program->setUniformValue("numSteps", 150);
-    d->program->setUniformValue("alphaScale", 0.6f);
+    d->program->setUniformValue("alphaScale", m_alphaScale);
     d->program->setUniformValue("positiveColor", posCol);
     d->program->setUniformValue("negativeColor", negCol);
     d->program->setUniformValue("uInvViewProj", invViewProj);
