@@ -16,6 +16,7 @@ set(tests
   SphereGeometry
   TessellatingVisitor
   Texture2D
+  VolumeGeometry
   )
 
 find_package(OpenGL REQUIRED)
