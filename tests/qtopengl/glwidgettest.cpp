@@ -494,7 +494,8 @@ TEST_F(GLWidgetTest, reparentToAnotherWindowKeepsRendering)
   const QImage image = moving->grabFramebuffer();
   EXPECT_FALSE(image.isNull());
   moving->makeCurrent();
-  EXPECT_EQ(glGetError(), static_cast<GLenum>(GL_NO_ERROR));
+  EXPECT_EQ(QOpenGLContext::currentContext()->functions()->glGetError(),
+            static_cast<GLenum>(GL_NO_ERROR));
   moving->doneCurrent();
   // Destroy the widget with its window still alive and the renderer clean.
   delete moving;
