@@ -9,9 +9,11 @@
 
 #include <avogadro/core/vector.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/renderoptions.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
+#include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/shader.h>
 #include <avogadro/rendering/shaderprogram.h>
 #include <avogadro/rendering/spheregeometry.h>
@@ -29,9 +31,13 @@ using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
 using Avogadro::QtOpenGL::GLWidget;
+using Avogadro::QtOpenGL::RenderOptions;
 using Avogadro::Rendering::ArrowGeometry;
 using Avogadro::Rendering::BSplineGeometry;
 using Avogadro::Rendering::GeometryNode;
+using Avogadro::Rendering::GLRenderer;
+using Avogadro::Rendering::Orthographic;
+using Avogadro::Rendering::Perspective;
 using Avogadro::Rendering::Shader;
 using Avogadro::Rendering::ShaderProgram;
 using Avogadro::Rendering::SphereGeometry;
@@ -315,4 +321,164 @@ TEST_F(GLWidgetTest, shaderProgramSetTextureSamplerReservesUnitZero)
   GLint unit = -1;
   gl->glGetUniformiv(progId, loc, &unit);
   EXPECT_EQ(unit, 1);
+}
+
+TEST_F(GLWidgetTest, solidPipelineBypassRendersOpaqueGeometry)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  struct RestorePipeline
+  {
+    Avogadro::Rendering::SolidPipeline& p;
+    bool fog, ao, ed, dof;
+    ~RestorePipeline()
+    {
+      p.setFogEnabled(fog);
+      p.setAoEnabled(ao);
+      p.setEdEnabled(ed);
+      p.setDofEnabled(dof);
+    }
+  } restore{ pipeline, pipeline.getFogEnabled(), pipeline.getAoEnabled(),
+             pipeline.getEdEnabled(), pipeline.getDofEnabled() };
+
+  pipeline.setFogEnabled(false);
+  pipeline.setAoEnabled(false);
+  pipeline.setEdEnabled(false);
+  pipeline.setDofEnabled(false);
+  ASSERT_FALSE(pipeline.hasActiveEffects());
+
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* geometry = new GeometryNode;
+  auto* spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f(-1.5f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.9f);
+  auto* curve = new BSplineGeometry(false);
+  curve->addPoint(Vector3f(0.2f, -1.0f, 0.0f), Vector3ub(0, 255, 0), 0.4f, 0,
+                  0);
+  curve->addPoint(Vector3f(1.2f, 0.0f, 0.0f), Vector3ub(0, 255, 0), 0.4f, 0, 1);
+  curve->addPoint(Vector3f(2.2f, 1.0f, 0.0f), Vector3ub(0, 255, 0), 0.4f, 0, 2);
+  geometry->addDrawable(spheres);
+  geometry->addDrawable(curve);
+  widget->renderer().scene().rootNode().addChild(geometry);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  widget->doneCurrent();
+  settle();
+
+  // Direct on-screen render (bypassing SolidPipeline's offscreen FBO).
+  const QImage window = widget->grabFramebuffer();
+  ASSERT_FALSE(window.isNull());
+  EXPECT_GT(dominantBounds(window, 0, 90, 60).count, 20);
+  EXPECT_GT(dominantBounds(window, 1, 90, 60).count, 20);
+
+  // Transparent offscreen render: foreground has opaque alpha, corners stay
+  // transparent.
+  RenderOptions opts;
+  opts.size = QSize(200, 200);
+  opts.transparentBackground = true;
+  const QImage exported = widget->renderImage(opts);
+  ASSERT_FALSE(exported.isNull());
+  EXPECT_EQ(qAlpha(exported.pixel(0, 0)), 0);
+  const Bounds red = dominantBounds(exported, 0, 90, 60);
+  const Bounds green = dominantBounds(exported, 1, 90, 60);
+  ASSERT_GT(red.count, 20);
+  ASSERT_GT(green.count, 20);
+  EXPECT_EQ(
+    qAlpha(exported.pixel(qRound(red.centerX()), qRound(red.centerY()))), 255);
+  EXPECT_EQ(
+    qAlpha(exported.pixel(qRound(green.centerX()), qRound(green.centerY()))),
+    255);
+}
+
+TEST_F(GLWidgetTest, solidPipelineEarlyOutWorksInPerspectiveAndOrthographic)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  struct RestoreState
+  {
+    GLWidget* w;
+    bool fog, ao, ed, dof;
+    Avogadro::Rendering::Projection proj;
+    ~RestoreState()
+    {
+      auto& p = w->renderer().solidPipeline();
+      p.setFogEnabled(fog);
+      p.setAoEnabled(ao);
+      p.setEdEnabled(ed);
+      p.setDofEnabled(dof);
+      w->renderer().camera().setProjectionType(proj);
+      w->renderer().resetCamera();
+    }
+  } restore{ widget,
+             pipeline.getFogEnabled(),
+             pipeline.getAoEnabled(),
+             pipeline.getEdEnabled(),
+             pipeline.getDofEnabled(),
+             widget->renderer().camera().projectionType() };
+
+  pipeline.setFogEnabled(true);
+  pipeline.setAoEnabled(true);
+  pipeline.setEdEnabled(true);
+  pipeline.setDofEnabled(false);
+
+  for (const auto proj : { Perspective, Orthographic }) {
+    SCOPED_TRACE(proj == Perspective ? "perspective" : "orthographic");
+    widget->renderer().camera().setProjectionType(proj);
+    widget->renderer().resetCamera();
+    settle();
+
+    const QImage image = widget->grabFramebuffer();
+    ASSERT_FALSE(image.isNull());
+    // Corners must stay exact background (depth >= 1.0 early-out).
+    const QRgb corner = image.pixel(0, 0);
+    EXPECT_NEAR(qRed(corner), Background[0], 2);
+    EXPECT_NEAR(qGreen(corner), Background[1], 2);
+    EXPECT_NEAR(qBlue(corner), Background[2], 2);
+    // All three spheres must remain visibly rendered in their colors.
+    EXPECT_GT(dominantBounds(image, 0, 60, 50).count, 10);
+    EXPECT_GT(dominantBounds(image, 1, 60, 50).count, 20);
+    EXPECT_GT(dominantBounds(image, 2, 100, 80).count, 15);
+  }
+}
+
+TEST_F(GLWidgetTest, solidPipelineCleanupAndReinitialize)
+{
+  widget->makeCurrent();
+  struct ContextGuard
+  {
+    GLWidget* w;
+    GLint vp[4] = { 0, 0, 0, 0 };
+    explicit ContextGuard(GLWidget* widget_) : w(widget_)
+    {
+      if (QOpenGLContext* ctx = QOpenGLContext::currentContext())
+        ctx->functions()->glGetIntegerv(GL_VIEWPORT, vp);
+    }
+    ~ContextGuard()
+    {
+      if (QOpenGLContext* ctx = QOpenGLContext::currentContext()) {
+        ctx->functions()->glBindFramebuffer(GL_FRAMEBUFFER,
+                                            w->defaultFramebufferObject());
+        ctx->functions()->glViewport(vp[0], vp[1], vp[2], vp[3]);
+        ctx->functions()->glUseProgram(0);
+      }
+      w->doneCurrent();
+    }
+  } guard(widget);
+
+  GLRenderer renderer;
+  renderer.initialize();
+  ASSERT_TRUE(renderer.isValid()) << renderer.error();
+  renderer.resize(64, 64);
+  EXPECT_TRUE(renderer.solidPipeline().hasActiveEffects());
+  EXPECT_TRUE(renderer.solidPipeline().begin());
+  renderer.solidPipeline().end(renderer.camera());
+
+  renderer.cleanup();
+  EXPECT_FALSE(renderer.solidPipeline().begin());
+
+  // Re-initializing after cleanup must restore a working pipeline.
+  renderer.initialize();
+  ASSERT_TRUE(renderer.isValid()) << renderer.error();
+  renderer.resize(64, 64);
+  EXPECT_TRUE(renderer.solidPipeline().begin());
+  renderer.solidPipeline().end(renderer.camera());
+  renderer.cleanup();
 }

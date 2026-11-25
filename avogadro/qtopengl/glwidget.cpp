@@ -256,10 +256,11 @@ GLWidget::~GLWidget()
   delete m_glContainer;
   m_glContainer = nullptr;
 #else
-  // Release the timing queries while this widget's context is current.
-  if (m_renderer.timingEnabled()) {
+  // Release timing queries and SolidPipeline GL resources while this widget's
+  // context is current.
+  if (context() != nullptr && m_renderer.isValid()) {
     makeCurrent();
-    m_renderer.setTimingEnabled(false);
+    m_renderer.cleanup();
     doneCurrent();
   }
 #endif

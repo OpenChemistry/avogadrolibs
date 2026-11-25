@@ -16,10 +16,10 @@
 
 #include "solid_ao_fs.h"
 
-#include <iostream>
-#include <string>
-
 #include <cmath>
+#include <iostream>
+#include <memory>
+#include <string>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/html5.h>
@@ -69,23 +69,17 @@ public:
   bool aoReady = false;
   GLuint defaultFBO = 0;
   GLint defaultViewport[4] = { 0, 0, 0, 0 };
-  GLuint renderFBO;
-  GLuint renderTexture;
-  GLuint depthTexture;
-  GLuint aoFBO;
-  GLuint aoTexture;
-  GLuint screenVAO;
-  GLuint screenVBO;
-  ShaderProgram firstStageShaders;
-  ShaderProgram aoStageShaders;
+  GLuint renderFBO = 0;
+  GLuint renderTexture = 0;
+  GLuint depthTexture = 0;
+  GLuint aoFBO = 0;
+  GLuint aoTexture = 0;
+  GLuint screenVAO = 0;
+  std::unique_ptr<ShaderProgram> firstStageShaders;
+  std::unique_ptr<ShaderProgram> aoStageShaders;
   Shader screenVertexShader;
   Shader firstFragmentShader;
   Shader aoFragmentShader;
-};
-
-static const GLfloat s_fullscreenQuad[] = {
-  -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-  -1.0f, 1.0f,  0.0f, 1.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
 };
 
 void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
@@ -146,11 +140,51 @@ SolidPipeline::SolidPipeline()
 
 SolidPipeline::~SolidPipeline()
 {
+  releaseResources();
   delete d;
+}
+
+void SolidPipeline::releaseResources()
+{
+  if (d->renderFBO != 0) {
+    glDeleteFramebuffers(1, &d->renderFBO);
+    d->renderFBO = 0;
+  }
+  if (d->renderTexture != 0) {
+    glDeleteTextures(1, &d->renderTexture);
+    d->renderTexture = 0;
+  }
+  if (d->depthTexture != 0) {
+    glDeleteTextures(1, &d->depthTexture);
+    d->depthTexture = 0;
+  }
+  if (d->aoFBO != 0) {
+    glDeleteFramebuffers(1, &d->aoFBO);
+    d->aoFBO = 0;
+  }
+  if (d->aoTexture != 0) {
+    glDeleteTextures(1, &d->aoTexture);
+    d->aoTexture = 0;
+  }
+  if (d->screenVAO != 0) {
+    glDeleteVertexArrays(1, &d->screenVAO);
+    d->screenVAO = 0;
+  }
+  d->screenVertexShader.cleanup();
+  d->firstFragmentShader.cleanup();
+  d->aoFragmentShader.cleanup();
+  d->firstStageShaders.reset();
+  d->aoStageShaders.reset();
+  d->initialized = false;
+  d->framebufferReady = false;
+  d->aoReady = false;
 }
 
 void SolidPipeline::initialize()
 {
+  if (d->initialized)
+    releaseResources();
+
   GLint previousFBO = 0;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
 #ifdef __EMSCRIPTEN__
@@ -164,20 +198,9 @@ void SolidPipeline::initialize()
   // pipeline renders into.
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
 
-  // Create VAO for fullscreen quad (required for OpenGL Core Profile)
+  // Empty VAO for the procedural fullscreen triangle (required for Core
+  // Profile; vertex positions are generated from gl_VertexID in solid_vs.glsl).
   glGenVertexArrays(1, &d->screenVAO);
-  glBindVertexArray(d->screenVAO);
-
-  glGenBuffers(1, &d->screenVBO);
-  glBindBuffer(GL_ARRAY_BUFFER, d->screenVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(s_fullscreenQuad), s_fullscreenQuad,
-               GL_STATIC_DRAW);
-
-  // Set up vertex attribute for the fullscreen quad
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-  glBindVertexArray(0);
 
   d->screenVertexShader.setType(Shader::Vertex);
   d->screenVertexShader.setSource(solid_vs);
@@ -191,21 +214,23 @@ void SolidPipeline::initialize()
   if (!fragmentCompiled)
     std::cout << d->firstFragmentShader.error() << '\n';
 
-  d->firstStageShaders.attachShader(d->screenVertexShader);
-  d->firstStageShaders.attachShader(d->firstFragmentShader);
+  d->firstStageShaders = std::make_unique<ShaderProgram>();
+  d->firstStageShaders->attachShader(d->screenVertexShader);
+  d->firstStageShaders->attachShader(d->firstFragmentShader);
   d->initialized =
-    vertexCompiled && fragmentCompiled && d->firstStageShaders.link();
+    vertexCompiled && fragmentCompiled && d->firstStageShaders->link();
   if (!d->initialized)
-    std::cout << d->firstStageShaders.error() << '\n';
+    std::cout << d->firstStageShaders->error() << '\n';
 
   if (d->aoSupported) {
     d->aoFragmentShader.setType(Shader::Fragment);
     d->aoFragmentShader.setSource(solid_ao_fs);
     d->aoSupported = d->aoFragmentShader.compile();
     if (d->aoSupported) {
-      d->aoStageShaders.attachShader(d->screenVertexShader);
-      d->aoStageShaders.attachShader(d->aoFragmentShader);
-      d->aoSupported = d->aoStageShaders.link();
+      d->aoStageShaders = std::make_unique<ShaderProgram>();
+      d->aoStageShaders->attachShader(d->screenVertexShader);
+      d->aoStageShaders->attachShader(d->aoFragmentShader);
+      d->aoSupported = d->aoStageShaders->link();
     }
   }
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
@@ -213,7 +238,7 @@ void SolidPipeline::initialize()
 
 bool SolidPipeline::begin()
 {
-  if (!d->initialized || !d->framebufferReady)
+  if (!hasActiveEffects() || !d->initialized || !d->framebufferReady)
     return false;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING,
                 reinterpret_cast<GLint*>(&d->defaultFBO));
@@ -245,13 +270,16 @@ bool SolidPipeline::begin()
 
 void SolidPipeline::end(const Camera& camera)
 {
-  // Bind VAO for fullscreen quad (required for OpenGL Core Profile)
+  if (!d->initialized || d->firstStageShaders == nullptr)
+    return;
+
+  // Bind VAO for procedural fullscreen triangle (required for Core Profile)
   glBindVertexArray(d->screenVAO);
 
   // Render the ambient occlusion term into its own buffer first, so the
   // compositing stage can blur away the kernel's sampling pattern. Skipped
   // entirely when ambient occlusion is off, since nothing would read it.
-  const bool useAo = m_aoEnabled && d->aoReady;
+  const bool useAo = m_aoEnabled && d->aoReady && d->aoStageShaders != nullptr;
   if (useAo) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
     GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
@@ -261,16 +289,16 @@ void SolidPipeline::end(const Camera& camera)
     // This target has no depth attachment, and the pass covers every pixel.
     glDisable(GL_DEPTH_TEST);
 
-    d->aoStageShaders.bind();
-    d->bindSampler(d->aoStageShaders, "inDepthTex", d->depthTexture,
+    d->aoStageShaders->bind();
+    d->bindSampler(*d->aoStageShaders, "inDepthTex", d->depthTexture,
                    TextureUnitDepth);
-    d->aoStageShaders.setUniformValue("width", float(m_width));
-    d->aoStageShaders.setUniformValue("height", float(m_height));
-    d->aoStageShaders.setUniformValue("inAoStrength", m_aoStrength);
+    d->aoStageShaders->setUniformValue("width", float(m_width));
+    d->aoStageShaders->setUniformValue("height", float(m_height));
+    d->aoStageShaders->setUniformValue("inAoStrength", m_aoStrength);
     // Used to write the distance to the surface alongside the term.
-    d->aoStageShaders.setUniformValue("inProjection",
-                                      camera.projection().matrix());
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    d->aoStageShaders->setUniformValue("inProjection",
+                                       camera.projection().matrix());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // The passes that follow this one still depend on depth testing.
     glEnable(GL_DEPTH_TEST);
@@ -292,36 +320,42 @@ void SolidPipeline::end(const Camera& camera)
   }
   glViewport(d->defaultViewport[0], d->defaultViewport[1],
              d->defaultViewport[2], d->defaultViewport[3]);
-  d->attachStage(d->firstStageShaders, "inRGBTex", d->renderTexture,
+  d->attachStage(*d->firstStageShaders, "inRGBTex", d->renderTexture,
                  "inDepthTex", d->depthTexture, m_width, m_height);
-  d->firstStageShaders.setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
-  d->firstStageShaders.setUniformValue("inDofEnabled",
-                                       m_dofEnabled ? 1.0f : 0.0f);
-  d->firstStageShaders.setUniformValue(
+  d->firstStageShaders->setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
+  d->firstStageShaders->setUniformValue("inDofEnabled",
+                                        m_dofEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders->setUniformValue(
     "inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
-  d->firstStageShaders.setUniformValue("inDofPosition",
-                                       ((m_dofPosition) / 10.0f));
+  d->firstStageShaders->setUniformValue("inDofPosition",
+                                        ((m_dofPosition) / 10.0f));
 
   // The AO term, plus the projection the blur uses to size its surface test.
-  d->bindSampler(d->firstStageShaders, "inAoTex", d->aoTexture, TextureUnitAo);
-  d->firstStageShaders.setUniformValue("inProjection",
-                                       camera.projection().matrix());
-  d->firstStageShaders.setUniformValue("inEdStrength",
-                                       m_edEnabled ? m_edStrength : 0.0f);
-  d->firstStageShaders.setUniformValue("inFogEnabled",
-                                       m_fogEnabled ? 1.0f : 0.0f);
-  d->firstStageShaders.setUniformValue("inFogStrength",
-                                       m_fogEnabled ? m_fogStrength : 0.0f);
-  d->firstStageShaders.setUniformValue("inFogPosition", m_fogPosition);
-  d->firstStageShaders.setUniformValue("fogR", (m_backgroundColor[0]) / 255.0f);
-  d->firstStageShaders.setUniformValue("fogG", (m_backgroundColor[1]) / 255.0f);
-  d->firstStageShaders.setUniformValue("fogB", (m_backgroundColor[2]) / 255.0f);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  d->bindSampler(*d->firstStageShaders, "inAoTex", d->aoTexture, TextureUnitAo);
+  d->firstStageShaders->setUniformValue("inProjection",
+                                        camera.projection().matrix());
+  d->firstStageShaders->setUniformValue("inEdStrength",
+                                        m_edEnabled ? m_edStrength : 0.0f);
+  d->firstStageShaders->setUniformValue("inFogEnabled",
+                                        m_fogEnabled ? 1.0f : 0.0f);
+  d->firstStageShaders->setUniformValue("inFogStrength",
+                                        m_fogEnabled ? m_fogStrength : 0.0f);
+  d->firstStageShaders->setUniformValue("inFogPosition", m_fogPosition);
+  d->firstStageShaders->setUniformValue("fogR",
+                                        (m_backgroundColor[0]) / 255.0f);
+  d->firstStageShaders->setUniformValue("fogG",
+                                        (m_backgroundColor[1]) / 255.0f);
+  d->firstStageShaders->setUniformValue("fogB",
+                                        (m_backgroundColor[2]) / 255.0f);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
   glBindVertexArray(0);
 }
 
 void SolidPipeline::adjustOffset(const Camera& cam)
 {
+  if (!d->initialized || d->firstStageShaders == nullptr ||
+      (!m_fogEnabled && !m_dofEnabled))
+    return;
 
   // The numbers used in calculations are random.
   // They help define an offset with the projection-matrix
@@ -339,8 +373,8 @@ void SolidPipeline::adjustOffset(const Camera& cam)
   }
   // Uniforms land on whichever program is bound, so bind the one this is
   // meant for rather than depending on what the last pass left behind.
-  d->firstStageShaders.bind();
-  d->firstStageShaders.setUniformValue("uoffset", offSet);
+  d->firstStageShaders->bind();
+  d->firstStageShaders->setUniformValue("uoffset", offSet);
 }
 
 void SolidPipeline::resize(int width, int height)

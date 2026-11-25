@@ -320,6 +320,15 @@ void GLRenderer::initialize()
   m_solidPipeline.initialize();
 }
 
+void GLRenderer::cleanup()
+{
+  d->timing.releaseQueries();
+  d->timing = TimingState();
+  d->timings = RenderTimings();
+  d->timingEnabled = false;
+  m_solidPipeline.releaseResources();
+}
+
 void GLRenderer::resize(int width, int height)
 {
   resize(width, height, static_cast<int>(width * m_pixelRatio),

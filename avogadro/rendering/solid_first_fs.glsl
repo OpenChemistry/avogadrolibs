@@ -120,7 +120,9 @@ float blurredAo(vec2 texCoord)
         continue;
       vec2 tapUV = texCoord + vec2(float(x) / width, float(y) / height);
       vec2 tap = texture(inAoTex, tapUV).xy;
-      if (abs(tap.y - centerZ) < tolerance) {
+      // Reject background pixels (sentinel 65504.0 in solid_ao_fs.glsl) as
+      // well as taps on a different foreground surface.
+      if (tap.y < 65000.0 && abs(tap.y - centerZ) < tolerance) {
         total += tap.x;
         weight += 1.0;
       }
@@ -188,6 +190,12 @@ float computeEdgeLuminosity(vec3 normal)
 }
 
 void main() {
+    float depth = texture(inDepthTex, UV).x;
+    // Background pixels (depth == 1.0) would fail the GL_LESS depth test
+    // anyway; discarding upfront skips AO blur, edge detection, fog and DoF.
+    if (depth >= 1.0)
+        discard;
+
     float luminosity = 1.0;
     vec4 color = texture(inRGBTex, UV);
     vec4 finalColor = color; // Initialize finalColor with base color
@@ -232,5 +240,5 @@ void main() {
 
     // Set the final fragment color
     outColor = finalColor;
-    gl_FragDepth = texture(inDepthTex, UV).x;
+    gl_FragDepth = depth;
 }

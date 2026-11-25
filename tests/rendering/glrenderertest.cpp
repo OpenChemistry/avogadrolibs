@@ -158,3 +158,42 @@ TEST(GLRendererTest, renderVisitorSkipsHiddenDrawables)
   EXPECT_EQ(visible->renderCalls, 1);
   EXPECT_EQ(hidden->renderCalls, 0);
 }
+
+TEST(GLRendererTest, solidPipelineHasActiveEffects)
+{
+  GLRenderer renderer;
+  auto& pipeline = renderer.solidPipeline();
+
+  // Fog defaults to enabled.
+  EXPECT_TRUE(pipeline.getFogEnabled());
+  EXPECT_TRUE(pipeline.hasActiveEffects());
+
+  pipeline.setFogEnabled(false);
+  EXPECT_FALSE(pipeline.hasActiveEffects());
+  // begin() returns false both because no effects are active and because the
+  // pipeline has not been initialized.
+  EXPECT_FALSE(pipeline.begin());
+
+  pipeline.setAoEnabled(true);
+  EXPECT_TRUE(pipeline.hasActiveEffects());
+  pipeline.setAoEnabled(false);
+  EXPECT_FALSE(pipeline.hasActiveEffects());
+
+  pipeline.setEdEnabled(true);
+  EXPECT_TRUE(pipeline.hasActiveEffects());
+  pipeline.setEdEnabled(false);
+  EXPECT_FALSE(pipeline.hasActiveEffects());
+
+  pipeline.setDofEnabled(true);
+  EXPECT_TRUE(pipeline.hasActiveEffects());
+  pipeline.setDofEnabled(false);
+  EXPECT_FALSE(pipeline.hasActiveEffects());
+}
+
+TEST(GLRendererTest, cleanupWithoutGLContextIsNoOp)
+{
+  GLRenderer renderer;
+  renderer.cleanup();
+  renderer.solidPipeline().releaseResources();
+  EXPECT_FALSE(renderer.solidPipeline().begin());
+}

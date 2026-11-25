@@ -125,6 +125,12 @@ float computeSSAOLuminosity(vec3 normal, float depth)
 
 void main() {
   float depth = texture(inDepthTex, UV).x;
+  if (depth >= 1.0) {
+    // Background pixel: skip the 16-tap SSAO kernel and write the FP16-max
+    // sentinel distance so blurredAo() never blends background into foreground.
+    outAo = vec2(1.0, 65504.0);
+    return;
+  }
   // The term can exceed 1.0: it brightens as well as darkens, so the buffer
   // this is written to has to be a float format rather than a normalized one.
   outAo = vec2(computeSSAOLuminosity(getNormalNear(UV, depth), depth),

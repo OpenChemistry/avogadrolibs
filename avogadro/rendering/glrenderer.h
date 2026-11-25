@@ -44,6 +44,12 @@ public:
   /** Initialize the OpenGL context for rendering. */
   void initialize();
 
+  /**
+   * Release OpenGL resources owned by this renderer (timing queries and
+   * SolidPipeline buffers/shaders) while its context is current.
+   */
+  void cleanup();
+
   /** Resize the context in response to window management events. */
   void resize(int width, int height);
 
