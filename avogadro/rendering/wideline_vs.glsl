@@ -7,7 +7,6 @@ in vec4 color;        // RGBA color at this endpoint
 in float widthSide;   // half-width * side (-1 or +1)
 in float lineParam;   // dash parameter (0 for solid lines)
 
-
 out vec4 outColor;
 out float fragLineParam;
 

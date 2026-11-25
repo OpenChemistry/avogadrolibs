@@ -15,8 +15,6 @@
 #include "glrendervisitor.h"
 #include "rendercontext_p.h"
 #include "rendertimings.h"
-#include "shader.h"
-#include "shaderprogram.h"
 #include "textlabel2d.h"
 #include "textlabel3d.h"
 #include "textrenderstrategy.h"

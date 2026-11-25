@@ -40,30 +40,22 @@ struct Sources
   const char* fragment;
 };
 
-Sources sourcesFor(ShaderId id)
-{
-  switch (id) {
-    case ShaderId::Spheres:
-      return { spheres_vs, spheres_fs };
-    case ShaderId::Cylinders:
-      return { cylinders_vs, cylinders_fs };
-    case ShaderId::Mesh:
-      return { mesh_vs, mesh_fs };
-    case ShaderId::Curves:
-      // CurveGeometry shades with the cylinder fragment shader.
-      return { curves_vs, cylinders_fs };
-    case ShaderId::TextLabel:
-      return { textlabelbase_vs, textlabelbase_fs };
-    case ShaderId::LineStrip:
-      return { linestrip_vs, linestrip_fs };
-    case ShaderId::WideLine:
-      return { wideline_vs, wideline_fs };
-    case ShaderId::DashedLine:
-      return { dashedline_vs, dashedline_fs };
-    default:
-      return { nullptr, nullptr };
-  }
-}
+// Indexed by ShaderId.
+const Sources s_sources[] = {
+  { spheres_vs, spheres_fs },
+  { cylinders_vs, cylinders_fs },
+  { mesh_vs, mesh_fs },
+  // CurveGeometry shades with the cylinder fragment shader.
+  { curves_vs, cylinders_fs },
+  { textlabelbase_vs, textlabelbase_fs },
+  { linestrip_vs, linestrip_fs },
+  { wideline_vs, wideline_fs },
+  { dashedline_vs, dashedline_fs },
+};
+
+static_assert(sizeof(s_sources) / sizeof(s_sources[0]) ==
+                static_cast<std::size_t>(ShaderId::Count),
+              "every ShaderId needs its sources");
 
 } // namespace
 
@@ -86,11 +78,7 @@ ShaderProgram* ShaderLibrary::program(ShaderId id)
   if (entry.failed)
     return nullptr;
 
-  const Sources sources = sourcesFor(id);
-  if (sources.vertex == nullptr || sources.fragment == nullptr) {
-    entry.failed = true;
-    return nullptr;
-  }
+  const Sources& sources = s_sources[index];
 
   // Every shader gets the CameraBuffer block declaration; a program whose
   // shaders never read it simply has no active block.

@@ -1,6 +1,5 @@
 #version 400
 precision highp float;
-// Modelview/projection matrix
 
 // anchor position
 uniform vec3 anchor;

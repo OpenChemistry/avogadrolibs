@@ -221,19 +221,12 @@ void ArrowGeometry::update()
   // The program must exist before VAO setup since we need it for attribute
   // setup.
   FallbackRenderContext fallbackContext;
-  ShaderProgram* program =
-    RenderContext::current()->shaders().program(ShaderId::Mesh);
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Mesh);
   if (program == nullptr)
     return;
 
-  // The GL context was replaced: the buffers belong to the dead one, so
-  // forget them without deleting and rebuild.
-  if (d->contextStamp.replaced()) {
-    d->vbo.abandon();
-    d->ibo.abandon();
-    d->vao.abandon();
+  if (d->contextStamp.forgetIfReplaced(d->vbo, d->ibo, d->vao))
     m_dirty = true;
-  }
 
   // Rebuild mesh geometry if dirty
   if (!d->vbo.ready() || m_dirty) {
@@ -311,8 +304,7 @@ void ArrowGeometry::render(const Camera& camera)
   if (d->numberOfVertices == 0 || d->numberOfIndices == 0)
     return;
 
-  ShaderProgram* program =
-    RenderContext::current()->shaders().program(ShaderId::Mesh);
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Mesh);
   if (program == nullptr)
     return;
 
@@ -322,10 +314,7 @@ void ArrowGeometry::render(const Camera& camera)
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
-  // Set up our uniforms.
-  // The camera lives in the shared uniform buffer.
-  if (!RenderContext::current()->cameraBuffer().use(camera))
-    cout << "Could not update the camera buffer." << '\n';
+  RenderContext::useCamera(camera);
   if (!program->setUniformValue("normalSign", 1.0f))
     cout << program->error() << '\n';
 

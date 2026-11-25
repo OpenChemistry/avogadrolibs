@@ -148,17 +148,13 @@ void TextLabelBase::RenderImpl::setOffsets(const Vector2i& dimensions,
   vboInvalid = true;
 }
 
-// If the GL context was replaced, the GL objects belong to the dead one: forget
-// them without deleting and have the texture and buffer rebuilt.
+// Have the texture and buffer rebuilt if the GL context was replaced.
 void TextLabelBase::RenderImpl::forgetObjectsOfReplacedContext()
 {
-  if (!contextStamp.replaced())
-    return;
-  vbo.abandon();
-  vao.abandon();
-  texture.abandon();
-  textureInvalid = true;
-  vboInvalid = true;
+  if (contextStamp.forgetIfReplaced(vbo, vao, texture)) {
+    textureInvalid = true;
+    vboInvalid = true;
+  }
 }
 
 void TextLabelBase::RenderImpl::render(const Camera& cam)
@@ -175,7 +171,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
 
   // Prepare GL - the program must exist before VAO setup
   ShaderProgram* shaderProgram =
-    RenderContext::current()->shaders().program(ShaderId::TextLabel);
+    RenderContext::currentProgram(ShaderId::TextLabel);
   if (shaderProgram == nullptr)
     return;
   if (vboInvalid)
@@ -191,8 +187,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   }
 
   // Setup shaders and uniforms
-  if (!shaderProgram->bind() ||
-      !RenderContext::current()->cameraBuffer().use(cam) ||
+  if (!shaderProgram->bind() || !RenderContext::useCamera(cam) ||
       !shaderProgram->setUniformValue("vpDims", vpDims) ||
       !shaderProgram->setUniformValue("anchor", anchor) ||
       !shaderProgram->setUniformValue("radius", radius) ||

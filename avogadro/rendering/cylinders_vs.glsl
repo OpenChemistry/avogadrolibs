@@ -13,7 +13,6 @@ in float cylRadius;
 in vec4 colorsA;
 in vec4 colorsB;
 
-
 out vec3 fnormal;
 out vec4 outColor;
 

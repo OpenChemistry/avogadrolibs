@@ -285,28 +285,17 @@ void CurveGeometry::tessellate(size_t lineIndex,
   }
 }
 
-// The GL context was replaced: the line's objects belong to the dead one, so
-// forget them without deleting and rebuild.
-void CurveGeometry::forgetStaleObjects(Line& line)
-{
-  if (ContextStamp::replaced(line.contextId)) {
-    line.vbo.abandon();
-    line.ibo.abandon();
-    line.vao.abandon();
-    line.dirty = true;
-  }
-}
-
 void CurveGeometry::update(int index)
 {
   FallbackRenderContext fallbackContext;
-  ShaderProgram* programPtr =
-    RenderContext::current()->shaders().program(ShaderId::Curves);
+  ShaderProgram* programPtr = RenderContext::currentProgram(ShaderId::Curves);
   if (programPtr == nullptr)
     return;
 
   Line* line = m_lines[index];
-  forgetStaleObjects(*line);
+  if (ContextStamp::forgetIfReplaced(line->contextId, line->vbo, line->ibo,
+                                     line->vao))
+    line->dirty = true;
   line->numberOfVertices = 0;
   line->numberOfIndices = 0;
 
@@ -369,9 +358,7 @@ void CurveGeometry::accept(Visitor& visitor)
 void CurveGeometry::processShaderError(bool error)
 {
   if (error) {
-    RenderContext* context = RenderContext::current();
-    ShaderProgram* program =
-      context ? context->shaders().program(ShaderId::Curves) : nullptr;
+    ShaderProgram* program = RenderContext::currentProgram(ShaderId::Curves);
     if (program != nullptr)
       cout << program->error() << '\n';
   }
@@ -380,20 +367,20 @@ void CurveGeometry::processShaderError(bool error)
 void CurveGeometry::render(const Camera& camera)
 {
   FallbackRenderContext fallbackContext;
-  ShaderProgram* programPtr =
-    RenderContext::current()->shaders().program(ShaderId::Curves);
+  ShaderProgram* programPtr = RenderContext::currentProgram(ShaderId::Curves);
   if (programPtr == nullptr)
     return;
   ShaderProgram& program = *programPtr;
 
   processShaderError(!program.bind());
-  // The camera lives in the shared uniform buffer.
-  processShaderError(!RenderContext::current()->cameraBuffer().use(camera));
+  RenderContext::useCamera(camera);
   processShaderError(!program.setUniformValue("opacity", 1.0f));
 
   for (size_t i = 0; i < m_lines.size(); ++i) {
     Line* line = m_lines[i];
-    forgetStaleObjects(*line);
+    if (ContextStamp::forgetIfReplaced(line->contextId, line->vbo, line->ibo,
+                                       line->vao))
+      line->dirty = true;
     if (line->dirty) {
       update(i);
     }

@@ -6,22 +6,25 @@
 #include "rendercontext_p.h"
 
 #include <atomic>
+#include <iostream>
 
 namespace Avogadro::Rendering {
 
 namespace {
 std::atomic<std::uint64_t> s_nextId{ 1 };
+
+// An id that has not been handed out before, never 0.
+std::uint64_t nextId()
+{
+  return s_nextId.fetch_add(1, std::memory_order_relaxed);
+}
+
 thread_local RenderContext* s_current = nullptr;
 } // namespace
 
 RenderContext::~RenderContext()
 {
   releaseResources();
-}
-
-std::uint64_t RenderContext::nextId()
-{
-  return s_nextId.fetch_add(1, std::memory_order_relaxed);
 }
 
 void RenderContext::initialize()
@@ -42,6 +45,14 @@ void RenderContext::releaseResources()
 RenderContext* RenderContext::current()
 {
   return s_current;
+}
+
+bool RenderContext::useCamera(const Camera& camera)
+{
+  if (s_current != nullptr && s_current->cameraBuffer().use(camera))
+    return true;
+  std::cout << "Could not update the camera buffer." << '\n';
+  return false;
 }
 
 void RenderContext::setCurrent(RenderContext* context)

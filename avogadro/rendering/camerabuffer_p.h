@@ -163,11 +163,6 @@ public:
    */
   void abandon();
 
-  /** The GL buffer name, or 0 before the first use(). */
-  unsigned int handle() const { return m_handle; }
-
-  const CameraBlockState& state() const { return m_state; }
-
 private:
   CameraBlockState m_state;
   unsigned int m_handle = 0;

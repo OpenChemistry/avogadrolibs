@@ -66,19 +66,12 @@ void WideLineGeometry::update()
   // The program must exist before VAO setup since we need it for attribute
   // setup.
   FallbackRenderContext fallbackContext;
-  ShaderProgram* program =
-    RenderContext::current()->shaders().program(ShaderId::WideLine);
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::WideLine);
   if (program == nullptr)
     return;
 
-  // The GL context was replaced: the buffers belong to the dead one, so
-  // forget them without deleting and rebuild.
-  if (d->contextStamp.replaced()) {
-    d->vbo.abandon();
-    d->ibo.abandon();
-    d->vao.abandon();
+  if (d->contextStamp.forgetIfReplaced(d->vbo, d->ibo, d->vao))
     m_dirty = true;
-  }
 
   // Upload vertex and index data if dirty.
   if (!d->vbo.ready() || m_dirty) {
@@ -146,8 +139,7 @@ void WideLineGeometry::render(const Camera& camera)
   // Prepare the VBOs, IBO, VAO, and shader program if necessary.
   update();
 
-  ShaderProgram* program =
-    RenderContext::current()->shaders().program(ShaderId::WideLine);
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::WideLine);
   if (program == nullptr)
     return;
 
@@ -157,10 +149,7 @@ void WideLineGeometry::render(const Camera& camera)
   // Bind the VAO
   d->vao.bind();
 
-  // Set up our uniforms
-  // The camera lives in the shared uniform buffer.
-  if (!RenderContext::current()->cameraBuffer().use(camera))
-    cout << "Could not update the camera buffer." << '\n';
+  RenderContext::useCamera(camera);
 
   // Render the quads
   glDrawRangeElements(GL_TRIANGLES, 0,

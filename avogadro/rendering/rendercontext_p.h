@@ -66,14 +66,31 @@ public:
    */
   void releaseResources();
 
-  /** An id that has not been handed out before, never 0. */
-  static std::uint64_t nextId();
-
   /**
    * The context being rendered in on this thread, or nullptr outside a
    * ScopedRenderContext.
    */
   static RenderContext* current();
+
+  /**
+   * The program for @p id in the current context, or nullptr if there is no
+   * current context or the program failed to build. The pointer is valid only
+   * while the context is (inside a FallbackRenderContext scope for a
+   * drawable).
+   */
+  static ShaderProgram* currentProgram(ShaderId id)
+  {
+    RenderContext* context = current();
+    return context ? context->shaders().program(id) : nullptr;
+  }
+
+  /**
+   * Make the current context's camera buffer hold @p camera (it uploads only
+   * if the camera differs from the one it holds) and bind it. Prints an error
+   * and returns false if there is no context or the buffer could not be
+   * created.
+   */
+  static bool useCamera(const Camera& camera);
 
 private:
   friend class ScopedRenderContext;
@@ -140,6 +157,28 @@ public:
     const bool changed = storedId != 0 && storedId != id;
     storedId = id;
     return changed;
+  }
+
+  /**
+   * If the GL context was replaced, the GL objects belong to the dead one:
+   * forget them (abandon(), never delete) so that they are rebuilt.
+   * @return true if they were abandoned, so the caller has to mark its data
+   * dirty.
+   */
+  template <class... Objects>
+  bool forgetIfReplaced(Objects&... objects)
+  {
+    return forgetIfReplaced(m_id, objects...);
+  }
+
+  /** The same for a drawable that keeps the id itself (see replaced()). */
+  template <class... Objects>
+  static bool forgetIfReplaced(std::uint64_t& storedId, Objects&... objects)
+  {
+    if (!replaced(storedId))
+      return false;
+    (objects.abandon(), ...);
+    return true;
   }
 
 private:
