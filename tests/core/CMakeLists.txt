@@ -79,7 +79,11 @@ set(parameterizedTests
   )
 
 foreach(TestName ${tests})
-  if(${TestName} IN_LIST parameterizedTests)
+  if(TestName STREQUAL "GaussianPrimitiveNormalization")
+    # gaussianprimitivenormalizationtest.cpp also defines the parameterized
+    # GaussianRadialIncludedTest.
+    set(testFilter "*GaussianPrimitiveNormalizationTest*:*GaussianRadialIncludedTest*")
+  elseif(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
   elseif(TestName STREQUAL "Molecule")
     # moleculetest.cpp also defines MoleculeCoordinateSetTest and

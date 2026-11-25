@@ -146,6 +146,12 @@ foreach(plugin ${testNames})
     set(filter "MeasureToolCommandTest.*:MeasureWidgetTest.*")
   elseif(plugin STREQUAL "OpenBabel")
     set(filter "OpenBabelCommandTest.*")
+  elseif(plugin STREQUAL "GLTF")
+    # The fixture is GltfCommandTest, not GLTFCommandTest.
+    set(filter "GltfCommandTest.*")
+  elseif(plugin STREQUAL "Forcefield")
+    # forcefieldtest.cpp also defines EnergyWindowTest.
+    set(filter "ForcefieldCommandTest.*:EnergyWindowTest.*")
   elseif(plugin STREQUAL "PropertyTables")
     set(filter "PropertyTables*")
   elseif(plugin STREQUAL "PlayerTool")
