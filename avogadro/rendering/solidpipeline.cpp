@@ -16,6 +16,9 @@
 
 #include "solid_ao_fs.h"
 
+#include "solid_fxaa_fs.h"
+
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -91,6 +94,83 @@ public:
   // Settings live here rather than in the header's members so that adding one
   // does not change the size of the installed class.
   bool edgeSupersampling = true;
+  bool antiAliasing = false;
+  // The clear colour at begin(): the background that FXAA fills the composite
+  // with and blends silhouettes into.
+  GLfloat clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+  // The composited image FXAA reads, created on first use because most
+  // sessions never enable it. fxaaState: 0 = not tried, 1 = ready, -1 = a
+  // shader or framebuffer failed and FXAA is skipped.
+  GLuint compositeFBO = 0;
+  GLuint compositeTexture = 0;
+  int compositeWidth = 0;
+  int compositeHeight = 0;
+  int fxaaState = 0;
+  std::unique_ptr<ShaderProgram> fxaaStageShaders;
+  Shader fxaaFragmentShader;
+
+  // Build the FXAA shader and the composite target if they are missing or the
+  // wrong size. Needs the context current. Returns false if FXAA cannot run.
+  bool prepareFxaa(int w, int h)
+  {
+    if (fxaaState < 0)
+      return false;
+    if (fxaaState == 0) {
+      fxaaFragmentShader.setType(Shader::Fragment);
+      fxaaFragmentShader.setSource(solid_fxaa_fs);
+      bool ok = fxaaFragmentShader.compile();
+      if (!ok) {
+        std::cout << fxaaFragmentShader.error() << '\n';
+      } else {
+        fxaaStageShaders = std::make_unique<ShaderProgram>();
+        fxaaStageShaders->attachShader(screenVertexShader);
+        fxaaStageShaders->attachShader(fxaaFragmentShader);
+        ok = fxaaStageShaders->link();
+        if (!ok)
+          std::cout << fxaaStageShaders->error() << '\n';
+      }
+      fxaaState = ok ? 1 : -1;
+      if (!ok)
+        return false;
+    }
+    if (compositeFBO != 0 && compositeWidth == w && compositeHeight == h)
+      return true;
+
+    GLint previousFBO = 0;
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
+    GLint previousTexture = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &previousTexture);
+    if (compositeFBO == 0) {
+      glGenFramebuffers(1, &compositeFBO);
+      glGenTextures(1, &compositeTexture);
+      glBindTexture(GL_TEXTURE_2D, compositeTexture);
+      // Linear: the filter's half-pixel taps average two pixels each.
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      glBindFramebuffer(GL_FRAMEBUFFER, compositeFBO);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D, compositeTexture, 0);
+    } else {
+      glBindTexture(GL_TEXTURE_2D, compositeTexture);
+      glBindFramebuffer(GL_FRAMEBUFFER, compositeFBO);
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    const bool complete =
+      glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+    glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
+    glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(previousTexture));
+    if (!complete) {
+      fxaaState = -1;
+      return false;
+    }
+    compositeWidth = w;
+    compositeHeight = h;
+    return true;
+  }
 
   bool initialized = false;
   bool framebufferReady = false;
@@ -184,6 +264,13 @@ void SolidPipeline::releaseResources()
   d->screenVertexShader.cleanup();
   d->firstFragmentShader.cleanup();
   d->aoFragmentShader.cleanup();
+  deleteFramebuffer(d->compositeFBO);
+  deleteTexture(d->compositeTexture);
+  d->compositeWidth = 0;
+  d->compositeHeight = 0;
+  d->fxaaFragmentShader.cleanup();
+  d->fxaaStageShaders.reset();
+  d->fxaaState = 0;
   d->firstStageShaders.reset();
   d->aoStageShaders.reset();
   d->initialized = false;
@@ -274,6 +361,7 @@ bool SolidPipeline::begin()
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(tmp[0], tmp[1], tmp[2], tmp[3]);
+  std::copy(tmp, tmp + 4, d->clearColor);
 #ifdef __EMSCRIPTEN__
   glClearDepthf(tmp[4]);
 #else
@@ -318,22 +406,44 @@ void SolidPipeline::end(const Camera& camera)
     glEnable(GL_DEPTH_TEST);
   }
 
+  // FXAA needs the composited image as a texture, so with it on the compositing
+  // stage draws into one instead of the framebuffer, and a last pass filters
+  // it into the framebuffer. The composite starts as the background, since
+  // the compositing stage leaves background pixels alone.
+  const bool useFxaa = d->antiAliasing && d->prepareFxaa(m_width, m_height);
+
   // Draw to screen
-  if (glIsFramebuffer(d->defaultFBO)) {
-    glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
-    GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, drawBuffersList);
-  } else {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  auto bindScreen = [this]() {
+    if (glIsFramebuffer(d->defaultFBO)) {
+      glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
+      GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
+      glDrawBuffers(1, drawBuffersList);
+    } else {
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #ifdef __EMSCRIPTEN__
-    const GLenum back = GL_BACK;
-    glDrawBuffers(1, &back);
+      const GLenum back = GL_BACK;
+      glDrawBuffers(1, &back);
 #else
-    glDrawBuffer(GL_BACK);
+      glDrawBuffer(GL_BACK);
 #endif
+    }
+    glViewport(d->defaultViewport[0], d->defaultViewport[1],
+               d->defaultViewport[2], d->defaultViewport[3]);
+  };
+  if (useFxaa) {
+    glBindFramebuffer(GL_FRAMEBUFFER, d->compositeFBO);
+    GLenum compositeBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, compositeBuffersList);
+    glViewport(0, 0, static_cast<GLsizei>(m_width),
+               static_cast<GLsizei>(m_height));
+    // The clear colour is already the background; set it anyway rather than
+    // depend on what ran in between.
+    glClearColor(d->clearColor[0], d->clearColor[1], d->clearColor[2],
+                 d->clearColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT);
+  } else {
+    bindScreen();
   }
-  glViewport(d->defaultViewport[0], d->defaultViewport[1],
-             d->defaultViewport[2], d->defaultViewport[3]);
   d->attachStage(*d->firstStageShaders, "inRGBTex", d->renderTexture,
                  "inDepthTex", d->depthTexture, m_width, m_height);
   d->firstStageShaders->setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
@@ -364,6 +474,27 @@ void SolidPipeline::end(const Camera& camera)
   d->firstStageShaders->setUniformValue("fogB",
                                         (m_backgroundColor[2]) / 255.0f);
   glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  if (useFxaa) {
+    bindScreen();
+    // Edge pixels of the background are written too, at the background's own
+    // depth of 1.0, which a strict depth test would reject.
+    GLint depthFunc = GL_LESS;
+    glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
+    glDepthFunc(GL_LEQUAL);
+    ShaderProgram& fxaa = *d->fxaaStageShaders;
+    fxaa.bind();
+    d->bindSampler(fxaa, "inRGBTex", d->compositeTexture, TextureUnitRGB);
+    d->bindSampler(fxaa, "inDepthTex", d->depthTexture, TextureUnitDepth);
+    fxaa.setUniformValue("width", static_cast<float>(m_width));
+    fxaa.setUniformValue("height", static_cast<float>(m_height));
+    // Coverage only counts as contrast when the background can be seen
+    // through.
+    fxaa.setUniformValue("inAlphaWeight",
+                         d->clearColor[3] < 1.0f ? 1.0f : 0.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDepthFunc(static_cast<GLenum>(depthFunc));
+  }
   glBindVertexArray(0);
 }
 
@@ -458,6 +589,16 @@ void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
   d->framebufferReady =
     glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
+}
+
+bool SolidPipeline::antiAliasingEnabled() const
+{
+  return d->antiAliasing;
+}
+
+void SolidPipeline::setAntiAliasingEnabled(bool enabled)
+{
+  d->antiAliasing = enabled;
 }
 
 bool SolidPipeline::edgeSupersampling() const

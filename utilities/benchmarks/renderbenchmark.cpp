@@ -147,6 +147,8 @@ struct Options
   Effect fog;
   Effect dof;
   bool fogOff = false;
+  // FXAA on the finished image; it applies only while an effect is active.
+  bool fxaa = false;
   // The pipeline's own default (on) unless --edge-supersample says otherwise.
   bool edgeSupersampleSet = false;
   bool edgeSupersample = true;
@@ -267,6 +269,8 @@ void printUsage(const char* argv0)
     << "  --fog [STRENGTH]    Fog (on by default in the pipeline)\n"
     << "  --no-fog            Switch fog off\n"
     << "  --dof [STRENGTH]    Depth of field\n"
+    << "  --fxaa              FXAA on the finished image (only while an "
+       "effect is on)\n"
     << "  --edge-supersample on|off\n"
     << "                      Supersample the edge outline (default: the "
        "pipeline's)\n"
@@ -384,6 +388,8 @@ bool parseArguments(int argc, char** argv, Options& options)
       }
       options.edgeSupersampleSet = true;
       options.edgeSupersample = value == "on";
+    } else if (arg == "--fxaa") {
+      options.fxaa = true;
     } else if (arg == "--no-fog") {
       options.fogOff = true;
     } else if (arg == "--ao" || arg == "--edges" || arg == "--fog" ||
@@ -1055,6 +1061,8 @@ int main(int argc, char** argv)
       pipeline.setDofEnabled(true);
       pipeline.setDofStrength(static_cast<float>(options.dof.strength));
     }
+    if (options.fxaa)
+      pipeline.setAntiAliasingEnabled(true);
     if (options.edgeSupersampleSet)
       pipeline.setEdgeSupersampling(options.edgeSupersample);
     if (options.backgroundSet) {
