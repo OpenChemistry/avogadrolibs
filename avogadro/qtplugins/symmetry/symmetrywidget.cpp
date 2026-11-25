@@ -82,27 +82,25 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
   m_ui->subgroupsTree->setModel(m_subgroupsTreeModel);
   m_ui->subgroupsTree->setItemDelegateForColumn(0, new RichTextDelegate(this));
 
-  connect(m_ui->detectSymmetryButton, SIGNAL(clicked()),
-          SIGNAL(detectSymmetry()));
-  connect(m_ui->symmetrizeMoleculeButton, SIGNAL(clicked()),
-          SIGNAL(symmetrizeMolecule()));
+  connect(m_ui->detectSymmetryButton, &QPushButton::clicked, this,
+          &SymmetryWidget::detectSymmetry);
+  connect(m_ui->symmetrizeMoleculeButton, &QPushButton::clicked, this,
+          &SymmetryWidget::symmetrizeMolecule);
 
   connect(
     m_ui->equivalenceTree->selectionModel(),
-    SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    SLOT(equivalenceSelectionChanged(const QItemSelection&,
-                                     const QItemSelection&)));
+    &QItemSelectionModel::selectionChanged, this,
+    &SymmetryWidget::equivalenceSelectionChanged);
 
   connect(
     m_ui->operationsTable->selectionModel(),
-    SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    SLOT(operationsSelectionChanged(const QItemSelection&,
-                                    const QItemSelection&)));
+    &QItemSelectionModel::selectionChanged, this,
+    &SymmetryWidget::operationsSelectionChanged);
+
   connect(
     m_ui->subgroupsTree->selectionModel(),
-    SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    SLOT(
-      subgroupsSelectionChanged(const QItemSelection&, const QItemSelection&)));
+    &QItemSelectionModel::selectionChanged, this,
+    &SymmetryWidget::subgroupsSelectionChanged);
 }
 
 SymmetryWidget::~SymmetryWidget()
@@ -119,10 +117,11 @@ void SymmetryWidget::setMolecule(QtGui::Molecule* molecule)
     m_molecule = molecule;
 
     if (m_molecule) {
-      connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
-    }
+      connect(m_molecule, &QtGui::Molecule::changed, this, 
+              &SymmetryWidget::moleculeChanged);
+    }   
   }
-}
+}.
 
 void SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
