@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <set>
 
+using Avogadro::Rendering::ContextStamp;
 using Avogadro::Rendering::FallbackRenderContext;
 using Avogadro::Rendering::RenderContext;
 using Avogadro::Rendering::ScopedRenderContext;
@@ -118,4 +119,63 @@ TEST(RenderContextTest, fallbackLeavesARealContextAlone)
   }
   EXPECT_EQ(RenderContext::current(), &context);
   EXPECT_NE(context.id(), 0u);
+}
+
+TEST(RenderContextTest, stampIgnoresMissingAndFallbackContexts)
+{
+  ContextStamp stamp;
+  EXPECT_FALSE(stamp.replaced()); // no current context
+  FallbackRenderContext fallback;
+  EXPECT_FALSE(stamp.replaced()); // id 0
+}
+
+TEST(RenderContextTest, stampNoticesAReplacedContextOnce)
+{
+  RenderContext context;
+  ContextStamp stamp;
+  {
+    context.initialize();
+    ScopedRenderContext scope(&context);
+    EXPECT_FALSE(stamp.replaced()); // first use only remembers the id
+    EXPECT_FALSE(stamp.replaced());
+  }
+  // The GL context went away and a new one was initialized.
+  context.releaseResources();
+  context.initialize();
+  ScopedRenderContext scope(&context);
+  EXPECT_TRUE(stamp.replaced());
+  EXPECT_FALSE(stamp.replaced());
+}
+
+TEST(RenderContextTest, stampIsNotTriggeredByAFallbackBetweenRealContexts)
+{
+  RenderContext context;
+  context.initialize();
+  ContextStamp stamp;
+  {
+    ScopedRenderContext scope(&context);
+    EXPECT_FALSE(stamp.replaced());
+  }
+  {
+    FallbackRenderContext fallback; // id 0: neither a change nor remembered
+    EXPECT_FALSE(stamp.replaced());
+  }
+  ScopedRenderContext scope(&context);
+  EXPECT_FALSE(stamp.replaced());
+}
+
+TEST(RenderContextTest, stampsAreIndependent)
+{
+  RenderContext context;
+  context.initialize();
+  ContextStamp a;
+  ContextStamp b;
+  {
+    ScopedRenderContext scope(&context);
+    a.replaced();
+  }
+  context.initialize();
+  ScopedRenderContext scope(&context);
+  EXPECT_TRUE(a.replaced());
+  EXPECT_FALSE(b.replaced()); // never saw the old context
 }

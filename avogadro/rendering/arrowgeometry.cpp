@@ -50,6 +50,7 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
+  ContextStamp contextStamp;
 
   Core::Array<PackedVertex> meshVertices;
   Core::Array<unsigned int> meshIndices;
@@ -224,6 +225,15 @@ void ArrowGeometry::update()
     RenderContext::current()->shaders().program(ShaderId::Mesh);
   if (program == nullptr)
     return;
+
+  // The GL context was replaced: the buffers belong to the dead one, so
+  // forget them without deleting and rebuild.
+  if (d->contextStamp.replaced()) {
+    d->vbo.abandon();
+    d->ibo.abandon();
+    d->vao.abandon();
+    m_dirty = true;
+  }
 
   // Rebuild mesh geometry if dirty
   if (!d->vbo.ready() || m_dirty) {

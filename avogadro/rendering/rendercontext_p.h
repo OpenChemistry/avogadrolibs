@@ -97,6 +97,40 @@ private:
 };
 
 /**
+ * Remembers which RenderContext a drawable's GL objects were created in, so
+ * that the drawable can notice that the GL context was destroyed and replaced
+ * (for example when Qt moves a GLWidget to another window).
+ *
+ * Only real contexts count: a context with id() 0 (a FallbackRenderContext, or
+ * a RenderContext that was never initialized) neither triggers a change nor is
+ * remembered.
+ */
+class ContextStamp
+{
+public:
+  /**
+   * Call with the drawable's rendering under way, before using its GL objects.
+   * @return true if the objects were created in a context that has since been
+   * replaced. They belong to the dead context, so the drawable has to forget
+   * them (abandon(), never delete) and build new ones. Returns true only once
+   * per replacement.
+   */
+  bool replaced()
+  {
+    const RenderContext* context = RenderContext::current();
+    const std::uint64_t id = context ? context->id() : 0;
+    if (id == 0)
+      return false;
+    const bool changed = m_id != 0 && m_id != id;
+    m_id = id;
+    return changed;
+  }
+
+private:
+  std::uint64_t m_id = 0;
+};
+
+/**
  * Put at the top of a drawable's render() and update(). Costs one thread-local
  * read when a RenderContext is already current (the case inside
  * GLRenderer::render()). Otherwise, for example when a Drawable is rendered

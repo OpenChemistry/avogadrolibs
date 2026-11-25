@@ -33,6 +33,7 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
+  ContextStamp contextStamp;
 };
 
 WideLineGeometry::WideLineGeometry()
@@ -69,6 +70,15 @@ void WideLineGeometry::update()
     RenderContext::current()->shaders().program(ShaderId::WideLine);
   if (program == nullptr)
     return;
+
+  // The GL context was replaced: the buffers belong to the dead one, so
+  // forget them without deleting and rebuild.
+  if (d->contextStamp.replaced()) {
+    d->vbo.abandon();
+    d->ibo.abandon();
+    d->vao.abandon();
+    m_dirty = true;
+  }
 
   // Upload vertex and index data if dirty.
   if (!d->vbo.ready() || m_dirty) {

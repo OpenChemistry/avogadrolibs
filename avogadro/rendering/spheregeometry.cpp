@@ -54,6 +54,7 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
+  ContextStamp contextStamp;
 
   size_t numberOfInstances = 0;
 };
@@ -92,6 +93,15 @@ void SphereGeometry::update()
     RenderContext::current()->shaders().program(ShaderId::Spheres);
   if (program == nullptr)
     return;
+
+  // The GL context was replaced: the buffers belong to the dead one, so
+  // forget them without deleting and rebuild.
+  if (d->contextStamp.replaced()) {
+    d->vbo.abandon();
+    d->ibo.abandon();
+    d->vao.abandon();
+    m_dirty = true;
+  }
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {

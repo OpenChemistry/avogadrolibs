@@ -13,6 +13,7 @@
 #include <avogadro/qtopengl/renderoptions.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
+#include <avogadro/rendering/bufferobject.h>
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/cylindergeometry.h>
 #include <avogadro/rendering/dashedlinegeometry.h>
@@ -26,10 +27,12 @@
 #include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/rendering/textlabel3d.h>
 #include <avogadro/rendering/texture2d.h>
+#include <avogadro/rendering/vertexarrayobject.h>
 #include <avogadro/rendering/widelinegeometry.h>
 
 #include <QtGui/QImage>
 #include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLExtraFunctions>
 #include <QtGui/QOpenGLFunctions>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -46,6 +49,7 @@ using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::QtOpenGL::RenderOptions;
 using Avogadro::Rendering::ArrowGeometry;
 using Avogadro::Rendering::BSplineGeometry;
+using Avogadro::Rendering::BufferObject;
 using Avogadro::Rendering::Camera;
 using Avogadro::Rendering::CylinderGeometry;
 using Avogadro::Rendering::DashedLineGeometry;
@@ -61,6 +65,7 @@ using Avogadro::Rendering::SphereGeometry;
 using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::Texture2D;
 using Avogadro::Rendering::TranslucentPass;
+using Avogadro::Rendering::VertexArrayObject;
 using Avogadro::Rendering::WideLineGeometry;
 using namespace Avogadro::TestGL;
 
@@ -713,4 +718,60 @@ TEST_F(GLWidgetTest, drawableRendersOutsideTheRenderer)
     EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
   }
   widget->doneCurrent();
+}
+
+// abandon() forgets the GL name without deleting it: the object can be
+// uploaded or bound again, and the old name is still alive in this context.
+TEST_F(GLWidgetTest, abandonForgetsGLObjectsWithoutDeletingThem)
+{
+  widget->makeCurrent();
+  ContextGuard guard(widget);
+  drainGLErrors();
+  QOpenGLContext* context = QOpenGLContext::currentContext();
+  QOpenGLFunctions* gl = context->functions();
+  QOpenGLExtraFunctions* extra = context->extraFunctions();
+
+  BufferObject buffer;
+  const std::vector<float> data = { 1.0f, 2.0f, 3.0f };
+  ASSERT_TRUE(buffer.upload(data, BufferObject::ArrayBuffer));
+  const auto oldBuffer = static_cast<GLuint>(buffer.handle());
+  ASSERT_NE(oldBuffer, 0u);
+  buffer.abandon();
+  EXPECT_FALSE(buffer.ready());
+  EXPECT_EQ(buffer.handle(), 0u);
+  EXPECT_EQ(gl->glIsBuffer(oldBuffer), GL_TRUE);
+  ASSERT_TRUE(buffer.upload(data, BufferObject::ArrayBuffer));
+  EXPECT_TRUE(buffer.ready());
+  EXPECT_NE(static_cast<GLuint>(buffer.handle()), oldBuffer);
+  gl->glDeleteBuffers(1, &oldBuffer);
+
+  VertexArrayObject vao;
+  ASSERT_TRUE(vao.bind());
+  vao.release();
+  auto oldVao = static_cast<GLuint>(vao.handle());
+  ASSERT_NE(oldVao, 0u);
+  vao.abandon();
+  EXPECT_EQ(vao.handle(), 0u);
+  EXPECT_EQ(extra->glIsVertexArray(oldVao), GL_TRUE);
+  ASSERT_TRUE(vao.bind());
+  vao.release();
+  EXPECT_NE(static_cast<GLuint>(vao.handle()), oldVao);
+  extra->glDeleteVertexArrays(1, &oldVao);
+
+  Texture2D texture;
+  const std::vector<unsigned char> pixels(4 * 4, 255);
+  ASSERT_TRUE(texture.upload(pixels, Vector2i(2, 2), Texture2D::IncomingRGBA,
+                             Texture2D::InternalRGBA));
+  auto oldTexture = static_cast<GLuint>(texture.handle());
+  ASSERT_NE(oldTexture, 0u);
+  texture.abandon();
+  EXPECT_FALSE(texture.ready());
+  EXPECT_EQ(texture.handle(), 0u);
+  EXPECT_EQ(gl->glIsTexture(oldTexture), GL_TRUE);
+  ASSERT_TRUE(texture.upload(pixels, Vector2i(2, 2), Texture2D::IncomingRGBA,
+                             Texture2D::InternalRGBA));
+  EXPECT_NE(static_cast<GLuint>(texture.handle()), oldTexture);
+  gl->glDeleteTextures(1, &oldTexture);
+
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
 }

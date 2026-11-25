@@ -36,6 +36,7 @@ public:
 
   BufferObject vbo;
   VertexArrayObject vao;
+  ContextStamp contextStamp;
 };
 
 DashedLineGeometry::DashedLineGeometry()
@@ -73,6 +74,14 @@ void DashedLineGeometry::update()
     RenderContext::current()->shaders().program(ShaderId::DashedLine);
   if (program == nullptr)
     return;
+
+  // The GL context was replaced: the buffers belong to the dead one, so
+  // forget them without deleting and rebuild.
+  if (d->contextStamp.replaced()) {
+    d->vbo.abandon();
+    d->vao.abandon();
+    m_dirty = true;
+  }
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {

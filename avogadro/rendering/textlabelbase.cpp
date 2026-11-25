@@ -57,6 +57,9 @@ public:
   float pixelRatio = 1.0f;
   Texture2D texture;
 
+  // The GL context that vbo, vao and texture were created in.
+  ContextStamp contextStamp;
+
   RenderImpl();
   ~RenderImpl() {}
 
@@ -67,6 +70,7 @@ public:
                   TextProperties::VAlign vAlign);
 
   void render(const Camera& cam);
+  void forgetObjectsOfReplacedContext();
   void uploadVbo(ShaderProgram& shaderProgram);
 };
 
@@ -144,8 +148,23 @@ void TextLabelBase::RenderImpl::setOffsets(const Vector2i& dimensions,
   vboInvalid = true;
 }
 
+// If the GL context was replaced, the GL objects belong to the dead one: forget
+// them without deleting and have the texture and buffer rebuilt.
+void TextLabelBase::RenderImpl::forgetObjectsOfReplacedContext()
+{
+  if (!contextStamp.replaced())
+    return;
+  vbo.abandon();
+  vao.abandon();
+  texture.abandon();
+  textureInvalid = true;
+  vboInvalid = true;
+}
+
 void TextLabelBase::RenderImpl::render(const Camera& cam)
 {
+  forgetObjectsOfReplacedContext();
+
   // The texture should be valid at this point.
   if (textureInvalid) {
     std::cerr << "Unable to render text label -- no texture set. "
@@ -258,6 +277,8 @@ void TextLabelBase::render(const Camera& camera)
 
 void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
 {
+  m_render->forgetObjectsOfReplacedContext();
+
   if (!m_render->textureInvalid)
     return;
 

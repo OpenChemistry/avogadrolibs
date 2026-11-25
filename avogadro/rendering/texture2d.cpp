@@ -228,6 +228,12 @@ bool Texture2D::release() const
   return true;
 }
 
+void Texture2D::abandon()
+{
+  d->textureId = 0;
+  m_dirty = true;
+}
+
 bool Texture2D::uploadInternal(const void* buffer, const Vector2i& dims,
                                Texture2D::IncomingFormat dataFormat,
                                Avogadro::Type dataType,
