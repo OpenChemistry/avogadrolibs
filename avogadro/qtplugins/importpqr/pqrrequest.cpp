@@ -41,7 +41,7 @@ PQRRequest::~PQRRequest()
 void PQRRequest::sendRequest(QString url)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
-  connect(reply, SIGNAL(finished()), this, SLOT(parseJson()));
+  connect(reply, &QNetworkReply::finished, this, &PQRRequest::parseJson);
 }
 
 /**
@@ -53,7 +53,7 @@ void PQRRequest::sendRequest(QString url, QString)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
   currentMolName = nameDisplay->text(); // needed to load mol into Avogadro
-  connect(reply, SIGNAL(finished()), this, SLOT(getFile()));
+  connect(reply, &QNetworkReply::finished, this, &PQRRequest::getFile);
 }
 
 /**
@@ -63,7 +63,7 @@ void PQRRequest::sendRequest(QString url, QString)
 void PQRRequest::sendPNGRequest(QString url)
 {
   reply = oNetworkAccessManager->get(QNetworkRequest(QUrl(url)));
-  connect(reply, SIGNAL(finished()), this, SLOT(SetPNG()));
+  connect(reply, &QNetworkReply::finished, this, &PQRRequest::SetPNG);
 }
 
 /**
