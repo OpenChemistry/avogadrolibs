@@ -2018,9 +2018,9 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
 
     if (betaMatrix.cols() > 0 && betaMatrix.rows() > 0) {
       json moBeta;
-      for (int j = 0; j < moMatrix.cols(); ++j)
-        for (int i = 0; i < moMatrix.rows(); ++i)
-          moBeta.push_back(moMatrix(i, j));
+      for (int j = 0; j < betaMatrix.cols(); ++j)
+        for (int i = 0; i < betaMatrix.rows(); ++i)
+          moBeta.push_back(betaMatrix(i, j));
 
       root["orbitals"]["alphaCoefficients"] = moCoefficients;
       root["orbitals"]["betaCoefficients"] = moBeta;

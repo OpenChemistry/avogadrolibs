@@ -26,6 +26,7 @@ using Avogadro::MatrixX;
 using Avogadro::PI_F;
 using Avogadro::Real;
 using Avogadro::Core::Atom;
+using Avogadro::Core::BasisSet;
 using Avogadro::Core::Bond;
 using Avogadro::Core::Constraint;
 using Avogadro::Core::GaussianSet;
@@ -1346,6 +1347,51 @@ TEST(CjsonTest, basisSetRoundTripAfterInitialization)
   copy->initCalculation();
   EXPECT_EQ(copy->gtoIndices(), basis->gtoIndices());
   EXPECT_EQ(copy->gtoCN(), basis->gtoCN());
+}
+
+// An open-shell basis keeps separate alpha and beta orbitals. The writer used
+// to store the alpha matrix under betaCoefficients as well.
+TEST(CjsonTest, openShellOrbitalsRoundTrip)
+{
+  Molecule molecule;
+  GaussianSet* basis = attachSmallBasis(molecule);
+
+  std::vector<double> alpha(25), beta(25);
+  for (size_t i = 0; i < 25; ++i) {
+    alpha[i] = 0.01 * static_cast<double>(i + 1);
+    beta[i] = -0.02 * static_cast<double>(i + 1);
+  }
+  basis->setMolecularOrbitals(alpha, BasisSet::Alpha);
+  basis->setMolecularOrbitals(beta, BasisSet::Beta);
+  basis->setMolecularOrbitalEnergy({ -1.0, -0.5, 0.1, 0.4, 0.9 },
+                                   BasisSet::Alpha);
+  basis->setMolecularOrbitalEnergy({ -0.9, -0.4, 0.2, 0.5, 1.0 },
+                                   BasisSet::Beta);
+  basis->setMolecularOrbitalOccupancy({ 1, 1, 0, 0, 0 }, BasisSet::Alpha);
+  basis->setMolecularOrbitalOccupancy({ 1, 0, 0, 0, 0 }, BasisSet::Beta);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule)) << cjson.error();
+
+  Molecule reread;
+  ASSERT_TRUE(cjson.readString(output, reread)) << cjson.error();
+  auto* copy = dynamic_cast<GaussianSet*>(reread.basisSet());
+  ASSERT_NE(copy, nullptr);
+
+  for (auto type : { BasisSet::Alpha, BasisSet::Beta }) {
+    const auto& expected = basis->moMatrix(type);
+    const auto& actual = copy->moMatrix(type);
+    ASSERT_EQ(actual.rows(), expected.rows());
+    ASSERT_EQ(actual.cols(), expected.cols());
+    for (Eigen::Index j = 0; j < expected.cols(); ++j)
+      for (Eigen::Index i = 0; i < expected.rows(); ++i)
+        EXPECT_DOUBLE_EQ(actual(i, j), expected(i, j))
+          << (type == BasisSet::Alpha ? "alpha" : "beta") << " (" << i << ", "
+          << j << ")";
+    EXPECT_EQ(copy->moEnergy(type), basis->moEnergy(type));
+    EXPECT_EQ(copy->moOccupancy(type), basis->moOccupancy(type));
+  }
 }
 
 namespace {
