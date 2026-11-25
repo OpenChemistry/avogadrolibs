@@ -304,7 +304,13 @@ void GLRenderer::initialize()
     return;
   }
 
-  if (!GLEW_VERSION_4_0) {
+  // Ask the context for its version: GLEW_VERSION_4_0 is cleared if any
+  // entry point fails to resolve (glewExperimental is unset), which would
+  // reject working contexts.
+  GLint major = 0;
+  glGetIntegerv(GL_MAJOR_VERSION, &major);
+  glGetError(); // pre-3.0 contexts raise GL_INVALID_ENUM; major stays 0
+  if (major < 4) {
     m_error += "GL version 4.0 is not supported by your graphics driver.\n";
     m_valid = false;
     return;

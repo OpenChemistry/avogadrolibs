@@ -269,6 +269,19 @@ TEST_F(GLWidgetTest, arrowGeometryLitFromUpperFront)
 TEST_F(GLWidgetTest, shaderProgramSetTextureSamplerReservesUnitZero)
 {
   widget->makeCurrent();
+  // Declared before any GL object so it is destroyed last: the shaders,
+  // program and texture are deleted while the context is still current,
+  // on both the success and the early-return paths.
+  struct ContextGuard
+  {
+    GLWidget* widget;
+    ~ContextGuard()
+    {
+      if (QOpenGLContext* ctx = QOpenGLContext::currentContext())
+        ctx->functions()->glUseProgram(0);
+      widget->doneCurrent();
+    }
+  } guard{ widget };
   Shader vs(Shader::Vertex,
             "#version 400\n"
             "void main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }\n");
@@ -302,7 +315,4 @@ TEST_F(GLWidgetTest, shaderProgramSetTextureSamplerReservesUnitZero)
   GLint unit = -1;
   gl->glGetUniformiv(progId, loc, &unit);
   EXPECT_EQ(unit, 1);
-
-  program.release();
-  widget->doneCurrent();
 }
