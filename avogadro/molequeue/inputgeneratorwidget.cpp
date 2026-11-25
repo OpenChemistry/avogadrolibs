@@ -629,8 +629,9 @@ void InputGeneratorWidget::saveDirectory()
           << tr("%1: File will be overwritten.").arg(info.absoluteFilePath());
       }
 
-      // Attempt to open the file for writing
-      if (!QFile(info.absoluteFilePath()).open(QFile::WriteOnly)) {
+      // Check writability without opening (opening would truncate the file)
+      if (!(info.exists() ? info.isWritable()
+                          : QFileInfo(dir.absolutePath()).isWritable())) {
         errors << tr("%1: File is not writable.").arg(info.absoluteFilePath());
         fatalError = true;
         break;
