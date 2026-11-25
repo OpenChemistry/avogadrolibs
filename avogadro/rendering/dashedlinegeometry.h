@@ -31,7 +31,11 @@ public:
     static int colorOffset() { return static_cast<int>(sizeof(Vector3f)); }
   };
 
-  DashedLineGeometry();
+  /**
+   * @deprecated Use WideLineGeometry::addDashedLine() instead.
+   */
+  [[deprecated(
+    "Use WideLineGeometry::addDashedLine() instead.")]] DashedLineGeometry();
   DashedLineGeometry(const DashedLineGeometry& other);
   ~DashedLineGeometry() override;
 

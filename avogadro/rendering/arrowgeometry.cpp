@@ -154,11 +154,11 @@ void generateArrowGeometry(const Vector3f& origin, const Vector3f& target,
   for (unsigned int i = 0; i < res; ++i) {
     Vector3f coneRadial = cylEnd + (radial * coneRadius);
 
-    // Cone side normal calculation
+    // Cone side normal calculation (outward from the cone surface)
     Vector3f coneVec = axis * coneLength;
-    Vector3f coneSideNormal = -(coneVec.cross(radial * coneRadius))
-                                 .cross(coneVec - radial * coneRadius)
-                                 .normalized();
+    Vector3f coneSideNormal = (coneVec.cross(radial * coneRadius))
+                                .cross(coneVec - radial * coneRadius)
+                                .normalized();
 
     // Cone base radials (facing back)
     verts[coneBaseRadialsOffset + i] = coneRadial;
@@ -188,7 +188,6 @@ void generateArrowGeometry(const Vector3f& origin, const Vector3f& target,
   }
 
   // Add vertices to output array
-  size_t vertexStart = vertices.size();
   for (unsigned int i = 0; i < numVertices; ++i) {
     vertices.push_back(PackedVertex(color, norms[i], verts[i]));
   }
@@ -342,6 +341,8 @@ void ArrowGeometry::render(const Camera& camera)
   }
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
   if (!program->setUniformValue("normalMatrix", normalMatrix))
+    cout << program->error() << '\n';
+  if (!program->setUniformValue("normalSign", 1.0f))
     cout << program->error() << '\n';
 
   // Render using the shader and VAO.

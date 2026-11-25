@@ -179,6 +179,8 @@ void MeshGeometry::render(const Camera& camera)
   Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
   if (!program->setUniformValue("normalMatrix", normalMatrix))
     std::cout << program->error() << '\n';
+  if (!program->setUniformValue("normalSign", -1.0f))
+    std::cout << program->error() << '\n';
 
   auto drawMesh = [&]() {
     glDrawRangeElements(GL_TRIANGLES, 0,
