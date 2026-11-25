@@ -332,3 +332,28 @@ TEST(FileFormatManagerTest, v3000VariantsDoNotShadowV2000)
   EXPECT_EQ(format->name(), "MDL MOL V3000"s);
   delete format;
 }
+
+TEST(FileFormatManagerTest, validateFileNameReservedNames)
+{
+  using Avogadro::Io::FileFormat;
+  // Windows device names are invalid whatever the case or extension
+  EXPECT_FALSE(FileFormat::validateFileName("CON.cif"));
+  EXPECT_FALSE(FileFormat::validateFileName("con.txt"));
+  EXPECT_FALSE(FileFormat::validateFileName("nul"));
+  EXPECT_FALSE(FileFormat::validateFileName("COM1.xyz"));
+  EXPECT_FALSE(FileFormat::validateFileName("lpt9.pdb"));
+  EXPECT_FALSE(FileFormat::validateFileName("Aux.tar.gz"));
+
+  // Names that merely contain or resemble them are fine
+  EXPECT_TRUE(FileFormat::validateFileName("CONTCAR"));
+  EXPECT_TRUE(FileFormat::validateFileName("POSCAR"));
+  EXPECT_TRUE(FileFormat::validateFileName("console.xyz"));
+  EXPECT_TRUE(FileFormat::validateFileName("icon.cjson"));
+  EXPECT_TRUE(FileFormat::validateFileName("com10.xyz"));
+  EXPECT_TRUE(FileFormat::validateFileName("aux_data.xyz"));
+
+  // Existing rules still apply
+  EXPECT_FALSE(FileFormat::validateFileName(""));
+  EXPECT_FALSE(FileFormat::validateFileName("a..b.xyz"));
+  EXPECT_FALSE(FileFormat::validateFileName("a?b.xyz"));
+}

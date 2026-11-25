@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/core/array.h>
+#include <avogadro/core/cube.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtopengl/glwidget.h>
 #include <avogadro/qtopengl/qttextrenderstrategy.h>
@@ -31,6 +32,7 @@
 #include <avogadro/rendering/textrenderstrategy.h>
 #include <avogadro/rendering/texture2d.h>
 #include <avogadro/rendering/vertexarrayobject.h>
+#include <avogadro/rendering/volumegeometry.h>
 #include <avogadro/rendering/widelinegeometry.h>
 
 #include <QtGui/QImage>
@@ -45,9 +47,12 @@
 #include <vector>
 
 using Avogadro::Vector2i;
+using Avogadro::Vector3;
 using Avogadro::Vector3f;
+using Avogadro::Vector3i;
 using Avogadro::Vector3ub;
 using Avogadro::Vector4ub;
+using Avogadro::Core::Cube;
 using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::QtOpenGL::RenderOptions;
 using Avogadro::Rendering::ArrowGeometry;
@@ -70,6 +75,7 @@ using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::Texture2D;
 using Avogadro::Rendering::TranslucentPass;
 using Avogadro::Rendering::VertexArrayObject;
+using Avogadro::Rendering::VolumeGeometry;
 using Avogadro::Rendering::WideLineGeometry;
 using namespace Avogadro::TestGL;
 
@@ -656,6 +662,175 @@ TEST_F(GLWidgetTest, solidPipelineCleanupAndReinitialize)
   EXPECT_TRUE(renderer.solidPipeline().begin());
   renderer.solidPipeline().end(renderer.camera());
   renderer.cleanup();
+}
+
+TEST_F(GLWidgetTest, volumeGeometryRendersUnderZoomAndNearFarClipping)
+{
+  // Build a large uniform positive-density cube spanning [-7, 7]^3 around a
+  // tiny central sphere (radius 0.2) so GLRenderer's far plane (~distance + 6)
+  // and near plane (2.0) both clip the cube when zoomed in and rotated.
+  Cube cube;
+  constexpr int n = 12;
+  cube.setLimits(Vector3(-7.0, -7.0, -7.0), Vector3(7.0, 7.0, 7.0),
+                 Vector3i(n, n, n));
+  std::vector<float> data(static_cast<size_t>(n * n * n), 0.25f);
+  cube.setData(data);
+
+  struct RestoreState
+  {
+    GLWidget* w;
+    Avogadro::Rendering::Projection proj;
+    ~RestoreState()
+    {
+      clearScene(*w);
+      w->renderer().camera().setProjectionType(proj);
+      w->renderer().resetCamera();
+    }
+  } restore{ widget, widget->renderer().camera().projectionType() };
+
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* geometry = new GeometryNode;
+  auto* sphere = new SphereGeometry;
+  sphere->addSphere(Vector3f(0.0f, 0.0f, 0.0f), Vector3ub(200, 200, 200), 0.1f);
+  auto* volume = new VolumeGeometry;
+  volume->setCube(cube);
+  volume->setPositiveColor(Vector3ub(255, 0, 0));
+  volume->setNegativeColor(Vector3ub(0, 0, 255));
+  volume->setRenderPass(TranslucentPass);
+  geometry->addDrawable(sphere);
+  geometry->addDrawable(volume);
+  widget->renderer().scene().rootNode().addChild(geometry);
+  widget->renderer().scene().setBackgroundColor(Vector4ub(0, 0, 0, 255));
+  widget->renderer().solidPipeline().setBackgroundColor(
+    Vector4ub(0, 0, 0, 255));
+  widget->renderer().resetGeometry();
+  widget->doneCurrent();
+
+  for (const auto proj : { Perspective, Orthographic }) {
+    SCOPED_TRACE(proj == Perspective ? "perspective" : "orthographic");
+    widget->renderer().camera().setProjectionType(proj);
+    widget->renderer().resetCamera();
+    // Rotate and zoom close so both near and far planes intersect the cube.
+    widget->renderer().camera().rotate(0.45f, Vector3f::UnitX());
+    widget->renderer().camera().rotate(0.35f, Vector3f::UnitY());
+    if (proj == Perspective)
+      widget->renderer().camera().preTranslate(Vector3f(0.0f, 0.0f, 8.0f));
+    else
+      widget->renderer().camera().scale(0.5f);
+    settle();
+
+    const QImage image = widget->grabFramebuffer();
+    ASSERT_FALSE(image.isNull());
+
+    // Sample a vertical column slightly offset from the tiny center sphere:
+    // every sample across the central band must show red volume (no clipped
+    // triangular or rectangular hole).
+    const int x = image.width() / 2 + image.width() / 8;
+    for (int frac = 30; frac <= 70; frac += 10) {
+      const int y = (image.height() * frac) / 100;
+      const QRgb px = image.pixel(x, y);
+      EXPECT_GT(qRed(px), 40) << "missing volume at y=" << y;
+      EXPECT_LT(qBlue(px), 20) << "unexpected blue at y=" << y;
+    }
+  }
+}
+
+TEST_F(GLWidgetTest, volumeGeometryOccludedByOpaqueSphere)
+{
+  // Uniform positive red cube covering z in [-3, 1].
+  Cube cube;
+  constexpr int n = 8;
+  cube.setLimits(Vector3(-3.0, -3.0, -3.0), Vector3(3.0, 3.0, 1.0),
+                 Vector3i(n, n, n));
+  std::vector<float> data(static_cast<size_t>(n * n * n), 0.4f);
+  cube.setData(data);
+
+  auto& pipeline = widget->renderer().solidPipeline();
+  struct RestoreState
+  {
+    GLWidget* w;
+    bool fog, ao, ed, dof;
+    ~RestoreState()
+    {
+      clearScene(*w);
+      auto& p = w->renderer().solidPipeline();
+      p.setFogEnabled(fog);
+      p.setAoEnabled(ao);
+      p.setEdEnabled(ed);
+      p.setDofEnabled(dof);
+    }
+  } restore{ widget, pipeline.getFogEnabled(), pipeline.getAoEnabled(),
+             pipeline.getEdEnabled(), pipeline.getDofEnabled() };
+
+  auto renderWithSphereAtZ = [&](float sphereZ, bool useSolidPipeline,
+                                 bool includeVolume) {
+    pipeline.setFogEnabled(useSolidPipeline);
+    pipeline.setAoEnabled(false);
+    pipeline.setEdEnabled(false);
+    pipeline.setDofEnabled(false);
+
+    clearScene(*widget);
+    widget->makeCurrent();
+    auto* geometry = new GeometryNode;
+    auto* sphere = new SphereGeometry;
+    sphere->addSphere(Vector3f(0.0f, 0.0f, sphereZ), Vector3ub(0, 220, 0),
+                      0.8f);
+    geometry->addDrawable(sphere);
+    if (includeVolume) {
+      auto* volume = new VolumeGeometry;
+      volume->setCube(cube);
+      volume->setPositiveColor(Vector3ub(255, 0, 0));
+      volume->setNegativeColor(Vector3ub(0, 0, 255));
+      volume->setRenderPass(TranslucentPass);
+      geometry->addDrawable(volume);
+    }
+    widget->renderer().scene().rootNode().addChild(geometry);
+    widget->renderer().scene().setBackgroundColor(Vector4ub(0, 0, 0, 255));
+    widget->renderer().solidPipeline().setBackgroundColor(
+      Vector4ub(0, 0, 0, 255));
+    widget->renderer().resetGeometry();
+    // Fixed camera along +Z looking toward the origin.
+    widget->renderer().camera().setIdentity();
+    widget->renderer().camera().translate(Vector3f(0.0f, 0.0f, -12.0f));
+    widget->doneCurrent();
+    settle();
+
+    return widget->grabFramebuffer();
+  };
+
+  for (const bool useSolidPipeline : { true, false }) {
+    SCOPED_TRACE(useSolidPipeline ? "solid-pipeline" : "bypass");
+    // Reference sphere without volume (accounts for white specular highlight
+    // and SolidPipeline fog offset).
+    const QImage refImg = renderWithSphereAtZ(2.5f, useSolidPipeline, false);
+    ASSERT_FALSE(refImg.isNull());
+    const QRgb refCenter =
+      refImg.pixel(refImg.width() / 2, refImg.height() / 2);
+
+    // Sphere strictly in front of the cube (z = +2.5 vs cube z <= +1.0):
+    // must completely occlude the red volume behind it.
+    const QImage frontImg = renderWithSphereAtZ(2.5f, useSolidPipeline, true);
+    ASSERT_FALSE(frontImg.isNull());
+    const QRgb frontCenter =
+      frontImg.pixel(frontImg.width() / 2, frontImg.height() / 2);
+    EXPECT_GT(qGreen(frontCenter), 100);
+    EXPECT_NEAR(qRed(frontCenter), qRed(refCenter), 2);
+    // Away from the sphere (inside the cube at x = 2.0), the red volume must
+    // still be visible.
+    const QPointF sidePt =
+      screenPoint(*widget, frontImg, Vector3f(2.0f, 0.0f, -1.0f));
+    const QRgb sidePx = frontImg.pixel(qRound(sidePt.x()), qRound(sidePt.y()));
+    EXPECT_GT(qRed(sidePx), 80);
+
+    // Sphere strictly behind the cube (z = -4.5 vs cube z >= -3.0):
+    // red volume in front of it must tint the sphere strongly red.
+    const QImage backImg = renderWithSphereAtZ(-4.5f, useSolidPipeline, true);
+    ASSERT_FALSE(backImg.isNull());
+    const QRgb backCenter =
+      backImg.pixel(backImg.width() / 2, backImg.height() / 2);
+    EXPECT_GT(qRed(backCenter), qRed(refCenter) + 80);
+  }
 }
 
 // Moving a GLWidget to another top-level window makes Qt replace its context.

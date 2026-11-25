@@ -1,3 +1,6 @@
+# Fail any registered test that runs no gtest cases (see tests/CMakeLists.txt).
+cmake_language(DEFER CALL avogadro_fail_on_empty_gtest)
+
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   AngleIterator
@@ -47,9 +50,9 @@ set(tests
   Variant
   VariantMap
   )
-if(USE_SPGLIB)
-  list(APPEND tests SpaceGroup)
-endif()
+# The space group table does not need spglib; only some of the SpaceGroup
+# cases do, and they are compiled out without it.
+list(APPEND tests SpaceGroup)
 
 # Build up the source file names.
 set(testSrcs "")
@@ -67,6 +70,10 @@ target_link_libraries(AvogadroTests Avogadro::Core
 # Helpers shared between the core and io bond order tests.
 target_include_directories(AvogadroTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
+if(USE_SPGLIB)
+  target_compile_definitions(AvogadroTests PRIVATE AVOGADRO_TEST_HAS_SPGLIB)
+endif()
+
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
 # Tests written as gtest parameterized suites (TEST_P). Their full case
@@ -79,7 +86,11 @@ set(parameterizedTests
   )
 
 foreach(TestName ${tests})
-  if(${TestName} IN_LIST parameterizedTests)
+  if(TestName STREQUAL "GaussianPrimitiveNormalization")
+    # gaussianprimitivenormalizationtest.cpp also defines the parameterized
+    # GaussianRadialIncludedTest.
+    set(testFilter "*GaussianPrimitiveNormalizationTest*:*GaussianRadialIncludedTest*")
+  elseif(${TestName} IN_LIST parameterizedTests)
     set(testFilter "*${TestName}Test*")
   elseif(TestName STREQUAL "Molecule")
     # moleculetest.cpp also defines MoleculeCoordinateSetTest and

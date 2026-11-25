@@ -55,10 +55,15 @@ private slots:
   void setLineWidth(double width);
 
 private:
+  float volumeAlphaScale() const;
+  void updateOpacityControl();
+
   std::string m_name = "Surfaces";
 
   QWidget* m_setupWidget;
   unsigned char m_opacity;
+  // intensity of the volume rendering, saved separately from m_opacity
+  unsigned char m_volumeOpacity;
   Vector3ub m_color1;
   Vector3ub m_color2;
   unsigned char m_style;

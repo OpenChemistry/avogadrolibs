@@ -1,186 +1,132 @@
 #version 400
 precision highp float;
 
-// The ray entry/exit attachments from bounding-box passes:
-uniform sampler2D inFrontPosTex;
-uniform sampler2D inBackPosTex;
+in vec2 vNdc;
+
 uniform vec3 positiveColor;
 uniform vec3 negativeColor;
 
-// Our 3D volume (wavefunction):
+// 3D scalar volume (orbital / electron density).
 uniform sampler3D uVolumeData;
 
-// The box in world space: uBoxMatrix maps the unit cube [0,1]^3 (the texture
-// coordinates of the volume) to the world, uBoxInverse maps back. The box is
-// a parallelepiped for a skewed grid. uBoxDiagonal is its longest diagonal.
-uniform mat4 uBoxMatrix;
+// Opaque scene depth buffer ([0, 1]) for occlusion by atoms, bonds, and meshes.
+uniform sampler2D uSceneDepthTex;
+uniform int uHasSceneDepth;
+
+// Inverse of (projection * modelView), mapping NDC [-1, 1]^3 to world space.
+uniform mat4 uInvViewProj;
+
+// Maps world space to the volume's unit cube [0, 1]^3 texture coordinates.
+// Handles both orthogonal and skewed (triclinic) grids.
 uniform mat4 uBoxInverse;
 uniform float uBoxDiagonal;
 
-// Camera position for ray computation when back faces are clipped
-uniform vec3 uCameraPos;
-
-// View direction for orthographic projection (all rays parallel)
-uniform vec3 uViewDir;
-
-// Projection type: 0 = perspective, 1 = orthographic
-uniform int uProjectionType;
-
-// Screen size:
-uniform float width;
-uniform float height;
-
 // Ray-march parameters:
-uniform int   numSteps;    // e.g. 256
-uniform float alphaScale;  // overall alpha multiplier
+uniform int numSteps;   // reference steps across uBoxDiagonal (e.g. 150)
+uniform float alphaScale; // overall alpha multiplier
 
 out vec4 colorOut;
 
-// Ray-box intersection with the unit cube in volume (texture) space. An
-// affine map keeps the ray parameter t, so the ray is transformed into that
-// space and the t values are the world-space ones.
-
-// Returns (entry, exit) t values for ray origin + t * dir
-vec2 rayBox(vec3 origin, vec3 dir)
+vec3 unproject(vec3 ndc)
 {
-    vec3 o = (uBoxInverse * vec4(origin, 1.0)).xyz;
-    vec3 d = (uBoxInverse * vec4(dir, 0.0)).xyz;
-    vec3 invDir = 1.0 / d;
-    vec3 t1 = (vec3(0.0) - o) * invDir;
-    vec3 t2 = (vec3(1.0) - o) * invDir;
-    vec3 tMin = min(t1, t2);
-    vec3 tMax = max(t1, t2);
-    return vec2(max(max(tMin.x, tMin.y), tMin.z),
-                min(min(tMax.x, tMax.y), tMax.z));
+  vec4 world = uInvViewProj * vec4(ndc, 1.0);
+  return world.xyz / world.w;
+}
+
+// Slab intersection of ray (o + t * d) with the unit cube [0, 1]^3 in volume
+// texture space. Because uBoxInverse is affine, t stays in world-space units.
+vec2 rayBox(vec3 o, vec3 d)
+{
+  // Avoid 0 * inf = NaN when the view ray is parallel to a box face.
+  vec3 safeD = vec3(abs(d.x) < 1e-8 ? (d.x < 0.0 ? -1e-8 : 1e-8) : d.x,
+                    abs(d.y) < 1e-8 ? (d.y < 0.0 ? -1e-8 : 1e-8) : d.y,
+                    abs(d.z) < 1e-8 ? (d.z < 0.0 ? -1e-8 : 1e-8) : d.z);
+  vec3 invDir = 1.0 / safeD;
+  vec3 t0 = -o * invDir;
+  vec3 t1 = (vec3(1.0) - o) * invDir;
+  vec3 tMin = min(t0, t1);
+  vec3 tMax = max(t0, t1);
+  return vec2(max(max(tMin.x, tMin.y), tMin.z),
+              min(min(tMax.x, tMax.y), tMax.z));
 }
 
 void main()
 {
-    vec2 UV = gl_FragCoord.xy / vec2(width, height);
+  // Reconstruct the exact world-space ray for this pixel, starting on the near
+  // clip plane. Works identically for perspective and orthographic cameras,
+  // and never depends on rasterized box faces that can be clipped by near/far.
+  vec3 nearWorld = unproject(vec3(vNdc, -1.0));
+  vec3 farWorld = unproject(vec3(vNdc, 1.0));
+  vec3 rayVec = farWorld - nearWorld;
+  float raySpan = length(rayVec);
+  if (!(raySpan > 0.0))
+    discard;
+  vec3 rayDir = rayVec / raySpan;
+  vec3 rayOrigin = nearWorld;
 
-    vec3 entryPos = texture(inFrontPosTex, UV).xyz;
-    vec3 exitPos  = texture(inBackPosTex,  UV).xyz;
+  // Transform ray into volume texture space [0, 1]^3 once.
+  vec3 boxOrigin = (uBoxInverse * vec4(rayOrigin, 1.0)).xyz;
+  vec3 boxDir = (uBoxInverse * vec4(rayDir, 0.0)).xyz;
 
-    // The longest diagonal of the box
-    float boxDiagonal = uBoxDiagonal;
+  vec2 tBox = rayBox(boxOrigin, boxDir);
+  // Start at the near clip plane (t = 0) if the camera is inside the volume.
+  float tEntry = max(tBox.x, 0.0);
+  // Stop at the far clip plane even if the volume extends past it.
+  float tExit = min(tBox.y, raySpan);
 
-    // Check for sentinel values (positions set to -1e6 when no hit)
-    bool entryIsSentinel = entryPos.x < -1e5;
-    bool exitIsSentinel = exitPos.x < -1e5;
-
-    // Compute ray direction
-    vec3 rayDir;
-    if (uProjectionType == 1) {
-        // Orthographic: all rays are parallel to view direction
-        rayDir = uViewDir;
-    } else {
-        // Perspective: rays diverge from camera position
-        if (!entryIsSentinel) {
-            rayDir = normalize(entryPos - uCameraPos);
-        } else if (!exitIsSentinel) {
-            rayDir = normalize(exitPos - uCameraPos);
-        } else {
-            // Both sentinel - no valid ray
-            discard;
-        }
+  // Stop at opaque geometry (atoms, bonds, opaque surfaces) so volume lobes
+  // behind them are occluded while lobes in front still tint them.
+  if (uHasSceneDepth != 0) {
+    float sceneDepth = texture(uSceneDepthTex, vNdc * 0.5 + 0.5).x;
+    if (sceneDepth < 1.0) {
+      vec3 sceneWorld = unproject(vec3(vNdc, sceneDepth * 2.0 - 1.0));
+      float tScene = dot(sceneWorld - rayOrigin, rayDir);
+      tExit = min(tExit, tScene);
     }
+  }
 
-    // When either position is sentinel (clipped), compute analytically
-    if (entryIsSentinel || exitIsSentinel) {
-        if (uProjectionType == 1) {
-            // Orthographic: use the valid position as reference point
-            vec3 refPoint;
-            if (!entryIsSentinel) {
-                refPoint = entryPos;
-            } else {
-                refPoint = exitPos;
-            }
-            // Trace ray through reference point to find both entry and exit
-            // Move reference point back along ray to ensure we're outside the box
-            vec3 rayOrigin = refPoint - rayDir * boxDiagonal * 2.0;
-            vec2 tBox = rayBox(rayOrigin, rayDir);
-            float tEntry = tBox.x;
-            float tExit = tBox.y;
+  float rayLength = tExit - tEntry;
+  if (!(rayLength > 1e-4) || !(uBoxDiagonal > 0.0))
+    discard;
 
-            if (tExit <= tEntry) {
-                discard; // Ray misses box
-            }
+  // Step at a fixed world-space spacing anchored at the ray entry, so
+  // truncating a ray at an atom keeps the full-step sample positions and only
+  // shortens (and down-weights) the final partial step.
+  float refStep = uBoxDiagonal / float(numSteps);
+  int fullSteps = int(min(rayLength / refStep, float(numSteps)));
+  float lastStep = rayLength - float(fullSteps) * refStep;
+  int steps = fullSteps;
+  if (lastStep > 0.0 && steps < numSteps)
+    ++steps;
 
-            entryPos = rayOrigin + rayDir * tEntry;
-            exitPos = rayOrigin + rayDir * tExit;
-        } else {
-            // Perspective: use camera position as ray origin
-            vec2 tBox = rayBox(uCameraPos, rayDir);
-            float tEntry = tBox.x;
-            float tExit = tBox.y;
+  vec3 accumulatedColor = vec3(0.0);
+  float accumulatedAlpha = 0.0;
 
-            if (tExit <= tEntry || tExit <= 0.0) {
-                discard; // Ray misses box or is behind camera
-            }
+  for (int i = 0; i < steps; ++i) {
+    if (accumulatedAlpha > 0.95)
+      break;
 
-            if (tEntry > 0.0) {
-                entryPos = uCameraPos + rayDir * tEntry;
-            } else {
-                // Camera is inside the box
-                entryPos = uCameraPos;
-            }
-            exitPos = uCameraPos + rayDir * tExit;
-        }
-        entryIsSentinel = false;
-        exitIsSentinel = false;
-    }
+    // Full steps have unit weight; the last partial step is weighted by its
+    // length. Sample at the midpoint of each step, in volume texture space.
+    float stepLength = (i < fullSteps) ? refStep : lastStep;
+    float t = tEntry + float(i) * refStep + 0.5 * stepLength;
+    vec3 sampleUV = clamp(boxOrigin + boxDir * t, vec3(0.0), vec3(1.0));
+    float psi = texture(uVolumeData, sampleUV).r;
 
-    vec3 dir = exitPos - entryPos;
-    float rayLength = length(dir);
+    float amplitude = abs(psi);
+    vec3 color = (psi >= 0.0) ? positiveColor : negativeColor;
+    float alphaSample =
+      clamp(amplitude * alphaScale * (stepLength / refStep), 0.0, 1.0);
 
-    // Discard if ray length is invalid:
-    // - Too short (no real volume to traverse)
-    // - Too long (positions are garbage/sentinel values)
-    if (rayLength < 0.0001 || rayLength > boxDiagonal * 2.0) {
-        discard;
-    }
+    // Front-to-back premultiplied alpha compositing.
+    float contrib = (1.0 - accumulatedAlpha) * alphaSample;
+    accumulatedColor += contrib * color;
+    accumulatedAlpha += contrib;
+  }
 
-    vec3 stepDir = normalize(dir);
-    float stepSize = rayLength / float(numSteps);
-    vec3 step = stepDir * stepSize;
+  if (accumulatedAlpha <= 0.0)
+    discard;
 
-    vec3 accumulatedColor = vec3(0.0);
-    float accumulatedAlpha = 0.0;
-    vec3 currentPosition = entryPos;
-
-    for (int i = 0; i < numSteps; i++)
-    {
-        if (accumulatedAlpha > 0.95)
-            break;
-
-        // Map world position to texture coordinates [0, 1]
-        vec3 volumeUV = (uBoxInverse * vec4(currentPosition, 1.0)).xyz;
-
-        // Skip samples that are clearly outside (with small tolerance for edge precision)
-        if (any(lessThan(volumeUV, vec3(-0.01))) ||
-            any(greaterThan(volumeUV, vec3(1.01))))
-        {
-            currentPosition += step;
-            continue;
-        }
-
-        // Clamp to valid range for texture sampling (handles edge precision issues)
-        volumeUV = clamp(volumeUV, vec3(0.0), vec3(1.0));
-
-        float psi = texture(uVolumeData, volumeUV).r;
-
-        float amplitude = abs(psi);
-        vec3 color = (psi >= 0.0) ? positiveColor : negativeColor;
-
-        float alphaSample = amplitude * alphaScale;
-
-        // Front-to-back compositing with premultiplied alpha
-        accumulatedColor += (1.0 - accumulatedAlpha) * color * alphaSample;
-        accumulatedAlpha += (1.0 - accumulatedAlpha) * alphaSample;
-
-        currentPosition += step;
-    }
-
-    // Output premultiplied color and alpha - let GL blending composite over scene
-    colorOut = vec4(accumulatedColor, accumulatedAlpha);
+  // Output premultiplied color and alpha for GL_ONE, GL_ONE_MINUS_SRC_ALPHA.
+  colorOut = vec4(accumulatedColor, accumulatedAlpha);
 }

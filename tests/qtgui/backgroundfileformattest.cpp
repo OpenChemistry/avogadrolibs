@@ -23,19 +23,6 @@ using Avogadro::QtGui::BackgroundFileFormat;
 
 namespace {
 
-// Ensure a QCoreApplication exists (required for cross-thread signal
-// delivery). The test binary uses gtest_main, which does not create one.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "BackgroundFileFormatTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-  return &app;
-}
-
 const char kValidXyz[] = "2\n"
                          "test molecule\n"
                          "H 0.0 0.0 0.0\n"
@@ -200,8 +187,6 @@ TEST_F(BackgroundFileFormatTest, Write_ThenReadBack_RoundTrips)
 
 TEST_F(BackgroundFileFormatTest, Read_OnWorkerThread_ViaQueuedInvoke)
 {
-  ensureApp();
-
   QTemporaryDir dir;
   ASSERT_TRUE(dir.isValid());
   QString path = writeTempFile(dir, "threaded.xyz", kValidXyz);

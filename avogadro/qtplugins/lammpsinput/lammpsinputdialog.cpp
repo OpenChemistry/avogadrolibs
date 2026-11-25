@@ -278,8 +278,9 @@ void LammpsInputDialog::generateClicked()
                   .arg(jobFileInfo.absoluteFilePath());
     }
 
-    // Attempt to open the file for writing
-    if (!QFile(jobFileInfo.absoluteFilePath()).open(QFile::WriteOnly)) {
+    // Check writability without opening (opening would truncate the file)
+    if (!(jobFileInfo.exists() ? jobFileInfo.isWritable()
+                               : QFileInfo(dir.absolutePath()).isWritable())) {
       errors
         << tr("%1: File is not writable.").arg(jobFileInfo.absoluteFilePath());
       fatalError = true;
@@ -293,8 +294,9 @@ void LammpsInputDialog::generateClicked()
                   .arg(molFileInfo.absoluteFilePath());
     }
 
-    // Attempt to open the file for writing
-    if (!QFile(molFileInfo.absoluteFilePath()).open(QFile::WriteOnly)) {
+    // Check writability without opening (opening would truncate the file)
+    if (!(molFileInfo.exists() ? molFileInfo.isWritable()
+                               : QFileInfo(dir.absolutePath()).isWritable())) {
       errors
         << tr("%1: File is not writable.").arg(molFileInfo.absoluteFilePath());
       fatalError = true;

@@ -17,35 +17,12 @@ using Avogadro::QtOpenGL::GLWidget;
 
 namespace {
 
-/**
- * GLWidget is a QWidget, so a plain QCoreApplication is not enough. Other tests
- * in this binary may have created one already; if that instance is not a
- * QApplication there is no way to upgrade it, and the caller skips.
- */
-QApplication* ensureApp()
-{
-  if (QCoreApplication::instance() != nullptr)
-    return qobject_cast<QApplication*>(QCoreApplication::instance());
-
-  static int argc = 1;
-  static char arg0[] = "glwidgetmoleculetest";
-  static char* argv[] = { arg0, nullptr };
-  // Run without a display so this works in CI.
-  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM"))
-    qputenv("QT_QPA_PLATFORM", "offscreen");
-  static QApplication app(argc, argv);
-  return &app;
-}
-
 } // namespace
 
 // The widget is never shown, so no OpenGL context is created: setMolecule()
 // only touches the scene graph and the signal connections.
 TEST(GLWidgetMoleculeTest, setMoleculeKeepsOtherConnections)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "A QApplication is required for QWidget tests.";
-
   Molecule first;
   Molecule second;
   // An external object (standing in for the main window) watching the molecule.
@@ -80,9 +57,6 @@ TEST(GLWidgetMoleculeTest, setMoleculeKeepsOtherConnections)
 
 TEST(GLWidgetMoleculeTest, setMoleculeNullIsSafe)
 {
-  if (ensureApp() == nullptr)
-    GTEST_SKIP() << "A QApplication is required for QWidget tests.";
-
   Molecule mol;
   GLWidget widget;
   widget.setMolecule(&mol);

@@ -1,3 +1,6 @@
+# Fail any registered test that runs no gtest cases (see tests/CMakeLists.txt).
+cmake_language(DEFER CALL avogadro_fail_on_empty_gtest)
+
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   BezierGeometry
@@ -19,6 +22,7 @@ set(tests
   SphereGeometry
   TessellatingVisitor
   Texture2D
+  VolumeGeometry
   )
 
 find_package(OpenGL REQUIRED)

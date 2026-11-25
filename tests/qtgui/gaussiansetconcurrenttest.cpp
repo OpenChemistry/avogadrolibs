@@ -26,17 +26,6 @@ using Avogadro::QtGui::GaussianSetConcurrent;
 
 namespace {
 
-// finished() is delivered through the event loop, which needs an application.
-void ensureApp()
-{
-  if (QCoreApplication::instance() != nullptr)
-    return;
-  static int argc = 1;
-  static char name[] = "GaussianSetConcurrentTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-}
-
 // One hydrogen atom with a single S shell and one MO.
 void fillHydrogen(Molecule& m)
 {
@@ -66,7 +55,6 @@ float centre(const Cube& cube)
 // snapshot shares has to be copied for the live molecule first.
 TEST(GaussianSetConcurrentTest, setMoleculeDetachesASharedBasisSet)
 {
-  ensureApp();
   Molecule live;
   fillHydrogen(live);
   const Molecule snapshot(live);
@@ -85,7 +73,6 @@ TEST(GaussianSetConcurrentTest, setMoleculeDetachesASharedBasisSet)
 // otherwise).
 TEST(GaussianSetConcurrentTest, handleKeepsTheBasisSetAliveForTheJob)
 {
-  ensureApp();
   Molecule live;
   fillHydrogen(live);
   GaussianSetConcurrent calculator;
@@ -110,7 +97,6 @@ TEST(GaussianSetConcurrentTest, handleKeepsTheBasisSetAliveForTheJob)
 // (ASan reports a use after free if the calculator reads it).
 TEST(GaussianSetConcurrentTest, laterCalculationsSetUpAgain)
 {
-  ensureApp();
   Molecule live;
   fillHydrogen(live);
   GaussianSetConcurrent calculator;

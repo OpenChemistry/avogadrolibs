@@ -68,6 +68,21 @@ if(NOT AVOGADRO_DATA_ROOT OR NOT EXISTS "${AVOGADRO_DATA_ROOT}/.avogadro.data")
     "registered.")
 endif()
 
+# GoogleTest exits 0 when a --gtest_filter matches nothing, so a typo in a
+# filter (or a renamed suite) would leave a ctest entry that passes without
+# running anything. Every gtest directory defers this function to the end of
+# its own CMakeLists.txt; it makes any registered test that prints
+# "Running 0 tests" fail. This does not rely on --gtest_fail_if_no_test_selected,
+# which older distro and vcpkg GoogleTest releases do not have. A test whose
+# cases all GTEST_SKIP still prints "Running N tests", so it is unaffected.
+function(avogadro_fail_on_empty_gtest)
+  get_directory_property(dirTests TESTS)
+  foreach(testName IN LISTS dirTests)
+    set_tests_properties("${testName}" PROPERTIES
+      FAIL_REGULAR_EXPRESSION "Running 0 tests from")
+  endforeach()
+endfunction()
+
 # Add the tests for each module.
 
 add_subdirectory(calc)

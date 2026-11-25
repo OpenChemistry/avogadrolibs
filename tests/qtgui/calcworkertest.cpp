@@ -24,19 +24,6 @@ using Avogadro::QtGui::CalcWorker;
 
 namespace {
 
-// Ensure a QCoreApplication exists (required for cross-thread signal delivery).
-// The test binary uses gtest_main which does not create one.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "CalcWorkerTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-  return &app;
-}
-
 // Build a simple H2 molecule for testing
 Molecule buildH2()
 {
@@ -84,7 +71,6 @@ public:
 
 TEST(CalcWorkerTest, evaluateEnergy)
 {
-  ensureApp();
   Molecule mol = buildH2();
 
   auto* calc = new LennardJones();
@@ -130,7 +116,6 @@ TEST(CalcWorkerTest, evaluateEnergy)
 
 TEST(CalcWorkerTest, evaluateGradient)
 {
-  ensureApp();
   Molecule mol = buildH2();
 
   auto* calc = new LennardJones();
@@ -179,7 +164,6 @@ TEST(CalcWorkerTest, evaluateGradient)
 
 TEST(CalcWorkerTest, optimizeChunk)
 {
-  ensureApp();
   Molecule mol = buildH2();
 
   auto* calc = new LennardJones();
@@ -246,7 +230,6 @@ TEST(CalcWorkerTest, optimizeChunk)
 
 TEST(CalcWorkerTest, optimizeChunkReportsStall)
 {
-  ensureApp();
   Molecule mol = buildH2();
 
   auto* calc = new FlatEnergy();
@@ -295,7 +278,6 @@ TEST(CalcWorkerTest, optimizeChunkReportsStall)
 
 TEST(CalcWorkerTest, cancel)
 {
-  ensureApp();
   Molecule mol = buildH2();
 
   auto* calc = new LennardJones();

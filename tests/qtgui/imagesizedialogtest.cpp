@@ -20,20 +20,6 @@ namespace {
 
 const char* const Key = "imageSizeDialogTest";
 
-QApplication* ensureApp()
-{
-  if (QCoreApplication::instance() != nullptr)
-    return qobject_cast<QApplication*>(QCoreApplication::instance());
-
-  static int argc = 1;
-  static char arg0[] = "imagesizedialogtest";
-  static char* argv[] = { arg0, nullptr };
-  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM"))
-    qputenv("QT_QPA_PLATFORM", "offscreen");
-  static QApplication app(argc, argv);
-  return &app;
-}
-
 void clearSettings()
 {
   QSettings settings;
@@ -45,8 +31,6 @@ class ImageSizeDialogTest : public ::testing::Test
 protected:
   void SetUp() override
   {
-    if (ensureApp() == nullptr)
-      GTEST_SKIP() << "A QApplication is required for QWidget tests.";
     // Without an organization name QSettings cannot read or write anything on
     // Windows, so remembered choices would never come back.
     if (QCoreApplication::organizationName().isEmpty())
