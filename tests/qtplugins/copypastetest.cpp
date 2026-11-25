@@ -12,15 +12,21 @@
 #include <avogadro/io/fileformat.h>
 #include <avogadro/io/mdlformat.h>
 #include <avogadro/qtgui/molecule.h>
+#include <avogadro/qtgui/rwmolecule.h>
 
 #include <gtest/gtest.h>
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QMetaType>
 #include <QtCore/QMimeData>
+#include <QtCore/QTimer>
+#include <QtCore/QObject>
 #include <QtGui/QClipboard>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMessageBox>
+#include <QtTest/QSignalSpy>
 
 #include <memory>
 #include <string>
@@ -165,4 +171,41 @@ TEST_F(CopyPasteCommandTest, selectionCopyKeepsStereoUnspecified)
     EXPECT_TRUE(Avogadro::Core::atomStereoUnspecified(back, 1)) << label;
     EXPECT_FALSE(Avogadro::Core::bondStereoUnspecified(back, 1)) << label;
   }
+}
+
+// A paste whose clipboard text does not parse shows a warning, then must leave
+// the molecule, its undo stack and its selection alone.
+TEST_F(CopyPasteCommandTest, failedPasteChangesNothing)
+{
+  Avogadro::QtGui::Molecule* mol = m_harness.molecule();
+  mol->setAtomSelected(1, true);
+  const Avogadro::Index atoms = mol->atomCount();
+  const int undoCount = mol->undoMolecule()->undoStack().count();
+
+  QGuiApplication::clipboard()->setText(
+    QStringLiteral("this is not chemistry"));
+
+  // The warning box is modal; dismiss it as soon as it appears.
+  int boxesSeen = 0;
+  QTimer closer;
+  QObject::connect(&closer, &QTimer::timeout, [&boxesSeen]() {
+    if (auto* box =
+          qobject_cast<QMessageBox*>(QApplication::activeModalWidget())) {
+      ++boxesSeen;
+      box->accept();
+    }
+  });
+  closer.start(10);
+
+  QSignalSpy toolSpy(&m_plugin, &CopyPaste::requestActiveTool);
+  QAction* paste = findAction(m_plugin.actions(), "&Paste");
+  ASSERT_NE(paste, nullptr);
+  paste->trigger();
+  closer.stop();
+
+  EXPECT_EQ(boxesSeen, 1);
+  EXPECT_EQ(mol->atomCount(), atoms);
+  EXPECT_EQ(mol->undoMolecule()->undoStack().count(), undoCount);
+  EXPECT_EQ(toolSpy.count(), 0);
+  EXPECT_TRUE(mol->atomSelected(1));
 }

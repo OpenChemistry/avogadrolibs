@@ -356,10 +356,6 @@ void CopyPaste::paste()
   if (!m_molecule)
     return; // nothing to do
 
-  // make sure we clear the current selection
-  for (Index i = 0; i < m_molecule->atomCount(); ++i)
-    m_molecule->setAtomSelected(i, false);
-
   const QMimeData* mimeData(QApplication::clipboard()->mimeData());
 
   if (!mimeData) {
@@ -405,7 +401,17 @@ void CopyPaste::paste()
         "\n\n" +
         tr("Reader error:\n%1")
           .arg(QString::fromStdString(m_pastedFormat->error())));
+
+    // leave the molecule and its selection alone
+    delete m_pastedFormat;
+    m_pastedFormat = nullptr;
+    m_pastedData.clear();
+    return;
   }
+
+  // make sure we clear the current selection
+  for (Index i = 0; i < m_molecule->atomCount(); ++i)
+    m_molecule->setAtomSelected(i, false);
 
   // insert mol into m_molecule
   m_molecule->undoMolecule()->appendMolecule(mol, "Paste Molecule");
