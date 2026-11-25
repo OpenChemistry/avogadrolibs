@@ -134,6 +134,24 @@ struct Options
   double maxMemoryGb = 12.0;
   std::string saveImage;
   double zoom = 1.0;
+  // Post-processing effects, set the way the application sets them on the
+  // SolidPipeline. An effect that is not asked for keeps the pipeline's own
+  // default, so the CI workloads do not change.
+  struct Effect
+  {
+    bool set = false;
+    double strength = 1.0;
+  };
+  Effect ao;
+  Effect edges;
+  Effect fog;
+  Effect dof;
+  bool fogOff = false;
+  // Device pixels per logical pixel; --size is in logical pixels.
+  double pixelRatio = 1.0;
+  // "" keeps the scene's default; otherwise an RGBA colour.
+  bool backgroundSet = false;
+  Avogadro::Vector4ub background = Avogadro::Vector4ub(0, 0, 0, 0);
   bool listStyles = false;
   bool help = false;
 };
@@ -215,7 +233,8 @@ void printUsage(const char* argv0)
     << "  --style NAME     Display type to enable (repeatable, case\n"
     << "                   insensitive; default \"Ball and Stick\")\n"
     << "  --list-styles    Print the available display types and exit\n"
-    << "  --size WxH       Framebuffer size (default 1920x1080)\n"
+    << "  --size WxH       Window size in logical pixels; the framebuffer\n"
+    << "                   size at --pixel-ratio 1 (default 1920x1080)\n"
     << "  --frames F       Timed frames (default 100)\n"
     << "  --warmup W       Untimed frames after the cold frame (default 5)\n"
     << "  --sets K         Coordinate sets to synthesize when the molecule "
@@ -227,6 +246,24 @@ void printUsage(const char* argv0)
     << "  --zoom F         Dolly in after framing so the nearest surface "
        "looks\n"
     << "                   F times larger (default 1)\n"
+    << "  --pixel-ratio R  Render at R device pixels per logical pixel, like "
+       "a\n"
+    << "                   HiDPI window: --size stays logical and the "
+       "framebuffer\n"
+    << "                   is R times larger (default 1)\n"
+    << "  --background C   black, white, transparent, or #RRGGBB[AA] "
+       "(default:\n"
+    << "                   the scene's own)\n"
+    << "\nPost-processing (SolidPipeline; STRENGTH is optional and defaults "
+       "to\n"
+    << "the pipeline's value of 1; none given leaves the pipeline as it "
+       "is):\n"
+    << "  --ao [STRENGTH]     Ambient occlusion\n"
+    << "  --edges [STRENGTH]  Edge outlines (above 1 the half-width in "
+       "pixels)\n"
+    << "  --fog [STRENGTH]    Fog (on by default in the pipeline)\n"
+    << "  --no-fog            Switch fog off\n"
+    << "  --dof [STRENGTH]    Depth of field\n"
     << "\nSurface (adds the Surfaces display type to --style):\n"
     << "  --surface TYPE   vdw, sas or ses: calculate it before rendering\n"
     << "  --surface-resolution R\n"
@@ -251,6 +288,42 @@ bool parseSize(const std::string& text, std::size_t& w, std::size_t& h)
          parseUnsigned(text.substr(x + 1), h) && w > 0 && h > 0 &&
          w <= static_cast<std::size_t>(std::numeric_limits<int>::max()) &&
          h <= static_cast<std::size_t>(std::numeric_limits<int>::max());
+}
+
+// black, white, transparent or #RRGGBB[AA]. Opaque unless a colour says
+// otherwise. A transparent background is (0, 0, 0, 0), the premultiplied
+// colour the application draws transparent images over.
+bool parseBackground(const std::string& text, Avogadro::Vector4ub& out)
+{
+  const std::string lower = toLower(text);
+  if (lower == "black") {
+    out = Avogadro::Vector4ub(0, 0, 0, 255);
+  } else if (lower == "white") {
+    out = Avogadro::Vector4ub(255, 255, 255, 255);
+  } else if (lower == "transparent") {
+    out = Avogadro::Vector4ub(0, 0, 0, 0);
+  } else if ((lower.size() == 7 || lower.size() == 9) && lower[0] == '#') {
+    unsigned char channel[4] = { 0, 0, 0, 255 };
+    for (std::size_t k = 0; k < (lower.size() - 1) / 2; ++k) {
+      unsigned int v = 0;
+      for (std::size_t j = 0; j < 2; ++j) {
+        const char c = lower[1 + 2 * k + j];
+        unsigned int digit = 0;
+        if (c >= '0' && c <= '9')
+          digit = static_cast<unsigned int>(c - '0');
+        else if (c >= 'a' && c <= 'f')
+          digit = static_cast<unsigned int>(c - 'a') + 10;
+        else
+          return false;
+        v = v * 16 + digit;
+      }
+      channel[k] = static_cast<unsigned char>(v);
+    }
+    out = Avogadro::Vector4ub(channel[0], channel[1], channel[2], channel[3]);
+  } else {
+    return false;
+  }
+  return true;
 }
 
 bool parseArguments(int argc, char** argv, Options& options)
@@ -283,6 +356,41 @@ bool parseArguments(int argc, char** argv, Options& options)
     } else if (arg == "--save-image") {
       if (!next(options.saveImage))
         return false;
+    } else if (arg == "--pixel-ratio") {
+      double d = 0.0;
+      if (!next(value) || !parseDouble(value, d) || !std::isfinite(d) ||
+          d < 1.0 || d > 4.0) {
+        std::cerr << "--pixel-ratio expects a number from 1 to 4\n";
+        return false;
+      }
+      options.pixelRatio = d;
+    } else if (arg == "--background") {
+      if (!next(value) || !parseBackground(value, options.background)) {
+        std::cerr << "--background expects black, white, transparent or "
+                     "#RRGGBB[AA]\n";
+        return false;
+      }
+      options.backgroundSet = true;
+    } else if (arg == "--no-fog") {
+      options.fogOff = true;
+    } else if (arg == "--ao" || arg == "--edges" || arg == "--fog" ||
+               arg == "--dof") {
+      Options::Effect& effect = arg == "--ao"      ? options.ao
+                                : arg == "--edges" ? options.edges
+                                : arg == "--fog"   ? options.fog
+                                                   : options.dof;
+      effect.set = true;
+      // The strength is optional: take the next argument only when it is a
+      // number, which no option name is.
+      double d = 0.0;
+      if (i + 1 < argc && parseDouble(argv[i + 1], d)) {
+        if (!std::isfinite(d)) {
+          std::cerr << arg << " expects a finite strength\n";
+          return false;
+        }
+        effect.strength = d;
+        ++i;
+      }
     } else if (arg == "--surface") {
       if (!next(value))
         return false;
@@ -732,6 +840,8 @@ bool writeJson(const Report& r, const std::string& path)
       << ",\n"
       << "  \"uploaded_bytes_per_frame_max\": " << r.uploadedBytesFrameMax
       << ",\n";
+  if (r.options.pixelRatio != 1.0)
+    out << "  \"pixel_ratio\": " << r.options.pixelRatio << ",\n";
   if (r.options.mode == Mode::Coords)
     out << "  \"coords_updates\": " << r.coordsUpdates << ",\n"
         << "  \"coords_fallbacks\": " << r.coordsFallbacks << ",\n";
@@ -884,18 +994,23 @@ int main(int argc, char** argv)
     std::cerr << "Could not create an OpenGL context.\n";
     return 1;
   }
+  // --size is logical. The framebuffer is in device pixels, sized the way
+  // GLRenderer::resize() sizes it for a window on a HiDPI screen.
   const int width = static_cast<int>(options.width);
   const int height = static_cast<int>(options.height);
+  const float pixelRatio = static_cast<float>(options.pixelRatio);
+  const int deviceWidth = static_cast<int>(width * pixelRatio);
+  const int deviceHeight = static_cast<int>(height * pixelRatio);
   QOpenGLFramebufferObjectFormat fboFormat;
   fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
-  QOpenGLFramebufferObject fbo(width, height, fboFormat);
+  QOpenGLFramebufferObject fbo(deviceWidth, deviceHeight, fboFormat);
   if (!fbo.isValid() || !fbo.bind()) {
-    std::cerr << "Could not create a " << width << "x" << height
+    std::cerr << "Could not create a " << deviceWidth << "x" << deviceHeight
               << " framebuffer.\n";
     return 1;
   }
   QOpenGLFunctions* gl = context.functions();
-  gl->glViewport(0, 0, width, height);
+  gl->glViewport(0, 0, deviceWidth, deviceHeight);
 
   GLRenderer renderer;
   renderer.initialize();
@@ -903,8 +1018,37 @@ int main(int argc, char** argv)
     std::cerr << "Renderer is not valid: " << renderer.error() << "\n";
     return 1;
   }
-  renderer.setPixelRatio(1.0f);
-  renderer.resize(width, height);
+  renderer.setPixelRatio(pixelRatio);
+  renderer.resize(width, height, deviceWidth, deviceHeight);
+
+  // Post-processing, set as the application does (mainwindow.cpp).
+  {
+    auto& pipeline = renderer.solidPipeline();
+    if (options.ao.set) {
+      pipeline.setAoEnabled(true);
+      pipeline.setAoStrength(static_cast<float>(options.ao.strength));
+    }
+    if (options.edges.set) {
+      pipeline.setEdEnabled(true);
+      pipeline.setEdStrength(static_cast<float>(options.edges.strength));
+    }
+    if (options.fog.set) {
+      pipeline.setFogEnabled(true);
+      pipeline.setFogStrength(static_cast<float>(options.fog.strength));
+    }
+    if (options.fogOff)
+      pipeline.setFogEnabled(false);
+    if (options.dof.set) {
+      pipeline.setDofEnabled(true);
+      pipeline.setDofStrength(static_cast<float>(options.dof.strength));
+    }
+    if (options.backgroundSet) {
+      // Both, as the application does: the scene clears to it and the
+      // pipeline blends fog toward it.
+      renderer.scene().setBackgroundColor(options.background);
+      pipeline.setBackgroundColor(options.background);
+    }
+  }
 
   Report report;
   report.options = options;
@@ -951,7 +1095,11 @@ int main(int argc, char** argv)
   std::cout << "GL_VENDOR:   " << report.vendor << "\n"
             << "GL_RENDERER: " << report.renderer << "\n"
             << "GL_VERSION:  " << report.version << "\n"
-            << "Size:        " << width << "x" << height << "\n"
+            << "Size:        " << width << "x" << height;
+  if (pixelRatio != 1.0f)
+    std::cout << " logical, " << deviceWidth << "x" << deviceHeight
+              << " device (pixel ratio " << pixelRatio << ")";
+  std::cout << "\n"
             << "Molecule:    " << report.atoms << " atoms, " << report.bonds
             << " bonds, " << report.coordinateSets << " coordinate set(s); "
             << (options.file.empty() ? "generated" : "loaded") << " in "
