@@ -21,34 +21,10 @@ using Avogadro::QtGui::MoleculeModel;
 
 namespace {
 
-// Ensure a QCoreApplication exists. The test binary uses gtest_main, which
-// does not create one, but MoleculeModel's constructor unconditionally
-// loads icons (loadIcons(), moleculemodel.cpp:31-41), and constructing a
-// QIcon from a file path touches QPixmap, which qFatal()s ("QPixmap: Must
-// construct a QGuiApplication before a QPixmap") if no QCoreApplication
-// instance exists at all -- despite the message text, a plain
-// QCoreApplication (not QGuiApplication/QApplication, which this file must
-// not create) is sufficient in practice; verified with an isolated
-// `QIcon icon(":whatever");` reproducer both with and without a prior
-// QCoreApplication.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "MoleculeModelTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-  return &app;
-}
-
 } // namespace
 
 class MoleculeModelTest : public ::testing::Test
-{
-protected:
-  void SetUp() override { ensureApp(); }
-};
+{};
 
 TEST_F(MoleculeModelTest, AddItem_AddsToRowCountAndLists)
 {

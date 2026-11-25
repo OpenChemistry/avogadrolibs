@@ -18,21 +18,6 @@ using Avogadro::QtGui::Utilities::setDialogsSkipped;
 
 namespace {
 
-// Ensure a QCoreApplication exists (findExecutablePath() searches
-// applicationDirPath(), which warns and returns an empty string without one,
-// turning the first search entries into root-relative paths).
-// The test binary uses gtest_main which does not create one.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "UtilitiesTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-  return &app;
-}
-
 // A name no real installation can supply, so that a pixi (or anything else)
 // genuinely present on the test machine cannot decide the result.
 #ifdef Q_OS_WIN
@@ -92,7 +77,6 @@ private:
 // to be searched explicitly or pixi looks uninstalled.
 TEST(UtilitiesTest, findsPixiInPixiHomeWhenNotOnPath)
 {
-  ensureApp();
   ScopedEnvironment restoreEnvironment;
 
   QTemporaryDir tmp;
@@ -111,7 +95,6 @@ TEST(UtilitiesTest, findsPixiInPixiHomeWhenNotOnPath)
 // A pixi the user has deliberately put on PATH must still win.
 TEST(UtilitiesTest, pathTakesPrecedenceOverPixiHome)
 {
-  ensureApp();
   ScopedEnvironment restoreEnvironment;
 
   QTemporaryDir tmp;
@@ -131,7 +114,6 @@ TEST(UtilitiesTest, pathTakesPrecedenceOverPixiHome)
 
 TEST(UtilitiesTest, missingProgramReturnsEmptyPath)
 {
-  ensureApp();
   ScopedEnvironment restoreEnvironment;
 
   QTemporaryDir tmp;
@@ -147,7 +129,6 @@ TEST(UtilitiesTest, missingProgramReturnsEmptyPath)
 // An empty PATH entry must not turn into a search of the filesystem root.
 TEST(UtilitiesTest, emptyPathEntriesAreIgnored)
 {
-  ensureApp();
   ScopedEnvironment restoreEnvironment;
 
   QTemporaryDir tmp;
@@ -165,7 +146,8 @@ TEST(UtilitiesTest, emptyPathEntriesAreIgnored)
 
 TEST(UtilitiesTest, dialogsSkippedIsTheApplicationProperty)
 {
-  QCoreApplication* app = ensureApp();
+  QCoreApplication* app = QCoreApplication::instance();
+  ASSERT_NE(app, nullptr);
   const QVariant before = app->property("avogadro.skipDialogs");
 
   setDialogsSkipped(false);

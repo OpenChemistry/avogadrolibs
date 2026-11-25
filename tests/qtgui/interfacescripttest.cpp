@@ -26,25 +26,10 @@ using Avogadro::QtGui::InterfaceScript;
 
 namespace {
 
-// Ensure a QCoreApplication exists (required to run an event loop while the
-// script executes). The test binary uses gtest_main, which does not create one.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "InterfaceScriptTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-  return &app;
-}
-
 } // namespace
 
 TEST(InterfaceScriptTest, RerunDeliversSignalsOnce)
 {
-  ensureApp();
-
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
 
@@ -95,8 +80,6 @@ TEST(InterfaceScriptTest, RerunDeliversSignalsOnce)
 // would swap a water molecule for a lone carbon.
 TEST(InterfaceScriptTest, UnreadableMoleculeLeavesMoleculeUntouched)
 {
-  ensureApp();
-
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
 
@@ -205,7 +188,6 @@ const QByteArray bothKeywords(
 // specification early in Gaussian.
 TEST(InterfaceScriptTest, CartesianOptionSelectsTheCartesianBlock)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeGeneratorScript(temporaryDirectory, bothKeywords));
@@ -222,7 +204,6 @@ TEST(InterfaceScriptTest, CartesianOptionSelectsTheCartesianBlock)
 
 TEST(InterfaceScriptTest, ZMatrixOptionSelectsTheZMatrixBlock)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeGeneratorScript(temporaryDirectory, bothKeywords));
@@ -245,7 +226,6 @@ TEST(InterfaceScriptTest, ZMatrixOptionSelectsTheZMatrixBlock)
 // A script that never declared the option keeps the behavior it always had.
 TEST(InterfaceScriptTest, NoCoordinatesOptionMeansCartesian)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeGeneratorScript(temporaryDirectory, bothKeywords));
@@ -261,7 +241,6 @@ TEST(InterfaceScriptTest, NoCoordinatesOptionMeansCartesian)
 // than being deleted and leaving a file with no molecule in it.
 TEST(InterfaceScriptTest, LoneKeywordIsUsedWhateverTheOptionSays)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeGeneratorScript(
@@ -288,7 +267,6 @@ TEST(InterfaceScriptTest, LoneKeywordIsUsedWhateverTheOptionSays)
 // the file is then not the numbering on screen.
 TEST(InterfaceScriptTest, ReorderedZMatrixWarns)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(
@@ -379,7 +357,6 @@ TEST(InterfaceScriptTest, PackageModeDoesNotPassGenerateInput)
 #ifdef Q_OS_WIN
   GTEST_SKIP() << "The fake package command is a POSIX script.";
 #endif
-  ensureApp();
   QTemporaryDir packageDirectory;
   ASSERT_TRUE(packageDirectory.isValid());
   ASSERT_TRUE(QDir().mkpath(packageDirectory.filePath(".venv/bin")));
@@ -429,7 +406,6 @@ TEST(InterfaceScriptTest, PackageModeDoesNotPassGenerateInput)
 // build a rule; an unknown preset leaves the style out.
 TEST(InterfaceScriptTest, HighlightPresetsAndLiteralAlias)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeFilesScript(
@@ -463,7 +439,6 @@ TEST(InterfaceScriptTest, HighlightPresetsAndLiteralAlias)
 // nothing more specific was requested.
 TEST(InterfaceScriptTest, DefaultHighlightStyleIsTheFallback)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeFilesScript(
@@ -490,7 +465,6 @@ TEST(InterfaceScriptTest, DefaultHighlightStyleIsTheFallback)
 // replaces them.
 TEST(InterfaceScriptTest, SetOptionsJsonParsesHighlightStyles)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeFilesScript(
@@ -518,7 +492,6 @@ TEST(InterfaceScriptTest, SetOptionsJsonParsesHighlightStyles)
 // not fall back to --print-options (which this script would answer).
 TEST(InterfaceScriptTest, EmptyOptionsJsonIsCached)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   const QString script(writeFilesScript(temporaryDirectory, "[]"));
@@ -534,7 +507,6 @@ TEST(InterfaceScriptTest, EmptyOptionsJsonIsCached)
 // cube data.
 TEST(InterfaceScriptTest, GeneratorMoleculeOnlyWhenRequested)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
   QFile script(temporaryDirectory.filePath("echo.py"));

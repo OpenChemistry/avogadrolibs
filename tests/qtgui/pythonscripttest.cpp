@@ -17,19 +17,6 @@ using Avogadro::QtGui::PythonScript;
 
 namespace {
 
-// Ensure a QCoreApplication exists (required to run an event loop while the
-// script executes). The test binary uses gtest_main, which does not create one.
-QCoreApplication* ensureApp()
-{
-  if (QCoreApplication::instance())
-    return QCoreApplication::instance();
-  static int argc = 1;
-  static char name[] = "PythonScriptTest";
-  static char* argv[] = { name, nullptr };
-  static QCoreApplication app(argc, argv);
-  return &app;
-}
-
 // Windows line endings would otherwise make byte comparisons brittle.
 QByteArray withoutCarriageReturns(QByteArray data)
 {
@@ -60,8 +47,6 @@ TEST(PythonScriptTest, WindowsUsesUtf8Mode)
 
 TEST(PythonScriptTest, AsyncProgressScanning)
 {
-  ensureApp();
-
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
 
@@ -133,7 +118,6 @@ void runAsyncScript(PythonScript& pythonScript, const QString& path,
 // the command dialog looks at; stderr chatter from a successful one must not.
 TEST(PythonScriptTest, AsyncNonZeroExitRecordsError)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
 
@@ -150,7 +134,6 @@ TEST(PythonScriptTest, AsyncNonZeroExitRecordsError)
 
 TEST(PythonScriptTest, AsyncSuccessWithStderrNoiseRecordsNoError)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
 
@@ -165,7 +148,6 @@ TEST(PythonScriptTest, AsyncSuccessWithStderrNoiseRecordsNoError)
 #ifndef Q_OS_WIN
 TEST(PythonScriptTest, AsyncCrashRecordsError)
 {
-  ensureApp();
   QTemporaryDir temporaryDirectory;
   ASSERT_TRUE(temporaryDirectory.isValid());
 

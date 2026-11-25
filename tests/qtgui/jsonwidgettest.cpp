@@ -35,26 +35,6 @@ QJsonObject wrapOptions(const QJsonObject& userOptions)
   return options;
 }
 
-/**
- * JsonWidget is a QWidget, so a plain QCoreApplication is not enough. Other
- * tests in this binary may have created one already; if that instance is not
- * a QApplication there is no way to upgrade it, and the caller skips.
- */
-QApplication* ensureApp()
-{
-  if (QCoreApplication::instance() != nullptr)
-    return qobject_cast<QApplication*>(QCoreApplication::instance());
-
-  static int argc = 1;
-  static char arg0[] = "jsonwidgettest";
-  static char* argv[] = { arg0, nullptr };
-  // Run without a display so this works in CI.
-  if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM"))
-    qputenv("QT_QPA_PLATFORM", "offscreen");
-  static QApplication app(argc, argv);
-  return &app;
-}
-
 /// Thin subclass so the test can push option JSON in and reach the widgets.
 class TestableJsonWidget : public JsonWidget
 {
@@ -168,8 +148,6 @@ class JsonWidgetTest : public ::testing::Test
 protected:
   void SetUp() override
   {
-    if (ensureApp() == nullptr)
-      GTEST_SKIP() << "a non-GUI QCoreApplication already exists";
     // QSettings needs an organisation to file anything under; match the
     // application so a stray key is at least in the expected place.
     if (QCoreApplication::organizationName().isEmpty())
