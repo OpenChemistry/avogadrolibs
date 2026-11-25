@@ -497,28 +497,49 @@ void GLRenderer::resetGeometry()
   m_radius = m_scene.radius();
 }
 
+namespace {
+
+class ResetTextLabelVisitor : public Visitor
+{
+public:
+  void visit(Node&) override {}
+  void visit(GroupNode&) override {}
+  void visit(GeometryNode&) override {}
+  void visit(Drawable&) override {}
+  void visit(SphereGeometry&) override {}
+  void visit(CurveGeometry&) override {}
+  void visit(CylinderGeometry&) override {}
+  void visit(MeshGeometry&) override {}
+  void visit(TextLabel2D& l) override { l.resetTexture(); }
+  void visit(TextLabel3D& l) override { l.resetTexture(); }
+  void visit(LineStripGeometry&) override {}
+};
+
+// Reach every drawable below the node whether or not any node or drawable is
+// hidden, which GroupNode::accept() and GeometryNode::accept() do not.
+void resetTextLabels(GroupNode& group)
+{
+  ResetTextLabelVisitor resetter;
+  for (auto& info : group.children()) {
+    if (auto* childGroup = info.node->cast<GroupNode>()) {
+      resetTextLabels(*childGroup);
+    } else if (auto* geometry = info.node->cast<GeometryNode>()) {
+      for (Drawable* drawable : geometry->drawables())
+        drawable->accept(resetter);
+    }
+  }
+}
+
+} // namespace
+
 void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
 {
   if (tren != m_textRenderStrategy) {
-    // Force all labels to be regenerated on the next render:
-    class ResetTextLabelVisitor : public Visitor
-    {
-    public:
-      void visit(Node&) override {}
-      void visit(GroupNode&) override {}
-      void visit(GeometryNode&) override {}
-      void visit(Drawable&) override {}
-      void visit(SphereGeometry&) override {}
-      void visit(CurveGeometry&) override {}
-      void visit(CylinderGeometry&) override {}
-      void visit(MeshGeometry&) override {}
-      // void visit(Texture2D&) { return; }
-      void visit(TextLabel2D& l) override { l.resetTexture(); }
-      void visit(TextLabel3D& l) override { l.resetTexture(); }
-      void visit(LineStripGeometry&) override {}
-    } labelResetter;
-
-    m_scene.rootNode().accept(labelResetter);
+    // Force all labels to be regenerated on the next render, including those
+    // under hidden nodes: they must not keep a texture from the old strategy
+    // when they are shown again. Node::accept() skips hidden nodes, so walk
+    // the tree directly.
+    resetTextLabels(m_scene.rootNode());
 
     delete m_textRenderStrategy;
     m_textRenderStrategy = tren;
@@ -564,7 +585,7 @@ std::multimap<float, Identifier> GLRenderer::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  if (!group)
+  if (!group || !group->isVisible())
     return result;
 
   for (auto it : group->children()) {
@@ -590,7 +611,7 @@ std::multimap<float, Identifier> GLRenderer::hits(
   const GeometryNode* geometry, const Vector3f& rayOrigin,
   const Vector3f& rayEnd, const Vector3f& rayDirection) const
 {
-  if (!geometry)
+  if (!geometry || !geometry->isVisible())
     return std::multimap<float, Identifier>();
   return geometry->hits(rayOrigin, rayEnd, rayDirection);
 }
@@ -611,6 +632,8 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
                                    const Frustrum& f) const
 {
   Array<Identifier> result;
+  if (!group || !group->isVisible())
+    return result;
 
   for (auto it : group->children()) {
     Array<Identifier> loopHits;

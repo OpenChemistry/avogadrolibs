@@ -93,3 +93,48 @@ TEST(DrawableCollectorTest, bucketsByPassInSceneOrder)
   collector.clear();
   EXPECT_TRUE(collector.bucket(SolidPass).empty());
 }
+
+TEST(DrawableCollectorTest, skipsHiddenSubtrees)
+{
+  GroupNode root;
+  auto* hiddenGroup = new GroupNode;
+  auto* nestedVisible = new GroupNode;
+  auto* nestedGeometry = new GeometryNode;
+  auto* hiddenGeometry = new GeometryNode;
+  auto* shownGeometry = new GeometryNode;
+  root.addChild(hiddenGroup);
+  hiddenGroup->addChild(nestedVisible);
+  nestedVisible->addChild(nestedGeometry);
+  root.addChild(hiddenGeometry);
+  root.addChild(shownGeometry);
+
+  auto* a = new SphereGeometry;
+  auto* b = new SphereGeometry;
+  auto* c = new SphereGeometry;
+  auto* d = new SphereGeometry;
+  nestedGeometry->addDrawable(a);
+  hiddenGeometry->addDrawable(b);
+  shownGeometry->addDrawable(c);
+  hiddenGroup->addChild(new GeometryNode);
+  static_cast<GeometryNode*>(hiddenGroup->child(1))->addDrawable(d);
+
+  hiddenGroup->setVisible(false);
+  hiddenGeometry->setVisible(false);
+  // A visible group inside a hidden group is still hidden.
+  EXPECT_TRUE(nestedVisible->isVisible());
+
+  DrawableCollector collector;
+  root.accept(collector);
+  EXPECT_EQ(collector.bucket(SolidPass), (std::vector<Drawable*>{ c }));
+
+  hiddenGroup->setVisible(true);
+  collector.clear();
+  root.accept(collector);
+  EXPECT_EQ(collector.bucket(SolidPass), (std::vector<Drawable*>{ a, d, c }));
+
+  hiddenGeometry->setVisible(true);
+  collector.clear();
+  root.accept(collector);
+  EXPECT_EQ(collector.bucket(SolidPass),
+            (std::vector<Drawable*>{ a, d, b, c }));
+}

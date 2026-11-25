@@ -188,3 +188,42 @@ TEST(GeometryVisitorTest, meshBoundsMaintenance)
   ASSERT_TRUE(other.bounds(lo, hi));
   EXPECT_EQ(Vector3f(100.f, 100.f, 100.f), lo);
 }
+
+TEST(GeometryVisitorTest, hiddenSubtreesAreIgnored)
+{
+  GroupNode root;
+  auto* shown = new GeometryNode;
+  auto* group = new GroupNode;
+  auto* nested = new GeometryNode;
+  root.addChild(shown);
+  root.addChild(group);
+  group->addChild(nested);
+
+  auto* near = new SphereGeometry;
+  near->addSphere(Vector3f(0.f, 0.f, 0.f), Vector3ub(255, 0, 0), 1.f);
+  shown->addDrawable(near);
+  auto* far = new SphereGeometry;
+  far->addSphere(Vector3f(100.f, 0.f, 0.f), Vector3ub(255, 0, 0), 1.f);
+  nested->addDrawable(far);
+
+  GeometryVisitor all;
+  root.accept(all);
+  EXPECT_GT(all.radius(), 40.f);
+
+  group->setVisible(false);
+  GeometryVisitor hiddenGroup;
+  root.accept(hiddenGroup);
+  EXPECT_LT(hiddenGroup.radius(), 5.f);
+  EXPECT_NEAR(hiddenGroup.center().norm(), 0.f, 1e-4f);
+
+  group->setVisible(true);
+  shown->setVisible(false);
+  GeometryVisitor hiddenGeometry;
+  root.accept(hiddenGeometry);
+  EXPECT_NEAR(hiddenGeometry.center().x(), 100.f, 1e-3f);
+
+  shown->setVisible(true);
+  GeometryVisitor restored;
+  root.accept(restored);
+  EXPECT_NEAR(restored.radius(), all.radius(), 1e-4f);
+}

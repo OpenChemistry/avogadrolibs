@@ -10,6 +10,7 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/qttextrenderstrategy.h>
 #include <avogadro/qtopengl/renderoptions.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
@@ -27,6 +28,7 @@
 #include <avogadro/rendering/solidpipeline.h>
 #include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/rendering/textlabel3d.h>
+#include <avogadro/rendering/textrenderstrategy.h>
 #include <avogadro/rendering/texture2d.h>
 #include <avogadro/rendering/vertexarrayobject.h>
 #include <avogadro/rendering/widelinegeometry.h>
@@ -98,6 +100,33 @@ public:
 private:
   int m_id;
   std::vector<int>& m_log;
+};
+
+// Rasterizes through the Qt strategy and counts the calls.
+class RenderCountingStrategy : public Avogadro::Rendering::TextRenderStrategy
+{
+public:
+  TextRenderStrategy* newInstance() const override
+  {
+    return new RenderCountingStrategy;
+  }
+  void boundingBox(const std::string& string,
+                   const Avogadro::Rendering::TextProperties& tprop,
+                   int bbox[4]) const override
+  {
+    m_qt.boundingBox(string, tprop, bbox);
+  }
+  void render(const std::string& string,
+              const Avogadro::Rendering::TextProperties& tprop,
+              unsigned char* buffer, const Vector2i& dims) const override
+  {
+    ++renders;
+    m_qt.render(string, tprop, buffer, dims);
+  }
+  mutable int renders = 0;
+
+private:
+  Avogadro::QtOpenGL::QtTextRenderStrategy m_qt;
 };
 
 // One drawable of every kind that takes its shader program from the
@@ -740,15 +769,60 @@ TEST_F(GLWidgetTest, drawablesRenderOnceInTheirPassInSceneOrder)
   log.clear();
   widget->renderer().render();
   EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
-  // Only the drawable itself is hidden: GroupNode visibility is not used by
-  // the traversal, so the drawable in hiddenGroup (3) still renders.
-  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 3, 11, 10, 15, 20 }));
+  // The hidden drawable and everything under the hidden group (3) are
+  // skipped.
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 11, 10, 15, 20 }));
 
   // The buckets are reused: a second frame gives the same result.
   log.clear();
   widget->renderer().render();
   EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 11, 10, 15, 20 }));
+
+  // Showing the group again brings its drawable back, in scene order.
+  hiddenGroup->setVisible(true);
+  log.clear();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
   EXPECT_EQ(log, (std::vector<int>{ 1, 2, 3, 11, 10, 15, 20 }));
+  widget->doneCurrent();
+}
+
+// A label under a hidden node still loses its texture when the text strategy
+// changes, so showing it again does not draw a texture from the old strategy.
+TEST_F(GLWidgetTest, hiddenLabelsAreResetWhenTheTextStrategyChanges)
+{
+  using namespace Avogadro::Rendering;
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* group = new GroupNode;
+  auto* geometry = new GeometryNode;
+  auto* label = new TextLabel3D;
+  label->setText("Hidden");
+  label->setAnchor(Vector3f(0, 0, 0));
+  geometry->addDrawable(label);
+  group->addChild(geometry);
+  widget->renderer().scene().rootNode().addChild(group);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+
+  // Build the texture with the widget's own strategy.
+  widget->renderer().render();
+
+  RenderCountingStrategy* counting = new RenderCountingStrategy;
+  group->setVisible(false);
+  widget->renderer().setTextRenderStrategy(counting);
+  widget->renderer().render();
+  EXPECT_EQ(counting->renders, 0);
+
+  // The label was reset although it was hidden, so it is rasterized again.
+  group->setVisible(true);
+  widget->renderer().render();
+  EXPECT_GT(counting->renders, 0);
+
+  // Leave the shared widget with a normal strategy.
+  widget->renderer().setTextRenderStrategy(
+    new Avogadro::QtOpenGL::QtTextRenderStrategy);
   widget->doneCurrent();
 }
 
