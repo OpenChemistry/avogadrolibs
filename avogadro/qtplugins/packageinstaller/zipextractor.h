@@ -10,6 +10,7 @@
 #include <archive_entry.h>
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtCore/QString>
 #include <string>
 
 namespace Avogadro::QtPlugins {
@@ -25,6 +26,16 @@ public:
   QList<QString> extract(const std::string& extractdir,
                          const std::string& absolutepath);
   QList<QString> listFiles(const std::string& absolutepath);
+
+  /**
+   * The package name for an archive whose first entry is @p firstEntry:
+   * its top-level directory without the GitHub "{org}-" prefix and "-{sha}"
+   * suffix. Empty if that is not a usable directory name (e.g., "..").
+   */
+  static QString packageDirectoryName(const QString& firstEntry);
+
+  /** True if @p name is a single, ordinary path segment (not "." or ".."). */
+  static bool isUsableName(const QString& name);
 };
 
 } // namespace Avogadro::QtPlugins
