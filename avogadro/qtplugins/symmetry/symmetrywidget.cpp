@@ -87,20 +87,17 @@ SymmetryWidget::SymmetryWidget(QWidget* parent_)
   connect(m_ui->symmetrizeMoleculeButton, &QPushButton::clicked, this,
           &SymmetryWidget::symmetrizeMolecule);
 
-  connect(
-    m_ui->equivalenceTree->selectionModel(),
-    &QItemSelectionModel::selectionChanged, this,
-    &SymmetryWidget::equivalenceSelectionChanged);
+  connect(m_ui->equivalenceTree->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &SymmetryWidget::equivalenceSelectionChanged);
 
-  connect(
-    m_ui->operationsTable->selectionModel(),
-    &QItemSelectionModel::selectionChanged, this,
-    &SymmetryWidget::operationsSelectionChanged);
+  connect(m_ui->operationsTable->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &SymmetryWidget::operationsSelectionChanged);
 
-  connect(
-    m_ui->subgroupsTree->selectionModel(),
-    &QItemSelectionModel::selectionChanged, this,
-    &SymmetryWidget::subgroupsSelectionChanged);
+  connect(m_ui->subgroupsTree->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &SymmetryWidget::subgroupsSelectionChanged);
 }
 
 SymmetryWidget::~SymmetryWidget()
@@ -117,13 +114,15 @@ void SymmetryWidget::setMolecule(QtGui::Molecule* molecule)
     m_molecule = molecule;
 
     if (m_molecule) {
-      connect(m_molecule, &QtGui::Molecule::changed, this, 
+      connect(m_molecule, &QtGui::Molecule::changed, this,
               &SymmetryWidget::moleculeChanged);
-    }   
+    }
   }
-}.
+}
+.
 
-void SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
+  void
+  SymmetryWidget::moleculeChanged([[maybe_unused]] unsigned int changes)
 {
   /*
   if (changes & Molecule::UnitCell)
