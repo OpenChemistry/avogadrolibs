@@ -309,9 +309,8 @@ void GLRenderer::initialize()
   // reject working contexts.
   GLint major = 0;
   glGetIntegerv(GL_MAJOR_VERSION, &major);
-  // glewInit() on a core profile leaves GL_INVALID_ENUM pending, and a pre-3.0
-  // context adds another from the query above (major stays 0). Drain them all,
-  // bounded because some drivers report an error forever with no context.
+  // Drain errors left by glewInit() and the query above; bounded because some
+  // drivers report an error forever when there is no context.
   for (int i = 0; i < 32 && glGetError() != GL_NO_ERROR; ++i) {}
   if (major < 4) {
     m_error += "GL version 4.0 is not supported by your graphics driver.\n";

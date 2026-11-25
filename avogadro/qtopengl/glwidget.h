@@ -306,6 +306,8 @@ private:
   /** Update the existing scene tree after a positions-only change. */
   void rebuildCoordinates();
   void scheduleRender();
+  /** Free renderer GL resources with the context current, if one exists. */
+  void releaseRendererResources();
   bool isNavigationMouseGesture(const QMouseEvent* event) const;
   bool isNavigationKeyGesture(const QKeyEvent* event) const;
 

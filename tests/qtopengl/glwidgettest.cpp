@@ -16,6 +16,7 @@
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/shader.h>
 #include <avogadro/rendering/shaderprogram.h>
+#include <avogadro/rendering/solidpipeline.h>
 #include <avogadro/rendering/spheregeometry.h>
 #include <avogadro/rendering/texture2d.h>
 
@@ -78,7 +79,65 @@ protected:
     settle();
   }
 
+  // Replace the scene with the node, then return what the widget draws.
+  // The caller checks the image is not null.
+  QImage showNode(GeometryNode* node)
+  {
+    clearScene(*widget);
+    widget->makeCurrent();
+    widget->renderer().scene().rootNode().addChild(node);
+    widget->renderer().resetGeometry();
+    widget->renderer().resetCamera();
+    widget->doneCurrent();
+    settle();
+    return widget->grabFramebuffer();
+  }
+
   GLWidget* widget = nullptr;
+};
+
+// Restores the SolidPipeline effect flags when it goes out of scope.
+struct PipelineFlagsGuard
+{
+  explicit PipelineFlagsGuard(Avogadro::Rendering::SolidPipeline& pipeline)
+    : p(pipeline), fog(pipeline.getFogEnabled()), ao(pipeline.getAoEnabled()),
+      ed(pipeline.getEdEnabled()), dof(pipeline.getDofEnabled())
+  {
+  }
+  ~PipelineFlagsGuard()
+  {
+    p.setFogEnabled(fog);
+    p.setAoEnabled(ao);
+    p.setEdEnabled(ed);
+    p.setDofEnabled(dof);
+  }
+  Avogadro::Rendering::SolidPipeline& p;
+  bool fog, ao, ed, dof;
+};
+
+// For a test that makes the widget's context current and then uses GL
+// objects directly: on exit, restores the default framebuffer, viewport and
+// program, and releases the context. Declare it before any GL object so it
+// is destroyed last.
+struct ContextGuard
+{
+  explicit ContextGuard(GLWidget* widget) : w(widget)
+  {
+    if (QOpenGLContext* ctx = QOpenGLContext::currentContext())
+      ctx->functions()->glGetIntegerv(GL_VIEWPORT, vp);
+  }
+  ~ContextGuard()
+  {
+    if (QOpenGLContext* ctx = QOpenGLContext::currentContext()) {
+      ctx->functions()->glBindFramebuffer(GL_FRAMEBUFFER,
+                                          w->defaultFramebufferObject());
+      ctx->functions()->glViewport(vp[0], vp[1], vp[2], vp[3]);
+      ctx->functions()->glUseProgram(0);
+    }
+    w->doneCurrent();
+  }
+  GLWidget* w;
+  GLint vp[4] = { 0, 0, 0, 0 };
 };
 
 } // namespace
@@ -169,8 +228,6 @@ TEST_F(GLWidgetTest, spherePositionsFollowTheScene)
 
 TEST_F(GLWidgetTest, hiddenDrawableIsNotRendered)
 {
-  clearScene(*widget);
-  widget->makeCurrent();
   auto* geometry = new GeometryNode;
   auto* visibleSphere = new SphereGeometry;
   visibleSphere->addSphere(Vector3f(-1.5f, 0, 0), Vector3ub(255, 0, 0), 1.0f);
@@ -179,13 +236,8 @@ TEST_F(GLWidgetTest, hiddenDrawableIsNotRendered)
   hiddenSphere->setVisible(false);
   geometry->addDrawable(visibleSphere);
   geometry->addDrawable(hiddenSphere);
-  widget->renderer().scene().rootNode().addChild(geometry);
-  widget->renderer().resetGeometry();
-  widget->renderer().resetCamera();
-  widget->doneCurrent();
-  settle();
 
-  const QImage image = widget->grabFramebuffer();
+  const QImage image = showNode(geometry);
   ASSERT_FALSE(image.isNull());
   const Bounds red = dominantBounds(image, 0, 90, 60);
   const Bounds green = dominantBounds(image, 1, 90, 60);
@@ -195,8 +247,6 @@ TEST_F(GLWidgetTest, hiddenDrawableIsNotRendered)
 
 TEST_F(GLWidgetTest, curveGeometrySetsOpacityForTranslucentPass)
 {
-  clearScene(*widget);
-  widget->makeCurrent();
   auto* geometry = new GeometryNode;
   auto* curve = new BSplineGeometry(false);
   curve->setRenderPass(TranslucentPass);
@@ -205,13 +255,8 @@ TEST_F(GLWidgetTest, curveGeometrySetsOpacityForTranslucentPass)
   curve->addPoint(Vector3f(0.0f, 0.5f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0, 1);
   curve->addPoint(Vector3f(2.0f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0, 2);
   geometry->addDrawable(curve);
-  widget->renderer().scene().rootNode().addChild(geometry);
-  widget->renderer().resetGeometry();
-  widget->renderer().resetCamera();
-  widget->doneCurrent();
-  settle();
 
-  const QImage image = widget->grabFramebuffer();
+  const QImage image = showNode(geometry);
   ASSERT_FALSE(image.isNull());
   // Without CurveGeometry::render() setting opacity = 1.0, alpha defaults to
   // 0.0 and TranslucentPass blending makes the curve completely invisible.
@@ -221,24 +266,17 @@ TEST_F(GLWidgetTest, curveGeometrySetsOpacityForTranslucentPass)
 
 TEST_F(GLWidgetTest, arrowGeometryLitFromUpperFront)
 {
-  clearScene(*widget);
-  widget->makeCurrent();
   auto* geometry = new GeometryNode;
   auto* arrow = new ArrowGeometry;
   arrow->setRadiusScale(4.0f);
   arrow->addSingleArrow(Vector3f(-2.5f, 0.0f, 0.0f), Vector3f(2.5f, 0.0f, 0.0f),
                         Vector3ub(220, 220, 220));
   geometry->addDrawable(arrow);
-  widget->renderer().scene().rootNode().addChild(geometry);
   widget->renderer().scene().setBackgroundColor(Vector4ub(0, 0, 0, 255));
   widget->renderer().solidPipeline().setBackgroundColor(
     Vector4ub(0, 0, 0, 255));
-  widget->renderer().resetGeometry();
-  widget->renderer().resetCamera();
-  widget->doneCurrent();
-  settle();
 
-  const QImage image = widget->grabFramebuffer();
+  const QImage image = showNode(geometry);
   ASSERT_FALSE(image.isNull());
 
   // Check both shaft (x = -0.5) and cone head (x = 1.8): the light is at
@@ -277,19 +315,7 @@ TEST_F(GLWidgetTest, arrowGeometryLitFromUpperFront)
 TEST_F(GLWidgetTest, shaderProgramSetTextureSamplerReservesUnitZero)
 {
   widget->makeCurrent();
-  // Declared before any GL object so it is destroyed last: the shaders,
-  // program and texture are deleted while the context is still current,
-  // on both the success and the early-return paths.
-  struct ContextGuard
-  {
-    GLWidget* widget;
-    ~ContextGuard()
-    {
-      if (QOpenGLContext* ctx = QOpenGLContext::currentContext())
-        ctx->functions()->glUseProgram(0);
-      widget->doneCurrent();
-    }
-  } guard{ widget };
+  ContextGuard guard(widget);
   Shader vs(Shader::Vertex,
             "#version 400\n"
             "void main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }\n");
@@ -328,19 +354,7 @@ TEST_F(GLWidgetTest, shaderProgramSetTextureSamplerReservesUnitZero)
 TEST_F(GLWidgetTest, solidPipelineBypassRendersOpaqueGeometry)
 {
   auto& pipeline = widget->renderer().solidPipeline();
-  struct RestorePipeline
-  {
-    Avogadro::Rendering::SolidPipeline& p;
-    bool fog, ao, ed, dof;
-    ~RestorePipeline()
-    {
-      p.setFogEnabled(fog);
-      p.setAoEnabled(ao);
-      p.setEdEnabled(ed);
-      p.setDofEnabled(dof);
-    }
-  } restore{ pipeline, pipeline.getFogEnabled(), pipeline.getAoEnabled(),
-             pipeline.getEdEnabled(), pipeline.getDofEnabled() };
+  PipelineFlagsGuard restore(pipeline);
 
   pipeline.setFogEnabled(false);
   pipeline.setAoEnabled(false);
@@ -348,8 +362,6 @@ TEST_F(GLWidgetTest, solidPipelineBypassRendersOpaqueGeometry)
   pipeline.setDofEnabled(false);
   ASSERT_FALSE(pipeline.hasActiveEffects());
 
-  clearScene(*widget);
-  widget->makeCurrent();
   auto* geometry = new GeometryNode;
   auto* spheres = new SphereGeometry;
   spheres->addSphere(Vector3f(-1.5f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.9f);
@@ -360,14 +372,9 @@ TEST_F(GLWidgetTest, solidPipelineBypassRendersOpaqueGeometry)
   curve->addPoint(Vector3f(2.2f, 1.0f, 0.0f), Vector3ub(0, 255, 0), 0.4f, 0, 2);
   geometry->addDrawable(spheres);
   geometry->addDrawable(curve);
-  widget->renderer().scene().rootNode().addChild(geometry);
-  widget->renderer().resetGeometry();
-  widget->renderer().resetCamera();
-  widget->doneCurrent();
-  settle();
 
   // Direct on-screen render (bypassing SolidPipeline's offscreen FBO).
-  const QImage window = widget->grabFramebuffer();
+  const QImage window = showNode(geometry);
   ASSERT_FALSE(window.isNull());
   EXPECT_GT(dominantBounds(window, 0, 90, 60).count, 20);
   EXPECT_GT(dominantBounds(window, 1, 90, 60).count, 20);
@@ -394,27 +401,17 @@ TEST_F(GLWidgetTest, solidPipelineBypassRendersOpaqueGeometry)
 TEST_F(GLWidgetTest, solidPipelineEarlyOutWorksInPerspectiveAndOrthographic)
 {
   auto& pipeline = widget->renderer().solidPipeline();
-  struct RestoreState
+  PipelineFlagsGuard restoreFlags(pipeline);
+  struct RestoreProjection
   {
     GLWidget* w;
-    bool fog, ao, ed, dof;
     Avogadro::Rendering::Projection proj;
-    ~RestoreState()
+    ~RestoreProjection()
     {
-      auto& p = w->renderer().solidPipeline();
-      p.setFogEnabled(fog);
-      p.setAoEnabled(ao);
-      p.setEdEnabled(ed);
-      p.setDofEnabled(dof);
       w->renderer().camera().setProjectionType(proj);
       w->renderer().resetCamera();
     }
-  } restore{ widget,
-             pipeline.getFogEnabled(),
-             pipeline.getAoEnabled(),
-             pipeline.getEdEnabled(),
-             pipeline.getDofEnabled(),
-             widget->renderer().camera().projectionType() };
+  } restoreProjection{ widget, widget->renderer().camera().projectionType() };
 
   pipeline.setFogEnabled(true);
   pipeline.setAoEnabled(true);
@@ -444,26 +441,7 @@ TEST_F(GLWidgetTest, solidPipelineEarlyOutWorksInPerspectiveAndOrthographic)
 TEST_F(GLWidgetTest, solidPipelineCleanupAndReinitialize)
 {
   widget->makeCurrent();
-  struct ContextGuard
-  {
-    GLWidget* w;
-    GLint vp[4] = { 0, 0, 0, 0 };
-    explicit ContextGuard(GLWidget* widget_) : w(widget_)
-    {
-      if (QOpenGLContext* ctx = QOpenGLContext::currentContext())
-        ctx->functions()->glGetIntegerv(GL_VIEWPORT, vp);
-    }
-    ~ContextGuard()
-    {
-      if (QOpenGLContext* ctx = QOpenGLContext::currentContext()) {
-        ctx->functions()->glBindFramebuffer(GL_FRAMEBUFFER,
-                                            w->defaultFramebufferObject());
-        ctx->functions()->glViewport(vp[0], vp[1], vp[2], vp[3]);
-        ctx->functions()->glUseProgram(0);
-      }
-      w->doneCurrent();
-    }
-  } guard(widget);
+  ContextGuard guard(widget);
 
   GLRenderer renderer;
   renderer.initialize();
@@ -511,7 +489,7 @@ TEST_F(GLWidgetTest, reparentToAnotherWindowKeepsRendering)
   ASSERT_TRUE(moving->isValid()) << moving->error().toStdString();
   ASSERT_NE(moving->context(), nullptr);
   moving->makeCurrent();
-  while (glGetError() != GL_NO_ERROR) {}
+  drainGLErrors();
   moving->doneCurrent();
   const QImage image = moving->grabFramebuffer();
   EXPECT_FALSE(image.isNull());

@@ -33,6 +33,31 @@ namespace {
 constexpr int TextureUnitRGB = 1;
 constexpr int TextureUnitDepth = 2;
 constexpr int TextureUnitAo = 3;
+
+// Delete a GL object and zero its name; zero names are skipped.
+void deleteTexture(GLuint& name)
+{
+  if (name != 0) {
+    glDeleteTextures(1, &name);
+    name = 0;
+  }
+}
+
+void deleteFramebuffer(GLuint& name)
+{
+  if (name != 0) {
+    glDeleteFramebuffers(1, &name);
+    name = 0;
+  }
+}
+
+void deleteVertexArray(GLuint& name)
+{
+  if (name != 0) {
+    glDeleteVertexArrays(1, &name);
+    name = 0;
+  }
+}
 } // namespace
 
 class SolidPipeline::Private
@@ -146,30 +171,12 @@ SolidPipeline::~SolidPipeline()
 
 void SolidPipeline::releaseResources()
 {
-  if (d->renderFBO != 0) {
-    glDeleteFramebuffers(1, &d->renderFBO);
-    d->renderFBO = 0;
-  }
-  if (d->renderTexture != 0) {
-    glDeleteTextures(1, &d->renderTexture);
-    d->renderTexture = 0;
-  }
-  if (d->depthTexture != 0) {
-    glDeleteTextures(1, &d->depthTexture);
-    d->depthTexture = 0;
-  }
-  if (d->aoFBO != 0) {
-    glDeleteFramebuffers(1, &d->aoFBO);
-    d->aoFBO = 0;
-  }
-  if (d->aoTexture != 0) {
-    glDeleteTextures(1, &d->aoTexture);
-    d->aoTexture = 0;
-  }
-  if (d->screenVAO != 0) {
-    glDeleteVertexArrays(1, &d->screenVAO);
-    d->screenVAO = 0;
-  }
+  deleteFramebuffer(d->renderFBO);
+  deleteTexture(d->renderTexture);
+  deleteTexture(d->depthTexture);
+  deleteFramebuffer(d->aoFBO);
+  deleteTexture(d->aoTexture);
+  deleteVertexArray(d->screenVAO);
   d->screenVertexShader.cleanup();
   d->firstFragmentShader.cleanup();
   d->aoFragmentShader.cleanup();
@@ -273,7 +280,7 @@ bool SolidPipeline::begin()
 
 void SolidPipeline::end(const Camera& camera)
 {
-  if (!d->initialized || d->firstStageShaders == nullptr)
+  if (!d->initialized)
     return;
 
   // Bind VAO for procedural fullscreen triangle (required for Core Profile)
@@ -282,7 +289,7 @@ void SolidPipeline::end(const Camera& camera)
   // Render the ambient occlusion term into its own buffer first, so the
   // compositing stage can blur away the kernel's sampling pattern. Skipped
   // entirely when ambient occlusion is off, since nothing would read it.
-  const bool useAo = m_aoEnabled && d->aoReady && d->aoStageShaders != nullptr;
+  const bool useAo = m_aoEnabled && d->aoReady;
   if (useAo) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
     GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
@@ -356,8 +363,7 @@ void SolidPipeline::end(const Camera& camera)
 
 void SolidPipeline::adjustOffset(const Camera& cam)
 {
-  if (!d->initialized || d->firstStageShaders == nullptr ||
-      (!m_fogEnabled && !m_dofEnabled))
+  if (!d->initialized || (!m_fogEnabled && !m_dofEnabled))
     return;
 
   // The numbers used in calculations are random.

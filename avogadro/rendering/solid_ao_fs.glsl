@@ -74,6 +74,10 @@ vec3 getNormalNear(vec2 normalUV, float cent)
 // disagree the pattern stops cancelling and the dither returns.
 const int AO_TILE = 4;
 
+// Distance written for background pixels: the largest finite half float. Must
+// match the background test (BACKGROUND_THRESHOLD) in solid_first_fs.glsl.
+const float BACKGROUND_DISTANCE = 65504.0;
+
 // One kernel rotation per pixel of the tile.
 const int AO_SAMPLES = AO_TILE * AO_TILE;
 
@@ -128,7 +132,7 @@ void main() {
   if (depth >= 1.0) {
     // Background pixel: skip the 16-tap SSAO kernel and write the FP16-max
     // sentinel distance so blurredAo() never blends background into foreground.
-    outAo = vec2(1.0, 65504.0);
+    outAo = vec2(1.0, BACKGROUND_DISTANCE);
     return;
   }
   // The term can exceed 1.0: it brightens as well as darkens, so the buffer

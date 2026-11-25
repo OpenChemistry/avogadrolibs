@@ -9,6 +9,7 @@
 #include "curvegeometry.h"
 #include "cylindergeometry.h"
 #include "dashedlinegeometry.h"
+#include "drawable.h"
 #include "linestripgeometry.h"
 #include "widelinegeometry.h"
 #include "meshgeometry.h"
@@ -27,39 +28,44 @@ GLRenderVisitor::GLRenderVisitor(const Camera& camera_,
 
 GLRenderVisitor::~GLRenderVisitor() {}
 
+bool GLRenderVisitor::shouldRender(const Drawable& drawable) const
+{
+  return drawable.isVisible() && drawable.renderPass() == m_renderPass;
+}
+
 void GLRenderVisitor::visit(Drawable& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(SphereGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CurveGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(CylinderGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(MeshGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(TextLabel2D& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass) {
+  if (shouldRender(geometry)) {
     if (m_textRenderStrategy) {
       geometry.setPixelRatio(m_pixelRatio);
       geometry.buildTexture(*m_textRenderStrategy);
@@ -70,7 +76,7 @@ void GLRenderVisitor::visit(TextLabel2D& geometry)
 
 void GLRenderVisitor::visit(TextLabel3D& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass) {
+  if (shouldRender(geometry)) {
     if (m_textRenderStrategy) {
       geometry.setPixelRatio(m_pixelRatio);
       geometry.buildTexture(*m_textRenderStrategy);
@@ -81,31 +87,31 @@ void GLRenderVisitor::visit(TextLabel3D& geometry)
 
 void GLRenderVisitor::visit(LineStripGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(WideLineGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(DashedLineGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(ArrowGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 
 void GLRenderVisitor::visit(VolumeGeometry& geometry)
 {
-  if (geometry.isVisible() && geometry.renderPass() == m_renderPass)
+  if (shouldRender(geometry))
     geometry.render(m_camera);
 }
 

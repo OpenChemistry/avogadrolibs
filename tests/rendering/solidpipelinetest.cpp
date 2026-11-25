@@ -92,13 +92,20 @@ protected:
     for (int i = 0; i < 32 && glGetError() != GL_NO_ERROR; ++i) {}
   }
 
+  // Release the current context and destroy it.
+  void destroyContext()
+  {
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    if (context != EGL_NO_CONTEXT)
+      eglDestroyContext(display, context);
+    context = EGL_NO_CONTEXT;
+  }
+
   void TearDown() override
   {
     if (display == EGL_NO_DISPLAY)
       return;
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    if (context != EGL_NO_CONTEXT)
-      eglDestroyContext(display, context);
+    destroyContext();
     if (surface != EGL_NO_SURFACE)
       eglDestroySurface(display, surface);
     eglTerminate(display);
@@ -117,7 +124,7 @@ TEST_F(SolidPipelineGLTest, SolidPipelineRendersWithAndWithoutAmbientOcclusion)
   renderer.initialize();
   ASSERT_TRUE(renderer.isValid()) << renderer.error();
   // GLEW can leave an error when querying a core profile's extension string.
-  while (glGetError() != GL_NO_ERROR) {}
+  drainErrors();
   renderer.resize(64, 64);
   auto* geometry = new GeometryNode;
   auto* sphere = new SphereGeometry;
@@ -160,9 +167,7 @@ TEST_F(SolidPipelineGLTest, ReleaseTwiceThenDestroyAfterContext)
   pipeline->releaseResources();
   pipeline->releaseResources();
   // With the context gone, a pipeline that holds no names must not touch GL.
-  eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-  eglDestroyContext(display, context);
-  context = EGL_NO_CONTEXT;
+  destroyContext();
   pipeline.reset();
   SUCCEED();
 }
@@ -174,9 +179,7 @@ TEST_F(SolidPipelineGLTest, RendererCleanupIsIdempotent)
   ASSERT_TRUE(renderer->isValid()) << renderer->error();
   renderer->cleanup();
   renderer->cleanup();
-  eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-  eglDestroyContext(display, context);
-  context = EGL_NO_CONTEXT;
+  destroyContext();
   renderer.reset();
   SUCCEED();
 }
@@ -201,8 +204,7 @@ TEST_F(SolidPipelineGLTest, ContextRecreation)
   renderer.initialize();
   ASSERT_TRUE(renderer.isValid()) << renderer.error();
   renderer.cleanup();
-  eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-  eglDestroyContext(display, context);
+  destroyContext();
   context = createContext();
   ASSERT_NE(context, EGL_NO_CONTEXT);
   ASSERT_TRUE(eglMakeCurrent(display, surface, surface, context));

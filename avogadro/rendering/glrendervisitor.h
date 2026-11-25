@@ -86,6 +86,9 @@ public:
   /** @} */
 
 private:
+  /** True if the drawable is visible and belongs to the current pass. */
+  bool shouldRender(const Drawable& drawable) const;
+
   Camera m_camera;
   const TextRenderStrategy* m_textRenderStrategy;
   RenderPass m_renderPass;

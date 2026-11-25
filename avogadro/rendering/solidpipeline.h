@@ -31,12 +31,8 @@ public:
   /**
    * @brief Release OpenGL objects while the owning context is current.
    *
-   * Safe to call repeatedly: it only deletes names that are non-zero, so it
-   * issues no GL calls on a pipeline that holds no resources (never
-   * initialized, or already released). The destructor calls it as a fallback,
-   * so the owner must call this (e.g. through GLRenderer::cleanup()) with the
-   * context current before that context goes away or is replaced; the
-   * rendering library cannot tell which context the names belong to.
+   * Safe to call repeatedly; it deletes only non-zero names. The owner must
+   * call it with the context current before that context goes away.
    */
   void releaseResources();
 
