@@ -579,7 +579,12 @@ bool PackageManager::removeSupersededVenv(const QString& packageDir,
     return false;
   }
 
-  if (!QDir(venvDir).removeRecursively()) {
+  // A package (e.g., from an archive) can ship .venv as a symlink, and
+  // removeRecursively() would delete whatever it points to: remove the link.
+  const bool removed = QFileInfo(venvDir).isSymLink()
+                         ? QFile::remove(venvDir)
+                         : QDir(venvDir).removeRecursively();
+  if (!removed) {
     qWarning() << "Could not remove superseded virtual environment" << venvDir;
     return false;
   }
@@ -680,7 +685,11 @@ static bool installWithPixi(const QString& packageDir,
   // pixi install fails querying its interpreter. Remove it and recreate.
   const QString pixiDir = packageDir + QStringLiteral("/.pixi");
   if (hasNonExecutablePixiPython(packageDir)) {
-    if (!QDir(pixiDir).removeRecursively()) {
+    // Remove a symlinked .pixi itself, never what it points to.
+    const bool removed = QFileInfo(pixiDir).isSymLink()
+                           ? QFile::remove(pixiDir)
+                           : QDir(pixiDir).removeRecursively();
+    if (!removed) {
       qWarning() << "Could not remove invalid .pixi directory in" << packageDir;
     }
   }

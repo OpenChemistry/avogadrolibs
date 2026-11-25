@@ -607,9 +607,18 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
     const QString source = QDir::cleanPath(m_filePath + '/' + topLevel);
     const QString dest = QDir::cleanPath(m_filePath + '/' + component);
 
-    if (component.isEmpty() ||
-        !QtGui::PackageManager::isManagedPackagePath(m_filePath, source) ||
-        !QtGui::PackageManager::isManagedPackagePath(m_filePath, dest)) {
+    // The top-level entry must be a real directory: an archive can make it a
+    // symlink to anywhere, which would then be installed as the package.
+    const QFileInfo sourceInfo(source);
+    const bool managedSource =
+      !component.isEmpty() &&
+      QtGui::PackageManager::isManagedPackagePath(m_filePath, source);
+    if (!managedSource ||
+        !QtGui::PackageManager::isManagedPackagePath(m_filePath, dest) ||
+        sourceInfo.isSymLink() || !sourceInfo.isDir()) {
+      // Remove an extracted top-level link or file itself, never recursively.
+      if (managedSource && (sourceInfo.isSymLink() || sourceInfo.isFile()))
+        QFile::remove(source);
       m_ui->readmeBrowser->append(
         tr("Error: could not move extracted package %1 to %2\n")
           .arg(source)
