@@ -137,49 +137,52 @@ SpaceGroup::SpaceGroup(QObject* parent_)
     m_setToleranceAction(new QAction(this))
 {
   m_perceiveSpaceGroupAction->setText(tr("Perceive Space Group…"));
-  connect(m_perceiveSpaceGroupAction, SIGNAL(triggered()),
-          SLOT(perceiveSpaceGroup()));
+  connect(m_perceiveSpaceGroupAction, &QAction::triggered, this,
+          &SpaceGroup::perceiveSpaceGroup);
   m_actions.push_back(m_perceiveSpaceGroupAction);
   m_perceiveSpaceGroupAction->setProperty("menu priority", 90);
 
   m_reduceToPrimitiveAction->setText(tr("Reduce to Primitive"));
-  connect(m_reduceToPrimitiveAction, SIGNAL(triggered()),
-          SLOT(reduceToPrimitive()));
+  connect(m_reduceToPrimitiveAction, &QAction::triggered, this,
+          &SpaceGroup::reduceToPrimitive);
   m_actions.push_back(m_reduceToPrimitiveAction);
   m_reduceToPrimitiveAction->setProperty("menu priority", 80);
 
   m_conventionalizeCellAction->setText(tr("Conventionalize Cell"));
-  connect(m_conventionalizeCellAction, SIGNAL(triggered()),
-          SLOT(conventionalizeCell()));
+  connect(m_conventionalizeCellAction, &QAction::triggered, this,
+          &SpaceGroup::conventionalizeCell);
   m_actions.push_back(m_conventionalizeCellAction);
   m_conventionalizeCellAction->setProperty("menu priority", 70);
 
   m_symmetrizeAction->setText(tr("Symmetrize"));
-  connect(m_symmetrizeAction, SIGNAL(triggered()), SLOT(symmetrize()));
+  connect(m_symmetrizeAction, &QAction::triggered, this,
+          &SpaceGroup::symmetrize);
   m_actions.push_back(m_symmetrizeAction);
   m_symmetrizeAction->setProperty("menu priority", 60);
 
   m_reduceToAsymmetricUnitAction->setText(tr("Reduce to Asymmetric Unit"));
-  connect(m_reduceToAsymmetricUnitAction, SIGNAL(triggered()),
-          SLOT(reduceToAsymmetricUnit()));
+  connect(m_reduceToAsymmetricUnitAction, &QAction::triggered, this,
+          &SpaceGroup::reduceToAsymmetricUnit);
   m_actions.push_back(m_reduceToAsymmetricUnitAction);
   m_reduceToAsymmetricUnitAction->setProperty("menu priority", 40);
 
   m_setToleranceAction->setText(tr("Set Tolerance…"));
-  connect(m_setToleranceAction, SIGNAL(triggered()), SLOT(setTolerance()));
+  connect(m_setToleranceAction, &QAction::triggered, this,
+          &SpaceGroup::setTolerance);
   m_actions.push_back(m_setToleranceAction);
   m_setToleranceAction->setProperty("menu priority", 0);
 
   // should fall next to the "Wrap Atoms to Unit Cell" action on Crystal menu
   m_fillUnitCellAction->setText(tr("Fill Unit Cell…"));
-  connect(m_fillUnitCellAction, SIGNAL(triggered()), SLOT(fillUnitCell()));
+  connect(m_fillUnitCellAction, &QAction::triggered, this,
+          &SpaceGroup::fillUnitCell);
   m_actions.push_back(m_fillUnitCellAction);
   m_fillUnitCellAction->setProperty("menu priority", 185);
 
   m_fillTranslationalCellAction->setText(tr(
     "Fill Translation Cell…", "fill the translationally unique repeat unit"));
-  connect(m_fillTranslationalCellAction, SIGNAL(triggered()),
-          SLOT(fillTranslationalCell()));
+  connect(m_fillTranslationalCellAction, &QAction::triggered, this,
+          &SpaceGroup::fillTranslationalCell);
   m_actions.push_back(m_fillTranslationalCellAction);
   m_fillTranslationalCellAction->setProperty("menu priority", 184);
 
@@ -423,7 +426,8 @@ void SpaceGroup::setMolecule(QtGui::Molecule* mol)
   m_molecule = mol;
 
   if (m_molecule)
-    connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &SpaceGroup::moleculeChanged);
 
   updateActions();
 
@@ -981,11 +985,11 @@ unsigned short SpaceGroup::selectSpaceGroup(unsigned short internationalNumber)
   if (proxyModel.rowCount() > 0)
     view->selectRow(0);
 
-  connect(view, SIGNAL(activated(QModelIndex)), &dialog, SLOT(accept()));
+  connect(view, &QAbstractItemView::activated, &dialog, &QDialog::accept);
   auto* buttons =
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
-  connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+  connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+  connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
   dialog.layout()->addWidget(buttons);
   if (dialog.exec() != QDialog::Accepted)
     return 0;
