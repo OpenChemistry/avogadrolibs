@@ -24,13 +24,16 @@
 #include <avogadro/core/dihedraliterator.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QLocale>
 #include <QtCore/QRegularExpression>
 #include <QtGui/QColor>
 #include <QtWidgets/QColorDialog>
 
+#include <algorithm>
 #include <array>
-#include <optional>
+#include <cmath>
 #include <limits>
+#include <optional>
 
 namespace Avogadro {
 
@@ -65,29 +68,71 @@ inline double distance(Vector3 v1, Vector3 v2)
   return v3.norm();
 }
 
-// The atomic number for what was typed into the element column: a number, a
-// symbol in any case, a name, or one of the dummy atom's spellings (0 is
-// deliberate). Custom elements are not offered here.
-std::optional<int> parseElement(const QVariant& value)
+// Decimals the numeric columns show, and the editor keeps.
+const int CoordinateDecimals = 4;
+const int LengthDecimals = 3;
+const int AngleDecimals = 3;
+
+// The text an editor opens with: the displayed value in the user's locale,
+// but without group separators or the lock, which would not parse back.
+inline QString editText(double value, int decimals)
 {
-  const int elementCount = Core::Elements::elementCount();
-  auto inRange = [&](int number) -> std::optional<int> {
-    if (number < 0 || number >= elementCount)
+  QLocale locale;
+  locale.setNumberOptions(QLocale::OmitGroupSeparator);
+  return locale.toString(value, 'f', decimals);
+}
+
+// A number as the C locale spells it at the given decimals, for comparing
+// what the table shows. Negative zero and a tiny negative both read "-0.000"
+// otherwise, which would turn an unchanged cell into an edit.
+inline QString comparableText(double value, int decimals)
+{
+  QString text = QString::number(value, 'f', decimals);
+  const bool allZero = std::none_of(text.cbegin(), text.cend(), [](QChar c) {
+    return c >= QLatin1Char('1') && c <= QLatin1Char('9');
+  });
+  if (text.startsWith('-') && allZero)
+    text.remove(0, 1);
+  return text;
+}
+
+// A whole number in [low, high], from a number or from text read in the user's
+// locale and then with the C locale. A fraction is refused rather than rounded.
+std::optional<long long> parseInteger(const QVariant& value, long long low,
+                                      long long high)
+{
+  auto inRange = [&](long long number) -> std::optional<long long> {
+    if (number < low || number > high)
       return std::nullopt;
     return number;
   };
 
   switch (value.typeId()) {
     case QMetaType::Int:
-    case QMetaType::UInt:
     case QMetaType::Long:
-    case QMetaType::ULong:
     case QMetaType::LongLong:
-    case QMetaType::ULongLong:
     case QMetaType::Short:
+    case QMetaType::SChar:
+      return inRange(value.toLongLong());
+    case QMetaType::UInt:
+    case QMetaType::ULong:
+    case QMetaType::ULongLong:
     case QMetaType::UShort:
-    case QMetaType::UChar:
-      return inRange(value.toInt());
+    case QMetaType::UChar: {
+      const qulonglong number = value.toULongLong();
+      if (number > static_cast<qulonglong>(high))
+        return std::nullopt;
+      return inRange(static_cast<long long>(number));
+    }
+    case QMetaType::Double:
+    case QMetaType::Float: {
+      const double number = value.toDouble();
+      if (!std::isfinite(number) || number != std::floor(number) ||
+          number < static_cast<double>(low) ||
+          number > static_cast<double>(high))
+        return std::nullopt;
+      return static_cast<long long>(number);
+    }
     case QMetaType::QString:
       break;
     default:
@@ -97,13 +142,83 @@ std::optional<int> parseElement(const QVariant& value)
   const QString text = value.toString().trimmed();
   if (text.isEmpty())
     return std::nullopt;
-
-  static const QRegularExpression digits("^[0-9]+$");
-  if (digits.match(text).hasMatch()) {
+  for (QLocale locale : { QLocale(), QLocale::c() }) {
+    locale.setNumberOptions(QLocale::RejectGroupSeparator);
     bool ok = false;
-    const int number = text.toInt(&ok);
-    return ok ? inRange(number) : std::nullopt;
+    const long long number = locale.toLongLong(text, &ok);
+    if (ok)
+      return inRange(number);
   }
+  return std::nullopt;
+}
+
+// A number typed into a cell, or handed over directly. Text is read in the
+// user's locale first and then with a period, so either spelling works; group
+// separators are refused, since "1,5" would otherwise be 15 in en_US.
+std::optional<double> parseNumber(const QVariant& value)
+{
+  switch (value.typeId()) {
+    case QMetaType::Double:
+    case QMetaType::Float:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+    case QMetaType::Long:
+    case QMetaType::ULong:
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
+    case QMetaType::Short:
+    case QMetaType::UShort: {
+      const double number = value.toDouble();
+      if (!std::isfinite(number))
+        return std::nullopt;
+      return number;
+    }
+    case QMetaType::QString:
+      break;
+    default:
+      return std::nullopt;
+  }
+
+  QString text = value.toString();
+  text.remove(QStringLiteral("🔒"));
+  text = text.trimmed();
+  if (text.isEmpty())
+    return std::nullopt;
+
+  for (QLocale locale : { QLocale(), QLocale::c() }) {
+    locale.setNumberOptions(QLocale::RejectGroupSeparator);
+    bool ok = false;
+    const double number = locale.toDouble(text, &ok);
+    if (ok && std::isfinite(number))
+      return number;
+  }
+  return std::nullopt;
+}
+
+// The atomic number for what was typed into the element column: a number, a
+// symbol in any case, a name, or one of the dummy atom's spellings (0 is
+// deliberate). Custom elements are not offered here.
+std::optional<int> parseElement(const QVariant& value)
+{
+  const int elementCount = Core::Elements::elementCount();
+  auto fromInteger = [&](const QVariant& number) -> std::optional<int> {
+    const auto parsed = parseInteger(number, 0, elementCount - 1);
+    if (!parsed)
+      return std::nullopt;
+    return static_cast<int>(*parsed);
+  };
+
+  if (value.typeId() != QMetaType::QString)
+    return fromInteger(value);
+
+  const QString text = value.toString().trimmed();
+  if (text.isEmpty())
+    return std::nullopt;
+
+  // Only plain digits are a number here; "+6" or "1.5" are not elements.
+  static const QRegularExpression digits("^[0-9]+$");
+  if (digits.match(text).hasMatch())
+    return fromInteger(text);
 
   // The same dummy spellings as the CIF reader, plus the table's own.
   const QString upper = text.toUpper();
@@ -114,9 +229,11 @@ std::optional<int> parseElement(const QVariant& value)
   const QString normalized = text.left(1).toUpper() + text.mid(1).toLower();
   const std::string key = normalized.toStdString();
   int number = Core::Elements::atomicNumberFromSymbol(key);
-  if (!inRange(number))
+  if (number < 0 || number >= elementCount)
     number = Core::Elements::atomicNumberFromName(key);
-  return inRange(number);
+  if (number < 0 || number >= elementCount)
+    return std::nullopt;
+  return number;
 }
 
 inline QString angleTypeString(unsigned char a, unsigned char b,
@@ -531,6 +648,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         if (role == Qt::UserRole)
           // Return the x coordinate as a double for sorting
           return m_molecule->atomPosition3d(row).x();
+        else if (role == Qt::EditRole)
+          return editText(m_molecule->atomPosition3d(row).x(),
+                          CoordinateDecimals);
         else // format fixed to 4 decimals
         {
           auto formatted =
@@ -544,6 +664,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         if (role == Qt::UserRole)
           // Return the y coordinate as a double for sorting
           return m_molecule->atomPosition3d(row).y();
+        else if (role == Qt::EditRole)
+          return editText(m_molecule->atomPosition3d(row).y(),
+                          CoordinateDecimals);
         else // format fixed to 4 decimals
         {
           auto formatted =
@@ -556,6 +679,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         if (role == Qt::UserRole)
           // Return the z coordinate as a double for sorting
           return m_molecule->atomPosition3d(row).z();
+        else if (role == Qt::EditRole)
+          return editText(m_molecule->atomPosition3d(row).z(),
+                          CoordinateDecimals);
         else // format fixed to 4 decimals
         {
           auto formatted =
@@ -617,6 +743,9 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         if (role == Qt::UserRole)
           // Return the bond length as a double for sorting
           return distance(atom1.position3d(), atom2.position3d());
+        else if (role == Qt::EditRole)
+          return editText(distance(atom1.position3d(), atom2.position3d()),
+                          LengthDecimals);
         else {
           QString formatted = QString("%L1").arg(
             distance(atom1.position3d(), atom2.position3d()), 0, 'f', 3);
@@ -693,6 +822,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         if (role == Qt::UserRole)
           // Return the angle as a double for sorting
           return calculateAngle(a1, a2, a3);
+        else if (role == Qt::EditRole)
+          return editText(calculateAngle(a1, a2, a3), AngleDecimals);
         else { // format fixed to 3 decimals
           QString formatted =
             QString("%L1").arg(calculateAngle(a1, a2, a3), 0, 'f', 3);
@@ -751,6 +882,8 @@ QVariant PropertyModel::data(const QModelIndex& index, int role) const
         if (role == Qt::UserRole)
           // Return the dihedral angle as a double for sorting
           return calculateDihedral(a1, a2, a3, a4);
+        else if (role == Qt::EditRole)
+          return editText(calculateDihedral(a1, a2, a3, a4), AngleDecimals);
         else { // format fixed to 3 decimals
           QString format =
             QString("%L1").arg(calculateDihedral(a1, a2, a3, a4), 0, 'f', 3);
@@ -1093,11 +1226,16 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   if (m_type == AtomType) {
     switch (static_cast<AtomColumn>(index.column())) {
       case AtomDataFormalCharge: {
-        bool ok;
-        int charge = value.toInt(&ok);
-        if (ok) {
-          undoMolecule->setFormalCharge(index.row(), charge);
-        }
+        // Stored as a signed char, so anything wider would wrap.
+        const auto charge =
+          parseInteger(value, std::numeric_limits<signed char>::min(),
+                       std::numeric_limits<signed char>::max());
+        if (!charge)
+          return false;
+        if (*charge == m_molecule->formalCharge(index.row()))
+          return true;
+        undoMolecule->setFormalCharge(index.row(),
+                                      static_cast<signed char>(*charge));
         break;
       }
       case AtomDataElement: { // atomic number
@@ -1116,13 +1254,17 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
       case AtomDataZ: {
         // Only a coordinate edit moves the atom; other columns must not
         // leave a position step on the undo stack.
-        bool ok;
-        double coordinate = value.toDouble(&ok);
-        if (ok) {
-          Vector3 v = m_molecule->atomPosition3d(index.row());
-          v[index.column() - AtomDataX] = coordinate;
-          undoMolecule->setAtomPosition3d(index.row(), v);
-        }
+        const auto coordinate = parseNumber(value);
+        if (!coordinate)
+          return false;
+        Vector3 v = m_molecule->atomPosition3d(index.row());
+        const int axis = index.column() - AtomDataX;
+        // An unchanged cell must not move the atom to its rounded display.
+        if (comparableText(*coordinate, CoordinateDecimals) ==
+            comparableText(v[axis], CoordinateDecimals))
+          return true;
+        v[axis] = *coordinate;
+        undoMolecule->setAtomPosition3d(index.row(), v);
         break;
       }
       case AtomDataLabel:
@@ -1168,20 +1310,27 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
   } else if (m_type == BondType) {
     switch (static_cast<BondColumn>(index.column())) {
       case BondDataOrder: {
-        bool ok;
-        int order = value.toInt(&ok);
-        if (ok && order > 0 && order <= 6) {
-          undoMolecule->setBondOrder(index.row(), value.toInt());
-        }
+        const auto order = parseInteger(value, 1, 6);
+        if (!order)
+          return false;
+        if (*order == m_molecule->bondOrder(index.row()))
+          return true;
+        undoMolecule->setBondOrder(index.row(),
+                                   static_cast<unsigned char>(*order));
         break;
       }
       case BondDataLength: {
-        bool ok;
-        double length = value.toDouble(&ok);
-        if (ok) {
-          if (!setBondLength(index.row(), length))
-            return false;
-        }
+        const auto length = parseNumber(value);
+        if (!length)
+          return false;
+        auto bond = m_molecule->bond(index.row());
+        const double current =
+          distance(bond.atom1().position3d(), bond.atom2().position3d());
+        if (comparableText(*length, LengthDecimals) ==
+            comparableText(current, LengthDecimals))
+          return true;
+        if (!setBondLength(index.row(), *length))
+          return false;
         break;
       }
       case BondDataLabel:
@@ -1219,11 +1368,13 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     } // end editing residues
   } else if (m_type == AngleType) {
     if (index.column() == AngleDataValue) {
-      bool ok;
-      double angle = value.toDouble(&ok);
-      if (!ok)
+      const auto angle = parseNumber(value);
+      if (!angle)
         return false;
-      if (!setAngle(index.row(), angle))
+      if (comparableText(*angle, AngleDecimals) ==
+          comparableText(getAngleValue(index.row()), AngleDecimals))
+        return true;
+      if (!setAngle(index.row(), *angle))
         return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
@@ -1231,11 +1382,13 @@ bool PropertyModel::setData(const QModelIndex& index, const QVariant& value,
     }
   } else if (m_type == TorsionType) {
     if (index.column() == TorsionDataValue) {
-      bool ok;
-      double angle = value.toDouble(&ok);
-      if (!ok)
+      const auto angle = parseNumber(value);
+      if (!angle)
         return false;
-      if (!setTorsion(index.row(), angle))
+      if (comparableText(*angle, AngleDecimals) ==
+          comparableText(getTorsionValue(index.row()), AngleDecimals))
+        return true;
+      if (!setTorsion(index.row(), *angle))
         return false;
       emit dataChanged(index, index);
       m_molecule->emitChanged(Molecule::Atoms);
