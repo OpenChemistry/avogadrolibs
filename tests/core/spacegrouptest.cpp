@@ -5,7 +5,9 @@
 
 #include <gtest/gtest.h>
 
+#ifdef AVOGADRO_TEST_HAS_SPGLIB
 #include <avogadro/core/avospglib.h>
+#endif
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/spacegroups.h>
@@ -29,13 +31,18 @@ namespace SpaceGroupTable {
 
 using Avogadro::Matrix3;
 using Avogadro::Vector3;
+#ifdef AVOGADRO_TEST_HAS_SPGLIB
 using Avogadro::Core::AvoSpglib;
+#endif
 using Avogadro::Core::Molecule;
 using Avogadro::Core::SpaceGroups;
 using Avogadro::Core::split;
 using Avogadro::Core::UnitCell;
 using namespace std::string_literals;
 
+// The first few cases drive spglib, which is optional (USE_SPGLIB). The
+// rest of this file tests the built-in space group table and does not need it.
+#ifdef AVOGADRO_TEST_HAS_SPGLIB
 TEST(SpaceGroupTest, getSpaceGroup)
 {
   Molecule mol;
@@ -511,6 +518,8 @@ TEST(SpaceGroupTest, reduceToAsymmetricUnit)
   ASSERT_EQ(mol2.atomCount(), 4);
   ASSERT_EQ(mol2.atomicNumbers().size(), 4);
 }
+
+#endif // AVOGADRO_TEST_HAS_SPGLIB
 
 namespace {
 

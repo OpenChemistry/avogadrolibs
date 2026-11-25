@@ -50,9 +50,9 @@ set(tests
   Variant
   VariantMap
   )
-if(USE_SPGLIB)
-  list(APPEND tests SpaceGroup)
-endif()
+# The space group table does not need spglib; only some of the SpaceGroup
+# cases do, and they are compiled out without it.
+list(APPEND tests SpaceGroup)
 
 # Build up the source file names.
 set(testSrcs "")
@@ -69,6 +69,10 @@ target_link_libraries(AvogadroTests Avogadro::Core
   ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
 # Helpers shared between the core and io bond order tests.
 target_include_directories(AvogadroTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
+
+if(USE_SPGLIB)
+  target_compile_definitions(AvogadroTests PRIVATE AVOGADRO_TEST_HAS_SPGLIB)
+endif()
 
 # Now add all of the tests, using the gtest_filter argument so that only those
 # cases are run in each test invocation.
