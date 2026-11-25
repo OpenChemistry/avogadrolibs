@@ -147,6 +147,9 @@ struct Options
   Effect fog;
   Effect dof;
   bool fogOff = false;
+  // The pipeline's own default (on) unless --edge-supersample says otherwise.
+  bool edgeSupersampleSet = false;
+  bool edgeSupersample = true;
   // Device pixels per logical pixel; --size is in logical pixels.
   double pixelRatio = 1.0;
   // "" keeps the scene's default; otherwise an RGBA colour.
@@ -264,6 +267,9 @@ void printUsage(const char* argv0)
     << "  --fog [STRENGTH]    Fog (on by default in the pipeline)\n"
     << "  --no-fog            Switch fog off\n"
     << "  --dof [STRENGTH]    Depth of field\n"
+    << "  --edge-supersample on|off\n"
+    << "                      Supersample the edge outline (default: the "
+       "pipeline's)\n"
     << "\nSurface (adds the Surfaces display type to --style):\n"
     << "  --surface TYPE   vdw, sas or ses: calculate it before rendering\n"
     << "  --surface-resolution R\n"
@@ -371,6 +377,13 @@ bool parseArguments(int argc, char** argv, Options& options)
         return false;
       }
       options.backgroundSet = true;
+    } else if (arg == "--edge-supersample") {
+      if (!next(value) || (value != "on" && value != "off")) {
+        std::cerr << "--edge-supersample expects on or off\n";
+        return false;
+      }
+      options.edgeSupersampleSet = true;
+      options.edgeSupersample = value == "on";
     } else if (arg == "--no-fog") {
       options.fogOff = true;
     } else if (arg == "--ao" || arg == "--edges" || arg == "--fog" ||
@@ -1042,6 +1055,8 @@ int main(int argc, char** argv)
       pipeline.setDofEnabled(true);
       pipeline.setDofStrength(static_cast<float>(options.dof.strength));
     }
+    if (options.edgeSupersampleSet)
+      pipeline.setEdgeSupersampling(options.edgeSupersample);
     if (options.backgroundSet) {
       // Both, as the application does: the scene clears to it and the
       // pipeline blends fog toward it.

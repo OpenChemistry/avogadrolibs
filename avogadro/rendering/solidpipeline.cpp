@@ -88,6 +88,10 @@ public:
     prog.setUniformValue("height", static_cast<float>(h));
   }
 
+  // Settings live here rather than in the header's members so that adding one
+  // does not change the size of the installed class.
+  bool edgeSupersampling = true;
+
   bool initialized = false;
   bool framebufferReady = false;
   bool aoSupported = true;
@@ -346,6 +350,8 @@ void SolidPipeline::end(const Camera& camera)
                                         camera.projection().matrix());
   d->firstStageShaders->setUniformValue("inEdStrength",
                                         m_edEnabled ? m_edStrength : 0.0f);
+  d->firstStageShaders->setUniformValue("inEdgeSupersample",
+                                        d->edgeSupersampling ? 1.0f : 0.0f);
   d->firstStageShaders->setUniformValue("inFogEnabled",
                                         m_fogEnabled ? 1.0f : 0.0f);
   d->firstStageShaders->setUniformValue("inFogStrength",
@@ -452,6 +458,16 @@ void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
   d->framebufferReady =
     glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
+}
+
+bool SolidPipeline::edgeSupersampling() const
+{
+  return d->edgeSupersampling;
+}
+
+void SolidPipeline::setEdgeSupersampling(bool enabled)
+{
+  d->edgeSupersampling = enabled;
 }
 
 void SolidPipeline::setPixelRatio(float ratio)

@@ -151,6 +151,17 @@ public:
   float getEdStrength() { return m_edStrength; }
   void setEdStrength(float strength) { m_edStrength = strength; }
 
+  /**
+   * @brief Get or set whether the edge outline is supersampled.
+   *
+   * On (the default) the edge term is evaluated at four sub-pixel offsets and
+   * averaged, so a silhouette that only partly covers a pixel gets an
+   * intermediate shade instead of a hard 0 or 1. Off takes a single tap on
+   * each pixel centre. It has no effect unless edge detection is enabled.
+   */
+  bool edgeSupersampling() const;
+  void setEdgeSupersampling(bool enabled);
+
 private:
   float m_pixelRatio;
   bool m_aoEnabled;

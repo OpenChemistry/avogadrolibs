@@ -39,6 +39,9 @@ uniform float inFogStrength;
 // Edge outline: 0.0 when off. Up to 1.0 it fades the outline in; above 1.0 it
 // is the outline's half-width in pixels.
 uniform float inEdStrength;
+// 1.0 evaluates the edge term at four sub-pixel offsets and averages them;
+// 0.0 takes a single tap on the pixel centre.
+uniform float inEdgeSupersample;
 // amount of offset when zoom-in or zoom-out.
 uniform float uoffset;
 // Dof strength
@@ -238,7 +241,10 @@ void main() {
         // markedly bolder line than 1.0 without changing its colour.
         float edgeFade = min(inEdStrength, 1.0);
         float edgeRadius = max(inEdStrength, 1.0);
-        luminosity *= max(1.0 - edgeFade, edgeLuminosity(UV, edgeRadius));
+        float edge = (inEdgeSupersample != 0.0)
+                       ? edgeLuminosity(UV, edgeRadius)
+                       : computeEdgeLuminosity(getNormalAt(UV, edgeRadius));
+        luminosity *= max(1.0 - edgeFade, edge);
     }
 
     // Compute foggedColor if Fog is enabled
