@@ -253,11 +253,21 @@ GLWidget::GLWidget(QWidget* p)
 GLWidget::~GLWidget()
 {
 #ifdef Q_OS_WASM
+  // Release timing queries and SolidPipeline GL resources while the window's
+  // context is still alive; deleting the container destroys it.
+  if (m_glWindow && m_glWindow->context() != nullptr && m_renderer.isValid()) {
+    makeCurrent();
+    m_renderer.cleanup();
+    doneCurrent();
+  }
   delete m_glContainer;
   m_glContainer = nullptr;
 #else
+  // The base class destroys the context after this body, when the renderer
+  // is gone: stop reacting to it.
+  QObject::disconnect(m_contextConnection);
   // Release timing queries and SolidPipeline GL resources while this widget's
-  // context is current.
+  // context is current. cleanup() is idempotent.
   if (context() != nullptr && m_renderer.isValid()) {
     makeCurrent();
     m_renderer.cleanup();
@@ -675,6 +685,22 @@ void GLWidget::requestUpdate()
 
 void GLWidget::initializeGL()
 {
+#ifndef Q_OS_WASM
+  // Qt replaces the context (and calls this again) when the widget moves to a
+  // different top-level window. Release the GL objects while the old context
+  // still exists so the stale names are not deleted in the new one.
+  QObject::disconnect(m_contextConnection);
+  if (context() != nullptr) {
+    m_contextConnection =
+      connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, [this]() {
+        if (!m_renderer.isValid())
+          return;
+        makeCurrent();
+        m_renderer.cleanup();
+        doneCurrent();
+      });
+  }
+#endif
   m_renderer.initialize();
   if (!m_renderer.isValid())
     emit rendererInvalid();

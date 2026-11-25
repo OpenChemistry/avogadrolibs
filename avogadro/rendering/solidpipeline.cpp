@@ -59,8 +59,8 @@ public:
     prog.bind();
     bindSampler(prog, nameRGB, texRGB, TextureUnitRGB);
     bindSampler(prog, nameDepth, texDepth, TextureUnitDepth);
-    prog.setUniformValue("width", float(w));
-    prog.setUniformValue("height", float(h));
+    prog.setUniformValue("width", static_cast<float>(w));
+    prog.setUniformValue("height", static_cast<float>(h));
   }
 
   bool initialized = false;
@@ -178,12 +178,15 @@ void SolidPipeline::releaseResources()
   d->initialized = false;
   d->framebufferReady = false;
   d->aoReady = false;
+  // A failure on a previous context says nothing about the next one.
+  d->aoSupported = true;
 }
 
 void SolidPipeline::initialize()
 {
-  if (d->initialized)
-    releaseResources();
+  // Also needed after a failed initialize(): the framebuffers and VAO exist
+  // even when a shader did not compile. Zero names are skipped.
+  releaseResources();
 
   GLint previousFBO = 0;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFBO);
@@ -292,8 +295,8 @@ void SolidPipeline::end(const Camera& camera)
     d->aoStageShaders->bind();
     d->bindSampler(*d->aoStageShaders, "inDepthTex", d->depthTexture,
                    TextureUnitDepth);
-    d->aoStageShaders->setUniformValue("width", float(m_width));
-    d->aoStageShaders->setUniformValue("height", float(m_height));
+    d->aoStageShaders->setUniformValue("width", static_cast<float>(m_width));
+    d->aoStageShaders->setUniformValue("height", static_cast<float>(m_height));
     d->aoStageShaders->setUniformValue("inAoStrength", m_aoStrength);
     // Used to write the distance to the surface alongside the term.
     d->aoStageShaders->setUniformValue("inProjection",

@@ -22,6 +22,8 @@
 #include <QtGui/QImage>
 #include <QtGui/QOpenGLContext>
 #include <QtGui/QOpenGLFunctions>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
 
 #include <string>
 #include <vector>
@@ -481,4 +483,42 @@ TEST_F(GLWidgetTest, solidPipelineCleanupAndReinitialize)
   EXPECT_TRUE(renderer.solidPipeline().begin());
   renderer.solidPipeline().end(renderer.camera());
   renderer.cleanup();
+}
+
+// Moving a GLWidget to another top-level window makes Qt replace its context.
+// The renderer must release the old context's objects (not delete the stale
+// names in the new one) and come back usable.
+TEST_F(GLWidgetTest, reparentToAnotherWindowKeepsRendering)
+{
+  QWidget windowA;
+  auto* layoutA = new QVBoxLayout(&windowA);
+  QWidget windowB;
+  auto* layoutB = new QVBoxLayout(&windowB);
+  auto* moving = new GLWidget(&windowA);
+  layoutA->addWidget(moving);
+  windowA.resize(200, 150);
+  windowB.resize(200, 150);
+  windowA.show();
+  settle();
+  ASSERT_TRUE(moving->isValid()) << moving->error().toStdString();
+  moving->renderer().solidPipeline().setAoEnabled(true);
+  EXPECT_FALSE(moving->grabFramebuffer().isNull());
+
+  layoutB->addWidget(moving);
+  windowB.show();
+  windowA.hide();
+  settle();
+  ASSERT_TRUE(moving->isValid()) << moving->error().toStdString();
+  ASSERT_NE(moving->context(), nullptr);
+  moving->makeCurrent();
+  while (glGetError() != GL_NO_ERROR) {}
+  moving->doneCurrent();
+  const QImage image = moving->grabFramebuffer();
+  EXPECT_FALSE(image.isNull());
+  moving->makeCurrent();
+  EXPECT_EQ(glGetError(), static_cast<GLenum>(GL_NO_ERROR));
+  moving->doneCurrent();
+  // Destroy the widget with its window still alive and the renderer clean.
+  delete moving;
+  settle();
 }

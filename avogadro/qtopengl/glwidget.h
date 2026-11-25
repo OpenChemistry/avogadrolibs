@@ -317,6 +317,11 @@ private:
   float m_pixelRatio = 0.0f;
   QtGui::ScenePluginModel m_scenePlugins;
 
+#ifndef Q_OS_WASM
+  /** Releases GL resources when the widget's context is about to go away. */
+  QMetaObject::Connection m_contextConnection;
+#endif
+
 #ifdef Q_OS_WASM
   void paintEvent(QPaintEvent*) override;
   void makeCurrent();
