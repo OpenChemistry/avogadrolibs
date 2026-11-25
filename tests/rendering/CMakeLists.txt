@@ -15,6 +15,7 @@ set(tests
   PLYVisitor
   SphereGeometry
   TessellatingVisitor
+  Texture2D
   VolumeGeometry
   )
 
