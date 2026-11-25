@@ -28,7 +28,9 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include <cstdlib>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -58,6 +60,14 @@ using namespace Avogadro::TestGL;
 namespace {
 
 const Vector4ub Background(40, 80, 120, 255);
+
+// The error GL has recorded since the last drain, with the widget's context
+// current. Goes through QOpenGLFunctions: the test binary does not link
+// opengl32 on Windows.
+GLenum currentGLError()
+{
+  return QOpenGLContext::currentContext()->functions()->glGetError();
+}
 
 class GLWidgetTest : public ::testing::Test
 {
@@ -108,7 +118,9 @@ struct PipelineFlagsGuard
 {
   explicit PipelineFlagsGuard(Avogadro::Rendering::SolidPipeline& pipeline)
     : p(pipeline), fog(pipeline.getFogEnabled()), ao(pipeline.getAoEnabled()),
-      ed(pipeline.getEdEnabled()), dof(pipeline.getDofEnabled())
+      ed(pipeline.getEdEnabled()), dof(pipeline.getDofEnabled()),
+      fxaa(pipeline.antiAliasingEnabled()),
+      supersample(pipeline.edgeSupersampling())
   {
   }
   ~PipelineFlagsGuard()
@@ -117,9 +129,11 @@ struct PipelineFlagsGuard
     p.setAoEnabled(ao);
     p.setEdEnabled(ed);
     p.setDofEnabled(dof);
+    p.setAntiAliasingEnabled(fxaa);
+    p.setEdgeSupersampling(supersample);
   }
   Avogadro::Rendering::SolidPipeline& p;
-  bool fog, ao, ed, dof;
+  bool fog, ao, ed, dof, fxaa, supersample;
 };
 
 // For a test that makes the widget's context current and then uses GL
@@ -487,6 +501,221 @@ TEST_F(GLWidgetTest, solidPipelineEarlyOutWorksInPerspectiveAndOrthographic)
     EXPECT_GT(dominantBounds(image, 1, 60, 50).count, 20);
     EXPECT_GT(dominantBounds(image, 2, 100, 80).count, 15);
   }
+}
+
+namespace {
+
+// The sum, over every pixel and its right and lower neighbors, of the squared
+// color differences: the energy of the image's gradients. Spreading a hard
+// step over two pixels halves its share, so a smoother image scores lower.
+double gradientEnergy(const QImage& image)
+{
+  auto sq = [](int d) { return static_cast<double>(d) * d; };
+  auto diff = [&](QRgb a, QRgb b) {
+    return sq(qRed(a) - qRed(b)) + sq(qGreen(a) - qGreen(b)) +
+           sq(qBlue(a) - qBlue(b)) + sq(qAlpha(a) - qAlpha(b));
+  };
+  double total = 0.0;
+  for (int y = 0; y + 1 < image.height(); ++y) {
+    for (int x = 0; x + 1 < image.width(); ++x) {
+      const QRgb c = image.pixel(x, y);
+      total += diff(c, image.pixel(x + 1, y)) + diff(c, image.pixel(x, y + 1));
+    }
+  }
+  return total;
+}
+
+// The number of distinct pixel values in the image.
+int distinctPixels(const QImage& image)
+{
+  std::set<QRgb> values;
+  for (int y = 0; y < image.height(); ++y)
+    for (int x = 0; x < image.width(); ++x)
+      values.insert(image.pixel(x, y));
+  return static_cast<int>(values.size());
+}
+
+// Ambient occlusion alone: an effect that keeps the pipeline active and
+// leaves the silhouette as it is.
+void useAmbientOcclusionOnly(Avogadro::Rendering::SolidPipeline& pipeline)
+{
+  pipeline.setFogEnabled(false);
+  pipeline.setAoEnabled(true);
+  pipeline.setEdEnabled(false);
+  pipeline.setDofEnabled(false);
+}
+
+} // namespace
+
+TEST_F(GLWidgetTest, antiAliasingIsOffByDefaultAndDoesNotActivateThePipeline)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  PipelineFlagsGuard restore(pipeline);
+  EXPECT_FALSE(pipeline.antiAliasingEnabled());
+  EXPECT_TRUE(pipeline.edgeSupersampling());
+
+  pipeline.setFogEnabled(false);
+  pipeline.setAoEnabled(false);
+  pipeline.setEdEnabled(false);
+  pipeline.setDofEnabled(false);
+  pipeline.setAntiAliasingEnabled(true);
+  EXPECT_TRUE(pipeline.antiAliasingEnabled());
+  EXPECT_FALSE(pipeline.hasActiveEffects());
+}
+
+TEST_F(GLWidgetTest, antiAliasingOffRendersTheSameAfterUseAndWithoutErrors)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  PipelineFlagsGuard restore(pipeline);
+  useAmbientOcclusionOnly(pipeline);
+  pipeline.setEdEnabled(true);
+
+  drainGLErrors();
+  settle();
+  const QImage before = widget->grabFramebuffer();
+  ASSERT_FALSE(before.isNull());
+
+  // Use FXAA, then switch it off again: nothing it created may leak into the
+  // frames drawn without it.
+  pipeline.setAntiAliasingEnabled(true);
+  settle();
+  const QImage smoothed = widget->grabFramebuffer();
+  ASSERT_FALSE(smoothed.isNull());
+  EXPECT_NE(before, smoothed);
+  pipeline.setAntiAliasingEnabled(false);
+  settle();
+  const QImage after = widget->grabFramebuffer();
+  ASSERT_FALSE(after.isNull());
+  EXPECT_EQ(before, after);
+
+  widget->makeCurrent();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+}
+
+TEST_F(GLWidgetTest, antiAliasingSmoothsSilhouettes)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  PipelineFlagsGuard restore(pipeline);
+  useAmbientOcclusionOnly(pipeline);
+
+  pipeline.setAntiAliasingEnabled(false);
+  settle();
+  const QImage hard = widget->grabFramebuffer();
+  ASSERT_FALSE(hard.isNull());
+  saveForInspection(hard, "glwidget-fxaa-off.png");
+
+  pipeline.setAntiAliasingEnabled(true);
+  settle();
+  drainGLErrors();
+  const QImage smooth = widget->grabFramebuffer();
+  ASSERT_FALSE(smooth.isNull());
+  saveForInspection(smooth, "glwidget-fxaa-on.png");
+
+  // The silhouettes are curves, which the unfiltered image draws as stairs;
+  // filtered, the steps are spread over more pixels and intermediate values
+  // appear.
+  const double hardEnergy = gradientEnergy(hard);
+  const double smoothEnergy = gradientEnergy(smooth);
+  EXPECT_GT(hardEnergy, 0.0);
+  EXPECT_LT(smoothEnergy, hardEnergy * 0.9)
+    << smoothEnergy << " vs " << hardEnergy;
+  EXPECT_GT(distinctPixels(smooth), distinctPixels(hard));
+
+  // The background away from the geometry is untouched, and the spheres keep
+  // their colors.
+  const QRgb corner = smooth.pixel(0, 0);
+  EXPECT_NEAR(qRed(corner), Background[0], 2);
+  EXPECT_NEAR(qGreen(corner), Background[1], 2);
+  EXPECT_NEAR(qBlue(corner), Background[2], 2);
+  EXPECT_GT(dominantBounds(smooth, 0, 90, 60).count, 20);
+  EXPECT_GT(dominantBounds(smooth, 1, 90, 60).count, 20);
+  EXPECT_GT(dominantBounds(smooth, 2, 150, 90).count, 20);
+}
+
+TEST_F(GLWidgetTest, antiAliasingKeepsATransparentBackgroundTransparent)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  PipelineFlagsGuard restore(pipeline);
+  useAmbientOcclusionOnly(pipeline);
+
+  RenderOptions opts;
+  opts.size = QSize(240, 180);
+  opts.transparentBackground = true;
+
+  pipeline.setAntiAliasingEnabled(false);
+  const QImage hard = widget->renderImage(opts);
+  pipeline.setAntiAliasingEnabled(true);
+  drainGLErrors();
+  const QImage smooth = widget->renderImage(opts);
+  ASSERT_FALSE(hard.isNull());
+  ASSERT_FALSE(smooth.isNull());
+
+  // Count the partly covered pixels, and make sure nothing was smeared into
+  // the empty space or onto the spheres' interiors.
+  auto partial = [](const QImage& image) {
+    int count = 0;
+    for (int y = 0; y < image.height(); ++y) {
+      for (int x = 0; x < image.width(); ++x) {
+        const int a = qAlpha(image.pixel(x, y));
+        if (a > 0 && a < 255)
+          ++count;
+      }
+    }
+    return count;
+  };
+  EXPECT_EQ(partial(hard), 0);
+  EXPECT_GT(partial(smooth), 20);
+
+  for (const QPoint p : { QPoint(0, 0), QPoint(smooth.width() - 1, 0),
+                          QPoint(0, smooth.height() - 1),
+                          QPoint(smooth.width() - 1, smooth.height() - 1) })
+    EXPECT_EQ(qAlpha(smooth.pixel(p)), 0) << p.x() << "," << p.y();
+  const Bounds red = dominantBounds(smooth, 0, 90, 60);
+  ASSERT_GT(red.count, 20);
+  EXPECT_EQ(qAlpha(smooth.pixel(qRound(red.centerX()), qRound(red.centerY()))),
+            255);
+  // Pixels that were transparent without FXAA only gain coverage next to the
+  // geometry: whatever they hold is still the background's black, scaled by
+  // nothing, in a premultiplied image.
+  for (int y = 0; y < smooth.height(); ++y) {
+    for (int x = 0; x < smooth.width(); ++x) {
+      if (qAlpha(smooth.pixel(x, y)) == 0)
+        EXPECT_EQ(smooth.pixel(x, y) & 0x00ffffff, 0u) << x << "," << y;
+    }
+  }
+  widget->makeCurrent();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+}
+
+TEST_F(GLWidgetTest, edgeSupersamplingOffTakesASingleTapPerPixel)
+{
+  auto& pipeline = widget->renderer().solidPipeline();
+  PipelineFlagsGuard restore(pipeline);
+  pipeline.setFogEnabled(false);
+  pipeline.setAoEnabled(false);
+  pipeline.setDofEnabled(false);
+  pipeline.setEdEnabled(true);
+
+  pipeline.setEdgeSupersampling(false);
+  settle();
+  const QImage single = widget->grabFramebuffer();
+  pipeline.setEdgeSupersampling(true);
+  settle();
+  const QImage supersampled = widget->grabFramebuffer();
+  pipeline.setEdgeSupersampling(false);
+  settle();
+  const QImage singleAgain = widget->grabFramebuffer();
+  ASSERT_FALSE(single.isNull());
+  ASSERT_FALSE(supersampled.isNull());
+
+  // One tap makes the outline all or nothing at a pixel, so the same flat
+  // render comes out the same each time; four taps give it intermediate
+  // levels.
+  EXPECT_EQ(single, singleAgain);
+  EXPECT_NE(single, supersampled);
+  EXPECT_GT(distinctPixels(supersampled), distinctPixels(single));
 }
 
 TEST_F(GLWidgetTest, solidPipelineCleanupAndReinitialize)
