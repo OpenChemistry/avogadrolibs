@@ -141,12 +141,18 @@ struct Options
   {
     bool set = false;
     double strength = 1.0;
+    // Only the fog and depth of field have a position; unset keeps the
+    // pipeline's own.
+    bool positionSet = false;
+    double position = 0.0;
   };
   Effect ao;
   Effect edges;
   Effect fog;
   Effect dof;
   bool fogOff = false;
+  // Orthographic instead of perspective projection.
+  bool orthographic = false;
   // FXAA on the finished image; it applies only while an effect is active.
   bool fxaa = false;
   // The pipeline's own default (on) unless --edge-supersample says otherwise.
@@ -256,6 +262,8 @@ void printUsage(const char* argv0)
     << "                   HiDPI window: --size stays logical and the "
        "framebuffer\n"
     << "                   is R times larger (default 1)\n"
+    << "  --orthographic   Use an orthographic instead of a perspective "
+       "camera\n"
     << "  --background C   black, white, transparent, or #RRGGBB[AA] "
        "(default:\n"
     << "                   the scene's own)\n"
@@ -268,7 +276,11 @@ void printUsage(const char* argv0)
        "pixels)\n"
     << "  --fog [STRENGTH]    Fog (on by default in the pipeline)\n"
     << "  --no-fog            Switch fog off\n"
+    << "  --fog-position P    Where the fog starts (the application's "
+       "dialog: -20 to 20)\n"
     << "  --dof [STRENGTH]    Depth of field\n"
+    << "  --dof-position P    Where the focus is (the application's "
+       "dialog: 0 to 20)\n"
     << "  --fxaa              FXAA on the finished image (only while an "
        "effect is on)\n"
     << "  --edge-supersample on|off\n"
@@ -392,6 +404,18 @@ bool parseArguments(int argc, char** argv, Options& options)
       options.fxaa = true;
     } else if (arg == "--no-fog") {
       options.fogOff = true;
+    } else if (arg == "--orthographic") {
+      options.orthographic = true;
+    } else if (arg == "--fog-position" || arg == "--dof-position") {
+      double d = 0.0;
+      if (!next(value) || !parseDouble(value, d) || !std::isfinite(d)) {
+        std::cerr << arg << " expects a finite number\n";
+        return false;
+      }
+      Options::Effect& effect =
+        arg == "--fog-position" ? options.fog : options.dof;
+      effect.positionSet = true;
+      effect.position = d;
     } else if (arg == "--ao" || arg == "--edges" || arg == "--fog" ||
                arg == "--dof") {
       Options::Effect& effect = arg == "--ao"      ? options.ao
@@ -1055,8 +1079,14 @@ int main(int argc, char** argv)
       pipeline.setFogEnabled(true);
       pipeline.setFogStrength(static_cast<float>(options.fog.strength));
     }
+    if (options.fog.positionSet)
+      pipeline.setFogPosition(static_cast<float>(options.fog.position));
+    if (options.dof.positionSet)
+      pipeline.setDofPosition(static_cast<float>(options.dof.position));
     if (options.fogOff)
       pipeline.setFogEnabled(false);
+    if (options.orthographic)
+      renderer.camera().setProjectionType(Avogadro::Rendering::Orthographic);
     if (options.dof.set) {
       pipeline.setDofEnabled(true);
       pipeline.setDofStrength(static_cast<float>(options.dof.strength));
