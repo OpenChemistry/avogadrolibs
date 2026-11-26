@@ -714,3 +714,128 @@ TEST(UffTypingTest, HydrogenBridging)
   EXPECT_EQ(types[t2], "H_");
   EXPECT_EQ(types[b1], "B_3"); // four neighbors
 }
+
+// ---- Angle and inversion terms against their own energies -----------------
+
+namespace {
+// Maximum |analytic - central finite difference| of one energy term.
+// Both are in the units of that term's energy (they share the UFF scaling).
+template <typename EnergyFn, typename GradFn>
+double maxTermGradientError(Molecule& molecule, EnergyFn energy,
+                            GradFn gradient)
+{
+  UFF uff;
+  uff.setMolecule(&molecule);
+  const Eigen::Index n = 3 * static_cast<Eigen::Index>(molecule.atomCount());
+  Eigen::VectorXd x(n);
+  for (Index i = 0; i < molecule.atomCount(); ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+
+  Eigen::VectorXd analytic = Eigen::VectorXd::Zero(n);
+  gradient(uff, x, analytic);
+
+  const double h = 1.0e-5;
+  double worst = 0.0;
+  for (Eigen::Index c = 0; c < n; ++c) {
+    Eigen::VectorXd xp = x;
+    Eigen::VectorXd xm = x;
+    xp[c] += h;
+    xm[c] -= h;
+    const double fd = (energy(uff, xp) - energy(uff, xm)) / (2.0 * h);
+    worst = std::max(worst, std::fabs(fd - analytic[c]));
+  }
+  return worst;
+}
+} // namespace
+
+// A seven-coordinate center has no UFF angle form (Rappe et al. only define
+// up to octahedral), so the angle energy is harmonic, k * (theta - theta0)^2.
+// The analytic gradient must be the derivative of exactly that. Si3 with
+// seven ligands reaches the fallback branch ("Other").
+TEST(UffAngleTest, SevenCoordinateFallbackGradientMatchesEnergy)
+{
+  Molecule molecule;
+  Index center = addAt(molecule, 14, 0.0, 0.0, 0.0);
+  // pentagonal bipyramid, with some distortion so no angle is 180 degrees
+  for (int k = 0; k < 5; ++k) {
+    double a = 2.0 * 3.14159265358979 * k / 5.0 + 0.05 * k;
+    bond(
+      molecule, center,
+      addAt(molecule, 1, 1.5 * std::cos(a), 1.5 * std::sin(a), 0.1 * (k - 2)));
+  }
+  bond(molecule, center, addAt(molecule, 1, 0.1, 0.2, 1.5));
+  bond(molecule, center, addAt(molecule, 1, -0.2, 0.1, -1.5));
+  EXPECT_EQ(uffTypes(molecule)[0], "Si3");
+
+  const double error = maxTermGradientError(
+    molecule, [](UFF& u, const Eigen::VectorXd& x) { return u.angleEnergy(x); },
+    [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
+      u.angleGradient(x, g);
+    });
+  EXPECT_LT(error, 1.0e-4);
+}
+
+// Inversion terms for P, As, Sb and Bi: E = K (C0 + C1 cos w + C2 cos 2w) with
+// C1 = -4 C2 cos w0 so that the minimum is at w0 (Rappe et al. 1992), and
+// C0 chosen so E(w0) = 0.
+TEST(UffOopTest, BismuthGradientMatchesEnergy)
+{
+  Molecule molecule;
+  Index bi = addAt(molecule, 83, 0.0, 0.0, 0.0);
+  bond(molecule, bi, addAt(molecule, 1, 1.9, 0.1, 0.05));
+  bond(molecule, bi, addAt(molecule, 1, 0.15, 1.8, -0.1));
+  bond(molecule, bi, addAt(molecule, 1, -0.1, 0.2, 1.85));
+  EXPECT_EQ(uffTypes(molecule)[0], "Bi3+3");
+
+  const double error = maxTermGradientError(
+    molecule, [](UFF& u, const Eigen::VectorXd& x) { return u.oopEnergy(x); },
+    [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
+      u.oopGradient(x, g);
+    });
+  EXPECT_LT(error, 1.0e-4);
+}
+
+// Bi has w0 = 90 degrees: three mutually perpendicular bonds. The inversion
+// energy must be zero there (it was evaluated at 90 radians before).
+TEST(UffOopTest, BismuthEnergyIsZeroAtEquilibrium)
+{
+  Molecule molecule;
+  Index bi = addAt(molecule, 83, 0.0, 0.0, 0.0);
+  bond(molecule, bi, addAt(molecule, 1, 1.9, 0.0, 0.0));
+  bond(molecule, bi, addAt(molecule, 1, 0.0, 1.9, 0.0));
+  bond(molecule, bi, addAt(molecule, 1, 0.0, 0.0, 1.9));
+  UFF uff;
+  uff.setMolecule(&molecule);
+  Eigen::VectorXd x(12);
+  for (Index i = 0; i < 4; ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  EXPECT_NEAR(uff.oopEnergy(x), 0.0, 1.0e-9);
+}
+
+// The same for P (w0 = 84.4339): scan the H-P-H angle for the minimum of the
+// inversion energy, which must be zero.
+TEST(UffOopTest, PhosphorusMinimumEnergyIsZero)
+{
+  double lowest = 1.0e9;
+  for (double deg = 80.0; deg <= 100.0; deg += 0.005) {
+    const double a = deg * 3.14159265358979 / 180.0;
+    // three equivalent bonds of length 1.4 with mutual angle a
+    const double cz = std::sqrt((1.0 + 2.0 * std::cos(a)) / 3.0);
+    const double rho = std::sqrt(1.0 - cz * cz);
+    Molecule molecule;
+    Index p = addAt(molecule, 15, 0.0, 0.0, 0.0);
+    for (int k = 0; k < 3; ++k) {
+      const double phi = 2.0 * 3.14159265358979 * k / 3.0;
+      bond(molecule, p,
+           addAt(molecule, 1, 1.4 * rho * std::cos(phi),
+                 1.4 * rho * std::sin(phi), 1.4 * cz));
+    }
+    UFF uff;
+    uff.setMolecule(&molecule);
+    Eigen::VectorXd x(12);
+    for (Index i = 0; i < 4; ++i)
+      x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+    lowest = std::min(lowest, uff.oopEnergy(x));
+  }
+  EXPECT_NEAR(lowest, 0.0, 1.0e-4);
+}
