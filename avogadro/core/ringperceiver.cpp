@@ -160,8 +160,10 @@ std::vector<std::vector<size_t>> PidMatrix::splice(size_t i, size_t j, size_t k)
       splicedPaths.push_back(path);
     }
   } else {
-    for (auto path : ijPaths) {
-      for (auto& jkPath : jkPaths) {
+    for (const auto& ijPath : ijPaths) {
+      for (const auto& jkPath : jkPaths) {
+        // Start from a fresh copy so spliced paths do not accumulate.
+        std::vector<size_t> path = ijPath;
         path.push_back(j);
         path.insert(path.end(), jkPath.begin(), jkPath.end());
         splicedPaths.push_back(path);
@@ -359,11 +361,14 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
 {
   size_t n = graph.size();
 
-  if (graph.edgeCount() < graph.vertexCount())
+  // The number of independent rings is the cyclomatic number E - V + C,
+  // where C is the number of connected components.
+  const size_t components = graph.connectedComponents().size();
+  const size_t edges = graph.edgeCount();
+  const size_t vertices = graph.vertexCount();
+  if (edges + components <= vertices)
     return std::vector<std::vector<size_t>>();
-  size_t ringCount = graph.edgeCount() - graph.vertexCount() + 1;
-  if (ringCount == 0)
-    return std::vector<std::vector<size_t>>();
+  const size_t ringCount = edges + components - vertices;
 
   // Algorithm 1 - create the distance and pid matrices.
   DistanceMatrix D(n);
@@ -437,12 +442,14 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
            ++i) {
         std::vector<size_t> ring;
         ring.push_back(candidate.start());
-        std::vector<size_t>& path = Pt(candidate.start(), candidate.end())[i];
+        const std::vector<size_t>& path =
+          Pt(candidate.start(), candidate.end())[i];
         ring.insert(ring.end(), path.begin(), path.end());
         ring.push_back(candidate.end());
         if (!P(candidate.end(), candidate.start()).empty()) {
-          path = P(candidate.end(), candidate.start())[0];
-          ring.insert(ring.end(), path.begin(), path.end());
+          const std::vector<size_t>& back =
+            P(candidate.end(), candidate.start())[0];
+          ring.insert(ring.end(), back.begin(), back.end());
         }
 
         // Check if ring is valid and unique.
@@ -455,15 +462,18 @@ std::vector<std::vector<size_t>> perceiveRings(const Graph& graph)
 
     // Even sized ring.
     else {
-      for (size_t i = 0; i < P(candidate.start(), candidate.end()).size() - 1;
-           ++i) {
+      const size_t forward = P(candidate.start(), candidate.end()).size();
+      const size_t backward = P(candidate.end(), candidate.start()).size();
+      for (size_t i = 0; i + 1 < forward && i + 1 < backward; ++i) {
         std::vector<size_t> ring;
         ring.push_back(candidate.start());
-        std::vector<size_t>& path = P(candidate.start(), candidate.end())[i];
+        const std::vector<size_t>& path =
+          P(candidate.start(), candidate.end())[i];
         ring.insert(ring.end(), path.begin(), path.end());
         ring.push_back(candidate.end());
-        path = P(candidate.end(), candidate.start())[i + 1];
-        ring.insert(ring.end(), path.begin(), path.end());
+        const std::vector<size_t>& back =
+          P(candidate.end(), candidate.start())[i + 1];
+        ring.insert(ring.end(), back.begin(), back.end());
 
         // check if ring is valid and unique
         if (sssr.isValid(ring) && sssr.isUnique(ring)) {
