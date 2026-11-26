@@ -15,6 +15,7 @@ set(tests
   DrawableCollector
   GLRenderer
   GeometryVisitor
+  Picking
   GltfVisitor
   Node
   PLYVisitor

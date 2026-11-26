@@ -585,30 +585,43 @@ void GLRenderer::applyProjection()
     static_cast<float>(m_overlayCamera.height()), -1.f, 1.f);
 }
 
+namespace {
+
+// Walk the visible part of the scene and add every hit to one map: a nested
+// group no longer builds, returns and re-inserts a map of its own. Hits come
+// out in the same order as before (children in order, equal keys in the order
+// they were found).
+void collectHits(const GroupNode* group, const Vector3f& rayOrigin,
+                 const Vector3f& rayEnd, const Vector3f& rayDirection,
+                 std::multimap<float, Identifier>& result)
+{
+  if (!group || !group->isVisible())
+    return;
+
+  for (const auto& it : group->children()) {
+    const Node* itNode = it.node;
+    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
+    if (childGroup) {
+      collectHits(childGroup, rayOrigin, rayEnd, rayDirection, result);
+      continue;
+    }
+    const auto* childGeometry = itNode->cast<GeometryNode>();
+    if (childGeometry && childGeometry->isVisible()) {
+      const std::multimap<float, Identifier> found =
+        childGeometry->hits(rayOrigin, rayEnd, rayDirection);
+      result.insert(found.begin(), found.end());
+    }
+  }
+}
+
+} // namespace
+
 std::multimap<float, Identifier> GLRenderer::hits(
   const GroupNode* group, const Vector3f& rayOrigin, const Vector3f& rayEnd,
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  if (!group || !group->isVisible())
-    return result;
-
-  for (auto it : group->children()) {
-    std::multimap<float, Identifier> loopHits;
-    const Node* itNode = it.node;
-    const auto* childGroup = dynamic_cast<const GroupNode*>(itNode);
-    if (childGroup) {
-      loopHits = hits(childGroup, rayOrigin, rayEnd, rayDirection);
-      result.insert(loopHits.begin(), loopHits.end());
-      continue;
-    }
-    const auto* childGeometry = itNode->cast<GeometryNode>();
-    if (childGeometry) {
-      loopHits = hits(childGeometry, rayOrigin, rayEnd, rayDirection);
-      result.insert(loopHits.begin(), loopHits.end());
-      continue;
-    }
-  }
+  collectHits(group, rayOrigin, rayEnd, rayDirection, result);
   return result;
 }
 

@@ -91,9 +91,10 @@ std::multimap<float, Identifier> GeometryNode::hits(
   if (!isVisible())
     return result;
   for (auto* m_drawable : m_drawables) {
-    std::multimap<float, Identifier> drawableHits;
-    if (m_drawable->isVisible())
-      drawableHits = m_drawable->hits(rayOrigin, rayEnd, rayDirection);
+    if (!m_drawable->isVisible())
+      continue;
+    const std::multimap<float, Identifier> drawableHits =
+      m_drawable->hits(rayOrigin, rayEnd, rayDirection);
     result.insert(drawableHits.begin(), drawableHits.end());
   }
 
