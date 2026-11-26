@@ -8,15 +8,20 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/calc/uff.h>
+#include <avogadro/calc/uffdata.h>
 
 #include <avogadro/core/atom.h>
 #include <avogadro/core/constraint.h>
+#include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/io/xyzformat.h>
 
+#include <cctype>
 #include <cmath>
+#include <iterator>
+#include <string>
 #include <vector>
 
 using namespace Avogadro::Calc;
@@ -261,4 +266,327 @@ TEST(UffMaskTest, SingleAtomMoleculeGetsMaskOfTheRightSize)
   UFF uff;
   uff.setMolecule(&molecule);
   EXPECT_EQ(uff.mask().rows(), 3);
+}
+
+// ---- UFF atom typing and parameter table ----------------------------------
+
+namespace {
+// The leading element symbol of a UFF label. One-letter symbols are padded
+// ("C_3", "I_", "H_b"); two-letter symbols are not ("Cl", "Ti3+4", "He4+4").
+std::string labelSymbol(const std::string& label)
+{
+  std::string symbol = label.substr(0, 1);
+  if (label.size() > 1 && std::islower(static_cast<unsigned char>(label[1])))
+    symbol += label[1];
+  return symbol;
+}
+
+// Find the (first) row of uffparams with this label, or -1.
+int rowForLabel(const std::string& label)
+{
+  for (size_t i = 0; i < std::size(uffparams); ++i) {
+    if (uffparams[i].label == label)
+      return static_cast<int>(i);
+  }
+  return -1;
+}
+
+// The UFF atom type labels the molecule's atoms are given.
+std::vector<std::string> uffTypes(Molecule& molecule)
+{
+  UFF uff;
+  uff.setMolecule(&molecule);
+  std::vector<std::string> types;
+  for (Index i = 0; i < molecule.atomCount(); ++i)
+    types.push_back(uff.atomTypeLabel(i));
+  return types;
+}
+
+// Add an atom at the given position and return its index.
+Index addAt(Molecule& molecule, unsigned char z, double x, double y, double zz)
+{
+  Atom atom = molecule.addAtom(z);
+  atom.setPosition3d(Vector3(x, y, zz));
+  return atom.index();
+}
+
+void bond(Molecule& molecule, Index a, Index b, unsigned char order = 1)
+{
+  molecule.addBond(a, b, order);
+}
+} // namespace
+
+// Every row's element number must agree with the symbol in its label. This is
+// the regression test for Sb..Lr being one atomic number too low.
+TEST(UffTableTest, ElementNumbersMatchLabels)
+{
+  int previous = 0;
+  for (const parameter& row : uffparams) {
+    if (row.element == 0) // "Du" dummy atom
+      continue;
+    std::string expected = Elements::symbol(row.element);
+    // the original UFF paper (and Open Babel) label lawrencium "Lw"
+    if (row.element == 103)
+      expected = "Lw";
+    EXPECT_EQ(labelSymbol(row.label), expected)
+      << "row " << row.label << " has element " << row.element;
+    // rows are grouped by element in increasing order
+    EXPECT_GE(row.element, previous) << row.label;
+    previous = row.element;
+  }
+}
+
+TEST(UffTableTest, EveryElementFrom1To103HasAType)
+{
+  for (int z = 1; z <= 103; ++z) {
+    bool found = false;
+    for (const parameter& row : uffparams)
+      found = found || row.element == z;
+    EXPECT_TRUE(found) << "no UFF row for element " << z;
+  }
+  // and nothing beyond Lr
+  for (const parameter& row : uffparams)
+    EXPECT_LE(row.element, 103) << row.label;
+}
+
+TEST(UffTableTest, SupportedElementsCoverTheTable)
+{
+  UFF uff;
+  for (int z = 1; z <= 103; ++z)
+    EXPECT_TRUE(uff.elements().test(z)) << "element " << z;
+  EXPECT_FALSE(uff.elements().test(104));
+}
+
+// For every element, whatever the bonding (single, double or triple bond to
+// the same element, or six hydrogens), the type must belong to that element.
+// The coordination scan used to run into the next element's rows.
+TEST(UffTypingTest, EveryElementGetsOneOfItsOwnTypes)
+{
+  for (int z = 1; z <= 103; ++z) {
+    for (int order = 1; order <= 3; ++order) {
+      Molecule molecule;
+      Index a = addAt(molecule, static_cast<unsigned char>(z), 0.0, 0.0, 0.0);
+      Index b = addAt(molecule, static_cast<unsigned char>(z), 2.0, 0.0, 0.0);
+      bond(molecule, a, b, static_cast<unsigned char>(order));
+      for (const std::string& type : uffTypes(molecule)) {
+        int row = rowForLabel(type);
+        ASSERT_GE(row, 0) << "Z=" << z << " order " << order << ": '" << type
+                          << "'";
+        EXPECT_EQ(uffparams[row].element, z)
+          << "Z=" << z << " order " << order << " got " << type;
+      }
+    }
+
+    // six hydrogens around the element (octahedron)
+    Molecule molecule;
+    Index center =
+      addAt(molecule, static_cast<unsigned char>(z), 0.0, 0.0, 0.0);
+    const double dirs[6][3] = { { 1, 0, 0 },  { -1, 0, 0 }, { 0, 1, 0 },
+                                { 0, -1, 0 }, { 0, 0, 1 },  { 0, 0, -1 } };
+    for (int count = 1; count <= 6; ++count) {
+      const double* d = dirs[count - 1];
+      Index h = addAt(molecule, 1, 2.0 * d[0], 2.0 * d[1], 2.0 * d[2]);
+      bond(molecule, center, h);
+      std::vector<std::string> types = uffTypes(molecule);
+      ASSERT_FALSE(types.empty());
+      int row = rowForLabel(types[0]);
+      ASSERT_GE(row, 0) << "Z=" << z << " with " << count << " ligands";
+      EXPECT_EQ(uffparams[row].element, z)
+        << "Z=" << z << " with " << count << " ligands got " << types[0];
+    }
+  }
+}
+
+TEST(UffTypingTest, AtomsBeyondLawrenciumHaveNoType)
+{
+  Molecule molecule;
+  Index a = addAt(molecule, 104, 0.0, 0.0, 0.0);
+  Index b = addAt(molecule, 1, 1.5, 0.0, 0.0);
+  bond(molecule, a, b);
+  EXPECT_EQ(uffTypes(molecule)[0], "");
+}
+
+// Sulfur with two double bonds (SO2). Rappe et al. (1992) and the Open Babel
+// UFF.prm comment ("S+4 (SO2)") give S_3+4. (Open Babel itself assigns
+// S_3+2 here because its SMARTS needs an explicit +4 formal charge.)
+TEST(UffTypingTest, SulfurDioxide)
+{
+  Molecule molecule;
+  Index s = addAt(molecule, 16, 0.0, 0.0, 0.0);
+  Index o1 = addAt(molecule, 8, 1.43, 0.0, 0.0);
+  Index o2 = addAt(molecule, 8, -0.7, 1.25, 0.0);
+  bond(molecule, s, o1, 2);
+  bond(molecule, s, o2, 2);
+  std::vector<std::string> types = uffTypes(molecule);
+  EXPECT_EQ(types[0], "S_3+4");
+  EXPECT_EQ(types[1], "O_2");
+  EXPECT_EQ(types[2], "O_2");
+}
+
+// Sulfuric acid, drawn with two S=O. The UFF.prm comment gives S_3+6
+// ("SO3 / H2SO4"); Open Babel itself assigns S_3+2.
+TEST(UffTypingTest, SulfuricAcid)
+{
+  Molecule molecule;
+  Index s = addAt(molecule, 16, 0.0, 0.0, 0.0);
+  Index o1 = addAt(molecule, 8, 1.4, 0.0, 0.0);
+  Index o2 = addAt(molecule, 8, -1.4, 0.0, 0.0);
+  Index o3 = addAt(molecule, 8, 0.0, 1.6, 0.0);
+  Index o4 = addAt(molecule, 8, 0.0, -1.6, 0.0);
+  bond(molecule, s, o1, 2);
+  bond(molecule, s, o2, 2);
+  bond(molecule, s, o3);
+  bond(molecule, s, o4);
+  EXPECT_EQ(uffTypes(molecule)[0], "S_3+6");
+
+  // the same molecule with only single bonds (e.g., perceived from XYZ)
+  // or sulfate with charge-separated S+ / O- bonds is still four-coordinate
+  Molecule single;
+  Index s2 = addAt(single, 16, 0.0, 0.0, 0.0);
+  for (int k = 0; k < 4; ++k) {
+    Index o = addAt(single, 8, k < 2 ? (k ? 1.5 : -1.5) : 0.0,
+                    k >= 2 ? (k == 2 ? 1.5 : -1.5) : 0.0, 0.0);
+    bond(single, s2, o);
+  }
+  EXPECT_EQ(uffTypes(single)[0], "S_3+6");
+}
+
+// Dimethyl sulfoxide: S(=O) with two carbons is tetrahedral-like S(IV);
+// S_3+4 (it used to get the planar thione type S_2).
+TEST(UffTypingTest, DimethylSulfoxide)
+{
+  Molecule molecule;
+  Index s = addAt(molecule, 16, 0.0, 0.0, 0.0);
+  Index o = addAt(molecule, 8, 0.0, 0.0, 1.5);
+  Index c1 = addAt(molecule, 6, 1.8, 0.0, -0.5);
+  Index c2 = addAt(molecule, 6, -0.9, 1.6, -0.5);
+  bond(molecule, s, o, 2);
+  bond(molecule, s, c1);
+  bond(molecule, s, c2);
+  std::vector<std::string> types = uffTypes(molecule);
+  EXPECT_EQ(types[0], "S_3+4");
+  EXPECT_EQ(types[2], "C_3");
+}
+
+// A thioketone sulfur keeps the planar sp2 type, and divalent sulfur the
+// generic type.
+TEST(UffTypingTest, ThioneAndThioether)
+{
+  Molecule thione;
+  Index c = addAt(thione, 6, 0.0, 0.0, 0.0);
+  Index s = addAt(thione, 16, 1.6, 0.0, 0.0);
+  bond(thione, c, s, 2);
+  EXPECT_EQ(uffTypes(thione)[1], "S_2");
+
+  Molecule thioether;
+  Index c1 = addAt(thioether, 6, -1.0, 1.0, 0.0);
+  Index s2 = addAt(thioether, 16, 0.0, 0.0, 0.0);
+  Index c2 = addAt(thioether, 6, 1.0, 1.0, 0.0);
+  bond(thioether, c1, s2);
+  bond(thioether, s2, c2);
+  EXPECT_EQ(uffTypes(thioether)[1], "S_3+2");
+}
+
+// Trimethyl phosphate O=P(OMe)3. UFF P_3+5 is the 109.47 degree
+// pentavalent phosphorus (Open Babel only assigns it to five-coordinate P and
+// gives this P_3+3). It used to run past the P rows and get S_2.
+TEST(UffTypingTest, Phosphate)
+{
+  Molecule molecule;
+  Index p = addAt(molecule, 15, 0.0, 0.0, 0.0);
+  Index o = addAt(molecule, 8, 0.0, 0.0, 1.5);
+  bond(molecule, p, o, 2);
+  for (int k = 0; k < 3; ++k) {
+    double angle = 2.0 * 3.14159265358979 * k / 3.0;
+    Index ester =
+      addAt(molecule, 8, 1.6 * std::cos(angle), 1.6 * std::sin(angle), -0.5);
+    bond(molecule, p, ester);
+  }
+  std::vector<std::string> types = uffTypes(molecule);
+  EXPECT_EQ(types[0], "P_3+5");
+  EXPECT_EQ(types[1], "O_2");
+  EXPECT_EQ(types[2], "O_3");
+
+  // phosphine stays P_3+3
+  Molecule phosphine;
+  Index p3 = addAt(phosphine, 15, 0.0, 0.0, 0.0);
+  for (int k = 0; k < 3; ++k) {
+    double angle = 2.0 * 3.14159265358979 * k / 3.0;
+    Index h =
+      addAt(phosphine, 1, 1.4 * std::cos(angle), 1.4 * std::sin(angle), -0.4);
+    bond(phosphine, p3, h);
+  }
+  EXPECT_EQ(uffTypes(phosphine)[0], "P_3+3");
+}
+
+// Benzonitrile: the nitrile C and N are sp (C_1, N_1) and must not be changed
+// to sp2 / resonant types by the resonance pass just because the ipso carbon
+// is aromatic.
+TEST(UffTypingTest, BenzonitrileKeepsSpTypes)
+{
+  Molecule molecule;
+  Index ring[6];
+  for (int k = 0; k < 6; ++k) {
+    double angle = 2.0 * 3.14159265358979 * k / 6.0;
+    ring[k] =
+      addAt(molecule, 6, 1.4 * std::cos(angle), 1.4 * std::sin(angle), 0.0);
+  }
+  for (int k = 0; k < 6; ++k)
+    bond(molecule, ring[k], ring[(k + 1) % 6], (k % 2 == 0) ? 2 : 1);
+  Index c = addAt(molecule, 6, 2.86, 0.0, 0.0);
+  Index n = addAt(molecule, 7, 4.02, 0.0, 0.0);
+  bond(molecule, ring[0], c);
+  bond(molecule, c, n, 3);
+
+  std::vector<std::string> types = uffTypes(molecule);
+  for (int k = 0; k < 6; ++k)
+    EXPECT_EQ(types[ring[k]], "C_R");
+  EXPECT_EQ(types[c], "C_1");
+  EXPECT_EQ(types[n], "N_1");
+}
+
+// Allene and ketene: the central sp carbon next to sp2 atoms stays C_1.
+TEST(UffTypingTest, AlleneAndKeteneKeepSpCarbon)
+{
+  Molecule allene;
+  Index c1 = addAt(allene, 6, -1.3, 0.0, 0.0);
+  Index c2 = addAt(allene, 6, 0.0, 0.0, 0.0);
+  Index c3 = addAt(allene, 6, 1.3, 0.0, 0.0);
+  bond(allene, c1, c2, 2);
+  bond(allene, c2, c3, 2);
+  std::vector<std::string> types = uffTypes(allene);
+  EXPECT_EQ(types[1], "C_1");
+  EXPECT_EQ(types[0], "C_2");
+
+  Molecule ketene;
+  Index cc = addAt(ketene, 6, -1.3, 0.0, 0.0);
+  Index cm = addAt(ketene, 6, 0.0, 0.0, 0.0);
+  Index o = addAt(ketene, 8, 1.2, 0.0, 0.0);
+  bond(ketene, cc, cm, 2);
+  bond(ketene, cm, o, 2);
+  types = uffTypes(ketene);
+  EXPECT_EQ(types[1], "C_1");
+  EXPECT_EQ(types[2], "O_2");
+}
+
+// XeF4 must use Xe4+4. Xe has atomic number 54; the table used to have it at
+// 53 (and Cs at 54), so Xe was typed as I and Cs as Xe...
+TEST(UffTypingTest, XenonTetrafluoride)
+{
+  Molecule molecule;
+  Index xe = addAt(molecule, 54, 0.0, 0.0, 0.0);
+  const double dirs[4][2] = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+  for (const auto& d : dirs) {
+    Index f = addAt(molecule, 9, 1.95 * d[0], 1.95 * d[1], 0.0);
+    bond(molecule, xe, f);
+  }
+  std::vector<std::string> types = uffTypes(molecule);
+  EXPECT_EQ(types[0], "Xe4+4");
+  EXPECT_EQ(types[1], "F_");
+
+  Molecule cesiumChloride;
+  Index cs = addAt(cesiumChloride, 55, 0.0, 0.0, 0.0);
+  Index cl = addAt(cesiumChloride, 17, 3.0, 0.0, 0.0);
+  bond(cesiumChloride, cs, cl);
+  EXPECT_EQ(uffTypes(cesiumChloride)[0], "Cs");
 }

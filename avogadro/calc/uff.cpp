@@ -17,6 +17,8 @@
 #include <avogadro/core/unitcell.h>
 
 #include <cstdint>
+#include <iterator>
+#include <string>
 #include <unordered_set>
 
 namespace Avogadro::Calc {
@@ -1134,6 +1136,16 @@ void UFF::setMolecule(Core::Molecule* mol)
 
   // start with assigning atom types
   d = new UFFPrivate(mol);
+}
+
+std::string UFF::atomTypeLabel(Index atomIndex) const
+{
+  if (d == nullptr || atomIndex >= d->m_atomTypes.size())
+    return std::string();
+  const int type = d->m_atomTypes[atomIndex];
+  if (type < 0 || static_cast<size_t>(type) >= std::size(uffparams))
+    return std::string();
+  return uffparams[type].label;
 }
 
 Real UFF::value(const Eigen::VectorXd& x)
