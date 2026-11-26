@@ -16,6 +16,8 @@
 #include <avogadro/core/molecule.h>
 #include <avogadro/core/unitcell.h>
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <iterator>
 #include <string>
@@ -97,6 +99,9 @@ public:
   Real _x6;  // precomputed x^6
   Real _x12; // precomputed x^12
 };
+
+// Torsions fade out as a bond angle goes from this angle (degrees) to 180
+static constexpr Real TORSION_SWITCH_ONSET_DEGREES = 170.0;
 
 // VdW distance cutoff squared (10 Angstrom cutoff).
 // UFF equilibrium VdW distances are 2.5-4.5 Angstroms,
@@ -706,7 +711,8 @@ public:
         t._ijkl = 0.5 * 1.0;
 
         // exception when the sp3 center is group 16 (e.g. C=C-O-C):
-        // n = 2, phi0 = 90, same V as Open Babel
+        // n = 2, phi0 = 90. V stays 1.0 kcal/mol: Rappe 1992 and Open Babel
+        // agree
         const unsigned char zSp3 = (hybridJ == '3') ? zJ : zK;
         if (isGroup16(zSp3)) {
           t._n = 2;
@@ -1018,6 +1024,44 @@ public:
     }
   }
 
+  // Smooth switch that turns a torsion off as one of its bond angles nears
+  // 180 degrees, as a function of c = cos(theta). It is 1 for theta <= 170
+  // degrees and falls to 0 at 180 degrees (C2 smoothstep in c). At a linear
+  // angle the dihedral is undefined, so without it the torsion energy jumps
+  // and its gradient diverges. This deliberately deviates from Rappe 1992
+  // (like the extra exp() term in the angle energy). dS receives dS/dc.
+  static Real torsionSwitch(Real cosTheta, Real& dS)
+  {
+    const Real onset =
+      1.0 + std::cos(TORSION_SWITCH_ONSET_DEGREES * DEG_TO_RAD);
+    Real u = (cosTheta + 1.0) / onset;
+    u = std::clamp(u, 0.0, 1.0);
+    dS =
+      (u > 0.0 && u < 1.0) ? 30.0 * u * u * (1.0 - u) * (1.0 - u) / onset : 0.0;
+    return u * u * u * (10.0 - 15.0 * u + 6.0 * u * u);
+  }
+
+  // cos(angle a-b-c) and its gradient with respect to a, b and c. Returns
+  // false if either bond has zero length.
+  static bool cosineAndGradient(const Vector3d& a, const Vector3d& b,
+                                const Vector3d& c, Real& cosine, Vector3d& ga,
+                                Vector3d& gb, Vector3d& gc)
+  {
+    const Vector3d u = a - b;
+    const Vector3d v = c - b;
+    const Real lu = u.norm();
+    const Real lv = v.norm();
+    if (lu < 1e-6 || lv < 1e-6)
+      return false;
+    const Vector3d uh = u / lu;
+    const Vector3d vh = v / lv;
+    cosine = std::clamp(uh.dot(vh), -1.0, 1.0);
+    ga = (vh - cosine * uh) / lu;
+    gc = (uh - cosine * vh) / lv;
+    gb = -(ga + gc);
+    return true;
+  }
+
   void torsionEvaluate(const Eigen::VectorXd& x, Real* energy,
                        Eigen::VectorXd* grad)
   {
@@ -1034,42 +1078,55 @@ public:
       const Vector3d vk = x.segment<3>(3 * k);
       const Vector3d vl = x.segment<3>(3 * l);
 
-      Real phiGradient = 0.0;
-      Vector3d grad_i = Vector3d::Zero();
-      Vector3d grad_j = Vector3d::Zero();
-      Vector3d grad_k = Vector3d::Zero();
-      Vector3d grad_l = Vector3d::Zero();
-      if (needsGradient) {
-        phiGradient =
-          dihedralGradient(vi, vj, vk, vl, grad_i, grad_j, grad_k, grad_l);
-      }
+      // switch off the torsion near linear bond angles (zero-length bonds
+      // have no angle or dihedral, so the term is skipped for them too)
+      Vector3d a1, b1, c1, a2, b2, c2;
+      Real cos1 = 0.0;
+      Real cos2 = 0.0;
+      if (!cosineAndGradient(vi, vj, vk, cos1, a1, b1, c1) ||
+          !cosineAndGradient(vj, vk, vl, cos2, a2, b2, c2))
+        continue;
+      Real dS1 = 0.0;
+      Real dS2 = 0.0;
+      const Real s1 = torsionSwitch(cos1, dS1);
+      const Real s2 = torsionSwitch(cos2, dS2);
+      if (s1 * s2 == 0.0)
+        continue;
 
       const Real cosPhi0 = torsion._cos_phi0;
       const Real kijkl = torsion._ijkl;
       if (energy != nullptr) {
-        // Match the legacy value() path. Skip zero-length bonds, which make
-        // calculateDihedral() return NaN (the gradient skips them too).
-        const Vector3d ijv = vj - vi;
-        const Vector3d jkv = vk - vj;
-        const Vector3d klv = vl - vk;
-        if (ijv.norm() > 1e-6 && jkv.norm() > 1e-6 && klv.norm() > 1e-6) {
-          const Real phiEnergy = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
-          *energy += kijkl * (1.0 - cosPhi0 * cos(torsion._n * phiEnergy));
-        }
+        const Real phiEnergy = calculateDihedral(vi, vj, vk, vl) * DEG_TO_RAD;
+        const Real e0 = kijkl * (1.0 - cosPhi0 * cos(torsion._n * phiEnergy));
+        if (std::isfinite(e0))
+          *energy += s1 * s2 * e0;
       }
 
       if (!needsGradient)
         continue;
 
+      Real phiGradient = 0.0;
+      Vector3d grad_i = Vector3d::Zero();
+      Vector3d grad_j = Vector3d::Zero();
+      Vector3d grad_k = Vector3d::Zero();
+      Vector3d grad_l = Vector3d::Zero();
+      phiGradient =
+        dihedralGradient(vi, vj, vk, vl, grad_i, grad_j, grad_k, grad_l);
+
+      const Real e0 = kijkl * (1.0 - cosPhi0 * cos(torsion._n * phiGradient));
       const Real dE =
         kijkl * torsion._n * sin(torsion._n * phiGradient) * cosPhi0;
-      if (std::isnan(dE))
+      if (!std::isfinite(dE) || !std::isfinite(e0))
         continue;
 
-      grad->segment<3>(3 * i) += dE * grad_i;
-      grad->segment<3>(3 * j) += dE * grad_j;
-      grad->segment<3>(3 * k) += dE * grad_k;
-      grad->segment<3>(3 * l) += dE * grad_l;
+      // product rule: S1 S2 dE0 + E0 (S2 dS1 dcos1 + S1 dS2 dcos2)
+      const Real w = s1 * s2;
+      const Real w1 = e0 * s2 * dS1;
+      const Real w2 = e0 * s1 * dS2;
+      grad->segment<3>(3 * i) += w * dE * grad_i + w1 * a1;
+      grad->segment<3>(3 * j) += w * dE * grad_j + w1 * b1 + w2 * a2;
+      grad->segment<3>(3 * k) += w * dE * grad_k + w1 * c1 + w2 * b2;
+      grad->segment<3>(3 * l) += w * dE * grad_l + w2 * c2;
     }
   }
 

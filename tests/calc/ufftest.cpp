@@ -1242,3 +1242,122 @@ TEST(UffTorsionTest, GradientsMatchEnergies)
       EXPECT_LT(t.gradientError(deg), 1.0e-4);
   }
 }
+
+// ---- Torsions near linear bond angles --------------------------------------
+
+namespace {
+const double kPi = 3.14159265358979;
+
+// A four carbon chain A-B-C-D with bond angles theta1 (A-B-C) and theta2
+// (B-C-D), both given in degrees, and dihedral phi (degrees)
+Molecule fourChain(double theta1, double theta2, double phi)
+{
+  const double r = kPi / 180.0;
+  Molecule m;
+  addAt(m, 6, 1.5 * std::cos(theta1 * r),
+        1.5 * std::sin(theta1 * r) * std::cos(phi * r),
+        1.5 * std::sin(theta1 * r) * std::sin(phi * r));
+  addAt(m, 6, 0.0, 0.0, 0.0);
+  addAt(m, 6, 1.5, 0.0, 0.0);
+  addAt(m, 6, 1.5 - 1.5 * std::cos(theta2 * r), 1.5 * std::sin(theta2 * r),
+        0.0);
+  bond(m, 0, 1);
+  bond(m, 1, 2);
+  bond(m, 2, 3);
+  return m;
+}
+
+// sp3-sp3 torsion energy of the chain before any switching: n = 3, phi0 = 60
+double bareTorsion(double phi)
+{
+  const double v = uffparams[rowForLabel("C_3")].Vi;
+  return 0.5 * v * (1.0 + std::cos(3.0 * phi * kPi / 180.0));
+}
+
+// the C2 smoothstep in cos(theta), from 170 to 180 degrees
+double switchValue(double theta)
+{
+  const double onset = 1.0 + std::cos(170.0 * kPi / 180.0);
+  double u = (std::cos(theta * kPi / 180.0) + 1.0) / onset;
+  u = std::min(1.0, std::max(0.0, u));
+  return u * u * u * (10.0 - 15.0 * u + 6.0 * u * u);
+}
+
+double chainEnergy(double theta1, double theta2, double phi)
+{
+  Molecule m = fourChain(theta1, theta2, phi);
+  UFF uff;
+  uff.setMolecule(&m);
+  return uff.torsionEnergy(positionsOf(m));
+}
+} // namespace
+
+TEST(UffTorsionSwitchTest, EnergyFollowsTheSwitch)
+{
+  const double phi = 20.0;
+  for (double theta : { 100.0, 150.0, 165.0, 170.0 })
+    EXPECT_DOUBLE_EQ(chainEnergy(theta, 110.0, phi), bareTorsion(phi));
+  for (double theta : { 171.0, 175.0, 178.0, 179.9, 179.9999 }) {
+    EXPECT_NEAR(chainEnergy(theta, 110.0, phi),
+                switchValue(theta) * bareTorsion(phi), 1.0e-9);
+    // the same when the other angle is the near-linear one
+    EXPECT_NEAR(chainEnergy(110.0, theta, phi),
+                switchValue(theta) * bareTorsion(phi), 1.0e-9);
+  }
+  EXPECT_NEAR(chainEnergy(180.0, 110.0, phi), 0.0, 1.0e-12);
+  EXPECT_NEAR(chainEnergy(110.0, 180.0, phi), 0.0, 1.0e-12);
+  // both angles switched
+  EXPECT_NEAR(chainEnergy(175.0, 176.0, phi),
+              switchValue(175.0) * switchValue(176.0) * bareTorsion(phi),
+              1.0e-9);
+}
+
+// C1: no kink at the onset or at 180 degrees
+TEST(UffTorsionSwitchTest, EnergyIsSmoothThroughTheScan)
+{
+  const double phi = 20.0;
+  const double h = 1.0e-3;
+  for (double theta : { 170.0, 179.998 }) {
+    const double slope = (chainEnergy(theta + h, 110.0, phi) -
+                          chainEnergy(theta - h, 110.0, phi)) /
+                         (2.0 * h);
+    EXPECT_LT(std::fabs(slope), 1.0e-3);
+  }
+  double previous = chainEnergy(165.0, 110.0, phi);
+  for (double theta = 165.0; theta <= 180.0; theta += 0.05) {
+    const double e = chainEnergy(theta, 110.0, phi);
+    EXPECT_LE(e, previous + 1.0e-12);
+    EXPECT_LT(previous - e, 0.05); // no jump
+    previous = e;
+  }
+}
+
+TEST(UffTorsionSwitchTest, GradientMatchesEnergyNearLinear)
+{
+  for (double phi : { 20.0, 75.0 }) {
+    for (double theta :
+         { 165.0, 170.5, 172.0, 176.0, 179.0, 179.9999, 180.0 }) {
+      for (int which = 0; which < 2; ++which) {
+        Molecule m = which == 0 ? fourChain(theta, 110.0, phi)
+                                : fourChain(110.0, theta, phi);
+        UFF uff;
+        uff.setMolecule(&m);
+        const Eigen::VectorXd x = positionsOf(m);
+        Eigen::VectorXd analytic = Eigen::VectorXd::Zero(x.size());
+        uff.torsionGradient(x, analytic);
+        ASSERT_TRUE(analytic.allFinite());
+        const double h = 1.0e-7;
+        for (Eigen::Index c = 0; c < x.size(); ++c) {
+          Eigen::VectorXd xp = x;
+          Eigen::VectorXd xm = x;
+          xp[c] += h;
+          xm[c] -= h;
+          const double fd =
+            (uff.torsionEnergy(xp) - uff.torsionEnergy(xm)) / (2.0 * h);
+          EXPECT_NEAR(fd, analytic[c], 1.0e-4 + 1.0e-4 * std::fabs(fd))
+            << "theta " << theta << " phi " << phi << " component " << c;
+        }
+      }
+    }
+  }
+}
