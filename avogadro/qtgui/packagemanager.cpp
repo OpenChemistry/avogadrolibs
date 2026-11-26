@@ -560,6 +560,24 @@ QString PackageManager::packageVersion(const QString& packageDir)
     .toString();
 }
 
+// Remove a directory, or a symlink in its place, without ever following the
+// link. A package (e.g., from an archive) can ship one, and removeRecursively()
+// would delete whatever it points to.
+static bool removeDirOrLink(const QString& path)
+{
+  if (!QFileInfo(path).isSymLink())
+    return QDir(path).removeRecursively();
+  if (QFile::remove(path))
+    return true;
+#ifdef Q_OS_WIN
+  // DeleteFileW refuses a directory symlink; RemoveDirectoryW removes the
+  // link itself and leaves its target alone.
+  return QDir().rmdir(path);
+#else
+  return false;
+#endif
+}
+
 bool PackageManager::removeSupersededVenv(const QString& packageDir,
                                           const QString& command)
 {
@@ -579,7 +597,7 @@ bool PackageManager::removeSupersededVenv(const QString& packageDir,
     return false;
   }
 
-  if (!QDir(venvDir).removeRecursively()) {
+  if (!removeDirOrLink(venvDir)) {
     qWarning() << "Could not remove superseded virtual environment" << venvDir;
     return false;
   }
@@ -680,7 +698,7 @@ static bool installWithPixi(const QString& packageDir,
   // pixi install fails querying its interpreter. Remove it and recreate.
   const QString pixiDir = packageDir + QStringLiteral("/.pixi");
   if (hasNonExecutablePixiPython(packageDir)) {
-    if (!QDir(pixiDir).removeRecursively()) {
+    if (!removeDirOrLink(pixiDir)) {
       qWarning() << "Could not remove invalid .pixi directory in" << packageDir;
     }
   }

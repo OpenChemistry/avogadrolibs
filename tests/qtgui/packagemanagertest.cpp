@@ -1239,6 +1239,29 @@ TEST_F(PackageManagerTest, removeSupersededVenvDeletesVenvOncePixiProvidesIt)
     PackageManager::pixiScriptPath(m_packageDir, "avo-cmd").isEmpty());
 }
 
+TEST_F(PackageManagerTest, removeSupersededVenvRemovesOnlyASymlinkedVenv)
+{
+#ifdef Q_OS_WIN
+  GTEST_SKIP() << "QFile::link makes a shortcut, not a symlink, on Windows";
+#endif
+  // A package from an archive can ship .venv as a link to the user's files.
+  QTemporaryDir outside;
+  ASSERT_TRUE(outside.isValid());
+  const QString sentinel = outside.path() + "/sentinel.txt";
+  {
+    QFile f(sentinel);
+    ASSERT_TRUE(f.open(QIODevice::WriteOnly));
+    f.write("keep me\n");
+  }
+  if (!QFile::link(outside.path(), m_packageDir + "/.venv"))
+    GTEST_SKIP() << "symlinks unavailable";
+  ASSERT_TRUE(createConsoleScript(m_packageDir + pixiBinDir(), "avo-cmd"));
+
+  EXPECT_TRUE(PackageManager::removeSupersededVenv(m_packageDir, "avo-cmd"));
+  EXPECT_FALSE(QFileInfo(m_packageDir + "/.venv").isSymLink());
+  EXPECT_TRUE(QFileInfo::exists(sentinel));
+}
+
 TEST_F(PackageManagerTest, removeSupersededVenvKeepsVenvWithoutPixiCommand)
 {
   ASSERT_TRUE(createConsoleScript(m_packageDir + venvBinDir(), "avo-cmd"));

@@ -345,3 +345,17 @@ if(TARGET Editor)
   set_tests_properties(QtPlugins-EditorDrawOptions PROPERTIES
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endif()
+
+# The package installer's archive extraction (Zip Slip regression tests). The
+# tests build their archives with libarchive, as the plugin extracts them.
+if(TARGET PackageInstaller)
+  find_package(LibArchive REQUIRED)
+  get_target_property(packageinstaller_source_dir PackageInstaller SOURCE_DIR)
+  add_executable(AvogadroPackageInstallerTests zipextractortest.cpp)
+  target_include_directories(AvogadroPackageInstallerTests PRIVATE
+    "${packageinstaller_source_dir}")
+  target_link_libraries(AvogadroPackageInstallerTests PRIVATE PackageInstaller
+    LibArchive::LibArchive Qt${QT_VERSION}::Core
+    ${GTEST_BOTH_LIBRARIES} ${EXTRA_LINK_LIB})
+  add_test(NAME QtPlugins-ZipExtractor COMMAND AvogadroPackageInstallerTests)
+endif()
