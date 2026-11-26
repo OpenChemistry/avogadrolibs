@@ -195,7 +195,8 @@ QList<QString> ZipExtractor::extract(const std::string& extractdir,
       cleanup();
       return toReturn;
     }
-    if (r >= ARCHIVE_OK && archive_entry_size(entry) > 0) {
+    // ARCHIVE_WARN still wrote the header, so the data must follow.
+    if (archive_entry_size(entry) > 0) {
       r = copyData(a, ext);
       if (r < ARCHIVE_OK)
         qWarning() << archive_error_string(ext);
