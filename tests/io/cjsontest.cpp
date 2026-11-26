@@ -1768,3 +1768,108 @@ TEST(CjsonTest, shortOccupancyColumnWritesFullLength)
   EXPECT_EQ(root["atoms"]["occupancies"][0].get<double>(), 0.5);
   EXPECT_EQ(root["atoms"]["occupancies"][2].get<double>(), 1.0);
 }
+
+TEST(CjsonTest, disorderRoundTrip)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(
+    occupancyDocument(R"(, "disorder": { "assemblies": [ "", "A", "A" ],
+                                          "groups": [ "", "1", "-2" ] })"),
+    molecule))
+    << cjson.error();
+  EXPECT_EQ(molecule.disorderGroup(0), "");
+  EXPECT_EQ(molecule.disorderAssembly(1), "A");
+  EXPECT_EQ(molecule.disorderGroup(1), "1");
+  EXPECT_EQ(molecule.disorderGroup(2), "-2");
+
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  ASSERT_TRUE(root["atoms"].contains("disorder"));
+  ASSERT_EQ(root["atoms"]["disorder"]["groups"].size(), 3u);
+  ASSERT_EQ(root["atoms"]["disorder"]["assemblies"].size(), 3u);
+
+  Molecule readBack;
+  ASSERT_TRUE(cjson.readString(output, readBack)) << cjson.error();
+  for (Avogadro::Index i = 0; i < 3; ++i) {
+    EXPECT_EQ(readBack.disorderAssembly(i), molecule.disorderAssembly(i)) << i;
+    EXPECT_EQ(readBack.disorderGroup(i), molecule.disorderGroup(i)) << i;
+  }
+}
+
+TEST(CjsonTest, disorderMissingAssembliesAndBadLengths)
+{
+  CjsonFormat cjson;
+  {
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(
+      occupancyDocument(R"(, "disorder": { "groups": [ "1", "2", "" ] })"),
+      molecule))
+      << cjson.error();
+    EXPECT_EQ(molecule.disorderGroup(1), "2");
+    EXPECT_EQ(molecule.disorderAssembly(1), "");
+    EXPECT_EQ(molecule.disorderAssemblies().size(), 3u);
+  }
+  {
+    // too short groups read as far as they go; too long ones are cut off
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(
+      occupancyDocument(R"(, "disorder": { "assemblies": [ "A", "A", "A", "A" ],
+                                            "groups": [ "1", "2" ] })"),
+      molecule))
+      << cjson.error();
+    EXPECT_EQ(molecule.disorderGroup(0), "1");
+    EXPECT_EQ(molecule.disorderGroup(1), "2");
+    EXPECT_EQ(molecule.disorderGroup(2), "");
+    EXPECT_EQ(molecule.disorderAssembly(2), "A");
+    EXPECT_EQ(molecule.disorderGroups().size(), 3u);
+  }
+  // not strings, not arrays, not an object, nothing set: no disorder
+  const char* bad[] = {
+    R"(, "disorder": { "groups": [ 1, null, true ] })",
+    R"(, "disorder": { "groups": "1" })",
+    R"(, "disorder": { "groups": [ "", "", "" ] })",
+    R"(, "disorder": { "assemblies": [ "A", "A", "A" ] })",
+    R"(, "disorder": [ "1", "2", "3" ])",
+    R"(, "disorder": 1)",
+    R"(, "disorder": {})",
+  };
+  for (const char* text : bad) {
+    SCOPED_TRACE(text);
+    Molecule molecule;
+    ASSERT_TRUE(cjson.readString(occupancyDocument(text), molecule))
+      << cjson.error();
+    EXPECT_TRUE(molecule.disorderGroups().empty());
+    EXPECT_EQ(molecule.disorderGroup(0), "");
+  }
+}
+
+TEST(CjsonTest, noDisorderWritesNoKey)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(occupancyDocument(""), molecule))
+    << cjson.error();
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  EXPECT_FALSE(nlohmann::json::parse(output)["atoms"].contains("disorder"));
+}
+
+TEST(CjsonTest, shortDisorderColumnsWriteFullLength)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6).setPosition3d(Avogadro::Vector3(i, 0.0, 0.0));
+  ASSERT_TRUE(molecule.setDisorder(0, "A", "1"));
+  molecule.disorderAssemblies().resize(1); // shorter than the groups
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+  auto root = nlohmann::json::parse(output);
+  ASSERT_EQ(root["atoms"]["disorder"]["assemblies"].size(), 3u);
+  ASSERT_EQ(root["atoms"]["disorder"]["groups"].size(), 3u);
+  EXPECT_EQ(root["atoms"]["disorder"]["assemblies"][0], "A");
+  EXPECT_EQ(root["atoms"]["disorder"]["assemblies"][2], "");
+  EXPECT_EQ(root["atoms"]["disorder"]["groups"][2], "");
+}
