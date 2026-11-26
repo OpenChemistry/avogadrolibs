@@ -2474,7 +2474,10 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       // coordinate sets, which RWMolecule has no undoable edits for.
       if (chance(18))
         pick = pickInt(18, 24);
-      // 13 is setOccupancy(). setIsotope() is left out: it has no case here.
+      // 13 is setOccupancy(), and half of those are setDisorder() instead.
+      // setIsotope() is left out: it has no case here.
+      if (pick == 13 && chance(50))
+        pick = 25;
       if (n == 0 && pick != 0 && pick != 1)
         pick = 0;
       if ((pick == 2 || pick == 3) && (n < 2 || (pick == 3 && bonds == 0)))
@@ -2680,6 +2683,18 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           const double occupancy = 0.25 * pickInt(0, 4);
           mol.setOccupancy(i, occupancy);
           model.atoms[i].occupancy = occupancy;
+          break;
+        }
+        case 25: {
+          op = "setDisorder";
+          // "" is the implicit assembly and an ordered atom
+          static const char* const pool[] = { "", "1", "2", "-1", "A", "B" };
+          const Index i = pickIndex(n);
+          const std::string assembly = pool[pickInt(0, 5)];
+          const std::string group = pool[pickInt(0, 5)];
+          mol.setDisorder(i, assembly, group);
+          model.atoms[i].disorderAssembly = assembly;
+          model.atoms[i].disorderGroup = group;
           break;
         }
         case 14: {
