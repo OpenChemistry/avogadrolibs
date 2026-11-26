@@ -13,6 +13,9 @@
 #include "matrix.h"
 #include "vector.h"
 
+#include <algorithm>
+#include <cmath>
+
 namespace Avogadro::Core {
 
 /**
@@ -124,8 +127,18 @@ public:
   static Vector3 minimumImageFractional(const Vector3& v);
 
   /**
-   * Find the minimum image of a Cartesian vector @a v.
-   * A minimum image has all fractional coordinates between -0.5 and 0.5
+   * Find the minimum image of a Cartesian vector @a v: the shortest vector
+   * that differs from @a v by a lattice vector.
+   *
+   * Rounding the fractional coordinates to within -0.5 and 0.5 is exact only
+   * when the cell vectors are orthogonal. In a skewed cell (e.g., the
+   * hexagonal cell of graphene) that image can be longer than another one, so
+   * the 26 neighboring images are checked as well, unless rounding is known
+   * to be exact (an orthogonal cell, or a vector short enough that the
+   * shortest image has every fractional coordinate below 0.5). The search is
+   * exact for reduced cells (e.g., Niggli cells); in a very oblique cell a
+   * shorter image may lie farther away, and the shortest one found is
+   * returned.
    */
   Vector3 minimumImage(const Vector3& v) const;
 
@@ -355,7 +368,56 @@ inline Vector3 UnitCell::minimumImageFractional(const Vector3& v)
 
 inline Vector3 UnitCell::minimumImage(const Vector3& v) const
 {
-  return toCartesian(minimumImageFractional(toFractional(v)));
+  const Vector3 w = toCartesian(minimumImageFractional(toFractional(v)));
+  const Real wSquared = w.squaredNorm();
+
+  // Fractional coordinates are f_i = (row i of the fractional matrix) . v, so
+  // |f_i| <= |row_i| |v|. The shortest image is no longer than w, so if
+  // |w| |row_i| < 0.5 for every row, all of its fractional coordinates are
+  // below 0.5 and rounding already found it.
+  Real maxRowSquared = 0.0;
+  for (int i = 0; i < 3; ++i)
+    maxRowSquared =
+      std::max(maxRowSquared, m_fractionalMatrix.row(i).squaredNorm());
+  if (wSquared * maxRowSquared < 0.25)
+    return w;
+
+  // rounding is exact in an orthogonal cell
+  const Vector3 a = aVector();
+  const Vector3 b = bVector();
+  const Vector3 c = cVector();
+  constexpr Real orthogonalTolerance = 1.0e-10;
+  const Real aa = a.squaredNorm();
+  const Real bb = b.squaredNorm();
+  const Real cc = c.squaredNorm();
+  if (a.dot(b) * a.dot(b) <=
+        orthogonalTolerance * orthogonalTolerance * aa * bb &&
+      a.dot(c) * a.dot(c) <=
+        orthogonalTolerance * orthogonalTolerance * aa * cc &&
+      b.dot(c) * b.dot(c) <=
+        orthogonalTolerance * orthogonalTolerance * bb * cc)
+    return w;
+
+  // otherwise, try the neighboring images
+  Vector3 best = w;
+  Real bestSquared = wSquared;
+  for (int na = -1; na <= 1; ++na) {
+    for (int nb = -1; nb <= 1; ++nb) {
+      for (int nc = -1; nc <= 1; ++nc) {
+        if (na == 0 && nb == 0 && nc == 0)
+          continue;
+        const Vector3 candidate = w + static_cast<Real>(na) * a +
+                                  static_cast<Real>(nb) * b +
+                                  static_cast<Real>(nc) * c;
+        const Real candidateSquared = candidate.squaredNorm();
+        if (candidateSquared < bestSquared) {
+          best = candidate;
+          bestSquared = candidateSquared;
+        }
+      }
+    }
+  }
+  return best;
 }
 
 inline Real UnitCell::distance(const Vector3& v1, const Vector3& v2) const
