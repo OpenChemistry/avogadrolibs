@@ -1719,18 +1719,60 @@ TEST(CjsonTest, occupanciesRoundTrip)
   EXPECT_EQ(readBack.occupancy(2), 0.0);
 }
 
-TEST(CjsonTest, badOccupanciesAreIgnoredWhole)
+TEST(CjsonTest, shortAndLongOccupanciesAreCutOrPadded)
 {
-  const char* const bad[] = {
-    R"(, "occupancies": [ 0.5, 0.5 ])",           // too short
-    R"(, "occupancies": [ 0.5, 0.5, 0.5, 0.5 ])", // too long
-    R"(, "occupancies": [ 0.5, "0.5", 0.5 ])",    // a string entry
-    R"(, "occupancies": [ 0.5, null, 0.5 ])",     // a null entry
-    R"(, "occupancies": [ 0.5, -0.5, 0.5 ])",     // negative
-    R"(, "occupancies": 0.5)",                    // not an array
-    R"(, "occupancies": [])",                     // empty
+  CjsonFormat cjson;
+  {
+    Molecule molecule; // too short: the rest are full sites
+    ASSERT_TRUE(cjson.readString(
+      occupancyDocument(R"(, "occupancies": [ 0.5, 0.25 ])"), molecule))
+      << cjson.error();
+    ASSERT_EQ(molecule.occupancies().size(), 3u);
+    EXPECT_EQ(molecule.occupancy(0), 0.5);
+    EXPECT_EQ(molecule.occupancy(1), 0.25);
+    EXPECT_EQ(molecule.occupancy(2), 1.0);
+  }
+  {
+    Molecule molecule; // too long: cut at the atom count
+    ASSERT_TRUE(cjson.readString(
+      occupancyDocument(R"(, "occupancies": [ 0.5, 0.5, 0.5, 0.1, 0.1 ])"),
+      molecule))
+      << cjson.error();
+    ASSERT_EQ(molecule.occupancies().size(), 3u);
+    EXPECT_EQ(molecule.occupancy(2), 0.5);
+  }
+}
+
+TEST(CjsonTest, badOccupancyEntriesAreFullSites)
+{
+  CjsonFormat cjson;
+  Molecule molecule;
+  ASSERT_TRUE(cjson.readString(
+    occupancyDocument(R"(, "occupancies": [ 0.5, "0.5", -0.5 ])"), molecule))
+    << cjson.error();
+  EXPECT_EQ(molecule.occupancy(0), 0.5);
+  EXPECT_EQ(molecule.occupancy(1), 1.0); // a string
+  EXPECT_EQ(molecule.occupancy(2), 1.0); // negative
+
+  Molecule other;
+  ASSERT_TRUE(cjson.readString(
+    occupancyDocument(R"(, "occupancies": [ null, 0.5, true ])"), other))
+    << cjson.error();
+  EXPECT_EQ(other.occupancy(0), 1.0);
+  EXPECT_EQ(other.occupancy(1), 0.5);
+  EXPECT_EQ(other.occupancy(2), 1.0);
+}
+
+TEST(CjsonTest, occupanciesThatAreAllFullStoreNothing)
+{
+  const char* const none[] = {
+    R"(, "occupancies": [ 1.0, 1.0, 1.0 ])",
+    R"(, "occupancies": [ 1.0, "x", -1 ])",
+    R"(, "occupancies": [])",
+    R"(, "occupancies": 0.5)",
+    R"(, "occupancies": {})",
   };
-  for (const char* occupancies : bad) {
+  for (const char* occupancies : none) {
     SCOPED_TRACE(occupancies);
     CjsonFormat cjson;
     Molecule molecule;
