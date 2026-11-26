@@ -33,17 +33,17 @@ VibrationDialog::VibrationDialog(QWidget* parent_, Qt::WindowFlags f)
   m_ui->tableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
   m_ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(m_ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this,
-          SLOT(showTableContextMenu(QPoint)));
+  connect(m_ui->tableView, &QWidget::customContextMenuRequested, this,
+          &VibrationDialog::showTableContextMenu);
 
-  connect(m_ui->amplitudeSlider, SIGNAL(sliderMoved(int)),
-          SIGNAL(amplitudeChanged(int)));
+  connect(m_ui->amplitudeSlider, &QSlider::sliderMoved, this,
+          &VibrationDialog::amplitudeChanged);
   connect(m_ui->framesSpinBox, &QSpinBox::valueChanged, this,
           &VibrationDialog::framesPerCycleChanged);
   connect(m_ui->goToFrameButton, &QPushButton::clicked, this,
           &VibrationDialog::requestGoToFrame);
-  connect(m_ui->startButton, SIGNAL(clicked(bool)), this,
-          SLOT(changeAnimation()));
+  connect(m_ui->startButton, &QPushButton::clicked, this,
+          &VibrationDialog::changeAnimation);
 }
 
 VibrationDialog::~VibrationDialog()
@@ -76,8 +76,8 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
 {
   if (m_ui->tableView->selectionModel()) {
     disconnect(m_ui->tableView->selectionModel(),
-               SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this,
-               SLOT(selectRow(QModelIndex)));
+               &QItemSelectionModel::currentRowChanged, this,
+               &VibrationDialog::selectRow);
   }
 
   // QTableView does not take ownership of its model, so the previous one has
@@ -91,8 +91,8 @@ void VibrationDialog::setMolecule(QtGui::Molecule* molecule)
   delete previous;
 
   connect(m_ui->tableView->selectionModel(),
-          SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
-          SLOT(selectRow(QModelIndex)));
+          &QItemSelectionModel::currentRowChanged, this,
+          &VibrationDialog::selectRow);
 }
 
 void VibrationDialog::setCurrentMode(int mode)
@@ -187,7 +187,8 @@ void VibrationDialog::showTableContextMenu(const QPoint& point)
 
   QMenu menu(this);
   QAction* generate = menu.addAction(tr("Generate Displaced Coordinates…"));
-  connect(generate, SIGNAL(triggered()), SLOT(requestDisplacedCoordinates()));
+  connect(generate, &QAction::triggered, this,
+          &VibrationDialog::requestDisplacedCoordinates);
   menu.exec(m_ui->tableView->viewport()->mapToGlobal(point));
 }
 
