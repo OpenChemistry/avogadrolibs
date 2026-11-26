@@ -909,6 +909,10 @@ public:
           case Resonant:
           case SquarePlanar:
           case Octahedral:
+            // The exp() term is not in Rappe 1992. It removes the spurious
+            // minimum of 1 - cos(n theta) at theta = 0, which would otherwise
+            // pull two atoms on top of each other in distorted geometries
+            // (same term as Open Babel's UFF).
             *energy += kijk * (1 - cos(c0 * thetaEnergy)) +
                        exp(-20.0 * (thetaEnergy - theta0 + 0.25));
             break;
