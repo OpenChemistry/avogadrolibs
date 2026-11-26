@@ -313,6 +313,11 @@ std::multimap<float, Identifier> CylinderGeometry::hits(
       aoxab.dot(aoxab) - ab.dot(ab) * (cylinder.radius * cylinder.radius);
     float D = B * B - 4.0f * A * C;
 
+    // A ray parallel to the axis, or a cylinder with no length, never meets
+    // the side. Dividing by A would give NaN and a NaN-keyed hit.
+    if (!(A > 1.0e-18f))
+      continue;
+
     // no intersection
     if (D < 0.0f)
       continue;
