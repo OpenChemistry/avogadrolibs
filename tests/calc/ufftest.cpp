@@ -11,6 +11,7 @@
 #include <avogadro/calc/uffdata.h>
 
 #include <avogadro/core/atom.h>
+#include <avogadro/core/avogadrocore.h>
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
@@ -541,7 +542,7 @@ TEST(UffTypingTest, Phosphate)
   Index o = addAt(molecule, 8, 0.0, 0.0, 1.5);
   bond(molecule, p, o, 2);
   for (int k = 0; k < 3; ++k) {
-    double angle = 2.0 * 3.14159265358979 * k / 3.0;
+    double angle = 2.0 * PI_D * k / 3.0;
     Index ester =
       addAt(molecule, 8, 1.6 * std::cos(angle), 1.6 * std::sin(angle), -0.5);
     bond(molecule, p, ester);
@@ -555,7 +556,7 @@ TEST(UffTypingTest, Phosphate)
   Molecule phosphine;
   Index p3 = addAt(phosphine, 15, 0.0, 0.0, 0.0);
   for (int k = 0; k < 3; ++k) {
-    double angle = 2.0 * 3.14159265358979 * k / 3.0;
+    double angle = 2.0 * PI_D * k / 3.0;
     Index h =
       addAt(phosphine, 1, 1.4 * std::cos(angle), 1.4 * std::sin(angle), -0.4);
     bond(phosphine, p3, h);
@@ -571,7 +572,7 @@ TEST(UffTypingTest, BenzonitrileKeepsSpTypes)
   Molecule molecule;
   Index ring[6];
   for (int k = 0; k < 6; ++k) {
-    double angle = 2.0 * 3.14159265358979 * k / 6.0;
+    double angle = 2.0 * PI_D * k / 6.0;
     ring[k] =
       addAt(molecule, 6, 1.4 * std::cos(angle), 1.4 * std::sin(angle), 0.0);
   }
@@ -662,7 +663,7 @@ TEST(UffTypingTest, BoronCoordination)
   Molecule bf3;
   Index b = addAt(bf3, 5, 0.0, 0.0, 0.0);
   for (int k = 0; k < 3; ++k) {
-    double angle = 2.0 * 3.14159265358979 * k / 3.0;
+    double angle = 2.0 * PI_D * k / 3.0;
     bond(bf3, b,
          addAt(bf3, 9, 1.3 * std::cos(angle), 1.3 * std::sin(angle), 0.0));
   }
@@ -719,30 +720,33 @@ TEST(UffTypingTest, HydrogenBridging)
 // ---- Angle and inversion terms against their own energies -----------------
 
 namespace {
-// Maximum |analytic - central finite difference| of one energy term.
-// Both are in the units of that term's energy (they share the UFF scaling).
-template <typename EnergyFn, typename GradFn>
-double maxTermGradientError(Molecule& molecule, EnergyFn energy,
-                            GradFn gradient)
+using TermEnergy = Real (UFF::*)(const Eigen::VectorXd&);
+using TermGradient = void (UFF::*)(const Eigen::VectorXd&, Eigen::VectorXd&);
+
+// Maximum |analytic - central finite difference| of one energy term, given as
+// the UFF member functions for its energy and gradient. Both are in the units
+// of that term's energy (they share the UFF scaling). The default positions
+// are the molecule's own and the default step is 1e-5.
+double maxTermGradientError(
+  Molecule& molecule, TermEnergy energy, TermGradient gradient,
+  const Eigen::VectorXd& positions = Eigen::VectorXd(), double h = 1.0e-5)
 {
   UFF uff;
   uff.setMolecule(&molecule);
-  const Eigen::Index n = 3 * static_cast<Eigen::Index>(molecule.atomCount());
-  Eigen::VectorXd x(n);
-  for (Index i = 0; i < molecule.atomCount(); ++i)
-    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  const Eigen::VectorXd x =
+    positions.size() > 0 ? positions : positionsOf(molecule);
+  const Eigen::Index n = x.size();
 
   Eigen::VectorXd analytic = Eigen::VectorXd::Zero(n);
-  gradient(uff, x, analytic);
+  (uff.*gradient)(x, analytic);
 
-  const double h = 1.0e-5;
   double worst = 0.0;
   for (Eigen::Index c = 0; c < n; ++c) {
     Eigen::VectorXd xp = x;
     Eigen::VectorXd xm = x;
     xp[c] += h;
     xm[c] -= h;
-    const double fd = (energy(uff, xp) - energy(uff, xm)) / (2.0 * h);
+    const double fd = ((uff.*energy)(xp) - (uff.*energy)(xm)) / (2.0 * h);
     worst = std::max(worst, std::fabs(fd - analytic[c]));
   }
   return worst;
@@ -759,7 +763,7 @@ TEST(UffAngleTest, SevenCoordinateFallbackGradientMatchesEnergy)
   Index center = addAt(molecule, 14, 0.0, 0.0, 0.0);
   // pentagonal bipyramid, with some distortion so no angle is 180 degrees
   for (int k = 0; k < 5; ++k) {
-    double a = 2.0 * 3.14159265358979 * k / 5.0 + 0.05 * k;
+    double a = 2.0 * PI_D * k / 5.0 + 0.05 * k;
     bond(
       molecule, center,
       addAt(molecule, 1, 1.5 * std::cos(a), 1.5 * std::sin(a), 0.1 * (k - 2)));
@@ -768,11 +772,8 @@ TEST(UffAngleTest, SevenCoordinateFallbackGradientMatchesEnergy)
   bond(molecule, center, addAt(molecule, 1, -0.2, 0.1, -1.5));
   EXPECT_EQ(uffTypes(molecule)[0], "Si3");
 
-  const double error = maxTermGradientError(
-    molecule, [](UFF& u, const Eigen::VectorXd& x) { return u.angleEnergy(x); },
-    [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
-      u.angleGradient(x, g);
-    });
+  const double error =
+    maxTermGradientError(molecule, &UFF::angleEnergy, &UFF::angleGradient);
   EXPECT_LT(error, 1.0e-4);
 }
 
@@ -788,11 +789,8 @@ TEST(UffOopTest, BismuthGradientMatchesEnergy)
   bond(molecule, bi, addAt(molecule, 1, -0.1, 0.2, 1.85));
   EXPECT_EQ(uffTypes(molecule)[0], "Bi3+3");
 
-  const double error = maxTermGradientError(
-    molecule, [](UFF& u, const Eigen::VectorXd& x) { return u.oopEnergy(x); },
-    [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
-      u.oopGradient(x, g);
-    });
+  const double error =
+    maxTermGradientError(molecule, &UFF::oopEnergy, &UFF::oopGradient);
   EXPECT_LT(error, 1.0e-4);
 }
 
@@ -807,9 +805,7 @@ TEST(UffOopTest, BismuthEnergyIsZeroAtEquilibrium)
   bond(molecule, bi, addAt(molecule, 1, 0.0, 0.0, 1.9));
   UFF uff;
   uff.setMolecule(&molecule);
-  Eigen::VectorXd x(12);
-  for (Index i = 0; i < 4; ++i)
-    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  const Eigen::VectorXd x = positionsOf(molecule);
   EXPECT_NEAR(uff.oopEnergy(x), 0.0, 1.0e-9);
 }
 
@@ -819,23 +815,21 @@ TEST(UffOopTest, PhosphorusMinimumEnergyIsZero)
 {
   double lowest = 1.0e9;
   for (double deg = 80.0; deg <= 100.0; deg += 0.005) {
-    const double a = deg * 3.14159265358979 / 180.0;
+    const double a = deg * DEG_TO_RAD_D;
     // three equivalent bonds of length 1.4 with mutual angle a
     const double cz = std::sqrt((1.0 + 2.0 * std::cos(a)) / 3.0);
     const double rho = std::sqrt(1.0 - cz * cz);
     Molecule molecule;
     Index p = addAt(molecule, 15, 0.0, 0.0, 0.0);
     for (int k = 0; k < 3; ++k) {
-      const double phi = 2.0 * 3.14159265358979 * k / 3.0;
+      const double phi = 2.0 * PI_D * k / 3.0;
       bond(molecule, p,
            addAt(molecule, 1, 1.4 * rho * std::cos(phi),
                  1.4 * rho * std::sin(phi), 1.4 * cz));
     }
     UFF uff;
     uff.setMolecule(&molecule);
-    Eigen::VectorXd x(12);
-    for (Index i = 0; i < 4; ++i)
-      x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+    const Eigen::VectorXd x = positionsOf(molecule);
     lowest = std::min(lowest, uff.oopEnergy(x));
   }
   EXPECT_NEAR(lowest, 0.0, 1.0e-4);
@@ -852,9 +846,7 @@ TEST(UffGradientDistortedTest, ExactlySquarePlanarXenonTetrafluoride)
     bond(molecule, xe, addAt(molecule, 9, 2.0 * d[0], 2.0 * d[1], 0.0));
   UFF uff;
   uff.setMolecule(&molecule);
-  Eigen::VectorXd x(15);
-  for (Index i = 0; i < 5; ++i)
-    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  const Eigen::VectorXd x = positionsOf(molecule);
   Eigen::VectorXd grad = Eigen::VectorXd::Zero(15);
   uff.angleGradient(x, grad);
   EXPECT_TRUE(grad.allFinite());
@@ -876,8 +868,7 @@ struct Twistable
   Eigen::VectorXd positions(double degrees) const
   {
     Eigen::VectorXd x = positionsOf(molecule);
-    const Eigen::AngleAxisd rotation(degrees * 3.14159265358979 / 180.0,
-                                     axis.normalized());
+    const Eigen::AngleAxisd rotation(degrees * DEG_TO_RAD_D, axis.normalized());
     for (Index a : moving) {
       const Vector3 p = x.segment<3>(3 * a);
       x.segment<3>(3 * a) = origin + rotation * (p - origin);
@@ -895,24 +886,8 @@ struct Twistable
 
   double gradientError(double degrees)
   {
-    const Eigen::VectorXd x = positions(degrees);
-    const Eigen::Index n = x.size();
-    UFF uff;
-    uff.setMolecule(&molecule);
-    Eigen::VectorXd analytic = Eigen::VectorXd::Zero(n);
-    uff.torsionGradient(x, analytic);
-    double worst = 0.0;
-    const double h = 1.0e-5;
-    for (Eigen::Index c = 0; c < n; ++c) {
-      Eigen::VectorXd xp = x;
-      Eigen::VectorXd xm = x;
-      xp[c] += h;
-      xm[c] -= h;
-      const double fd =
-        (uff.torsionEnergy(xp) - uff.torsionEnergy(xm)) / (2.0 * h);
-      worst = std::max(worst, std::fabs(fd - analytic[c]));
-    }
-    return worst;
+    return maxTermGradientError(molecule, &UFF::torsionEnergy,
+                                &UFF::torsionGradient, positions(degrees));
   }
 };
 
@@ -927,7 +902,7 @@ std::vector<Vector3> methylHydrogens()
 {
   std::vector<Vector3> hydrogens;
   for (int k = 0; k < 3; ++k) {
-    const double a = 2.0 * 3.14159265358979 * k / 3.0 + 1.5707963267949;
+    const double a = 2.0 * PI_D * k / 3.0 + 0.5 * PI_D;
     hydrogens.push_back(Vector3(-0.36, 1.03 * std::sin(a), 1.03 * std::cos(a)));
   }
   return hydrogens;
@@ -1222,7 +1197,7 @@ TEST(UffTorsionTest, Sp2Sp3GroupSixteenIsTwofold)
   auto twofold = [&phi](double deg) {
     double sum = 0.0;
     for (double p : phi)
-      sum += 0.5 * (1.0 + std::cos(2.0 * (p + deg) * 3.14159265358979 / 180.0));
+      sum += 0.5 * (1.0 + std::cos(2.0 * (p + deg) * DEG_TO_RAD_D));
     return sum;
   };
   const double constant = t.energy(0.0) - twofold(0.0);
@@ -1248,13 +1223,11 @@ TEST(UffTorsionTest, GradientsMatchEnergies)
 // ---- Torsions near linear bond angles --------------------------------------
 
 namespace {
-const double kPi = 3.14159265358979;
-
 // A four carbon chain A-B-C-D with bond angles theta1 (A-B-C) and theta2
 // (B-C-D), both given in degrees, and dihedral phi (degrees)
 Molecule fourChain(double theta1, double theta2, double phi)
 {
-  const double r = kPi / 180.0;
+  const double r = DEG_TO_RAD_D;
   Molecule m;
   addAt(m, 6, 1.5 * std::cos(theta1 * r),
         1.5 * std::sin(theta1 * r) * std::cos(phi * r),
@@ -1273,14 +1246,14 @@ Molecule fourChain(double theta1, double theta2, double phi)
 double bareTorsion(double phi)
 {
   const double v = uffparams[rowForLabel("C_3")].Vi;
-  return 0.5 * v * (1.0 + std::cos(3.0 * phi * kPi / 180.0));
+  return 0.5 * v * (1.0 + std::cos(3.0 * phi * DEG_TO_RAD_D));
 }
 
 // the C2 smoothstep in cos(theta), from 170 to 180 degrees
 double switchValue(double theta)
 {
-  const double onset = 1.0 + std::cos(170.0 * kPi / 180.0);
-  double u = (std::cos(theta * kPi / 180.0) + 1.0) / onset;
+  const double onset = 1.0 + std::cos(170.0 * DEG_TO_RAD_D);
+  double u = (std::cos(theta * DEG_TO_RAD_D) + 1.0) / onset;
   u = std::min(1.0, std::max(0.0, u));
   return u * u * u * (10.0 - 15.0 * u + 6.0 * u * u);
 }
@@ -1431,7 +1404,7 @@ Molecule wrappedInCell(const Molecule& cluster, const UnitCell& cell,
   return m;
 }
 
-const double halfPi = 1.5707963267949;
+const double halfPi = 0.5 * PI_D;
 // cubic and triclinic
 const UnitCell cubicCell(12.0, 12.0, 12.0, halfPi, halfPi, halfPi);
 const UnitCell triclinicCell(12.0, 13.0, 14.0, 1.40, 1.65, 1.75);
@@ -1440,6 +1413,26 @@ struct BondedEnergies
 {
   double bond, angle, oop, torsion;
 };
+
+void expectBondedNear(const BondedEnergies& actual,
+                      const BondedEnergies& expected, double tolerance = 1.0e-8)
+{
+  EXPECT_NEAR(actual.bond, expected.bond, tolerance);
+  EXPECT_NEAR(actual.angle, expected.angle, tolerance);
+  EXPECT_NEAR(actual.oop, expected.oop, tolerance);
+  EXPECT_NEAR(actual.torsion, expected.torsion, tolerance);
+}
+
+// the gradient error of each bonded term (see maxTermGradientError)
+BondedEnergies bondedGradientErrors(Molecule& molecule)
+{
+  return {
+    maxTermGradientError(molecule, &UFF::bondEnergy, &UFF::bondGradient),
+    maxTermGradientError(molecule, &UFF::angleEnergy, &UFF::angleGradient),
+    maxTermGradientError(molecule, &UFF::oopEnergy, &UFF::oopGradient),
+    maxTermGradientError(molecule, &UFF::torsionEnergy, &UFF::torsionGradient)
+  };
+}
 
 BondedEnergies bondedEnergies(Molecule& molecule, const Eigen::VectorXd& x)
 {
@@ -1497,10 +1490,7 @@ TEST(UffPeriodicTest, BondedTermsMatchTheUnwrappedCluster)
       bondedEnergies(c.cluster, positionsOf(c.cluster));
     const BondedEnergies actual =
       bondedEnergies(c.periodic, positionsOf(c.periodic));
-    EXPECT_NEAR(actual.bond, expected.bond, 1.0e-8);
-    EXPECT_NEAR(actual.angle, expected.angle, 1.0e-8);
-    EXPECT_NEAR(actual.oop, expected.oop, 1.0e-8);
-    EXPECT_NEAR(actual.torsion, expected.torsion, 1.0e-8);
+    expectBondedNear(actual, expected);
   }
   // make sure the test really has bonds across the boundary
   EXPECT_GE(straddling, 4);
@@ -1510,31 +1500,11 @@ TEST(UffPeriodicTest, BondedTermsMatchTheUnwrappedCluster)
 TEST(UffPeriodicTest, GradientsMatchEnergiesAcrossTheBoundary)
 {
   for (PeriodicCase& c : periodicCases()) {
-    Molecule& m = c.periodic;
-    const double bondError = maxTermGradientError(
-      m, [](UFF& u, const Eigen::VectorXd& x) { return u.bondEnergy(x); },
-      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
-        u.bondGradient(x, g);
-      });
-    const double angleError = maxTermGradientError(
-      m, [](UFF& u, const Eigen::VectorXd& x) { return u.angleEnergy(x); },
-      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
-        u.angleGradient(x, g);
-      });
-    const double oopError = maxTermGradientError(
-      m, [](UFF& u, const Eigen::VectorXd& x) { return u.oopEnergy(x); },
-      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
-        u.oopGradient(x, g);
-      });
-    const double torsionError = maxTermGradientError(
-      m, [](UFF& u, const Eigen::VectorXd& x) { return u.torsionEnergy(x); },
-      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
-        u.torsionGradient(x, g);
-      });
-    EXPECT_LT(bondError, 1.0e-4);
-    EXPECT_LT(angleError, 1.0e-4);
-    EXPECT_LT(oopError, 1.0e-4);
-    EXPECT_LT(torsionError, 1.0e-4);
+    const BondedEnergies error = bondedGradientErrors(c.periodic);
+    EXPECT_LT(error.bond, 1.0e-4);
+    EXPECT_LT(error.angle, 1.0e-4);
+    EXPECT_LT(error.oop, 1.0e-4);
+    EXPECT_LT(error.torsion, 1.0e-4);
   }
 }
 
@@ -1555,10 +1525,7 @@ TEST(UffPeriodicTest, TranslatingAndWrappingKeepsTheEnergy)
         moved.setAtomPosition3d(
           i, cell.wrapCartesian(moved.atomPosition3d(i) + shift));
       const BondedEnergies after = bondedEnergies(moved, positionsOf(moved));
-      EXPECT_NEAR(after.bond, reference.bond, 1.0e-8);
-      EXPECT_NEAR(after.angle, reference.angle, 1.0e-8);
-      EXPECT_NEAR(after.oop, reference.oop, 1.0e-8);
-      EXPECT_NEAR(after.torsion, reference.torsion, 1.0e-8);
+      expectBondedNear(after, reference);
     }
   }
 }
@@ -1598,10 +1565,7 @@ TEST(UffPeriodicTest, InfiniteChainDoesNotDependOnTheBoundary)
   for (double offset : { 0.4, 1.0, 2.7, 4.9 }) {
     Molecule m = chain(offset);
     const BondedEnergies actual = bondedEnergies(m, positionsOf(m));
-    EXPECT_NEAR(actual.bond, expected.bond, 1.0e-8);
-    EXPECT_NEAR(actual.angle, expected.angle, 1.0e-8);
-    EXPECT_NEAR(actual.oop, expected.oop, 1.0e-8);
-    EXPECT_NEAR(actual.torsion, expected.torsion, 1.0e-8);
+    expectBondedNear(actual, expected);
   }
 }
 
@@ -1664,14 +1628,6 @@ Molecule argonCluster(int count, double box)
     addAt(molecule, 18, box * next(), box * next(), box * next());
   return molecule;
 }
-
-Eigen::VectorXd positionsOfMolecule(const Molecule& molecule)
-{
-  Eigen::VectorXd x(3 * static_cast<Eigen::Index>(molecule.atomCount()));
-  for (Index i = 0; i < molecule.atomCount(); ++i)
-    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
-  return x;
-}
 } // namespace
 
 // The energy used to jump at the 10 A cutoff. It must now be continuous
@@ -1719,7 +1675,7 @@ TEST(UffVdwSwitchTest, GradientMatchesFiniteDifferencesAcrossSwitchRegion)
 TEST(UffVdwSwitchTest, EnergyAndGradientDoNotDependOnPairListHistory)
 {
   Molecule molecule = argonCluster(40, 22.0);
-  const Eigen::VectorXd x = positionsOfMolecule(molecule);
+  const Eigen::VectorXd x = positionsOf(molecule);
 
   UFF uff;
   uff.setMolecule(&molecule);
@@ -1838,8 +1794,7 @@ TEST(UffVdwPeriodicTest, NearestImageDriftMatchesFreshEvaluation)
   Molecule molecule;
   addAt(molecule, 18, 0.0, 0.0, 0.0);
   addAt(molecule, 18, 3.0, 0.0, 0.0);
-  molecule.setUnitCell(
-    new UnitCell(30.0, 30.0, 30.0, M_PI / 2.0, M_PI / 2.0, M_PI / 2.0));
+  molecule.setUnitCell(new UnitCell(30.0, 30.0, 30.0, halfPi, halfPi, halfPi));
   UFF uff;
   uff.setMolecule(&molecule);
 
