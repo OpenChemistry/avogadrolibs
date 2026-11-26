@@ -529,7 +529,9 @@ TEST_F(MoleculeTest, radius)
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(2.0, 0.0, -1.0));
   a = mol.addAtom(1);
   mol.setAtomPosition3d(a.index(), Avogadro::Vector3(1.0, 3.0, -2.0));
-  EXPECT_DOUBLE_EQ(mol.radius(), sqrt(3.));
+  // Center of geometry is (1, 1, -1); the farthest atom is the last one,
+  // at (1, 3, -2): sqrt(0 + 4 + 1).
+  EXPECT_DOUBLE_EQ(mol.radius(), sqrt(5.));
 }
 
 TEST_F(MoleculeTest, bestFitPlane)
