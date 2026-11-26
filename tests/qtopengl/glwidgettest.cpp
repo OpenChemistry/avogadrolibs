@@ -7,23 +7,37 @@
 
 #include <gtest/gtest.h>
 
+#include <avogadro/core/array.h>
 #include <avogadro/core/cube.h>
 #include <avogadro/core/vector.h>
 #include <avogadro/qtopengl/glwidget.h>
+#include <avogadro/qtopengl/qttextrenderstrategy.h>
 #include <avogadro/qtopengl/renderoptions.h>
 #include <avogadro/rendering/arrowgeometry.h>
 #include <avogadro/rendering/bsplinegeometry.h>
+#include <avogadro/rendering/bufferobject.h>
+#include <avogadro/rendering/camera.h>
+#include <avogadro/rendering/cylindergeometry.h>
+#include <avogadro/rendering/dashedlinegeometry.h>
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/linestripgeometry.h>
+#include <avogadro/rendering/meshgeometry.h>
 #include <avogadro/rendering/shader.h>
 #include <avogadro/rendering/shaderprogram.h>
 #include <avogadro/rendering/solidpipeline.h>
 #include <avogadro/rendering/spheregeometry.h>
+#include <avogadro/rendering/textlabel3d.h>
+#include <avogadro/rendering/textrenderstrategy.h>
 #include <avogadro/rendering/texture2d.h>
+#include <avogadro/rendering/vertexarrayobject.h>
 #include <avogadro/rendering/volumegeometry.h>
+#include <avogadro/rendering/widelinegeometry.h>
 
 #include <QtGui/QImage>
 #include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLExtraFunctions>
 #include <QtGui/QOpenGLFunctions>
 #include <QtOpenGL/QOpenGLFramebufferObject>
 #include <QtWidgets/QVBoxLayout>
@@ -46,21 +60,157 @@ using Avogadro::QtOpenGL::GLWidget;
 using Avogadro::QtOpenGL::RenderOptions;
 using Avogadro::Rendering::ArrowGeometry;
 using Avogadro::Rendering::BSplineGeometry;
+using Avogadro::Rendering::BufferObject;
+using Avogadro::Rendering::Camera;
+using Avogadro::Rendering::CylinderGeometry;
+using Avogadro::Rendering::DashedLineGeometry;
 using Avogadro::Rendering::GeometryNode;
 using Avogadro::Rendering::GLRenderer;
+using Avogadro::Rendering::GroupNode;
+using Avogadro::Rendering::LineStripGeometry;
+using Avogadro::Rendering::MeshGeometry;
 using Avogadro::Rendering::Orthographic;
 using Avogadro::Rendering::Perspective;
 using Avogadro::Rendering::Shader;
 using Avogadro::Rendering::ShaderProgram;
 using Avogadro::Rendering::SphereGeometry;
+using Avogadro::Rendering::TextLabel3D;
 using Avogadro::Rendering::Texture2D;
 using Avogadro::Rendering::TranslucentPass;
+using Avogadro::Rendering::VertexArrayObject;
 using Avogadro::Rendering::VolumeGeometry;
+using Avogadro::Rendering::WideLineGeometry;
 using namespace Avogadro::TestGL;
 
 namespace {
 
 const Vector4ub Background(40, 80, 120, 255);
+
+// The error GL has recorded since the last drain, with the widget's context
+// current. Goes through QOpenGLFunctions: the test binary does not link
+// opengl32 on Windows.
+GLenum currentGLError()
+{
+  return QOpenGLContext::currentContext()->functions()->glGetError();
+}
+
+// A drawable that does no GL and records which pass it is rendered in.
+class CountingDrawable : public Avogadro::Rendering::Drawable
+{
+public:
+  CountingDrawable(int id, Avogadro::Rendering::RenderPass pass,
+                   std::vector<int>& log)
+    : m_id(id), m_log(log)
+  {
+    setRenderPass(pass);
+  }
+  void render(const Camera&) override { m_log.push_back(m_id); }
+
+private:
+  int m_id;
+  std::vector<int>& m_log;
+};
+
+// Rasterizes through the Qt strategy and counts the calls.
+class RenderCountingStrategy : public Avogadro::Rendering::TextRenderStrategy
+{
+public:
+  TextRenderStrategy* newInstance() const override
+  {
+    return new RenderCountingStrategy;
+  }
+  void boundingBox(const std::string& string,
+                   const Avogadro::Rendering::TextProperties& tprop,
+                   int bbox[4]) const override
+  {
+    m_qt.boundingBox(string, tprop, bbox);
+  }
+  void render(const std::string& string,
+              const Avogadro::Rendering::TextProperties& tprop,
+              unsigned char* buffer, const Vector2i& dims) const override
+  {
+    ++renders;
+    m_qt.render(string, tprop, buffer, dims);
+  }
+  mutable int renders = 0;
+
+private:
+  Avogadro::QtOpenGL::QtTextRenderStrategy m_qt;
+};
+
+// One drawable of every kind that takes its shader program from the
+// renderer's per-context cache, spread over the view.
+GeometryNode* makeEveryProgramScene()
+{
+  auto* geometry = new GeometryNode;
+
+  auto* spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f(-3, 2, 0), Vector3ub(255, 0, 0), 0.5f);
+  geometry->addDrawable(spheres);
+
+  auto* cylinders = new CylinderGeometry;
+  cylinders->addCylinder(Vector3f(-1, 2, 0), Vector3f(1, 2, 0), 0.25f,
+                         Vector3ub(0, 255, 0));
+  geometry->addDrawable(cylinders);
+
+  auto* mesh = new MeshGeometry;
+  Avogadro::Core::Array<Vector3f> vertices;
+  Avogadro::Core::Array<Vector3f> normals;
+  vertices.push_back(Vector3f(2, 1.5f, 0));
+  vertices.push_back(Vector3f(3, 1.5f, 0));
+  vertices.push_back(Vector3f(2.5f, 2.5f, 0));
+  for (int i = 0; i < 3; ++i)
+    normals.push_back(Vector3f(0, 0, 1));
+  mesh->setColor(Vector3ub(0, 0, 255));
+  mesh->addVertices(vertices, normals);
+  mesh->addTriangle(0, 1, 2);
+  geometry->addDrawable(mesh);
+
+  auto* wide = new WideLineGeometry;
+  wide->addLine(Vector3f(-3, 0, 0), Vector3f(-1, 0, 0), Vector3ub(255, 255, 0),
+                0.1f);
+  geometry->addDrawable(wide);
+
+  auto* strip = new LineStripGeometry;
+  Avogadro::Core::Array<Vector3f> stripPoints;
+  stripPoints.push_back(Vector3f(0, -0.5f, 0));
+  stripPoints.push_back(Vector3f(1, 0.5f, 0));
+  stripPoints.push_back(Vector3f(2, -0.5f, 0));
+  // glLineWidth() above 1 is an error in a core profile on macOS.
+  strip->addLineStrip(stripPoints, Vector3ub(255, 0, 255), 1.0f);
+  geometry->addDrawable(strip);
+
+  // DashedLineGeometry is deprecated but still shipped, and still uses a
+  // program from the cache.
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+  auto* dashed = new DashedLineGeometry;
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+  dashed->addDashedLine(Vector3f(-3, -2, 0), Vector3f(-1, -2, 0),
+                        Vector3ub(0, 255, 255), 6);
+  geometry->addDrawable(dashed);
+
+  auto* arrow = new ArrowGeometry;
+  arrow->addSingleArrow(Vector3f(0, -2, 0), Vector3f(2, -2, 0),
+                        Vector3ub(255, 128, 0));
+  geometry->addDrawable(arrow);
+
+  auto* label = new TextLabel3D;
+  label->setText("Label");
+  label->setAnchor(Vector3f(3, -2, 0));
+  geometry->addDrawable(label);
+
+  return geometry;
+}
 
 class GLWidgetTest : public ::testing::Test
 {
@@ -1256,4 +1406,451 @@ TEST_F(GLWidgetTest, reparentToAnotherWindowKeepsRendering)
   // Destroy the widget with its window still alive and the renderer clean.
   delete moving;
   settle();
+}
+
+// Every drawable type draws with a shader program from the renderer's
+// per-context cache, and none of that leaves a GL error behind.
+TEST_F(GLWidgetTest, everyProgramRendersWithoutGLErrors)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(makeEveryProgramScene());
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  // A second frame reuses the cached programs and the uploaded buffers.
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 20); // the red sphere
+  EXPECT_GT(dominantBounds(image, 1, 90, 60).count, 20); // the cylinder
+}
+
+// The renderer walks the scene once and sorts the drawables by pass: each
+// visible drawable renders once, in its own pass, in scene order.
+TEST_F(GLWidgetTest, drawablesRenderOnceInTheirPassInSceneOrder)
+{
+  using namespace Avogadro::Rendering;
+  std::vector<int> log;
+  auto* outer = new GroupNode;
+  auto* first = new GeometryNode;
+  auto* inner = new GroupNode;
+  auto* second = new GeometryNode;
+  auto* hiddenGroup = new GroupNode;
+  auto* third = new GeometryNode;
+  outer->addChild(first);
+  outer->addChild(inner);
+  inner->addChild(second);
+  hiddenGroup->setVisible(false);
+  outer->addChild(hiddenGroup);
+  hiddenGroup->addChild(third);
+
+  // Ids are in scene order within each pass; the passes are interleaved.
+  first->addDrawable(new CountingDrawable(20, Overlay2DPass, log));
+  first->addDrawable(new CountingDrawable(10, TranslucentPass, log));
+  first->addDrawable(new CountingDrawable(1, SolidPass, log));
+  first->addDrawable(new CountingDrawable(30, NotRendering, log));
+  second->addDrawable(new CountingDrawable(11, OpaquePass, log));
+  auto* hidden = new CountingDrawable(99, SolidPass, log);
+  hidden->setVisible(false);
+  second->addDrawable(hidden);
+  second->addDrawable(new CountingDrawable(2, SolidPass, log));
+  second->addDrawable(new CountingDrawable(15, Overlay3DPass, log));
+  third->addDrawable(new CountingDrawable(3, SolidPass, log));
+  // Real geometry in other passes next to the counting ones.
+  auto* sphere = new SphereGeometry;
+  sphere->addSphere(Vector3f(0, 0, 0), Vector3ub(255, 0, 0), 1.0f);
+  second->addDrawable(sphere);
+  auto* translucent = new SphereGeometry;
+  translucent->addSphere(Vector3f(1, 0, 0), Vector3ub(0, 255, 0), 1.0f);
+  translucent->setRenderPass(TranslucentPass);
+  second->addDrawable(translucent);
+
+  clearScene(*widget);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(outer);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  log.clear();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  // The hidden drawable and everything under the hidden group (3) are
+  // skipped.
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 11, 10, 15, 20 }));
+
+  // The buckets are reused: a second frame gives the same result.
+  log.clear();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 11, 10, 15, 20 }));
+
+  // Showing the group again brings its drawable back, in scene order.
+  hiddenGroup->setVisible(true);
+  log.clear();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  EXPECT_EQ(log, (std::vector<int>{ 1, 2, 3, 11, 10, 15, 20 }));
+  widget->doneCurrent();
+}
+
+// A label under a hidden node still loses its texture when the text strategy
+// changes, so showing it again does not draw a texture from the old strategy.
+TEST_F(GLWidgetTest, hiddenLabelsAreResetWhenTheTextStrategyChanges)
+{
+  using namespace Avogadro::Rendering;
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* group = new GroupNode;
+  auto* geometry = new GeometryNode;
+  auto* label = new TextLabel3D;
+  label->setText("Hidden");
+  label->setAnchor(Vector3f(0, 0, 0));
+  geometry->addDrawable(label);
+  group->addChild(geometry);
+  widget->renderer().scene().rootNode().addChild(group);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+
+  // Build the texture with the widget's own strategy.
+  widget->renderer().render();
+
+  RenderCountingStrategy* counting = new RenderCountingStrategy;
+  group->setVisible(false);
+  widget->renderer().setTextRenderStrategy(counting);
+  widget->renderer().render();
+  EXPECT_EQ(counting->renders, 0);
+
+  // The label was reset although it was hidden, so it is rasterized again.
+  group->setVisible(true);
+  widget->renderer().render();
+  EXPECT_GT(counting->renders, 0);
+
+  // Leave the shared widget with a normal strategy.
+  widget->renderer().setTextRenderStrategy(
+    new Avogadro::QtOpenGL::QtTextRenderStrategy);
+  widget->doneCurrent();
+}
+
+// cleanup() deletes the cached programs; initialize() on the same context
+// must rebuild them on demand.
+TEST_F(GLWidgetTest, cleanupThenInitializeRendersAgain)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(makeEveryProgramScene());
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 20);
+  EXPECT_GT(dominantBounds(image, 1, 90, 60).count, 20);
+}
+
+// A drawable rendered directly, outside GLRenderer::render(), builds its
+// program in a temporary context and deletes it again.
+TEST_F(GLWidgetTest, drawableRendersOutsideTheRenderer)
+{
+  widget->makeCurrent();
+  drainGLErrors();
+  {
+    SphereGeometry spheres;
+    spheres.addSphere(Vector3f(0, 0, -5), Vector3ub(255, 255, 255), 1.0f);
+    Camera camera;
+    camera.calculatePerspective(40.0f, 0.1f, 100.0f);
+    spheres.render(camera);
+    EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+    // Again: the first call's program is gone, so this builds a new one.
+    spheres.render(camera);
+    EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  }
+  widget->doneCurrent();
+}
+
+// abandon() forgets the GL name without deleting it: the object can be
+// uploaded or bound again, and the old name is still alive in this context.
+TEST_F(GLWidgetTest, abandonForgetsGLObjectsWithoutDeletingThem)
+{
+  widget->makeCurrent();
+  ContextGuard guard(widget);
+  drainGLErrors();
+  QOpenGLContext* context = QOpenGLContext::currentContext();
+  QOpenGLFunctions* gl = context->functions();
+  QOpenGLExtraFunctions* extra = context->extraFunctions();
+
+  BufferObject buffer;
+  const std::vector<float> data = { 1.0f, 2.0f, 3.0f };
+  ASSERT_TRUE(buffer.upload(data, BufferObject::ArrayBuffer));
+  const auto oldBuffer = static_cast<GLuint>(buffer.handle());
+  ASSERT_NE(oldBuffer, 0u);
+  buffer.abandon();
+  EXPECT_FALSE(buffer.ready());
+  EXPECT_EQ(buffer.handle(), 0u);
+  EXPECT_EQ(gl->glIsBuffer(oldBuffer), GL_TRUE);
+  ASSERT_TRUE(buffer.upload(data, BufferObject::ArrayBuffer));
+  EXPECT_TRUE(buffer.ready());
+  EXPECT_NE(static_cast<GLuint>(buffer.handle()), oldBuffer);
+  gl->glDeleteBuffers(1, &oldBuffer);
+
+  VertexArrayObject vao;
+  ASSERT_TRUE(vao.bind());
+  vao.release();
+  auto oldVao = static_cast<GLuint>(vao.handle());
+  ASSERT_NE(oldVao, 0u);
+  vao.abandon();
+  EXPECT_EQ(vao.handle(), 0u);
+  EXPECT_EQ(extra->glIsVertexArray(oldVao), GL_TRUE);
+  ASSERT_TRUE(vao.bind());
+  vao.release();
+  EXPECT_NE(static_cast<GLuint>(vao.handle()), oldVao);
+  extra->glDeleteVertexArrays(1, &oldVao);
+
+  Texture2D texture;
+  const std::vector<unsigned char> pixels(4 * 4, 255);
+  ASSERT_TRUE(texture.upload(pixels, Vector2i(2, 2), Texture2D::IncomingRGBA,
+                             Texture2D::InternalRGBA));
+  auto oldTexture = static_cast<GLuint>(texture.handle());
+  ASSERT_NE(oldTexture, 0u);
+  texture.abandon();
+  EXPECT_FALSE(texture.ready());
+  EXPECT_EQ(texture.handle(), 0u);
+  EXPECT_EQ(gl->glIsTexture(oldTexture), GL_TRUE);
+  ASSERT_TRUE(texture.upload(pixels, Vector2i(2, 2), Texture2D::IncomingRGBA,
+                             Texture2D::InternalRGBA));
+  EXPECT_NE(static_cast<GLuint>(texture.handle()), oldTexture);
+  gl->glDeleteTextures(1, &oldTexture);
+
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+}
+
+// A curve keeps its GL objects in its Line structs. After the renderer's
+// context life ends and a new one starts, the curve forgets the old buffers
+// (it never deletes them) and builds new ones.
+TEST_F(GLWidgetTest, curveGeometryRebuildsAfterContextReplaced)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* geometry = new GeometryNode;
+  auto* curve = new BSplineGeometry(false);
+  curve->addPoint(Vector3f(-2.0f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0,
+                  0);
+  curve->addPoint(Vector3f(0.0f, 0.5f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0, 1);
+  curve->addPoint(Vector3f(2.0f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 0.5f, 0, 2);
+  geometry->addDrawable(curve);
+  widget->renderer().scene().rootNode().addChild(geometry);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  ASSERT_EQ(curve->lines().size(), 1u);
+  const auto oldVbo = static_cast<GLuint>(curve->lines()[0]->vbo.handle());
+  ASSERT_NE(oldVbo, 0u);
+
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  const auto newVbo = static_cast<GLuint>(curve->lines()[0]->vbo.handle());
+  EXPECT_NE(newVbo, 0u);
+  // The old name was abandoned, not deleted, so it is still alive here.
+  EXPECT_NE(newVbo, oldVbo);
+  QOpenGLContext* context = QOpenGLContext::currentContext();
+  EXPECT_EQ(context->functions()->glIsBuffer(oldVbo), GL_TRUE);
+  context->functions()->glDeleteBuffers(1, &oldVbo);
+  widget->doneCurrent();
+  settle();
+
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 50);
+}
+
+// The main camera and the 2D overlay camera share one uniform buffer: a
+// drawable rendered with the overlay camera must land where that camera puts
+// it, and the main scene must stay put in the frames before and after.
+TEST_F(GLWidgetTest, overlayDrawableUsesItsOwnCamera)
+{
+  using namespace Avogadro::Rendering;
+  // A gray quad (flat 0.4 * 255 shading) in overlay coordinates: logical
+  // pixels, origin at the bottom left.
+  const float left = 20.0f, right = 100.0f, bottom = 30.0f, top = 70.0f;
+  auto* node = new GeometryNode;
+  auto* quad = new MeshGeometry;
+  Avogadro::Core::Array<Vector3f> vertices;
+  Avogadro::Core::Array<Vector3f> normals;
+  vertices.push_back(Vector3f(left, bottom, 0));
+  vertices.push_back(Vector3f(right, bottom, 0));
+  vertices.push_back(Vector3f(right, top, 0));
+  vertices.push_back(Vector3f(left, top, 0));
+  for (int i = 0; i < 4; ++i)
+    normals.push_back(Vector3f(0, 0, 1));
+  quad->setColor(Vector3ub(255, 255, 255));
+  quad->addVertices(vertices, normals);
+  // Both windings, so the quad shows whatever the face culling is.
+  quad->addTriangle(0, 1, 2);
+  quad->addTriangle(0, 2, 3);
+  quad->addTriangle(0, 2, 1);
+  quad->addTriangle(0, 3, 2);
+  quad->setRenderPass(Overlay2DPass);
+  node->addDrawable(quad);
+
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(node);
+  widget->doneCurrent();
+  settle();
+
+  const QImage first = widget->grabFramebuffer();
+  ASSERT_FALSE(first.isNull());
+  saveForInspection(first, "glwidget-overlay.png");
+
+  // The overlay quad, where the overlay camera puts it.
+  const Camera& camera = widget->renderer().camera();
+  const double sx = static_cast<double>(first.width()) / camera.width();
+  const double sy = static_cast<double>(first.height()) / camera.height();
+  const Bounds gray = colorBounds(first, 102, 102, 102, 6);
+  ASSERT_GT(gray.count, 100);
+  EXPECT_NEAR(gray.minX, left * sx, 2.0 * sx);
+  EXPECT_NEAR(gray.maxX + 1, right * sx, 2.0 * sx);
+  EXPECT_NEAR(gray.minY, first.height() - top * sy, 2.0 * sy);
+  EXPECT_NEAR(gray.maxY + 1, first.height() - bottom * sy, 2.0 * sy);
+
+  // The spheres of the main camera are where the scene puts them.
+  const Bounds red = dominantBounds(first, 0, 90, 60);
+  ASSERT_GT(red.count, 20);
+  const QPointF redCenter = screenPoint(*widget, first, Vector3f(0, 0, 0));
+  EXPECT_GE(redCenter.x(), red.minX);
+  EXPECT_LE(redCenter.x(), red.maxX + 1);
+  EXPECT_GE(redCenter.y(), red.minY);
+  EXPECT_LE(redCenter.y(), red.maxY + 1);
+
+  // The next frame starts from the overlay camera in the buffer, and
+  // renders the same picture.
+  widget->makeCurrent();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage second = widget->grabFramebuffer();
+  ASSERT_FALSE(second.isNull());
+  EXPECT_EQ(first, second);
+}
+
+// A drawable rendered outside GLRenderer::render() with a camera of its own
+// lands where that camera puts it, also right after the renderer drew a frame
+// with a different camera, and the renderer is unharmed afterwards.
+TEST_F(GLWidgetTest, standaloneDrawableUsesTheCameraItIsGiven)
+{
+  const QImage before = widget->grabFramebuffer();
+  ASSERT_FALSE(before.isNull());
+
+  widget->makeCurrent();
+  ContextGuard guard(widget);
+  QOpenGLFunctions* gl = QOpenGLContext::currentContext()->functions();
+  gl->glBindFramebuffer(GL_FRAMEBUFFER, widget->defaultFramebufferObject());
+  GLint viewport[4] = { 0, 0, 0, 0 };
+  gl->glGetIntegerv(GL_VIEWPORT, viewport);
+  const int width = viewport[2];
+  const int height = viewport[3];
+  ASSERT_GT(width, 0);
+  ASSERT_GT(height, 0);
+
+  SphereGeometry sphere;
+  sphere.addSphere(Vector3f(0, 0, 0), Vector3ub(255, 255, 255), 1.0f);
+
+  // The eye-space position of the sphere's center decides where it lands in
+  // this orthographic view, which spans -5..5 in x and y.
+  auto pixelAt = [&](float ndcX) {
+    unsigned char rgba[4] = { 0, 0, 0, 0 };
+    const int x = static_cast<int>((0.5f + 0.5f * ndcX) * width);
+    gl->glReadPixels(x, height / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+    return Vector3ub(rgba[0], rgba[1], rgba[2]);
+  };
+  auto drawAt = [&](float eyeX) {
+    Camera camera;
+    camera.setViewport(width, height);
+    camera.calculateOrthographic(-5.0f, 5.0f, -5.0f, 5.0f, -10.0f, 10.0f);
+    camera.translate(Vector3f(eyeX, 0.0f, -5.0f));
+    gl->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    gl->glEnable(GL_DEPTH_TEST);
+    drainGLErrors();
+    sphere.render(camera);
+    EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  };
+  auto isLit = [](const Vector3ub& c) { return c[0] > 100 && c[1] > 100; };
+
+  drawAt(2.0f); // ndc x = 0.4
+  EXPECT_TRUE(isLit(pixelAt(0.4f)));
+  EXPECT_FALSE(isLit(pixelAt(0.0f)));
+  EXPECT_FALSE(isLit(pixelAt(-0.4f)));
+  drawAt(-2.0f); // A different camera: ndc x = -0.4
+  EXPECT_TRUE(isLit(pixelAt(-0.4f)));
+  EXPECT_FALSE(isLit(pixelAt(0.4f)));
+  gl->glDisable(GL_DEPTH_TEST);
+
+  // The renderer still draws its scene with its own camera.
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage after = widget->grabFramebuffer();
+  ASSERT_FALSE(after.isNull());
+  EXPECT_EQ(before, after);
+}
+
+// The camera buffer belongs to the GL context: after cleanup() and
+// initialize() it is made again and the overlay and main cameras still work.
+TEST_F(GLWidgetTest, cameraBufferIsRecreatedAfterCleanupAndInitialize)
+{
+  using namespace Avogadro::Rendering;
+  auto* node = new GeometryNode;
+  auto* spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f(40, 40, 0), Vector3ub(255, 255, 255), 0.5f);
+  spheres->setRenderPass(Overlay2DPass);
+  node->addDrawable(spheres);
+  widget->makeCurrent();
+  widget->renderer().scene().rootNode().addChild(node);
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage first = widget->grabFramebuffer();
+  ASSERT_FALSE(first.isNull());
+
+  widget->makeCurrent();
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+  widget->doneCurrent();
+  settle();
+  const QImage second = widget->grabFramebuffer();
+  ASSERT_FALSE(second.isNull());
+  EXPECT_EQ(first, second);
+  EXPECT_GT(dominantBounds(second, 0, 90, 60).count, 20);
 }

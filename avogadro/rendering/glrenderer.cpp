@@ -9,12 +9,12 @@
 
 #include "bufferobject.h"
 
+#include "drawablecollector_p.h"
 #include "geometrynode.h"
 #include "geometrytiming.h"
 #include "glrendervisitor.h"
+#include "rendercontext_p.h"
 #include "rendertimings.h"
-#include "shader.h"
-#include "shaderprogram.h"
 #include "textlabel2d.h"
 #include "textlabel3d.h"
 #include "textrenderstrategy.h"
@@ -226,6 +226,12 @@ public:
   RenderTimings timings;
   bool timingEnabled = false;
   bool timingSync = false;
+  // Shader programs shared by the drawables, tied to the GL context that
+  // initialize() was called in.
+  RenderContext context;
+  // The drawables of the frame being rendered, by pass. Kept so that the
+  // buckets' capacity persists from frame to frame.
+  DrawableCollector collector;
 };
 
 GLRenderer::GLRenderer()
@@ -294,6 +300,9 @@ void GLRenderer::initialize()
   d->timing = TimingState();
   d->timings = RenderTimings();
 
+  // A new context life: drawables see a new id and rebuild their GL buffers.
+  d->context.initialize();
+
 #ifdef __EMSCRIPTEN__
   m_valid = true;
 #else
@@ -328,6 +337,7 @@ void GLRenderer::cleanup()
   d->timing = TimingState();
   d->timings = RenderTimings();
   d->timingEnabled = false;
+  d->context.releaseResources();
   m_solidPipeline.releaseResources();
 }
 
@@ -363,6 +373,9 @@ void GLRenderer::render()
   if (!m_valid)
     return;
 
+  // Drawables find their shader programs through the current context.
+  ScopedRenderContext renderContext(&d->context);
+
   TimingState* timing = d->timingEnabled ? &d->timing : nullptr;
   if (timing) {
     timing->beginFrame(d->timings, d->timingSync);
@@ -374,14 +387,32 @@ void GLRenderer::render()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   applyProjection();
 
+  // Put this frame's camera and scene bounds in the shared camera buffer.
+  // Drawables rendered with another camera (the 2D overlay) switch it
+  // themselves and keep these frame parameters.
+  CameraBuffer& cameraBuffer = d->context.cameraBuffer();
+  cameraBuffer.setFrameParameters(m_pixelRatio, m_center, m_radius);
+  cameraBuffer.use(m_camera);
+
   GLRenderVisitor visitor(m_camera, m_textRenderStrategy);
   visitor.setPixelRatio(m_pixelRatio);
+  // One walk of the scene sorts the drawables by pass. Each pass then hands
+  // its drawables back to the GLRenderVisitor through accept(), so the
+  // per-type work in GLRenderVisitor (text labels build their textures, for
+  // example) is the same as when the visitor walked the scene itself. The
+  // scene must not change until render() returns.
+  d->collector.clear();
+  m_scene.rootNode().accept(d->collector);
+  auto renderPass = [&](RenderPass pass) {
+    visitor.setRenderPass(pass);
+    for (Drawable* drawable : d->collector.bucket(pass))
+      drawable->accept(visitor);
+  };
   // Setup for solid geometry
-  visitor.setRenderPass(SolidPass);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   const bool useSolidPipeline = m_solidPipeline.begin();
-  m_scene.rootNode().accept(visitor);
+  renderPass(SolidPass);
   if (timing)
     timing->beginSection(PostSection);
   if (useSolidPipeline) {
@@ -393,13 +424,11 @@ void GLRenderer::render()
     timing->beginSection(OpaqueSection);
 
   // Setup for opaque geometry
-  visitor.setRenderPass(OpaquePass);
-  m_scene.rootNode().accept(visitor);
+  renderPass(OpaquePass);
   if (timing)
     timing->beginSection(TranslucentSection);
 
   // Setup for transparent geometry
-  visitor.setRenderPass(TranslucentPass);
   glEnable(GL_BLEND);
   // Thanks to Giuseppe D'Angelo for a related comment:
   // https://bugreports.qt.io/browse/QTBUG-36739
@@ -410,22 +439,20 @@ void GLRenderer::render()
   // holds a valid premultiplied image.
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
                       GL_ONE_MINUS_SRC_ALPHA);
-  m_scene.rootNode().accept(visitor);
+  renderPass(TranslucentPass);
   if (timing)
     timing->beginSection(Overlay3DSection);
 
   // Setup for 3d overlay rendering
-  visitor.setRenderPass(Overlay3DPass);
   glClear(GL_DEPTH_BUFFER_BIT);
-  m_scene.rootNode().accept(visitor);
+  renderPass(Overlay3DPass);
   if (timing)
     timing->beginSection(Overlay2DSection);
 
   // Setup for 2d overlay rendering
-  visitor.setRenderPass(Overlay2DPass);
   visitor.setCamera(m_overlayCamera);
   glDisable(GL_DEPTH_TEST);
-  m_scene.rootNode().accept(visitor);
+  renderPass(Overlay2DPass);
   if (timing)
     timing->endFrame(d->timings, d->timingSync);
 
@@ -475,28 +502,49 @@ void GLRenderer::resetGeometry()
   m_radius = m_scene.radius();
 }
 
+namespace {
+
+class ResetTextLabelVisitor : public Visitor
+{
+public:
+  void visit(Node&) override {}
+  void visit(GroupNode&) override {}
+  void visit(GeometryNode&) override {}
+  void visit(Drawable&) override {}
+  void visit(SphereGeometry&) override {}
+  void visit(CurveGeometry&) override {}
+  void visit(CylinderGeometry&) override {}
+  void visit(MeshGeometry&) override {}
+  void visit(TextLabel2D& l) override { l.resetTexture(); }
+  void visit(TextLabel3D& l) override { l.resetTexture(); }
+  void visit(LineStripGeometry&) override {}
+};
+
+// Reach every drawable below the node whether or not any node or drawable is
+// hidden, which GroupNode::accept() and GeometryNode::accept() do not.
+void resetTextLabels(GroupNode& group)
+{
+  ResetTextLabelVisitor resetter;
+  for (auto& info : group.children()) {
+    if (auto* childGroup = info.node->cast<GroupNode>()) {
+      resetTextLabels(*childGroup);
+    } else if (auto* geometry = info.node->cast<GeometryNode>()) {
+      for (Drawable* drawable : geometry->drawables())
+        drawable->accept(resetter);
+    }
+  }
+}
+
+} // namespace
+
 void GLRenderer::setTextRenderStrategy(TextRenderStrategy* tren)
 {
   if (tren != m_textRenderStrategy) {
-    // Force all labels to be regenerated on the next render:
-    class ResetTextLabelVisitor : public Visitor
-    {
-    public:
-      void visit(Node&) override {}
-      void visit(GroupNode&) override {}
-      void visit(GeometryNode&) override {}
-      void visit(Drawable&) override {}
-      void visit(SphereGeometry&) override {}
-      void visit(CurveGeometry&) override {}
-      void visit(CylinderGeometry&) override {}
-      void visit(MeshGeometry&) override {}
-      // void visit(Texture2D&) { return; }
-      void visit(TextLabel2D& l) override { l.resetTexture(); }
-      void visit(TextLabel3D& l) override { l.resetTexture(); }
-      void visit(LineStripGeometry&) override {}
-    } labelResetter;
-
-    m_scene.rootNode().accept(labelResetter);
+    // Force all labels to be regenerated on the next render, including those
+    // under hidden nodes: they must not keep a texture from the old strategy
+    // when they are shown again. Node::accept() skips hidden nodes, so walk
+    // the tree directly.
+    resetTextLabels(m_scene.rootNode());
 
     delete m_textRenderStrategy;
     m_textRenderStrategy = tren;
@@ -542,7 +590,7 @@ std::multimap<float, Identifier> GLRenderer::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
-  if (!group)
+  if (!group || !group->isVisible())
     return result;
 
   for (auto it : group->children()) {
@@ -568,7 +616,7 @@ std::multimap<float, Identifier> GLRenderer::hits(
   const GeometryNode* geometry, const Vector3f& rayOrigin,
   const Vector3f& rayEnd, const Vector3f& rayDirection) const
 {
-  if (!geometry)
+  if (!geometry || !geometry->isVisible())
     return std::multimap<float, Identifier>();
   return geometry->hits(rayOrigin, rayEnd, rayDirection);
 }
@@ -589,6 +637,8 @@ Array<Identifier> GLRenderer::hits(const GroupNode* group,
                                    const Frustrum& f) const
 {
   Array<Identifier> result;
+  if (!group || !group->isVisible())
+    return result;
 
   for (auto it : group->children()) {
     Array<Identifier> loopHits;

@@ -44,12 +44,18 @@ public:
   /**
    * @brief Set the visibility of the node.
    * @param visibility True if the node is visible, false if invisible.
+   *
+   * A hidden node hides its whole subtree: nothing below it is rendered,
+   * picked, counted in the scene bounds or exported, and visitors never see
+   * the hidden node itself or anything below it. Showing the node again
+   * restores the subtree, whatever the visibility of the nodes below it.
    */
   void setVisible(bool visibility) { m_visible = visibility; }
 
   /**
    * @brief Get the current visibility of the node.
-   * @return True if visible.
+   * @return True if visible. This is the node's own flag: a node below a
+   * hidden node can still report true while being hidden by it.
    */
   bool isVisible() const { return m_visible; }
 

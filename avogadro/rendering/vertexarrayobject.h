@@ -51,6 +51,14 @@ public:
   /** Unbind the VAO. */
   void release();
 
+  /**
+   * Forget the GL vertex array without deleting it, so the next bind() creates
+   * a new one. Only for a VAO whose GL context has been destroyed: its name
+   * means nothing in any other context, where deleting it could delete an
+   * unrelated object. In a context that is still alive this leaks the VAO.
+   */
+  void abandon() { m_handle = 0; }
+
   /** Get the OpenGL handle. Returns 0 if not yet created. */
   Index handle() const { return static_cast<Index>(m_handle); }
 

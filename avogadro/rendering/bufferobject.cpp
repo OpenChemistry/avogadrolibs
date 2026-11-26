@@ -80,6 +80,12 @@ bool BufferObject::release()
   return true;
 }
 
+void BufferObject::abandon()
+{
+  d->handle = 0;
+  m_dirty = true;
+}
+
 bool BufferObject::uploadInternal(const void* buffer, size_t size,
                                   ObjectType objectType)
 {

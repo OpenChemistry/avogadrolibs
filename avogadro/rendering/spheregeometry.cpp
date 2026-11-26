@@ -11,15 +11,10 @@
 #include "bufferobject.h"
 #include "vertexarrayobject.h"
 
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
 
 #include "visitor.h"
-
-namespace {
-#include "spheres_fs.h"
-#include "spheres_vs.h"
-} // namespace
 
 #include "avogadrogl.h"
 
@@ -59,10 +54,7 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
-
-  inline static Shader* vertexShader = nullptr;
-  inline static Shader* fragmentShader = nullptr;
-  inline static ShaderProgram* program = nullptr;
+  ContextStamp contextStamp;
 
   size_t numberOfInstances = 0;
 };
@@ -94,29 +86,15 @@ void SphereGeometry::update()
   if (m_indices.empty() || m_spheres.empty())
     return;
 
-  // Build and link the shader if it has not been used yet.
-  // Must be done before VAO setup since we need the program for attribute
+  // The program must exist before VAO setup since we need it for attribute
   // setup.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(spheres_vs);
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(spheres_fs);
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << '\n';
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << '\n';
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Spheres);
+  if (program == nullptr)
+    return;
 
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << '\n';
-  }
+  if (d->contextStamp.forgetIfReplaced(d->vbo, d->ibo, d->vao))
+    m_dirty = true;
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
@@ -150,7 +128,6 @@ void SphereGeometry::update()
     }
 
     // The three attributes advance once per sphere (instance).
-    ShaderProgram* program = d->program;
     const auto stride = sizeof(SphereColor);
     if (!program->enableAttributeArray("center"))
       cout << program->error() << '\n';
@@ -190,29 +167,28 @@ void SphereGeometry::render(const Camera& camera)
   if (m_indices.empty() || m_spheres.empty())
     return;
 
+  FallbackRenderContext fallbackContext;
+
   // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
-  if (!d->program->bind())
-    cout << d->program->error() << '\n';
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Spheres);
+  if (program == nullptr)
+    return;
+
+  if (!program->bind())
+    cout << program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   // If bind fails (e.g., no GL context), skip rendering to avoid GL errors.
   if (!d->vao.bind()) {
-    d->program->release();
+    program->release();
     return;
   }
 
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program->error() << '\n';
-  }
-  if (!d->program->setUniformValue("projection",
-                                   camera.projection().matrix())) {
-    cout << d->program->error() << '\n';
-  }
-  if (!d->program->setUniformValue("opacity", m_opacity)) {
-    cout << d->program->error() << '\n';
+  RenderContext::useCamera(camera);
+  if (!program->setUniformValue("opacity", m_opacity)) {
+    cout << program->error() << '\n';
   }
 
   // Render the loaded spheres using the shader and VAO.
@@ -222,7 +198,7 @@ void SphereGeometry::render(const Camera& camera)
   }
 
   d->vao.release();
-  d->program->release();
+  program->release();
 }
 
 std::multimap<float, Identifier> SphereGeometry::hits(

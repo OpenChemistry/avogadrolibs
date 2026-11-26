@@ -80,6 +80,7 @@ target_sources(Rendering PRIVATE
   arrowgeometry.cpp
   beziergeometry.cpp
   bufferobject.cpp
+  camerabuffer.cpp
   bsplinegeometry.cpp
   cartoongeometry.cpp
   camera.cpp
@@ -101,8 +102,10 @@ target_sources(Rendering PRIVATE
   povrayvisitor.cpp
   quad.cpp
   quadoutline.cpp
+  rendercontext.cpp
   scene.cpp
   shader.cpp
+  shaderlibrary.cpp
   shaderprogram.cpp
   solidpipeline.cpp
   spheregeometry.cpp

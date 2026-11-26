@@ -8,17 +8,12 @@
 #include "avogadrogl.h"
 #include "bufferobject.h"
 #include "camera.h"
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
 #include "visitor.h"
 
 #include <iostream>
-
-namespace {
-#include "wideline_fs.h"
-#include "wideline_vs.h"
-} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -38,10 +33,7 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
-
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram program;
+  ContextStamp contextStamp;
 };
 
 WideLineGeometry::WideLineGeometry()
@@ -71,26 +63,15 @@ void WideLineGeometry::update()
   if (m_vertices.empty())
     return;
 
-  // Build and link the shader if it has not been used yet.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(wideline_vs);
-    d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(wideline_fs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << '\n';
-    if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << '\n';
-    d->program.attachShader(d->vertexShader);
-    d->program.attachShader(d->fragmentShader);
-    if (!d->program.link())
-      cout << d->program.error() << '\n';
+  // The program must exist before VAO setup since we need it for attribute
+  // setup.
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::WideLine);
+  if (program == nullptr)
+    return;
 
-    d->program.detachShader(d->vertexShader);
-    d->program.detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
-  }
+  if (d->contextStamp.forgetIfReplaced(d->vbo, d->ibo, d->vao))
+    m_dirty = true;
 
   // Upload vertex and index data if dirty.
   if (!d->vbo.ready() || m_dirty) {
@@ -102,44 +83,44 @@ void WideLineGeometry::update()
     d->vbo.bind();
     d->ibo.bind();
 
-    if (!d->program.enableAttributeArray("position"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray(
-          "position", PackedVertex::positionOffset(), sizeof(PackedVertex),
-          FloatType, 3, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << '\n';
+    if (!program->enableAttributeArray("position"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray("position", PackedVertex::positionOffset(),
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << '\n';
     }
 
-    if (!d->program.enableAttributeArray("otherEnd"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray(
-          "otherEnd", PackedVertex::otherEndOffset(), sizeof(PackedVertex),
-          FloatType, 3, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << '\n';
+    if (!program->enableAttributeArray("otherEnd"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray("otherEnd", PackedVertex::otherEndOffset(),
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << '\n';
     }
 
-    if (!d->program.enableAttributeArray("color"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
-                                      sizeof(PackedVertex), UCharType, 4,
-                                      ShaderProgram::Normalize)) {
-      cout << d->program.error() << '\n';
+    if (!program->enableAttributeArray("color"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
+                                    sizeof(PackedVertex), UCharType, 4,
+                                    ShaderProgram::Normalize)) {
+      cout << program->error() << '\n';
     }
 
-    if (!d->program.enableAttributeArray("widthSide"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray(
+    if (!program->enableAttributeArray("widthSide"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray(
           "widthSide", PackedVertex::widthSideOffset(), sizeof(PackedVertex),
           FloatType, 1, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << '\n';
+      cout << program->error() << '\n';
     }
 
-    if (!d->program.enableAttributeArray("lineParam"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray(
+    if (!program->enableAttributeArray("lineParam"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray(
           "lineParam", PackedVertex::lineParamOffset(), sizeof(PackedVertex),
           FloatType, 1, ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << '\n';
+      cout << program->error() << '\n';
     }
 
     d->vao.release();
@@ -153,20 +134,22 @@ void WideLineGeometry::render(const Camera& camera)
   if (m_vertices.empty() || m_indices.empty())
     return;
 
+  FallbackRenderContext fallbackContext;
+
   // Prepare the VBOs, IBO, VAO, and shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << '\n';
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::WideLine);
+  if (program == nullptr)
+    return;
+
+  if (!program->bind())
+    cout << program->error() << '\n';
 
   // Bind the VAO
   d->vao.bind();
 
-  // Set up our uniforms
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix()))
-    cout << d->program.error() << '\n';
-  if (!d->program.setUniformValue("projection", camera.projection().matrix()))
-    cout << d->program.error() << '\n';
+  RenderContext::useCamera(camera);
 
   // Render the quads
   glDrawRangeElements(GL_TRIANGLES, 0,
@@ -175,7 +158,7 @@ void WideLineGeometry::render(const Camera& camera)
                       reinterpret_cast<const GLvoid*>(0));
 
   d->vao.release();
-  d->program.release();
+  program->release();
 }
 
 void WideLineGeometry::clear()

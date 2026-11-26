@@ -22,6 +22,10 @@ GroupNode::~GroupNode()
 
 void GroupNode::accept(Visitor& visitor)
 {
+  // A hidden group hides its subtree, including the group itself: no visitor
+  // sees it or anything below it.
+  if (!isVisible())
+    return;
   visitor.visit(*this);
   for (auto& it : m_children) {
     it.node->accept(visitor);

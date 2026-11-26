@@ -13,6 +13,7 @@
 #include "vertexarrayobject.h"
 #include <avogadro/core/vector.h>
 #include <algorithm>
+#include <cstdint>
 #include <map>
 #include <vector>
 
@@ -56,6 +57,8 @@ struct Line
   VertexArrayObject vao;
   size_t numberOfVertices;
   size_t numberOfIndices;
+  /** Private: the render context the GL objects above were created in. */
+  std::uint64_t contextId = 0;
 };
 
 class AVOGADRORENDERING_EXPORT CurveGeometry : public Drawable

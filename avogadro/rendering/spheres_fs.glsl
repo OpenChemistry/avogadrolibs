@@ -7,7 +7,6 @@ in vec3 fColor;
 in float radius;
 
 uniform float opacity;
-uniform mat4 projection;
 
 out vec4 outColor;
 

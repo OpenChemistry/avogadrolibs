@@ -10,6 +10,10 @@
 #include <avogadro/rendering/geometrynode.h>
 #include <avogadro/rendering/glrenderer.h>
 #include <avogadro/rendering/glrendervisitor.h>
+#include <avogadro/rendering/groupnode.h>
+#include <avogadro/rendering/spheregeometry.h>
+
+#include <initializer_list>
 
 using Avogadro::Rendering::Camera;
 using Avogadro::Rendering::Drawable;
@@ -196,4 +200,43 @@ TEST(GLRendererTest, cleanupWithoutGLContextIsNoOp)
   renderer.cleanup();
   renderer.solidPipeline().releaseResources();
   EXPECT_FALSE(renderer.solidPipeline().begin());
+}
+
+// Picking is CPU math on the camera and the drawables: no GL context needed.
+TEST(GLRendererTest, hiddenNodesAreNotPicked)
+{
+  using Avogadro::Rendering::GroupNode;
+  using Avogadro::Rendering::SphereGeometry;
+  GLRenderer renderer;
+  renderer.camera().setViewport(100, 100);
+  auto* group = new GroupNode;
+  auto* inner = new GroupNode;
+  auto* geometry = new GeometryNode;
+  auto* spheres = new SphereGeometry;
+  int owner = 0;
+  spheres->identifier().molecule = &owner;
+  spheres->identifier().type = Avogadro::Rendering::AtomType;
+  spheres->addSphere(Avogadro::Vector3f(0, 0, 0),
+                     Avogadro::Vector3ub(255, 0, 0), 1.0f);
+  renderer.scene().rootNode().addChild(group);
+  group->addChild(inner);
+  inner->addChild(geometry);
+  geometry->addDrawable(spheres);
+  renderer.resetCamera();
+  renderer.applyProjection();
+
+  EXPECT_FALSE(renderer.hits(50, 50).empty());
+  EXPECT_FALSE(renderer.hits(0, 0, 100, 100).empty());
+
+  // Hidden at any level of the subtree: no hits from any picking path.
+  for (Avogadro::Rendering::Node* hidden :
+       std::initializer_list<Avogadro::Rendering::Node*>{ group, inner,
+                                                          geometry }) {
+    hidden->setVisible(false);
+    EXPECT_TRUE(renderer.hits(50, 50).empty());
+    EXPECT_TRUE(renderer.hits(0, 0, 100, 100).empty());
+    hidden->setVisible(true);
+    EXPECT_FALSE(renderer.hits(50, 50).empty());
+    EXPECT_FALSE(renderer.hits(0, 0, 100, 100).empty());
+  }
 }

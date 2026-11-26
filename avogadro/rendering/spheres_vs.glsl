@@ -9,9 +9,6 @@ out vec3 fColor;
 out vec4 eyePosition;
 out float radius;
 
-uniform mat4 modelView;
-uniform mat4 projection;
-
 void main()
 {
   // Corners 0..3 are (-1,-1), (-1,1), (1,-1), (1,1).

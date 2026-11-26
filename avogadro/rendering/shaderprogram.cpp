@@ -218,6 +218,19 @@ bool ShaderProgram::link()
   return true;
 }
 
+bool ShaderProgram::bindUniformBlock(const std::string& blockName,
+                                     unsigned int bindingPoint)
+{
+  if (!m_linked)
+    return false;
+  const GLuint program = static_cast<GLuint>(m_handle);
+  const GLuint index = glGetUniformBlockIndex(program, blockName.c_str());
+  if (index == GL_INVALID_INDEX)
+    return false;
+  glUniformBlockBinding(program, index, bindingPoint);
+  return true;
+}
+
 bool ShaderProgram::bind()
 {
   if (!m_linked && !link())
