@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "rendercontext_p.h"
 #include "shaderprogram.h"
+#include "solideffects_p.h"
 
 #include <algorithm>
 #include <cmath>
@@ -393,10 +394,14 @@ void SolidPipeline::end(const Camera& camera)
   d->attachStage(*firstStage, "inRGBTex", d->renderTexture, "inDepthTex",
                  d->depthTexture, m_width, m_height);
   firstStage->setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
-  firstStage->setUniformValue("inDofEnabled", m_dofEnabled ? 1.0f : 0.0f);
-  firstStage->setUniformValue("inDofStrength",
-                              m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
-  firstStage->setUniformValue("inDofPosition", ((m_dofPosition) / 10.0f));
+  // Depth of field and fog work in scene radii and are mapped from the
+  // application's settings on the CPU (see solideffects_p.h).
+  const DepthOfFieldSettings dof =
+    m_dofEnabled ? depthOfFieldSettings(m_dofStrength, m_dofPosition)
+                 : DepthOfFieldSettings();
+  firstStage->setUniformValue("inDofBlur", dof.blurPerRadius);
+  firstStage->setUniformValue("inDofMaxBlur", dof.maxBlur);
+  firstStage->setUniformValue("inDofFocusRadii", dof.focusRadii);
 
   // The AO term; the blur sizes its surface test with the camera block's
   // projection.
@@ -405,13 +410,16 @@ void SolidPipeline::end(const Camera& camera)
                               m_edEnabled ? m_edStrength : 0.0f);
   firstStage->setUniformValue("inEdgeSupersample",
                               d->edgeSupersampling ? 1.0f : 0.0f);
-  firstStage->setUniformValue("inFogEnabled", m_fogEnabled ? 1.0f : 0.0f);
-  firstStage->setUniformValue("inFogStrength",
-                              m_fogEnabled ? m_fogStrength : 0.0f);
-  firstStage->setUniformValue("inFogPosition", m_fogPosition);
-  firstStage->setUniformValue("fogR", (m_backgroundColor[0]) / 255.0f);
-  firstStage->setUniformValue("fogG", (m_backgroundColor[1]) / 255.0f);
-  firstStage->setUniformValue("fogB", (m_backgroundColor[2]) / 255.0f);
+  const FogSettings fog =
+    m_fogEnabled ? fogSettings(m_fogStrength, m_fogPosition) : FogSettings();
+  firstStage->setUniformValue("inFogAmount", fog.amount);
+  firstStage->setUniformValue("inFogStartRadii", fog.startRadii);
+  // Fade toward the color the frame was cleared to (alpha included), which is
+  // what the background pixels hold.
+  firstStage->setUniformValue("fogR", d->clearColor[0]);
+  firstStage->setUniformValue("fogG", d->clearColor[1]);
+  firstStage->setUniformValue("fogB", d->clearColor[2]);
+  firstStage->setUniformValue("fogA", d->clearColor[3]);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 
   if (useFxaa) {
@@ -437,33 +445,10 @@ void SolidPipeline::end(const Camera& camera)
   glBindVertexArray(0);
 }
 
-void SolidPipeline::adjustOffset(const Camera& cam)
+void SolidPipeline::adjustOffset(const Camera&)
 {
-  if (!d->initialized || (!m_fogEnabled && !m_dofEnabled))
-    return;
-
-  // The numbers used in calculations are random.
-  // They help define an offset with the projection-matrix
-  // to make the fog dynamic as the molecule moves away
-  // from the camera or come closer.
-  Eigen::Matrix4f projectView = cam.projection().matrix();
-
-  float project = ((((5000 + projectView(2, 3) * 1000) / 6) + 55) * 100);
-
-  float offSet = 0.000102337 * pow(project, 2) - 3.84689 * project + 36182.2;
-  if (project >= 21018.106 && project < 21595.588) {
-    offSet = 2.63129 * project - 54768.4;
-  } else if (project >= 21595.588) {
-    offSet = 9.952 * project - 212865;
-  }
-  // Uniforms land on whichever program is bound, so bind the one this is
-  // meant for rather than depending on what the last pass left behind.
-  ShaderProgram* firstStage =
-    RenderContext::currentProgram(ShaderId::SolidFirst);
-  if (firstStage == nullptr)
-    return;
-  firstStage->bind();
-  firstStage->setUniformValue("uoffset", offSet);
+  // Retained for compatibility only: the fog and depth of field now read the
+  // camera and scene bounds from the camera buffer.
 }
 
 void SolidPipeline::resize(int width, int height)

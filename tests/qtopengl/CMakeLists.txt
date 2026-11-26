@@ -15,6 +15,7 @@ set(tests
   RendererTeardown
   QtTextLabel
   QtTextRenderStrategy
+  SolidEffects
 )
 
 set(testSrcs gltesthelpers.cpp)

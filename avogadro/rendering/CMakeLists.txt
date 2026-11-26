@@ -107,6 +107,7 @@ target_sources(Rendering PRIVATE
   shader.cpp
   shaderlibrary.cpp
   shaderprogram.cpp
+  solideffects.cpp
   solidpipeline.cpp
   spheregeometry.cpp
   tessellatingvisitor.cpp

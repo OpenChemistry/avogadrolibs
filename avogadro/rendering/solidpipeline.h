@@ -53,6 +53,13 @@ public:
    */
   bool begin();
 
+  /**
+   * @brief Does nothing.
+   *
+   * Fog and depth of field used to need this each frame to follow the camera.
+   * They now read the camera and the scene bounds from the camera buffer. The
+   * function stays so that 2.x code that calls it still builds and links.
+   */
   void adjustOffset(const Camera& camera);
 
   /**
@@ -100,7 +107,10 @@ public:
   void setFogEnabled(bool enabled) { m_fogEnabled = enabled; }
 
   /**
-   * @brief Set Background Color to it's current value.
+   * @brief The background color.
+   *
+   * The fog fades toward the color the frame was cleared to (alpha included),
+   * so this no longer affects it; it is kept for compatibility.
    */
   Vector4ub backgroundColor() const { return m_backgroundColor; }
   void setBackgroundColor(const Vector4ub& c) { m_backgroundColor = c; }
@@ -113,12 +123,30 @@ public:
 
   /**
    * @brief Get or set fog strength.
+   *
+   * Fog is a depth cue: a linear mix toward the background color that is zero
+   * at the fog position and reaches its maximum at the back of the molecule's
+   * depth span (center distance plus the scene radius). It works for both
+   * projections and, with the fog position, does not depend on how far the
+   * camera is. The effect is applied after depth of field, ambient occlusion
+   * and edge outlines. Pure black stays black on a black background; over a
+   * transparent background the molecule fades to transparent.
+   *
+   * Strength (the dialog's range is -20 to 20, default 1) sets the maximum mix:
+   * s / (s + 1.5), so 1 gives 40% at the back, 5 gives 77%, 20 gives 93%. Zero
+   * or negative turns the fog off.
    */
   float getFogStrength() { return m_fogStrength; }
   void setFogStrength(float strength) { m_fogStrength = strength; }
 
   /**
-   * @brief Get or set fog position
+   * @brief Get or set fog position (clamped to -20 to 20, default 1).
+   *
+   * The fog starts at 0.1 * (position - 1) scene radii from the scene center
+   * toward the back: the default starts it at the center, so the front half of
+   * the molecule is clear. Smaller values start it nearer the camera (-20: 2.1
+   * radii in front of the center), larger values later, down to a short ramp at
+   * the very back.
    */
   float getFogPosition() { return m_fogPosition; }
   void setFogPosition(float position) { m_fogPosition = position; }
@@ -134,12 +162,20 @@ public:
 
   /**
    * @brief Get or set dof strength.
+   *
+   * The blur radius of a point one scene radius from the focus is 8 * strength
+   * logical pixels (default 1; the dialog allows 0 to 2), at most 16 pixels,
+   * and grows linearly with the distance from the focus. Zero or less turns it
+   * off. The sampling pattern is fixed, so a still image does not shimmer.
    */
   float getDofStrength() { return m_dofStrength; }
   void setDofStrength(float strength) { m_dofStrength = strength; }
 
   /**
-   * @brief Set position of dof
+   * @brief Get or set the focus position (clamped to 0 to 20, default 1).
+   *
+   * 0 focuses on the front of the scene's bounding sphere, 1 (the default) on
+   * its center, and 20 on its back, linearly between.
    */
   float getDofPosition() { return m_dofPosition; }
   void setDofPosition(float position) { m_dofPosition = position; }

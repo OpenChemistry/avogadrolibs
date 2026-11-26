@@ -19,6 +19,7 @@ set(tests
   Node
   PLYVisitor
   RenderContext
+  SolidEffects
   SphereGeometry
   TessellatingVisitor
   Texture2D
