@@ -7,6 +7,7 @@
 
 #include <avogadro/core/vector.h>
 
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtopengl/glwidget.h>
 
@@ -58,6 +59,8 @@ Navigator::Navigator(QObject* parent_)
   setIcon();
   QSettings settings;
   m_zoomDirection = settings.value("navigator/zoom", 1).toInt();
+
+  registerNavigatorCommands();
 }
 
 void Navigator::setIcon(bool darkTheme)
@@ -68,56 +71,112 @@ void Navigator::setIcon(bool darkTheme)
     m_activateAction->setIcon(QIcon(":/icons/navigator_light.svg"));
 }
 
-void Navigator::registerCommands()
+void Navigator::registerNavigatorCommands()
 {
-  emit registerCommand("rotateScene",
-                       tr("Rotate the scene along the x, y, or z axes."));
-  emit registerCommand(
-    "zoomScene",
-    tr("Zoom the scene. Positive delta moves toward the molecule, negative "
-       "away. One unit of delta is roughly a 2% change in the camera's "
-       "distance to the focal point."));
-  emit registerCommand("translateScene", tr("Translate the scene."));
-}
+  QtGui::CommandSpec rotateSpec;
+  rotateSpec.name = "rotateScene";
+  rotateSpec.description =
+    tr("Rotate the scene along the x, y, or z axes around the camera focus. "
+       "At least one of 'x', 'y', or 'z' must be specified in degrees.");
+  rotateSpec.needsMolecule = true;
+  rotateSpec.arguments = {
+    QtGui::CommandArgumentSpec::real(
+      "x", tr("Rotation angle around the X axis in degrees."))
+      .withUnit("°"),
+    QtGui::CommandArgumentSpec::real(
+      "y", tr("Rotation angle around the Y axis in degrees."))
+      .withUnit("°"),
+    QtGui::CommandArgumentSpec::real(
+      "z", tr("Rotation angle around the Z axis in degrees."))
+      .withUnit("°")
+  };
+  rotateSpec.handler = [this](const QtGui::CommandArguments& args) {
+    if (m_renderer == nullptr) {
+      emit commandFailed(tr("No camera"));
+      return;
+    }
+    if (!args.has("x") && !args.has("y") && !args.has("z")) {
+      emit commandFailed(
+        tr("At least one rotation angle ('x', 'y', or 'z') must be provided."));
+      return;
+    }
+    float x = static_cast<float>(args.real("x"));
+    float y = static_cast<float>(args.real("y"));
+    float z = static_cast<float>(args.real("z"));
+    this->rotate(m_renderer->camera().focus(), x, y, z);
+    if (m_glWidget != nullptr)
+      m_glWidget->requestUpdate();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(rotateSpec));
 
-bool Navigator::handleCommand(const QString& command,
-                              const QVariantMap& options)
-{
-  static const QStringList knownCommands = { "rotateScene", "zoomScene",
-                                             "translateScene" };
-
-  if (!knownCommands.contains(command))
-    return false; // not one of our commands
-
-  if (m_renderer == nullptr) {
-    emit commandFailed(tr("No camera"));
-    return true;
-  }
-
-  if (command == "rotateScene") {
-    float x = options.value("x").toFloat();
-    float y = options.value("y").toFloat();
-    float z = options.value("z").toFloat();
-    rotate(m_renderer->camera().focus(), x, y, z);
-
-    m_glWidget->requestUpdate();
-  } else if (command == "zoomScene") {
-    float d = options.value("delta").toFloat();
+  QtGui::CommandSpec zoomSpec;
+  zoomSpec.name = "zoomScene";
+  zoomSpec.description =
+    tr("Zoom the scene toward or away from the camera focus. Positive delta "
+       "moves toward the molecule, negative away. One unit of delta is roughly "
+       "a 2% change in distance to the focal point.");
+  zoomSpec.needsMolecule = true;
+  zoomSpec.arguments = {
+    QtGui::CommandArgumentSpec::real(
+      "delta",
+      tr("Zoom delta (positive moves toward the molecule, negative away)."))
+      .withRequired()
+  };
+  zoomSpec.handler = [this](const QtGui::CommandArguments& args) {
+    if (m_renderer == nullptr) {
+      emit commandFailed(tr("No camera"));
+      return;
+    }
+    float d = static_cast<float>(args.real("delta"));
     // zoom() itself treats positive d as moving away from the focus point
     // (used as-is by the mouse wheel / keyboard handlers below, which must
     // keep their existing feel). The zoomScene command is documented the
     // other way around -- positive delta moves toward the molecule -- so
     // negate here, at the command boundary only.
-    zoom(m_renderer->camera().focus(), -d);
-    m_glWidget->requestUpdate();
-  } else if (command == "translateScene") {
-    float x = options.value("x").toFloat();
-    float y = options.value("y").toFloat();
-    translate(m_renderer->camera().focus(), x, y);
-    m_glWidget->requestUpdate();
-  }
+    this->zoom(m_renderer->camera().focus(), -d);
+    if (m_glWidget != nullptr)
+      m_glWidget->requestUpdate();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(zoomSpec));
 
-  return true;
+  QtGui::CommandSpec translateSpec;
+  translateSpec.name = "translateScene";
+  translateSpec.description =
+    tr("Translate the scene horizontally or vertically in screen pixels. "
+       "At least one of 'x' or 'y' must be specified.");
+  translateSpec.needsMolecule = true;
+  translateSpec.arguments = {
+    QtGui::CommandArgumentSpec::real(
+      "x", tr("Horizontal translation in screen pixels.")),
+    QtGui::CommandArgumentSpec::real(
+      "y", tr("Vertical translation in screen pixels."))
+  };
+  translateSpec.handler = [this](const QtGui::CommandArguments& args) {
+    if (m_renderer == nullptr) {
+      emit commandFailed(tr("No camera"));
+      return;
+    }
+    if (!args.has("x") && !args.has("y")) {
+      emit commandFailed(
+        tr("At least one translation offset ('x' or 'y') must be provided."));
+      return;
+    }
+    float x = static_cast<float>(args.real("x"));
+    float y = static_cast<float>(args.real("y"));
+    this->translate(m_renderer->camera().focus(), x, y);
+    if (m_glWidget != nullptr)
+      m_glWidget->requestUpdate();
+    emit commandFinished();
+  };
+  commandRegistry().add(std::move(translateSpec));
+}
+
+bool Navigator::handleCommand(const QString& command,
+                              const QVariantMap& options)
+{
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 Navigator::~Navigator() {}
