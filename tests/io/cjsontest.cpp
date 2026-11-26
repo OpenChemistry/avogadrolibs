@@ -1768,3 +1768,59 @@ TEST(CjsonTest, shortOccupancyColumnWritesFullLength)
   EXPECT_EQ(root["atoms"]["occupancies"][0].get<double>(), 0.5);
   EXPECT_EQ(root["atoms"]["occupancies"][2].get<double>(), 1.0);
 }
+
+TEST(CjsonTest, integerPropertiesRoundTrip)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.setData("answer", 42);
+  molecule.setData("minusThree", -3);
+  molecule.setData("zero", 0);
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+  // nlohmann parses non-negative integers as unsigned; they must not be lost
+  ASSERT_TRUE(readMol.hasData("answer"));
+  EXPECT_EQ(readMol.data("answer").type(), Variant::Int);
+  EXPECT_EQ(readMol.data("answer").toInt(), 42);
+  ASSERT_TRUE(readMol.hasData("minusThree"));
+  EXPECT_EQ(readMol.data("minusThree").type(), Variant::Int);
+  EXPECT_EQ(readMol.data("minusThree").toInt(), -3);
+  ASSERT_TRUE(readMol.hasData("zero"));
+  EXPECT_EQ(readMol.data("zero").toInt(), 0);
+}
+
+TEST(CjsonTest, residueLabelsRoundTrip)
+{
+  // Residue ids deliberately do not match the residue indices (PDB numbering
+  // starting at 10), and only some residues have a custom label.
+  Molecule molecule;
+  const char* names[3] = { "ALA", "GLY", "SER" };
+  for (Index i = 0; i < 3; ++i) {
+    Atom a = molecule.addAtom(6);
+    std::string name = names[i];
+    Index id = 10 + i;
+    char chain = 'A';
+    Residue r(name, id, chain);
+    r.addResidueAtom("CA", a);
+    molecule.addResidue(r);
+  }
+  ASSERT_TRUE(molecule.setResidueLabel(0, "first"));
+  ASSERT_TRUE(molecule.setResidueLabel(2, "third"));
+
+  CjsonFormat cjson;
+  std::string output;
+  ASSERT_TRUE(cjson.writeString(output, molecule));
+
+  Molecule readMol;
+  ASSERT_TRUE(cjson.readString(output, readMol));
+  ASSERT_EQ(readMol.residueCount(), static_cast<size_t>(3));
+  EXPECT_EQ(readMol.residueLabel(0), "first");
+  EXPECT_EQ(readMol.residueLabel(1), "");
+  EXPECT_EQ(readMol.residueLabel(2), "third");
+  EXPECT_EQ(readMol.residue(0).residueId(), static_cast<Index>(10));
+}
