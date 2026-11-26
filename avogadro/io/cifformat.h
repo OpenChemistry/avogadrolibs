@@ -27,16 +27,19 @@ namespace Avogadro::Io {
  *
  * The site occupancy of each atom is stored (see Core::Molecule::occupancy()),
  * but only when some site is not a full one, and a missing or unreadable value
- * counts as 1. The disorder groups are not stored.
+ * counts as 1. The disorder assembly and group labels of the atoms are stored
+ * as written (see Core::Molecule::disorderGroup()) when any atom has a group,
+ * and written back as @c _atom_site_disorder_assembly and
+ * @c _atom_site_disorder_group.
  *
- * The read option "disorder" chooses what to do with disordered sites. Because
- * the groups are not stored, with "major" (the default) only one
- * configuration is read: in each disorder assembly the group with the highest
- * mean occupancy is kept (the first in the file on a tie; a lone group needs
- * 0.5 or more) and the atoms of the other groups are dropped. Groups with a
- * negative label (disorder across a symmetry element) and atoms without a group
- * are always kept. With "all" every atom of every group is read; bonds between
- * alternatives are never perceived.
+ * The read option "disorder" chooses what to do with disordered sites. With
+ * "major" (the default) only one configuration is read: in each disorder
+ * assembly the group with the highest mean occupancy is kept (the first in the
+ * file on a tie; a lone group needs 0.5 or more) and the atoms of the other
+ * groups are dropped. Groups with a negative label (disorder across a symmetry
+ * element) and atoms without a group are always kept. With "all" every atom of
+ * every group is read; bonds between alternatives are never perceived (see
+ * Core::Molecule::areDisorderAlternatives()).
  *
  * Displacement parameters are not stored. The occupancies also choose the major
  * group.
