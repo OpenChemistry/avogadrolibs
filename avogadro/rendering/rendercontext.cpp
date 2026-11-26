@@ -29,8 +29,10 @@ RenderContext::~RenderContext()
 
 void RenderContext::initialize()
 {
-  // A GL buffer left from an earlier life belongs to a context that is gone
-  // (or was cleaned up, which released it already): never delete it here.
+  // A GL buffer or program left from an earlier life belongs to a context that
+  // is gone (or was cleaned up, which released it already): never delete it
+  // here.
+  m_shaders.abandonResources();
   m_camera.abandon();
   m_id = nextId();
 }

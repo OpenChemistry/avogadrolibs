@@ -1907,6 +1907,63 @@ TEST_F(GLWidgetTest, curveGeometryRebuildsAfterContextReplaced)
   EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 50);
 }
 
+// A context replaced without cleanup() leaves the cached programs behind: the
+// library must forget them (never delete them) and build new ones.
+TEST_F(GLWidgetTest, shaderProgramsAbandonedWhenContextReplaced)
+{
+  clearScene(*widget);
+  widget->makeCurrent();
+  auto* geometry = new GeometryNode;
+  auto* spheres = new SphereGeometry;
+  spheres->addSphere(Vector3f(0.0f, 0.0f, 0.0f), Vector3ub(255, 0, 0), 1.0f);
+  geometry->addDrawable(spheres);
+  widget->renderer().scene().rootNode().addChild(geometry);
+  widget->renderer().resetGeometry();
+  widget->renderer().resetCamera();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+
+  QOpenGLFunctions* gl = QOpenGLContext::currentContext()->functions();
+  constexpr GLuint maxName = 512;
+  std::vector<GLuint> oldPrograms;
+  for (GLuint name = 1; name < maxName; ++name) {
+    if (gl->glIsProgram(name) == GL_TRUE)
+      oldPrograms.push_back(name);
+  }
+  ASSERT_FALSE(oldPrograms.empty());
+
+  // No cleanup(): the old programs are not released.
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  drainGLErrors();
+  widget->renderer().render();
+  EXPECT_EQ(currentGLError(), static_cast<GLenum>(GL_NO_ERROR));
+
+  // Every old name is still a program (abandoned, not deleted), and the
+  // library built new ones instead of reusing them.
+  for (GLuint name : oldPrograms)
+    EXPECT_EQ(gl->glIsProgram(name), GL_TRUE);
+  std::size_t now = 0;
+  for (GLuint name = 1; name < maxName; ++name) {
+    if (gl->glIsProgram(name) == GL_TRUE)
+      ++now;
+  }
+  EXPECT_GT(now, oldPrograms.size());
+
+  // Tidy up the leaked programs; releasing the library cleans up the new ones.
+  widget->renderer().cleanup();
+  for (GLuint name : oldPrograms)
+    gl->glDeleteProgram(name);
+  widget->renderer().initialize();
+  widget->doneCurrent();
+  settle();
+
+  const QImage image = widget->grabFramebuffer();
+  ASSERT_FALSE(image.isNull());
+  EXPECT_GT(dominantBounds(image, 0, 90, 60).count, 50);
+}
+
 // The main camera and the 2D overlay camera share one uniform buffer: a
 // drawable rendered with the overlay camera must land where that camera puts
 // it, and the main scene must stay put in the frames before and after.

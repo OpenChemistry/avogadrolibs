@@ -102,6 +102,18 @@ ShaderProgram::~ShaderProgram()
   }
 }
 
+void ShaderProgram::abandon()
+{
+  m_handle = 0;
+  m_vertexShader = 0;
+  m_fragmentShader = 0;
+  m_linked = false;
+  m_attributes.clear();
+  m_uniforms.clear();
+  m_textureUnitBindings.clear();
+  m_boundTextureUnits.clear();
+}
+
 bool ShaderProgram::attachShader(const Shader& shader)
 {
   if (shader.handle() == 0) {
