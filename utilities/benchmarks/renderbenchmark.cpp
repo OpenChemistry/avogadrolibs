@@ -264,6 +264,7 @@ void printUsage(const char* argv0)
     << "                   is R times larger (default 1)\n"
     << "  --orthographic   Use an orthographic instead of a perspective "
        "camera\n"
+    << "                   (--zoom is not supported)\n"
     << "  --background C   black, white, transparent, or #RRGGBB[AA] "
        "(default:\n"
     << "                   the scene's own)\n"
@@ -512,6 +513,10 @@ bool parseArguments(int argc, char** argv, Options& options)
       std::cerr << "Unknown argument: " << arg << "\n";
       return false;
     }
+  }
+  if (options.orthographic && options.zoom != 1.0) {
+    std::cerr << "--zoom is not supported with --orthographic\n";
+    return false;
   }
   return true;
 }
@@ -1080,9 +1085,11 @@ int main(int argc, char** argv)
       pipeline.setFogStrength(static_cast<float>(options.fog.strength));
     }
     if (options.fog.positionSet)
-      pipeline.setFogPosition(static_cast<float>(options.fog.position));
+      pipeline.setFogPosition(
+        static_cast<float>(std::clamp(options.fog.position, -20.0, 20.0)));
     if (options.dof.positionSet)
-      pipeline.setDofPosition(static_cast<float>(options.dof.position));
+      pipeline.setDofPosition(
+        static_cast<float>(std::clamp(options.dof.position, 0.0, 20.0)));
     if (options.fogOff)
       pipeline.setFogEnabled(false);
     if (options.orthographic)

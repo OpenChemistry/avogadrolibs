@@ -570,16 +570,21 @@ TEST_F(SolidAoTest, oddFrameSizesWork)
   };
   for (const auto& [w, h] : sizes) {
     SCOPED_TRACE(std::to_string(w) + "x" + std::to_string(h));
+    widget->makeCurrent();
+    drainGLErrors();
+    widget->doneCurrent();
     widget->resize(w, h);
     settle();
-    const QImage image = touchingSpheres(White, Perspective);
-    ASSERT_FALSE(image.isNull());
-    EXPECT_GE(image.width(), 1);
-    // render() checks for GL errors; so does this, for the resize itself.
+    // render() drains errors itself, so check the resize before it.
     widget->makeCurrent();
     EXPECT_EQ(widget->context()->functions()->glGetError(),
               static_cast<GLenum>(GL_NO_ERROR));
     widget->doneCurrent();
+    const QImage image = touchingSpheres(White, Perspective);
+    ASSERT_FALSE(image.isNull());
+    const qreal dpr = widget->devicePixelRatioF();
+    EXPECT_EQ(image.width(), qRound(w * dpr));
+    EXPECT_EQ(image.height(), qRound(h * dpr));
     // Nothing in the frame is NaN-black where the sphere should be lit.
     if (image.width() >= 63) {
       const double v = meanLuminance(widget, image, openSurface(), 1);

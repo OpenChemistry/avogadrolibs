@@ -330,8 +330,29 @@ void SolidPipeline::end(const Camera& camera)
   FallbackRenderContext fallbackContext;
   ShaderProgram* firstStage =
     RenderContext::currentProgram(ShaderId::SolidFirst);
-  if (firstStage == nullptr || !RenderContext::useCamera(camera))
+  // Draw to screen
+  auto bindScreen = [this]() {
+    if (glIsFramebuffer(d->defaultFBO)) {
+      glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
+      GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
+      glDrawBuffers(1, drawBuffersList);
+    } else {
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#ifdef __EMSCRIPTEN__
+      const GLenum back = GL_BACK;
+      glDrawBuffers(1, &back);
+#else
+      glDrawBuffer(GL_BACK);
+#endif
+    }
+    glViewport(d->defaultViewport[0], d->defaultViewport[1],
+               d->defaultViewport[2], d->defaultViewport[3]);
+  };
+
+  if (firstStage == nullptr || !RenderContext::useCamera(camera)) {
+    bindScreen();
     return;
+  }
 
   // Bind VAO for procedural fullscreen triangle (required for Core Profile)
   glBindVertexArray(d->screenVAO);
@@ -392,24 +413,6 @@ void SolidPipeline::end(const Camera& camera)
   const bool useFxaa =
     fxaaStage != nullptr && d->prepareFxaa(m_width, m_height);
 
-  // Draw to screen
-  auto bindScreen = [this]() {
-    if (glIsFramebuffer(d->defaultFBO)) {
-      glBindFramebuffer(GL_FRAMEBUFFER, d->defaultFBO);
-      GLenum drawBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
-      glDrawBuffers(1, drawBuffersList);
-    } else {
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#ifdef __EMSCRIPTEN__
-      const GLenum back = GL_BACK;
-      glDrawBuffers(1, &back);
-#else
-      glDrawBuffer(GL_BACK);
-#endif
-    }
-    glViewport(d->defaultViewport[0], d->defaultViewport[1],
-               d->defaultViewport[2], d->defaultViewport[3]);
-  };
   if (useFxaa) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->compositeFBO);
     GLenum compositeBuffersList[1] = { GL_COLOR_ATTACHMENT0 };

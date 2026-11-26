@@ -69,7 +69,10 @@ public:
    * depth back into scene units to tell surfaces apart. The stages' shader
    * programs belong to the current RenderContext, so call it, like begin(),
    * while one is current (GLRenderer::render() does); otherwise a temporary
-   * context builds the programs and deletes them again.
+   * context builds the programs and deletes them again. Fog and depth of
+   * field take the scene bounds from the camera buffer that
+   * GLRenderer::render() fills, so outside it (no current RenderContext) they
+   * are off.
    */
   void end(const Camera& camera);
 

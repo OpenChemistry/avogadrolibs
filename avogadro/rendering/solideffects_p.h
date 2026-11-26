@@ -55,8 +55,9 @@ struct FogSettings
  * 0.1 * (position - 1). The default starts the fog at the center of the
  * scene. Smaller values start it nearer the camera, down to 2.1 radii in
  * front of the center at -20, which fogs the whole molecule; larger values
- * start it later, until the ramp is squeezed into the very back of the
- * scene (the ramp is never shorter than 5% of the radius).
+ * start it later, up to 0.95 radii behind the center (reached at position
+ * 10.5), where the ramp is squeezed into the very back of the scene. The
+ * start is capped there, so the ramp is never shorter than 5% of the radius.
  */
 AVOGADRORENDERING_EXPORT FogSettings fogSettings(float strength,
                                                  float position);

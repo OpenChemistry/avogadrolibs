@@ -40,10 +40,10 @@ TEST(SolidEffectsTest, fogPositionMapping)
 {
   EXPECT_FLOAT_EQ(fogSettings(1.0f, 1.0f).startRadii, 0.0f);
   EXPECT_FLOAT_EQ(fogSettings(1.0f, -20.0f).startRadii, -2.1f);
-  EXPECT_FLOAT_EQ(fogSettings(1.0f, 20.0f).startRadii, 1.9f);
+  EXPECT_FLOAT_EQ(fogSettings(1.0f, 20.0f).startRadii, 0.95f);
   // Clamped to the dialog's range; garbage means the default.
   EXPECT_FLOAT_EQ(fogSettings(1.0f, -500.0f).startRadii, -2.1f);
-  EXPECT_FLOAT_EQ(fogSettings(1.0f, 500.0f).startRadii, 1.9f);
+  EXPECT_FLOAT_EQ(fogSettings(1.0f, 500.0f).startRadii, 0.95f);
   EXPECT_FLOAT_EQ(fogSettings(1.0f, NaN).startRadii, 0.0f);
 }
 
@@ -72,13 +72,14 @@ TEST(SolidEffectsTest, fogFactorIsALinearRamp)
 
 TEST(SolidEffectsTest, fogFactorGuardsDegenerateInput)
 {
-  const FogSettings fog = fogSettings(5.0f, 20.0f); // start near the back
+  // Starts at 0.95 radii, near the back.
+  const FogSettings fog = fogSettings(5.0f, 20.0f);
   EXPECT_EQ(fogFactor(fog, 10.0f, 10.0f, 0.0f), 0.0f);
   EXPECT_EQ(fogFactor(fog, 10.0f, 10.0f, -1.0f), 0.0f);
   EXPECT_EQ(fogFactor(fog, NaN, 10.0f, 1.0f), 0.0f);
   EXPECT_EQ(fogFactor(fog, 10.0f, Inf, 1.0f), 0.0f);
   EXPECT_EQ(fogFactor(FogSettings(), 10.0f, 10.0f, 1.0f), 0.0f);
-  // A start beyond the back of the span still gives a finite value.
+  // A start this close to the back of the span still gives a finite value.
   for (float z = 0.0f; z < 30.0f; z += 0.25f) {
     const float v = fogFactor(fog, z, 10.0f, 1.0f);
     EXPECT_TRUE(std::isfinite(v));

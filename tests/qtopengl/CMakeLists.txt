@@ -35,6 +35,11 @@ target_link_libraries(AvogadroQtOpenGLTests
 # suites skip when there is no usable OpenGL context; the text render strategy
 # does not need one.
 foreach(TestName ${tests})
+  set(filter "${TestName}Test.*")
+  # The ambient occlusion fixture lives in the SolidEffects source file.
+  if(TestName STREQUAL "SolidEffects")
+    string(APPEND filter ":SolidAoTest.*")
+  endif()
   add_test(NAME "QtOpenGL-${TestName}"
-    COMMAND AvogadroQtOpenGLTests "--gtest_filter=${TestName}Test.*")
+    COMMAND AvogadroQtOpenGLTests "--gtest_filter=${filter}")
 endforeach()

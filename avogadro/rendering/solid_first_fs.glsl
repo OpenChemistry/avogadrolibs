@@ -182,10 +182,10 @@ float sceneCenterDistance()
 
 // Linear fog: nothing in front of the ramp's start, rising to inFogAmount at
 // the back of the scene's depth span [center - radius, center + radius]. The
-// start can be moved past the back, so the ramp keeps a minimum length.
+// start is capped at 0.95 radii, so the ramp keeps a minimum length.
 float fogFactor(float viewDist, float centerDistance, float sceneRadius)
 {
-    float start = centerDistance + inFogStartRadii * sceneRadius;
+    float start = centerDistance + min(inFogStartRadii, 0.95) * sceneRadius;
     float end = centerDistance + sceneRadius;
     float rampLength = max(end - start, 0.05 * sceneRadius);
     return inFogAmount * clamp((viewDist - start) / rampLength, 0.0, 1.0);
@@ -247,8 +247,10 @@ vec4 applyBlur(vec2 texCoord, float viewDist, float centerDistance,
         vec2 tapUV = (vec2(tap) + 0.5) / vec2(size);
         float tapRadius = circleOfConfusion(viewDistance(tapUV, tapDepth),
                                             centerDistance, sceneRadius);
-        // Soft over one pixel, so the weight does not flicker at the edge.
-        float weight = clamp(tapRadius - length(offset) + 1.0, 0.0, 1.0);
+        // Soft over one pixel, measured to the texel that was sampled, so the
+        // weight does not flicker at the edge.
+        float weight =
+            clamp(tapRadius - length(vec2(tap - pixel)) + 1.0, 0.0, 1.0);
         color += weight * texelFetch(inRGBTex, tap, 0);
         total += weight;
     }

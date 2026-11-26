@@ -37,7 +37,8 @@ FogSettings fogSettings(float strength, float position)
     return settings;
   settings.amount = strength / (strength + FogHalfStrength);
   settings.startRadii =
-    0.1f * (clampedFinite(position, -20.0f, 20.0f, 1.0f) - 1.0f);
+    std::min(0.1f * (clampedFinite(position, -20.0f, 20.0f, 1.0f) - 1.0f),
+             1.0f - MinimumFogRampRadii);
   return settings;
 }
 
