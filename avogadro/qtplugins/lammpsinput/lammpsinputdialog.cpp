@@ -54,59 +54,66 @@ LammpsInputDialog::LammpsInputDialog(QWidget* parent, Qt::WindowFlags flag)
 {
   ui.setupUi(this);
   // Connect the GUI elements to the correct slots
-  connect(ui.titleLine, SIGNAL(editingFinished()), this, SLOT(setTitle()));
+  connect(ui.titleLine, &QLineEdit::editingFinished, this,
+          &LammpsInputDialog::setTitle);
 
   // now for something useful
-  connect(ui.unitsCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setUnits(int)));
-  connect(ui.atomStyleCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setAtomStyle(int)));
-  connect(ui.dimensionCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setDimensionType(int)));
-  connect(ui.xBoundaryCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setXBoundaryType(int)));
-  connect(ui.yBoundaryCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setYBoundaryType(int)));
-  connect(ui.zBoundaryCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setZBoundaryType(int)));
-  connect(ui.waterPotentialCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setWaterPotential(int)));
-  connect(ui.readDataLine, SIGNAL(editingFinished()), this,
-          SLOT(setReadData()));
-  connect(ui.ensembleCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setEnsemble(int)));
-  connect(ui.tempSpin, SIGNAL(valueChanged(double)), this,
-          SLOT(setTemperature(double)));
-  connect(ui.nhChainSpin, SIGNAL(valueChanged(int)), this,
-          SLOT(setNHChain(int)));
-  connect(ui.stepSpin, SIGNAL(valueChanged(double)), this,
-          SLOT(setTimeStep(double)));
-  connect(ui.runSpin, SIGNAL(valueChanged(int)), this, SLOT(setRunSteps(int)));
-  connect(ui.xReplicateSpin, SIGNAL(valueChanged(int)), this,
-          SLOT(setXReplicate(int)));
-  connect(ui.yReplicateSpin, SIGNAL(valueChanged(int)), this,
-          SLOT(setYReplicate(int)));
-  connect(ui.zReplicateSpin, SIGNAL(valueChanged(int)), this,
-          SLOT(setZReplicate(int)));
-  connect(ui.dumpXYZEdit, SIGNAL(editingFinished()), this, SLOT(setDumpXYZ()));
-  connect(ui.dumpStepSpin, SIGNAL(valueChanged(int)), this,
-          SLOT(setDumpStep(int)));
-  connect(ui.velocityDistCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setVelocityDist(int)));
-  connect(ui.velocityTempSpin, SIGNAL(valueChanged(double)), this,
-          SLOT(setVelocityTemp(double)));
-  connect(ui.zeroMOMCheck, SIGNAL(toggled(bool)), this, SLOT(setZeroMOM(bool)));
-  connect(ui.zeroLCheck, SIGNAL(toggled(bool)), this, SLOT(setZeroL(bool)));
-  connect(ui.thermoStyleCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(setThermoStyle(int)));
-  connect(ui.thermoSpin, SIGNAL(valueChanged(int)), this,
-          SLOT(setThermoInterval(int)));
+  connect(ui.unitsCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setUnits);
+  connect(ui.atomStyleCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setAtomStyle);
+  connect(ui.dimensionCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setDimensionType);
+  connect(ui.xBoundaryCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setXBoundaryType);
+  connect(ui.yBoundaryCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setYBoundaryType);
+  connect(ui.zBoundaryCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setZBoundaryType);
+  connect(ui.waterPotentialCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setWaterPotential);
+  connect(ui.readDataLine, &QLineEdit::editingFinished, this,
+          &LammpsInputDialog::setReadData);
+  connect(ui.ensembleCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setEnsemble);
+  connect(ui.tempSpin, &QDoubleSpinBox::valueChanged, this,
+          &LammpsInputDialog::setTemperature);
+  connect(ui.nhChainSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setNHChain);
+  connect(ui.stepSpin, &QDoubleSpinBox::valueChanged, this,
+          &LammpsInputDialog::setTimeStep);
+  connect(ui.runSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setRunSteps);
+  connect(ui.xReplicateSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setXReplicate);
+  connect(ui.yReplicateSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setYReplicate);
+  connect(ui.zReplicateSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setZReplicate);
+  connect(ui.dumpXYZEdit, &QLineEdit::editingFinished, this,
+          &LammpsInputDialog::setDumpXYZ);
+  connect(ui.dumpStepSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setDumpStep);
+  connect(ui.velocityDistCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setVelocityDist);
+  connect(ui.velocityTempSpin, &QDoubleSpinBox::valueChanged, this,
+          &LammpsInputDialog::setVelocityTemp);
+  connect(ui.zeroMOMCheck, &QCheckBox::toggled, this,
+          &LammpsInputDialog::setZeroMOM);
+  connect(ui.zeroLCheck, &QCheckBox::toggled, this,
+          &LammpsInputDialog::setZeroL);
+  connect(ui.thermoStyleCombo, &QComboBox::currentIndexChanged, this,
+          &LammpsInputDialog::setThermoStyle);
+  connect(ui.thermoSpin, &QSpinBox::valueChanged, this,
+          &LammpsInputDialog::setThermoInterval);
 
-  connect(ui.generateButton, SIGNAL(clicked()), this, SLOT(generateClicked()));
-  connect(ui.resetButton, SIGNAL(clicked()), this, SLOT(resetClicked()));
+  connect(ui.generateButton, &QPushButton::clicked, this,
+          &LammpsInputDialog::generateClicked);
+  connect(ui.resetButton, &QPushButton::clicked, this,
+          &LammpsInputDialog::resetClicked);
 
-  connect(ui.enableFormButton, SIGNAL(clicked()), this,
-          SLOT(enableFormClicked()));
+  connect(ui.enableFormButton, &QPushButton::clicked, this,
+          &LammpsInputDialog::enableFormClicked);
 
   QSettings settings;
   readSettings(settings);
@@ -166,7 +173,8 @@ void LammpsInputDialog::updatePreviewText()
   m_jobEdit = new QTextEdit(this);
   m_jobEdit->setObjectName(m_jobFileName);
   m_jobEdit->setFontFamily("monospace");
-  connect(m_jobEdit, SIGNAL(textChanged()), this, SLOT(textEditModified()));
+  connect(m_jobEdit, &QTextEdit::textChanged, this,
+          &LammpsInputDialog::textEditModified);
   m_jobEdit->setText(generateInputDeck());
   ui.tabWidget->insertTab(jobTabPosition, m_jobEdit, m_jobFileName);
   deckDirty(false);
@@ -480,7 +488,8 @@ void LammpsInputDialog::setMolecule(QtGui::Molecule* molecule)
 
   m_molecule = molecule;
   // Update the preview text whenever primitives are changed
-  connect(molecule, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
+  connect(molecule, &QtGui::Molecule::changed, this,
+          &LammpsInputDialog::updatePreviewText);
   updatePreviewText();
 }
 
