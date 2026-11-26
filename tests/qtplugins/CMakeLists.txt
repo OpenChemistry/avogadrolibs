@@ -33,6 +33,7 @@ set(plugins
   OpenBabel
   PlayerTool
   PropertyTables
+  ResetView
   ScriptFileFormats
   Select
   SpaceGroup

@@ -33,8 +33,6 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
   void setCamera(Rendering::Camera* camera) override;
@@ -48,6 +46,8 @@ private slots:
   void alignToAxes();
 
 private:
+  void registerResetViewCommands();
+
   QtGui::Molecule* m_molecule;
   Rendering::Camera* m_camera;
   QAction* m_centerAction;
@@ -59,7 +59,8 @@ private:
 
   bool defaultChecks();
   void animationCamera(const Eigen::Affine3f& goal, bool animate = true);
-  void animationCameraDefault(bool animate = true);
+  bool animationCameraDefault(const QString& axis = QStringLiteral("z"),
+                              bool animate = true);
   float calculateOptimalOrthographicScale(const Eigen::Affine3f& viewTransform);
 };
 
