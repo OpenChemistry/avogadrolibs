@@ -98,19 +98,38 @@ public:
   Real _x;
   Real _x6;  // precomputed x^6
   Real _x12; // precomputed x^12
+  Real _rc;  // soft-core radius, see VDW_CORE_FRACTION
 };
 
 // Torsions fade out as a bond angle goes from this angle (degrees) to 180
 static constexpr Real TORSION_SWITCH_ONSET_DEGREES = 170.0;
 
-// VdW distance cutoff squared (10 Angstrom cutoff).
-// UFF equilibrium VdW distances are 2.5-4.5 Angstroms,
-// so at ~2.5x the largest, LJ energy is negligible.
-static constexpr Real VDW_CUTOFF_SQ = 100.0;
-// Rebuild VdW pair list when max atom displacement exceeds 2 Angstroms
-static constexpr Real VDW_REBUILD_THRESHOLD_SQ = 4.0;
-// Only check for rebuild every N evaluations
-static constexpr int VDW_REBUILD_CHECK_INTERVAL = 10;
+// The van der Waals energy is switched smoothly to zero between VDW_R_ON and
+// VDW_R_OFF (the CHARMM / Brooks switch, continuous in value and first
+// derivative). UFF equilibrium VdW distances are 2.5-4.5 Angstroms, so at
+// 2.5x the largest the LJ energy is already negligible.
+static constexpr Real VDW_R_ON = 8.0;
+static constexpr Real VDW_R_OFF = 10.0;
+static constexpr Real VDW_R_ON_SQ = VDW_R_ON * VDW_R_ON;
+static constexpr Real VDW_R_OFF_SQ = VDW_R_OFF * VDW_R_OFF;
+// Denominator (r_off^2 - r_on^2)^3 of the switching function
+static constexpr Real VDW_SWITCH_DENOM = (VDW_R_OFF_SQ - VDW_R_ON_SQ) *
+                                         (VDW_R_OFF_SQ - VDW_R_ON_SQ) *
+                                         (VDW_R_OFF_SQ - VDW_R_ON_SQ);
+// Verlet pair list: every pair closer than r_off + skin is listed, and the
+// list is rebuilt as soon as any atom has moved more than skin / 2 since it
+// was built. Two atoms can then close by at most skin, so every pair inside
+// r_off is always in the list and the energy does not depend on when the list
+// was last built.
+static constexpr Real VDW_SKIN = 2.5;
+static constexpr Real VDW_LIST_CUTOFF_SQ =
+  (VDW_R_OFF + VDW_SKIN) * (VDW_R_OFF + VDW_SKIN);
+static constexpr Real VDW_REBUILD_THRESHOLD_SQ =
+  (0.5 * VDW_SKIN) * (0.5 * VDW_SKIN);
+// Soft core: inside r_c = VDW_CORE_FRACTION * x_ij the 12-6 energy is replaced
+// by its tangent line at r_c, so the energy and gradient agree and stay finite
+// for overlapping atoms. At r_c the 12-6 repulsion is already about 4000 D.
+static constexpr Real VDW_CORE_FRACTION = 0.5;
 
 // Helpers to look up rows of uffparams. Rows for an element are contiguous,
 // and the third character of a label is the coordination (e.g., "C_3", "C_R",
@@ -193,7 +212,6 @@ public:
   std::vector<UFFVdW> m_vdws;
   std::unordered_set<uint64_t> m_excludedPairs; // 1-2 and 1-3 pairs
   Eigen::VectorXd m_lastVdWPositions; // positions when VdW list was last built
-  int m_vdwCallCount = 0;             // counter for rebuild check interval
   Core::Molecule* m_molecule;
   Core::UnitCell* m_cell;
 
@@ -755,7 +773,12 @@ public:
     return m_excludedPairs.count(pairKey(i, j)) > 0;
   }
 
-  // Build or rebuild the VdW pair list with distance cutoff
+  // Build or rebuild the VdW pair list with distance cutoff.
+  // With a unit cell each pair is listed once and seen through its nearest
+  // periodic image only (UnitCell::minimumImage). That is exact while the
+  // list cutoff (r_off + skin = 12.5 A) is shorter than half the narrowest
+  // cell width; in a smaller cell the farther images of a pair, and the
+  // interaction of an atom with its own images, are not counted.
   void setVdWs(const Eigen::VectorXd& x)
   {
     m_vdws.clear();
@@ -780,7 +803,7 @@ public:
           r2 = m_cell->distanceSquared(Vector3(x.segment<3>(3 * i)),
                                        Vector3(x.segment<3>(3 * j)));
         }
-        if (r2 > VDW_CUTOFF_SQ)
+        if (r2 > VDW_LIST_CUTOFF_SQ)
           continue;
 
         UFFVdW v;
@@ -793,13 +816,16 @@ public:
         Real x3 = v._x * v._x * v._x;
         v._x6 = x3 * x3;
         v._x12 = v._x6 * v._x6;
+        v._rc = VDW_CORE_FRACTION * v._x;
         m_vdws.push_back(v);
       }
     }
   }
 
-  // Rebuild the VdW pair list if any atom has moved significantly.
-  // Only checks every N calls to avoid O(N) overhead on every evaluation.
+  // Rebuild the VdW pair list if any atom has moved more than half the skin
+  // since it was built. This is checked on every evaluation (O(N)); see
+  // VDW_SKIN for why that keeps every pair inside the switching distance
+  // listed.
   void rebuildVdWsIfNeeded(const Eigen::VectorXd& x)
   {
     if (m_lastVdWPositions.size() != x.size()) {
@@ -807,10 +833,6 @@ public:
       return;
     }
 
-    if (++m_vdwCallCount % VDW_REBUILD_CHECK_INTERVAL != 0)
-      return;
-
-    // Check max squared displacement across all atoms
     const Index n = m_molecule->atomCount();
     for (Index i = 0; i < n; ++i) {
       const Vector3d disp =
@@ -1157,6 +1179,45 @@ public:
     }
   }
 
+  // Energy (kcal/mol) and dE/dr of one pair at squared distance r2 > 0,
+  // including the soft core and the switch. dEdr is only set when requested.
+  static Real vdwPair(const UFFVdW& vdw, Real r2, bool needsGradient,
+                      Real* dEdr)
+  {
+    const Real r = sqrt(r2);
+    Real e = 0.0;
+    Real de = 0.0;
+    if (r < vdw._rc) {
+      // tangent line of the 12-6 curve at r_c (r < r_c implies r_c > 0)
+      const Real rc2 = vdw._rc * vdw._rc;
+      const Real rc6 = rc2 * rc2 * rc2;
+      const Real ec = vdw._depth * (vdw._x12 / (rc6 * rc6) - 2 * vdw._x6 / rc6);
+      de = 12 * vdw._depth * vdw._x6 / (rc6 * vdw._rc) * (1 - vdw._x6 / rc6);
+      e = ec + de * (r - vdw._rc);
+    } else {
+      const Real r6 = r2 * r2 * r2;
+      e = vdw._depth * (vdw._x12 / (r6 * r6) - 2 * vdw._x6 / r6);
+      if (needsGradient)
+        de = 12 * vdw._depth * vdw._x6 / (r6 * r) * (1 - vdw._x6 / r6);
+    }
+
+    if (r2 > VDW_R_ON_SQ) {
+      // S(r) = (roff^2 - r^2)^2 (roff^2 + 2r^2 - 3ron^2) / (roff^2 - ron^2)^3
+      const Real a = VDW_R_OFF_SQ - r2;
+      const Real s =
+        a * a * (VDW_R_OFF_SQ + 2 * r2 - 3 * VDW_R_ON_SQ) / VDW_SWITCH_DENOM;
+      if (needsGradient) {
+        const Real ds = 12 * r * a * (VDW_R_ON_SQ - r2) / VDW_SWITCH_DENOM;
+        de = s * de + e * ds;
+      }
+      e *= s;
+    }
+
+    if (dEdr != nullptr)
+      *dEdr = de;
+    return e;
+  }
+
   void vdwEvaluate(const Eigen::VectorXd& x, Real* energy,
                    Eigen::VectorXd* grad)
   {
@@ -1182,30 +1243,23 @@ public:
         r2 = m_cell->distanceSquared(vi, vj);
       }
 
-      // Skip pairs that moved beyond the cutoff since the list was built
-      if (r2 > VDW_CUTOFF_SQ)
+      // The energy is exactly zero beyond the switching distance
+      if (r2 >= VDW_R_OFF_SQ)
         continue;
 
-      const Real r6 = r2 * r2 * r2;
-      if (energy != nullptr) {
-        // Overlapping atoms make x12/r12 and x6/r6 both +inf, and
-        // inf - inf == NaN. Floor the energy at r = 0.1 A, as LennardJones
-        // does; the gradient below has its own r < 1e-3 guard.
-        const Real r6e = std::max(r6, 1e-6);
-        const Real r12e = r6e * r6e;
-        *energy += vdw._depth * (vdw._x12 / r12e - 2 * vdw._x6 / r6e);
-      }
+      Real dEdr = 0.0;
+      const Real e = vdwPair(vdw, r2, needsGradient, &dEdr);
+      if (energy != nullptr)
+        *energy += e;
 
       if (!needsGradient)
         continue;
 
-      const Real r = sqrt(r2);
-      if (r < 1e-3)
-        continue;
-
-      const Vector3d direction = diff / r;
-      const Real r7 = r6 * r;
-      const Real dEdr = 12 * vdw._depth * vdw._x6 / r7 * (1 - vdw._x6 / r6);
+      // Coincident atoms have no direction; the soft core still has a finite
+      // force, so push them apart along a fixed axis instead of dropping it.
+      Vector3d direction = Vector3d::UnitX();
+      if (r2 > 1e-24)
+        direction = diff / sqrt(r2);
       grad->segment<3>(3 * i) += dEdr * direction;
       grad->segment<3>(3 * j) -= dEdr * direction;
     }

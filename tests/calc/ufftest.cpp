@@ -32,6 +32,7 @@ using namespace Avogadro;
 using Avogadro::Vector3;
 using Avogadro::Core::Atom;
 using Avogadro::Core::Molecule;
+using Avogadro::Core::UnitCell;
 using Avogadro::Io::XyzFormat;
 
 // basic idea - go through a bunch of molecules
@@ -1601,5 +1602,256 @@ TEST(UffPeriodicTest, InfiniteChainDoesNotDependOnTheBoundary)
     EXPECT_NEAR(actual.angle, expected.angle, 1.0e-8);
     EXPECT_NEAR(actual.oop, expected.oop, 1.0e-8);
     EXPECT_NEAR(actual.torsion, expected.torsion, 1.0e-8);
+  }
+}
+
+// ---- Van der Waals switching, pair list and soft core ---------------------
+
+namespace {
+// Two unbonded argon atoms, `r` apart along x. Argon has no bonded terms, so
+// UFF::value() is the van der Waals energy alone (kJ/mol).
+struct ArgonPair
+{
+  Molecule molecule;
+  UFF uff;
+  ArgonPair(double r = 5.0)
+  {
+    addAt(molecule, 18, 0.0, 0.0, 0.0);
+    addAt(molecule, 18, r, 0.0, 0.0);
+    uff.setMolecule(&molecule);
+  }
+  static Eigen::VectorXd positions(double r)
+  {
+    Eigen::VectorXd x = Eigen::VectorXd::Zero(6);
+    x[3] = r;
+    return x;
+  }
+  double energy(double r) { return uff.value(positions(r)); }
+  // dE/dr, the force on the second atom along x
+  double slope(double r)
+  {
+    Eigen::VectorXd g = Eigen::VectorXd::Zero(6);
+    uff.gradient(positions(r), g);
+    return g[3];
+  }
+  double finiteSlope(double r, double h)
+  {
+    return (energy(r + h) - energy(r - h)) / (2.0 * h);
+  }
+};
+
+// Argon-argon UFF parameters, in kcal/mol and Angstrom
+double argonX()
+{
+  return uffparams[rowForLabel("Ar4+4")].x1;
+}
+
+double argonDepth()
+{
+  return uffparams[rowForLabel("Ar4+4")].D1;
+}
+
+// Deterministic scatter of argon atoms in a box (a simple LCG)
+Molecule argonCluster(int count, double box)
+{
+  Molecule molecule;
+  unsigned int state = 12345u;
+  auto next = [&state]() {
+    state = state * 1664525u + 1013904223u;
+    return static_cast<double>(state >> 8) / static_cast<double>(1u << 24);
+  };
+  for (int i = 0; i < count; ++i)
+    addAt(molecule, 18, box * next(), box * next(), box * next());
+  return molecule;
+}
+
+Eigen::VectorXd positionsOfMolecule(const Molecule& molecule)
+{
+  Eigen::VectorXd x(3 * static_cast<Eigen::Index>(molecule.atomCount()));
+  for (Index i = 0; i < molecule.atomCount(); ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  return x;
+}
+} // namespace
+
+// The energy used to jump at the 10 A cutoff. It must now be continuous
+// across the whole switching region (8-10 A) and vanish beyond it, and the
+// analytic gradient must be the derivative of the switched energy.
+TEST(UffVdwSwitchTest, EnergyIsContinuousAcrossSwitchRegion)
+{
+  ArgonPair pair;
+  const double step = 1.0e-4;
+  const double regions[2][2] = { { 7.9, 8.1 }, { 9.9, 10.1 } };
+  for (const auto& region : regions) {
+    double previous = pair.energy(region[0]);
+    for (double r = region[0] + step; r <= region[1]; r += step) {
+      const double current = pair.energy(r);
+      // the slope is at most ~0.02 kJ/mol/A here, so a step changes the
+      // energy by ~2e-6; the old jump at 10 A was 2.6e-3
+      EXPECT_LT(std::fabs(current - previous), 1.0e-5) << "r = " << r;
+      previous = current;
+    }
+  }
+  EXPECT_EQ(pair.energy(10.0), 0.0);
+  EXPECT_EQ(pair.energy(10.5), 0.0);
+  EXPECT_EQ(pair.energy(13.0), 0.0);
+  EXPECT_NE(pair.energy(9.9), 0.0);
+}
+
+TEST(UffVdwSwitchTest, GradientMatchesFiniteDifferencesAcrossSwitchRegion)
+{
+  ArgonPair pair;
+  // includes both ends of the switch exactly
+  const double radii[] = { 3.0, 4.5,  7.0,  7.99, 8.0,  8.01, 8.5,
+                           9.0, 9.25, 9.75, 9.99, 10.0, 10.01 };
+  for (double r : radii) {
+    const double analytic = pair.slope(r);
+    // the second derivative of the switch jumps at its ends, so use a short
+    // step there
+    const double numeric = pair.finiteSlope(r, 1.0e-7);
+    EXPECT_NEAR(analytic, numeric, 1.0e-8 + 1.0e-6 * std::fabs(analytic))
+      << "r = " << r;
+  }
+}
+
+// With a switch that reaches zero at the cutoff and a pair list that holds
+// every pair inside it, the energy cannot depend on earlier evaluations.
+TEST(UffVdwSwitchTest, EnergyAndGradientDoNotDependOnPairListHistory)
+{
+  Molecule molecule = argonCluster(40, 22.0);
+  const Eigen::VectorXd x = positionsOfMolecule(molecule);
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  Eigen::VectorXd g0;
+  const double e0 = uff.evaluate(x, &g0);
+
+  // trial points: a small step, a far one (every atom moves well past the
+  // rebuild threshold), and a long run of evaluations in between
+  Eigen::VectorXd far = x;
+  for (Eigen::Index i = 0; i < far.size(); ++i)
+    far[i] += 3.0 * std::sin(1.7 * static_cast<double>(i) + 0.3);
+  for (int pass = 0; pass < 25; ++pass) {
+    Eigen::VectorXd trial = (pass % 3 == 0) ? far : x;
+    if (pass % 3 == 1)
+      trial[0] += 0.01 * pass;
+    Eigen::VectorXd g;
+    const double e = uff.evaluate(trial, &g);
+
+    // a UFF built at exactly these coordinates is the reference
+    Molecule fresh = molecule;
+    for (Index i = 0; i < fresh.atomCount(); ++i)
+      fresh.setAtomPosition3d(i, trial.segment<3>(3 * i));
+    UFF reference;
+    reference.setMolecule(&fresh);
+    Eigen::VectorXd gr;
+    const double er = reference.evaluate(trial, &gr);
+    EXPECT_EQ(e, er) << "pass " << pass;
+    EXPECT_EQ((g - gr).cwiseAbs().maxCoeff(), 0.0) << "pass " << pass;
+  }
+
+  Eigen::VectorXd g1;
+  const double e1 = uff.evaluate(x, &g1);
+  EXPECT_EQ(e1, e0);
+  EXPECT_EQ((g1 - g0).cwiseAbs().maxCoeff(), 0.0);
+  EXPECT_NE(e0, 0.0);
+}
+
+// A pair that drifts into range must be seen right away: the list reaches
+// beyond the switching distance and is rebuilt before any atom has moved far
+// enough to matter.
+TEST(UffVdwPairListTest, DriftingPairIsNotMissed)
+{
+  const double starts[2][2] = { { 10.5, 9.5 }, { 13.0, 9.0 } };
+  for (const auto& drift : starts) {
+    ArgonPair pair(drift[0]);
+    const double step =
+      0.01 * (drift[1] - drift[0]) / std::fabs(drift[1] - drift[0]);
+    for (double r = drift[0]; (r - drift[1]) * step <= 0.0; r += step) {
+      ArgonPair fresh(r);
+      EXPECT_EQ(pair.energy(r), fresh.energy(r)) << "r = " << r;
+      EXPECT_EQ(pair.slope(r), fresh.slope(r)) << "r = " << r;
+    }
+  }
+}
+
+// Below r_c = x / 2 the energy continues linearly with the slope it has at
+// r_c, so the energy and the gradient describe the same function there.
+TEST(UffVdwSoftCoreTest, EnergyAndGradientAgreeInsideTheCore)
+{
+  ArgonPair pair;
+  const double rc = 0.5 * argonX();
+  const double radii[] = { 0.002,     0.02,     0.05,          0.09,
+                           0.3,       0.8,      1.5,           rc - 0.01,
+                           rc + 0.01, rc + 0.1, 0.8 * argonX() };
+  for (double r : radii) {
+    const double analytic = pair.slope(r);
+    const double numeric = pair.finiteSlope(r, 1.0e-6);
+    EXPECT_NEAR(analytic, numeric, 1.0e-8 + 1.0e-6 * std::fabs(analytic))
+      << "r = " << r;
+    EXPECT_LT(analytic, 0.0) << "r = " << r; // always repulsive
+  }
+}
+
+TEST(UffVdwSoftCoreTest, EnergyIsContinuousAndSmoothAtCoreRadius)
+{
+  ArgonPair pair;
+  const double rc = 0.5 * argonX();
+  const double eps = 1.0e-9;
+  const double below = pair.energy(rc - eps);
+  const double above = pair.energy(rc + eps);
+  EXPECT_NEAR(below, above, 1.0e-5 * std::fabs(above));
+  const double slopeBelow = pair.slope(rc - eps);
+  const double slopeAbove = pair.slope(rc + eps);
+  EXPECT_NEAR(slopeBelow, slopeAbove, 1.0e-6 * std::fabs(slopeAbove));
+
+  // E(r_c) is the 12-6 energy there; kcal/mol -> kJ/mol
+  const double x6 = std::pow(argonX(), 6);
+  const double r6 = std::pow(rc, 6);
+  const double expected =
+    argonDepth() * (x6 * x6 / (r6 * r6) - 2.0 * x6 / r6) * 4.184;
+  EXPECT_NEAR(pair.energy(rc), expected, 1.0e-3 * expected);
+}
+
+TEST(UffVdwSoftCoreTest, CoincidentAtomsGiveFiniteEnergyAndGradient)
+{
+  ArgonPair pair;
+  const Eigen::VectorXd x = Eigen::VectorXd::Zero(6);
+  Eigen::VectorXd g;
+  const double e = pair.uff.evaluate(x, &g);
+  EXPECT_TRUE(std::isfinite(e));
+  EXPECT_TRUE(g.allFinite());
+  // finite and larger than anywhere outside the core
+  EXPECT_GT(e, pair.energy(0.5 * argonX()));
+  // the force still pushes the atoms apart rather than vanishing
+  EXPECT_GT(g.cwiseAbs().maxCoeff(), 0.0);
+  EXPECT_NEAR((g.segment<3>(0) + g.segment<3>(3)).norm(), 0.0, 1.0e-9);
+}
+
+// A pair is seen through its nearest periodic image, and the switch, the soft
+// core and the list behave as they do without a cell. (Only the nearest image
+// is used, so a cell narrower than 2 * 10 A leaves out the farther ones; see
+// the note in uff.cpp.)
+TEST(UffVdwPeriodicTest, NearestImageDriftMatchesFreshEvaluation)
+{
+  Molecule molecule;
+  addAt(molecule, 18, 0.0, 0.0, 0.0);
+  addAt(molecule, 18, 3.0, 0.0, 0.0);
+  molecule.setUnitCell(
+    new UnitCell(30.0, 30.0, 30.0, M_PI / 2.0, M_PI / 2.0, M_PI / 2.0));
+  UFF uff;
+  uff.setMolecule(&molecule);
+
+  ArgonPair open;
+  // the second atom starts 27 A away along -x through the boundary and drifts
+  // from an image 13 A away to one 9 A away
+  for (double r = 13.0; r >= 9.0; r -= 0.05) {
+    Eigen::VectorXd x = Eigen::VectorXd::Zero(6);
+    x[3] = 30.0 - r;
+    Eigen::VectorXd g;
+    const double e = uff.evaluate(x, &g);
+    EXPECT_NEAR(e, open.energy(r), 1.0e-12) << "r = " << r;
+    EXPECT_NEAR(g[3], -open.slope(r), 1.0e-12) << "r = " << r;
   }
 }
