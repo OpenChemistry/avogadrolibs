@@ -11,6 +11,7 @@
 #include "bufferobject.h"
 #include "vertexarrayobject.h"
 
+#include "geometrybounds_p.h"
 #include "rendercontext_p.h"
 #include "shaderprogram.h"
 
@@ -57,6 +58,9 @@ public:
   ContextStamp contextStamp;
 
   size_t numberOfInstances = 0;
+
+  // Used only to reject pick rays; see CachedBounds for the contract.
+  CachedBounds bounds;
 };
 
 SphereGeometry::SphereGeometry() : m_dirty(false), d(new Private)
@@ -159,6 +163,7 @@ void SphereGeometry::update()
     d->numberOfInstances = std::min(m_indices.size(), m_spheres.size());
 
     m_dirty = false;
+    d->bounds.invalidate();
   }
 }
 
@@ -206,6 +211,18 @@ std::multimap<float, Identifier> SphereGeometry::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
+
+  // Whole-geometry rejection. The box is only trusted for clean geometry:
+  // code that edits spheres() in place must call markDirty().
+  const GeometryBounds* box = d->bounds.acquire(m_dirty, [this] {
+    GeometryBounds b;
+    for (const SphereColor& sphere : m_spheres)
+      b.include(sphere.center, sphere.radius);
+    b.finish();
+    return b;
+  });
+  if (box != nullptr && !rayMayHitBounds(*box, rayOrigin, rayDirection))
+    return result;
 
   // Check for intersection.
   for (size_t i = 0; i < m_spheres.size(); ++i) {
@@ -274,6 +291,7 @@ void SphereGeometry::addSphere(const Vector3f& position, const Vector3ub& color,
                                float radius, size_t index)
 {
   m_dirty = true;
+  d->bounds.invalidate();
   m_spheres.push_back(SphereColor(position, radius, color));
   m_indices.push_back(index == MaxIndex ? m_indices.size() : index);
 }
@@ -282,6 +300,7 @@ void SphereGeometry::clear()
 {
   m_spheres.clear();
   m_indices.clear();
+  d->bounds.invalidate();
 }
 
 } // namespace Avogadro::Rendering

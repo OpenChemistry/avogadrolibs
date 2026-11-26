@@ -12,6 +12,7 @@
 #include "bufferobject.h"
 #include "vertexarrayobject.h"
 
+#include "geometrybounds_p.h"
 #include "rendercontext_p.h"
 #include "shaderprogram.h"
 
@@ -67,6 +68,9 @@ public:
   ContextStamp contextStamp;
 
   size_t numberOfInstances = 0;
+
+  // Used only to reject pick rays; see CachedBounds for the contract.
+  CachedBounds bounds;
 };
 
 CylinderGeometry::CylinderGeometry() : m_dirty(false), d(new Private)
@@ -249,6 +253,7 @@ void CylinderGeometry::update()
     d->numberOfInstances = std::min(m_indices.size(), m_cylinders.size());
 
     m_dirty = false;
+    d->bounds.invalidate();
   }
 }
 
@@ -298,6 +303,20 @@ std::multimap<float, Identifier> CylinderGeometry::hits(
 {
   std::multimap<float, Identifier> result;
 
+  // Whole-geometry rejection. The box is only trusted for clean geometry:
+  // code that edits cylinders() in place must call markDirty().
+  const GeometryBounds* box = d->bounds.acquire(m_dirty, [this] {
+    GeometryBounds b;
+    for (const CylinderColor& cylinder : m_cylinders) {
+      b.include(cylinder.end1, cylinder.radius);
+      b.include(cylinder.end2, cylinder.radius);
+    }
+    b.finish();
+    return b;
+  });
+  if (box != nullptr && !rayMayHitBounds(*box, rayOrigin, rayDirection))
+    return result;
+
   for (size_t i = 0; i < m_cylinders.size(); ++i) {
     const CylinderColor& cylinder = m_cylinders[i];
 
@@ -312,6 +331,11 @@ std::multimap<float, Identifier> CylinderGeometry::hits(
     float C =
       aoxab.dot(aoxab) - ab.dot(ab) * (cylinder.radius * cylinder.radius);
     float D = B * B - 4.0f * A * C;
+
+    // A ray parallel to the axis, or a cylinder with no length, never meets
+    // the side. Dividing by A would give NaN and a NaN-keyed hit.
+    if (!(A > 1.0e-18f))
+      continue;
 
     // no intersection
     if (D < 0.0f)
@@ -362,6 +386,7 @@ void CylinderGeometry::addCylinder(const Vector3f& pos1, const Vector3f& pos2,
                                    const Vector3ub& colorEnd)
 {
   m_dirty = true;
+  d->bounds.invalidate();
   m_cylinders.emplace_back(pos1, pos2, radius, colorStart, colorEnd);
   m_indices.push_back(m_indices.size());
 }
@@ -394,6 +419,7 @@ void CylinderGeometry::clear()
   m_cylinders.clear();
   m_indices.clear();
   m_indexMap.clear();
+  d->bounds.invalidate();
 }
 
 } // namespace Avogadro::Rendering

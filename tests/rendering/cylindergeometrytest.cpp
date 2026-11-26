@@ -233,3 +233,34 @@ TEST(CylinderGeometryTest, instanceBytes)
   EXPECT_EQ(bytes[second + 31], 4);
   EXPECT_EQ(bytes[second + 33], 6);
 }
+
+// A ray along the axis (or a zero-length cylinder) made the quadratic divide
+// by zero, which inserted a hit whose key was NaN.
+TEST(CylinderGeometryTest, hitsIgnoreRaysParallelToTheAxis)
+{
+  CylinderGeometry geometry;
+  geometry.identifier().molecule = &geometry; // any non-null address
+  geometry.identifier().type = Avogadro::Rendering::BondType;
+  const Vector3ub c(10, 20, 30);
+  geometry.addCylinder(Vector3f(0, 0, 0), Vector3f(0, 0, 4), 0.5f, c);
+  // No length.
+  geometry.addCylinder(Vector3f(5, 0, 2), Vector3f(5, 0, 2), 0.5f, c);
+
+  // Along the axis, from inside and from outside the cylinder.
+  auto hits =
+    geometry.hits(Vector3f(0, 0, -5), Vector3f(0, 0, 10), Vector3f(0, 0, 1));
+  EXPECT_TRUE(hits.empty());
+  hits = geometry.hits(Vector3f(0.1f, 0, 1), Vector3f(0.1f, 0, 10),
+                       Vector3f(0, 0, 1));
+  EXPECT_TRUE(hits.empty());
+  // Straight at the zero-length cylinder.
+  hits =
+    geometry.hits(Vector3f(5, -5, 2), Vector3f(5, 5, 2), Vector3f(0, 1, 0));
+  EXPECT_TRUE(hits.empty());
+
+  // A ray across the first cylinder still hits it, with a finite depth.
+  hits =
+    geometry.hits(Vector3f(-5, 0, 2), Vector3f(5, 0, 2), Vector3f(1, 0, 0));
+  ASSERT_EQ(hits.size(), 1u);
+  EXPECT_NEAR(hits.begin()->first, 4.5f, 1.0e-4f);
+}
