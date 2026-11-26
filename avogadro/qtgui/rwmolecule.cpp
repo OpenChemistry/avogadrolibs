@@ -410,69 +410,79 @@ bool RWMolecule::setOccupancy(Index atomId, double occupancy)
   return true;
 }
 
+namespace {
+// Sets both disorder arrays of a molecule, and puts back both old arrays
+// exactly (an empty or short column stays so).
+class SetDisorderArraysCommand : public RWMolecule::UndoCommand
+{
+public:
+  SetDisorderArraysCommand(RWMolecule& m,
+                           const Array<std::string>& oldAssemblies,
+                           const Array<std::string>& oldGroups,
+                           const Array<std::string>& newAssemblies,
+                           const Array<std::string>& newGroups)
+    : UndoCommand(m), m_oldAssemblies(oldAssemblies), m_oldGroups(oldGroups),
+      m_newAssemblies(newAssemblies), m_newGroups(newGroups)
+  {
+  }
+
+  void redo() override { apply(m_newAssemblies, m_newGroups); }
+  void undo() override { apply(m_oldAssemblies, m_oldGroups); }
+
+private:
+  void apply(const Array<std::string>& assemblies,
+             const Array<std::string>& groups)
+  {
+    m_molecule.disorderAssemblies() = assemblies;
+    m_molecule.disorderGroups() = groups;
+    // as for the occupancy: nothing else refreshes a view of the labels
+    m_molecule.emitChanged(Molecule::Atoms | Molecule::Properties);
+  }
+
+  Array<std::string> m_oldAssemblies;
+  Array<std::string> m_oldGroups;
+  Array<std::string> m_newAssemblies;
+  Array<std::string> m_newGroups;
+};
+} // namespace
+
 bool RWMolecule::setDisorder(Index atomId, const std::string& assembly,
                              const std::string& group)
 {
   if (atomId >= atomCount())
     return false;
 
-  // As for the occupancy: the first edit of a short or empty column grows it,
-  // so keep both whole arrays (assemblies first, then groups, or nothing at
-  // all for a molecule without disorder) to let undo restore their shape.
+  // As for the occupancy, setting one atom grows a short or empty column to
+  // the atom count, so keep both whole arrays to let undo restore their
+  // shapes exactly.
   const Index count = atomCount();
   const Array<std::string>& assemblies = m_molecule.disorderAssemblies();
   const Array<std::string>& groups = m_molecule.disorderGroups();
-  if (assemblies.size() != count || groups.size() != count) {
-    auto pack = [count](const Array<std::string>& first,
-                        const Array<std::string>& second) {
-      Array<std::string> packed;
-      if (first.empty() && second.empty())
-        return packed;
-      packed.resize(2 * count);
-      for (Index i = 0; i < count && i < first.size(); ++i)
-        packed[i] = first[i];
-      for (Index i = 0; i < count && i < second.size(); ++i)
-        packed[count + i] = second[i];
-      return packed;
-    };
-    Array<std::string> grownAssemblies(assemblies);
-    Array<std::string> grownGroups(groups);
-    grownAssemblies.resize(count);
-    grownGroups.resize(count);
-    grownAssemblies[atomId] = assembly;
-    grownGroups[atomId] = group;
-    auto* comm = new SetArrayCommand<std::string>(
+  if (assemblies.size() == count && groups.size() == count) {
+    // whole columns: only the entries change (a large edit stores no arrays)
+    using Labels = std::pair<std::string, std::string>;
+    auto* entry = new SetEntryCommand<Labels>(
       *this,
-      [](Molecule& mol, const Array<std::string>& values) {
-        // empty: no disorder at all; otherwise assemblies then groups
-        Array<std::string> assemblyValues;
-        Array<std::string> groupValues;
-        const Index half = values.size() / 2;
-        for (Index i = 0; i < half; ++i) {
-          assemblyValues.push_back(values[i]);
-          groupValues.push_back(values[half + i]);
-        }
-        mol.disorderAssemblies() = assemblyValues;
-        mol.disorderGroups() = groupValues;
+      [](Molecule& mol, Index index, const Labels& value) {
+        mol.setDisorder(index, value.first, value.second);
         mol.emitChanged(Molecule::Atoms | Molecule::Properties);
       },
-      pack(assemblies, groups), pack(grownAssemblies, grownGroups));
-    comm->setText(tr("Change Atom Disorder"));
-    m_undoStack.push(comm);
+      atomId, Labels(assemblies[atomId], groups[atomId]),
+      Labels(assembly, group));
+    entry->setText(tr("Change Atom Disorder"));
+    m_undoStack.push(entry);
     return true;
   }
-
-  using Labels = std::pair<std::string, std::string>;
-  auto* comm = new SetEntryCommand<Labels>(
-    *this,
-    [](Molecule& mol, Index index, const Labels& value) {
-      mol.setDisorder(index, value.first, value.second);
-      mol.emitChanged(Molecule::Atoms | Molecule::Properties);
-    },
-    atomId,
-    Labels(m_molecule.disorderAssembly(atomId),
-           m_molecule.disorderGroup(atomId)),
-    Labels(assembly, group));
+  Array<std::string> grownAssemblies(assemblies);
+  Array<std::string> grownGroups(groups);
+  if (grownAssemblies.size() < count)
+    grownAssemblies.resize(count);
+  if (grownGroups.size() < count)
+    grownGroups.resize(count);
+  grownAssemblies[atomId] = assembly;
+  grownGroups[atomId] = group;
+  auto* comm = new SetDisorderArraysCommand(*this, assemblies, groups,
+                                            grownAssemblies, grownGroups);
   comm->setText(tr("Change Atom Disorder"));
   m_undoStack.push(comm);
   return true;

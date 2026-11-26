@@ -4545,6 +4545,33 @@ TEST(RWMoleculeTest, setDisorderEmitsChanges)
   EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
 }
 
+TEST(RWMoleculeTest, setDisorderUndoRestoresAShortColumn)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 3; ++i)
+    mol.addAtom(6);
+  // only the groups have been set, and only for the first atom
+  m.disorderGroups().push_back("1");
+  mol.undoStack().clear();
+  ASSERT_TRUE(m.disorderAssemblies().empty());
+
+  ASSERT_TRUE(mol.setDisorder(2, "A", "2"));
+  EXPECT_EQ(3u, m.disorderAssemblies().size());
+  EXPECT_EQ(3u, m.disorderGroups().size());
+  EXPECT_EQ("1", mol.disorderGroup(0));
+  EXPECT_EQ("2", mol.disorderGroup(2));
+
+  // each column gets its own shape back
+  mol.undoStack().undo();
+  EXPECT_TRUE(m.disorderAssemblies().empty());
+  EXPECT_EQ(1u, m.disorderGroups().size());
+  EXPECT_EQ("1", mol.disorderGroup(0));
+  mol.undoStack().redo();
+  EXPECT_EQ(3u, m.disorderAssemblies().size());
+  EXPECT_EQ("A", mol.disorderAssembly(2));
+}
+
 TEST(RWMoleculeTest, undoRemoveAtomRestoresDisorder)
 {
   Molecule m;
