@@ -44,7 +44,7 @@ void CoordinateEditor::triggered()
   if (!m_dialog) {
     m_dialog = new CoordinateEditorDialog(qobject_cast<QWidget*>(parent()));
     m_dialog->setMolecule(m_molecule);
-    connect(m_dialog, &CoordinateEditorDialog::pastedMolecule, this, 
+    connect(m_dialog, &CoordinateEditorDialog::pastedMolecule, this,
             &CoordinateEditor::pastedMolecule);
   }
 
