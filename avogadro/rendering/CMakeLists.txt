@@ -107,6 +107,7 @@ target_sources(Rendering PRIVATE
   shader.cpp
   shaderlibrary.cpp
   shaderprogram.cpp
+  solideffects.cpp
   solidpipeline.cpp
   spheregeometry.cpp
   tessellatingvisitor.cpp
@@ -137,6 +138,7 @@ set(shader_files
   "solid_vs.glsl"
   "solid_first_fs.glsl"
   "solid_ao_fs.glsl"
+  "solid_aoblur_fs.glsl"
   "solid_fxaa_fs.glsl"
   "volume_fs.glsl"
   "volume_vs.glsl"

@@ -416,8 +416,6 @@ void GLRenderer::render()
   if (timing)
     timing->beginSection(PostSection);
   if (useSolidPipeline) {
-    // Use this frame's camera for the fog and depth-of-field offsets.
-    m_solidPipeline.adjustOffset(m_camera);
     m_solidPipeline.end(m_camera);
   }
   if (timing)

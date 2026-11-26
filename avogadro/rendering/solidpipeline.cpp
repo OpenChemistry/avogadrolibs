@@ -7,20 +7,12 @@
 
 #include "avogadrogl.h"
 #include "camera.h"
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
-
-#include "solid_vs.h"
-
-#include "solid_first_fs.h"
-
-#include "solid_ao_fs.h"
-
-#include "solid_fxaa_fs.h"
+#include "solideffects_p.h"
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -100,40 +92,20 @@ public:
   GLfloat clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
   // The composited image FXAA reads, created on first use because most
-  // sessions never enable it. fxaaState: 0 = not tried, 1 = ready, -1 = a
-  // shader or framebuffer failed and FXAA is skipped.
+  // sessions never enable it. fxaaState: 0 = not tried, 1 = ready, -1 = the
+  // framebuffer was incomplete and FXAA is skipped.
   GLuint compositeFBO = 0;
   GLuint compositeTexture = 0;
   int compositeWidth = 0;
   int compositeHeight = 0;
   int fxaaState = 0;
-  std::unique_ptr<ShaderProgram> fxaaStageShaders;
-  Shader fxaaFragmentShader;
 
-  // Build the FXAA shader and the composite target if they are missing or the
-  // wrong size. Needs the context current. Returns false if FXAA cannot run.
+  // Build the composite target if it is missing or the wrong size. Needs the
+  // context current. Returns false if FXAA cannot run.
   bool prepareFxaa(int w, int h)
   {
     if (fxaaState < 0)
       return false;
-    if (fxaaState == 0) {
-      fxaaFragmentShader.setType(Shader::Fragment);
-      fxaaFragmentShader.setSource(solid_fxaa_fs);
-      bool ok = fxaaFragmentShader.compile();
-      if (!ok) {
-        std::cout << fxaaFragmentShader.error() << '\n';
-      } else {
-        fxaaStageShaders = std::make_unique<ShaderProgram>();
-        fxaaStageShaders->attachShader(screenVertexShader);
-        fxaaStageShaders->attachShader(fxaaFragmentShader);
-        ok = fxaaStageShaders->link();
-        if (!ok)
-          std::cout << fxaaStageShaders->error() << '\n';
-      }
-      fxaaState = ok ? 1 : -1;
-      if (!ok)
-        return false;
-    }
     if (compositeFBO != 0 && compositeWidth == w && compositeHeight == h)
       return true;
 
@@ -169,6 +141,7 @@ public:
     }
     compositeWidth = w;
     compositeHeight = h;
+    fxaaState = 1;
     return true;
   }
 
@@ -181,14 +154,14 @@ public:
   GLuint renderFBO = 0;
   GLuint renderTexture = 0;
   GLuint depthTexture = 0;
+  // The occlusion term at half the frame's resolution: aoTexture takes the
+  // AO stage's output and the final blurred result, aoBlurTexture the output of
+  // the first blur direction.
   GLuint aoFBO = 0;
   GLuint aoTexture = 0;
+  GLuint aoBlurFBO = 0;
+  GLuint aoBlurTexture = 0;
   GLuint screenVAO = 0;
-  std::unique_ptr<ShaderProgram> firstStageShaders;
-  std::unique_ptr<ShaderProgram> aoStageShaders;
-  Shader screenVertexShader;
-  Shader firstFragmentShader;
-  Shader aoFragmentShader;
 };
 
 void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
@@ -218,10 +191,11 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
                          *texDepth, 0);
 }
 
-// The ambient occlusion term is rendered on its own so the compositing stage
-// can filter it, with the distance to the surface in the second channel so
-// that the filter's surface test costs no extra fetch. It needs a float
-// format: the term brightens as well as darkens, and goes above 1.0.
+// The ambient occlusion term is rendered on its own, at half resolution, so
+// the blur and the compositing stage can filter it, with the distance to the
+// surface in the second channel so that their surface tests cost no extra
+// fetch. It needs a float format: the term brightens as well as darkens, and
+// goes above 1.0.
 void initializeAoFramebuffer(GLuint* outFBO, GLuint* texAo)
 {
   glGenFramebuffers(1, outFBO);
@@ -229,7 +203,7 @@ void initializeAoFramebuffer(GLuint* outFBO, GLuint* texAo)
 
   glGenTextures(1, texAo);
   glBindTexture(GL_TEXTURE_2D, *texAo);
-  // The blur reads exact texel centres, so no filtering is wanted here.
+  // The blur reads exact texel centers, so no filtering is wanted here.
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -260,19 +234,14 @@ void SolidPipeline::releaseResources()
   deleteTexture(d->depthTexture);
   deleteFramebuffer(d->aoFBO);
   deleteTexture(d->aoTexture);
+  deleteFramebuffer(d->aoBlurFBO);
+  deleteTexture(d->aoBlurTexture);
   deleteVertexArray(d->screenVAO);
-  d->screenVertexShader.cleanup();
-  d->firstFragmentShader.cleanup();
-  d->aoFragmentShader.cleanup();
   deleteFramebuffer(d->compositeFBO);
   deleteTexture(d->compositeTexture);
   d->compositeWidth = 0;
   d->compositeHeight = 0;
-  d->fxaaFragmentShader.cleanup();
-  d->fxaaStageShaders.reset();
   d->fxaaState = 0;
-  d->firstStageShaders.reset();
-  d->aoStageShaders.reset();
   d->initialized = false;
   d->framebufferReady = false;
   d->aoReady = false;
@@ -295,6 +264,7 @@ void SolidPipeline::initialize()
 #endif
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeAoFramebuffer(&d->aoFBO, &d->aoTexture);
+  initializeAoFramebuffer(&d->aoBlurFBO, &d->aoBlurTexture);
   // Each helper leaves its own framebuffer bound; settle on the one the
   // pipeline renders into.
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
@@ -303,43 +273,25 @@ void SolidPipeline::initialize()
   // Profile; vertex positions are generated from gl_VertexID in solid_vs.glsl).
   glGenVertexArrays(1, &d->screenVAO);
 
-  d->screenVertexShader.setType(Shader::Vertex);
-  d->screenVertexShader.setSource(solid_vs);
-  const bool vertexCompiled = d->screenVertexShader.compile();
-  if (!vertexCompiled)
-    std::cout << d->screenVertexShader.error() << '\n';
-
-  d->firstFragmentShader.setType(Shader::Fragment);
-  d->firstFragmentShader.setSource(solid_first_fs);
-  const bool fragmentCompiled = d->firstFragmentShader.compile();
-  if (!fragmentCompiled)
-    std::cout << d->firstFragmentShader.error() << '\n';
-
-  d->firstStageShaders = std::make_unique<ShaderProgram>();
-  d->firstStageShaders->attachShader(d->screenVertexShader);
-  d->firstStageShaders->attachShader(d->firstFragmentShader);
-  d->initialized =
-    vertexCompiled && fragmentCompiled && d->firstStageShaders->link();
-  if (!d->initialized)
-    std::cout << d->firstStageShaders->error() << '\n';
-
-  if (d->aoSupported) {
-    d->aoFragmentShader.setType(Shader::Fragment);
-    d->aoFragmentShader.setSource(solid_ao_fs);
-    d->aoSupported = d->aoFragmentShader.compile();
-    if (d->aoSupported) {
-      d->aoStageShaders = std::make_unique<ShaderProgram>();
-      d->aoStageShaders->attachShader(d->screenVertexShader);
-      d->aoStageShaders->attachShader(d->aoFragmentShader);
-      d->aoSupported = d->aoStageShaders->link();
-    }
-  }
+  // The shader programs belong to the render context and are built on first
+  // use in begin() and end(), where it is current.
+  d->initialized = true;
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
+  // A new context starts with empty targets, and nothing may call resize()
+  // before the next frame (a renderer cleaned up and initialized again keeps
+  // its size). Without this the effects would stay off until a resize.
+  if (m_width > 0 && m_height > 0)
+    resizeDevice(m_width, m_height);
 }
 
 bool SolidPipeline::begin()
 {
   if (!hasActiveEffects() || !d->initialized || !d->framebufferReady)
+    return false;
+  // Without the compositing program the offscreen image could never be drawn,
+  // so leave the solid geometry to render directly.
+  FallbackRenderContext fallbackContext;
+  if (RenderContext::currentProgram(ShaderId::SolidFirst) == nullptr)
     return false;
   glGetIntegerv(GL_FRAMEBUFFER_BINDING,
                 reinterpret_cast<GLint*>(&d->defaultFBO));
@@ -375,43 +327,9 @@ void SolidPipeline::end(const Camera& camera)
   if (!d->initialized)
     return;
 
-  // Bind VAO for procedural fullscreen triangle (required for Core Profile)
-  glBindVertexArray(d->screenVAO);
-
-  // Render the ambient occlusion term into its own buffer first, so the
-  // compositing stage can blur away the kernel's sampling pattern. Skipped
-  // entirely when ambient occlusion is off, since nothing would read it.
-  const bool useAo = m_aoEnabled && d->aoReady;
-  if (useAo) {
-    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
-    GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, aoBuffersList);
-    glViewport(0, 0, static_cast<GLsizei>(m_width),
-               static_cast<GLsizei>(m_height));
-    // This target has no depth attachment, and the pass covers every pixel.
-    glDisable(GL_DEPTH_TEST);
-
-    d->aoStageShaders->bind();
-    d->bindSampler(*d->aoStageShaders, "inDepthTex", d->depthTexture,
-                   TextureUnitDepth);
-    d->aoStageShaders->setUniformValue("width", static_cast<float>(m_width));
-    d->aoStageShaders->setUniformValue("height", static_cast<float>(m_height));
-    d->aoStageShaders->setUniformValue("inAoStrength", m_aoStrength);
-    // Used to write the distance to the surface alongside the term.
-    d->aoStageShaders->setUniformValue("inProjection",
-                                       camera.projection().matrix());
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    // The passes that follow this one still depend on depth testing.
-    glEnable(GL_DEPTH_TEST);
-  }
-
-  // FXAA needs the composited image as a texture, so with it on the compositing
-  // stage draws into one instead of the framebuffer, and a last pass filters
-  // it into the framebuffer. The composite starts as the background, since
-  // the compositing stage leaves background pixels alone.
-  const bool useFxaa = d->antiAliasing && d->prepareFxaa(m_width, m_height);
-
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* firstStage =
+    RenderContext::currentProgram(ShaderId::SolidFirst);
   // Draw to screen
   auto bindScreen = [this]() {
     if (glIsFramebuffer(d->defaultFBO)) {
@@ -430,6 +348,71 @@ void SolidPipeline::end(const Camera& camera)
     glViewport(d->defaultViewport[0], d->defaultViewport[1],
                d->defaultViewport[2], d->defaultViewport[3]);
   };
+
+  if (firstStage == nullptr || !RenderContext::useCamera(camera)) {
+    bindScreen();
+    return;
+  }
+
+  // Bind VAO for procedural fullscreen triangle (required for Core Profile)
+  glBindVertexArray(d->screenVAO);
+
+  // Render the ambient occlusion term into its own half-resolution buffer
+  // first, then blur it in two directions so the compositing stage gets a term
+  // without the kernel's sampling pattern. Skipped entirely when ambient
+  // occlusion is off, since nothing would read it.
+  ShaderProgram* aoStage = nullptr;
+  ShaderProgram* blurStage = nullptr;
+  if (m_aoEnabled && d->aoReady) {
+    aoStage = RenderContext::currentProgram(ShaderId::SolidAo);
+    blurStage = RenderContext::currentProgram(ShaderId::SolidAoBlur);
+  }
+  const bool useAo = aoStage != nullptr && blurStage != nullptr;
+  if (useAo) {
+    const GLsizei aoWidth = static_cast<GLsizei>(occlusionBufferSize(m_width));
+    const GLsizei aoHeight =
+      static_cast<GLsizei>(occlusionBufferSize(m_height));
+    GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
+    // These targets have no depth attachment, and each pass covers every
+    // texel.
+    glDisable(GL_DEPTH_TEST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    glDrawBuffers(1, aoBuffersList);
+    glViewport(0, 0, aoWidth, aoHeight);
+    aoStage->bind();
+    d->bindSampler(*aoStage, "inDepthTex", d->depthTexture, TextureUnitDepth);
+    aoStage->setUniformValue("inAoStrength", m_aoStrength);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Horizontal into the second buffer, then vertical back into the first.
+    blurStage->bind();
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoBlurFBO);
+    glDrawBuffers(1, aoBuffersList);
+    d->bindSampler(*blurStage, "inAoTex", d->aoTexture, TextureUnitAo);
+    blurStage->setUniformValue("inVertical", 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    glDrawBuffers(1, aoBuffersList);
+    d->bindSampler(*blurStage, "inAoTex", d->aoBlurTexture, TextureUnitAo);
+    blurStage->setUniformValue("inVertical", 1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // The passes that follow this one still depend on depth testing.
+    glEnable(GL_DEPTH_TEST);
+  }
+
+  // FXAA needs the composited image as a texture, so with it on the compositing
+  // stage draws into one instead of the framebuffer, and a last pass filters
+  // it into the framebuffer. The composite starts as the background, since
+  // the compositing stage leaves background pixels alone.
+  ShaderProgram* fxaaStage = nullptr;
+  if (d->antiAliasing)
+    fxaaStage = RenderContext::currentProgram(ShaderId::SolidFxaa);
+  const bool useFxaa =
+    fxaaStage != nullptr && d->prepareFxaa(m_width, m_height);
+
   if (useFxaa) {
     glBindFramebuffer(GL_FRAMEBUFFER, d->compositeFBO);
     GLenum compositeBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
@@ -444,35 +427,35 @@ void SolidPipeline::end(const Camera& camera)
   } else {
     bindScreen();
   }
-  d->attachStage(*d->firstStageShaders, "inRGBTex", d->renderTexture,
-                 "inDepthTex", d->depthTexture, m_width, m_height);
-  d->firstStageShaders->setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
-  d->firstStageShaders->setUniformValue("inDofEnabled",
-                                        m_dofEnabled ? 1.0f : 0.0f);
-  d->firstStageShaders->setUniformValue(
-    "inDofStrength", m_dofEnabled ? (m_dofStrength * 100.0f) : 0.0f);
-  d->firstStageShaders->setUniformValue("inDofPosition",
-                                        ((m_dofPosition) / 10.0f));
+  d->attachStage(*firstStage, "inRGBTex", d->renderTexture, "inDepthTex",
+                 d->depthTexture, m_width, m_height);
+  firstStage->setUniformValue("inAoEnabled", useAo ? 1.0f : 0.0f);
+  // Depth of field and fog work in scene radii and are mapped from the
+  // application's settings on the CPU (see solideffects_p.h).
+  const DepthOfFieldSettings dof =
+    m_dofEnabled ? depthOfFieldSettings(m_dofStrength, m_dofPosition)
+                 : DepthOfFieldSettings();
+  firstStage->setUniformValue("inDofBlur", dof.blurPerRadius);
+  firstStage->setUniformValue("inDofMaxBlur", dof.maxBlur);
+  firstStage->setUniformValue("inDofFocusRadii", dof.focusRadii);
 
-  // The AO term, plus the projection the blur uses to size its surface test.
-  d->bindSampler(*d->firstStageShaders, "inAoTex", d->aoTexture, TextureUnitAo);
-  d->firstStageShaders->setUniformValue("inProjection",
-                                        camera.projection().matrix());
-  d->firstStageShaders->setUniformValue("inEdStrength",
-                                        m_edEnabled ? m_edStrength : 0.0f);
-  d->firstStageShaders->setUniformValue("inEdgeSupersample",
-                                        d->edgeSupersampling ? 1.0f : 0.0f);
-  d->firstStageShaders->setUniformValue("inFogEnabled",
-                                        m_fogEnabled ? 1.0f : 0.0f);
-  d->firstStageShaders->setUniformValue("inFogStrength",
-                                        m_fogEnabled ? m_fogStrength : 0.0f);
-  d->firstStageShaders->setUniformValue("inFogPosition", m_fogPosition);
-  d->firstStageShaders->setUniformValue("fogR",
-                                        (m_backgroundColor[0]) / 255.0f);
-  d->firstStageShaders->setUniformValue("fogG",
-                                        (m_backgroundColor[1]) / 255.0f);
-  d->firstStageShaders->setUniformValue("fogB",
-                                        (m_backgroundColor[2]) / 255.0f);
+  // The AO term, at half resolution; the upsampling sizes its surface test with
+  // the camera block's projection.
+  d->bindSampler(*firstStage, "inAoTex", d->aoTexture, TextureUnitAo);
+  firstStage->setUniformValue("inEdStrength",
+                              m_edEnabled ? m_edStrength : 0.0f);
+  firstStage->setUniformValue("inEdgeSupersample",
+                              d->edgeSupersampling ? 1.0f : 0.0f);
+  const FogSettings fog =
+    m_fogEnabled ? fogSettings(m_fogStrength, m_fogPosition) : FogSettings();
+  firstStage->setUniformValue("inFogAmount", fog.amount);
+  firstStage->setUniformValue("inFogStartRadii", fog.startRadii);
+  // Fade toward the color the frame was cleared to (alpha included), which is
+  // what the background pixels hold.
+  firstStage->setUniformValue("fogR", d->clearColor[0]);
+  firstStage->setUniformValue("fogG", d->clearColor[1]);
+  firstStage->setUniformValue("fogB", d->clearColor[2]);
+  firstStage->setUniformValue("fogA", d->clearColor[3]);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 
   if (useFxaa) {
@@ -482,7 +465,7 @@ void SolidPipeline::end(const Camera& camera)
     GLint depthFunc = GL_LESS;
     glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
     glDepthFunc(GL_LEQUAL);
-    ShaderProgram& fxaa = *d->fxaaStageShaders;
+    ShaderProgram& fxaa = *fxaaStage;
     fxaa.bind();
     d->bindSampler(fxaa, "inRGBTex", d->compositeTexture, TextureUnitRGB);
     d->bindSampler(fxaa, "inDepthTex", d->depthTexture, TextureUnitDepth);
@@ -498,29 +481,10 @@ void SolidPipeline::end(const Camera& camera)
   glBindVertexArray(0);
 }
 
-void SolidPipeline::adjustOffset(const Camera& cam)
+void SolidPipeline::adjustOffset(const Camera&)
 {
-  if (!d->initialized || (!m_fogEnabled && !m_dofEnabled))
-    return;
-
-  // The numbers used in calculations are random.
-  // They help define an offset with the projection-matrix
-  // to make the fog dynamic as the molecule moves away
-  // from the camera or come closer.
-  Eigen::Matrix4f projectView = cam.projection().matrix();
-
-  float project = ((((5000 + projectView(2, 3) * 1000) / 6) + 55) * 100);
-
-  float offSet = 0.000102337 * pow(project, 2) - 3.84689 * project + 36182.2;
-  if (project >= 21018.106 && project < 21595.588) {
-    offSet = 2.63129 * project - 54768.4;
-  } else if (project >= 21595.588) {
-    offSet = 9.952 * project - 212865;
-  }
-  // Uniforms land on whichever program is bound, so bind the one this is
-  // meant for rather than depending on what the last pass left behind.
-  d->firstStageShaders->bind();
-  d->firstStageShaders->setUniformValue("uoffset", offSet);
+  // Retained for compatibility only: the fog and depth of field now read the
+  // camera and scene bounds from the camera buffer.
 }
 
 void SolidPipeline::resize(int width, int height)
@@ -559,7 +523,8 @@ void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 #endif
 
-  // Two channels: the occlusion term and the distance to the surface.
+  // Two channels: the occlusion term and the distance to the surface, at half
+  // the frame's size in each direction (see occlusionBufferSize()).
   //
   // Half floats hold that distance to one part in 2048. Both the distance and
   // the blur's surface tolerance scale with the view, so what matters is their
@@ -572,19 +537,27 @@ void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
   // The format tops out at 65504, so a camera further than that many scene
   // units from the geometry would lose the surface test. Nothing chemical
   // comes near it.
-  glBindTexture(GL_TEXTURE_2D, d->aoTexture);
-  if (d->aoSupported) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, m_width, m_height, 0, GL_RG,
-                 GL_FLOAT, nullptr);
-    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
-    d->aoReady =
-      glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
-  } else {
-    // Keep the composite shader's unused sampler complete without requiring
-    // a floating-point render target.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 nullptr);
+  const int aoWidth = occlusionBufferSize(m_width);
+  const int aoHeight = occlusionBufferSize(m_height);
+  bool aoComplete = d->aoSupported;
+  const GLuint aoTargets[2][2] = { { d->aoFBO, d->aoTexture },
+                                   { d->aoBlurFBO, d->aoBlurTexture } };
+  for (const auto& target : aoTargets) {
+    glBindTexture(GL_TEXTURE_2D, target[1]);
+    if (d->aoSupported) {
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, aoWidth, aoHeight, 0, GL_RG,
+                   GL_FLOAT, nullptr);
+      glBindFramebuffer(GL_FRAMEBUFFER, target[0]);
+      aoComplete = aoComplete && glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
+                                   GL_FRAMEBUFFER_COMPLETE;
+    } else {
+      // Keep the composite shader's unused sampler complete without requiring
+      // a floating-point render target.
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA,
+                   GL_UNSIGNED_BYTE, nullptr);
+    }
   }
+  d->aoReady = aoComplete;
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
   d->framebufferReady =
     glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;

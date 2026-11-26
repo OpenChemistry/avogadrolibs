@@ -19,10 +19,17 @@ namespace {
 #include "linestrip_vs.h"
 #include "mesh_fs.h"
 #include "mesh_vs.h"
+#include "solid_ao_fs.h"
+#include "solid_aoblur_fs.h"
+#include "solid_first_fs.h"
+#include "solid_fxaa_fs.h"
+#include "solid_vs.h"
 #include "spheres_fs.h"
 #include "spheres_vs.h"
 #include "textlabelbase_fs.h"
 #include "textlabelbase_vs.h"
+#include "volume_fs.h"
+#include "volume_vs.h"
 #include "wideline_fs.h"
 #include "wideline_vs.h"
 } // namespace
@@ -51,6 +58,11 @@ const Sources s_sources[] = {
   { linestrip_vs, linestrip_fs },
   { wideline_vs, wideline_fs },
   { dashedline_vs, dashedline_fs },
+  { solid_vs, solid_first_fs },
+  { solid_vs, solid_ao_fs },
+  { solid_vs, solid_fxaa_fs },
+  { solid_vs, solid_aoblur_fs },
+  { volume_vs, volume_fs },
 };
 
 static_assert(sizeof(s_sources) / sizeof(s_sources[0]) ==
