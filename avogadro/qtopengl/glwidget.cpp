@@ -19,6 +19,7 @@
 
 #include <avogadro/rendering/camera.h>
 #include <avogadro/rendering/rendertimings.h>
+#include <avogadro/rendering/solidpipeline.h>
 
 #include <QAction>
 #include <QOpenGLContext>
@@ -242,6 +243,15 @@ GLWidget::GLWidget(QWidget* p)
     settings
       .value("glwidget/navigationModifier", static_cast<int>(Qt::AltModifier))
       .toInt());
+
+  // Effect settings with no UI yet; the pipeline's own values are the defaults.
+  Rendering::SolidPipeline& pipeline = m_renderer.solidPipeline();
+  pipeline.setAntiAliasingEnabled(
+    settings.value(antiAliasingSettingsKey, pipeline.antiAliasingEnabled())
+      .toBool());
+  pipeline.setEdgeSupersampling(
+    settings.value(edgeSupersamplingSettingsKey, pipeline.edgeSupersampling())
+      .toBool());
 
   const QByteArray stats = qgetenv("AVOGADRO_FRAME_STATS");
   if (!stats.isEmpty() && stats != "0") {

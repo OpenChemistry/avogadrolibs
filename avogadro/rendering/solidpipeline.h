@@ -151,6 +151,35 @@ public:
   float getEdStrength() { return m_edStrength; }
   void setEdStrength(float strength) { m_edStrength = strength; }
 
+  /**
+   * @brief Get or set whether the edge outline is supersampled.
+   *
+   * On (the default) the edge term is evaluated at four sub-pixel offsets and
+   * averaged, so a silhouette that only partly covers a pixel gets an
+   * intermediate shade instead of a hard 0 or 1. Off takes a single tap on
+   * each pixel centre. It has no effect unless edge detection is enabled.
+   */
+  bool edgeSupersampling() const;
+  void setEdgeSupersampling(bool enabled);
+
+  /**
+   * @brief Get or set whether FXAA smooths the finished image (default off).
+   *
+   * FXAA (fast approximate anti-aliasing) is a luma edge filter run after the
+   * ambient occlusion, edge outlines, fog and depth of field have been
+   * applied, so it smooths the outlines they draw as well as the silhouettes.
+   * It costs an offscreen image the size of the viewport and one more
+   * full-screen pass, and only when enabled.
+   *
+   * It is not an effect of its own: it applies only while the pipeline is
+   * already active (see hasActiveEffects()), and enabling it does not make
+   * the pipeline active. Without an active effect the solid geometry goes
+   * straight to the framebuffer, as always, unsmoothed. It works in device
+   * pixels, so it follows setPixelRatio().
+   */
+  bool antiAliasingEnabled() const;
+  void setAntiAliasingEnabled(bool enabled);
+
 private:
   float m_pixelRatio;
   bool m_aoEnabled;

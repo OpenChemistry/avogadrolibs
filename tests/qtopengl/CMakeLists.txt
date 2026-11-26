@@ -11,6 +11,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets REQUIRED)
 # Specify the name of each test (the Test will be appended where needed).
 set(tests
   GLWidget
+  GLWidgetSettings
   RendererTeardown
   QtTextLabel
   QtTextRenderStrategy

@@ -39,6 +39,9 @@ uniform float inFogStrength;
 // Edge outline: 0.0 when off. Up to 1.0 it fades the outline in; above 1.0 it
 // is the outline's half-width in pixels.
 uniform float inEdStrength;
+// 1.0 evaluates the edge term at four sub-pixel offsets and averages them;
+// 0.0 takes a single tap on the pixel centre.
+uniform float inEdgeSupersample;
 // amount of offset when zoom-in or zoom-out.
 uniform float uoffset;
 // Dof strength
@@ -193,6 +196,29 @@ float computeEdgeLuminosity(vec3 normal)
     return max(0.0, pow(normal.z - 0.1, 1.0 / 3.0));
 }
 
+// Anti-aliased edge term. The test above is binary per pixel: at a silhouette
+// the depth jump swamps the z term, so the normal's z is about 0 and the cube
+// root in computeEdgeLuminosity() comes out as a hard 0 or 1. That makes the
+// outline stair-step on 1x screens. The taps normally land on texel centres, so
+// this evaluates the term at four rotated-grid offsets within the pixel and
+// averages them. The depth texture is linearly filtered, so each sub-pixel tap
+// interpolates, and a pixel the silhouette only partly covers lands on one of
+// five levels (0, 1/4 ... 1) rather than flipping between 0 and 1. The radius
+// still sets the outline's width, and the offsets are under a pixel, so the
+// outline does not get any wider.
+const vec2 EDGE_SS[4] = vec2[](vec2(-0.125, -0.375), vec2(0.375, -0.125),
+                               vec2(0.125, 0.375), vec2(-0.375, 0.125));
+
+float edgeLuminosity(vec2 uv, float radius)
+{
+    float sum = 0.0;
+    for (int i = 0; i < 4; i++) {
+        sum += computeEdgeLuminosity(
+            getNormalAt(uv + EDGE_SS[i] / vec2(width, height), radius));
+    }
+    return 0.25 * sum;
+}
+
 void main() {
     float depth = texture(inDepthTex, UV).x;
     // Background pixels (depth == 1.0) would fail the GL_LESS depth test
@@ -215,8 +241,10 @@ void main() {
         // markedly bolder line than 1.0 without changing its colour.
         float edgeFade = min(inEdStrength, 1.0);
         float edgeRadius = max(inEdStrength, 1.0);
-        luminosity *= max(1.0 - edgeFade,
-                          computeEdgeLuminosity(getNormalAt(UV, edgeRadius)));
+        float edge = (inEdgeSupersample != 0.0)
+                       ? edgeLuminosity(UV, edgeRadius)
+                       : computeEdgeLuminosity(getNormalAt(UV, edgeRadius));
+        luminosity *= max(1.0 - edgeFade, edge);
     }
 
     // Compute foggedColor if Fog is enabled

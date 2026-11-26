@@ -61,6 +61,14 @@ using GLWidgetBase = QOpenGLWidget;
  * will be given the opportunity to handle input events first. If the active
  * tool does not handle the event, the default tool will be used. If the default
  * tool also ignores the event, it will be passed to QOpenGLWidget's handlers.
+ *
+ * The constructor reads two QSettings keys and applies them to the renderer's
+ * SolidPipeline, next to the other effect settings the application stores
+ * under MainWindow/ (ao_enabled, dof_enabled, fog_enabled, ed_enabled, ...):
+ * - MainWindow/fxaa_enabled (bool): SolidPipeline::setAntiAliasingEnabled()
+ * - MainWindow/ed_supersampling (bool): SolidPipeline::setEdgeSupersampling()
+ * A missing key leaves the SolidPipeline default in place. See
+ * antiAliasingSettingsKey and edgeSupersamplingSettingsKey.
  */
 
 class AVOGADROQTOPENGL_EXPORT GLWidget : public GLWidgetBase
@@ -68,6 +76,13 @@ class AVOGADROQTOPENGL_EXPORT GLWidget : public GLWidgetBase
   Q_OBJECT
 
 public:
+  /** QSettings key for SolidPipeline::setAntiAliasingEnabled() (FXAA). */
+  static constexpr const char* antiAliasingSettingsKey =
+    "MainWindow/fxaa_enabled";
+  /** QSettings key for SolidPipeline::setEdgeSupersampling(). */
+  static constexpr const char* edgeSupersamplingSettingsKey =
+    "MainWindow/ed_supersampling";
+
   explicit GLWidget(QWidget* parent = nullptr);
   ~GLWidget() override;
 

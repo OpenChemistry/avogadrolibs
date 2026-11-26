@@ -163,6 +163,30 @@ TEST(GLRendererTest, renderVisitorSkipsHiddenDrawables)
   EXPECT_EQ(hidden->renderCalls, 0);
 }
 
+TEST(GLRendererTest, solidPipelineAntiAliasingSettings)
+{
+  GLRenderer renderer;
+  auto& pipeline = renderer.solidPipeline();
+
+  // FXAA is opt-in, and on its own it is not an effect: the pipeline stays
+  // inactive, as it was without it.
+  EXPECT_FALSE(pipeline.antiAliasingEnabled());
+  pipeline.setFogEnabled(false);
+  ASSERT_FALSE(pipeline.hasActiveEffects());
+  pipeline.setAntiAliasingEnabled(true);
+  EXPECT_TRUE(pipeline.antiAliasingEnabled());
+  EXPECT_FALSE(pipeline.hasActiveEffects());
+  pipeline.setAntiAliasingEnabled(false);
+  EXPECT_FALSE(pipeline.antiAliasingEnabled());
+
+  // Supersampling the edge outline is on until it is switched off.
+  EXPECT_TRUE(pipeline.edgeSupersampling());
+  pipeline.setEdgeSupersampling(false);
+  EXPECT_FALSE(pipeline.edgeSupersampling());
+  pipeline.setEdgeSupersampling(true);
+  EXPECT_TRUE(pipeline.edgeSupersampling());
+}
+
 TEST(GLRendererTest, solidPipelineHasActiveEffects)
 {
   GLRenderer renderer;
