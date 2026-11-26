@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Avogadro 1.90.0\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-22 21:07+0000\n"
+"PO-Revision-Date: 2026-11-25 08:05+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remus-"
 "gabriel@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/avogadro/"
@@ -2245,7 +2245,7 @@ msgstr "Axa:"
 
 #: qtplugins/aligntool/aligntool.cpp:154
 msgid "Align Molecule"
-msgstr ""
+msgstr "Aliniază molecula"
 
 #: qtplugins/aligntool/aligntool.cpp:174
 msgid "Align at Origin"
@@ -2261,23 +2261,25 @@ msgstr "Centrați atomul la origine."
 
 #: qtplugins/aligntool/aligntool.cpp:320
 msgid "Index of an atom"
-msgstr ""
+msgstr "Indicele unui atom"
 
 #: qtplugins/aligntool/aligntool.cpp:333
 msgid "Align picked atoms."
-msgstr ""
+msgstr "Aliniază atomii selectați."
 
 #: qtplugins/aligntool/aligntool.cpp:336 qtplugins/aligntool/aligntool.cpp:364
 msgid "Target Cartesian axis."
-msgstr ""
+msgstr "Axa carteziană țintă."
 
 #: qtplugins/aligntool/aligntool.cpp:346
 msgid "No atoms have been picked for alignment. Pick 1 or 2 atoms first."
 msgstr ""
+"Nu a fost selectat niciun atom pentru aliniere. Selectați mai întâi 1 sau 2 "
+"atomi."
 
 #: qtplugins/aligntool/aligntool.cpp:350
 msgid "Failed to align picked atoms."
-msgstr ""
+msgstr "Nu s-a reușit alinierea atomilor selectați."
 
 #: qtplugins/aligntool/aligntool.cpp:361
 msgid "Rotate the molecule to align the atom to the specified axis."
@@ -2285,12 +2287,12 @@ msgstr "Rotește molecula pentru a alinia atomul la axa specificată."
 
 #: qtplugins/aligntool/aligntool.cpp:367
 msgid "Index of atom to be aligned."
-msgstr ""
+msgstr "Indicele atomului care urmează să fie aliniat."
 
 #: qtplugins/aligntool/aligntool.cpp:378
 #, qt-format
 msgid "Atom %1 is at the origin and cannot define an alignment axis."
-msgstr ""
+msgstr "Atomul %1 se află la origine și nu poate defini o axă de aliniere."
 
 #: qtplugins/aligntool/aligntool.h:29
 msgid "Align tool"
@@ -3069,19 +3071,27 @@ msgstr "Adaugă perpendiculară"
 #: qtplugins/centroid/centroid.cpp:86
 msgid "No non-dummy atoms found to compute centroid."
 msgstr ""
+"Nu s-au găsit atomi care să nu fie fictivi pentru calcularea centrului de "
+"greutate."
 
 #: qtplugins/centroid/centroid.cpp:138
 msgid "No non-dummy atoms found to compute center of mass."
 msgstr ""
+"Nu s-au găsit atomi care să nu fie fictivi pentru calcularea centrului de "
+"masă."
 
 #: qtplugins/centroid/centroid.cpp:179
 msgid "No non-dummy atoms found to compute perpendicular point."
 msgstr ""
+"Nu s-au găsit atomi care să nu fie fictivi pentru calcularea punctului "
+"perpendicular."
 
 #: qtplugins/centroid/centroid.cpp:181
 msgid ""
 "At least three non-dummy atoms are required to compute a best-fit plane."
 msgstr ""
+"Sunt necesari cel puțin trei atomi reali pentru a calcula un plan de cea mai "
+"bună potrivire."
 
 #: qtplugins/centroid/centroid.cpp:201
 msgid ""
@@ -4293,15 +4303,15 @@ msgstr "Focalizează vizualizarea pe anumite caracteristici."
 
 #: qtplugins/force/force.cpp:112
 msgid "Arrow length:"
-msgstr ""
+msgstr "Lungimea săgeții:"
 
 #: qtplugins/force/force.cpp:122
 msgid "Arrow width:"
-msgstr ""
+msgstr "Lățimea săgeții:"
 
 #: qtplugins/force/force.cpp:129
 msgid "Arrow color:"
-msgstr ""
+msgstr "Culoarea săgeții:"
 
 #: qtplugins/force/force.h:35
 msgid "Render the force field visualizations for the atoms of the molecule."
@@ -4423,7 +4433,7 @@ msgstr "Nu au fost furnizați atomi pentru calcularea forței."
 
 #: qtplugins/forcefield/forcefield.cpp:457
 msgid "Optimization needs atoms with 3D coordinates."
-msgstr ""
+msgstr "Optimizarea necesită atomi cu coordonate 3D."
 
 #: qtplugins/forcefield/forcefield.cpp:477
 msgid "\"steps\" must be a positive integer."
@@ -5145,7 +5155,7 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:82
 msgid "Edit Atom Label"
-msgstr ""
+msgstr "Editează eticheta atomului"
 
 #: qtplugins/label/labeleditor.h:25 qtplugins/label/labeleditor.h:26
 msgid "Label editor tool"
@@ -7613,7 +7623,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:641
 msgid "The symmetry operations of the file could not be applied."
-msgstr ""
+msgstr "Operațiile de simetrie ale fișierului nu au putut fi aplicate."
 
 #: qtplugins/spacegroup/spacegroup.cpp:657
 #, qt-format
@@ -7627,12 +7637,15 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:707
 msgid "Reduce to the asymmetric unit with the symmetry operations of the file?"
 msgstr ""
+"Reduceți la unitatea asimetrică cu operațiile de simetrie ale fișierului?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 #, qt-format
 msgid ""
 "Reduce to the asymmetric unit with the symmetry operations of the file (%1)?"
 msgstr ""
+"Reduceți la unitatea asimetrică cu operațiile de simetrie ale fișierului (%1)"
+"?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:730
 #, qt-format
@@ -8195,7 +8208,7 @@ msgstr "Videoclip MP4 (*.mp4);; Videoclip AVI (*.avi);; GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:1412
 msgid "Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Videoclip AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:1483
 msgid "Couldn't find the active render widget, failing."

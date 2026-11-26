@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: avogadro\n"
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
-"PO-Revision-Date: 2026-11-22 23:47+0000\n"
+"PO-Revision-Date: 2026-11-25 22:33+0000\n"
 "Last-Translator: Michal Várady <majkl82@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/avogadro/"
 "avogadrolibs/cs/>\n"
@@ -4039,6 +4039,8 @@ msgid ""
 "Set drawing options: element (symbol or atomic number), bondOrder, "
 "adjustHydrogens, and adjustBondLengths."
 msgstr ""
+"Nastavit možnosti kreslení: element (značka nebo protonové číslo), "
+"bondOrder, adjustHydrogens a adjustBondLengths."
 
 #: qtplugins/editor/editor.cpp:1094
 msgid ""
@@ -4248,15 +4250,15 @@ msgstr "Zaměřovat pohled na konkrétní objekty."
 
 #: qtplugins/force/force.cpp:112
 msgid "Arrow length:"
-msgstr ""
+msgstr "Délka šipky:"
 
 #: qtplugins/force/force.cpp:122
 msgid "Arrow width:"
-msgstr ""
+msgstr "Šířka šipky:"
 
 #: qtplugins/force/force.cpp:129
 msgid "Arrow color:"
-msgstr ""
+msgstr "Barva šipky:"
 
 #: qtplugins/force/force.h:35
 msgid "Render the force field visualizations for the atoms of the molecule."
@@ -4376,7 +4378,7 @@ msgstr "Pro výpočet sil nebyly zadány žádné atomy."
 
 #: qtplugins/forcefield/forcefield.cpp:457
 msgid "Optimization needs atoms with 3D coordinates."
-msgstr ""
+msgstr "Optimalizace vyžaduje atomy s 3D souřadnicemi."
 
 #: qtplugins/forcefield/forcefield.cpp:477
 msgid "\"steps\" must be a positive integer."
@@ -4677,15 +4679,15 @@ msgstr "Odeslat výpočet GAMESS"
 
 #: qtplugins/gltf/gltf.cpp:30
 msgid "glTF Scene (.glb)…"
-msgstr ""
+msgstr "Scéna glTF (.glb)…"
 
 #: qtplugins/gltf/gltf.cpp:82
 msgid "There is no scene to export."
-msgstr ""
+msgstr "Není k dispozici žádná scéna k exportu."
 
 #: qtplugins/gltf/gltf.cpp:84
 msgid "No file name was given."
-msgstr ""
+msgstr "Nebyl zadán název souboru."
 
 #: qtplugins/gltf/gltf.cpp:106 qtplugins/ply/ply.cpp:75
 #, qt-format
@@ -4706,11 +4708,11 @@ msgstr "Uložit soubor"
 
 #: qtplugins/gltf/gltf.cpp:130
 msgid "glTF Binary (*.glb)"
-msgstr ""
+msgstr "Binární glTF (*.glb)"
 
 #: qtplugins/gltf/gltf.cpp:141
 msgid "Split at midpoint"
-msgstr ""
+msgstr "Rozdělit ve středu"
 
 #: qtplugins/gltf/gltf.cpp:142
 msgid "Gradient"
@@ -4718,11 +4720,11 @@ msgstr "Přechod"
 
 #: qtplugins/gltf/gltf.cpp:145 qtplugins/gltf/gltf.cpp:158
 msgid "glTF Export"
-msgstr ""
+msgstr "Export glTF"
 
 #: qtplugins/gltf/gltf.cpp:145
 msgid "Bond colors:"
-msgstr ""
+msgstr "Barvy vazeb:"
 
 #: qtplugins/gltf/gltf.cpp:168
 msgid ""
@@ -4732,27 +4734,32 @@ msgid ""
 "in the export dialog (\"split\" at first). An existing file is only replaced "
 "if the export succeeds. Returns {\"fileName\": path}."
 msgstr ""
+"Exportovat aktuální scénu jako binární soubor glTF (.glb): {\"fileName\": "
+"path, \"bondColors\": \"split\"\\|\"gradient\"}. \"bondColors\" určuje "
+"způsob obarvení vazeb mezi různými prvky; výchozí hodnotou je volba "
+"naposledy použitá v dialogu exportu (zpočátku \"split\"). Existující soubor "
+"se nahradí pouze při úspěšném exportu. Vrací {\"fileName\": path}."
 
 #: qtplugins/gltf/gltf.cpp:175
 msgid "Path of the .glb file to write."
-msgstr ""
+msgstr "Cesta k souboru .glb, který se má zapsat."
 
 #: qtplugins/gltf/gltf.cpp:179
 msgid "How to colour bonds between different elements."
-msgstr ""
+msgstr "Způsob obarvení vazeb mezi různými prvky."
 
 #: qtplugins/gltf/gltf.cpp:197
 #, qt-format
 msgid "Exported %1."
-msgstr ""
+msgstr "Exportováno: %1."
 
 #: qtplugins/gltf/gltf.h:24
 msgid "GLTF"
-msgstr ""
+msgstr "GLTF"
 
 #: qtplugins/gltf/gltf.h:28
 msgid "Export the scene as a glTF binary (.glb) file."
-msgstr ""
+msgstr "Exportovat scénu jako binární soubor glTF (.glb)."
 
 #: qtplugins/hydrogens/hydrogens.cpp:23
 msgid "&Adjust Hydrogens"
@@ -5089,7 +5096,7 @@ msgstr ""
 
 #: qtplugins/label/labeleditor.cpp:82
 msgid "Edit Atom Label"
-msgstr ""
+msgstr "Upravit popisek atomu"
 
 #: qtplugins/label/labeleditor.h:25 qtplugins/label/labeleditor.h:26
 msgid "Label editor tool"
@@ -5705,7 +5712,7 @@ msgstr "Posunout scénu."
 
 #: qtplugins/navigator/navigator.cpp:93 qtplugins/resetview/resetview.cpp:68
 msgid "No camera"
-msgstr ""
+msgstr "Žádná kamera"
 
 #: qtplugins/navigator/navigator.cpp:131
 msgid "Reverse Direction of Zoom on Scroll"
@@ -6271,7 +6278,7 @@ msgstr "Smazat soubory"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:736
 msgid "Files Not Deleted"
-msgstr ""
+msgstr "Soubory nebyly odstraněny"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:737
 #, qt-format
@@ -6280,6 +6287,9 @@ msgid ""
 "inside the plugins directory:\n"
 "%1"
 msgstr ""
+"Plugin byl odregistrován, ale jeho soubory byly zachovány, protože se "
+"nenacházejí v adresáři pluginů: \n"
+"%1"
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:753
 msgid "Select Plugin Directory"
@@ -6300,6 +6310,8 @@ msgid ""
 "This directory cannot be installed as a plugin. Choose a plugin directory "
 "outside of the plugins folder (%1)."
 msgstr ""
+"Tento adresář nelze nainstalovat jako plugin. Vyberte adresář pluginu mimo "
+"složku pluginů (%1)."
 
 #: qtplugins/packageinstaller/packagemanagerdialog.cpp:786
 #, qt-format
@@ -7527,7 +7539,7 @@ msgstr ""
 
 #: qtplugins/spacegroup/spacegroup.cpp:641
 msgid "The symmetry operations of the file could not be applied."
-msgstr ""
+msgstr "Symetrické operace ze souboru se nepodařilo použít."
 
 #: qtplugins/spacegroup/spacegroup.cpp:657
 #, qt-format
@@ -7541,12 +7553,15 @@ msgstr ""
 #: qtplugins/spacegroup/spacegroup.cpp:707
 msgid "Reduce to the asymmetric unit with the symmetry operations of the file?"
 msgstr ""
+"Redukovat na asymetrickou jednotku pomocí symetrických operací ze souboru?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:709
 #, qt-format
 msgid ""
 "Reduce to the asymmetric unit with the symmetry operations of the file (%1)?"
 msgstr ""
+"Redukovat na asymetrickou jednotku pomocí symetrických operací ze souboru "
+"(%1)?"
 
 #: qtplugins/spacegroup/spacegroup.cpp:730
 #, qt-format
@@ -8104,7 +8119,7 @@ msgstr "Video MP4 (*.mp4);;Video AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:1412
 msgid "Movie AVI (*.avi);;GIF (*.gif)"
-msgstr ""
+msgstr "Video AVI (*.avi);;GIF (*.gif)"
 
 #: qtplugins/surfaces/surfaces.cpp:1483
 msgid "Couldn't find the active render widget, failing."
@@ -10708,7 +10723,7 @@ msgstr "Algoritmus optimalizace:"
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:66
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
 msgid "L-BFGS"
-msgstr ""
+msgstr "L-BFGS"
 
 #. i18n: file: qtplugins/openbabel/obforcefielddialog.ui:71
 #. i18n: ectx: property (text), item, widget (QComboBox, algorithm)
