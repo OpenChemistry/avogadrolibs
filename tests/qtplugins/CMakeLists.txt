@@ -30,6 +30,7 @@ set(plugins
   Forcefield
   GLTF
   MeasureTool
+  Navigator
   OpenBabel
   PlayerTool
   PropertyTables

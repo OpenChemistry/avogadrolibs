@@ -52,12 +52,11 @@ public:
   bool handleCommand(const QString& command,
                      const QVariantMap& options) override;
 
-  void registerCommands() override;
-
 protected slots:
   void swapZoomDirection(bool checked);
 
 private:
+  void registerNavigatorCommands();
   /**
    * Update the currently pressed buttons, accounting for modifier keys.
    * \todo Account for modifier keys.
