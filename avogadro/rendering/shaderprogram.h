@@ -51,6 +51,16 @@ public:
   ShaderProgram();
   ~ShaderProgram();
 
+  /**
+   * Forget the GL program without deleting it, so the object is inert and its
+   * destructor makes no GL call. Cached uniform and attribute locations and
+   * the attached shader handles are forgotten too. Only for a program whose
+   * GL context has been destroyed: its name means nothing in any other
+   * context, where deleting it could delete an unrelated program. In a
+   * context that is still alive this leaks the program.
+   */
+  void abandon();
+
   /** Attach the supplied shader to this program.
    * @note A maximum of one Vertex shader and one Fragment shader can be
    * attached to a shader prorgram.

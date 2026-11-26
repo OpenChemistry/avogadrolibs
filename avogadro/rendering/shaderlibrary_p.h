@@ -69,6 +69,12 @@ public:
    */
   void releaseResources();
 
+  /**
+   * Forget every program without any GL call, and forget failures. For a
+   * context that is gone: its program names mean nothing anywhere else.
+   */
+  void abandonResources();
+
 private:
   struct Entry
   {

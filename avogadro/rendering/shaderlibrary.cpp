@@ -137,4 +137,14 @@ void ShaderLibrary::releaseResources()
   }
 }
 
+void ShaderLibrary::abandonResources()
+{
+  for (Entry& entry : m_entries) {
+    if (entry.program)
+      entry.program->abandon();
+    entry.program.reset();
+    entry.failed = false;
+  }
+}
+
 } // namespace Avogadro::Rendering
