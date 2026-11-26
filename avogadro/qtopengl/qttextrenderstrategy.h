@@ -47,7 +47,7 @@ public:
 
 private:
   static void argbToRgba(unsigned char* buffer, size_t pixels);
-  bool m_preserveArgb;
+  bool m_preserveArgb = false;
 };
 
 } // namespace Avogadro::QtOpenGL

@@ -4,6 +4,7 @@
 ******************************************************************************/
 
 #include "qttextrenderstrategy.h"
+#include "qttextrenderstrategy_p.h"
 
 #include <avogadro/rendering/textproperties.h>
 
@@ -22,6 +23,9 @@
 #include <QtCore/QSysInfo>
 
 #include <cmath>
+#include <map>
+#include <mutex>
+#include <tuple>
 
 using Avogadro::Rendering::TextProperties;
 
@@ -61,7 +65,7 @@ inline Qt::Alignment textPropertiesToAlignment(const TextProperties& prop)
   return result;
 }
 
-inline QFont textPropertiesToQFont(const TextProperties& prop)
+QString resolveFamily(const TextProperties& prop)
 {
   QString family;
   switch (prop.fontFamily()) {
@@ -91,7 +95,11 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
                  << "Defaulting to SansSerif.";
       family = QApplication::font().family();
   }
+  return family;
+}
 
+QFont buildScaledFont(const QString& family, const TextProperties& prop)
+{
   TextProperties::FontStyles style = prop.fontStyles();
 
   QFont result(family, static_cast<int>(prop.pixelHeight()) / 2 + 1,
@@ -117,9 +125,99 @@ inline QFont textPropertiesToQFont(const TextProperties& prop)
   return result;
 }
 
+// Building a scaled font runs several QFontMetricsF constructions, and every
+// label calls it twice (boundingBox and render). The result depends only on
+// the resolved family, pixel height, and the bold/italic/underline bits, so
+// keep recent results. The family is part of the key *after* resolution, so a
+// change to QApplication::font() yields a new entry instead of a stale font.
+// Rotation, alignment and color do not affect the font.
+//
+// The cache is bounded and simply cleared when full: label sets use a handful
+// of distinct fonts, so refilling is cheap and no LRU bookkeeping is needed.
+// It is heap-allocated and never freed so no QFont is destroyed after the
+// QApplication at exit.
+constexpr size_t kFontCacheLimit = 64;
+
+using FontKey = std::tuple<QString, size_t, int>;
+
+struct FontCache
+{
+  std::mutex mutex;
+  std::map<FontKey, QFont> fonts;
+};
+
+FontCache& fontCache()
+{
+  static FontCache* cache = new FontCache;
+  return *cache;
+}
+
+FontKey fontKey(const QString& family, const TextProperties& prop)
+{
+  const int styles = static_cast<int>(
+    prop.fontStyles() & (TextProperties::Bold | TextProperties::Italic |
+                         TextProperties::Underline));
+  return FontKey(family, prop.pixelHeight(), styles);
+}
+
+inline QFont textPropertiesToQFont(const TextProperties& prop)
+{
+  return Avogadro::QtOpenGL::Detail::scaledFontCached(prop);
+}
+
 } // namespace
 
 namespace Avogadro::QtOpenGL {
+
+namespace Detail {
+
+QFont scaledFontUncached(const TextProperties& prop)
+{
+  return buildScaledFont(resolveFamily(prop), prop);
+}
+
+QFont scaledFontCached(const TextProperties& prop)
+{
+  const QString family = resolveFamily(prop);
+  const FontKey key = fontKey(family, prop);
+  FontCache& cache = fontCache();
+  {
+    std::lock_guard<std::mutex> lock(cache.mutex);
+    auto it = cache.fonts.find(key);
+    if (it != cache.fonts.end())
+      return it->second;
+  }
+  // Build outside the lock; two threads racing build identical fonts.
+  QFont font = buildScaledFont(family, prop);
+  {
+    std::lock_guard<std::mutex> lock(cache.mutex);
+    if (cache.fonts.size() >= kFontCacheLimit)
+      cache.fonts.clear();
+    cache.fonts.emplace(key, font);
+  }
+  return font;
+}
+
+void clearFontCache()
+{
+  FontCache& cache = fontCache();
+  std::lock_guard<std::mutex> lock(cache.mutex);
+  cache.fonts.clear();
+}
+
+size_t fontCacheSize()
+{
+  FontCache& cache = fontCache();
+  std::lock_guard<std::mutex> lock(cache.mutex);
+  return cache.fonts.size();
+}
+
+size_t fontCacheLimit()
+{
+  return kFontCacheLimit;
+}
+
+} // namespace Detail
 
 QtTextRenderStrategy::QtTextRenderStrategy() {}
 
