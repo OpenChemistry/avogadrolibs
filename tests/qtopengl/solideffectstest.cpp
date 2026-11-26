@@ -602,3 +602,16 @@ TEST_F(SolidAoTest, survivesResizingLargeToSmallAndBack)
   settle();
   EXPECT_LT(creviceDarkening(Perspective), 0.85);
 }
+
+TEST_F(SolidAoTest, effectsSurviveRendererCleanupAndInitialize)
+{
+  EXPECT_LT(creviceDarkening(Perspective), 0.85);
+  // Without a resize in between, as in a context replacement that keeps the
+  // window's size.
+  widget->makeCurrent();
+  widget->renderer().cleanup();
+  widget->renderer().initialize();
+  ASSERT_TRUE(widget->renderer().isValid()) << widget->renderer().error();
+  widget->doneCurrent();
+  EXPECT_LT(creviceDarkening(Perspective), 0.85);
+}

@@ -277,6 +277,11 @@ void SolidPipeline::initialize()
   // use in begin() and end(), where it is current.
   d->initialized = true;
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(previousFBO));
+  // A new context starts with empty targets, and nothing may call resize()
+  // before the next frame (a renderer cleaned up and initialized again keeps
+  // its size). Without this the effects would stay off until a resize.
+  if (m_width > 0 && m_height > 0)
+    resizeDevice(m_width, m_height);
 }
 
 bool SolidPipeline::begin()
