@@ -1152,14 +1152,15 @@ Twistable formamide()
 } // namespace
 
 // Rotation about a C=C bond. The typer makes both carbons C_R (each has an
-// sp2 neighbor), so the sp2-sp2 term uses BO = 1.5: n = 2, phi0 = 180 and
-// V = 5 sqrt(Uj Uk) (1 + 4.18 ln 1.5). The four H-C=C-H torsions cost 4 V at
+// sp2 neighbor), but the bond is an explicit, non-aromatic double bond, so the
+// sp2-sp2 term uses BO = 2: n = 2, phi0 = 180 and
+// V = 5 sqrt(Uj Uk) (1 + 4.18 ln 2). The four H-C=C-H torsions cost 4 V at
 // 90 degrees. Before this was fixed double bonds had no torsion at all.
 TEST(UffTorsionTest, EtheneBarrier)
 {
   Twistable t = ethene();
   EXPECT_EQ(uffTypes(t.molecule)[0], "C_R");
-  const double v = 5.0 * paramU("C_R") * (1.0 + 4.18 * std::log(1.5));
+  const double v = 5.0 * paramU("C_R") * (1.0 + 4.18 * std::log(2.0));
   EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
   EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
   EXPECT_NEAR(t.energy(45.0), 2.0 * v, 1.0e-6);
@@ -1206,6 +1207,65 @@ TEST(UffTorsionTest, AmideBondOrder)
   const double v = 5.0 * std::sqrt(paramU("C_R") * paramU("N_R")) *
                    (1.0 + 4.18 * std::log(1.41));
   EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+}
+
+// Slightly puckered benzene with alternating C-C lengths (1.34 / 1.47 A). The
+// aromatic bonds all have the effective order 1.5, so the bond and torsion
+// energies cannot depend on which Kekule structure the bond orders spell.
+namespace {
+Molecule distortedBenzene(bool doubleOnShortBonds)
+{
+  Molecule m;
+  const double lengths[2] = { 1.34, 1.47 };
+  Vector3 position = Vector3::Zero();
+  std::vector<Vector3> carbons;
+  for (int k = 0; k < 6; ++k) {
+    carbons.push_back(position);
+    const double a = k * PI_D / 3.0;
+    position += lengths[k % 2] * Vector3(std::cos(a), std::sin(a), 0.0);
+  }
+  Vector3 center = Vector3::Zero();
+  for (const Vector3& c : carbons)
+    center += c / 6.0;
+  // pucker the ring a little so that the torsion terms are not zero
+  for (int k = 0; k < 6; ++k)
+    carbons[k].z() = (k % 2 == 0) ? 0.1 : -0.1;
+  for (const Vector3& c : carbons)
+    addAt(m, 6, c.x(), c.y(), c.z());
+  for (const Vector3& c : carbons) {
+    Vector3 h = c + 1.08 * (c - center).normalized();
+    h.z() = c.z();
+    addAt(m, 1, h.x(), h.y(), h.z());
+  }
+  for (int k = 0; k < 6; ++k) {
+    const bool shortBond = (k % 2 == 0);
+    const unsigned char order = (shortBond == doubleOnShortBonds) ? 2 : 1;
+    bond(m, k, (k + 1) % 6, order);
+    bond(m, k, 6 + k);
+  }
+  return m;
+}
+} // namespace
+
+TEST(UffTorsionTest, AromaticRingIgnoresTheKekuleStructure)
+{
+  Molecule first = distortedBenzene(true);
+  Molecule second = distortedBenzene(false);
+  for (int k = 0; k < 6; ++k)
+    EXPECT_EQ(uffTypes(first)[k], "C_R");
+
+  UFF ffFirst, ffSecond;
+  ffFirst.setMolecule(&first);
+  ffSecond.setMolecule(&second);
+  const Eigen::VectorXd x = positionsOf(first);
+  ASSERT_NEAR((x - positionsOf(second)).norm(), 0.0, 1.0e-14);
+
+  const double bondEnergy = ffFirst.bondEnergy(x);
+  EXPECT_GT(bondEnergy, 0.0);
+  EXPECT_NEAR(bondEnergy, ffSecond.bondEnergy(x), 1.0e-9);
+  const double torsionEnergy = ffFirst.torsionEnergy(x);
+  EXPECT_GT(torsionEnergy, 0.0);
+  EXPECT_NEAR(torsionEnergy, ffSecond.torsionEnergy(x), 1.0e-9);
 }
 
 // H-C-O-H is sp3-sp3 with only one group 16 atom: 3-fold, phi0 = 60. Only a

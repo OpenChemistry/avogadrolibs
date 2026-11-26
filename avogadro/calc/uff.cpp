@@ -10,6 +10,7 @@
 #include <Eigen/src/Core/util/Meta.h>
 #include <avogadro/core/angleiterator.h>
 #include <avogadro/core/angletools.h>
+#include <avogadro/core/aromaticity.h>
 #include <avogadro/core/array.h>
 #include <avogadro/core/dihedraliterator.h>
 #include <avogadro/core/elements.h>
@@ -210,6 +211,7 @@ public:
   std::vector<UFFOOP> m_oops;
   std::vector<UFFTorsion> m_torsions;
   std::vector<UFFVdW> m_vdws;
+  std::vector<bool> m_aromaticBonds; // per bond, from AromaticityPerceiver
   std::unordered_set<uint64_t> m_excludedPairs; // 1-2 and 1-3 pairs
   Eigen::VectorXd m_lastVdWPositions; // positions when VdW list was last built
   Core::Molecule* m_molecule;
@@ -237,6 +239,11 @@ public:
         m_atomTypes.clear();
         return;
       }
+    }
+    // perceive aromatic bonds once; they set the effective bond order
+    {
+      AromaticityPerceiver perceiver(m_molecule);
+      m_aromaticBonds = perceiver.aromaticBonds();
     }
     setBonds();
     setAngles();
@@ -415,6 +422,35 @@ public:
     }
   }
 
+  // The bond order used for the bond length and the sp2-sp2 torsion barrier.
+  // An aromatic bond (AromaticityPerceiver) is 1.5 whatever the Kekule form.
+  // A single bond between two resonant atoms is conjugated: 1.5, or 1.41 for
+  // a C-N pair (amide). Any other bond keeps its explicit order (at least 1),
+  // so a non-aromatic C=C between two C_R atoms stays 2.
+  Real effectiveBondOrder(const Core::Bond& bond, Index atom1, Index atom2)
+  {
+    // order 0 would give log(0) = -inf in the bond-order correction
+    const Real order =
+      bond.isValid() ? std::max(1.0, static_cast<Real>(bond.order())) : 1.0;
+
+    if (bond.isValid() && bond.index() < m_aromaticBonds.size() &&
+        m_aromaticBonds[bond.index()])
+      return 1.5;
+
+    if (order == 1.0) {
+      const auto& symbol1 = uffparams[m_atomTypes[atom1]].label;
+      const auto& symbol2 = uffparams[m_atomTypes[atom2]].label;
+      if (symbol1.size() > 2 && symbol1[2] == 'R' && symbol2.size() > 2 &&
+          symbol2[2] == 'R') {
+        if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
+            (symbol1[0] == 'C' && symbol2[0] == 'N'))
+          return 1.41;
+        return 1.5;
+      }
+    }
+    return order;
+  }
+
   // calculate the ideal bond distance between two atoms
   // used in a few places
   Real calculateRij(Index atom1, Index atom2)
@@ -423,22 +459,8 @@ public:
     Real rj = uffparams[m_atomTypes[atom2]].r1;
     Real r0 = ri + rj;
     // bond order correction
-    Bond bond = m_molecule->bond(atom1, atom2);
-    Real order = static_cast<Real>(bond.order());
-    // order 0 would give log(0) = -inf in the bond-order correction
-    if (order < 1.0)
-      order = 1.0;
-    // check if it's a resonant / aromatic bond
-    const auto& symbol1 = uffparams[m_atomTypes[atom1]].label;
-    const auto& symbol2 = uffparams[m_atomTypes[atom2]].label;
-    if (symbol1.size() > 2 && symbol1[2] == 'R' && symbol2.size() > 2 &&
-        symbol2[2] == 'R') {
-      order = 1.5;
-      // tweak for amide
-      if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
-          (symbol1[0] == 'C' && symbol2[0] == 'N'))
-        order = 1.41;
-    }
+    const Real order =
+      effectiveBondOrder(m_molecule->bond(atom1, atom2), atom1, atom2);
     Real rbo = -0.1332 * r0 * log(order);
 
     // electronegativity correction
@@ -707,14 +729,7 @@ public:
         t._ijkl = 0.5 * sqrt(Vi_j * Vi_k);
       } else if (isSp2(hybridJ) && isSp2(hybridK)) {
         // sp2-sp2: n = 2, phi0 = 180, V = 5 sqrt(Uj Uk) (1 + 4.18 ln BO)
-        Real order = std::max(1.0, static_cast<Real>(bond.order()));
-        if (hybridJ == 'R' && hybridK == 'R') {
-          order = 1.5;
-          // tweak for amide
-          if ((paramJ.label[0] == 'N' && paramK.label[0] == 'C') ||
-              (paramJ.label[0] == 'C' && paramK.label[0] == 'N'))
-            order = 1.41;
-        }
+        const Real order = effectiveBondOrder(bond, j, k);
         t._n = 2;
         t._cos_phi0 = 1.0; // cos(2 * 180 degrees)
         t._ijkl =
