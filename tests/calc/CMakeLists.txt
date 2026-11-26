@@ -73,11 +73,10 @@ foreach(TestName ${tests})
     add_test(NAME "Calc-Gradient-Stress"
       COMMAND AvogadroCalcTests "--gtest_filter=GradientStressTest.*")
   elseif(TestName STREQUAL "UFF")
-    # Parameterized test suite name is UffGradientTest; ufftest.cpp also
-    # defines UffConstraintTest and UffMaskTest.
+    # ufftest.cpp defines many Uff* suites (the parameterized one is
+    # UffTest/UffGradientTest), so match them all.
     add_test(NAME "Calc-UFF"
-      COMMAND AvogadroCalcTests
-      "--gtest_filter=UffTest/UffGradientTest.*:UffConstraintTest.*:UffMaskTest.*")
+      COMMAND AvogadroCalcTests "--gtest_filter=Uff*")
   elseif(TestName STREQUAL "ForceFieldEdgeCase")
     # Parameterized test suite name is ForceFieldEdgeCaseTest.
     add_test(NAME "Calc-ForceFieldEdgeCase"
