@@ -618,21 +618,41 @@ public:
 
   void setTorsions()
   {
+    // The third character of a UFF label is the hybridization or geometry:
+    // '3' sp3, '2' sp2, 'R' resonant (treated as sp2), '1' linear. Labels
+    // of one or two characters (H_, F_, Cl, Na) have none and can't be
+    // torsion centers; the old code treated them as sp3 with Vi = 0.
+    auto hybridization = [](const std::string& label) -> char {
+      return label.size() < 3 ? '\0' : label[2];
+    };
+    auto isSp2 = [](char h) { return h == '2' || h == 'R'; };
+    // group 16: O, S, Se, Te, Po
+    auto isGroup16 = [](unsigned char atomicNumber) {
+      return atomicNumber == 8 || atomicNumber == 16 || atomicNumber == 34 ||
+             atomicNumber == 52 || atomicNumber == 84;
+    };
+
     DihedralIterator di(m_molecule);
     auto dihedral = di.begin();
-    while (dihedral != di.end()) {
+    for (; dihedral != di.end(); dihedral = ++di) {
       Index i = std::get<0>(dihedral);
       Index j = std::get<1>(dihedral);
       Index k = std::get<2>(dihedral);
       Index l = std::get<3>(dihedral);
 
-      // check the bond order of j-k
-      // (if it's not rotatable, we can skip this one)
       Bond bond = m_molecule->bond(j, k);
-      if (bond.order() != 1) {
-        dihedral = ++di;
+      if (!bond.isValid())
         continue;
-      }
+      // no torsion about a triple bond (the centers are linear anyway)
+      if (bond.order() >= 3)
+        continue;
+
+      const auto& paramJ = uffparams[m_atomTypes[j]];
+      const auto& paramK = uffparams[m_atomTypes[k]];
+      const char hybridJ = hybridization(paramJ.label);
+      const char hybridK = hybridization(paramK.label);
+      const unsigned char zJ = m_molecule->atom(j).atomicNumber();
+      const unsigned char zK = m_molecule->atom(k).atomicNumber();
 
       UFFTorsion t;
       t._atom1 = i;
@@ -640,97 +660,67 @@ public:
       t._atom3 = k;
       t._atom4 = l;
 
-      // default is for sp3-sp3
-      Real order = static_cast<Real>(bond.order());
-
-      auto symbol1 = uffparams[m_atomTypes[j]].label;
-      auto symbol2 = uffparams[m_atomTypes[k]].label;
-
-      // TODO: a bunch of special cases
-      if (symbol1.size() < 3 || symbol2.size() < 3 || symbol1[2] == '3' ||
-          symbol2[2] == '3') {
-        // default is sp3-sp3
+      // _ijkl holds V / 2 (kcal/mol), _cos_phi0 holds cos(n * phi0):
+      // E = V/2 * [1 - cos(n * phi0) * cos(n * phi)]  (Rappe 1992, eq. 16-18)
+      if (hybridJ == '3' && hybridK == '3') {
+        // sp3-sp3: n = 3, phi0 = 60, V = sqrt(Vj * Vk)
         t._n = 3;
-        Real Vi_j = uffparams[m_atomTypes[j]].Vi;
-        Real Vi_k = uffparams[m_atomTypes[k]].Vi;
+        Real Vi_j = paramJ.Vi;
+        Real Vi_k = paramK.Vi;
         Real phi0 = 60.0;
 
-        // handle some special cases
-        // e.g. a pair of group 6 sp3 atoms
-        auto atomicNumberJ = m_molecule->atom(j).atomicNumber();
-        auto atomicNumberK = m_molecule->atom(k).atomicNumber();
-        switch (atomicNumberJ) {
-          case 8: // oxygen
-            t._n = 2;
-            phi0 = 90.0; // hydrogen peroxide H-O-O-H
-            Vi_j = 2.0;
-            break;
-          case 16: // sulfur
-          case 34: // selenium
-          case 52: // tellurium
-          case 84: // polonium
-            Vi_j = 6.8;
-            t._n = 2;
-            phi0 = 90.0;
-          default:
-            break;
-        }
-        switch (atomicNumberK) {
-          case 8: // oxygen
-            t._n = 2;
-            phi0 = 90.0; // hydrogen peroxide H-O-O-H
-            Vi_k = 2.0;
-            break;
-          case 16: // sulfur
-          case 34: // selenium
-          case 52: // tellurium
-          case 84: // polonium
-            Vi_k = 6.8;
-            t._n = 2;
-            phi0 = 90.0;
-          default:
-            break;
+        // Pair of group 16 centers (e.g. H-O-O-H): n = 2, phi0 = 90,
+        // V_O = 2.0, V_S/Se/Te/Po = 6.8. This applies only when BOTH centers
+        // are group 16. (Open Babel applies it when either one is, so it
+        // gives H-C-O-H a 2-fold term; that is not what the paper says.)
+        if (isGroup16(zJ) && isGroup16(zK)) {
+          t._n = 2;
+          phi0 = 90.0;
+          Vi_j = (zJ == 8) ? 2.0 : 6.8;
+          Vi_k = (zK == 8) ? 2.0 : 6.8;
         }
 
         t._cos_phi0 = cos(t._n * phi0 * DEG_TO_RAD);
-        // geometric mean of the two V1 parameters
         t._ijkl = 0.5 * sqrt(Vi_j * Vi_k);
-      } else if (symbol1[2] == 'R' && symbol2[2] == 'R') {
-        order = 1.5;
-        // tweak for amide
-        if ((symbol1[0] == 'N' && symbol2[0] == 'C') ||
-            (symbol1[0] == 'C' && symbol2[0] == 'N'))
-          order = 1.41;
+      } else if (isSp2(hybridJ) && isSp2(hybridK)) {
+        // sp2-sp2: n = 2, phi0 = 180, V = 5 sqrt(Uj Uk) (1 + 4.18 ln BO)
+        Real order = std::max(1.0, static_cast<Real>(bond.order()));
+        if (hybridJ == 'R' && hybridK == 'R') {
+          order = 1.5;
+          // tweak for amide
+          if ((paramJ.label[0] == 'N' && paramK.label[0] == 'C') ||
+              (paramJ.label[0] == 'C' && paramK.label[0] == 'N'))
+            order = 1.41;
+        }
         t._n = 2;
         t._cos_phi0 = cos(t._n * 180.0 * DEG_TO_RAD);
-        t._ijkl = 5.0 * sqrt(uffparams[m_atomTypes[j]].Uj *
-                             uffparams[m_atomTypes[k]].Uj);
-        t._ijkl *= 0.5 * (1.0 + 4.18 * log(order));
-      } else if ((symbol1[2] == '2' && symbol2[2] == '3') ||
-                 (symbol1[2] == '3' && symbol2[2] == '2')) {
-        // sp2-sp3
-        t._cos_phi0 = cos(0.0 * DEG_TO_RAD);
+        t._ijkl =
+          0.5 * 5.0 * sqrt(paramJ.Uj * paramK.Uj) * (1.0 + 4.18 * log(order));
+      } else if ((isSp2(hybridJ) && hybridK == '3') ||
+                 (hybridJ == '3' && isSp2(hybridK))) {
+        // sp2-sp3: n = 6, phi0 = 0, V = 1.0 kcal/mol
+        // TODO: propene-like case (sp2 atom bonded to another sp2 atom):
+        // n = 3, phi0 = 180, V = 2.0. Open Babel doesn't do it either.
         t._n = 6;
-        t._ijkl = 0.5;
+        t._cos_phi0 = cos(t._n * 0.0 * DEG_TO_RAD);
+        t._ijkl = 0.5 * 1.0;
 
-        // exceptions for Oxygen, Sulfur, Selenium, Tellurium, Polonium
-        auto atomicNumberJ = m_molecule->atom(j).atomicNumber();
-        auto atomicNumberK = m_molecule->atom(k).atomicNumber();
-        if (atomicNumberJ == 8 || atomicNumberK == 8 || atomicNumberJ == 16 ||
-            atomicNumberK == 16 || atomicNumberJ == 34 || atomicNumberK == 34 ||
-            atomicNumberJ == 52 || atomicNumberK == 52 || atomicNumberJ == 84 ||
-            atomicNumberK == 84) {
+        // exception when the sp3 center is group 16 (e.g. C=C-O-C):
+        // n = 2, phi0 = 90, same V as Open Babel
+        const unsigned char zSp3 = (hybridJ == '3') ? zJ : zK;
+        if (isGroup16(zSp3)) {
           t._n = 2;
-          t._cos_phi0 = cos(90.0 * DEG_TO_RAD);
+          t._cos_phi0 = cos(t._n * 90.0 * DEG_TO_RAD);
         }
-
       } else {
-        dihedral = ++di;
+        // linear (sp1) or higher coordination: no torsion term
         continue;
       }
 
+      if (std::fabs(t._ijkl) < 1.0e-6)
+        continue;
+
       m_torsions.push_back(t);
-      dihedral = ++di;
     }
   }
 

@@ -858,3 +858,387 @@ TEST(UffGradientDistortedTest, ExactlySquarePlanarXenonTetrafluoride)
   EXPECT_TRUE(grad.allFinite());
   EXPECT_LT(grad.cwiseAbs().maxCoeff(), 1.0e-6);
 }
+
+// ---- Torsion terms ---------------------------------------------------------
+
+namespace {
+// A molecule plus a rigid group of atoms that can be twisted about an axis.
+struct Twistable
+{
+  Molecule molecule;
+  std::vector<Index> moving;
+  Vector3 origin = Vector3::Zero();
+  Vector3 axis = Vector3::UnitX();
+
+  // positions with the moving group rotated by `degrees` about the axis
+  Eigen::VectorXd positions(double degrees) const
+  {
+    Eigen::VectorXd x = positionsOf(molecule);
+    const Eigen::AngleAxisd rotation(degrees * 3.14159265358979 / 180.0,
+                                     axis.normalized());
+    for (Index a : moving) {
+      const Vector3 p = x.segment<3>(3 * a);
+      x.segment<3>(3 * a) = origin + rotation * (p - origin);
+    }
+    return x;
+  }
+
+  // the torsion energy (kcal/mol) at a twist angle
+  double energy(double degrees)
+  {
+    UFF uff;
+    uff.setMolecule(&molecule);
+    return uff.torsionEnergy(positions(degrees));
+  }
+
+  double gradientError(double degrees)
+  {
+    const Eigen::VectorXd x = positions(degrees);
+    const Eigen::Index n = x.size();
+    UFF uff;
+    uff.setMolecule(&molecule);
+    Eigen::VectorXd analytic = Eigen::VectorXd::Zero(n);
+    uff.torsionGradient(x, analytic);
+    double worst = 0.0;
+    const double h = 1.0e-5;
+    for (Eigen::Index c = 0; c < n; ++c) {
+      Eigen::VectorXd xp = x;
+      Eigen::VectorXd xm = x;
+      xp[c] += h;
+      xm[c] -= h;
+      const double fd =
+        (uff.torsionEnergy(xp) - uff.torsionEnergy(xm)) / (2.0 * h);
+      worst = std::max(worst, std::fabs(fd - analytic[c]));
+    }
+    return worst;
+  }
+};
+
+double paramU(const char* label)
+{
+  return uffparams[rowForLabel(label)].Uj;
+}
+
+// Three hydrogens exactly 120 degrees apart about the x axis, for a methyl
+// carbon at the origin
+std::vector<Vector3> methylHydrogens()
+{
+  std::vector<Vector3> hydrogens;
+  for (int k = 0; k < 3; ++k) {
+    const double a = 2.0 * 3.14159265358979 * k / 3.0 + 1.5707963267949;
+    hydrogens.push_back(Vector3(-0.36, 1.03 * std::sin(a), 1.03 * std::cos(a)));
+  }
+  return hydrogens;
+}
+
+// H2C=CH2, twisting one CH2 about the C=C bond
+Twistable ethene()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index c0 = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index c1 = addAt(m, 6, 1.34, 0.0, 0.0);
+  bond(m, c0, c1, 2);
+  bond(m, c0, addAt(m, 1, -0.55, 0.93, 0.0));
+  bond(m, c0, addAt(m, 1, -0.55, -0.93, 0.0));
+  Index h4 = addAt(m, 1, 1.89, 0.93, 0.0);
+  Index h5 = addAt(m, 1, 1.89, -0.93, 0.0);
+  bond(m, c1, h4);
+  bond(m, c1, h5);
+  t.moving = { h4, h5 };
+  return t;
+}
+
+// s-trans 1,3-butadiene, twisting one vinyl group about the central bond
+Twistable butadiene()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index c0 = addAt(m, 6, -0.67, 1.16, 0.0);
+  Index c1 = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index c2 = addAt(m, 6, 1.46, 0.0, 0.0);
+  Index c3 = addAt(m, 6, 2.13, -1.16, 0.0);
+  bond(m, c0, c1, 2);
+  bond(m, c1, c2, 1);
+  bond(m, c2, c3, 2);
+  bond(m, c0, addAt(m, 1, -0.2, 2.1, 0.0));
+  bond(m, c0, addAt(m, 1, -1.75, 1.1, 0.0));
+  bond(m, c1, addAt(m, 1, -0.5, -0.95, 0.0));
+  Index h2 = addAt(m, 1, 1.96, 0.95, 0.0);
+  Index h3a = addAt(m, 1, 1.66, -2.1, 0.0);
+  Index h3b = addAt(m, 1, 3.21, -1.1, 0.0);
+  bond(m, c2, h2);
+  bond(m, c3, h3a);
+  bond(m, c3, h3b);
+  t.moving = { c3, h2, h3a, h3b };
+  t.origin = m.atomPosition3d(c1);
+  return t;
+}
+
+// CH3-OH, twisting the hydroxyl hydrogen about the C-O bond
+Twistable methanol()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index c = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index o = addAt(m, 8, 1.43, 0.0, 0.0);
+  bond(m, c, o);
+  for (const Vector3& v : methylHydrogens())
+    bond(m, c, addAt(m, 1, v.x(), v.y(), v.z()));
+  Index h = addAt(m, 1, 1.75, 0.9, 0.0);
+  bond(m, o, h);
+  t.moving = { h };
+  return t;
+}
+
+// HO-OH, twisting one hydroxyl hydrogen about the O-O bond
+Twistable peroxide()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index o0 = addAt(m, 8, 0.0, 0.0, 0.0);
+  Index o1 = addAt(m, 8, 1.45, 0.0, 0.0);
+  bond(m, o0, o1);
+  bond(m, o0, addAt(m, 1, -0.3, 0.9, 0.0));
+  Index h = addAt(m, 1, 1.75, 0.9, 0.0);
+  bond(m, o1, h);
+  t.moving = { h };
+  return t;
+}
+
+// CH3-CHO, twisting the methyl group about the C-C bond
+Twistable acetaldehyde()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index cm = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index ca = addAt(m, 6, 1.5, 0.0, 0.0);
+  bond(m, cm, ca);
+  bond(m, ca, addAt(m, 8, 2.1, 1.05, 0.0), 2);
+  bond(m, ca, addAt(m, 1, 2.1, -0.9, 0.0));
+  for (const Vector3& v : methylHydrogens()) {
+    Index h = addAt(m, 1, v.x(), v.y(), v.z());
+    bond(m, cm, h);
+    t.moving.push_back(h);
+  }
+  return t;
+}
+
+// H2C=CH-S(=O)-CH3, twisting the sulfoxide group about the (sp2)C-S bond.
+// The S atom is sp3 and group 16; S_3+4 keeps it from being typed resonant.
+// The oxygen and methyl carbon sit at +-60 degrees from the C=C plane.
+Twistable vinylSulfoxide()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index c2 = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index c1 = addAt(m, 6, -0.67, 1.16, 0.0);
+  Index s = addAt(m, 16, 1.77, 0.0, 0.0);
+  bond(m, c1, c2, 2);
+  bond(m, c2, s);
+  bond(m, c1, addAt(m, 1, -0.2, 2.1, 0.0));
+  bond(m, c1, addAt(m, 1, -1.75, 1.1, 0.0));
+  bond(m, c2, addAt(m, 1, -0.55, -0.93, 0.0));
+  const double c = std::cos(1.0471975511966), sn = std::sin(1.0471975511966);
+  Index o = addAt(m, 8, 2.1, 1.4 * c, 1.4 * sn);
+  Index cm = addAt(m, 6, 2.4, 1.8 * c, -1.8 * sn);
+  bond(m, s, o, 2);
+  bond(m, s, cm);
+  t.moving = { s, o, cm };
+  // the methyl hydrogens move with the carbon
+  for (const Vector3& v : { Vector3(3.4, 1.8 * c, -1.8 * sn + 0.9),
+                            Vector3(3.0, 1.8 * c + 0.9, -1.8 * sn - 0.4),
+                            Vector3(3.0, 1.8 * c - 0.9, -1.8 * sn - 0.4) }) {
+    Index h = addAt(m, 1, v.x(), v.y(), v.z());
+    bond(m, cm, h);
+    t.moving.push_back(h);
+  }
+  return t;
+}
+
+// H2C=CH-BF2, twisting the BF2 group about the C-B bond. B_2 is not a
+// resonant type, so this bond is C_R-B_2 and uses its own bond order.
+Twistable vinylBorane()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index c2 = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index c1 = addAt(m, 6, -0.67, 1.16, 0.0);
+  Index b = addAt(m, 5, 1.55, 0.0, 0.0);
+  bond(m, c1, c2, 2);
+  bond(m, c2, b);
+  bond(m, c1, addAt(m, 1, -0.2, 2.1, 0.0));
+  bond(m, c1, addAt(m, 1, -1.75, 1.1, 0.0));
+  bond(m, c2, addAt(m, 1, -0.55, -0.93, 0.0));
+  Index f1 = addAt(m, 9, 2.2, 1.15, 0.0);
+  Index f2 = addAt(m, 9, 2.2, -1.15, 0.0);
+  bond(m, b, f1);
+  bond(m, b, f2);
+  t.moving = { b, f1, f2 };
+  return t;
+}
+
+// H2N-CH=O, twisting the NH2 group about the amide C-N bond
+Twistable formamide()
+{
+  Twistable t;
+  Molecule& m = t.molecule;
+  Index c = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index n = addAt(m, 7, 1.35, 0.0, 0.0);
+  bond(m, c, n);
+  bond(m, c, addAt(m, 8, -0.6, 1.05, 0.0), 2);
+  bond(m, c, addAt(m, 1, -0.6, -0.9, 0.0));
+  Index h1 = addAt(m, 1, 1.9, 0.85, 0.0);
+  Index h2 = addAt(m, 1, 1.9, -0.85, 0.0);
+  bond(m, n, h1);
+  bond(m, n, h2);
+  t.moving = { n, h1, h2 };
+  return t;
+}
+} // namespace
+
+// Rotation about a C=C bond. The typer makes both carbons C_R (each has an
+// sp2 neighbor), so the sp2-sp2 term uses BO = 1.5: n = 2, phi0 = 180 and
+// V = 5 sqrt(Uj Uk) (1 + 4.18 ln 1.5). The four H-C=C-H torsions cost 4 V at
+// 90 degrees. Before this was fixed double bonds had no torsion at all.
+TEST(UffTorsionTest, EtheneBarrier)
+{
+  Twistable t = ethene();
+  EXPECT_EQ(uffTypes(t.molecule)[0], "C_R");
+  const double v = 5.0 * paramU("C_R") * (1.0 + 4.18 * std::log(1.5));
+  EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
+  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(45.0), 2.0 * v, 1.0e-6);
+  // cis and trans (twist by 180 degrees) are the same by symmetry
+  EXPECT_NEAR(t.energy(180.0), t.energy(0.0), 1.0e-9);
+  EXPECT_NEAR(t.energy(37.0), t.energy(217.0), 1.0e-9);
+}
+
+// The single bond of s-trans butadiene joins two sp2 carbons. Both are C_R
+// here, so BO = 1.5 as for any resonant pair.
+TEST(UffTorsionTest, ButadieneCentralBond)
+{
+  Twistable t = butadiene();
+  const auto types = uffTypes(t.molecule);
+  EXPECT_EQ(types[1], "C_R");
+  EXPECT_EQ(types[2], "C_R");
+  const double v = 5.0 * paramU("C_R") * (1.0 + 4.18 * std::log(1.5));
+  EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9); // s-trans
+  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(180.0), 0.0, 1.0e-9); // s-cis
+}
+
+// A resonant atom bonded to a non-resonant sp2 atom uses the bond's own
+// order: BO = 1 gives V = 5 sqrt(Uj Uk).
+TEST(UffTorsionTest, ResonantToPlainSp2UsesBondOrder)
+{
+  Twistable t = vinylBorane();
+  const auto types = uffTypes(t.molecule);
+  EXPECT_EQ(types[0], "C_R");
+  EXPECT_EQ(types[2], "B_2");
+  const double v = 5.0 * std::sqrt(paramU("C_R") * paramU("B_2"));
+  EXPECT_GT(v, 0.0);
+  EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
+  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+}
+
+// The amide C-N bond uses BO = 1.41
+TEST(UffTorsionTest, AmideBondOrder)
+{
+  Twistable t = formamide();
+  const auto types = uffTypes(t.molecule);
+  EXPECT_EQ(types[0], "C_R");
+  EXPECT_EQ(types[1], "N_R");
+  const double v = 5.0 * std::sqrt(paramU("C_R") * paramU("N_R")) *
+                   (1.0 + 4.18 * std::log(1.41));
+  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+}
+
+// H-C-O-H is sp3-sp3 with only one group 16 atom: 3-fold, phi0 = 60. Only a
+// pair of group 16 atoms (H-O-O-H) is 2-fold with phi0 = 90.
+TEST(UffTorsionTest, MethanolIsThreefold)
+{
+  Twistable t = methanol();
+  const auto types = uffTypes(t.molecule);
+  EXPECT_EQ(types[0], "C_3");
+  EXPECT_EQ(types[1], "O_3");
+  const double v = std::sqrt(uffparams[rowForLabel("C_3")].Vi *
+                             uffparams[rowForLabel("O_3")].Vi);
+  EXPECT_GT(v, 0.0);
+  for (double deg : { 0.0, 17.0, 50.0, 111.0 })
+    EXPECT_NEAR(t.energy(deg), t.energy(deg + 120.0), 1.0e-9);
+  // eclipsed (0) is the maximum, 3 torsions of V
+  EXPECT_NEAR(t.energy(0.0), 3.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(60.0), 0.0, 1.0e-9);
+}
+
+TEST(UffTorsionTest, HydrogenPeroxideKeepsTwofoldTerm)
+{
+  Twistable t = peroxide();
+  EXPECT_EQ(uffTypes(t.molecule)[0], "O_3");
+  double bestAngle = 0.0;
+  double best = 1.0e9;
+  for (double deg = 0.0; deg <= 180.0; deg += 1.0) {
+    const double e = t.energy(deg);
+    if (e < best) {
+      best = e;
+      bestAngle = deg;
+    }
+  }
+  EXPECT_NEAR(bestAngle, 90.0, 1.0);
+  EXPECT_NEAR(best, 0.0, 1.0e-9);
+  EXPECT_NEAR(t.energy(0.0), 2.0, 1.0e-6); // V = sqrt(2 * 2)
+  EXPECT_NEAR(t.energy(0.0), t.energy(180.0), 1.0e-9);
+}
+
+// sp2-sp3 (methyl on a carbonyl): n = 6, phi0 = 0, V = 1 kcal/mol, six
+// torsions across the bond.
+TEST(UffTorsionTest, AcetaldehydeMethylIsSixfold)
+{
+  Twistable t = acetaldehyde();
+  const auto types = uffTypes(t.molecule);
+  EXPECT_EQ(types[0], "C_3");
+  EXPECT_EQ(types[1], "C_R");
+  EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
+  EXPECT_NEAR(t.energy(30.0), 6.0, 1.0e-6);
+  for (double deg : { 5.0, 23.0, 41.0 })
+    EXPECT_NEAR(t.energy(deg), t.energy(deg + 60.0), 1.0e-9);
+}
+
+// sp2-sp3 with a group 16 sp3 atom (vinyl sulfoxide): n = 2, phi0 = 90, so
+// E = V/2 (1 + cos 2 phi) per torsion, minimum perpendicular to the C=C plane.
+// (Vinyl ethers don't reach this: the typer calls that oxygen O_R.)
+TEST(UffTorsionTest, Sp2Sp3GroupSixteenIsTwofold)
+{
+  Twistable t = vinylSulfoxide();
+  const auto types = uffTypes(t.molecule);
+  EXPECT_EQ(types[0], "C_R");
+  EXPECT_EQ(types[2], "S_3+4");
+  // dihedrals of C1/H against O/CH3 at zero twist: +-60 and 180 -/+ 60
+  // (the S-CH3 torsions add a constant that doesn't depend on the twist)
+  const double phi[4] = { 60.0, -60.0, 120.0, -120.0 };
+  auto twofold = [&phi](double deg) {
+    double sum = 0.0;
+    for (double p : phi)
+      sum += 0.5 * (1.0 + std::cos(2.0 * (p + deg) * 3.14159265358979 / 180.0));
+    return sum;
+  };
+  const double constant = t.energy(0.0) - twofold(0.0);
+  for (double deg : { 0.0, 20.0, 45.0, 90.0, 133.0 }) {
+    EXPECT_NEAR(t.energy(deg), twofold(deg) + constant, 1.0e-6);
+    EXPECT_NEAR(t.energy(deg + 180.0), t.energy(deg), 1.0e-9);
+  }
+  // not the 6-fold form
+  EXPECT_GT(std::fabs(t.energy(0.0) - t.energy(60.0)), 0.1);
+}
+
+TEST(UffTorsionTest, GradientsMatchEnergies)
+{
+  for (double deg : { 13.0, 37.0, 122.0 }) {
+    Twistable cases[] = { ethene(),      butadiene(),    methanol(),
+                          peroxide(),    acetaldehyde(), vinylSulfoxide(),
+                          vinylBorane(), formamide() };
+    for (Twistable& t : cases)
+      EXPECT_LT(t.gradientError(deg), 1.0e-4);
+  }
+}
