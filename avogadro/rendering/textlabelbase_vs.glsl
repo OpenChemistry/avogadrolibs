@@ -1,8 +1,5 @@
 #version 400
 precision highp float;
-// Modelview/projection matrix
-uniform mat4 mv;
-uniform mat4 proj;
 
 // anchor position
 uniform vec3 anchor;
@@ -38,7 +35,7 @@ void alignToPixelCenter(inout vec4 clipCoord)
 void main(void)
 {
   // Transform to eye coordinates:
-  vec4 eyeAnchor = mv * vec4(anchor, 1.0);
+  vec4 eyeAnchor = modelView * vec4(anchor, 1.0);
 
   // Apply radius
   // Scale about camera origin, that shifts z forward by radius.
@@ -49,11 +46,11 @@ void main(void)
   //   = 1 + radius/eyeAnchor.z
 
   // That keeps the screen position only under perspective. An orthographic
-  // projection (proj[3][3] == 1, 0 for perspective) views along -z
+  // projection (projection[3][3] == 1, 0 for perspective) views along -z
   // everywhere, so scaling would pull the label toward the view center;
   // translate along z instead.
   float MIN_DEPTH = 1.0e-06;
-  if (proj[3][3] != 0.0) {
+  if (projection[3][3] != 0.0) {
     eyeAnchor.z += radius;
   } else if(-eyeAnchor.z > MIN_DEPTH) {
     float scale = 1.0 + radius / eyeAnchor.z;
@@ -61,7 +58,7 @@ void main(void)
   }
 
   // Transform to clip coordinates
-  vec4 clipAnchor = proj * eyeAnchor;
+  vec4 clipAnchor = projection * eyeAnchor;
 
   // Move the anchor to a pixel center:
   alignToPixelCenter(clipAnchor);

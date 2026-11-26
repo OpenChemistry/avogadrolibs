@@ -9,7 +9,7 @@
 #include "bufferobject.h"
 #include "camera.h"
 #include "scene.h"
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
 #include "visitor.h"
@@ -20,11 +20,6 @@
 #include <iostream>
 #include <iterator>
 #include <limits>
-
-namespace {
-#include "mesh_fs.h"
-#include "mesh_vs.h"
-} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -46,10 +41,7 @@ public:
   BufferObject vbo;
   BufferObject ibo;
   VertexArrayObject vao;
-
-  inline static Shader* vertexShader = nullptr;
-  inline static Shader* fragmentShader = nullptr;
-  inline static ShaderProgram* program = nullptr;
+  ContextStamp contextStamp;
 
   size_t numberOfVertices;
   size_t numberOfIndices;
@@ -87,30 +79,15 @@ void MeshGeometry::update()
   if (m_vertices.empty() || m_indices.empty())
     return;
 
-  // Build and link the shader if it has not been used yet.
-  // Must be done before VAO setup since we need the program for attribute
+  // The program must exist before VAO setup since we need it for attribute
   // setup.
-  if (d->vertexShader == nullptr) {
-    d->vertexShader = new Shader;
-    d->vertexShader->setType(Shader::Vertex);
-    d->vertexShader->setSource(mesh_vs);
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Mesh);
+  if (program == nullptr)
+    return;
 
-    d->fragmentShader = new Shader;
-    d->fragmentShader->setType(Shader::Fragment);
-    d->fragmentShader->setSource(mesh_fs);
-
-    if (!d->vertexShader->compile())
-      cout << d->vertexShader->error() << '\n';
-    if (!d->fragmentShader->compile())
-      cout << d->fragmentShader->error() << '\n';
-
-    if (d->program == nullptr)
-      d->program = new ShaderProgram;
-    d->program->attachShader(*d->vertexShader);
-    d->program->attachShader(*d->fragmentShader);
-    if (!d->program->link())
-      cout << d->program->error() << '\n';
-  }
+  if (d->contextStamp.forgetIfReplaced(d->vbo, d->ibo, d->vao))
+    m_dirty = true;
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
@@ -122,7 +99,6 @@ void MeshGeometry::update()
     d->vbo.bind();
     d->ibo.bind();
 
-    ShaderProgram* program = d->program;
     if (!program->enableAttributeArray("vertex"))
       cout << program->error() << '\n';
     if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
@@ -158,10 +134,14 @@ void MeshGeometry::render(const Camera& camera)
   if (m_indices.empty() || m_vertices.empty())
     return;
 
+  FallbackRenderContext fallbackContext;
+
   // Prepare the VBOs, IBOs, VAO, and shader program if necessary.
   update();
 
-  ShaderProgram* program = d->program;
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::Mesh);
+  if (program == nullptr)
+    return;
 
   if (!program->bind())
     cout << program->error() << '\n';
@@ -169,16 +149,7 @@ void MeshGeometry::render(const Camera& camera)
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!program->setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << program->error() << '\n';
-  }
-  if (!program->setUniformValue("projection", camera.projection().matrix())) {
-    cout << program->error() << '\n';
-  }
-  Matrix3f normalMatrix = camera.modelView().linear().inverse().transpose();
-  if (!program->setUniformValue("normalMatrix", normalMatrix))
-    std::cout << program->error() << '\n';
+  RenderContext::useCamera(camera);
   if (!program->setUniformValue("normalSign", -1.0f))
     std::cout << program->error() << '\n';
 

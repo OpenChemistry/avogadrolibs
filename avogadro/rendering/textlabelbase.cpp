@@ -9,7 +9,7 @@
 #include "blendstateguard_p.h"
 #include "bufferobject.h"
 #include "camera.h"
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
 #include "textrenderstrategy.h"
 #include "texture2d.h"
@@ -19,11 +19,6 @@
 #include <avogadro/core/array.h>
 #include <avogadro/core/matrix.h>
 #include <avogadro/core/vector.h>
-
-namespace {
-#include "textlabelbase_fs.h"
-#include "textlabelbase_vs.h"
-} // namespace
 
 #include <algorithm>
 #include <cmath>
@@ -53,7 +48,6 @@ public:
   VertexArrayObject vao;
 
   // Sentinels:
-  bool shadersInvalid;
   bool textureInvalid;
   bool vboInvalid;
 
@@ -63,10 +57,8 @@ public:
   float pixelRatio = 1.0f;
   Texture2D texture;
 
-  // Shaders
-  inline static Shader* vertexShader = nullptr;
-  inline static Shader* fragmentShader = nullptr;
-  inline static ShaderProgram* shaderProgram = nullptr;
+  // The GL context that vbo, vao and texture were created in.
+  ContextStamp contextStamp;
 
   RenderImpl();
   ~RenderImpl() {}
@@ -78,12 +70,12 @@ public:
                   TextProperties::VAlign vAlign);
 
   void render(const Camera& cam);
-  void compileShaders();
-  void uploadVbo();
+  void forgetObjectsOfReplacedContext();
+  void uploadVbo(ShaderProgram& shaderProgram);
 };
 
 TextLabelBase::RenderImpl::RenderImpl()
-  : vertices(4), shadersInvalid(true), textureInvalid(true), vboInvalid(true),
+  : vertices(4), textureInvalid(true), vboInvalid(true),
     anchor(Vector3f::Zero()), radius(0.0)
 {
   texture.setMinFilter(Texture2D::Linear);
@@ -156,8 +148,19 @@ void TextLabelBase::RenderImpl::setOffsets(const Vector2i& dimensions,
   vboInvalid = true;
 }
 
+// Have the texture and buffer rebuilt if the GL context was replaced.
+void TextLabelBase::RenderImpl::forgetObjectsOfReplacedContext()
+{
+  if (contextStamp.forgetIfReplaced(vbo, vao, texture)) {
+    textureInvalid = true;
+    vboInvalid = true;
+  }
+}
+
 void TextLabelBase::RenderImpl::render(const Camera& cam)
 {
+  forgetObjectsOfReplacedContext();
+
   // The texture should be valid at this point.
   if (textureInvalid) {
     std::cerr << "Unable to render text label -- no texture set. "
@@ -166,14 +169,14 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
     return;
   }
 
-  // Prepare GL - shaders must be compiled before VAO setup
-  if (shadersInvalid)
-    compileShaders();
+  // Prepare GL - the program must exist before VAO setup
+  ShaderProgram* shaderProgram =
+    RenderContext::currentProgram(ShaderId::TextLabel);
+  if (shaderProgram == nullptr)
+    return;
   if (vboInvalid)
-    uploadVbo();
+    uploadVbo(*shaderProgram);
 
-  const Matrix4f mv(cam.modelView().matrix());
-  const Matrix4f proj(cam.projection().matrix());
   const Vector2i vpDims(static_cast<int>(cam.width() * pixelRatio),
                         static_cast<int>(cam.height() * pixelRatio));
 
@@ -184,8 +187,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   }
 
   // Setup shaders and uniforms
-  if (!shaderProgram->bind() || !shaderProgram->setUniformValue("mv", mv) ||
-      !shaderProgram->setUniformValue("proj", proj) ||
+  if (!shaderProgram->bind() || !RenderContext::useCamera(cam) ||
       !shaderProgram->setUniformValue("vpDims", vpDims) ||
       !shaderProgram->setUniformValue("anchor", anchor) ||
       !shaderProgram->setUniformValue("radius", radius) ||
@@ -215,48 +217,7 @@ void TextLabelBase::RenderImpl::render(const Camera& cam)
   shaderProgram->release();
 }
 
-void TextLabelBase::RenderImpl::compileShaders()
-{
-  if (vertexShader != nullptr && fragmentShader != nullptr &&
-      shaderProgram != nullptr)
-    return;
-
-  if (vertexShader == nullptr)
-    vertexShader = new Shader;
-  vertexShader->setType(Shader::Vertex);
-  vertexShader->setSource(textlabelbase_vs);
-  if (!vertexShader->compile()) {
-    std::cerr << vertexShader->error() << '\n';
-    return;
-  }
-
-  if (fragmentShader == nullptr)
-    fragmentShader = new Shader;
-  fragmentShader->setType(Shader::Fragment);
-  fragmentShader->setSource(textlabelbase_fs);
-  if (!fragmentShader->compile()) {
-    std::cerr << fragmentShader->error() << '\n';
-    return;
-  }
-
-  if (shaderProgram == nullptr)
-    shaderProgram = new ShaderProgram;
-  shaderProgram->attachShader(*vertexShader);
-  shaderProgram->attachShader(*fragmentShader);
-  if (!shaderProgram->link()) {
-    std::cerr << shaderProgram->error() << '\n';
-    return;
-  }
-  /*  shaderProgram->detachShader(vertexShader);
-    shaderProgram->detachShader(fragmentShader);
-    vertexShader->cleanup();
-    fragmentShader->cleanup();
-    */
-
-  shadersInvalid = false;
-}
-
-void TextLabelBase::RenderImpl::uploadVbo()
+void TextLabelBase::RenderImpl::uploadVbo(ShaderProgram& shaderProgram)
 {
   if (!vbo.upload(vertices, BufferObject::ArrayBuffer)) {
     std::cerr << "TextLabelBase VBO error: " << vbo.error() << '\n';
@@ -267,16 +228,16 @@ void TextLabelBase::RenderImpl::uploadVbo()
   vao.bind();
   vbo.bind();
 
-  if (!shaderProgram->enableAttributeArray("offset") ||
-      !shaderProgram->useAttributeArray("offset", PackedVertex::offsetOffset(),
-                                        sizeof(PackedVertex), IntType, 2,
-                                        ShaderProgram::NoNormalize) ||
-      !shaderProgram->enableAttributeArray("texCoord") ||
-      !shaderProgram->useAttributeArray(
-        "texCoord", PackedVertex::tcoordOffset(), sizeof(PackedVertex),
-        FloatType, 2, ShaderProgram::NoNormalize)) {
-    std::cerr << "Error setting up TextLabelBase VAO: "
-              << shaderProgram->error() << '\n';
+  if (!shaderProgram.enableAttributeArray("offset") ||
+      !shaderProgram.useAttributeArray("offset", PackedVertex::offsetOffset(),
+                                       sizeof(PackedVertex), IntType, 2,
+                                       ShaderProgram::NoNormalize) ||
+      !shaderProgram.enableAttributeArray("texCoord") ||
+      !shaderProgram.useAttributeArray("texCoord", PackedVertex::tcoordOffset(),
+                                       sizeof(PackedVertex), FloatType, 2,
+                                       ShaderProgram::NoNormalize)) {
+    std::cerr << "Error setting up TextLabelBase VAO: " << shaderProgram.error()
+              << '\n';
   }
 
   vao.release();
@@ -303,11 +264,14 @@ TextLabelBase::~TextLabelBase()
 
 void TextLabelBase::render(const Camera& camera)
 {
+  FallbackRenderContext fallbackContext;
   m_render->render(camera);
 }
 
 void TextLabelBase::buildTexture(const TextRenderStrategy& tren)
 {
+  m_render->forgetObjectsOfReplacedContext();
+
   if (!m_render->textureInvalid)
     return;
 
@@ -407,7 +371,6 @@ float TextLabelBase::getRadiusInternal() const
 
 void TextLabelBase::markDirty()
 {
-  m_render->shadersInvalid = true;
   m_render->textureInvalid = true;
   m_render->vboInvalid = true;
 }

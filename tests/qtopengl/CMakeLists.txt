@@ -12,6 +12,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets REQUIRED)
 set(tests
   GLWidget
   GLWidgetSettings
+  RendererTeardown
   QtTextLabel
   QtTextRenderStrategy
 )

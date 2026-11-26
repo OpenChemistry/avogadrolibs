@@ -68,6 +68,15 @@ public:
   bool release();
 
   /**
+   * Forget the GL buffer without deleting it, so the object is no longer ready
+   * and the next upload() creates a new buffer. Only for a buffer whose GL
+   * context has been destroyed: its name means nothing in any other context,
+   * where deleting it could delete an unrelated buffer. In a context that is
+   * still alive this leaks the buffer.
+   */
+  void abandon();
+
+  /**
    * @return the number of bytes passed to glBufferData by every BufferObject
    * in the process so far. Monotonic; take differences to measure a span.
    */

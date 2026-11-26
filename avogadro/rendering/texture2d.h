@@ -155,6 +155,16 @@ public:
 
   bool release() const;
 
+  /**
+   * Forget the GL texture without deleting it, so the texture is no longer
+   * ready and the next upload() creates a new one with the current filter and
+   * wrapping options. Only for a texture whose GL context has been destroyed:
+   * its name means nothing in any other context, where deleting it could
+   * delete an unrelated texture. In a context that is still alive this leaks
+   * the texture.
+   */
+  void abandon();
+
   std::string error() const { return m_error; }
 
 private:

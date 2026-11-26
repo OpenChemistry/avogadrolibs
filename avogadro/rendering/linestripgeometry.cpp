@@ -9,7 +9,7 @@
 #include "bufferobject.h"
 #include "camera.h"
 #include "scene.h"
-#include "shader.h"
+#include "rendercontext_p.h"
 #include "shaderprogram.h"
 #include "vertexarrayobject.h"
 #include "visitor.h"
@@ -19,11 +19,6 @@
 
 #include <iostream>
 #include <limits>
-
-namespace {
-#include "linestrip_fs.h"
-#include "linestrip_vs.h"
-} // namespace
 
 using Avogadro::Vector3f;
 using Avogadro::Vector3ub;
@@ -45,10 +40,7 @@ public:
 
   BufferObject vbo;
   VertexArrayObject vao;
-
-  Shader vertexShader;
-  Shader fragmentShader;
-  ShaderProgram program;
+  ContextStamp contextStamp;
 };
 
 LineStripGeometry::LineStripGeometry()
@@ -79,28 +71,15 @@ void LineStripGeometry::update()
   if (m_vertices.empty())
     return;
 
-  // Build and link the shader if it has not been used yet.
-  // Must be done before VAO setup since we need the program for attribute
+  // The program must exist before VAO setup since we need it for attribute
   // setup.
-  if (d->vertexShader.type() == Shader::Unknown) {
-    d->vertexShader.setType(Shader::Vertex);
-    d->vertexShader.setSource(linestrip_vs);
-    d->fragmentShader.setType(Shader::Fragment);
-    d->fragmentShader.setSource(linestrip_fs);
-    if (!d->vertexShader.compile())
-      cout << d->vertexShader.error() << '\n';
-    if (!d->fragmentShader.compile())
-      cout << d->fragmentShader.error() << '\n';
-    d->program.attachShader(d->vertexShader);
-    d->program.attachShader(d->fragmentShader);
-    if (!d->program.link())
-      cout << d->program.error() << '\n';
+  FallbackRenderContext fallbackContext;
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::LineStrip);
+  if (program == nullptr)
+    return;
 
-    d->program.detachShader(d->vertexShader);
-    d->program.detachShader(d->fragmentShader);
-    d->vertexShader.cleanup();
-    d->fragmentShader.cleanup();
-  }
+  if (d->contextStamp.forgetIfReplaced(d->vbo, d->vao))
+    m_dirty = true;
 
   // Check if the VBOs are ready, if not get them ready.
   if (!d->vbo.ready() || m_dirty) {
@@ -110,19 +89,19 @@ void LineStripGeometry::update()
     d->vao.bind();
     d->vbo.bind();
 
-    if (!d->program.enableAttributeArray("vertex"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray("vertex", PackedVertex::vertexOffset(),
-                                      sizeof(PackedVertex), FloatType, 3,
-                                      ShaderProgram::NoNormalize)) {
-      cout << d->program.error() << '\n';
+    if (!program->enableAttributeArray("vertex"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray("vertex", PackedVertex::vertexOffset(),
+                                    sizeof(PackedVertex), FloatType, 3,
+                                    ShaderProgram::NoNormalize)) {
+      cout << program->error() << '\n';
     }
-    if (!d->program.enableAttributeArray("color"))
-      cout << d->program.error() << '\n';
-    if (!d->program.useAttributeArray("color", PackedVertex::colorOffset(),
-                                      sizeof(PackedVertex), UCharType, 4,
-                                      ShaderProgram::Normalize)) {
-      cout << d->program.error() << '\n';
+    if (!program->enableAttributeArray("color"))
+      cout << program->error() << '\n';
+    if (!program->useAttributeArray("color", PackedVertex::colorOffset(),
+                                    sizeof(PackedVertex), UCharType, 4,
+                                    ShaderProgram::Normalize)) {
+      cout << program->error() << '\n';
     }
 
     d->vao.release();
@@ -137,22 +116,22 @@ void LineStripGeometry::render(const Camera& camera)
       m_lineWidths.size() != m_lineStarts.size())
     return;
 
+  FallbackRenderContext fallbackContext;
+
   // Prepare the VBO, VAO, and shader program if necessary.
   update();
 
-  if (!d->program.bind())
-    cout << d->program.error() << '\n';
+  ShaderProgram* program = RenderContext::currentProgram(ShaderId::LineStrip);
+  if (program == nullptr)
+    return;
+
+  if (!program->bind())
+    cout << program->error() << '\n';
 
   // Bind the VAO (captures all vertex attribute state)
   d->vao.bind();
 
-  // Set up our uniforms (model-view and projection matrices right now).
-  if (!d->program.setUniformValue("modelView", camera.modelView().matrix())) {
-    cout << d->program.error() << '\n';
-  }
-  if (!d->program.setUniformValue("projection", camera.projection().matrix())) {
-    cout << d->program.error() << '\n';
-  }
+  RenderContext::useCamera(camera);
 
   // Render the linestrips using the shader and VAO.
   auto startIter = m_lineStarts.begin();
@@ -178,7 +157,7 @@ void LineStripGeometry::render(const Camera& camera)
                static_cast<GLsizei>(endIndex - startIndex));
 
   d->vao.release();
-  d->program.release();
+  program->release();
 }
 
 void LineStripGeometry::clear()

@@ -23,6 +23,9 @@ GeometryNode::~GeometryNode()
 
 void GeometryNode::accept(Visitor& visitor)
 {
+  // A hidden node hides all of its drawables.
+  if (!isVisible())
+    return;
   visitor.visit(*this);
   for (auto& m_drawable : m_drawables) {
     m_drawable->accept(visitor);
@@ -72,6 +75,8 @@ void GeometryNode::clearDrawables()
 
 void GeometryNode::render(const Camera& camera)
 {
+  if (!isVisible())
+    return;
   for (auto& m_drawable : m_drawables) {
     if (m_drawable->isVisible())
       m_drawable->render(camera);
@@ -83,6 +88,8 @@ std::multimap<float, Identifier> GeometryNode::hits(
   const Vector3f& rayDirection) const
 {
   std::multimap<float, Identifier> result;
+  if (!isVisible())
+    return result;
   for (auto* m_drawable : m_drawables) {
     std::multimap<float, Identifier> drawableHits;
     if (m_drawable->isVisible())
@@ -96,6 +103,8 @@ std::multimap<float, Identifier> GeometryNode::hits(
 Array<Identifier> GeometryNode::areaHits(const Frustrum& f) const
 {
   Array<Identifier> result;
+  if (!isVisible())
+    return result;
   for (auto* m_drawable : m_drawables) {
     Array<Identifier> drawableHits;
     if (m_drawable->isVisible())
