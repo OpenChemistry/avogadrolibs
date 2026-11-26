@@ -142,18 +142,18 @@ QWidget* CrystalScene::setupWidget()
     spin->setSingleStep(0.25);
     spin->setDecimals(2);
     spin->setValue(m_lineWidth);
-    connect(spin, SIGNAL(valueChanged(double)), SLOT(setLineWidth(double)));
+    connect(spin, &QDoubleSpinBox::valueChanged, this, &CrystalScene::setLineWidth);
     auto* form = new QFormLayout;
     form->addRow(tr("Line width:"), spin);
 
     auto* multiColor = new QCheckBox;
     multiColor->setChecked(m_multiColor);
     form->addRow(tr("Color axes:"), multiColor);
-    connect(multiColor, SIGNAL(toggled(bool)), SLOT(setMultiColor(bool)));
+    connect(multiColor, &QCheckBox::toggled, this, &CrystalScene::setMultiColor);
 
     auto* color = new QtGui::ColorButton;
-    connect(color, SIGNAL(colorChanged(const QColor&)),
-            SLOT(setColor(const QColor&)));
+    connect(color, &QtGui::ColorButton::colorChanged, this,
+            &CrystalScene::setColor);
     form->addRow(tr("Line color:"), color);
 
     v->addLayout(form);
