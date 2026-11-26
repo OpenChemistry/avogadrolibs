@@ -36,10 +36,15 @@ inline bool distanceGradient(const Vector3& a, const Vector3& b, Real& distance,
 
 /**
  * Calculate the components of the gradient for the angle a-b-c using atan2.
+ * @param minCrossNorm the gradient is zeroed (and 0.0 returned) when
+ * |ab x cb| is below this, i.e., for nearly collinear atoms where the
+ * direction of d(angle)/dx is ill-defined. Energy terms like cos(n * angle)
+ * whose derivative vanishes as sin(angle) can use a much smaller value.
  * @return the angle between a-b-c in radians or 0.0 if ill-defined
  */
 inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
-                          Vector3& aGrad, Vector3& bGrad, Vector3& cGrad)
+                          Vector3& aGrad, Vector3& bGrad, Vector3& cGrad,
+                          Real minCrossNorm = 1.e-6)
 {
   cGrad = bGrad = aGrad = Vector3::Zero();
 
@@ -54,7 +59,7 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   const Real dot = ab.dot(cb);
   const Vector3 ab_cross_cb = ab.cross(cb);
   const Real crossNorm = ab_cross_cb.norm();
-  if (!std::isfinite(crossNorm) || crossNorm < 1.e-6)
+  if (!std::isfinite(crossNorm) || crossNorm < minCrossNorm)
     return 0.0;
 
   Real angle = atan2(crossNorm, dot);

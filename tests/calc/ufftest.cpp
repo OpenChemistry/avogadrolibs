@@ -120,13 +120,12 @@ INSTANTIATE_TEST_SUITE_P(
   UffTest, UffGradientTest,
   ::testing::Values("acetylene.xyz", "c2h2f2.xyz", "methane.xyz",
                     "formaldehyde.xyz", "H2O.xyz", "H2S.xyz", "H2Se.xyz",
-                    "hooh.xyz", "PF5.xyz", "SF4.xyz", "SF6.xyz"
+                    "hooh.xyz", "PF5.xyz", "SF4.xyz", "SF6.xyz", "XeF4.xyz"
                     // Add more molecule files here as needed
                     ));
 
-// XeF4 is exactly square planar (Xe4+4), so its F-Xe-F angles are 180 degrees
-// and the analytical angle gradient is dropped for such degenerate (collinear)
-// angles. Check the gradient on a distorted copy instead.
+// XeF4.xyz (above) has trans F-Xe-F angles within 1e-7 radians of 180
+// degrees, where the gradient used to be dropped. Check a distorted copy too.
 TEST(UffGradientDistortedTest, XenonTetrafluoride)
 {
   XyzFormat xyz;
@@ -838,4 +837,24 @@ TEST(UffOopTest, PhosphorusMinimumEnergyIsZero)
     lowest = std::min(lowest, uff.oopEnergy(x));
   }
   EXPECT_NEAR(lowest, 0.0, 1.0e-4);
+}
+
+// Exactly collinear F-Xe-F (a perfect square): the gradient must stay finite
+// and the angle term (zero force at 180 degrees) must not disturb the bonds.
+TEST(UffGradientDistortedTest, ExactlySquarePlanarXenonTetrafluoride)
+{
+  Molecule molecule;
+  Index xe = addAt(molecule, 54, 0.0, 0.0, 0.0);
+  const double dirs[4][2] = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+  for (const auto& d : dirs)
+    bond(molecule, xe, addAt(molecule, 9, 2.0 * d[0], 2.0 * d[1], 0.0));
+  UFF uff;
+  uff.setMolecule(&molecule);
+  Eigen::VectorXd x(15);
+  for (Index i = 0; i < 5; ++i)
+    x.segment<3>(3 * i) = molecule.atomPosition3d(i);
+  Eigen::VectorXd grad = Eigen::VectorXd::Zero(15);
+  uff.angleGradient(x, grad);
+  EXPECT_TRUE(grad.allFinite());
+  EXPECT_LT(grad.cwiseAbs().maxCoeff(), 1.0e-6);
 }

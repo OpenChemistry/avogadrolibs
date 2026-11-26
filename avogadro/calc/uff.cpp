@@ -876,8 +876,17 @@ public:
       Vector3d grad_j = Vector3d::Zero();
       Vector3d grad_k = Vector3d::Zero();
       if (needsGradient) {
-        thetaGradient =
-          ::Avogadro::Calc::angleGradient(vi, vj, vk, grad_i, grad_j, grad_k);
+        // d(theta)/dx ~ 1/sin(theta) is large for nearly linear angles, but
+        // the periodic forms (Linear, Trigonal, SquarePlanar, Octahedral,
+        // Tetrahedral) have dE/dtheta ~ sin(theta), so the product stays
+        // finite and must not be dropped (e.g., trans F-Xe-F in XeF4 is
+        // within 1e-7 radians of 180 degrees). The harmonic fallback has no
+        // such cancellation, so it keeps the default cutoff.
+        const bool harmonic = angle.coordination == TrigonalBipyramidal ||
+                              angle.coordination == TrigonalBipentagonal ||
+                              angle.coordination == Other;
+        thetaGradient = ::Avogadro::Calc::angleGradient(
+          vi, vj, vk, grad_i, grad_j, grad_k, harmonic ? 1.e-6 : 1.e-14);
       }
 
       if (needsEnergy) {
