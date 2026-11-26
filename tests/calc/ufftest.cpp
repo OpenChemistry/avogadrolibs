@@ -14,6 +14,7 @@
 #include <avogadro/core/constraint.h>
 #include <avogadro/core/elements.h>
 #include <avogadro/core/molecule.h>
+#include <avogadro/core/unitcell.h>
 #include <avogadro/core/vector.h>
 
 #include <avogadro/io/xyzformat.h>
@@ -1359,5 +1360,246 @@ TEST(UffTorsionSwitchTest, GradientMatchesEnergyNearLinear)
         }
       }
     }
+  }
+}
+
+// ---- Bonded terms across periodic boundaries ------------------------------
+
+namespace {
+using Avogadro::Core::UnitCell;
+
+// n-butane (the heavy-atom backbone is gauche so no angle is 180 degrees)
+Molecule butane()
+{
+  Molecule m;
+  Index c0 = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index c1 = addAt(m, 6, 1.53, 0.1, 0.0);
+  Index c2 = addAt(m, 6, 2.1, 1.5, 0.1);
+  Index c3 = addAt(m, 6, 3.6, 1.6, 0.9);
+  bond(m, c0, c1);
+  bond(m, c1, c2);
+  bond(m, c2, c3);
+  // hydrogen offsets from each carbon (3 on the ends, 2 inside)
+  const std::vector<std::vector<Vector3>> offsets = {
+    { Vector3(-0.4, 0.9, 0.3), Vector3(-0.4, -0.6, 0.8),
+      Vector3(-0.5, -0.4, -0.9) },
+    { Vector3(0.0, -0.7, 0.8), Vector3(0.1, -0.6, -0.9) },
+    { Vector3(0.2, 0.7, -0.9), Vector3(-0.8, 1.2, 0.5) },
+    { Vector3(0.5, 0.8, -0.5), Vector3(0.7, -0.1, -0.2),
+      Vector3(0.9, 1.0, 0.8) }
+  };
+  const Index carbons[4] = { c0, c1, c2, c3 };
+  for (int c = 0; c < 4; ++c) {
+    const Vector3 p = m.atomPosition3d(carbons[c]);
+    for (const Vector3& o : offsets[c])
+      bond(m, carbons[c],
+           addAt(m, 1, p.x() + o.x(), p.y() + o.y(), p.z() + o.z()));
+  }
+  return m;
+}
+
+// A pyramidalized acetaldehyde, so the inversion term is not zero
+Molecule pyramidalAcetaldehyde()
+{
+  Molecule m;
+  Index cm = addAt(m, 6, 0.0, 0.0, 0.0);
+  Index ca = addAt(m, 6, 1.5, 0.1, 0.0);
+  bond(m, cm, ca);
+  bond(m, ca, addAt(m, 8, 2.1, 1.1, 0.2), 2);
+  bond(m, ca, addAt(m, 1, 2.0, -0.9, -0.3));
+  bond(m, cm, addAt(m, 1, -0.4, 1.0, 0.1));
+  bond(m, cm, addAt(m, 1, -0.4, -0.5, 0.9));
+  bond(m, cm, addAt(m, 1, -0.4, -0.5, -0.9));
+  return m;
+}
+
+// A copy of the molecule in a cell with every atom wrapped back into it,
+// after moving the molecule by `shift`, so it straddles the cell boundary.
+Molecule wrappedInCell(const Molecule& cluster, const UnitCell& cell,
+                       const Vector3& shift)
+{
+  Molecule m(cluster);
+  m.setUnitCell(new UnitCell(cell));
+  Vector3 center = Vector3::Zero();
+  for (Index i = 0; i < m.atomCount(); ++i)
+    center += m.atomPosition3d(i);
+  center /= static_cast<double>(m.atomCount());
+  for (Index i = 0; i < m.atomCount(); ++i)
+    m.setAtomPosition3d(
+      i, cell.wrapCartesian(m.atomPosition3d(i) - center + shift));
+  return m;
+}
+
+const double halfPi = 1.5707963267949;
+// cubic and triclinic
+const UnitCell cubicCell(12.0, 12.0, 12.0, halfPi, halfPi, halfPi);
+const UnitCell triclinicCell(12.0, 13.0, 14.0, 1.40, 1.65, 1.75);
+
+struct BondedEnergies
+{
+  double bond, angle, oop, torsion;
+};
+
+BondedEnergies bondedEnergies(Molecule& molecule, const Eigen::VectorXd& x)
+{
+  UFF uff;
+  uff.setMolecule(&molecule);
+  return { uff.bondEnergy(x), uff.angleEnergy(x), uff.oopEnergy(x),
+           uff.torsionEnergy(x) };
+}
+
+// the largest bond length between atoms in the raw coordinates
+double longestRawBond(const Molecule& molecule)
+{
+  double longest = 0.0;
+  for (Index b = 0; b < molecule.bondCount(); ++b) {
+    const auto bnd = molecule.bond(b);
+    longest = std::max(longest, (molecule.atomPosition3d(bnd.atom1().index()) -
+                                 molecule.atomPosition3d(bnd.atom2().index()))
+                                  .norm());
+  }
+  return longest;
+}
+
+// Test molecules with a wrapped copy in each cell
+struct PeriodicCase
+{
+  Molecule cluster;
+  Molecule periodic;
+};
+
+std::vector<PeriodicCase> periodicCases()
+{
+  std::vector<PeriodicCase> cases;
+  for (const Molecule& cluster : { butane(), pyramidalAcetaldehyde() }) {
+    for (const UnitCell* cell : { &cubicCell, &triclinicCell }) {
+      for (const Vector3& shift :
+           { Vector3(0.0, 0.0, 0.0), Vector3(0.3, -0.7, 0.45) }) {
+        cases.push_back({ cluster, wrappedInCell(cluster, *cell, shift) });
+      }
+    }
+  }
+  return cases;
+}
+} // namespace
+
+// Wrap a molecule into the cell and every bonded term is the same as for
+// the contiguous cluster without a cell.
+TEST(UffPeriodicTest, BondedTermsMatchTheUnwrappedCluster)
+{
+  int straddling = 0;
+  for (PeriodicCase& c : periodicCases()) {
+    // a long raw bond means the molecule crosses the cell boundary
+    if (longestRawBond(c.periodic) > 4.0)
+      ++straddling;
+    const BondedEnergies expected =
+      bondedEnergies(c.cluster, positionsOf(c.cluster));
+    const BondedEnergies actual =
+      bondedEnergies(c.periodic, positionsOf(c.periodic));
+    EXPECT_NEAR(actual.bond, expected.bond, 1.0e-8);
+    EXPECT_NEAR(actual.angle, expected.angle, 1.0e-8);
+    EXPECT_NEAR(actual.oop, expected.oop, 1.0e-8);
+    EXPECT_NEAR(actual.torsion, expected.torsion, 1.0e-8);
+  }
+  // make sure the test really has bonds across the boundary
+  EXPECT_GE(straddling, 4);
+}
+
+// Analytic gradients are the derivatives of the minimum image energies.
+TEST(UffPeriodicTest, GradientsMatchEnergiesAcrossTheBoundary)
+{
+  for (PeriodicCase& c : periodicCases()) {
+    Molecule& m = c.periodic;
+    const double bondError = maxTermGradientError(
+      m, [](UFF& u, const Eigen::VectorXd& x) { return u.bondEnergy(x); },
+      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
+        u.bondGradient(x, g);
+      });
+    const double angleError = maxTermGradientError(
+      m, [](UFF& u, const Eigen::VectorXd& x) { return u.angleEnergy(x); },
+      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
+        u.angleGradient(x, g);
+      });
+    const double oopError = maxTermGradientError(
+      m, [](UFF& u, const Eigen::VectorXd& x) { return u.oopEnergy(x); },
+      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
+        u.oopGradient(x, g);
+      });
+    const double torsionError = maxTermGradientError(
+      m, [](UFF& u, const Eigen::VectorXd& x) { return u.torsionEnergy(x); },
+      [](UFF& u, const Eigen::VectorXd& x, Eigen::VectorXd& g) {
+        u.torsionGradient(x, g);
+      });
+    EXPECT_LT(bondError, 1.0e-4);
+    EXPECT_LT(angleError, 1.0e-4);
+    EXPECT_LT(oopError, 1.0e-4);
+    EXPECT_LT(torsionError, 1.0e-4);
+  }
+}
+
+// Moving the whole molecule and wrapping it back into the cell changes the
+// raw coordinates, not the energy.
+TEST(UffPeriodicTest, TranslatingAndWrappingKeepsTheEnergy)
+{
+  const Vector3 shifts[] = { Vector3(1.9, 0.7, -0.3), Vector3(-5.5, 3.2, 8.8),
+                             Vector3(12.0, -13.0, 29.0) };
+  for (PeriodicCase& c : periodicCases()) {
+    const BondedEnergies reference =
+      bondedEnergies(c.periodic, positionsOf(c.periodic));
+    const UnitCell cell = *c.periodic.unitCell();
+    for (const Vector3& shift : shifts) {
+      Molecule moved(c.periodic);
+      moved.setUnitCell(new UnitCell(cell));
+      for (Index i = 0; i < moved.atomCount(); ++i)
+        moved.setAtomPosition3d(
+          i, cell.wrapCartesian(moved.atomPosition3d(i) + shift));
+      const BondedEnergies after = bondedEnergies(moved, positionsOf(moved));
+      EXPECT_NEAR(after.bond, reference.bond, 1.0e-8);
+      EXPECT_NEAR(after.angle, reference.angle, 1.0e-8);
+      EXPECT_NEAR(after.oop, reference.oop, 1.0e-8);
+      EXPECT_NEAR(after.torsion, reference.torsion, 1.0e-8);
+    }
+  }
+}
+
+// A chain that is bonded across the cell boundary on its own, with no end:
+// four CH2 groups of zigzag polyethylene (a ring in the bond graph) along a.
+// The total bonded energy must not depend on where the cell boundary falls.
+TEST(UffPeriodicTest, InfiniteChainDoesNotDependOnTheBoundary)
+{
+  auto chain = [](double offset) {
+    Molecule m;
+    m.setUnitCell(new UnitCell(5.12, 14.0, 14.0, halfPi, halfPi, halfPi));
+    const UnitCell& cell = *m.unitCell();
+    Index carbons[4];
+    for (int c = 0; c < 4; ++c) {
+      const double y = (c % 2 == 0) ? 0.43 : -0.43;
+      carbons[c] = addAt(m, 6, 1.28 * c + offset, y, 0.0);
+    }
+    for (int c = 0; c < 4; ++c) {
+      bond(m, carbons[c], carbons[(c + 1) % 4]);
+      const double s = (c % 2 == 0) ? 1.0 : -1.0;
+      for (double z : { 0.89, -0.89 }) {
+        Vector3 p = m.atomPosition3d(carbons[c]) + Vector3(0.0, s * 0.63, z);
+        bond(m, carbons[c], addAt(m, 1, p.x(), p.y(), p.z()));
+      }
+    }
+    for (Index i = 0; i < m.atomCount(); ++i)
+      m.setAtomPosition3d(i, cell.wrapCartesian(m.atomPosition3d(i)));
+    return m;
+  };
+  Molecule reference = chain(0.0);
+  const BondedEnergies expected =
+    bondedEnergies(reference, positionsOf(reference));
+  // the periodic bond is about 1.5 A, not a cell length: finite and small
+  EXPECT_LT(expected.bond, 5.0);
+  EXPECT_LT(expected.angle, 30.0);
+  for (double offset : { 0.4, 1.0, 2.7, 4.9 }) {
+    Molecule m = chain(offset);
+    const BondedEnergies actual = bondedEnergies(m, positionsOf(m));
+    EXPECT_NEAR(actual.bond, expected.bond, 1.0e-8);
+    EXPECT_NEAR(actual.angle, expected.angle, 1.0e-8);
+    EXPECT_NEAR(actual.oop, expected.oop, 1.0e-8);
+    EXPECT_NEAR(actual.torsion, expected.torsion, 1.0e-8);
   }
 }

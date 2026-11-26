@@ -822,13 +822,34 @@ public:
     }
   }
 
+  // True if bonded terms should use the minimum image convention: there is a
+  // unit cell and it can be inverted (a singular cell would give NaN).
+  bool usesMinimumImage() const
+  {
+    return m_cell != nullptr && m_cell->isRegular();
+  }
+
+  // The vector from atom a to atom b. Bonded atoms in a periodic cell may sit
+  // on opposite sides of the boundary, so take the shortest periodic image.
+  // The angle, inversion and torsion terms chain these vectors to place their
+  // atoms as one connected fragment. The gradient with respect to each atom
+  // is unchanged by the (constant) lattice shifts, so those terms can use the
+  // shifted points for both the energy and the gradient.
+  Vector3d bondedVector(const Eigen::VectorXd& x, Index a, Index b,
+                        bool periodic) const
+  {
+    const Vector3d v = x.segment<3>(3 * b) - x.segment<3>(3 * a);
+    return periodic ? Vector3d(m_cell->minimumImage(v)) : v;
+  }
+
   void bondEvaluate(const Eigen::VectorXd& x, Real* energy,
                     Eigen::VectorXd* grad)
   {
+    const bool periodic = usesMinimumImage();
     for (const UFFBond& bond : m_bonds) {
       const Index i = bond._atom1;
       const Index j = bond._atom2;
-      const Vector3d diff = x.segment<3>(3 * i) - x.segment<3>(3 * j);
+      const Vector3d diff = -bondedVector(x, i, j, periodic);
       const Real r = diff.norm();
       const Real dr = r - bond._r0;
 
@@ -852,6 +873,7 @@ public:
   {
     const bool needsGradient = grad != nullptr;
     const bool needsEnergy = energy != nullptr;
+    const bool periodic = usesMinimumImage();
 
     for (const UFFAngle& angle : m_angles) {
       const Index i = angle._atom1;
@@ -863,9 +885,10 @@ public:
       const Real c1 = angle._c1;
       const Real c2 = angle._c2;
 
-      const Vector3d vi = x.segment<3>(3 * i);
+      // the vertex j, with i and k at their shortest images from it
       const Vector3d vj = x.segment<3>(3 * j);
-      const Vector3d vk = x.segment<3>(3 * k);
+      const Vector3d vi = vj + bondedVector(x, j, i, periodic);
+      const Vector3d vk = vj + bondedVector(x, j, k, periodic);
 
       Real thetaGradient = 0.0;
       Vector3d grad_i = Vector3d::Zero();
@@ -974,6 +997,7 @@ public:
                    Eigen::VectorXd* grad)
   {
     const bool needsGradient = grad != nullptr;
+    const bool periodic = usesMinimumImage();
 
     for (const UFFOOP& oop : m_oops) {
       // for UFF, i is the central atom
@@ -987,10 +1011,11 @@ public:
       const Real c1 = oop._c1;
       const Real c2 = oop._c2;
 
+      // all three neighbors at their shortest images from the central atom
       const Vector3d vi = x.segment<3>(3 * i);
-      const Vector3d vj = x.segment<3>(3 * j);
-      const Vector3d vk = x.segment<3>(3 * k);
-      const Vector3d vl = x.segment<3>(3 * l);
+      const Vector3d vj = vi + bondedVector(x, i, j, periodic);
+      const Vector3d vk = vi + bondedVector(x, i, k, periodic);
+      const Vector3d vl = vi + bondedVector(x, i, l, periodic);
 
       Real angleGradient = 0.0;
       Vector3d grad_i = Vector3d::Zero();
@@ -1066,6 +1091,7 @@ public:
                        Eigen::VectorXd* grad)
   {
     const bool needsGradient = grad != nullptr;
+    const bool periodic = usesMinimumImage();
 
     for (const UFFTorsion& torsion : m_torsions) {
       const Index i = torsion._atom1;
@@ -1073,10 +1099,11 @@ public:
       const Index k = torsion._atom3;
       const Index l = torsion._atom4;
 
+      // follow the chain i-j-k-l so it stays contiguous across the boundary
       const Vector3d vi = x.segment<3>(3 * i);
-      const Vector3d vj = x.segment<3>(3 * j);
-      const Vector3d vk = x.segment<3>(3 * k);
-      const Vector3d vl = x.segment<3>(3 * l);
+      const Vector3d vj = vi + bondedVector(x, i, j, periodic);
+      const Vector3d vk = vj + bondedVector(x, j, k, periodic);
+      const Vector3d vl = vk + bondedVector(x, k, l, periodic);
 
       // switch off the torsion near linear bond angles (zero-length bonds
       // have no angle or dihedral, so the term is skipped for them too)
