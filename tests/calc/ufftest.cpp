@@ -591,6 +591,80 @@ TEST(UffTypingTest, BenzonitrileKeepsSpTypes)
   EXPECT_EQ(types[n], "N_1");
 }
 
+// The resonance pass must not depend on the order of the atoms. In
+// acetohydrazide CH3-C(=O)-NH-NH2 the amide N is resonant (its neighbor C is
+// sp2), but the terminal NH2 only sees an sp3 N and stays N_3, whichever of
+// the two nitrogens is visited first.
+namespace {
+struct AtomSpec
+{
+  unsigned char z;
+  double x, y, zz;
+};
+
+// acetohydrazide with explicit hydrogens; `order` lists the original atom
+// indices in the order they are added. Returns the new index of each original.
+std::vector<Index> buildAcetohydrazide(Molecule& molecule,
+                                       const std::vector<size_t>& order)
+{
+  const AtomSpec atoms[11] = {
+    { 6, 0.0, 0.0, 0.0 },    // 0 methyl C
+    { 6, 1.52, 0.0, 0.0 },   // 1 carbonyl C
+    { 8, 2.1, 1.05, 0.0 },   // 2 O
+    { 7, 2.1, -1.15, 0.0 },  // 3 amide N
+    { 7, 3.5, -1.25, 0.3 },  // 4 terminal N
+    { 1, 1.6, -1.95, 0.1 },  // 5 H on N3
+    { 1, 3.9, -2.1, 0.1 },   // 6 H on N4
+    { 1, 3.9, -0.5, 0.8 },   // 7 H on N4
+    { 1, -0.37, 0.95, 0.5 }, // 8 H on C0
+    { 1, -0.37, -0.9, 0.6 }, // 9 H on C0
+    { 1, -0.37, 0.05, -1.0 } // 10 H on C0
+  };
+  const size_t bonds[10][3] = { { 0, 1, 1 }, { 1, 2, 2 }, { 1, 3, 1 },
+                                { 3, 4, 1 }, { 3, 5, 1 }, { 4, 6, 1 },
+                                { 4, 7, 1 }, { 0, 8, 1 }, { 0, 9, 1 },
+                                { 0, 10, 1 } };
+  std::vector<Index> newIndex(11, 0);
+  for (size_t original : order) {
+    const AtomSpec& a = atoms[original];
+    newIndex[original] = addAt(molecule, a.z, a.x, a.y, a.zz);
+  }
+  for (const auto& b : bonds) {
+    bond(molecule, newIndex[b[0]], newIndex[b[1]],
+         static_cast<unsigned char>(b[2]));
+  }
+  return newIndex;
+}
+} // namespace
+
+TEST(UffTypingTest, ResonanceTypingIsIndependentOfAtomOrder)
+{
+  std::vector<size_t> forward, backward;
+  for (size_t i = 0; i < 11; ++i) {
+    forward.push_back(i);
+    backward.push_back(10 - i);
+  }
+  Molecule first, second;
+  const std::vector<Index> mapFirst = buildAcetohydrazide(first, forward);
+  const std::vector<Index> mapSecond = buildAcetohydrazide(second, backward);
+
+  const std::vector<std::string> typesFirst = uffTypes(first);
+  const std::vector<std::string> typesSecond = uffTypes(second);
+  for (size_t i = 0; i < 11; ++i)
+    EXPECT_EQ(typesFirst[mapFirst[i]], typesSecond[mapSecond[i]]) << i;
+  EXPECT_EQ(typesFirst[mapFirst[3]], "N_R");
+  EXPECT_EQ(typesFirst[mapFirst[4]], "N_3");
+
+  UFF ffFirst, ffSecond;
+  ffFirst.setMolecule(&first);
+  ffSecond.setMolecule(&second);
+  const Eigen::VectorXd xFirst = positionsOf(first);
+  const Eigen::VectorXd xSecond = positionsOf(second);
+  EXPECT_NEAR(ffFirst.torsionEnergy(xFirst), ffSecond.torsionEnergy(xSecond),
+              1.0e-10);
+  EXPECT_NEAR(ffFirst.value(xFirst), ffSecond.value(xSecond), 1.0e-10);
+}
+
 // Allene and ketene: the central sp carbon next to sp2 atoms stays C_1.
 TEST(UffTypingTest, AlleneAndKeteneKeepSpCarbon)
 {

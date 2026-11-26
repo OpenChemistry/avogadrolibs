@@ -354,16 +354,19 @@ public:
 
     // we need to do one more pass to set aromatic / resonance types
     // i.e., if an sp2 atom has neighbors, mark them as resonant
+    // Read every label from a snapshot so the result does not depend on the
+    // order of the atoms.
+    const std::vector<int> baseTypes = m_atomTypes;
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
       const Core::Atom& atom = m_molecule->atom(i);
       int atomicNumber = atom.atomicNumber();
       // carbon, nitrogen, oxygen and sulfur sp2 atoms
       if (atomicNumber == 6 || atomicNumber == 7 || atomicNumber == 8 ||
           atomicNumber == 16) {
-        if (m_atomTypes[i] < 0)
+        if (baseTypes[i] < 0)
           continue;
 
-        const std::string& label = uffparams[m_atomTypes[i]].label;
+        const std::string& label = uffparams[baseTypes[i]].label;
         const char symbolChar = label.size() > 2 ? label[2] : '\0';
 
         // sp atoms (C_1, N_1, O_1) are linear and not conjugated in the UFF
@@ -391,9 +394,9 @@ public:
         bool resonant = false;
         for (Index j : neighbors) {
           // untyped neighbor (unsupported element)
-          if (m_atomTypes[j] < 0)
+          if (baseTypes[j] < 0)
             continue;
-          const auto& symbolLabel = uffparams[m_atomTypes[j]].label;
+          const auto& symbolLabel = uffparams[baseTypes[j]].label;
           if (symbolLabel.size() < 3)
             continue; // not a resonant type
 
