@@ -146,9 +146,8 @@ static int findUffTypeByLabel(int atomicNumber, const char* label)
 
 // UFF types for hypervalent sulfur and phosphorus, or -1 when the atom is not
 // hypervalent (use the ordinary coordination types).
-//   S_3+6 (109.47) : sulfate, sulfone, SO3, H2SO4, SF6, anything
-//   four-coordinate
-//                    or with a bond order sum >= 6
+//   S_3+6 (109.47) : sulfate, sulfone, SO3, H2SO4, SF6; a bond order sum >= 6
+//                    or five or more neighbors
 //   S_3+4 (103.2)  : SO2, sulfoxides (DMSO), sulfite (bond order sum 4-5)
 //   P_3+5 (109.47) : phosphates, phosphine oxides, PF5; four or more
 //                    neighbors or a bond order sum >= 5
@@ -157,13 +156,14 @@ static int findUffTypeByLabel(int atomicNumber, const char* label)
 // These follow the oxidation-state comments in Open Babel's UFF.prm
 // (S+4: SO2; S+6: SO3, H2SO4). Open Babel itself only applies them when the
 // atom has that formal charge, so it types neutral SO2 / H2SO4 as S_3+2.
-// Neutral four-coordinate S with only single bonds (e.g., SF4, or sulfate as
-// perceived from an XYZ file) is ambiguous; it is typed S_3+6.
+// The types follow the bond order sum, so four single bonds to S (SF4, but
+// also sulfate or H2SO4 whose S=O bonds were never perceived) give S_3+4.
+// That is a bond perception problem, not a typing one.
 static int hypervalentTypeFor(int atomicNumber, int neighborCount,
                               int bondOrderSum, int formalCharge)
 {
   if (atomicNumber == 16) {
-    if (neighborCount >= 4 || bondOrderSum >= 6)
+    if (neighborCount >= 5 || bondOrderSum >= 6)
       return findUffTypeByLabel(16, "S_3+6");
     if (bondOrderSum >= 4)
       return findUffTypeByLabel(16, "S_3+4");
@@ -257,9 +257,9 @@ public:
       // there are multiple types for this element
       const Array<Bond> bonds = m_molecule->bonds(i);
       if (atomicNumber == 1) {
-        // hydrogen has two types, so count the bonds
-        // (H_ with one bond, otherwise the bridging type H_b)
-        m_atomTypes.push_back(bonds.size() == 1 ? firstType : firstType + 1);
+        // hydrogen has two types, so count the bonds (H_ with none or one
+        // bond, otherwise the bridging type H_b, e.g., B-H-B in diborane)
+        m_atomTypes.push_back(bonds.size() <= 1 ? firstType : firstType + 1);
         continue;
       }
 
@@ -275,6 +275,15 @@ public:
         else if (order == 3)
           ++tripleBonds;
         bondOrderSum += (order > 0 ? order : 1);
+      }
+
+      // Rappe et al. (1992) / UFF.prm: B_2 is trigonal planar, B_3 is
+      // tetrahedral. Three-coordinate boron (BF3, BH3, boronic esters) is
+      // trigonal; four-coordinate (BH4-, BF4-, amine-boranes) is tetrahedral.
+      if (atomicNumber == 5 && bonds.size() >= 3) {
+        m_atomTypes.push_back(
+          findUffTypeByLabel(5, bonds.size() == 3 ? "B_2" : "B_3"));
+        continue;
       }
 
       // sulfur and phosphorus can be hypervalent: SO2, DMSO, sulfate,

@@ -481,8 +481,9 @@ TEST(UffTypingTest, SulfuricAcid)
   bond(molecule, s, o4);
   EXPECT_EQ(uffTypes(molecule)[0], "S_3+6");
 
-  // the same molecule with only single bonds (e.g., perceived from XYZ)
-  // or sulfate with charge-separated S+ / O- bonds is still four-coordinate
+  // The same molecule with only single bonds, as when S=O bonds were never
+  // perceived (e.g., from XYZ). Types follow the bond order sum, so this gets
+  // S_3+4; that is a bond perception problem, not a typing one.
   Molecule single;
   Index s2 = addAt(single, 16, 0.0, 0.0, 0.0);
   for (int k = 0; k < 4; ++k) {
@@ -490,7 +491,7 @@ TEST(UffTypingTest, SulfuricAcid)
                     k >= 2 ? (k == 2 ? 1.5 : -1.5) : 0.0, 0.0);
     bond(single, s2, o);
   }
-  EXPECT_EQ(uffTypes(single)[0], "S_3+6");
+  EXPECT_EQ(uffTypes(single)[0], "S_3+4");
 }
 
 // Dimethyl sulfoxide: S(=O) with two carbons is tetrahedral-like S(IV);
@@ -631,4 +632,85 @@ TEST(UffTypingTest, XenonTetrafluoride)
   Index cl = addAt(cesiumChloride, 17, 3.0, 0.0, 0.0);
   bond(cesiumChloride, cs, cl);
   EXPECT_EQ(uffTypes(cesiumChloride)[0], "Cs");
+}
+
+// SF4 (four single bonds, bond order sum 4) is S(IV): S_3+4. SF6 has six
+// neighbors: S_3+6 (UFF.prm: S+4 for SO2, S+6 for SO3 / H2SO4).
+TEST(UffTypingTest, SulfurFluorides)
+{
+  Molecule sf4;
+  Index s = addAt(sf4, 16, 0.0, 0.0, 0.0);
+  const double dirs[6][3] = { { 1, 0, 0 },  { -1, 0, 0 }, { 0, 1, 0 },
+                              { 0, -1, 0 }, { 0, 0, 1 },  { 0, 0, -1 } };
+  for (int k = 0; k < 4; ++k)
+    bond(sf4, s,
+         addAt(sf4, 9, 1.6 * dirs[k][0], 1.6 * dirs[k][1], 1.6 * dirs[k][2]));
+  EXPECT_EQ(uffTypes(sf4)[0], "S_3+4");
+
+  Molecule sf6;
+  Index s6 = addAt(sf6, 16, 0.0, 0.0, 0.0);
+  for (int k = 0; k < 6; ++k)
+    bond(sf6, s6,
+         addAt(sf6, 9, 1.6 * dirs[k][0], 1.6 * dirs[k][1], 1.6 * dirs[k][2]));
+  EXPECT_EQ(uffTypes(sf6)[0], "S_3+6");
+}
+
+// Rappe et al. (1992) / UFF.prm: B_2 is trigonal planar, B_3 tetrahedral.
+TEST(UffTypingTest, BoronCoordination)
+{
+  Molecule bf3;
+  Index b = addAt(bf3, 5, 0.0, 0.0, 0.0);
+  for (int k = 0; k < 3; ++k) {
+    double angle = 2.0 * 3.14159265358979 * k / 3.0;
+    bond(bf3, b,
+         addAt(bf3, 9, 1.3 * std::cos(angle), 1.3 * std::sin(angle), 0.0));
+  }
+  EXPECT_EQ(uffTypes(bf3)[0], "B_2");
+
+  Molecule bf4; // tetrafluoroborate
+  Index b4 = addAt(bf4, 5, 0.0, 0.0, 0.0);
+  const double tet[4][3] = {
+    { 1, 1, 1 }, { 1, -1, -1 }, { -1, 1, -1 }, { -1, -1, 1 }
+  };
+  for (const auto& t : tet)
+    bond(bf4, b4, addAt(bf4, 9, 0.8 * t[0], 0.8 * t[1], 0.8 * t[2]));
+  EXPECT_EQ(uffTypes(bf4)[0], "B_3");
+}
+
+// H_ for an isolated or terminal hydrogen, H_b only for a bridging hydrogen
+// (more than one bond), as in diborane.
+TEST(UffTypingTest, HydrogenBridging)
+{
+  Molecule atom; // a lone H atom has no bonds (no force field is set up for
+                 // one atom, so pair it with a non-bonded H)
+  addAt(atom, 1, 0.0, 0.0, 0.0);
+  addAt(atom, 1, 5.0, 0.0, 0.0);
+  EXPECT_EQ(uffTypes(atom)[0], "H_");
+
+  Molecule h2;
+  Index h1 = addAt(h2, 1, 0.0, 0.0, 0.0);
+  Index h1b = addAt(h2, 1, 0.74, 0.0, 0.0);
+  bond(h2, h1, h1b);
+  EXPECT_EQ(uffTypes(h2)[0], "H_");
+
+  // B2H6: two bridging H (two bonds each), four terminal H
+  Molecule b2h6;
+  Index b1 = addAt(b2h6, 5, -0.88, 0.0, 0.0);
+  Index b2 = addAt(b2h6, 5, 0.88, 0.0, 0.0);
+  Index hb1 = addAt(b2h6, 1, 0.0, 0.0, 0.98);
+  Index hb2 = addAt(b2h6, 1, 0.0, 0.0, -0.98);
+  bond(b2h6, b1, hb1);
+  bond(b2h6, b2, hb1);
+  bond(b2h6, b1, hb2);
+  bond(b2h6, b2, hb2);
+  Index t1 = addAt(b2h6, 1, -1.5, 1.0, 0.0);
+  Index t2 = addAt(b2h6, 1, -1.5, -1.0, 0.0);
+  bond(b2h6, b1, t1);
+  bond(b2h6, b1, t2);
+  std::vector<std::string> types = uffTypes(b2h6);
+  EXPECT_EQ(types[hb1], "H_b");
+  EXPECT_EQ(types[hb2], "H_b");
+  EXPECT_EQ(types[t1], "H_");
+  EXPECT_EQ(types[t2], "H_");
+  EXPECT_EQ(types[b1], "B_3"); // four neighbors
 }
