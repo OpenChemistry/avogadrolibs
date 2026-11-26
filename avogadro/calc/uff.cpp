@@ -588,11 +588,14 @@ public:
             break;
           case 83: // Bi
           default:
-            phi = 90.0;
+            phi = 90.0 * DEG_TO_RAD;
         }
+        // E = K (C0 + C1 cos(w) + C2 cos(2w)), Rappe et al. (1992):
+        // C1 = -4 C2 cos(w0) puts the minimum at w0, and
+        // C0 = -C1 cos(w0) - C2 cos(2 w0) makes E(w0) = 0
         oop._c1 = -4.0 * cos(phi);
         oop._c2 = 1.0;
-        oop._c0 = -1.0 * oop._c1 * cos(phi) + oop._c2 * cos(2.0 * phi);
+        oop._c0 = -1.0 * oop._c1 * cos(phi) - oop._c2 * cos(2.0 * phi);
         oop._koop = 22.0;
       } else if (symbol == "C_2" || symbol == "C_R") {
         oop._c0 = 1.0;
@@ -943,7 +946,9 @@ public:
         case TrigonalBipentagonal:
         case Other:
         default:
-          dEdTheta = 2.0 * kijk * (thetaGradient - theta0) * sin(thetaGradient);
+          // E = k (theta - theta0)^2 and angleGradient() gives d(theta)/dx,
+          // so dE/dtheta has no sin(theta) factor
+          dEdTheta = 2.0 * kijk * (thetaGradient - theta0);
           break;
       }
 
