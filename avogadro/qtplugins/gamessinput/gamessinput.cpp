@@ -32,7 +32,7 @@ GamessInput::GamessInput(QObject* parent_)
 {
   m_action->setEnabled(true);
   m_action->setText(tr("&GAMESS…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(menuActivated()));
+  connect(m_action, &QAction::triggered, this, &GamessInput::menuActivated);
 }
 
 GamessInput::~GamessInput() {}
@@ -104,8 +104,8 @@ void GamessInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new GamessInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, SIGNAL(openJobOutput(Avogadro::MoleQueue::JobObject)),
-            this, SLOT(openJobOutput(Avogadro::MoleQueue::JobObject)));
+    connect(m_dialog, &GamessInputDialog::openJobOutput, this,
+            &GamessInput::openJobOutput);
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
