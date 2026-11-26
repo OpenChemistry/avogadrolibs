@@ -912,6 +912,10 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
   // Only carry site occupancies into the copies if there are any to carry
   const bool hasOccupancies = !molecule.occupancies().empty();
   const Array<double> occupancies = molecule.occupancies();
+  // and the disorder labels
+  const bool hasDisorder = !molecule.disorderGroups().empty();
+  const Array<std::string> disorderAssemblies = molecule.disorderAssemblies();
+  const Array<std::string> disorderGroups = molecule.disorderGroups();
 
   // Fractional coordinates of the original atoms, used to decide which
   // translations of each atom land inside the requested range.
@@ -995,6 +999,11 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
             if (hasOccupancies)
               newAtom.setOccupancy(i < occupancies.size() ? occupancies[i]
                                                           : 1.0);
+            if (hasDisorder)
+              newAtom.setDisorder(
+                i < disorderAssemblies.size() ? disorderAssemblies[i]
+                                              : std::string(),
+                i < disorderGroups.size() ? disorderGroups[i] : std::string());
             copyMap[i] = newAtom.index();
             grid.insert(newPos, newAtom.index());
           }

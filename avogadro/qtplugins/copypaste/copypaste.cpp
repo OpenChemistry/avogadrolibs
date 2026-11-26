@@ -41,6 +41,7 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
 
   // only carry site occupancies if the source has them
   const bool hasOccupancies = !mol.occupancies().empty();
+  const bool hasDisorder = !mol.disorderGroups().empty();
 
   // MaxIndex marks an atom that was not copied
   std::vector<Index> atomIndex(mol.atomCount(), MaxIndex);
@@ -53,6 +54,8 @@ std::unique_ptr<QtGui::Molecule> selectionCopy(const QtGui::Molecule& mol)
     a.setIsotope(mol.isotope(i));
     if (hasOccupancies)
       a.setOccupancy(mol.occupancy(i));
+    if (hasDisorder)
+      a.setDisorder(mol.disorderAssembly(i), mol.disorderGroup(i));
     const std::string label = mol.atomLabel(i);
     if (!label.empty())
       copy->setAtomLabel(a.index(), label);

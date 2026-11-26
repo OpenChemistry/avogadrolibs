@@ -385,6 +385,27 @@ TEST(CrystalToolsTest, buildSupercellCarriesOccupancy)
   EXPECT_EQ(oxygens, 2);
 }
 
+TEST(CrystalToolsTest, buildSupercellCarriesDisorder)
+{
+  Molecule mol = cubicCell();
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  ASSERT_EQ(mol.atomCount(), 4);
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    const bool oxygen = mol.atomicNumber(i) == 8;
+    EXPECT_EQ(mol.disorderGroup(i), oxygen ? "2" : "") << i;
+    EXPECT_EQ(mol.disorderAssembly(i), oxygen ? "A" : "") << i;
+  }
+}
+
+TEST(CrystalToolsTest, buildSupercellWithoutDisorderStoresNone)
+{
+  Molecule mol = cubicCell();
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  EXPECT_TRUE(mol.disorderGroups().empty());
+  EXPECT_TRUE(mol.disorderAssemblies().empty());
+}
+
 TEST(CrystalToolsTest, buildSupercellWithoutOccupancyStoresNone)
 {
   Molecule mol = cubicCell();

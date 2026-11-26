@@ -596,6 +596,7 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
   // Apply BIOMT matrices to generate biological assembly
   if (!bioMTGroups.empty()) {
     const bool hasOccupancies = !mol.occupancies().empty();
+    const bool hasDisorder = !mol.disorderGroups().empty();
     const Index originalAtomCount = mol.atomCount();
     const Index originalBondCount = mol.bondCount();
     const Index originalResidueCount = mol.residueCount();
@@ -691,6 +692,9 @@ bool PdbFormat::read(std::istream& in, Core::Molecule& mol)
             mol.setIsotope(newAtom.index(), mol.isotope(origIdx));
           if (hasOccupancies)
             mol.setOccupancy(newAtom.index(), mol.occupancy(origIdx));
+          if (hasDisorder)
+            mol.setDisorder(newAtom.index(), mol.disorderAssembly(origIdx),
+                            mol.disorderGroup(origIdx));
           oldToNew[origIdx] = newAtom.index();
 
           for (auto& coordSet : coordinateSets) {
