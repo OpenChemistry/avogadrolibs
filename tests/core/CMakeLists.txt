@@ -45,6 +45,7 @@ set(tests
   Residue
   RingPerceiver
   SecondaryStructure
+  SlaterSet
   Utilities
   UnitCell
   Variant
