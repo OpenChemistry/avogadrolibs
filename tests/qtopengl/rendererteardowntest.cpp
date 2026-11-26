@@ -14,6 +14,7 @@
 
 #include <gtest/gtest.h>
 
+#include <QtCore/QPair>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QOffscreenSurface>
 #include <QtGui/QOpenGLContext>
@@ -55,7 +56,28 @@ public:
     m_surface->create();
     if (!m_surface->isValid())
       return "Could not create an offscreen surface.";
-    return std::string();
+
+    // Fallback contexts (e.g. on CI runners with no GPU) can be created yet
+    // be unusable, so check the way the GLWidget suite does.
+    if (!m_context->makeCurrent(m_surface.get()))
+      return "Could not make the OpenGL context current.";
+    const QSurfaceFormat format = m_context->format();
+    if (format.version() < qMakePair(4, 0)) {
+      m_context->doneCurrent();
+      return "OpenGL 4.0 is required; the context is " +
+             std::to_string(format.majorVersion()) + "." +
+             std::to_string(format.minorVersion()) + ".";
+    }
+    std::string reason;
+    {
+      GLRenderer probe;
+      probe.initialize();
+      if (!probe.isValid())
+        reason = "No usable OpenGL context: " + probe.error();
+      probe.cleanup();
+    }
+    m_context->doneCurrent();
+    return reason;
   }
 
   bool makeCurrent() { return m_context->makeCurrent(m_surface.get()); }
@@ -81,6 +103,8 @@ std::unique_ptr<GLRenderer> makeBusyRenderer(StandaloneGL& gl)
   EXPECT_TRUE(gl.makeCurrent());
   renderer->initialize();
   EXPECT_TRUE(renderer->isValid()) << renderer->error();
+  if (!renderer->isValid())
+    return renderer;
   renderer->resize(64, 64);
   renderer->solidPipeline().setAoEnabled(true);
 
