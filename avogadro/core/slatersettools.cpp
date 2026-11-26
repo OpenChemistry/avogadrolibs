@@ -5,9 +5,11 @@
 
 #include "slatersettools.h"
 
+#include "avogadrocore.h"
 #include "molecule.h"
 #include "slaterset.h"
 
+#include <cmath>
 #include <utility>
 
 namespace Avogadro::Core {
@@ -16,45 +18,58 @@ SlaterSetTools::SlaterSetTools(Molecule* mol) : m_molecule(mol)
 {
   if (m_molecule)
     m_basis = dynamic_cast<SlaterSet*>(m_molecule->basisSet());
+  // Initialize here, on the caller's thread: the concurrent calculators
+  // evaluate points from many threads and must only read the basis set.
+  if (m_basis != nullptr)
+    m_basis->initCalculation();
 }
 
 double SlaterSetTools::calculateMolecularOrbital(const Vector3& position,
                                                  int mo) const
 {
-  if (mo > static_cast<int>(m_basis->molecularOrbitalCount()))
+  if (m_molecule == nullptr || m_basis == nullptr || mo < 0)
     return 0.0;
 
   std::vector<double> values(calculateValues(position));
 
+  // Orbitals are numbered from zero, the column of the coefficient matrix.
   const MatrixX& matrix = m_basis->normalizedMatrix();
-  int matrixSize(static_cast<int>(matrix.rows()));
-  int indexMO(mo);
+  if (mo >= static_cast<int>(matrix.cols()) ||
+      static_cast<size_t>(matrix.rows()) != values.size())
+    return 0.0;
 
-  // Now calculate the value of the density at this point in space
+  // Now calculate the value of the orbital at this point in space
   double result(0.0);
-  for (int i = 0; i < matrixSize; ++i)
-    result += matrix(i, indexMO) * values[i];
+  for (size_t i = 0; i < values.size(); ++i)
+    result += matrix(static_cast<Eigen::Index>(i), mo) * values[i];
 
   return result;
 }
 
 double SlaterSetTools::calculateElectronDensity(const Vector3& position) const
 {
-  const MatrixX& matrix = m_basis->densityMatrix();
-  int matrixSize(static_cast<int>(m_basis->normalizedMatrix().rows()));
-  if (matrix.rows() != matrixSize || matrix.cols() != matrixSize)
+  if (m_molecule == nullptr || m_basis == nullptr)
     return 0.0;
 
   std::vector<double> values(calculateValues(position));
 
+  const MatrixX& matrix = m_basis->densityMatrix();
+  const size_t matrixSize = values.size();
+  if (static_cast<size_t>(matrix.rows()) != matrixSize ||
+      static_cast<size_t>(matrix.cols()) != matrixSize ||
+      static_cast<size_t>(m_basis->normalizedMatrix().rows()) != matrixSize)
+    return 0.0;
+
   // Now calculate the value of the density at this point in space
   double rho(0.0);
-  for (int i = 0; i < matrixSize; ++i) {
+  for (size_t i = 0; i < matrixSize; ++i) {
+    const auto row = static_cast<Eigen::Index>(i);
     // Calculate the off-diagonal parts of the matrix
-    for (int j = 0; j < i; ++j)
-      rho += 2.0 * matrix(i, j) * (values[i] * values[j]);
+    for (size_t j = 0; j < i; ++j)
+      rho += 2.0 * matrix(row, static_cast<Eigen::Index>(j)) *
+             (values[i] * values[j]);
     // Now calculate the matrix diagonal
-    rho += matrix(i, i) * (values[i] * values[i]);
+    rho += matrix(row, row) * (values[i] * values[i]);
   }
 
   return rho;
@@ -81,71 +96,94 @@ inline bool SlaterSetTools::isSmall(double val) const
 std::vector<double> SlaterSetTools::calculateValues(
   const Vector3& position) const
 {
+  std::vector<double> values;
+  if (m_molecule == nullptr || m_basis == nullptr)
+    return values;
+
   m_basis->initCalculation();
 
-  Index atomsSize = m_molecule->atomCount();
-  size_t basisSize = m_basis->zetas().size();
-
+  const Index atomsSize = m_molecule->atomCount();
   const std::vector<int>& slaterIndices = m_basis->slaterIndices();
   const std::vector<int>& slaterTypes = m_basis->slaterTypes();
   const std::vector<int>& PQNs = m_basis->PQNs();
   const std::vector<double>& factors = m_basis->factors();
   const std::vector<double>& zetas = m_basis->zetas();
 
+  // All of the per-function arrays must describe the same functions.
+  const size_t basisSize = zetas.size();
+  if (slaterIndices.size() != basisSize || slaterTypes.size() != basisSize ||
+      PQNs.size() != basisSize || factors.size() != basisSize)
+    return values;
+
+  // The exponents are in inverse bohr and the factors are normalized for
+  // distances in bohr, so work in bohr; positions are stored in angstrom.
   std::vector<Vector3> deltas;
-  std::vector<double> dr2;
+  std::vector<double> distances;
   deltas.reserve(atomsSize);
-  dr2.reserve(atomsSize);
+  distances.reserve(atomsSize);
 
   // Calculate the deltas for the position
   for (Index i = 0; i < atomsSize; ++i) {
-    deltas.emplace_back(position - m_molecule->atom(i).position3d());
-    dr2.push_back(deltas[i].squaredNorm());
+    deltas.emplace_back((position - m_molecule->atom(i).position3d()) *
+                        ANGSTROM_TO_BOHR_D);
+    distances.push_back(deltas[i].norm());
   }
 
   // Allocate space for the values to be calculated.
-  std::vector<double> values;
-  values.resize(basisSize);
+  values.assign(basisSize, 0.0);
 
   // Now calculate the values at this point in space
   for (size_t i = 0; i < basisSize; ++i) {
-    double dr(dr2[slaterIndices[i]]);
-    Vector3 delta(deltas[slaterIndices[i]]);
-    values[i] = factors[i] * exp(-zetas[i] * dr);
-    // Radial part with effective PQNs
-    for (int j = 0; j < PQNs[i]; ++j)
-      values[i] *= dr;
+    // A basis function on an atom that does not exist contributes nothing.
+    if (slaterIndices[i] < 0 ||
+        static_cast<Index>(slaterIndices[i]) >= atomsSize)
+      continue;
+    const double r = distances[slaterIndices[i]];
+    const Vector3& delta = deltas[slaterIndices[i]];
+
+    // N r^(n-1-l) exp(-zeta r) times the (unnormalized by r^l) angular
+    // polynomial below; see SlaterSet::initCalculation().
+    double value = factors[i] * std::exp(-zetas[i] * r);
+    if (PQNs[i] >= 0) {
+      for (int j = 0; j < PQNs[i]; ++j)
+        value *= r;
+    } else if (r > 0.0) {
+      value *= std::pow(r, PQNs[i]);
+    } else {
+      continue; // not defined at the nucleus
+    }
     switch (slaterTypes[i]) {
       case SlaterSet::S:
         break;
       case SlaterSet::PX:
-        values[i] *= delta.x();
+        value *= delta.x();
         break;
       case SlaterSet::PY:
-        values[i] *= delta.y();
+        value *= delta.y();
         break;
       case SlaterSet::PZ:
-        values[i] *= delta.z();
+        value *= delta.z();
         break;
       case SlaterSet::X2: // (x^2 - y^2)r^n
-        values[i] *= delta.x() * delta.x() - delta.y() * delta.y();
+        value *= delta.x() * delta.x() - delta.y() * delta.y();
         break;
       case SlaterSet::XZ: // xzr^n
-        values[i] *= delta.x() * delta.z();
+        value *= delta.x() * delta.z();
         break;
       case SlaterSet::Z2: // (2z^2 - x^2 - y^2)r^n
-        values[i] *= 2.0 * delta.z() * delta.z() - delta.x() * delta.x() -
-                     delta.y() * delta.y();
+        value *= 2.0 * delta.z() * delta.z() - delta.x() * delta.x() -
+                 delta.y() * delta.y();
         break;
       case SlaterSet::YZ: // yzr^n
-        values[i] *= delta.y() * delta.z();
+        value *= delta.y() * delta.z();
         break;
       case SlaterSet::XY: // xyr^n
-        values[i] *= delta.x() * delta.y();
+        value *= delta.x() * delta.y();
         break;
       default:
-        values[i] = 0.0;
+        value = 0.0;
     }
+    values[i] = value;
   }
 
   return values;
