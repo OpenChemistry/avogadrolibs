@@ -813,11 +813,12 @@ public:
   }
 
   // Build or rebuild the VdW pair list with distance cutoff.
-  // With a unit cell each pair is listed once and seen through its nearest
-  // periodic image only (UnitCell::minimumImage). That is exact while the
-  // list cutoff (r_off + skin = 12.5 A) is shorter than half the narrowest
-  // cell width; in a smaller cell the farther images of a pair, and the
-  // interaction of an atom with its own images, are not counted.
+  // With a unit cell each pair is listed once and seen through its shortest
+  // periodic image only (UnitCell::minimumImage, used for both admission and
+  // evaluation). That is exact while the list cutoff (r_off + skin = 12.5 A)
+  // is shorter than half the narrowest cell width; in a smaller cell the
+  // farther images of a pair, and the interaction of an atom with its own
+  // images, are not counted.
   void setVdWs(const Eigen::VectorXd& x)
   {
     m_vdws.clear();
