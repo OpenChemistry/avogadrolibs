@@ -98,7 +98,6 @@ public:
   Real _x;
   Real _x6;  // precomputed x^6
   Real _x12; // precomputed x^12
-  Real _rc;  // soft-core radius, see VDW_CORE_FRACTION
 };
 
 // Torsions fade out as a bond angle goes from this angle (degrees) to 180
@@ -116,6 +115,7 @@ static constexpr Real VDW_R_OFF_SQ = VDW_R_OFF * VDW_R_OFF;
 static constexpr Real VDW_SWITCH_DENOM = (VDW_R_OFF_SQ - VDW_R_ON_SQ) *
                                          (VDW_R_OFF_SQ - VDW_R_ON_SQ) *
                                          (VDW_R_OFF_SQ - VDW_R_ON_SQ);
+static constexpr Real VDW_SWITCH_INV = 1.0 / VDW_SWITCH_DENOM;
 // Verlet pair list: every pair closer than r_off + skin is listed, and the
 // list is rebuilt as soon as any atom has moved more than skin / 2 since it
 // was built. Two atoms can then close by at most skin, so every pair inside
@@ -135,37 +135,37 @@ static constexpr Real VDW_CORE_FRACTION = 0.5;
 // and the third character of a label is the coordination (e.g., "C_3", "C_R",
 // "Ti6+4"). Every search is limited to the one element's rows so that a
 // missing coordination can never return another element's type.
-static int findFirstUffType(int atomicNumber)
+// Returns the first row of this element accepted by the predicate, or -1.
+template <class Pred>
+static int findUffRow(int atomicNumber, Pred accept)
 {
   for (size_t j = 0; j < std::size(uffparams); ++j) {
-    if (uffparams[j].element == atomicNumber)
+    if (uffparams[j].element == atomicNumber && accept(uffparams[j]))
       return static_cast<int>(j);
   }
   return -1;
+}
+
+// the first (generic) type of this element, or -1 if unsupported
+static int findFirstUffType(int atomicNumber)
+{
+  return findUffRow(atomicNumber, [](const auto&) { return true; });
 }
 
 // the first type of this element with the given coordination character,
 // or -1 if the element has none
 static int findUffType(int atomicNumber, char coordination)
 {
-  for (size_t j = 0; j < std::size(uffparams); ++j) {
-    if (uffparams[j].element != atomicNumber)
-      continue;
-    const std::string& label = uffparams[j].label;
-    if (label.size() > 2 && label[2] == coordination)
-      return static_cast<int>(j);
-  }
-  return -1;
+  return findUffRow(atomicNumber, [coordination](const auto& row) {
+    return row.label.size() > 2 && row.label[2] == coordination;
+  });
 }
 
 // the type of this element with the exact label (e.g., "S_3+6"), or -1
 static int findUffTypeByLabel(int atomicNumber, const char* label)
 {
-  for (size_t j = 0; j < std::size(uffparams); ++j) {
-    if (uffparams[j].element == atomicNumber && uffparams[j].label == label)
-      return static_cast<int>(j);
-  }
-  return -1;
+  return findUffRow(atomicNumber,
+                    [label](const auto& row) { return row.label == label; });
 }
 
 // UFF types for hypervalent sulfur and phosphorus, or -1 when the atom is not
@@ -311,12 +311,9 @@ public:
 
       // sulfur and phosphorus can be hypervalent: SO2, DMSO, sulfate,
       // phosphate, ..., and the UFF types depend on the oxidation state
-      int hypervalentType = -1;
-      if (atomicNumber == 15 || atomicNumber == 16) {
-        hypervalentType =
-          hypervalentTypeFor(atomicNumber, static_cast<int>(bonds.size()),
-                             bondOrderSum, m_molecule->formalCharge(i));
-      }
+      const int hypervalentType =
+        hypervalentTypeFor(atomicNumber, static_cast<int>(bonds.size()),
+                           bondOrderSum, m_molecule->formalCharge(i));
       if (hypervalentType >= 0) {
         m_atomTypes.push_back(hypervalentType);
         continue;
@@ -396,7 +393,7 @@ public:
           // untyped neighbor (unsupported element)
           if (m_atomTypes[j] < 0)
             continue;
-          auto symbolLabel = uffparams[m_atomTypes[j]].label;
+          const auto& symbolLabel = uffparams[m_atomTypes[j]].label;
           if (symbolLabel.size() < 3)
             continue; // not a resonant type
 
@@ -429,8 +426,8 @@ public:
     if (order < 1.0)
       order = 1.0;
     // check if it's a resonant / aromatic bond
-    auto symbol1 = uffparams[m_atomTypes[atom1]].label;
-    auto symbol2 = uffparams[m_atomTypes[atom2]].label;
+    const auto& symbol1 = uffparams[m_atomTypes[atom1]].label;
+    const auto& symbol2 = uffparams[m_atomTypes[atom2]].label;
     if (symbol1.size() > 2 && symbol1[2] == 'R' && symbol2.size() > 2 &&
         symbol2[2] == 'R') {
       order = 1.5;
@@ -515,7 +512,7 @@ public:
 
       // calculate the c0, c1, c2 terms
       // based on coordination of the central atom
-      std::string label = uffparams[m_atomTypes[j]].label;
+      const std::string& label = uffparams[m_atomTypes[j]].label;
       auto neighbors = m_molecule->graph().neighbors(j);
       a._c0 = 0.0;
       a._c1 = 0.0;
@@ -588,7 +585,7 @@ public:
       oop._atom3 = neighbors[1];
       oop._atom4 = neighbors[2];
 
-      std::string symbol = uffparams[m_atomTypes[i]].label;
+      const std::string& symbol = uffparams[m_atomTypes[i]].label;
       if (symbol == "N_R" || symbol == "N_2" || symbol == "O_R" ||
           symbol == "O_2") {
         oop._c0 = 1.0;
@@ -716,7 +713,7 @@ public:
             order = 1.41;
         }
         t._n = 2;
-        t._cos_phi0 = cos(t._n * 180.0 * DEG_TO_RAD);
+        t._cos_phi0 = 1.0; // cos(2 * 180 degrees)
         t._ijkl =
           0.5 * 5.0 * sqrt(paramJ.Uj * paramK.Uj) * (1.0 + 4.18 * log(order));
       } else if ((isSp2(hybridJ) && hybridK == '3') ||
@@ -725,8 +722,8 @@ public:
         // TODO: propene-like case (sp2 atom bonded to another sp2 atom):
         // n = 3, phi0 = 180, V = 2.0. Open Babel doesn't do it either.
         t._n = 6;
-        t._cos_phi0 = cos(t._n * 0.0 * DEG_TO_RAD);
-        t._ijkl = 0.5 * 1.0;
+        t._cos_phi0 = 1.0; // cos(6 * 0 degrees)
+        t._ijkl = 0.5;     // V / 2 with V = 1.0
 
         // exception when the sp3 center is group 16 (e.g. C=C-O-C):
         // n = 2, phi0 = 90. V stays 1.0 kcal/mol: Rappe 1992 and Open Babel
@@ -789,11 +786,12 @@ public:
       return;
 
     const Index n = m_molecule->atomCount();
+    // clear() keeps the capacity, so this only matters for the first build:
+    // a few dozen listed neighbors per atom, never more than all pairs
+    const size_t pairCount = static_cast<size_t>(n) * (n - 1) / 2;
+    m_vdws.reserve(std::min(pairCount, static_cast<size_t>(n) * 64));
     for (Index i = 0; i < n; ++i) {
       for (Index j = i + 1; j < n; ++j) {
-        if (areExcluded(i, j))
-          continue;
-
         // Apply distance cutoff
         Real r2;
         if (m_cell == nullptr) {
@@ -803,7 +801,7 @@ public:
           r2 = m_cell->distanceSquared(Vector3(x.segment<3>(3 * i)),
                                        Vector3(x.segment<3>(3 * j)));
         }
-        if (r2 > VDW_LIST_CUTOFF_SQ)
+        if (r2 > VDW_LIST_CUTOFF_SQ || areExcluded(i, j))
           continue;
 
         UFFVdW v;
@@ -816,7 +814,6 @@ public:
         Real x3 = v._x * v._x * v._x;
         v._x6 = x3 * x3;
         v._x12 = v._x6 * v._x6;
-        v._rc = VDW_CORE_FRACTION * v._x;
         m_vdws.push_back(v);
       }
     }
@@ -1079,12 +1076,13 @@ public:
   // (like the extra exp() term in the angle energy). dS receives dS/dc.
   static Real torsionSwitch(Real cosTheta, Real& dS)
   {
-    const Real onset =
+    static const Real onset =
       1.0 + std::cos(TORSION_SWITCH_ONSET_DEGREES * DEG_TO_RAD);
-    Real u = (cosTheta + 1.0) / onset;
+    static const Real onsetInv = 1.0 / onset;
+    Real u = (cosTheta + 1.0) * onsetInv;
     u = std::clamp(u, 0.0, 1.0);
-    dS =
-      (u > 0.0 && u < 1.0) ? 30.0 * u * u * (1.0 - u) * (1.0 - u) / onset : 0.0;
+    dS = (u > 0.0 && u < 1.0) ? 30.0 * u * u * (1.0 - u) * (1.0 - u) * onsetInv
+                              : 0.0;
     return u * u * u * (10.0 - 15.0 * u + 6.0 * u * u);
   }
 
@@ -1181,19 +1179,21 @@ public:
 
   // Energy (kcal/mol) and dE/dr of one pair at squared distance r2 > 0,
   // including the soft core and the switch. dEdr is only set when requested.
-  static Real vdwPair(const UFFVdW& vdw, Real r2, bool needsGradient,
-                      Real* dEdr)
+  // r receives the pair distance sqrt(r2).
+  static Real vdwPair(const UFFVdW& vdw, Real r2, Real& r, Real* dEdr)
   {
-    const Real r = sqrt(r2);
+    r = sqrt(r2);
+    const bool needsGradient = dEdr != nullptr;
+    const Real rc = VDW_CORE_FRACTION * vdw._x; // soft-core radius
     Real e = 0.0;
     Real de = 0.0;
-    if (r < vdw._rc) {
+    if (r < rc) {
       // tangent line of the 12-6 curve at r_c (r < r_c implies r_c > 0)
-      const Real rc2 = vdw._rc * vdw._rc;
+      const Real rc2 = rc * rc;
       const Real rc6 = rc2 * rc2 * rc2;
       const Real ec = vdw._depth * (vdw._x12 / (rc6 * rc6) - 2 * vdw._x6 / rc6);
-      de = 12 * vdw._depth * vdw._x6 / (rc6 * vdw._rc) * (1 - vdw._x6 / rc6);
-      e = ec + de * (r - vdw._rc);
+      de = 12 * vdw._depth * vdw._x6 / (rc6 * rc) * (1 - vdw._x6 / rc6);
+      e = ec + de * (r - rc);
     } else {
       const Real r6 = r2 * r2 * r2;
       e = vdw._depth * (vdw._x12 / (r6 * r6) - 2 * vdw._x6 / r6);
@@ -1205,15 +1205,15 @@ public:
       // S(r) = (roff^2 - r^2)^2 (roff^2 + 2r^2 - 3ron^2) / (roff^2 - ron^2)^3
       const Real a = VDW_R_OFF_SQ - r2;
       const Real s =
-        a * a * (VDW_R_OFF_SQ + 2 * r2 - 3 * VDW_R_ON_SQ) / VDW_SWITCH_DENOM;
+        a * a * (VDW_R_OFF_SQ + 2 * r2 - 3 * VDW_R_ON_SQ) * VDW_SWITCH_INV;
       if (needsGradient) {
-        const Real ds = 12 * r * a * (VDW_R_ON_SQ - r2) / VDW_SWITCH_DENOM;
+        const Real ds = 12 * r * a * (VDW_R_ON_SQ - r2) * VDW_SWITCH_INV;
         de = s * de + e * ds;
       }
       e *= s;
     }
 
-    if (dEdr != nullptr)
+    if (needsGradient)
       *dEdr = de;
     return e;
   }
@@ -1247,8 +1247,9 @@ public:
       if (r2 >= VDW_R_OFF_SQ)
         continue;
 
+      Real r = 0.0;
       Real dEdr = 0.0;
-      const Real e = vdwPair(vdw, r2, needsGradient, &dEdr);
+      const Real e = vdwPair(vdw, r2, r, needsGradient ? &dEdr : nullptr);
       if (energy != nullptr)
         *energy += e;
 
@@ -1259,7 +1260,7 @@ public:
       // force, so push them apart along a fixed axis instead of dropping it.
       Vector3d direction = Vector3d::UnitX();
       if (r2 > 1e-24)
-        direction = diff / sqrt(r2);
+        direction = diff / r;
       grad->segment<3>(3 * i) += dEdr * direction;
       grad->segment<3>(3 * j) -= dEdr * direction;
     }
