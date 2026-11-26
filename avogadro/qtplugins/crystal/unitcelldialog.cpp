@@ -39,20 +39,27 @@ UnitCellDialog::UnitCellDialog(QWidget* p)
 {
   m_ui->setupUi(this);
 
-  connect(m_ui->a, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
-  connect(m_ui->b, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
-  connect(m_ui->c, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
-  connect(m_ui->alpha, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
-  connect(m_ui->beta, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
-  connect(m_ui->gamma, SIGNAL(valueChanged(double)), SLOT(parametersEdited()));
+  connect(m_ui->a, &QDoubleSpinBox::valueChanged, this,
+          &UnitCellDialog::parametersEdited);
+  connect(m_ui->b, &QDoubleSpinBox::valueChanged, this,
+          &UnitCellDialog::parametersEdited);
+  connect(m_ui->c, &QDoubleSpinBox::valueChanged, this,
+          &UnitCellDialog::parametersEdited);
+  connect(m_ui->alpha, &QDoubleSpinBox::valueChanged, this,
+          &UnitCellDialog::parametersEdited);
+  connect(m_ui->beta, &QDoubleSpinBox::valueChanged, this,
+          &UnitCellDialog::parametersEdited);
+  connect(m_ui->gamma, &QDoubleSpinBox::valueChanged, this,
+          &UnitCellDialog::parametersEdited);
 
-  connect(m_ui->cellMatrix, SIGNAL(textChanged()), SLOT(cellMatrixEdited()));
+  connect(m_ui->cellMatrix, &QPlainTextEdit::textChanged, this,
+          &UnitCellDialog::cellMatrixEdited);
 
-  connect(m_ui->fractionalMatrix, SIGNAL(textChanged()),
-          SLOT(fractionalMatrixEdited()));
+  connect(m_ui->fractionalMatrix, &QPlainTextEdit::textChanged, this,
+          &UnitCellDialog::fractionalMatrixEdited);
 
-  connect(m_ui->apply, SIGNAL(clicked()), SLOT(apply()));
-  connect(m_ui->revert, SIGNAL(clicked()), SLOT(revert()));
+  connect(m_ui->apply, &QPushButton::clicked, this, &UnitCellDialog::apply);
+  connect(m_ui->revert, &QPushButton::clicked, this, &UnitCellDialog::revert);
 }
 
 UnitCellDialog::~UnitCellDialog()
@@ -69,7 +76,8 @@ void UnitCellDialog::setMolecule(QtGui::Molecule* molecule)
     m_molecule = molecule;
 
     if (m_molecule)
-      connect(m_molecule, SIGNAL(changed(uint)), SLOT(moleculeChanged(uint)));
+      connect(m_molecule, &QtGui::Molecule::changed, this,
+              &UnitCellDialog::moleculeChanged);
 
     revert();
   }
