@@ -35,8 +35,6 @@ public:
   QList<QAction*> actions() const override;
   QStringList menuPath(QAction*) const override;
 
-  void registerCommands() override;
-
 public slots:
   void setMolecule(QtGui::Molecule* mol) override;
 
@@ -55,6 +53,8 @@ private slots:
   void symmetrizeMolecule();
 
 private:
+  void registerSymmetryCommands();
+
   /// Runs libmsym over the current molecule and, when a panel exists,
   /// fills it in. This is the body of detectSymmetry(), reachable without a
   /// panel so that a command can use it.

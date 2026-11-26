@@ -12,6 +12,7 @@
 // #include <avogadro/core/unitcell.h>
 // #include <avogadro/core/crystaltools.h>
 
+#include <avogadro/qtgui/commandregistry.h>
 #include <avogadro/qtgui/molecule.h>
 #include <avogadro/qtgui/rwmolecule.h>
 
@@ -57,6 +58,7 @@ Symmetry::Symmetry(QObject* parent_)
     m_standardOrientationAction->setProperty("menu priority", -250);*/
 
   updateActions();
+  registerSymmetryCommands();
 }
 
 Symmetry::~Symmetry()
@@ -435,63 +437,66 @@ bool Symmetry::runSymmetrize(double* symmetryError, QString* error)
   return true;
 }
 
-void Symmetry::registerCommands()
+void Symmetry::registerSymmetryCommands()
 {
-  emit registerCommand("detectSymmetry",
-                       tr("Detect the point group of the molecule."));
-  emit registerCommand("symmetrize",
-                       tr("Snap the molecule onto its detected point group."));
+  QtGui::CommandSpec detectSpec;
+  detectSpec.name = "detectSymmetry";
+  detectSpec.description = tr("Detect the point group of the molecule.");
+  detectSpec.needsMolecule = true;
+  detectSpec.arguments = { QtGui::CommandArgumentSpec::enumeration(
+                             "tolerance", tr("Symmetry detection tolerance."),
+                             { "loose", "normal", "tight", "veryloose" })
+                             .withDefault(QStringLiteral("tight")) };
+  detectSpec.handler = [this](const QtGui::CommandArguments& args) {
+    const QString tolerance = args.string("tolerance");
+    msym_thresholds_t* thresholds = thresholdsForName(tolerance);
+    QString pointGroup;
+    QString error;
+    if (!runSymmetryDetection(thresholds, &pointGroup, &error)) {
+      emit commandFailed(error);
+      return;
+    }
+    QVariantMap result;
+    result["pointGroup"] = pointGroup;
+    emit commandFinished(tr("Detected %1").arg(pointGroup), result);
+  };
+  commandRegistry().add(std::move(detectSpec));
+
+  QtGui::CommandSpec symmetrizeSpec;
+  symmetrizeSpec.name = "symmetrize";
+  symmetrizeSpec.description =
+    tr("Snap the molecule onto its detected point group.");
+  symmetrizeSpec.needsMolecule = true;
+  symmetrizeSpec.arguments = { QtGui::CommandArgumentSpec::enumeration(
+                                 "tolerance",
+                                 tr("Symmetry detection tolerance."),
+                                 { "loose", "normal", "tight", "veryloose" })
+                                 .withDefault(QStringLiteral("tight")) };
+  symmetrizeSpec.handler = [this](const QtGui::CommandArguments& args) {
+    const QString tolerance = args.string("tolerance");
+    msym_thresholds_t* thresholds = thresholdsForName(tolerance);
+    QString pointGroup;
+    QString error;
+    if (!runSymmetryDetection(thresholds, &pointGroup, &error)) {
+      emit commandFailed(error);
+      return;
+    }
+    double symmetryError = 0.0;
+    if (!runSymmetrize(&symmetryError, &error)) {
+      emit commandFailed(error);
+      return;
+    }
+    QVariantMap result;
+    result["pointGroup"] = pointGroup;
+    result["symmetryError"] = symmetryError;
+    emit commandFinished(tr("Symmetrized to %1").arg(pointGroup), result);
+  };
+  commandRegistry().add(std::move(symmetrizeSpec));
 }
 
 bool Symmetry::handleCommand(const QString& command, const QVariantMap& options)
 {
-  const bool symmetrizeRequested = (command == "symmetrize");
-  if (!symmetrizeRequested && command != "detectSymmetry")
-    return false;
-
-  // The panel offers four named tolerances rather than a number, and
-  // libmsym wants a whole struct of seven thresholds, so the command names
-  // a preset instead of inventing a scalar the GUI has no equivalent for.
-  msym_thresholds_t* thresholds = nullptr;
-  if (options.contains("tolerance")) {
-    const QString name = options.value("tolerance").toString();
-    thresholds = thresholdsForName(name);
-    if (thresholds == nullptr) {
-      emit commandFailed(tr("Unknown tolerance \"%1\": expected tight, "
-                            "normal, loose or veryloose.")
-                           .arg(name));
-      return true;
-    }
-  }
-
-  emit commandStarted();
-
-  // Detection is the first half of both commands: it is what fills the
-  // libmsym context that symmetrize then works from.
-  QString pointGroup;
-  QString error;
-  if (!runSymmetryDetection(thresholds, &pointGroup, &error)) {
-    emit commandFailed(error);
-    return true;
-  }
-
-  QVariantMap result;
-  result["pointGroup"] = pointGroup;
-
-  if (!symmetrizeRequested) {
-    emit commandFinished(tr("Detected %1").arg(pointGroup), result);
-    return true;
-  }
-
-  double symmetryError = 0.0;
-  if (!runSymmetrize(&symmetryError, &error)) {
-    emit commandFailed(error);
-    return true;
-  }
-
-  result["symmetryError"] = symmetryError;
-  emit commandFinished(tr("Symmetrized to %1").arg(pointGroup), result);
-  return true;
+  return commandRegistry().handle(command, options, m_molecule);
 }
 
 /*
