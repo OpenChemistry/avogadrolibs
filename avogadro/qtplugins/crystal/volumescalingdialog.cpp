@@ -12,9 +12,10 @@ VolumeScalingDialog::VolumeScalingDialog(QWidget* p)
   : QDialog(p), m_ui(new Ui::VolumeScalingDialog), m_currentVolume(0.)
 {
   m_ui->setupUi(this);
-  connect(m_ui->newVolume, SIGNAL(valueChanged(double)), SLOT(volumeEdited()));
-  connect(m_ui->scalingFactor, SIGNAL(valueChanged(double)),
-          SLOT(factorEdited()));
+  connect(m_ui->newVolume, &QDoubleSpinBox::valueChanged, this,
+          &VolumeScalingDialog::volumeEdited);
+  connect(m_ui->scalingFactor, &QDoubleSpinBox::valueChanged, this,
+          &VolumeScalingDialog::factorEdited);
 }
 
 VolumeScalingDialog::~VolumeScalingDialog()
