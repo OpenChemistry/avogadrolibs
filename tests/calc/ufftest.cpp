@@ -23,6 +23,7 @@
 #include <cctype>
 #include <cmath>
 #include <iterator>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -747,6 +748,8 @@ double maxTermGradientError(
     xp[c] += h;
     xm[c] -= h;
     const double fd = ((uff.*energy)(xp) - (uff.*energy)(xm)) / (2.0 * h);
+    if (!std::isfinite(fd) || !std::isfinite(analytic[c]))
+      return std::numeric_limits<double>::infinity();
     worst = std::max(worst, std::fabs(fd - analytic[c]));
   }
   return worst;

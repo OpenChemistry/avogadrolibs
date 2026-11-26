@@ -59,7 +59,7 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   const Real dot = ab.dot(cb);
   const Vector3 ab_cross_cb = ab.cross(cb);
   const Real crossNorm = ab_cross_cb.norm();
-  if (!std::isfinite(crossNorm) || crossNorm < minCrossNorm)
+  if (!std::isfinite(crossNorm) || crossNorm <= 0.0 || crossNorm < minCrossNorm)
     return 0.0;
 
   Real angle = atan2(crossNorm, dot);
