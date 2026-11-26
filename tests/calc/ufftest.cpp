@@ -1154,23 +1154,25 @@ Twistable formamide()
 // Rotation about a C=C bond. The typer makes both carbons C_R (each has an
 // sp2 neighbor), but the bond is an explicit, non-aromatic double bond, so the
 // sp2-sp2 term uses BO = 2: n = 2, phi0 = 180 and
-// V = 5 sqrt(Uj Uk) (1 + 4.18 ln 2). The four H-C=C-H torsions cost 4 V at
-// 90 degrees. Before this was fixed double bonds had no torsion at all.
+// V = 5 sqrt(Uj Uk) (1 + 4.18 ln 2). V is the barrier about the bond, shared
+// by the four H-C=C-H torsions, so the twist costs V at 90 degrees. Before
+// this was fixed double bonds had no torsion at all.
 TEST(UffTorsionTest, EtheneBarrier)
 {
   Twistable t = ethene();
   EXPECT_EQ(uffTypes(t.molecule)[0], "C_R");
   const double v = 5.0 * paramU("C_R") * (1.0 + 4.18 * std::log(2.0));
   EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
-  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
-  EXPECT_NEAR(t.energy(45.0), 2.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(90.0), v, 1.0e-6);
+  EXPECT_NEAR(t.energy(45.0), 0.5 * v, 1.0e-6);
   // cis and trans (twist by 180 degrees) are the same by symmetry
   EXPECT_NEAR(t.energy(180.0), t.energy(0.0), 1.0e-9);
   EXPECT_NEAR(t.energy(37.0), t.energy(217.0), 1.0e-9);
 }
 
 // The single bond of s-trans butadiene joins two sp2 carbons. Both are C_R
-// here, so BO = 1.5 as for any resonant pair.
+// here, so BO = 1.5 as for any conjugated single bond. The barrier V is
+// shared by the four torsions about the bond.
 TEST(UffTorsionTest, ButadieneCentralBond)
 {
   Twistable t = butadiene();
@@ -1179,7 +1181,7 @@ TEST(UffTorsionTest, ButadieneCentralBond)
   EXPECT_EQ(types[2], "C_R");
   const double v = 5.0 * paramU("C_R") * (1.0 + 4.18 * std::log(1.5));
   EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9); // s-trans
-  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(90.0), v, 1.0e-6);
   EXPECT_NEAR(t.energy(180.0), 0.0, 1.0e-9); // s-cis
 }
 
@@ -1194,7 +1196,7 @@ TEST(UffTorsionTest, ResonantToPlainSp2UsesBondOrder)
   const double v = 5.0 * std::sqrt(paramU("C_R") * paramU("B_2"));
   EXPECT_GT(v, 0.0);
   EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
-  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(90.0), v, 1.0e-6); // V shared by four torsions
 }
 
 // The amide C-N bond uses BO = 1.41
@@ -1206,7 +1208,7 @@ TEST(UffTorsionTest, AmideBondOrder)
   EXPECT_EQ(types[1], "N_R");
   const double v = 5.0 * std::sqrt(paramU("C_R") * paramU("N_R")) *
                    (1.0 + 4.18 * std::log(1.41));
-  EXPECT_NEAR(t.energy(90.0), 4.0 * v, 1.0e-6);
+  EXPECT_NEAR(t.energy(90.0), v, 1.0e-6); // V shared by four torsions
 }
 
 // Slightly puckered benzene with alternating C-C lengths (1.34 / 1.47 A). The
@@ -1281,8 +1283,8 @@ TEST(UffTorsionTest, MethanolIsThreefold)
   EXPECT_GT(v, 0.0);
   for (double deg : { 0.0, 17.0, 50.0, 111.0 })
     EXPECT_NEAR(t.energy(deg), t.energy(deg + 120.0), 1.0e-9);
-  // eclipsed (0) is the maximum, 3 torsions of V
-  EXPECT_NEAR(t.energy(0.0), 3.0 * v, 1.0e-6);
+  // eclipsed (0) is the maximum: V shared by the 3 torsions
+  EXPECT_NEAR(t.energy(0.0), v, 1.0e-6);
   EXPECT_NEAR(t.energy(60.0), 0.0, 1.0e-9);
 }
 
@@ -1305,8 +1307,8 @@ TEST(UffTorsionTest, HydrogenPeroxideKeepsTwofoldTerm)
   EXPECT_NEAR(t.energy(0.0), t.energy(180.0), 1.0e-9);
 }
 
-// sp2-sp3 (methyl on a carbonyl): n = 6, phi0 = 0, V = 1 kcal/mol, six
-// torsions across the bond.
+// sp2-sp3 (methyl on a carbonyl): n = 6, phi0 = 0, V = 1 kcal/mol, shared by
+// the six torsions across the bond.
 TEST(UffTorsionTest, AcetaldehydeMethylIsSixfold)
 {
   Twistable t = acetaldehyde();
@@ -1314,13 +1316,14 @@ TEST(UffTorsionTest, AcetaldehydeMethylIsSixfold)
   EXPECT_EQ(types[0], "C_3");
   EXPECT_EQ(types[1], "C_R");
   EXPECT_NEAR(t.energy(0.0), 0.0, 1.0e-9);
-  EXPECT_NEAR(t.energy(30.0), 6.0, 1.0e-6);
+  EXPECT_NEAR(t.energy(30.0), 1.0, 1.0e-6);
   for (double deg : { 5.0, 23.0, 41.0 })
     EXPECT_NEAR(t.energy(deg), t.energy(deg + 60.0), 1.0e-9);
 }
 
 // sp2-sp3 with a group 16 sp3 atom (vinyl sulfoxide): n = 2, phi0 = 90, so
-// E = V/2 (1 + cos 2 phi) per torsion, minimum perpendicular to the C=C plane.
+// E = V/2 (1 + cos 2 phi) shared among the four torsions about the bond (V/8
+// each), minimum perpendicular to the C=C plane.
 // (Vinyl ethers don't reach this: the typer calls that oxygen O_R.)
 TEST(UffTorsionTest, Sp2Sp3GroupSixteenIsTwofold)
 {
@@ -1334,7 +1337,7 @@ TEST(UffTorsionTest, Sp2Sp3GroupSixteenIsTwofold)
   auto twofold = [&phi](double deg) {
     double sum = 0.0;
     for (double p : phi)
-      sum += 0.5 * (1.0 + std::cos(2.0 * (p + deg) * DEG_TO_RAD_D));
+      sum += 0.125 * (1.0 + std::cos(2.0 * (p + deg) * DEG_TO_RAD_D));
     return sum;
   };
   const double constant = t.energy(0.0) - twofold(0.0);

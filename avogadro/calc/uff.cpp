@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <iterator>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace Avogadro::Calc {
@@ -760,6 +761,19 @@ public:
         continue;
 
       m_torsions.push_back(t);
+    }
+
+    // Rappe's V is the barrier about the j-k bond, but every i-j-k-l dihedral
+    // was given all of it (ethane would get 9 times the barrier). Divide it
+    // among the torsions about each central bond, as RDKit's UFF does. (Open
+    // Babel applies the full V to every torsion.)
+    std::unordered_map<uint64_t, int> torsionCounts;
+    for (const UFFTorsion& t : m_torsions)
+      ++torsionCounts[pairKey(t._atom2, t._atom3)];
+    for (UFFTorsion& t : m_torsions) {
+      const int count = torsionCounts[pairKey(t._atom2, t._atom3)];
+      if (count > 1)
+        t._ijkl /= static_cast<Real>(count);
     }
   }
 
