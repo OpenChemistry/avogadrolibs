@@ -856,7 +856,8 @@ TEST(UffAngleTest, SevenCoordinateFallbackGradientMatchesEnergy)
 
 // Inversion terms for P, As, Sb and Bi: E = K (C0 + C1 cos w + C2 cos 2w) with
 // C1 = -4 C2 cos w0 so that the minimum is at w0 (Rappe et al. 1992), and
-// C0 chosen so E(w0) = 0.
+// C0 chosen so E(w0) = 0. K = 22 / (C0 + C1 + C2)
+// makes the planar energy 22 kcal/mol, split over three inversion axes.
 TEST(UffOopTest, BismuthGradientMatchesEnergy)
 {
   Molecule molecule;
@@ -910,6 +911,45 @@ TEST(UffOopTest, PhosphorusMinimumEnergyIsZero)
     lowest = std::min(lowest, uff.oopEnergy(x));
   }
   EXPECT_NEAR(lowest, 0.0, 1.0e-4);
+}
+
+// The planar (w = 0) inversion energy of a group 15 center is 22 kcal/mol
+// (K = 22 / (C0 + C1 + C2)), shared by the three inversion axes. Without the
+// P/As/Sb/Bi term this is zero, which the minimum scan above can't tell.
+TEST(UffOopTest, PlanarGroupFifteenCentersCost22)
+{
+  for (unsigned char z : { 15, 33, 83 }) {
+    Molecule molecule;
+    Index center = addAt(molecule, z, 0.0, 0.0, 0.0);
+    for (int k = 0; k < 3; ++k) {
+      const double phi = 2.0 * PI_D * k / 3.0;
+      bond(molecule, center,
+           addAt(molecule, 1, 1.6 * std::cos(phi), 1.6 * std::sin(phi), 0.0));
+    }
+    UFF uff;
+    uff.setMolecule(&molecule);
+    const Eigen::VectorXd x = positionsOf(molecule);
+    const double energy = uff.oopEnergy(x);
+    EXPECT_GT(energy, 0.0) << int(z);
+    EXPECT_NEAR(energy, 22.0, 1.0e-9) << int(z);
+  }
+}
+
+// An asymmetric, pyramidal phosphorus: the three inversion axes each have a
+// different out-of-plane angle, and the gradient must match the energy.
+TEST(UffOopTest, DistortedPhosphorusGradientMatchesEnergy)
+{
+  Molecule molecule;
+  Index p = addAt(molecule, 15, 0.0, 0.0, 0.0);
+  bond(molecule, p, addAt(molecule, 1, 1.35, 0.2, 0.55));
+  bond(molecule, p, addAt(molecule, 1, -0.5, 1.3, 0.35));
+  bond(molecule, p, addAt(molecule, 1, -0.3, -0.9, 1.0));
+  EXPECT_EQ(uffTypes(molecule)[0], "P_3+3");
+  UFF uff;
+  uff.setMolecule(&molecule);
+  EXPECT_GT(uff.oopEnergy(positionsOf(molecule)), 0.0);
+  EXPECT_LT(maxTermGradientError(molecule, &UFF::oopEnergy, &UFF::oopGradient),
+            1.0e-4);
 }
 
 // Exactly collinear F-Xe-F (a perfect square): the gradient must stay finite

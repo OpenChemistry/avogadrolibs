@@ -607,9 +607,6 @@ public:
 
       UFFOOP oop;
       oop._atom1 = i;
-      oop._atom2 = neighbors[0];
-      oop._atom3 = neighbors[1];
-      oop._atom4 = neighbors[2];
 
       const std::string& symbol = uffparams[m_atomTypes[i]].label;
       if (symbol == "N_R" || symbol == "N_2" || symbol == "O_R" ||
@@ -638,11 +635,15 @@ public:
         }
         // E = K (C0 + C1 cos(w) + C2 cos(2w)), Rappe et al. (1992):
         // C1 = -4 C2 cos(w0) puts the minimum at w0, and
-        // C0 = -C1 cos(w0) - C2 cos(2 w0) makes E(w0) = 0
+        // C0 = -C1 cos(w0) - C2 cos(2 w0) makes E(w0) = 0, and
+        // K = 22 / (C0 + C1 + C2) makes the planar (w = 0) energy 22 kcal/mol
         oop._c1 = -4.0 * cos(phi);
         oop._c2 = 1.0;
         oop._c0 = -1.0 * oop._c1 * cos(phi) - oop._c2 * cos(2.0 * phi);
-        oop._koop = 22.0;
+        const Real planar = oop._c0 + oop._c1 + oop._c2;
+        if (!(planar > 1.0e-8))
+          continue;
+        oop._koop = 22.0 / planar;
       } else if (symbol == "C_2" || symbol == "C_R") {
         oop._c0 = 1.0;
         oop._c1 = -1.0;
@@ -658,7 +659,16 @@ public:
         continue;
       }
 
-      m_oops.push_back(oop);
+      // Rappe et al. average the inversion over the three axes (each
+      // neighbor in turn is the out-of-plane atom, the other two define the
+      // plane), as Open Babel does: three terms with a third of K each.
+      oop._koop /= 3.0;
+      for (size_t axis = 0; axis < 3; ++axis) {
+        oop._atom2 = neighbors[axis];
+        oop._atom3 = neighbors[(axis + 1) % 3];
+        oop._atom4 = neighbors[(axis + 2) % 3];
+        m_oops.push_back(oop);
+      }
     }
   }
 
