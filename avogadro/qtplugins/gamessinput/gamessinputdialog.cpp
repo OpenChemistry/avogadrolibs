@@ -161,8 +161,10 @@ void GamessInputDialog::setMolecule(QtGui::Molecule* mol)
 
   m_molecule = mol;
 
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updatePreviewText()));
-  connect(mol, SIGNAL(changed(unsigned int)), SLOT(updateTitlePlaceholder()));
+  connect(mol, &QtGui::Molecule::changed, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(mol, &QtGui::Molecule::changed, this,
+          &GamessInputDialog::updateTitlePlaceholder);
 
   updateTitlePlaceholder();
   updatePreviewText();
@@ -175,50 +177,55 @@ void GamessInputDialog::showEvent(QShowEvent* e)
   // Update the preview text if an update was requested while hidden. Use a
   // single shot to allow the dialog to show before popping up any warnings.
   if (m_updatePending)
-    QTimer::singleShot(0, this, SLOT(updatePreviewText()));
+    QTimer::singleShot(0, this, &GamessInputDialog::updatePreviewText);
 }
 
 void GamessInputDialog::connectBasic()
 {
-  connect(ui.titleEdit, SIGNAL(textChanged(QString)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.calculateCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updateTitlePlaceholder()));
-  connect(ui.theoryCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.theoryCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updateTitlePlaceholder()));
-  connect(ui.basisCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.basisCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updateTitlePlaceholder()));
-  connect(ui.DCVerCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.DCVerCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updateTitlePlaceholder()));
-  connect(ui.stateCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.multiplicityCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.chargeCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.maxscfspinBox, SIGNAL(valueChanged(int)), this,
-          SLOT(updatePreviewText()));
-  connect(ui.convergeSpinBox, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePreviewText()));
+  connect(ui.titleEdit, &QLineEdit::textChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.calculateCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.calculateCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updateTitlePlaceholder);
+  connect(ui.theoryCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.theoryCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updateTitlePlaceholder);
+  connect(ui.basisCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.basisCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updateTitlePlaceholder);
+  connect(ui.DCVerCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.DCVerCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updateTitlePlaceholder);
+  connect(ui.stateCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.multiplicityCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.chargeCombo, &QComboBox::currentIndexChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.maxscfspinBox, &QSpinBox::valueChanged, this,
+          &GamessInputDialog::updatePreviewText);
+  connect(ui.convergeSpinBox, &QDoubleSpinBox::valueChanged, this,
+          &GamessInputDialog::updatePreviewText);
 }
 
 void GamessInputDialog::connectPreview() {}
 
 void GamessInputDialog::connectButtons()
 {
-  connect(ui.resetAllButton, SIGNAL(clicked()), SLOT(resetClicked()));
-  connect(ui.defaultsButton, SIGNAL(clicked()), SLOT(defaultsClicked()));
-  connect(ui.generateButton, SIGNAL(clicked()), SLOT(generateClicked()));
-  connect(ui.computeButton, SIGNAL(clicked()), SLOT(computeClicked()));
-  connect(ui.closeButton, SIGNAL(clicked()), SLOT(close()));
+  connect(ui.resetAllButton, &QPushButton::clicked, this,
+          &GamessInputDialog::resetClicked);
+  connect(ui.defaultsButton, &QPushButton::clicked, this,
+          &GamessInputDialog::defaultsClicked);
+  connect(ui.generateButton, &QPushButton::clicked, this,
+          &GamessInputDialog::generateClicked);
+  connect(ui.computeButton, &QPushButton::clicked, this,
+          &GamessInputDialog::computeClicked);
+  connect(ui.closeButton, &QPushButton::clicked, this,
+          &GamessInputDialog::close);
 }
 
 void GamessInputDialog::buildOptions()
