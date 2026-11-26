@@ -15,6 +15,13 @@
 namespace Avogadro::Calc {
 
 /**
+ * Bonds shorter than this (in Angstrom) have no usable direction. The
+ * dihedral gradient is zero for them, so torsion energies must drop the term
+ * under the same condition.
+ */
+constexpr Real minDihedralBondLength = 1.0e-3;
+
+/**
  * Calculate the components of the gradient for the distance a-b.
  * @return true if the length is well-defined.
  */
@@ -36,10 +43,15 @@ inline bool distanceGradient(const Vector3& a, const Vector3& b, Real& distance,
 
 /**
  * Calculate the components of the gradient for the angle a-b-c using atan2.
+ * @param minCrossNorm the gradient is zeroed (and 0.0 returned) when
+ * |ab x cb| is below this, i.e., for nearly collinear atoms where the
+ * direction of d(angle)/dx is ill-defined. Energy terms like cos(n * angle)
+ * whose derivative vanishes as sin(angle) can use a much smaller value.
  * @return the angle between a-b-c in radians or 0.0 if ill-defined
  */
 inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
-                          Vector3& aGrad, Vector3& bGrad, Vector3& cGrad)
+                          Vector3& aGrad, Vector3& bGrad, Vector3& cGrad,
+                          Real minCrossNorm = 1.e-6)
 {
   cGrad = bGrad = aGrad = Vector3::Zero();
 
@@ -54,7 +66,7 @@ inline Real angleGradient(const Vector3& a, const Vector3& b, const Vector3& c,
   const Real dot = ab.dot(cb);
   const Vector3 ab_cross_cb = ab.cross(cb);
   const Real crossNorm = ab_cross_cb.norm();
-  if (!std::isfinite(crossNorm) || crossNorm < 1.e-6)
+  if (!std::isfinite(crossNorm) || crossNorm <= 0.0 || crossNorm < minCrossNorm)
     return 0.0;
 
   Real angle = atan2(crossNorm, dot);
@@ -108,7 +120,8 @@ inline Real dihedralGradient(const Vector3& i, const Vector3& j,
   Real phi = calculateDihedral(i, j, k, l) * DEG_TO_RAD;
 
   // check if the bond vectors are near zero
-  if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3)
+  if (rij < minDihedralBondLength || rjk < minDihedralBondLength ||
+      rkl < minDihedralBondLength)
     return phi; // skip this torsion
 
   // Using the BallView / Open Babel formula

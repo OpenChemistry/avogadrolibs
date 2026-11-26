@@ -197,10 +197,10 @@ public:
    * center to b, c and the out-of-plane atom is taken as its shortest image.
    * The unwrapped points are then measured exactly as in measure().
    *
-   * UnitCell::minimumImage() rounds fractional coordinates. That finds the
-   * true shortest image in orthogonal cells, but can miss it in strongly
-   * skewed cells when a step is longer than about half the cell's thinnest
-   * width.
+   * UnitCell::minimumImage() returns the shortest image of a vector (exact for
+   * orthogonal and reduced cells). The result is still ambiguous when a step
+   * is about half the cell's thinnest width, so the atoms should be bonded
+   * neighbors, not far apart.
    *
    * @return The same units and ranges as measure(). Returns std::nullopt in
    * the cases measure() does (including non-finite positions), and also if @p

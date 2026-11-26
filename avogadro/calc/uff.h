@@ -62,6 +62,13 @@ public:
    */
   void setMolecule(Core::Molecule* mol) override;
 
+  /**
+   * @return the UFF atom type label (e.g., "C_3", "S_3+6") assigned to the
+   * atom at @p atomIndex, or an empty string if the atom has no type (no
+   * molecule set, unsupported element, or index out of range).
+   */
+  std::string atomTypeLabel(Index atomIndex) const;
+
 protected:
   Core::Molecule* m_molecule;
 

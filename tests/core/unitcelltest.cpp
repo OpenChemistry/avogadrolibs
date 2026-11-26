@@ -1353,3 +1353,92 @@ TEST(UnitCellTest, Angles_ConsistencyWithVectors)
   EXPECT_NEAR(b, cell.b(), 1e-4);
   EXPECT_NEAR(c, cell.c(), 1e-4);
 }
+
+namespace {
+// The shortest vector differing from v by a lattice vector, by brute force
+// over a large block of images around the rounded fractional coordinates.
+Vector3 bruteForceMinimumImage(const UnitCell& cell, const Vector3& v)
+{
+  const Vector3 f = cell.toFractional(v);
+  const Vector3 r = UnitCell::minimumImageFractional(f);
+  Vector3 best = cell.toCartesian(r);
+  for (int i = -2; i <= 2; ++i) {
+    for (int j = -2; j <= 2; ++j) {
+      for (int k = -2; k <= 2; ++k) {
+        const Vector3 candidate = cell.toCartesian(
+          r + Vector3(static_cast<Real>(i), static_cast<Real>(j),
+                      static_cast<Real>(k)));
+        if (candidate.squaredNorm() < best.squaredNorm())
+          best = candidate;
+      }
+    }
+  }
+  return best;
+}
+
+// Compare minimumImage() with brute force for a deterministic set of vectors.
+// Returns how many of them rounding alone would have gotten wrong.
+int checkMinimumImage(const UnitCell& cell, Real range)
+{
+  int roundingMisses = 0;
+  unsigned int state = 12345u;
+  auto next = [&state]() {
+    state = state * 1664525u + 1013904223u;
+    return static_cast<Real>(state >> 8) / static_cast<Real>(1u << 24);
+  };
+  for (int n = 0; n < 2000; ++n) {
+    const Vector3 v(range * (2.0 * next() - 1.0), range * (2.0 * next() - 1.0),
+                    range * (2.0 * next() - 1.0));
+    const Vector3 expected = bruteForceMinimumImage(cell, v);
+    const Vector3 image = cell.minimumImage(v);
+    EXPECT_NEAR(image.squaredNorm(), expected.squaredNorm(), 1.0e-9);
+    // it must still be a lattice translate of v
+    const Vector3 shift = cell.toFractional(image - v);
+    EXPECT_NEAR(shift.x(), std::round(shift.x()), 1.0e-9);
+    EXPECT_NEAR(shift.y(), std::round(shift.y()), 1.0e-9);
+    EXPECT_NEAR(shift.z(), std::round(shift.z()), 1.0e-9);
+    EXPECT_NEAR(cell.distanceSquared(v, Vector3::Zero()),
+                expected.squaredNorm(), 1.0e-9);
+
+    const Vector3 rounded =
+      cell.toCartesian(UnitCell::minimumImageFractional(cell.toFractional(v)));
+    if (rounded.squaredNorm() > expected.squaredNorm() + 1.0e-9)
+      ++roundingMisses;
+  }
+  return roundingMisses;
+}
+} // namespace
+
+TEST(UnitCellTest, MinimumImage_HexagonalCell)
+{
+  // graphene primitive cell, a = 2.46 A, gamma = 120 degrees
+  UnitCell cell;
+  cell.setCellParameters(2.46, 2.46, 15.0, 90.0 * DEG_TO_RAD, 90.0 * DEG_TO_RAD,
+                         120.0 * DEG_TO_RAD);
+  // rounding alone is not always the shortest image here
+  EXPECT_GT(checkMinimumImage(cell, 6.0), 0);
+  // 0.4 a - 0.4 b rounds to itself (sqrt(0.48) * 2.46 = 1.70 A), but the image
+  // -0.6 a - 0.4 b is shorter: sqrt(0.28) * 2.46 = 1.30 A
+  const Vector3 v = 0.4 * cell.aVector() - 0.4 * cell.bVector();
+  EXPECT_NEAR(cell.minimumImage(v).norm(), std::sqrt(0.28) * 2.46, 1.0e-9);
+  EXPECT_NEAR(cell.distance(v, Vector3::Zero()), std::sqrt(0.28) * 2.46,
+              1.0e-9);
+}
+
+TEST(UnitCellTest, MinimumImage_SkewedTriclinicCell)
+{
+  UnitCell cell(Vector3(4.0, 0.0, 0.0), Vector3(-2.0, 3.0, 0.0),
+                Vector3(1.9, -1.4, 3.5));
+  EXPECT_GT(checkMinimumImage(cell, 9.0), 0);
+}
+
+TEST(UnitCellTest, MinimumImage_OrthogonalCell)
+{
+  UnitCell cell(Vector3(5.0, 0.0, 0.0), Vector3(0.0, 7.0, 0.0),
+                Vector3(0.0, 0.0, 9.0));
+  EXPECT_EQ(checkMinimumImage(cell, 14.0), 0);
+  // and a rotated orthogonal cell
+  UnitCell rotated(Vector3(3.0, 4.0, 0.0), Vector3(-8.0, 6.0, 0.0),
+                   Vector3(0.0, 0.0, 6.0));
+  EXPECT_EQ(checkMinimumImage(rotated, 14.0), 0);
+}
