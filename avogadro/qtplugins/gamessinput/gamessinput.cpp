@@ -104,8 +104,8 @@ void GamessInput::menuActivated()
 {
   if (!m_dialog) {
     m_dialog = new GamessInputDialog(qobject_cast<QWidget*>(parent()));
-    connect(m_dialog, &GamessInputDialog::openJobOutput,
-            this, &GamessInput::openJobOutput);
+    connect(m_dialog, &GamessInputDialog::openJobOutput, this,
+            &GamessInput::openJobOutput);
   }
   m_dialog->setMolecule(m_molecule);
   m_dialog->show();
