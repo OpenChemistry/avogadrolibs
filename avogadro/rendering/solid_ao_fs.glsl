@@ -2,17 +2,25 @@
 //
 // Ambient occlusion stage for the solid pipeline
 //
-// Writes the raw screen-space ambient occlusion term to its own buffer so the
-// compositing stage can filter it. The estimator takes 16 samples per pixel
-// and rotates the kernel from one pixel to the next; on its own that shows up
-// as a dither pattern, so the rotations are laid out on a 4x4 tile that uses
-// each of the 16 angles exactly once. Averaging over any 4x4 block of pixels
-// then cancels the pattern, which is what the next stage does.
+// Writes the raw screen-space ambient occlusion term to its own buffer, at half
+// the resolution of the frame in each direction, so the blur stages can filter
+// it. The estimator takes 16 samples per texel and rotates the kernel from one
+// texel to the next; on its own that shows up as a dither pattern, so the
+// rotations are laid out on a 4x4 tile that uses each of the 16 angles exactly
+// once. Averaging over any 4x4 block of texels then cancels the pattern, which
+// is what the blur stages (solid_aoblur_fs.glsl) do.
+//
+// Each texel stands for a 2x2 block of frame pixels and is evaluated at the
+// one of the four nearest the camera. Taking the nearest keeps a texel that
+// straddles a silhouette on the molecule rather than on the background behind
+// it, so the upsampling in the compositing stage finds foreground texels right
+// up to the edge. The kernel is laid out in screen UV units, as before, so the
+// occlusion has the same world-space reach at any resolution.
 //
 // The distance to the surface, in scene units, is written alongside the term.
-// The blur needs it to tell surfaces apart, and this pass has already read the
-// depth it comes from, so carrying it here saves the blur a second depth
-// texture and a per-tap linearization.
+// The blur and the upsampling need it to tell surfaces apart, and this pass
+// has already read the depth it comes from, so carrying it here saves them a
+// second depth texture and a per-tap linearization.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -20,11 +28,8 @@
 precision highp float;
 
 //
-// Input
+// Output
 //
-
-// texture coordinates
-in vec2 UV;
 
 // x: the ambient occlusion term. y: distance from the camera, in scene units.
 out vec2 outAo;
@@ -33,12 +38,10 @@ out vec2 outAo;
 // Uniforms
 //
 
-// Depth rendered texture
+// Depth rendered texture, at the full resolution of the frame
 uniform sampler2D inDepthTex;
 // Shadow strength for SSAO
 uniform float inAoStrength;
-// Rendering surface dimensions, in pixels
-uniform float width, height;
 // The projection matrix, used to turn window depth into a distance in scene
 // units, comes from the CameraBuffer block that the shader library declares.
 
@@ -53,29 +56,33 @@ float linearDepth(float depth)
   return -viewZ;
 }
 
-vec3 getNormalNear(vec2 normalUV, float cent)
+// Screen-space normal from the depth gradient at a pixel: the smaller of the
+// forward and backward differences, so a silhouette does not tilt it.
+vec3 getNormalNear(ivec2 pixel, ivec2 size, float cent)
 {
-  float xpos = texture(inDepthTex, normalUV + vec2(1.0 / width, 0.0)).x;
-  float xneg = texture(inDepthTex, normalUV - vec2(1.0 / width, 0.0)).x;
-  float ypos = texture(inDepthTex, normalUV + vec2(0.0, 1.0 / height)).x;
-  float yneg = texture(inDepthTex, normalUV - vec2(0.0, 1.0 / height)).x;
+  ivec2 last = size - ivec2(1);
+  float xpos = texelFetch(inDepthTex, min(pixel + ivec2(1, 0), last), 0).x;
+  float xneg = texelFetch(inDepthTex, max(pixel - ivec2(1, 0), ivec2(0)), 0).x;
+  float ypos = texelFetch(inDepthTex, min(pixel + ivec2(0, 1), last), 0).x;
+  float yneg = texelFetch(inDepthTex, max(pixel - ivec2(0, 1), ivec2(0)), 0).x;
   float xposdelta = xpos - cent;
   float xnegdelta = cent - xneg;
   float yposdelta = ypos - cent;
   float ynegdelta = cent - yneg;
   float xdelta = abs(xposdelta) > abs(xnegdelta) ? xnegdelta : xposdelta;
   float ydelta = abs(yposdelta) > abs(ynegdelta) ? ynegdelta : yposdelta;
-  vec3 r = vec3(xdelta, ydelta, 0.5 / width + 0.5 / height);
+  vec3 r = vec3(xdelta, ydelta, 0.5 / float(size.x) + 0.5 / float(size.y));
   return normalize(r);
 }
 
-// Size of the rotation tile, in pixels. Must match AO_BLUR_TILE in
-// solid_first_fs.glsl, which averages a block of exactly this size; if the two
+// Size of the rotation tile, in texels of this pass. Must match AO_TILE in
+// solid_aoblur_fs.glsl, which averages a block of exactly this size; if the two
 // disagree the pattern stops cancelling and the dither returns.
 const int AO_TILE = 4;
 
-// Distance written for background pixels: the largest finite half float. Must
-// match the background test (BACKGROUND_THRESHOLD) in solid_first_fs.glsl.
+// Distance written for background texels: the largest finite half float. Must
+// match the background test (BACKGROUND_THRESHOLD) in solid_aoblur_fs.glsl and
+// solid_first_fs.glsl.
 const float BACKGROUND_DISTANCE = 65504.0;
 
 // One kernel rotation per pixel of the tile.
@@ -100,7 +107,7 @@ const vec2 SSAOkernel[16] = vec2[16](
         vec2(-0.032077, -0.042826)
     );
 
-float computeSSAOLuminosity(vec3 normal, float depth)
+float computeSSAOLuminosity(vec3 normal, float depth, vec2 uv)
 {
   float totalOcclusion = 0.0;
   // One of AO_SAMPLES kernel rotations, arranged so that each tile-sized block
@@ -117,7 +124,7 @@ float computeSSAOLuminosity(vec3 normal, float depth)
   );
   for (int i = 0; i < AO_SAMPLES; i++) {
     vec2 samplePoint = rotation * SSAOkernel[i];
-    float occluderDepth = texture(inDepthTex, UV + samplePoint).x;
+    float occluderDepth = texture(inDepthTex, uv + samplePoint).x;
     vec3 occluder = vec3(samplePoint.xy, depth - occluderDepth);
     float d = length(occluder);
     float occlusion = max(0.0, dot(normal, occluder)) * (1.0 / (1.0 + d));
@@ -128,15 +135,32 @@ float computeSSAOLuminosity(vec3 normal, float depth)
 }
 
 void main() {
-  float depth = texture(inDepthTex, UV).x;
+  ivec2 size = textureSize(inDepthTex, 0);
+  ivec2 last = size - ivec2(1);
+  // The 2x2 block of frame pixels this texel covers. On an odd-sized frame the
+  // last texel's block hangs over the edge, and the clamp repeats the edge.
+  ivec2 corner = 2 * ivec2(gl_FragCoord.xy);
+  ivec2 nearest = min(corner, last);
+  float depth = texelFetch(inDepthTex, nearest, 0).x;
+  for (int i = 1; i < 4; i++) {
+    ivec2 pixel = min(corner + ivec2(i & 1, i >> 1), last);
+    float other = texelFetch(inDepthTex, pixel, 0).x;
+    if (other < depth) {
+      depth = other;
+      nearest = pixel;
+    }
+  }
   if (depth >= 1.0) {
-    // Background pixel: skip the 16-tap SSAO kernel and write the FP16-max
-    // sentinel distance so blurredAo() never blends background into foreground.
+    // Background: skip the 16-tap SSAO kernel and write the FP16-max sentinel
+    // distance so the blur and upsampling never mix background into
+    // foreground.
     outAo = vec2(1.0, BACKGROUND_DISTANCE);
     return;
   }
+  vec2 uv = (vec2(nearest) + 0.5) / vec2(size);
   // The term can exceed 1.0: it brightens as well as darkens, so the buffer
   // this is written to has to be a float format rather than a normalized one.
-  outAo = vec2(computeSSAOLuminosity(getNormalNear(UV, depth), depth),
+  outAo = vec2(computeSSAOLuminosity(getNormalNear(nearest, size, depth),
+                                     depth, uv),
                linearDepth(depth));
 }

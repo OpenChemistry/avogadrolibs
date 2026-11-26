@@ -79,4 +79,12 @@ float circleOfConfusion(const DepthOfFieldSettings& settings, float depth,
   return std::min(blur, settings.maxBlur);
 }
 
+int occlusionBufferSize(int size)
+{
+  // Written as a division and a remainder so that size + 1 cannot overflow.
+  if (size <= 1)
+    return 1;
+  return size / 2 + size % 2;
+}
+
 } // namespace Avogadro::Rendering

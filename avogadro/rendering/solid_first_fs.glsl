@@ -60,14 +60,14 @@ uniform float inDofMaxBlur;
 uniform float inDofFocusRadii;
 // Rendering surface dimensions, in pixels
 uniform float width, height;
-// Output of the AO stage: the ambient occlusion term in x, still carrying its
-// sampling pattern, and the distance to the surface in scene units in y.
-// blurredAo() below removes the pattern.
+// Output of the AO and blur stages, at half the resolution of the frame: the
+// ambient occlusion term in x and the distance to the surface in scene units in
+// y. upsampledAo() below brings it to the frame's resolution.
 uniform sampler2D inAoTex;
 // The camera matrices and the scene bounds come from the CameraBuffer block
-// that the shader library declares: the blur uses the projection to size its
-// surface test, and depth cue and depth of field use the inverse projection to
-// turn window depth into a distance, and the model-view matrix and bounds to
+// that the shader library declares: the upsampling uses the projection to size
+// its surface test, and depth cue and depth of field use the inverse projection
+// to turn window depth into a distance, and the model-view matrix and bounds to
 // find the scene's center and radius.
 
 // Screen-space normal from the depth gradient, sampled `radius` pixels either
@@ -92,62 +92,13 @@ vec3 getNormalAt(vec2 normalUV, float radius)
   return normalize(r);
 }
 
-// Must match AO_TILE in solid_ao_fs.glsl. That stage uses a different kernel
-// rotation for each pixel of a tile this size, and averaging a block of the
-// same size is exactly what cancels the pattern.
-const int AO_BLUR_TILE = 4;
-
 // Distances at or above this are background; just below BACKGROUND_DISTANCE in
 // solid_ao_fs.glsl, the sentinel written there.
 const float BACKGROUND_THRESHOLD = 65000.0;
 
-// The steepest surface, in scene units of depth per pixel, still treated as one
-// surface by the blur. Anything steeper is taken to be a different surface.
+// The steepest surface, in scene units of depth per AO texel, still treated as
+// one surface. Must match AO_BLUR_SLOPE_LIMIT in solid_aoblur_fs.glsl.
 const float AO_BLUR_SLOPE_LIMIT = 16.0;
-
-// Average the ambient occlusion term over the block of pixels that the AO stage
-// rotates its kernel across. Every rotation appears exactly once in the block,
-// so the sampling pattern averages out instead of showing as a dither. Any
-// AO_BLUR_TILE consecutive offsets cover the tile, whatever the alignment.
-// Taps sitting on a different surface are dropped, so occlusion does not bleed
-// across a silhouette into whatever lies behind it.
-//
-// Both the term and the distance the surface test needs come from the same
-// texel, so each tap is a single fetch.
-float blurredAo(vec2 texCoord)
-{
-  vec2 center = texture(inAoTex, texCoord).xy;
-  float centerZ = center.y;
-
-  // Size the surface test by how much scene distance one pixel covers here,
-  // rather than by a fixed number of Angstroms. A fixed distance is only right
-  // at one zoom level: it rejects every tap on a steep surface when zoomed out,
-  // which brings the dither back in exactly the places the blur exists for.
-  // projection[2][3] and [3][3] give the perspective divide, which is the
-  // view distance for a perspective camera and 1 for an orthographic one.
-  float wClip = projection[2][3] * -centerZ + projection[3][3];
-  float pixelSize = 2.0 * wClip / (height * projection[1][1]);
-  float tolerance = AO_BLUR_SLOPE_LIMIT * pixelSize;
-
-  // The centre tap always belongs, so seed with it and skip it in the loop.
-  float total = center.x;
-  float weight = 1.0;
-  for (int y = -1; y <= AO_BLUR_TILE - 2; y++) {
-    for (int x = -1; x <= AO_BLUR_TILE - 2; x++) {
-      if (x == 0 && y == 0)
-        continue;
-      vec2 tapUV = texCoord + vec2(float(x) / width, float(y) / height);
-      vec2 tap = texture(inAoTex, tapUV).xy;
-      // Reject background pixels as well as taps on a different foreground
-      // surface.
-      if (tap.y < BACKGROUND_THRESHOLD && abs(tap.y - centerZ) < tolerance) {
-        total += tap.x;
-        weight += 1.0;
-      }
-    }
-  }
-  return total / weight;
-}
 
 // Smallest denominator: keeps a degenerate projection or scene from dividing
 // by zero.
@@ -163,6 +114,64 @@ float viewDistance(vec2 texCoord, float depth)
                 vec4(texCoord * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0);
     float w = abs(view.w) > DEPTH_EPSILON ? view.w : DEPTH_EPSILON;
     return -view.z / w;
+}
+
+// The occlusion term at a pixel, upsampled from the half-resolution buffer the
+// AO and blur stages produce. The four texels nearest the pixel are weighted
+// bilinearly, but a texel whose surface is further from this pixel's than the
+// tolerance is left out, so the term does not smear across a silhouette: no
+// dark halo on the nearer surface from the farther one, and none spilled onto
+// the background. If every one of the four is on another surface, as at a
+// one-pixel feature, the term of the nearest of them in depth stands in. Only
+// when there is no foreground texel at all is there no occlusion.
+//
+// Both the term and the distance the test needs come from the same texel, so
+// each tap is a single fetch.
+float upsampledAo(vec2 texCoord, float depth)
+{
+  ivec2 aoSize = textureSize(inAoTex, 0);
+  ivec2 last = aoSize - ivec2(1);
+  // Texel centers sit on the corners shared by the 2x2 blocks of pixels they
+  // cover, so the pixel's center is a quarter of a texel off from the nearest
+  // texel centers, on one side or the other.
+  vec2 position = texCoord * vec2(textureSize(inDepthTex, 0)) * 0.5 - 0.5;
+  vec2 base = floor(position);
+  vec2 frac = position - base;
+  ivec2 corner = ivec2(base);
+
+  // The pixel's distance from the camera, and how far apart two texels of the
+  // same surface can be in it: the slope limit times the scene length of one
+  // texel here. See texelSize() in solid_aoblur_fs.glsl.
+  float z = viewDistance(texCoord, depth);
+  float wClip = projection[2][3] * -z + projection[3][3];
+  float scale = abs(float(aoSize.y) * projection[1][1]);
+  float tolerance = AO_BLUR_SLOPE_LIMIT * 2.0 * abs(wClip) /
+                    max(scale, DEPTH_EPSILON);
+
+  float total = 0.0;
+  float weight = 0.0;
+  float nearestTerm = 1.0;
+  float nearestGap = 3.4e38;
+  for (int i = 0; i < 4; i++) {
+    ivec2 offset = ivec2(i & 1, i >> 1);
+    ivec2 texel = clamp(corner + offset, ivec2(0), last);
+    vec2 tap = texelFetch(inAoTex, texel, 0).xy;
+    if (tap.y >= BACKGROUND_THRESHOLD)
+      continue;
+    float gap = abs(tap.y - z);
+    float bilinear = (offset.x == 0 ? 1.0 - frac.x : frac.x) *
+                     (offset.y == 0 ? 1.0 - frac.y : frac.y);
+    if (gap < tolerance) {
+      total += bilinear * tap.x;
+      weight += bilinear;
+    }
+    if (gap < nearestGap) {
+      nearestGap = gap;
+      nearestTerm = tap.x;
+    }
+  }
+  // No texel on this pixel's surface: take the closest one in depth.
+  return weight > DEPTH_EPSILON ? total / weight : nearestTerm;
 }
 
 // The scene's center, as a distance in front of the camera.
@@ -286,7 +295,7 @@ void main() {
 
     // Luminosity from Ambient Occlusion (AO) and Edge Detection
     if (inAoEnabled != 0.0) {
-        luminosity *= max(1.2 * (1.0 - inAoEnabled), blurredAo(UV));
+        luminosity *= max(1.2 * (1.0 - inAoEnabled), upsampledAo(UV, depth));
     }
     if (inEdStrength != 0.0) {
         // Below 1.0 the outline fades in at its original one-pixel width, which

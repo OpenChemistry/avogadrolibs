@@ -20,6 +20,7 @@ namespace {
 #include "mesh_fs.h"
 #include "mesh_vs.h"
 #include "solid_ao_fs.h"
+#include "solid_aoblur_fs.h"
 #include "solid_first_fs.h"
 #include "solid_fxaa_fs.h"
 #include "solid_vs.h"
@@ -60,6 +61,7 @@ const Sources s_sources[] = {
   { solid_vs, solid_first_fs },
   { solid_vs, solid_ao_fs },
   { solid_vs, solid_fxaa_fs },
+  { solid_vs, solid_aoblur_fs },
   { volume_vs, volume_fs },
 };
 

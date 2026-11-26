@@ -121,3 +121,25 @@ TEST(SolidEffectsTest, circleOfConfusion)
   EXPECT_EQ(circleOfConfusion(dof, 60.0f, center, 0.0f), 0.0f);
   EXPECT_EQ(circleOfConfusion(dof, NaN, center, radius), 0.0f);
 }
+
+TEST(SolidEffectsTest, occlusionBufferIsHalfTheFrameRoundedUp)
+{
+  EXPECT_EQ(occlusionBufferSize(1920), 960);
+  EXPECT_EQ(occlusionBufferSize(1080), 540);
+  // An odd frame's last row or column still gets a texel.
+  EXPECT_EQ(occlusionBufferSize(63), 32);
+  EXPECT_EQ(occlusionBufferSize(47), 24);
+  EXPECT_EQ(occlusionBufferSize(3), 2);
+  EXPECT_EQ(occlusionBufferSize(2), 1);
+  // Never empty, whatever the frame.
+  EXPECT_EQ(occlusionBufferSize(1), 1);
+  EXPECT_EQ(occlusionBufferSize(0), 1);
+  EXPECT_EQ(occlusionBufferSize(-5), 1);
+  // And the texels always cover the frame: 2 per texel, at most one over.
+  for (int size = 1; size < 4096; ++size) {
+    const int texels = occlusionBufferSize(size);
+    EXPECT_GE(2 * texels, size);
+    EXPECT_LE(2 * texels - size, 1);
+  }
+  EXPECT_GT(occlusionBufferSize(std::numeric_limits<int>::max()), 0);
+}

@@ -107,6 +107,15 @@ AVOGADRORENDERING_EXPORT float circleOfConfusion(
   const DepthOfFieldSettings& settings, float depth, float centerDepth,
   float radius);
 
+/**
+ * The size, in pixels, of the ambient occlusion buffers for a frame @p size
+ * pixels across (or high): half of it, rounded up so that an odd frame's last
+ * row or column still has a texel, and never less than one. The occlusion is
+ * computed and blurred at this size, and each texel stands for a 2x2 block of
+ * frame pixels; the last block hangs over the edge when the frame is odd.
+ */
+AVOGADRORENDERING_EXPORT int occlusionBufferSize(int size);
+
 } // namespace Avogadro::Rendering
 
 #endif // AVOGADRO_RENDERING_SOLIDEFFECTS_P_H

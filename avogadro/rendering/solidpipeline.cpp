@@ -154,8 +154,13 @@ public:
   GLuint renderFBO = 0;
   GLuint renderTexture = 0;
   GLuint depthTexture = 0;
+  // The occlusion term at half the frame's resolution: aoTexture takes the
+  // AO stage's output and the final blurred result, aoBlurTexture the output of
+  // the first blur direction.
   GLuint aoFBO = 0;
   GLuint aoTexture = 0;
+  GLuint aoBlurFBO = 0;
+  GLuint aoBlurTexture = 0;
   GLuint screenVAO = 0;
 };
 
@@ -186,10 +191,11 @@ void initializeFramebuffer(GLuint* outFBO, GLuint* texRGB, GLuint* texDepth)
                          *texDepth, 0);
 }
 
-// The ambient occlusion term is rendered on its own so the compositing stage
-// can filter it, with the distance to the surface in the second channel so
-// that the filter's surface test costs no extra fetch. It needs a float
-// format: the term brightens as well as darkens, and goes above 1.0.
+// The ambient occlusion term is rendered on its own, at half resolution, so
+// the blur and the compositing stage can filter it, with the distance to the
+// surface in the second channel so that their surface tests cost no extra
+// fetch. It needs a float format: the term brightens as well as darkens, and
+// goes above 1.0.
 void initializeAoFramebuffer(GLuint* outFBO, GLuint* texAo)
 {
   glGenFramebuffers(1, outFBO);
@@ -197,7 +203,7 @@ void initializeAoFramebuffer(GLuint* outFBO, GLuint* texAo)
 
   glGenTextures(1, texAo);
   glBindTexture(GL_TEXTURE_2D, *texAo);
-  // The blur reads exact texel centres, so no filtering is wanted here.
+  // The blur reads exact texel centers, so no filtering is wanted here.
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -228,6 +234,8 @@ void SolidPipeline::releaseResources()
   deleteTexture(d->depthTexture);
   deleteFramebuffer(d->aoFBO);
   deleteTexture(d->aoTexture);
+  deleteFramebuffer(d->aoBlurFBO);
+  deleteTexture(d->aoBlurTexture);
   deleteVertexArray(d->screenVAO);
   deleteFramebuffer(d->compositeFBO);
   deleteTexture(d->compositeTexture);
@@ -256,6 +264,7 @@ void SolidPipeline::initialize()
 #endif
   initializeFramebuffer(&d->renderFBO, &d->renderTexture, &d->depthTexture);
   initializeAoFramebuffer(&d->aoFBO, &d->aoTexture);
+  initializeAoFramebuffer(&d->aoBlurFBO, &d->aoBlurTexture);
   // Each helper leaves its own framebuffer bound; settle on the one the
   // pipeline renders into.
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
@@ -322,27 +331,46 @@ void SolidPipeline::end(const Camera& camera)
   // Bind VAO for procedural fullscreen triangle (required for Core Profile)
   glBindVertexArray(d->screenVAO);
 
-  // Render the ambient occlusion term into its own buffer first, so the
-  // compositing stage can blur away the kernel's sampling pattern. Skipped
-  // entirely when ambient occlusion is off, since nothing would read it.
+  // Render the ambient occlusion term into its own half-resolution buffer
+  // first, then blur it in two directions so the compositing stage gets a term
+  // without the kernel's sampling pattern. Skipped entirely when ambient
+  // occlusion is off, since nothing would read it.
   ShaderProgram* aoStage = nullptr;
-  if (m_aoEnabled && d->aoReady)
+  ShaderProgram* blurStage = nullptr;
+  if (m_aoEnabled && d->aoReady) {
     aoStage = RenderContext::currentProgram(ShaderId::SolidAo);
-  const bool useAo = aoStage != nullptr;
+    blurStage = RenderContext::currentProgram(ShaderId::SolidAoBlur);
+  }
+  const bool useAo = aoStage != nullptr && blurStage != nullptr;
   if (useAo) {
-    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    const GLsizei aoWidth = static_cast<GLsizei>(occlusionBufferSize(m_width));
+    const GLsizei aoHeight =
+      static_cast<GLsizei>(occlusionBufferSize(m_height));
     GLenum aoBuffersList[1] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, aoBuffersList);
-    glViewport(0, 0, static_cast<GLsizei>(m_width),
-               static_cast<GLsizei>(m_height));
-    // This target has no depth attachment, and the pass covers every pixel.
+    // These targets have no depth attachment, and each pass covers every
+    // texel.
     glDisable(GL_DEPTH_TEST);
 
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    glDrawBuffers(1, aoBuffersList);
+    glViewport(0, 0, aoWidth, aoHeight);
     aoStage->bind();
     d->bindSampler(*aoStage, "inDepthTex", d->depthTexture, TextureUnitDepth);
-    aoStage->setUniformValue("width", static_cast<float>(m_width));
-    aoStage->setUniformValue("height", static_cast<float>(m_height));
     aoStage->setUniformValue("inAoStrength", m_aoStrength);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Horizontal into the second buffer, then vertical back into the first.
+    blurStage->bind();
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoBlurFBO);
+    glDrawBuffers(1, aoBuffersList);
+    d->bindSampler(*blurStage, "inAoTex", d->aoTexture, TextureUnitAo);
+    blurStage->setUniformValue("inVertical", 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
+    glDrawBuffers(1, aoBuffersList);
+    d->bindSampler(*blurStage, "inAoTex", d->aoBlurTexture, TextureUnitAo);
+    blurStage->setUniformValue("inVertical", 1);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // The passes that follow this one still depend on depth testing.
@@ -403,8 +431,8 @@ void SolidPipeline::end(const Camera& camera)
   firstStage->setUniformValue("inDofMaxBlur", dof.maxBlur);
   firstStage->setUniformValue("inDofFocusRadii", dof.focusRadii);
 
-  // The AO term; the blur sizes its surface test with the camera block's
-  // projection.
+  // The AO term, at half resolution; the upsampling sizes its surface test with
+  // the camera block's projection.
   d->bindSampler(*firstStage, "inAoTex", d->aoTexture, TextureUnitAo);
   firstStage->setUniformValue("inEdStrength",
                               m_edEnabled ? m_edStrength : 0.0f);
@@ -487,7 +515,8 @@ void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
                GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 #endif
 
-  // Two channels: the occlusion term and the distance to the surface.
+  // Two channels: the occlusion term and the distance to the surface, at half
+  // the frame's size in each direction (see occlusionBufferSize()).
   //
   // Half floats hold that distance to one part in 2048. Both the distance and
   // the blur's surface tolerance scale with the view, so what matters is their
@@ -500,19 +529,27 @@ void SolidPipeline::resizeDevice(int deviceWidth, int deviceHeight)
   // The format tops out at 65504, so a camera further than that many scene
   // units from the geometry would lose the surface test. Nothing chemical
   // comes near it.
-  glBindTexture(GL_TEXTURE_2D, d->aoTexture);
-  if (d->aoSupported) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, m_width, m_height, 0, GL_RG,
-                 GL_FLOAT, nullptr);
-    glBindFramebuffer(GL_FRAMEBUFFER, d->aoFBO);
-    d->aoReady =
-      glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
-  } else {
-    // Keep the composite shader's unused sampler complete without requiring
-    // a floating-point render target.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 nullptr);
+  const int aoWidth = occlusionBufferSize(m_width);
+  const int aoHeight = occlusionBufferSize(m_height);
+  bool aoComplete = d->aoSupported;
+  const GLuint aoTargets[2][2] = { { d->aoFBO, d->aoTexture },
+                                   { d->aoBlurFBO, d->aoBlurTexture } };
+  for (const auto& target : aoTargets) {
+    glBindTexture(GL_TEXTURE_2D, target[1]);
+    if (d->aoSupported) {
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, aoWidth, aoHeight, 0, GL_RG,
+                   GL_FLOAT, nullptr);
+      glBindFramebuffer(GL_FRAMEBUFFER, target[0]);
+      aoComplete = aoComplete && glCheckFramebufferStatus(GL_FRAMEBUFFER) ==
+                                   GL_FRAMEBUFFER_COMPLETE;
+    } else {
+      // Keep the composite shader's unused sampler complete without requiring
+      // a floating-point render target.
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA,
+                   GL_UNSIGNED_BYTE, nullptr);
+    }
   }
+  d->aoReady = aoComplete;
   glBindFramebuffer(GL_FRAMEBUFFER, d->renderFBO);
   d->framebufferReady =
     glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
