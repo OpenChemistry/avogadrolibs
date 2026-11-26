@@ -8,13 +8,19 @@
 #include <gtest/gtest.h>
 
 #include <avogadro/qtopengl/qttextrenderstrategy.h>
+#include <avogadro/qtopengl/qttextrenderstrategy_p.h>
 #include <avogadro/rendering/textproperties.h>
 
 #include <avogadro/core/vector.h>
 
+#include <QtCore/QElapsedTimer>
+#include <QtGui/QFont>
 #include <QtGui/QImage>
+#include <QtWidgets/QApplication>
 
 #include <algorithm>
+#include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -255,4 +261,163 @@ TEST_F(QtTextRenderStrategyTest, rotationByNinetyDegreesSwapsExtent)
   }
   ASSERT_GE(maxX, 0) << "No text pixels were drawn.";
   EXPECT_GT(maxY - minY, maxX - minX);
+}
+
+namespace {
+
+struct Result
+{
+  BBox box;
+  std::vector<unsigned char> pixels;
+};
+
+Result renderAll(const QtTextRenderStrategy& strategy, const std::string& text,
+                 const TextProperties& tprop)
+{
+  Result r;
+  int b[4];
+  strategy.boundingBox(text, tprop, b);
+  r.box = { b[0], b[1], b[2], b[3] };
+  const Vector2i dims(r.box.width(), r.box.height());
+  if (dims[0] > 0 && dims[1] > 0) {
+    r.pixels.assign(static_cast<size_t>(dims[0]) * dims[1] * 4, 0);
+    strategy.render(text, tprop, r.pixels.data(), dims);
+  }
+  return r;
+}
+
+bool sameResult(const Result& a, const Result& b)
+{
+  return a.box.left == b.box.left && a.box.right == b.box.right &&
+         a.box.top == b.box.top && a.box.bottom == b.box.bottom &&
+         a.pixels == b.pixels;
+}
+
+} // namespace
+
+TEST_F(QtTextRenderStrategyTest, preserveArgbDefaultsToFalse)
+{
+  for (int i = 0; i < 20; ++i) {
+    QtTextRenderStrategy fresh;
+    EXPECT_FALSE(fresh.preserveArgb());
+    std::unique_ptr<TextRenderStrategy> clone(fresh.newInstance());
+    auto* q = dynamic_cast<QtTextRenderStrategy*>(clone.get());
+    ASSERT_NE(q, nullptr);
+    EXPECT_FALSE(q->preserveArgb());
+  }
+}
+
+TEST_F(QtTextRenderStrategyTest, cachedFontsMatchUncachedAndAreStable)
+{
+  using namespace Avogadro::QtOpenGL::Detail;
+  const TextProperties::FontFamily families[] = { TextProperties::SansSerif,
+                                                  TextProperties::Serif,
+                                                  TextProperties::Mono };
+  const int styleSets[] = { 0, TextProperties::Bold, TextProperties::Italic,
+                            TextProperties::Underline,
+                            TextProperties::Bold | TextProperties::Italic |
+                              TextProperties::Underline };
+  const float rotations[] = { 0.f, 90.f, 33.f };
+  clearFontCache();
+  for (int pass = 0; pass < 2; ++pass) { // pass 0 cold, pass 1 warm
+    for (auto family : families) {
+      for (size_t height : { 9, 14, 27, 40 }) {
+        for (int styles : styleSets) {
+          for (float rot : rotations) {
+            TextProperties tprop = defaultProperties();
+            tprop.setFontFamily(family);
+            tprop.setPixelHeight(height);
+            tprop.setFontStyles(styles);
+            tprop.setRotationDegreesCW(rot);
+            EXPECT_EQ(scaledFontCached(tprop), scaledFontUncached(tprop));
+            const Result first = renderAll(strategy, "CA 1234", tprop);
+            const Result again = renderAll(strategy, "CA 1234", tprop);
+            EXPECT_TRUE(sameResult(first, again));
+            // A cold cache gives the same pixels as the warm one.
+            clearFontCache();
+            const Result cold = renderAll(strategy, "CA 1234", tprop);
+            EXPECT_TRUE(sameResult(first, cold));
+          }
+        }
+      }
+    }
+  }
+}
+
+TEST_F(QtTextRenderStrategyTest, fontCacheIsBoundedAndEvictionIsCorrect)
+{
+  using namespace Avogadro::QtOpenGL::Detail;
+  clearFontCache();
+  const size_t limit = fontCacheLimit();
+  std::vector<Result> results;
+  for (size_t h = 8; h < 8 + 3 * limit; ++h) {
+    TextProperties tprop = defaultProperties();
+    tprop.setPixelHeight(h);
+    results.push_back(renderAll(strategy, "CA", tprop));
+    EXPECT_LE(fontCacheSize(), limit);
+  }
+  // Revisit everything after evictions: same output, and equal to uncached.
+  for (size_t h = 8; h < 8 + 3 * limit; ++h) {
+    TextProperties tprop = defaultProperties();
+    tprop.setPixelHeight(h);
+    EXPECT_TRUE(sameResult(results[h - 8], renderAll(strategy, "CA", tprop)));
+    EXPECT_EQ(scaledFontCached(tprop), scaledFontUncached(tprop));
+  }
+}
+
+TEST_F(QtTextRenderStrategyTest, applicationFontChangeIsNotStale)
+{
+  using namespace Avogadro::QtOpenGL::Detail;
+  // On macOS SansSerif resolves to QApplication::font().family() at call
+  // time, so changing the application font must produce a new cache entry. On
+  // other platforms SansSerif is the literal "SansSerif", so this only checks
+  // that the cached result still equals the uncached one after the change.
+  const QFont original = QApplication::font();
+  TextProperties tprop = defaultProperties();
+  clearFontCache();
+  const Result before = renderAll(strategy, "CA", tprop);
+
+  QFont other = original;
+  other.setFamily("Courier");
+  QApplication::setFont(other);
+  EXPECT_EQ(scaledFontCached(tprop), scaledFontUncached(tprop));
+  const Result changed = renderAll(strategy, "CA", tprop);
+  clearFontCache();
+  EXPECT_TRUE(sameResult(changed, renderAll(strategy, "CA", tprop)));
+
+  QApplication::setFont(original);
+  EXPECT_EQ(scaledFontCached(tprop), scaledFontUncached(tprop));
+  EXPECT_TRUE(sameResult(before, renderAll(strategy, "CA", tprop)));
+}
+
+// Reports the cost of building label textures. Disabled by default; run with
+// --gtest_also_run_disabled_tests. Nothing here asserts on time.
+TEST_F(QtTextRenderStrategyTest, DISABLED_reportLabelTiming)
+{
+  const std::vector<std::string> labels = { "C", "H", "O", "N", "CA", "1234" };
+  const std::vector<size_t> heights = { 12, 20, 36 };
+  for (int count : { 1000, 10000 }) {
+    std::vector<double> perCall;
+    for (int run = 0; run < 5; ++run) {
+      std::vector<unsigned char> buffer;
+      QElapsedTimer timer;
+      timer.start();
+      for (int i = 0; i < count; ++i) {
+        TextProperties tprop = defaultProperties();
+        tprop.setPixelHeight(heights[static_cast<size_t>(i) % heights.size()]);
+        const std::string& text =
+          labels[static_cast<size_t>(i) % labels.size()];
+        const BBox b = boundingBox(text, tprop);
+        const Vector2i dims(b.width(), b.height());
+        buffer.assign(static_cast<size_t>(dims[0]) * dims[1] * 4, 0);
+        strategy.render(text, tprop, buffer.data(), dims);
+      }
+      // Two strategy calls per label.
+      perCall.push_back(static_cast<double>(timer.nsecsElapsed()) / 1000.0 /
+                        (2.0 * count));
+    }
+    std::sort(perCall.begin(), perCall.end());
+    std::cout << "labels=" << count << " median us/call=" << perCall[2]
+              << " (min " << perCall[0] << ", max " << perCall[4] << ")\n";
+  }
 }
