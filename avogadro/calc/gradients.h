@@ -15,6 +15,13 @@
 namespace Avogadro::Calc {
 
 /**
+ * Bonds shorter than this (in Angstrom) have no usable direction. The
+ * dihedral gradient is zero for them, so torsion energies must drop the term
+ * under the same condition.
+ */
+constexpr Real minDihedralBondLength = 1.0e-3;
+
+/**
  * Calculate the components of the gradient for the distance a-b.
  * @return true if the length is well-defined.
  */
@@ -113,7 +120,8 @@ inline Real dihedralGradient(const Vector3& i, const Vector3& j,
   Real phi = calculateDihedral(i, j, k, l) * DEG_TO_RAD;
 
   // check if the bond vectors are near zero
-  if (rij < 1e-3 || rjk < 1e-3 || rkl < 1e-3)
+  if (rij < minDihedralBondLength || rjk < minDihedralBondLength ||
+      rkl < minDihedralBondLength)
     return phi; // skip this torsion
 
   // Using the BallView / Open Babel formula

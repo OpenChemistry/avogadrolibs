@@ -1129,7 +1129,8 @@ public:
   }
 
   // cos(angle a-b-c) and its gradient with respect to a, b and c. Returns
-  // false if either bond has zero length.
+  // false if either bond is shorter than dihedralGradient() accepts, so the
+  // torsion energy and gradient drop the term together.
   static bool cosineAndGradient(const Vector3d& a, const Vector3d& b,
                                 const Vector3d& c, Real& cosine, Vector3d& ga,
                                 Vector3d& gb, Vector3d& gc)
@@ -1138,7 +1139,7 @@ public:
     const Vector3d v = c - b;
     const Real lu = u.norm();
     const Real lv = v.norm();
-    if (lu < 1e-6 || lv < 1e-6)
+    if (lu < minDihedralBondLength || lv < minDihedralBondLength)
       return false;
     const Vector3d uh = u / lu;
     const Vector3d vh = v / lv;
@@ -1167,8 +1168,8 @@ public:
       const Vector3d vk = vj + bondedVector(x, j, k, periodic);
       const Vector3d vl = vk + bondedVector(x, k, l, periodic);
 
-      // switch off the torsion near linear bond angles (zero-length bonds
-      // have no angle or dihedral, so the term is skipped for them too)
+      // switch off the torsion near linear bond angles (bonds too short to
+      // have an angle or dihedral skip the term, in the energy and gradient)
       Vector3d a1, b1, c1, a2, b2, c2;
       Real cos1 = 0.0;
       Real cos2 = 0.0;

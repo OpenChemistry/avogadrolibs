@@ -1517,6 +1517,22 @@ TEST(UffTorsionSwitchTest, GradientMatchesEnergyNearLinear)
   }
 }
 
+// A bond shorter than 1e-3 A has no direction. The dihedral gradient is zero
+// for it, so the energy must drop the term too (it used to do so only below
+// 1e-6 A, leaving an energy with no matching gradient).
+TEST(UffTorsionSwitchTest, VeryShortBondDropsEnergyAndGradient)
+{
+  Molecule m = fourChain(110.0, 110.0, 40.0);
+  const Vector3 direction = m.atomPosition3d(0).normalized(); // B is the origin
+  m.setAtomPosition3d(0, 5.0e-4 * direction);
+  UFF uff;
+  uff.setMolecule(&m);
+  const Eigen::VectorXd x = positionsOf(m);
+  EXPECT_EQ(uff.torsionEnergy(x), 0.0);
+  EXPECT_LT(maxTermGradientError(m, &UFF::torsionEnergy, &UFF::torsionGradient),
+            1.0e-6);
+}
+
 // ---- Bonded terms across periodic boundaries ------------------------------
 
 namespace {
