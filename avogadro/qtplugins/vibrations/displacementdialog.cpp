@@ -18,11 +18,12 @@ DisplacementDialog::DisplacementDialog(QWidget* parent_, Qt::WindowFlags f)
 {
   m_ui->setupUi(this);
 
-  connect(m_ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
-  connect(m_ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
-  connect(m_ui->scaleSpinBox, SIGNAL(valueChanged(double)),
-          SLOT(updateSummary()));
-  connect(m_ui->countSpinBox, SIGNAL(valueChanged(int)), SLOT(updateSummary()));
+  connect(m_ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+  connect(m_ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(m_ui->scaleSpinBox, &QDoubleSpinBox::valueChanged, this,
+          &DisplacementDialog::updateSummary);
+  connect(m_ui->countSpinBox, &QSpinBox::valueChanged, this,
+          &DisplacementDialog::updateSummary);
 
   updateSummary();
 }
