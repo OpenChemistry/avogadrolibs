@@ -78,7 +78,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setShortcut(QKeySequence("Ctrl+Alt+O"));
   action->setData(optimizeAction);
   action->setProperty("menu priority", 920);
-  connect(action, SIGNAL(triggered()), SLOT(optimize()));
+  connect(action, &QAction::triggered, this, &Forcefield::optimize);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -86,7 +86,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Energy")); // calculate energy
   action->setData(energyAction);
   action->setProperty("menu priority", 910);
-  connect(action, SIGNAL(triggered()), SLOT(energy()));
+  connect(action, &QAction::triggered, this, &Forcefield::energy);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -94,7 +94,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Forces")); // calculate gradients
   action->setData(forcesAction);
   action->setProperty("menu priority", 910);
-  connect(action, SIGNAL(triggered()), SLOT(forces()));
+  connect(action, &QAction::triggered, this, &Forcefield::forces);
   m_actions.push_back(action);
 
   // Batch actions over every coordinate set (conformers / trajectory frames).
@@ -104,7 +104,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Energies (All Conformers)"));
   action->setData(batchEnergyAction);
   action->setProperty("menu priority", 906);
-  connect(action, SIGNAL(triggered()), SLOT(batchEnergy()));
+  connect(action, &QAction::triggered, this, &Forcefield::batchEnergy);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -112,7 +112,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Forces (All Conformers)"));
   action->setData(batchForcesAction);
   action->setProperty("menu priority", 905);
-  connect(action, SIGNAL(triggered()), SLOT(batchForces()));
+  connect(action, &QAction::triggered, this, &Forcefield::batchForces);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -120,7 +120,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Configure…"));
   action->setData(configureAction);
   action->setProperty("menu priority", 900);
-  connect(action, SIGNAL(triggered()), SLOT(showDialog()));
+  connect(action, &QAction::triggered, this, &Forcefield::showDialog);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -132,7 +132,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Freeze Selected Atoms"));
   action->setData(freezeAction);
   action->setProperty("menu priority", 790);
-  connect(action, SIGNAL(triggered()), SLOT(freezeSelected()));
+  connect(action, &QAction::triggered, this, &Forcefield::freezeSelected);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -140,7 +140,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Freeze X", "freeze x-axis of selected atoms"));
   action->setData(unfreezeAction);
   action->setProperty("menu priority", 788);
-  connect(action, SIGNAL(triggered()), SLOT(freezeX()));
+  connect(action, &QAction::triggered, this, &Forcefield::freezeX);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -148,7 +148,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Freeze Y", "freeze y-axis of selected atoms"));
   action->setData(unfreezeAction);
   action->setProperty("menu priority", 787);
-  connect(action, SIGNAL(triggered()), SLOT(freezeY()));
+  connect(action, &QAction::triggered, this, &Forcefield::freezeY);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -156,7 +156,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Freeze Z", "freeze z-axis of selected atoms"));
   action->setData(unfreezeAction);
   action->setProperty("menu priority", 786);
-  connect(action, SIGNAL(triggered()), SLOT(freezeZ()));
+  connect(action, &QAction::triggered, this, &Forcefield::freezeZ);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -164,7 +164,7 @@ Forcefield::Forcefield(QObject* parent_)
   action->setText(tr("Unfreeze Selected Atoms"));
   action->setData(unfreezeAction);
   action->setProperty("menu priority", 780);
-  connect(action, SIGNAL(triggered()), SLOT(unfreezeSelected()));
+  connect(action, &QAction::triggered, this, &Forcefield::unfreezeSelected);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -173,7 +173,7 @@ Forcefield::Forcefield(QObject* parent_)
     tr("Fuse Selected Atoms", "freeze atomic distances / glue atoms together"));
   action->setData(fuseAction);
   action->setProperty("menu priority", 770);
-  connect(action, SIGNAL(triggered()), SLOT(fuseSelected()));
+  connect(action, &QAction::triggered, this, &Forcefield::fuseSelected);
   m_actions.push_back(action);
 
   action = new QAction(this);
@@ -182,7 +182,7 @@ Forcefield::Forcefield(QObject* parent_)
                      "freeze atomic distances / glue atoms together"));
   action->setData(unfuseAction);
   action->setProperty("menu priority", 760);
-  connect(action, SIGNAL(triggered()), SLOT(unfuseSelected()));
+  connect(action, &QAction::triggered, this, &Forcefield::unfuseSelected);
   m_actions.push_back(action);
 
   // initialize the calculators
@@ -689,15 +689,16 @@ void Forcefield::setMolecule(QtGui::Molecule* mol)
 
   // Disconnect from the old molecule so it no longer drives our actions.
   if (m_molecule != nullptr)
-    disconnect(m_molecule, SIGNAL(changed(unsigned int)), this,
-               SLOT(updateActions()));
+    disconnect(m_molecule, &QtGui::Molecule::changed, this,
+               &Forcefield::updateActions);
 
   m_molecule = mol;
 
   // Refresh action enable-state (e.g. batch actions) when the molecule
   // changes - conformers may be added or removed.
   if (m_molecule)
-    connect(m_molecule, SIGNAL(changed(unsigned int)), SLOT(updateActions()));
+    connect(m_molecule, &QtGui::Molecule::changed, this,
+            &Forcefield::updateActions);
   updateActions();
 }
 
