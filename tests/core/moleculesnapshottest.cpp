@@ -73,6 +73,10 @@ std::pair<Index, Index> sortedPair(const std::pair<Index, Index>& pair)
       return fail("isotope", i);
     if (expected.occupancy(i) != got.occupancy(i))
       return fail("occupancy", i);
+    if (expected.disorderAssembly(i) != got.disorderAssembly(i))
+      return fail("disorderAssembly", i);
+    if (expected.disorderGroup(i) != got.disorderGroup(i))
+      return fail("disorderGroup", i);
     if (expected.color(i) != got.color(i))
       return fail("color", i);
     if (expected.atomSelected(i) != got.atomSelected(i))
@@ -171,6 +175,7 @@ Molecule makeMolecule()
     mol.setFormalCharge(i, static_cast<signed char>(i % 3) - 1);
     mol.setIsotope(i, static_cast<unsigned short>(10 + i));
     mol.setOccupancy(i, 0.1 * double(i + 1));
+    mol.setDisorder(i, i % 2 == 0 ? "A" : "", std::to_string(i + 1));
     mol.setColor(i, Vector3ub(i, i + 1, i + 2));
     mol.setAtomSelected(i, i % 2 == 0);
     mol.atomProperties().setDouble(kAtomKey, i, 0.5 * double(i));

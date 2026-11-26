@@ -691,6 +691,26 @@ const Array<double>& Molecule::occupancies() const
   return m_atomState.occupancies.array();
 }
 
+Array<std::string>& Molecule::disorderAssemblies()
+{
+  return m_atomState.disorderAssemblies.array();
+}
+
+const Array<std::string>& Molecule::disorderAssemblies() const
+{
+  return m_atomState.disorderAssemblies.array();
+}
+
+Array<std::string>& Molecule::disorderGroups()
+{
+  return m_atomState.disorderGroups.array();
+}
+
+const Array<std::string>& Molecule::disorderGroups() const
+{
+  return m_atomState.disorderGroups.array();
+}
+
 Array<signed char>& Molecule::formalCharges()
 {
   return m_atomState.formalCharges.array();
@@ -2566,6 +2586,9 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
   // each pair only needs to be considered once, at min(i, j).
   const Array<Vector3>& positions = m_positions3d; // avoid copy-on-write checks
   Array<Index> neighbors;
+  // atoms in different disorder groups are alternatives and are never bonded;
+  // nothing is checked unless the molecule has some disorder
+  const bool hasDisorder = !m_atomState.disorderGroups.empty();
   for (Index i = 0; i < atomCount(); i++) {
     // Don't automatically bond nobel gases to anything
     const unsigned char iNumber = atomicNumber(i);
@@ -2606,8 +2629,11 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > min * min)
+      if (diffsq < cutoffSq && diffsq > min * min) {
+        if (hasDisorder && areDisorderAlternatives(i, j))
+          continue;
         addBond(atom(i), atom(j), 1);
+      }
     }
   }
 }

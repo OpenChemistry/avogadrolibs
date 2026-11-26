@@ -84,6 +84,9 @@ struct AtomState
   Column<signed char> formalCharges;
   Column<unsigned short> isotopes;
   Column<double> occupancies; // crystallographic site occupancy, 0-1
+  // CIF disorder assembly and group labels, "" for an ordered atom
+  Column<std::string> disorderAssemblies;
+  Column<std::string> disorderGroups;
   Column<Vector3ub> colors;
   Column<unsigned char> selection; // 0 = not selected, 1 = selected
   FrozenMaskColumn frozenMask;
@@ -109,6 +112,9 @@ struct AtomState
     f(isotopes, NoFill(), others.isotopes...);
     // an atom with no stored occupancy fills the site completely
     f(occupancies, 1.0, others.occupancies...);
+    // an atom with no stored label is ordered ("")
+    f(disorderAssemblies, NoFill(), others.disorderAssemblies...);
+    f(disorderGroups, NoFill(), others.disorderGroups...);
     f(colors, ColorFill{ atomicNumbers }, others.colors...);
     f(selection, NoFill(), others.selection...);
     f(frozenMask, NoFill(), others.frozenMask...);
