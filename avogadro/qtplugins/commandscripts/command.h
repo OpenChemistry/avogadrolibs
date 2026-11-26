@@ -13,10 +13,13 @@
 #include <QtCore/QPointer>
 #include <QtCore/QVariantMap>
 
+#include <memory>
+
 #include <avogadro/qtgui/molecule.h>
 
 class QAction;
 class QDialog;
+class QTemporaryDir;
 
 namespace Avogadro {
 namespace Io {
@@ -25,7 +28,8 @@ class FileFormat;
 
 namespace Rendering {
 class Camera;
-}
+class Scene;
+} // namespace Rendering
 
 namespace QtGui {
 class InterfaceScript;
@@ -62,6 +66,21 @@ public:
   void setMolecule(QtGui::Molecule* mol) override;
 
   void setCamera(Rendering::Camera* camera) override;
+
+  void setScene(Rendering::Scene* scene) override;
+
+  /**
+   * Write @p scene as a glTF binary (.glb) file for a script that asked for it
+   * with `input-scene = "glb"`.
+   *
+   * The file stays in Avogadro's own frame and units (angstroms): it is not
+   * centered or scaled, so its vertices line up with the CJSON coordinates and
+   * with the camera matrices the script receives.
+   * @return false (after a warning on the console) if either pointer is null
+   * or the file could not be written completely.
+   */
+  static bool writeSceneGlb(Rendering::Scene* scene, Rendering::Camera* camera,
+                            const QString& fileName);
 
 public slots:
   /**
@@ -130,10 +149,21 @@ private:
    */
   void closeProgressDialog();
 
+  /**
+   * Delete the temporary directory holding the scene file handed to the
+   * running script, if any.
+   */
+  void releaseSceneFile();
+
   QList<QAction*> m_actions;
   QtGui::Molecule* m_molecule;
   // The active view's camera, owned by the renderer; null until a view exists.
   Rendering::Camera* m_camera = nullptr;
+  // The active view's scene, owned by its renderer; null until a view exists.
+  // Like m_camera it is only read on the GUI thread, during run().
+  Rendering::Scene* m_scene = nullptr;
+  // Holds scene.glb for the running script; removed when the run ends.
+  std::unique_ptr<QTemporaryDir> m_sceneDir;
   // Launch-time molecule for the async script; QPointer detects deletion.
   QPointer<QtGui::Molecule> m_runningMolecule;
   // keyed on script file path or package feature key

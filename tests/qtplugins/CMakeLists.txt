@@ -21,6 +21,7 @@ set(plugins
   ApplyColors
   Bonding
   Centroid
+  commands
   ConstraintsExtension
   CopyPaste
   Crystal
@@ -141,6 +142,8 @@ foreach(plugin ${testNames})
     set(filter "CommandTestHarnessTest.*")
   elseif(plugin STREQUAL "ScenePluginSerialize")
     set(filter "*ScenePluginSerializeTest.*")
+  elseif(plugin STREQUAL "commands")
+    set(filter "CommandSceneTest.*")
   elseif(plugin STREQUAL "ConstraintsExtension")
     # The suite is named ConstraintsCommandTest, not ConstraintsExtension*.
     set(filter "ConstraintsCommandTest.*")
