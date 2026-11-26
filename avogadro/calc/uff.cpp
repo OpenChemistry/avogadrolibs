@@ -107,6 +107,76 @@ static constexpr Real VDW_REBUILD_THRESHOLD_SQ = 4.0;
 // Only check for rebuild every N evaluations
 static constexpr int VDW_REBUILD_CHECK_INTERVAL = 10;
 
+// Helpers to look up rows of uffparams. Rows for an element are contiguous,
+// and the third character of a label is the coordination (e.g., "C_3", "C_R",
+// "Ti6+4"). Every search is limited to the one element's rows so that a
+// missing coordination can never return another element's type.
+static int findFirstUffType(int atomicNumber)
+{
+  for (size_t j = 0; j < std::size(uffparams); ++j) {
+    if (uffparams[j].element == atomicNumber)
+      return static_cast<int>(j);
+  }
+  return -1;
+}
+
+// the first type of this element with the given coordination character,
+// or -1 if the element has none
+static int findUffType(int atomicNumber, char coordination)
+{
+  for (size_t j = 0; j < std::size(uffparams); ++j) {
+    if (uffparams[j].element != atomicNumber)
+      continue;
+    const std::string& label = uffparams[j].label;
+    if (label.size() > 2 && label[2] == coordination)
+      return static_cast<int>(j);
+  }
+  return -1;
+}
+
+// the type of this element with the exact label (e.g., "S_3+6"), or -1
+static int findUffTypeByLabel(int atomicNumber, const char* label)
+{
+  for (size_t j = 0; j < std::size(uffparams); ++j) {
+    if (uffparams[j].element == atomicNumber && uffparams[j].label == label)
+      return static_cast<int>(j);
+  }
+  return -1;
+}
+
+// UFF types for hypervalent sulfur and phosphorus, or -1 when the atom is not
+// hypervalent (use the ordinary coordination types).
+//   S_3+6 (109.47) : sulfate, sulfone, SO3, H2SO4, SF6, anything
+//   four-coordinate
+//                    or with a bond order sum >= 6
+//   S_3+4 (103.2)  : SO2, sulfoxides (DMSO), sulfite (bond order sum 4-5)
+//   P_3+5 (109.47) : phosphates, phosphine oxides, PF5; four or more
+//                    neighbors or a bond order sum >= 5
+//   P_3+q (109.47) : the same for a positively charged P with only single
+//                    bonds (phosphonium, charge-separated phosphate)
+// These follow the oxidation-state comments in Open Babel's UFF.prm
+// (S+4: SO2; S+6: SO3, H2SO4). Open Babel itself only applies them when the
+// atom has that formal charge, so it types neutral SO2 / H2SO4 as S_3+2.
+// Neutral four-coordinate S with only single bonds (e.g., SF4, or sulfate as
+// perceived from an XYZ file) is ambiguous; it is typed S_3+6.
+static int hypervalentTypeFor(int atomicNumber, int neighborCount,
+                              int bondOrderSum, int formalCharge)
+{
+  if (atomicNumber == 16) {
+    if (neighborCount >= 4 || bondOrderSum >= 6)
+      return findUffTypeByLabel(16, "S_3+6");
+    if (bondOrderSum >= 4)
+      return findUffTypeByLabel(16, "S_3+4");
+  } else if (atomicNumber == 15) {
+    if (neighborCount >= 4 || bondOrderSum >= 5) {
+      if (formalCharge > 0 && bondOrderSum == neighborCount)
+        return findUffTypeByLabel(15, "P_3+q");
+      return findUffTypeByLabel(15, "P_3+5");
+    }
+  }
+  return -1;
+}
+
 class UFFPrivate // track the particular calculations for a molecule
 {
 public:
@@ -137,7 +207,7 @@ public:
     m_cell = mol->unitCell(); // could be nullptr
 
     setAtomTypes();
-    // An element with no UFF type (> 102) leaves -1 in m_atomTypes, which
+    // An element with no UFF type (> 103) leaves -1 in m_atomTypes, which
     // would index uffparams[-1] below. Leave the molecule with no terms.
     for (int type : m_atomTypes) {
       if (type < 0) {
@@ -167,88 +237,92 @@ public:
     m_atomTypes.reserve(m_molecule->atomCount());
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
       const Core::Atom& atom = m_molecule->atom(i);
-      int atomicNumber = atom.atomicNumber();
-      int atomType = -1;
-      for (int j = 0; j < 126; ++j) {
-        if (uffparams[j].element == atomicNumber) {
-          atomType = j;
-          // not guaranteed - only the first type for this element
-          // we can peek ahead to see if there are any more for this element
-          if (j < 125 && uffparams[j + 1].element == atomicNumber) {
-            // there are multiple types for this element
-            const Array<Bond> bonds = m_molecule->bonds(i);
-            if (atomicNumber == 1) {
-              // hydrogen has two types, so count the bonds
-              if (bonds.size() == 1) {
-                atomType = j; // hydrogen with one bond
-                break;
-              } else { // hydrogen with more than one bond = bridging type
-                atomType = j + 1;
-                break;
-              }
-            }
+      const int atomicNumber = atom.atomicNumber();
 
-            // remaining elements, we want the coordination number
-            // and possibly formal charge
-            [[maybe_unused]] int charge = m_molecule->formalCharge(i);
-            // UFF fortunately only has square planar as special cases
-            // so if it's more than 4 bonds, we just use that type
-            if (bonds.size() > 4) {
-              // check the atom type symbols
-              char coord = '4' + (bonds.size() - 4);
-              if (uffparams[j].label[2] == coord) {
-                atomType = j;
-                break;
-              } else {
-                // check the next one
-                if (uffparams[j + 1].label[2] == coord) {
-                  atomType = j + 1;
-                  break;
-                }
-              }
-            } else {
-              // count double and triple bonds
-              int doubleBonds = 0;
-              int tripleBonds = 0;
-              for (const Bond bond : bonds) {
-                unsigned char order = bond.order();
-                if (order == 2) {
-                  ++doubleBonds;
-                } else if (order == 3) {
-                  ++tripleBonds;
-                }
-              }
-              char coord = '3';
-              if (tripleBonds > 0 || doubleBonds > 1)
-                coord = '1'; // sp linear
-              else if (doubleBonds == 1)
-                coord = '2'; // sp2 trigonal
-              else if (doubleBonds == 0 && tripleBonds == 0)
-                coord = '3'; // sp3 tetrahedral
-
-              // check the atom type symbols
-              if (uffparams[j].label[2] == coord) {
-                atomType = j;
-                break;
-              } else {
-                // bump up until we find one
-                while (j < 125 && uffparams[j].label[2] != coord) {
-                  ++j;
-                }
-                atomType = j;
-                break;
-              }
-            }
-            break;
-          }
-
-          // nope it's the only one for this element
-          // we're done
-          break;
-        }
+      // the first (generic) type for this element, or -1 if unsupported
+      const int firstType = findFirstUffType(atomicNumber);
+      if (firstType < 0) {
+        m_atomTypes.push_back(-1);
+        continue;
       }
+
+      // most elements only have one type
+      const size_t next = static_cast<size_t>(firstType) + 1;
+      if (next >= std::size(uffparams) ||
+          uffparams[next].element != atomicNumber) {
+        m_atomTypes.push_back(firstType);
+        continue;
+      }
+
+      // there are multiple types for this element
+      const Array<Bond> bonds = m_molecule->bonds(i);
+      if (atomicNumber == 1) {
+        // hydrogen has two types, so count the bonds
+        // (H_ with one bond, otherwise the bridging type H_b)
+        m_atomTypes.push_back(bonds.size() == 1 ? firstType : firstType + 1);
+        continue;
+      }
+
+      // remaining elements, we want the coordination number
+      // count double and triple bonds
+      int doubleBonds = 0;
+      int tripleBonds = 0;
+      int bondOrderSum = 0;
+      for (const Bond bond : bonds) {
+        unsigned char order = bond.order();
+        if (order == 2)
+          ++doubleBonds;
+        else if (order == 3)
+          ++tripleBonds;
+        bondOrderSum += (order > 0 ? order : 1);
+      }
+
+      // sulfur and phosphorus can be hypervalent: SO2, DMSO, sulfate,
+      // phosphate, ..., and the UFF types depend on the oxidation state
+      int hypervalentType = -1;
+      if (atomicNumber == 15 || atomicNumber == 16) {
+        hypervalentType =
+          hypervalentTypeFor(atomicNumber, static_cast<int>(bonds.size()),
+                             bondOrderSum, m_molecule->formalCharge(i));
+      }
+      if (hypervalentType >= 0) {
+        m_atomTypes.push_back(hypervalentType);
+        continue;
+      }
+
+      int atomType = -1;
+      if (bonds.size() > 4) {
+        // UFF fortunately only has square planar as special cases
+        // so if it's more than 4 bonds, we just use that type
+        // (the digit in the label is the coordination number)
+        const char coord =
+          bonds.size() <= 9 ? static_cast<char>('0' + bonds.size()) : '6';
+        atomType = findUffType(atomicNumber, coord);
+        // e.g., five-coordinate Ti: octahedral is the closest type
+        if (atomType < 0)
+          atomType = findUffType(atomicNumber, '6');
+      } else {
+        char coord = '3'; // sp3 tetrahedral
+        if (tripleBonds > 0 || doubleBonds > 1)
+          coord = '1'; // sp linear
+        else if (doubleBonds == 1)
+          coord = '2'; // sp2 trigonal
+
+        atomType = findUffType(atomicNumber, coord);
+        // Not every element has every coordination (e.g., boron, phosphorus
+        // and sulfur have no sp type). Fall back to the next less
+        // unsaturated type of the same element, never to another element.
+        if (atomType < 0 && coord == '1')
+          atomType = findUffType(atomicNumber, '2');
+        if (atomType < 0 && (coord == '1' || coord == '2'))
+          atomType = findUffType(atomicNumber, '3');
+      }
+      // last resort: the generic type for this element
+      if (atomType < 0)
+        atomType = firstType;
       m_atomTypes.push_back(atomType);
     }
+
     // we need to do one more pass to set aromatic / resonance types
     // i.e., if an sp2 atom has neighbors, mark them as resonant
     for (Index i = 0; i < m_molecule->atomCount(); ++i) {
@@ -257,13 +331,25 @@ public:
       // carbon, nitrogen, oxygen and sulfur sp2 atoms
       if (atomicNumber == 6 || atomicNumber == 7 || atomicNumber == 8 ||
           atomicNumber == 16) {
+        if (m_atomTypes[i] < 0)
+          continue;
 
-        const char symbolChar = uffparams[m_atomTypes[i]].label[2];
+        const std::string& label = uffparams[m_atomTypes[i]].label;
+        const char symbolChar = label.size() > 2 ? label[2] : '\0';
+
+        // sp atoms (C_1, N_1, O_1) are linear and not conjugated in the UFF
+        // sense; benzonitrile, ketene and allene keep their sp types
+        if (symbolChar == '1')
+          continue;
 
         // we might have an aromatic / resonant N, O, or S
         // e.g., furan, thiophene .. we also mark amide N
         // if it's an sp3 carbon, skip it
         if (atomicNumber == 6 && symbolChar == '3')
+          continue;
+
+        // hypervalent sulfur (sulfoxide, sulfone, sulfate) is not aromatic
+        if (atomicNumber == 16 && label != "S_3+2" && label != "S_2")
           continue;
 
         // check the neighbors
@@ -288,17 +374,10 @@ public:
           }
         }
         if (resonant) {
-          // set the resonant type
-          if (atomicNumber == 7 && symbolChar == '3')
-            m_atomTypes[i] = m_atomTypes[i] + 1; // N_R after N_3
-          else if (atomicNumber == 8 && symbolChar == '3')
-            m_atomTypes[i] = m_atomTypes[i] + 2; // O_R after O_3 and O_3_z
-          else if (atomicNumber == 16 && symbolChar == '3') {
-            // loop until we find 'R' .. might be a few different S types
-            while (uffparams[m_atomTypes[i]].label[2] != 'R')
-              ++m_atomTypes[i];
-          } else
-            m_atomTypes[i] = m_atomTypes[i] - 1; // C_R before C_2
+          // set the resonant type (C_R, N_R, O_R, S_R) for this element
+          const int resonantType = findUffType(atomicNumber, 'R');
+          if (resonantType >= 0)
+            m_atomTypes[i] = resonantType;
         }
       }
     }
@@ -1103,9 +1182,10 @@ public:
 
 UFF::UFF() : d(nullptr)
 {
-  // defined for 1-102
-  for (unsigned int i = 0; i <= 102; ++i) {
-    m_elements.set(i);
+  // defined for every element in the parameter table (1-103, plus the
+  // dummy atom at 0)
+  for (const parameter& row : uffparams) {
+    m_elements.set(static_cast<size_t>(row.element));
   }
 }
 

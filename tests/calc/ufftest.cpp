@@ -120,9 +120,51 @@ INSTANTIATE_TEST_SUITE_P(
   UffTest, UffGradientTest,
   ::testing::Values("acetylene.xyz", "c2h2f2.xyz", "methane.xyz",
                     "formaldehyde.xyz", "H2O.xyz", "H2S.xyz", "H2Se.xyz",
-                    "hooh.xyz", "PF5.xyz", "SF4.xyz", "SF6.xyz", "XeF4.xyz"
+                    "hooh.xyz", "PF5.xyz", "SF4.xyz", "SF6.xyz"
                     // Add more molecule files here as needed
                     ));
+
+// XeF4 is exactly square planar (Xe4+4), so its F-Xe-F angles are 180 degrees
+// and the analytical angle gradient is dropped for such degenerate (collinear)
+// angles. Check the gradient on a distorted copy instead.
+TEST(UffGradientDistortedTest, XenonTetrafluoride)
+{
+  XyzFormat xyz;
+  Molecule molecule;
+  std::string filepath = std::string(AVOGADRO_DATA) + "/data/xyz/XeF4.xyz";
+  ASSERT_TRUE(xyz.readFile(filepath, molecule));
+  ASSERT_EQ(molecule.atomCount(), 5u);
+
+  // deterministic displacements of a few tenths of an Angstrom
+  const double shifts[5][3] = { { 0.05, -0.03, 0.04 },
+                                { 0.20, 0.15, -0.10 },
+                                { -0.15, 0.25, 0.20 },
+                                { 0.10, -0.20, 0.15 },
+                                { -0.25, -0.10, -0.20 } };
+  for (Index i = 0; i < 5; ++i) {
+    molecule.setAtomPosition3d(
+      i, molecule.atomPosition3d(i) +
+           Vector3(shifts[i][0], shifts[i][1], shifts[i][2]));
+  }
+
+  UFF uff;
+  uff.setMolecule(&molecule);
+  ASSERT_EQ(uff.atomTypeLabel(0), "Xe4+4");
+
+  const Eigen::Index n = 3 * 5;
+  Core::Array<Vector3> pos = molecule.atomPositions3d();
+  Eigen::Map<Eigen::VectorXd> positions(pos[0].data(), n);
+  Eigen::VectorXd analytical = Eigen::VectorXd::Zero(n);
+  Eigen::VectorXd numeric = Eigen::VectorXd::Zero(n);
+  uff.gradient(positions, analytical);
+  uff.finiteGradient(positions, numeric);
+  ASSERT_TRUE(analytical.allFinite());
+  ASSERT_TRUE(numeric.allFinite());
+  for (Eigen::Index i = 0; i < n; ++i) {
+    EXPECT_NEAR(analytical[i], numeric[i],
+                std::max(2.5e-5, 0.1 * std::fabs(analytical[i])));
+  }
+}
 
 // Restraints are documented in kJ/mol (core/constraint.h), the same units as
 // the UFF energy, so adding one must raise the energy by exactly k * delta^2
