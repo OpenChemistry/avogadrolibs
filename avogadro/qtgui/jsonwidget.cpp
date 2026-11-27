@@ -816,11 +816,6 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
             "Row/Column does not contain a type or its type is not a string!");
           continue;
         }
-        if (!(current.contains(u"label"_s) && current[u"label"_s].isString())) {
-          qDebug() << tr("Row/Column does not contain a label or its label "
-                         "is not a string!");
-          continue;
-        }
         bool editable = true;
         if (current.contains(u"editable"_s) && current[u"editable"_s].isBool())
           editable = current[u"editable"_s].toBool();
@@ -835,7 +830,10 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
         } else if (type == "boolean") {
           auto* checkBox = new QCheckBox();
           checkBox->setChecked(defaults[j].toBool());
-          checkBox->setCheckable(editable);
+          if (!editable) {
+            checkBox->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+            checkBox->setFocusPolicy(Qt::NoFocus);
+          }
           tableWidget->setCellWidget(row, column, checkBox);
         } else if (type == "integer") {
           auto* spin = new QSpinBox;
