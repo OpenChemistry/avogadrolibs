@@ -38,6 +38,7 @@ set(plugins
   ScriptFileFormats
   Select
   SpaceGroup
+  Symmetry
   Surfaces
   TemplateTool
   Vibrations
