@@ -76,7 +76,7 @@ enum class TableAxis
  * the row the user chose is returned. An empty array means nothing is
  * selected, which the script must handle.
  */
-QJsonArray tableToArray(const QTableWidget* table)
+QJsonObject tableToObject(const QTableWidget* table)
 {
   auto getJsonValue = [table](int row, int col) -> QJsonValue {
     if (auto* widget = table->cellWidget(row, col)) {
@@ -100,7 +100,7 @@ QJsonArray tableToArray(const QTableWidget* table)
   int rowCount = table->rowCount();
   int columnCount = table->columnCount();
 
-  QJsonArray output;
+  QJsonObject output;
 
   int outerCount = isColumnWise ? columnCount : rowCount;
   int innerCount = isColumnWise ? rowCount : columnCount;
@@ -108,10 +108,10 @@ QJsonArray tableToArray(const QTableWidget* table)
   if (table->property("selectable").toBool()) {
     const QItemSelectionModel* selection = table->selectionModel();
     if (selection == nullptr)
-      return QJsonArray();
+      return QJsonObject();
     const QModelIndexList rows = selection->selectedRows();
     if (rows.isEmpty())
-      return QJsonArray();
+      return QJsonObject();
     auto row = rows.first().row();
     if (isColumnWise) {
       for (int col = 0; col < columnCount; col++) {
@@ -119,8 +119,7 @@ QJsonArray tableToArray(const QTableWidget* table)
         auto* headerItem = table->horizontalHeaderItem(col);
         if (headerItem && !headerItem->text().isEmpty())
           header = headerItem->text();
-        QJsonObject obj{ { header, getJsonValue(row, col) } };
-        output.append(obj);
+        output.insert(header, getJsonValue(row, col));
       }
       return output;
     } else {
@@ -132,8 +131,7 @@ QJsonArray tableToArray(const QTableWidget* table)
       for (int col = 0; col < columnCount; col++) {
         content.append(getJsonValue(row, col));
       }
-      QJsonObject obj{ { header, content } };
-      output.append(obj);
+      output.insert(header, content);
       return output;
     }
   }
@@ -155,8 +153,7 @@ QJsonArray tableToArray(const QTableWidget* table)
       int col = isColumnWise ? outer : inner;
       content.append(getJsonValue(row, col));
     }
-    QJsonObject obj{ { header, content } };
-    output.append(obj);
+    output.insert(header, content);
   }
 
   return output;
@@ -764,27 +761,33 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   // dicts mapping headers to content, and only the nesting order differs.
   // Fill the table from one of them, mapping the outer index to whichever
   // axis it names. Note that setItem() takes (row, column) in that order.
-  auto populate = [tableWidget](const QJsonArray& outer, TableAxis axis) {
+  auto populate = [tableWidget](const QJsonObject& outer, TableAxis axis) {
     const bool outerIsRows = axis == TableAxis::Rows;
     // The longest inner array sets the size of the other axis. Ragged input
     // is allowed: missing cells are simply left empty.
 
     int nEntries = static_cast<int>(outer.size());
-    if (outerIsRows) {
+    if (outerIsRows && nEntries > tableWidget->rowCount()) {
       tableWidget->setRowCount(nEntries);
-    } else {
+    } else if (nEntries > tableWidget->columnCount()) {
       tableWidget->setColumnCount(nEntries);
     }
 
-    for (int i = 0; i < nEntries; ++i) {
-      const QJsonObject current = outer[i].toObject();
+    for (const auto& key : outer.keys()) {
+      const QJsonObject current = outer[key].toObject();
       if (!(current.contains(u"defaults"_s) &&
             current[u"defaults"_s].isArray())) {
         qWarning() << tr(
           "Row/Column does not contain defaults or defaults are not an array!");
         continue;
       }
+      if (!(current.contains(u"order"_s) && current[u"order"_s].isDouble())) {
+        qWarning() << tr(
+          "Row/Column does not contain order or order is not a number!");
+        continue;
+      }
       QJsonArray defaults = current[u"defaults"_s].toArray();
+      int order = current[u"order"_s].toInt();
 
       const int nDefaults = static_cast<int>(defaults.size());
       if (outerIsRows) {
@@ -795,27 +798,27 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
           tableWidget->setRowCount(nDefaults);
       }
 
-      QString label = QString::number(i);
+      QString label = key;
       if (current.contains(u"label"_s) && current[u"label"_s].isString())
         label = current[u"label"_s].toString();
       auto* header = new QTableWidgetItem(label);
       if (outerIsRows) {
-        tableWidget->setVerticalHeaderItem(i, header);
+        tableWidget->setVerticalHeaderItem(order, header);
       } else {
-        tableWidget->setHorizontalHeaderItem(i, header);
+        tableWidget->setHorizontalHeaderItem(order, header);
       }
 
       for (int j = 0; j < current.size(); ++j) {
-        int row = outerIsRows ? i : j;
-        int column = outerIsRows ? j : i;
+        int row = outerIsRows ? order : j;
+        int column = outerIsRows ? j : order;
         if (!(current.contains(u"type"_s) && current[u"type"_s].isString())) {
           qWarning() << tr(
             "Row/Column does not contain a type or its type is not a string!");
           continue;
         }
         if (!(current.contains(u"label"_s) && current[u"label"_s].isString())) {
-          qWarning() << tr("Row/Column does not contain a label or its label "
-                           "is not a string!");
+          qDebug() << tr("Row/Column does not contain a label or its label "
+                         "is not a string!");
           continue;
         }
         bool editable = true;
@@ -876,11 +879,11 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
     return tableWidget;
   }
 
-  if (obj[u"columns"_s].isArray()) {
-    populate(obj[u"columns"_s].toArray(), TableAxis::Columns);
+  if (obj[u"columns"_s].isObject()) {
+    populate(obj[u"columns"_s].toObject(), TableAxis::Columns);
     tableWidget->setProperty("direction", QString("columns"));
-  } else if (obj[u"rows"_s].isArray()) {
-    populate(obj[u"rows"_s].toArray(), TableAxis::Rows);
+  } else if (obj[u"rows"_s].isObject()) {
+    populate(obj[u"rows"_s].toObject(), TableAxis::Rows);
     tableWidget->setProperty("direction", QString("rows"));
   } else {
     qWarning() << tr("Neither columns nor rows are arrays!");
@@ -1238,7 +1241,7 @@ QJsonObject JsonWidget::collectOptions() const
                  qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
       ret.insert(label, fileBrowse->fileName());
     } else if (auto* table = qobject_cast<QTableWidget*>(widget)) {
-      ret.insert(label, tableToArray(table));
+      ret.insert(label, tableToObject(table));
     } else {
       qWarning()
         << tr("Unhandled widget in collectOptions for option '%1'.").arg(label);
