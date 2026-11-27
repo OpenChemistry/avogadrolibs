@@ -430,8 +430,7 @@ bool PythonScript::asyncExecute(const QStringList& args,
   }
 
   // let the script run
-  connect(m_process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
-          SLOT(processFinished(int, QProcess::ExitStatus)));
+  connect(m_process, &QProcess::finished, this, &PythonScript::processFinished);
   return true;
 }
 

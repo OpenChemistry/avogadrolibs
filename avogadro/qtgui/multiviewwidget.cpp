@@ -168,9 +168,12 @@ void MultiViewWidget::removeView()
 ContainerWidget* MultiViewWidget::createContainer(QWidget* widget)
 {
   auto* container = new ContainerWidget;
-  connect(container, SIGNAL(splitHorizontal()), SLOT(splitHorizontal()));
-  connect(container, SIGNAL(splitVertical()), SLOT(splitVertical()));
-  connect(container, SIGNAL(closeView()), SLOT(removeView()));
+  connect(container, &ContainerWidget::splitHorizontal, this,
+          &MultiViewWidget::splitHorizontal);
+  connect(container, &ContainerWidget::splitVertical, this,
+          &MultiViewWidget::splitVertical);
+  connect(container, &ContainerWidget::closeView, this,
+          &MultiViewWidget::removeView);
 
   if (widget) {
     container->setViewWidget(widget);
@@ -185,7 +188,8 @@ ContainerWidget* MultiViewWidget::createContainer(QWidget* widget)
       auto* button = new QPushButton(name);
       button->setProperty("name", name);
       button->setToolTip(tr("Create a new view"));
-      connect(button, SIGNAL(clicked()), SLOT(createView()));
+      connect(button, &QPushButton::clicked, this,
+              &MultiViewWidget::createView);
       auto* h = new QHBoxLayout;
       h->addStretch();
       h->addWidget(button);

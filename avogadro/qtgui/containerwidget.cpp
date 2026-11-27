@@ -26,15 +26,17 @@ ContainerWidget::ContainerWidget(QWidget* p, Qt::WindowFlags f)
   h->addStretch();
   auto* button = new QPushButton(tr("Split Horizontal"), this);
   button->setEnabled(false);
-  //  connect(button, SIGNAL(clicked()), SIGNAL(splitHorizontal()));
+  //  connect(button, &QPushButton::clicked, this,
+  //          &ContainerWidget::splitHorizontal);
   h->addWidget(button);
   button = new QPushButton(tr("Split Vertical"), this);
   button->setEnabled(false);
-  //  connect(button, SIGNAL(clicked()), SIGNAL(splitVertical()));
+  //  connect(button, &QPushButton::clicked, this,
+  //          &ContainerWidget::splitVertical);
   h->addWidget(button);
   button = new QPushButton(tr("Close"), this);
   button->setEnabled(false);
-  //  connect(button, SIGNAL(clicked()), SIGNAL(closeView()));
+  //  connect(button, &QPushButton::clicked, this, &ContainerWidget::closeView);
   h->addWidget(button);
   v->addLayout(h);
   setLayout(v);

@@ -581,7 +581,8 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
     } else
       qDebug() << "Cannot convert value to string for stringList:" << *vit;
   }
-  connect(combo, SIGNAL(currentIndexChanged(int)), SLOT(updatePreviewText()));
+  connect(combo, &QComboBox::currentIndexChanged, this,
+          &JsonWidget::updatePreviewText);
 
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     combo->setToolTip(obj[u"toolTip"_s].toString());
@@ -593,7 +594,7 @@ QWidget* JsonWidget::createStringListWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createStringWidget(const QJsonObject& obj)
 {
   auto* edit = new QLineEdit(this);
-  connect(edit, SIGNAL(textChanged(QString)), SLOT(updatePreviewText()));
+  connect(edit, &QLineEdit::textChanged, this, &JsonWidget::updatePreviewText);
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     edit->setToolTip(obj[u"toolTip"_s].toString());
   }
@@ -625,8 +626,8 @@ QWidget* JsonWidget::createTextWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createFilePathWidget(const QJsonObject& obj)
 {
   auto* fileBrowse = new QtGui::FileBrowseWidget(this);
-  connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
-          SLOT(updatePreviewText()));
+  connect(fileBrowse, &FileBrowseWidget::fileNameChanged, this,
+          &JsonWidget::updatePreviewText);
 
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     fileBrowse->setToolTip(obj[u"toolTip"_s].toString());
@@ -652,7 +653,7 @@ QWidget* JsonWidget::createIntegerWidget(const QJsonObject& obj)
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     spin->setToolTip(obj[u"toolTip"_s].toString());
   }
-  connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
+  connect(spin, &QSpinBox::valueChanged, this, &JsonWidget::updatePreviewText);
   return spin;
 }
 
@@ -677,14 +678,15 @@ QWidget* JsonWidget::createFloatWidget(const QJsonObject& obj)
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     spin->setToolTip(obj[u"toolTip"_s].toString());
   }
-  connect(spin, SIGNAL(valueChanged(double)), SLOT(updatePreviewText()));
+  connect(spin, &QDoubleSpinBox::valueChanged, this,
+          &JsonWidget::updatePreviewText);
   return spin;
 }
 
 QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
 {
   auto* checkBox = new QCheckBox(this);
-  connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
+  connect(checkBox, &QCheckBox::toggled, this, &JsonWidget::updatePreviewText);
 
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     checkBox->setToolTip(obj[u"toolTip"_s].toString());
@@ -695,8 +697,8 @@ QWidget* JsonWidget::createBooleanWidget(const QJsonObject& obj)
 QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
 {
   auto* tableWidget = new QTableWidget(this);
-  connect(tableWidget, SIGNAL(cellChanged(int, int)),
-          SLOT(updatePreviewText()));
+  connect(tableWidget, &QTableWidget::cellChanged, this,
+          &JsonWidget::updatePreviewText);
 
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     tableWidget->setToolTip(obj[u"toolTip"_s].toString());
@@ -721,8 +723,8 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     tableWidget->verticalHeader()->setVisible(false);
-    connect(tableWidget, SIGNAL(itemSelectionChanged()),
-            SLOT(updatePreviewText()));
+    connect(tableWidget, &QTableWidget::itemSelectionChanged, this,
+            &JsonWidget::updatePreviewText);
   }
 
   // Data may be supplied either as columns or as rows: both are arrays of
