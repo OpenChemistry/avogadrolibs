@@ -26,8 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
 "PO-Revision-Date: 2026-11-28 14:51+0000\n"
-"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
-"memory@weblate.org>\n"
+"Last-Translator: LibreTranslate <noreply-mt-libretranslate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -717,7 +716,7 @@ msgstr "相对能量"
 
 #: qtgui/conformerquantitytranslator.cpp:53
 msgid "RMS Gradient"
-msgstr ""
+msgstr "RMS 梯度"
 
 #: qtgui/conformerquantitytranslator.cpp:55
 msgctxt "average over the atoms of how fast each moves"
