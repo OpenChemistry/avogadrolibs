@@ -26,7 +26,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: avogadro-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-11-22 08:02+0000\n"
 "PO-Revision-Date: 2026-11-28 14:51+0000\n"
-"Last-Translator: eNoWater <rf_sun@users.noreply.hosted.weblate.org>\n"
+"Last-Translator: Weblate Translation Memory <noreply-mt-weblate-translation-"
+"memory@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/avogadro/avogadrolibs/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -692,12 +693,12 @@ msgstr "二面角 %1-%2-%3-%4"
 
 #: qtgui/conformerquantitytranslator.cpp:39
 msgid "Constraint"
-msgstr ""
+msgstr "约束"
 
 #: qtgui/conformerquantitytranslator.cpp:45
 msgctxt "position in a trajectory, counting from one"
 msgid "Frame"
-msgstr ""
+msgstr "帧"
 
 #. i18n: file: qtplugins/openmminput/openmminputdialog.ui:948
 #. i18n: ectx: property (text), widget (QCheckBox, timeCheck)
@@ -708,7 +709,7 @@ msgstr "时间"
 #: qtgui/conformerquantitytranslator.cpp:49
 msgctxt "root mean square displacement"
 msgid "RMSD"
-msgstr ""
+msgstr "RMSD"
 
 #: qtgui/conformerquantitytranslator.cpp:51
 msgid "Relative Energy"
