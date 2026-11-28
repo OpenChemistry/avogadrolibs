@@ -2344,7 +2344,7 @@ void Molecule::perceiveBondOrders()
   perceiveBondOrders(BondOrderOptions());
 }
 
-void Molecule::perceiveBondsSimple(const double tolerance, const double min)
+void Molecule::perceiveBondsSimple(const double tolerance, const double minimum)
 {
   // check for coordinates
   if (m_positions3d.size() != atomCount() || m_positions3d.size() < 2)
@@ -2412,7 +2412,10 @@ void Molecule::perceiveBondsSimple(const double tolerance, const double min)
       // check radius and add bond if needed
       double cutoffSq = cutoff * cutoff;
       double diffsq = diff.squaredNorm();
-      if (diffsq < cutoffSq && diffsq > min * min)
+      // Compare to squared minimum distance to avoid expensive square root
+      // calculation
+      double minsq = minimum * minimum;
+      if (diffsq < cutoffSq && diffsq > minsq)
         addBond(atom(i), atom(j), 1);
     }
   }
