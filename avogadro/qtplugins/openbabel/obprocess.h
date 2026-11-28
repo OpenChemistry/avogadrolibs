@@ -402,15 +402,16 @@ private:
   /**
    * Internal method for launching the obabel executable.
    * @param options List of options to pass to QProcess::start
-   * @param receiver A QObject subclass instance that has @a slot as a member.
-   * @param slot The slot to call when completed. Must have no arguments.
+   * @param receiver The OBProcess instance that @a slot is called on.
+   * @param slot Pointer to an OBProcess member function to call when
+   * completed. Must have no arguments.
    * @param obabelStdin Standard input for the obabel process (optional).
    *
    * Call this method like so:
 @code
 QStringList options;
 <Populate options>
-executeObabel(options, this, SLOT(mySlot()));
+executeObabel(options, this, &OBProcess::mySlot);
 @endcode
    *
    * @a slot will be connected to QProcess::finished(int) and
@@ -419,8 +420,8 @@ executeObabel(options, this, SLOT(mySlot()));
    * m_obabelExecutable and options as arguments. If provided, the obabelStdin
    * data will be written to the obabel stdin channel.
    */
-  void executeObabel(const QStringList& options, QObject* receiver = nullptr,
-                     const char* slot = nullptr,
+  void executeObabel(const QStringList& options, OBProcess* receiver = nullptr,
+                     void (OBProcess::*slot)() = nullptr,
                      const QByteArray& obabelStdin = QByteArray());
 
   void resetState();

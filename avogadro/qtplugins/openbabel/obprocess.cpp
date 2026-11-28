@@ -122,7 +122,7 @@ bool OBProcess::queryReadFormats()
           << "formats"
           << "read";
 
-  executeObabel(options, this, SLOT(queryReadFormatsPrepare()));
+  executeObabel(options, this, &OBProcess::queryReadFormatsPrepare);
   return true;
 }
 
@@ -139,7 +139,7 @@ bool OBProcess::queryWriteFormats()
           << "formats"
           << "write";
 
-  executeObabel(options, this, SLOT(queryWriteFormatsPrepare()));
+  executeObabel(options, this, &OBProcess::queryWriteFormatsPrepare);
   return true;
 }
 
@@ -221,7 +221,7 @@ bool OBProcess::convert(const QByteArray& input, const QString& inFormat,
   realOptions << QString("-i%1").arg(inFormat) << QString("-o%1").arg(outFormat)
               << options;
 
-  executeObabel(realOptions, this, SLOT(convertPrepareOutput()), input);
+  executeObabel(realOptions, this, &OBProcess::convertPrepareOutput, input);
   return true;
 }
 
@@ -237,7 +237,7 @@ bool OBProcess::convert(const QString& filename, const QString& inFormat,
   realOptions << QString("-i%1").arg(inFormat) << filename
               << QString("-o%1").arg(outFormat) << options;
 
-  executeObabel(realOptions, this, SLOT(convertPrepareOutput()));
+  executeObabel(realOptions, this, &OBProcess::convertPrepareOutput);
   return true;
 }
 
@@ -280,7 +280,7 @@ bool OBProcess::queryForceFields()
   options << "-L"
           << "forcefields";
 
-  executeObabel(options, this, SLOT(queryForceFieldsPrepare()));
+  executeObabel(options, this, &OBProcess::queryForceFieldsPrepare);
   return true;
 }
 
@@ -322,7 +322,7 @@ bool OBProcess::queryCharges()
   options << "-L"
           << "charges";
 
-  executeObabel(options, this, SLOT(queryChargesPrepare()));
+  executeObabel(options, this, &OBProcess::queryChargesPrepare);
   return true;
 }
 
@@ -373,7 +373,7 @@ bool OBProcess::calculateCharges(const QByteArray& mol,
               << "--partialcharge" << type.c_str() << "--print";
 
   // Start the optimization
-  executeObabel(realOptions, this, SLOT(chargesPrepareOutput()), mol);
+  executeObabel(realOptions, this, &OBProcess::chargesPrepareOutput, mol);
   return true;
 }
 
@@ -440,15 +440,15 @@ bool OBProcess::optimizeGeometry(const QByteArray& mol,
               << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
-  connect(m_process, SIGNAL(readyReadStandardError()),
-          SLOT(optimizeGeometryReadLog()));
+  connect(m_process, &QProcess::readyReadStandardError, this,
+          &OBProcess::optimizeGeometryReadLog);
 
   // Initialize the log reader ivars
   m_optimizeGeometryLog.clear();
   m_optimizeGeometryMaxSteps = -1;
 
   // Start the optimization
-  executeObabel(realOptions, this, SLOT(optimizeGeometryPrepare()), mol);
+  executeObabel(realOptions, this, &OBProcess::optimizeGeometryPrepare, mol);
   return true;
 }
 
@@ -503,15 +503,15 @@ bool OBProcess::generateConformers(const QByteArray& mol,
               << "--log" << options;
 
   // We'll need to read the log (printed to stderr) to update progress
-  connect(m_process, SIGNAL(readyReadStandardError()),
-          SLOT(conformerReadLog()));
+  connect(m_process, &QProcess::readyReadStandardError, this,
+          &OBProcess::conformerReadLog);
 
   // Initialize the log reader ivars
   m_optimizeGeometryLog.clear();
   m_maxConformers = -1;
 
   // Start the optimization
-  executeObabel(realOptions, this, SLOT(conformerPrepare()), mol);
+  executeObabel(realOptions, this, &OBProcess::conformerPrepare, mol);
   return true;
 }
 
@@ -630,16 +630,15 @@ void OBProcess::conformerReadLog()
   }
 }
 
-void OBProcess::executeObabel(const QStringList& options, QObject* receiver,
-                              const char* slot, const QByteArray& obabelStdin)
+void OBProcess::executeObabel(const QStringList& options, OBProcess* receiver,
+                              void (OBProcess::*slot)(),
+                              const QByteArray& obabelStdin)
 {
   // Setup exit handler
   if (receiver) {
-    connect(m_process, SIGNAL(finished(int)), receiver, slot);
-    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), receiver,
-            slot);
-    connect(m_process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
-            SLOT(obError()));
+    connect(m_process, &QProcess::finished, receiver, slot);
+    connect(m_process, &QProcess::errorOccurred, receiver, slot);
+    connect(m_process, &QProcess::errorOccurred, this, &OBProcess::obError);
   }
 
   // Start process
@@ -660,7 +659,7 @@ void OBProcess::resetState()
   m_aborted = false;
   m_process->disconnect(this);
   disconnect(m_process);
-  connect(this, SIGNAL(aborted()), m_process, SLOT(kill()));
+  connect(this, &OBProcess::aborted, m_process, &QProcess::kill);
 }
 
 } // namespace Avogadro::QtPlugins
