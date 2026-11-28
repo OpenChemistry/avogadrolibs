@@ -15,17 +15,17 @@ ConformerSearchDialog::ConformerSearchDialog(QWidget* parent) : QDialog(parent)
 {
   ui.setupUi(this);
 
-  connect(ui.systematicRadio, SIGNAL(toggled(bool)), this,
-          SLOT(systematicToggled(bool)));
-  connect(ui.randomRadio, SIGNAL(toggled(bool)), this,
-          SLOT(randomToggled(bool)));
-  connect(ui.weightedRadio, SIGNAL(toggled(bool)), this,
-          SLOT(weightedToggled(bool)));
-  connect(ui.geneticRadio, SIGNAL(toggled(bool)), this,
-          SLOT(geneticToggled(bool)));
+  connect(ui.systematicRadio, &QRadioButton::toggled, this,
+          &ConformerSearchDialog::systematicToggled);
+  connect(ui.randomRadio, &QRadioButton::toggled, this,
+          &ConformerSearchDialog::randomToggled);
+  connect(ui.weightedRadio, &QRadioButton::toggled, this,
+          &ConformerSearchDialog::weightedToggled);
+  connect(ui.geneticRadio, &QRadioButton::toggled, this,
+          &ConformerSearchDialog::geneticToggled);
 
-  connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this,
-          SLOT(buttonClicked(QAbstractButton*)));
+  connect(ui.buttonBox, &QDialogButtonBox::clicked, this,
+          &ConformerSearchDialog::buttonClicked);
 
   // Open Babel matches these tokens exactly, so keep them out of the visible
   // (and translated) item text.
