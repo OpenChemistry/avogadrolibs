@@ -1868,8 +1868,12 @@ inline bool Molecule::setDisorders(const Core::Array<std::string>& assemblies,
   if ((!assemblies.empty() && assemblies.size() != count) ||
       (!groups.empty() && groups.size() != count))
     return false;
-  m_atomState.disorderAssemblies.setAll(assemblies, count, true);
-  m_atomState.disorderGroups.setAll(groups, count, true);
+  // Copy first: the arguments may be this molecule's own columns, which the
+  // first setAll() would overwrite before the second one reads them.
+  const Core::Array<std::string> assemblyCopy = assemblies;
+  const Core::Array<std::string> groupCopy = groups;
+  m_atomState.disorderAssemblies.setAll(assemblyCopy, count, true);
+  m_atomState.disorderGroups.setAll(groupCopy, count, true);
   return true;
 }
 

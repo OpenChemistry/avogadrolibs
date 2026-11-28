@@ -1333,6 +1333,23 @@ TEST_F(MoleculeTest, setDisorder)
   EXPECT_TRUE(molecule.disorderGroups().empty());
 }
 
+TEST_F(MoleculeTest, setDisordersSwapsOwnColumns)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+  molecule.setDisorder(0, "A", "1");
+  molecule.setDisorder(1, "B", "2");
+  ASSERT_TRUE(molecule.setDisorders(molecule.disorderGroups(),
+                                    molecule.disorderAssemblies()));
+  EXPECT_EQ(molecule.disorderAssembly(0), "1");
+  EXPECT_EQ(molecule.disorderGroup(0), "A");
+  EXPECT_EQ(molecule.disorderAssembly(1), "2");
+  EXPECT_EQ(molecule.disorderGroup(1), "B");
+  EXPECT_EQ(molecule.disorderAssembly(2), "");
+  EXPECT_EQ(molecule.disorderGroup(2), "");
+}
+
 TEST_F(MoleculeTest, areDisorderAlternatives)
 {
   Molecule molecule;
