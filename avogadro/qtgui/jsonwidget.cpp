@@ -86,6 +86,16 @@ QJsonObject tableToObject(const QTableWidget* table)
         return dSpinBox->value();
       } else if (auto* checkBox = qobject_cast<QCheckBox*>(widget)) {
         return checkBox->isChecked();
+      } else if (auto* fileBrowse =
+                   qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
+        return fileBrowse->fileName();
+      } else if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
+        return lineEdit->text();
+      } else if (auto* combo = qobject_cast<QComboBox*>(widget)) {
+        const QVariant data = combo->currentData();
+        return data.isValid() && data.canConvert<QString>()
+                 ? data.toString()
+                 : combo->currentText();
       } else {
         qCritical() << JsonWidget::tr("Invalid widget encountered in table!");
         return QString("");
@@ -761,7 +771,8 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   // dicts mapping headers to content, and only the nesting order differs.
   // Fill the table from one of them, mapping the outer index to whichever
   // axis it names. Note that setItem() takes (row, column) in that order.
-  auto populate = [tableWidget](const QJsonObject& outer, TableAxis axis) {
+  auto populate = [this, tableWidget](const QJsonObject& outer,
+                                      TableAxis axis) {
     const bool outerIsRows = axis == TableAxis::Rows;
     // The longest inner array sets the size of the other axis. Ragged input
     // is allowed: missing cells are simply left empty.
@@ -822,11 +833,11 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
 
         QString type = current[u"type"_s].toString();
         if (type == "string") {
-          auto* item = new QTableWidgetItem(defaults[j].toString());
-          if (!editable)
-            item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-
-          tableWidget->setItem(row, column, item);
+          auto* item = new QLineEdit(defaults[j].toString());
+          item->setReadOnly(!editable);
+          connect(item, SIGNAL(textChanged(QString)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, item);
         } else if (type == "boolean") {
           auto* checkBox = new QCheckBox();
           checkBox->setChecked(defaults[j].toBool());
@@ -834,6 +845,7 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
             checkBox->setAttribute(Qt::WA_TransparentForMouseEvents, true);
             checkBox->setFocusPolicy(Qt::NoFocus);
           }
+          connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
           tableWidget->setCellWidget(row, column, checkBox);
         } else if (type == "integer") {
           auto* spin = new QSpinBox;
@@ -847,6 +859,7 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
           }
           spin->setReadOnly(!editable);
           spin->setValue(defaults[j].toInt());
+          connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
           tableWidget->setCellWidget(row, column, spin);
         } else if (type == "float") {
           auto* spin = new QDoubleSpinBox;
@@ -860,10 +873,51 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
           }
           spin->setReadOnly(!editable);
           spin->setValue(defaults[j].toDouble());
+          connect(spin, SIGNAL(valueChanged(double)),
+                  SLOT(updatePreviewText()));
           tableWidget->setCellWidget(row, column, spin);
+        } else if (type == "filePath") {
+          auto* fileBrowse = new QtGui::FileBrowseWidget;
+          fileBrowse->setEnabled(editable);
+          connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, fileBrowse);
+        } else if (type == "stringList") {
+          if (!current.contains(u"values"_s) ||
+              !current[u"values"_s].isArray()) {
+            qWarning()
+              << "stringList in table has values missing, or not array!";
+            continue;
+          }
+          QJsonArray valueArray = current[u"values"_s].toArray();
+
+          auto* combo = new QComboBox();
+          for (QJsonArray::const_iterator vit = valueArray.constBegin(),
+                                          vitEnd = valueArray.constEnd();
+               vit != vitEnd; ++vit) {
+            if ((*vit).isString()) {
+              QString value = (*vit).toString();
+              if (value == '-') {
+                combo->insertSeparator(combo->count());
+              } else {
+                combo->addItem(value, value);
+              }
+            } else
+              qWarning() << "Cannot convert value to string for stringList:"
+                         << *vit;
+          }
+          int index = -1;
+          if (defaults[j].isDouble())
+            index = static_cast<int>(defaults[j].toDouble() + 0.5);
+          combo->setCurrentIndex(index);
+          combo->setEnabled(editable);
+          connect(combo, SIGNAL(currentIndexChanged(int)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, combo);
         }
       }
     }
+    // This should be redundant, but better to be safe than sorry.
     tableWidget->resizeColumnsToContents();
     tableWidget->resizeRowsToContents();
   };
