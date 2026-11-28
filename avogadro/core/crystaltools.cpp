@@ -779,8 +779,11 @@ public:
     m_bins[key(pos)].emplace_back(pos, index);
   }
 
-  // Returns true and sets @a index if an atom already sits at @a pos.
-  bool find(const Vector3& pos, Index& index) const
+  // Returns true and sets @a index if an atom within the tolerance of @a pos
+  // satisfies @a accept (called with the atom's index). Every candidate in
+  // range is examined, so an unacceptable atom does not hide a later one.
+  template <typename Predicate>
+  bool find(const Vector3& pos, Index& index, Predicate accept) const
   {
     const std::array<std::int64_t, 3> k = key(pos);
     for (std::int64_t i = -1; i <= 1; ++i) {
@@ -791,7 +794,7 @@ public:
           if (bin == m_bins.end())
             continue;
           for (const auto& entry : bin->second) {
-            if ((entry.first - pos).norm() < m_tol) {
+            if ((entry.first - pos).norm() < m_tol && accept(entry.second)) {
               index = entry.second;
               return true;
             }
@@ -994,7 +997,20 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
 
           const Vector3 newPos = atoms.at(i) + displacement;
           Index existingIdx = MaxIndex;
-          if (grid.find(newPos, existingIdx)) {
+          // Coincident atoms with different disorder labels are different
+          // sites (substitutional disorder), so only merge matching labels.
+          const std::string assembly =
+            hasDisorder && i < disorderAssemblies.size() ? disorderAssemblies[i]
+                                                         : std::string();
+          const std::string group = hasDisorder && i < disorderGroups.size()
+                                      ? disorderGroups[i]
+                                      : std::string();
+          auto sameLabels = [&](Index idx) {
+            return !hasDisorder ||
+                   (molecule.disorderAssembly(idx) == assembly &&
+                    molecule.disorderGroup(idx) == group);
+          };
+          if (grid.find(newPos, existingIdx, sameLabels)) {
             copyMap[i] = existingIdx;
           } else {
             Atom newAtom = molecule.addAtom(atomicNums.at(i));

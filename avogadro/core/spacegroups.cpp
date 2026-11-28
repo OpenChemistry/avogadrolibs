@@ -1027,6 +1027,18 @@ void addImage(Molecule& mol, unsigned char atomicNum, unsigned short isotope,
     newAtom.setDisorder(disorder->first, disorder->second);
 }
 
+// True if atom @p index carries the disorder labels @p disorder. A molecule
+// without disorder labels (@p disorder empty) matches everything, so
+// coincident atoms there still count as duplicates.
+bool hasSameDisorder(const Molecule& mol, Index index,
+                     const DisorderLabels& disorder)
+{
+  if (!disorder)
+    return true;
+  return mol.disorderAssembly(index) == disorder->first &&
+         mol.disorderGroup(index) == disorder->second;
+}
+
 // Remove every atom that is the image of an earlier atom of the same element
 // under one of the transforms. @p transformsOf is as for fillWithTransforms(),
 // and the first @p firstTransform of its results are skipped (the identity).
@@ -1123,7 +1135,7 @@ void fillWithTransforms(
       bool atomAlreadyPresent = false;
       for (Index k = 0; k < mol.atomCount(); k++) {
         Real distance = uc->distance(mol.atomPosition3d(k), newCandidate);
-        if (distance <= cartTol) {
+        if (distance <= cartTol && hasSameDisorder(mol, k, disorder)) {
           atomAlreadyPresent = true;
           break; // no need to keep looking
         }
@@ -1381,7 +1393,7 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
       for (Index k = 0; k < mol.atomCount(); k++) {
         Real distSq = (mol.atomPosition3d(k) - newCandidate).squaredNorm();
 
-        if (distSq <= cartTolSq) {
+        if (distSq <= cartTolSq && hasSameDisorder(mol, k, disorder)) {
           atomAlreadyPresent = true;
           break;
         }

@@ -413,6 +413,47 @@ TEST(CrystalToolsTest, buildSupercellCarriesDisorder)
   }
 }
 
+TEST(CrystalToolsTest, buildSupercellKeepsCoincidentDisorderSites)
+{
+  // Substitutional disorder: two atoms with different groups, same position.
+  Molecule mol;
+  mol.setUnitCell(new UnitCell(Vector3(5.0, 0.0, 0.0), Vector3(0.0, 5.0, 0.0),
+                               Vector3(0.0, 0.0, 5.0)));
+  mol.addAtom(26).setPosition3d(Vector3(1.0, 1.0, 1.0));
+  mol.addAtom(27).setPosition3d(Vector3(1.0, 1.0, 1.0));
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  ASSERT_EQ(mol.atomCount(), 4);
+  int iron = 0, cobalt = 0;
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    if (mol.atomicNumber(i) == 26) {
+      ++iron;
+      EXPECT_EQ(mol.disorderGroup(i), "1") << i;
+    } else {
+      ++cobalt;
+      EXPECT_EQ(mol.disorderGroup(i), "2") << i;
+    }
+    EXPECT_EQ(mol.disorderAssembly(i), "A") << i;
+  }
+  EXPECT_EQ(iron, 2);
+  EXPECT_EQ(cobalt, 2);
+}
+
+TEST(CrystalToolsTest, buildSupercellMergesDuplicatesWithSameDisorder)
+{
+  Molecule mol;
+  mol.setUnitCell(new UnitCell(Vector3(5.0, 0.0, 0.0), Vector3(0.0, 5.0, 0.0),
+                               Vector3(0.0, 0.0, 5.0)));
+  mol.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(5.0, 0.0, 0.0)); // same site
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "1"));
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 3, 1, 1));
+  EXPECT_EQ(mol.atomCount(), 4);
+}
+
 TEST(CrystalToolsTest, buildSupercellWithoutDisorderStoresNone)
 {
   Molecule mol = cubicCell();

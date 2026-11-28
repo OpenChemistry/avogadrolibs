@@ -441,6 +441,35 @@ TEST(SpaceGroupTest, fillUnitCell)
   ASSERT_EQ(mol3.atomCount(), 30);
 }
 
+TEST(SpaceGroupTest, fillUnitCellKeepsCoincidentDisorderSites)
+{
+  // Two substitutional alternatives on the same general position each get
+  // their own symmetry image under P -1 (Hall number 2).
+  Molecule mol;
+  UnitCell* uc = new UnitCell(Vector3(10.0, 0.0, 0.0), Vector3(0.0, 10.0, 0.0),
+                              Vector3(0.0, 0.0, 10.0));
+  mol.setUnitCell(uc);
+  const Vector3 site = uc->toCartesian(Vector3(0.1, 0.2, 0.3));
+  mol.addAtom(26).setPosition3d(site);
+  mol.addAtom(27).setPosition3d(site);
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+
+  SpaceGroups::fillUnitCell(mol, 2, 1e-5);
+
+  ASSERT_EQ(mol.atomCount(), 4);
+  int group1 = 0, group2 = 0;
+  for (size_t i = 0; i < mol.atomCount(); ++i) {
+    if (mol.disorderGroup(i) == "1" && mol.atomicNumber(i) == 26)
+      ++group1;
+    if (mol.disorderGroup(i) == "2" && mol.atomicNumber(i) == 27)
+      ++group2;
+    EXPECT_EQ(mol.disorderAssembly(i), "A");
+  }
+  EXPECT_EQ(group1, 2);
+  EXPECT_EQ(group2, 2);
+}
+
 TEST(SpaceGroupTest, reduceToAsymmetricUnit)
 {
   double cartTol = 1e-5;
