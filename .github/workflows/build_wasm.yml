@@ -7,6 +7,7 @@ on:
       - 'avogadro/**'
       - 'cmake/**'
       - 'thirdparty/**'
+      - 'tests/wasm/**'
       - 'utilities/**'
       - 'CMakeLists.txt'
       - '.github/workflows/build_wasm.yml'
@@ -15,6 +16,7 @@ on:
       - 'avogadro/**'
       - 'cmake/**'
       - 'thirdparty/**'
+      - 'tests/wasm/**'
       - 'utilities/**'
       - 'CMakeLists.txt'
       - '.github/workflows/build_wasm.yml'
@@ -37,8 +39,92 @@ env:
   SUPERBUILD_REVISION: ${{ inputs.superbuild_revision || vars.WASM_SUPERBUILD_REVISION }}
   # ExternalProject's nested builds must use the same limit as the superbuild.
   CMAKE_BUILD_PARALLEL_LEVEL: '2'
+  EIGEN_VERSION: '3.4.0'
+  EIGEN_SHA256: '8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72'
 
 jobs:
+  # Headless core/io/calc for downstream WebAssembly apps. Needs neither Qt
+  # nor the superbuild, so it runs on every change.
+  headless:
+    name: WebAssembly headless (core, io, calc)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install build tools
+        run: |
+          sudo apt-get -qq update
+          sudo apt-get -qq install cmake ninja-build
+
+      - name: Checkout Emscripten SDK installer
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: emscripten-core/emsdk
+          ref: ${{ env.EMSCRIPTEN_VERSION }}
+          path: emsdk
+          persist-credentials: false
+
+      - name: Cache Emscripten SDK
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            emsdk/upstream
+            emsdk/node
+          key: wasm-sdk-${{ runner.os }}-${{ runner.arch }}-${{ env.EMSCRIPTEN_VERSION }}
+
+      - name: Activate toolchain
+        run: |
+          ./emsdk/emsdk install "$EMSCRIPTEN_VERSION"
+          ./emsdk/emsdk activate "$EMSCRIPTEN_VERSION"
+          echo "EM_CACHE=$RUNNER_TEMP/em-cache" >> "$GITHUB_ENV"
+
+      # The Emscripten toolchain only searches its own sysroot, so give it a
+      # private copy of the (header-only) Eigen.
+      - name: Install Eigen
+        run: |
+          curl -fsSL --retry 3 -o eigen.tar.gz \
+            "https://gitlab.com/libeigen/eigen/-/archive/${EIGEN_VERSION}/eigen-${EIGEN_VERSION}.tar.gz"
+          echo "${EIGEN_SHA256}  eigen.tar.gz" | sha256sum -c -
+          tar -xzf eigen.tar.gz
+          cmake -S "eigen-${EIGEN_VERSION}" -B eigen-build \
+            -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/eigen" -DBUILD_TESTING=OFF \
+            -DEIGEN_BUILD_DOC=OFF -DEIGEN_BUILD_PKGCONFIG=OFF
+          cmake --install eigen-build
+
+      - name: Configure
+        run: |
+          source "$GITHUB_WORKSPACE/emsdk/emsdk_env.sh"
+          emcmake cmake -S . -B build-headless -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/stage-headless" \
+            -DCMAKE_FIND_ROOT_PATH="$RUNNER_TEMP/eigen" \
+            -DUSE_QT=OFF -DUSE_OPENGL=OFF -DBUILD_SHARED_LIBS=OFF \
+            -DENABLE_TESTING=OFF
+
+      - name: Build and install
+        run: |
+          source "$GITHUB_WORKSPACE/emsdk/emsdk_env.sh"
+          cmake --build build-headless --parallel 2
+          cmake --install build-headless
+
+      - name: Downstream smoke test
+        run: |
+          source "$GITHUB_WORKSPACE/emsdk/emsdk_env.sh"
+          prefix="$RUNNER_TEMP/stage-headless;$RUNNER_TEMP/eigen"
+          emcmake cmake -S tests/wasm -B build-smoke -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$prefix" -DCMAKE_FIND_ROOT_PATH="$prefix"
+          cmake --build build-smoke
+          node build-smoke/smoke.js
+
   build:
     if: ${{ vars.WASM_SUPERBUILD_REVISION != '' || inputs.superbuild_revision != '' }}
     name: WebAssembly Release

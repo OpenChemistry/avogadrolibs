@@ -82,7 +82,12 @@ option(USE_HDF5 "Enable optional HDF5 features" OFF)
 option(USE_QT "Enable libraries that use Qt 6" ON)
 option(USE_LIBARCHIVE "Enable optional Libarchive features" ${_desktop_features_default})
 option(USE_LIBMSYM "Enable optional features using libmsym" ON)
-option(USE_SPGLIB "Enable optional features using spglib" ON)
+# No spglib is available to a headless WASM build unless one is provided.
+set(_spglib_default ON)
+if(EMSCRIPTEN AND NOT USE_QT)
+  set(_spglib_default OFF)
+endif()
+option(USE_SPGLIB "Enable optional features using spglib" ${_spglib_default})
 option(USE_PLOTTER "Enable JKQTPlotter for charts and spectra" ${_desktop_features_default})
 option(USE_MMTF "Enable optional features using mmtf" OFF) # MMTF is no longer maintained
 option(USE_PYTHON "Use Python to wrap some of our API" OFF)
@@ -192,15 +197,27 @@ if(NOT QT_VERSION IN_LIST QT_VERSIONS_SUPPORTED)
   message(FATAL_ERROR "Qt version must be one of ${QT_VERSIONS_SUPPORTED}")
 endif()
 
-if(EMSCRIPTEN AND (USE_SUBPROCESS OR USE_LIBARCHIVE OR USE_PYTHON OR USE_PLOTTER))
-  message(FATAL_ERROR "WASM requires USE_SUBPROCESS=OFF, USE_LIBARCHIVE=OFF, USE_PYTHON=OFF and USE_PLOTTER=OFF. Configure a fresh build directory with these options.")
+if(EMSCRIPTEN AND (USE_SUBPROCESS OR USE_LIBARCHIVE OR USE_PLOTTER))
+  message(FATAL_ERROR "WASM requires USE_SUBPROCESS=OFF, USE_LIBARCHIVE=OFF and USE_PLOTTER=OFF. Configure a fresh build directory with these options.")
 endif()
 
-if(EMSCRIPTEN AND (NOT USE_QT OR NOT USE_OPENGL))
-  message(FATAL_ERROR "EMSCRIPTEN requires USE_QT=ON and USE_OPENGL=ON for its viewport")
+# The Python bindings are plain pybind11 (no subprocesses), so Pyodide wheels
+# may use them. They make no sense for the Qt viewport build, though.
+if(EMSCRIPTEN AND USE_QT AND USE_PYTHON)
+  message(FATAL_ERROR "The Qt WASM build requires USE_PYTHON=OFF. Configure a fresh build directory with this option.")
 endif()
 
-if(EMSCRIPTEN)
+# With Qt, WASM is the viewport build. Without Qt it is the headless
+# core/io/calc build, which needs neither OpenGL nor Qt.
+if(EMSCRIPTEN AND USE_QT AND NOT USE_OPENGL)
+  message(FATAL_ERROR "EMSCRIPTEN with USE_QT=ON requires USE_OPENGL=ON for its viewport (or configure the headless build with USE_QT=OFF USE_OPENGL=OFF)")
+endif()
+
+if(EMSCRIPTEN AND NOT USE_QT AND USE_OPENGL)
+  message(FATAL_ERROR "The headless WASM build (USE_QT=OFF) requires USE_OPENGL=OFF")
+endif()
+
+if(EMSCRIPTEN AND USE_QT)
   find_package(Qt6 REQUIRED COMPONENTS Core)
   # Non-Qt libraries and host-run WASM tools also need to match the Qt ABI.
   if(QT_FEATURE_thread)
