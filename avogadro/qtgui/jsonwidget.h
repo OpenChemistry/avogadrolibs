@@ -142,7 +142,6 @@ protected:
   void setFloatOption(const QString& name, const QJsonValue& value);
   void setBooleanOption(const QString& name, const QJsonValue& value);
   void setTextOption(const QString& name, const QJsonValue& value);
-  void setTableOption(const QString& name, const QJsonValue& value);
   /**@}*/
 
   /**

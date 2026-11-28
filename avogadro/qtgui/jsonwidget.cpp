@@ -69,51 +69,104 @@ enum class TableAxis
   Rows
 };
 
-/// The cell separator a table option was built with; a tab unless it said so.
-QString tableDelimiter(const QTableWidget* table)
-{
-  const QVariant delimiter = table->property("delimiter");
-  return delimiter.isValid() ? delimiter.toString() : u"\t"_s;
-}
-
 /**
- * Serialize a table the way setTableOption() parses one: cells joined by the
- * widget's delimiter, rows joined by newlines, so an editable table round
- * trips through its own default value.
+ * Serialize a table as a JSON array, the same way it is set up by the plugin.
  *
  * A table created with "selectable" is a picker rather than a grid, so only
- * the row the user chose is returned.  An empty string means nothing is
+ * the row the user chose is returned. An empty array means nothing is
  * selected, which the script must handle.
  */
-QString tableToString(const QTableWidget* table)
+QJsonObject tableToObject(const QTableWidget* table)
 {
-  const QString delimiter = tableDelimiter(table);
-
-  auto rowText = [table, &delimiter](int row) {
-    QStringList cells;
-    cells.reserve(table->columnCount());
-    for (int column = 0; column < table->columnCount(); ++column) {
-      const QTableWidgetItem* cell = table->item(row, column);
-      cells << (cell != nullptr ? cell->text() : QString());
+  auto getJsonValue = [table](int row, int col) -> QJsonValue {
+    if (auto* widget = table->cellWidget(row, col)) {
+      if (auto* spinBox = qobject_cast<QSpinBox*>(widget)) {
+        return spinBox->value();
+      } else if (auto* dSpinBox = qobject_cast<QDoubleSpinBox*>(widget)) {
+        return dSpinBox->value();
+      } else if (auto* checkBox = qobject_cast<QCheckBox*>(widget)) {
+        return checkBox->isChecked();
+      } else if (auto* fileBrowse =
+                   qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
+        return fileBrowse->fileName();
+      } else if (auto* lineEdit = qobject_cast<QLineEdit*>(widget)) {
+        return lineEdit->text();
+      } else if (auto* combo = qobject_cast<QComboBox*>(widget)) {
+        const QVariant data = combo->currentData();
+        return data.isValid() && data.canConvert<QString>()
+                 ? data.toString()
+                 : combo->currentText();
+      } else {
+        qCritical() << JsonWidget::tr("Invalid widget encountered in table!");
+        return QString("");
+      }
+    } else if (auto* item = table->item(row, col)) {
+      return item->data(Qt::DisplayRole).toString();
     }
-    return cells.join(delimiter);
+    return QString("");
   };
+
+  bool isColumnWise = table->property("direction").toString() == "columns";
+  int rowCount = table->rowCount();
+  int columnCount = table->columnCount();
+
+  QJsonObject output;
+
+  int outerCount = isColumnWise ? columnCount : rowCount;
+  int innerCount = isColumnWise ? rowCount : columnCount;
 
   if (table->property("selectable").toBool()) {
     const QItemSelectionModel* selection = table->selectionModel();
     if (selection == nullptr)
-      return QString();
+      return QJsonObject();
     const QModelIndexList rows = selection->selectedRows();
     if (rows.isEmpty())
-      return QString();
-    return rowText(rows.first().row());
+      return QJsonObject();
+    auto row = rows.first().row();
+    if (isColumnWise) {
+      for (int col = 0; col < columnCount; col++) {
+        QString header = QString::number(col);
+        auto* headerItem = table->horizontalHeaderItem(col);
+        if (headerItem && !headerItem->text().isEmpty())
+          header = headerItem->text();
+        output.insert(header, getJsonValue(row, col));
+      }
+      return output;
+    } else {
+      QString header = QString::number(row);
+      auto* headerItem = table->verticalHeaderItem(row);
+      if (headerItem && !headerItem->text().isEmpty())
+        header = headerItem->text();
+      QJsonArray content;
+      for (int col = 0; col < columnCount; col++) {
+        content.append(getJsonValue(row, col));
+      }
+      output.insert(header, content);
+      return output;
+    }
   }
 
-  QStringList lines;
-  lines.reserve(table->rowCount());
-  for (int row = 0; row < table->rowCount(); ++row)
-    lines << rowText(row);
-  return lines.join(u"\n"_s);
+  for (int outer = 0; outer < outerCount; outer++) {
+    QString header = QString::number(outer);
+    QTableWidgetItem* headerItem;
+    if (isColumnWise)
+      headerItem = table->horizontalHeaderItem(outer);
+    else
+      headerItem = table->verticalHeaderItem(outer);
+
+    if (headerItem && !headerItem->text().isEmpty())
+      header = headerItem->text();
+
+    QJsonArray content;
+    for (int inner = 0; inner < innerCount; inner++) {
+      int row = isColumnWise ? inner : outer;
+      int col = isColumnWise ? outer : inner;
+      content.append(getJsonValue(row, col));
+    }
+    output.insert(header, content);
+  }
+
+  return output;
 }
 
 } // namespace
@@ -703,17 +756,6 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   if (obj.contains(u"toolTip"_s) && obj[u"toolTip"_s].isString()) {
     tableWidget->setToolTip(obj[u"toolTip"_s].toString());
   }
-  if (obj.contains(u"headers"_s) && obj[u"headers"_s].isArray()) {
-    QJsonArray headers = obj[u"headers"_s].toArray();
-    tableWidget->setColumnCount(headers.size());
-    for (int i = 0; i < headers.size(); ++i) {
-      tableWidget->setHorizontalHeaderItem(
-        i, new QTableWidgetItem(headers[i].toString()));
-    }
-  }
-  if (obj.contains(u"delimiter"_s) && obj[u"delimiter"_s].isString()) {
-    tableWidget->setProperty("delimiter", obj[u"delimiter"_s].toString());
-  }
 
   // A "selectable" table is a picker rather than an editable grid: the user
   // chooses one row and collectOptions() hands that row to the script.
@@ -728,38 +770,179 @@ QWidget* JsonWidget::createTableWidget(const QJsonObject& obj)
   }
 
   // Data may be supplied either as columns or as rows: both are arrays of
-  // arrays of cell strings, and only the nesting order differs.  Fill the
-  // table from one of them, mapping the outer index to whichever axis it
-  // names.  Note that setItem() takes (row, column) in that order.
-  auto populate = [tableWidget](const QJsonArray& outer, TableAxis axis) {
+  // dicts mapping headers to content, and only the nesting order differs.
+  // Fill the table from one of them, mapping the outer index to whichever
+  // axis it names. Note that setItem() takes (row, column) in that order.
+  auto populate = [this, tableWidget](const QJsonObject& outer,
+                                      TableAxis axis) {
     const bool outerIsRows = axis == TableAxis::Rows;
     // The longest inner array sets the size of the other axis. Ragged input
     // is allowed: missing cells are simply left empty.
-    int innerCount = 0;
-    for (const QJsonValue& inner : outer)
-      innerCount = qMax(innerCount, static_cast<int>(inner.toArray().size()));
 
-    const auto outerCount = static_cast<int>(outer.size());
-    tableWidget->setRowCount(outerIsRows ? outerCount : innerCount);
-    // Headers, if any, have already set the column count; only grow it.
-    const int columnCount = outerIsRows ? innerCount : outerCount;
-    if (columnCount > tableWidget->columnCount())
-      tableWidget->setColumnCount(columnCount);
-
-    for (int i = 0; i < outerCount; ++i) {
-      const QJsonArray cells = outer[i].toArray();
-      for (int j = 0; j < cells.size(); ++j)
-        tableWidget->setItem(outerIsRows ? i : j, outerIsRows ? j : i,
-                             new QTableWidgetItem(cells[j].toString()));
+    int nEntries = static_cast<int>(outer.size());
+    if (outerIsRows && nEntries > tableWidget->rowCount()) {
+      tableWidget->setRowCount(nEntries);
+    } else if (nEntries > tableWidget->columnCount()) {
+      tableWidget->setColumnCount(nEntries);
     }
+
+    for (const auto& key : outer.keys()) {
+      const QJsonObject current = outer[key].toObject();
+      if (!(current.contains(u"defaults"_s) &&
+            current[u"defaults"_s].isArray())) {
+        qWarning() << tr(
+          "Row/Column does not contain defaults or defaults are not an array!");
+        continue;
+      }
+      if (!(current.contains(u"order"_s) && current[u"order"_s].isDouble())) {
+        qWarning() << tr(
+          "Row/Column does not contain order or order is not a number!");
+        continue;
+      }
+      QJsonArray defaults = current[u"defaults"_s].toArray();
+      int order = current[u"order"_s].toInt();
+
+      const int nDefaults = static_cast<int>(defaults.size());
+      if (outerIsRows) {
+        if (nDefaults > tableWidget->columnCount())
+          tableWidget->setColumnCount(nDefaults);
+      } else {
+        if (nDefaults > tableWidget->rowCount())
+          tableWidget->setRowCount(nDefaults);
+      }
+
+      QString label = key;
+      if (current.contains(u"label"_s) && current[u"label"_s].isString())
+        label = current[u"label"_s].toString();
+      auto* header = new QTableWidgetItem(label);
+      if (outerIsRows) {
+        tableWidget->setVerticalHeaderItem(order, header);
+      } else {
+        tableWidget->setHorizontalHeaderItem(order, header);
+      }
+
+      for (int j = 0; j < current.size(); ++j) {
+        int row = outerIsRows ? order : j;
+        int column = outerIsRows ? j : order;
+        if (!(current.contains(u"type"_s) && current[u"type"_s].isString())) {
+          qWarning() << tr(
+            "Row/Column does not contain a type or its type is not a string!");
+          continue;
+        }
+        bool editable = true;
+        if (current.contains(u"editable"_s) && current[u"editable"_s].isBool())
+          editable = current[u"editable"_s].toBool();
+
+        QString type = current[u"type"_s].toString();
+        if (type == "string") {
+          auto* item = new QLineEdit(defaults[j].toString());
+          item->setReadOnly(!editable);
+          connect(item, SIGNAL(textChanged(QString)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, item);
+        } else if (type == "boolean") {
+          auto* checkBox = new QCheckBox();
+          checkBox->setChecked(defaults[j].toBool());
+          if (!editable) {
+            checkBox->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+            checkBox->setFocusPolicy(Qt::NoFocus);
+          }
+          connect(checkBox, SIGNAL(toggled(bool)), SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, checkBox);
+        } else if (type == "integer") {
+          auto* spin = new QSpinBox;
+          if (current.contains(u"minimum"_s) &&
+              current[u"minimum"_s].isDouble()) {
+            spin->setMinimum(current[u"minimum"_s].toInt());
+          }
+          if (current.contains(u"maximum"_s) &&
+              current[u"maximum"_s].isDouble()) {
+            spin->setMaximum(current[u"maximum"_s].toInt());
+          }
+          spin->setReadOnly(!editable);
+          spin->setValue(defaults[j].toInt());
+          connect(spin, SIGNAL(valueChanged(int)), SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, spin);
+        } else if (type == "float") {
+          auto* spin = new QDoubleSpinBox;
+          if (current.contains(u"minimum"_s) &&
+              current[u"minimum"_s].isDouble()) {
+            spin->setMinimum(current[u"minimum"_s].toDouble());
+          }
+          if (current.contains(u"maximum"_s) &&
+              current[u"maximum"_s].isDouble()) {
+            spin->setMaximum(current[u"maximum"_s].toDouble());
+          }
+          spin->setReadOnly(!editable);
+          spin->setValue(defaults[j].toDouble());
+          connect(spin, SIGNAL(valueChanged(double)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, spin);
+        } else if (type == "filePath") {
+          auto* fileBrowse = new QtGui::FileBrowseWidget;
+          fileBrowse->setEnabled(editable);
+          connect(fileBrowse, SIGNAL(fileNameChanged(QString)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, fileBrowse);
+        } else if (type == "stringList") {
+          if (!current.contains(u"values"_s) ||
+              !current[u"values"_s].isArray()) {
+            qWarning()
+              << "stringList in table has values missing, or not array!";
+            continue;
+          }
+          QJsonArray valueArray = current[u"values"_s].toArray();
+
+          auto* combo = new QComboBox();
+          for (QJsonArray::const_iterator vit = valueArray.constBegin(),
+                                          vitEnd = valueArray.constEnd();
+               vit != vitEnd; ++vit) {
+            if ((*vit).isString()) {
+              QString value = (*vit).toString();
+              if (value == '-') {
+                combo->insertSeparator(combo->count());
+              } else {
+                combo->addItem(value, value);
+              }
+            } else
+              qWarning() << "Cannot convert value to string for stringList:"
+                         << *vit;
+          }
+          int index = -1;
+          if (defaults[j].isDouble())
+            index = static_cast<int>(defaults[j].toDouble() + 0.5);
+          combo->setCurrentIndex(index);
+          combo->setEnabled(editable);
+          connect(combo, SIGNAL(currentIndexChanged(int)),
+                  SLOT(updatePreviewText()));
+          tableWidget->setCellWidget(row, column, combo);
+        }
+      }
+    }
+    // This should be redundant, but better to be safe than sorry.
     tableWidget->resizeColumnsToContents();
+    tableWidget->resizeRowsToContents();
   };
 
-  if (obj[u"columns"_s].isArray())
-    populate(obj[u"columns"_s].toArray(), TableAxis::Columns);
-  if (obj[u"rows"_s].isArray())
-    populate(obj[u"rows"_s].toArray(), TableAxis::Rows);
+  if (obj.contains(u"columns"_s) && obj.contains(u"rows"_s)) {
+    qWarning() << tr("Can not set both columns and rows!");
+    return tableWidget;
+  }
+  if (!(obj.contains(u"columns"_s) || obj.contains(u"rows"_s))) {
+    qWarning() << tr("Must supply columns or rows!");
+    return tableWidget;
+  }
 
+  if (obj[u"columns"_s].isObject()) {
+    populate(obj[u"columns"_s].toObject(), TableAxis::Columns);
+    tableWidget->setProperty("direction", QString("columns"));
+  } else if (obj[u"rows"_s].isObject()) {
+    populate(obj[u"rows"_s].toObject(), TableAxis::Rows);
+    tableWidget->setProperty("direction", QString("rows"));
+  } else {
+    qWarning() << tr("Neither columns nor rows are arrays!");
+    return tableWidget;
+  }
   // Sorting has to be switched on after the data is in place, or the rows are
   // re-ordered underneath setItem() as they are inserted.
   if (obj[u"sortable"_s].toBool())
@@ -866,8 +1049,8 @@ void JsonWidget::setOption(const QString& name, const QJsonValue& defaultValue)
     return setBooleanOption(name, defaultValue);
   else if (type == u"text"_s)
     return setTextOption(name, defaultValue);
-  else if (type == u"table"_s)
-    return setTableOption(name, defaultValue);
+  // else if (type == u"table"_s)
+  //   return setTableOption(name, defaultValue);
 
   qWarning()
     << tr("Unrecognized option type '%1' for option '%2'.").arg(type).arg(name);
@@ -955,61 +1138,6 @@ void JsonWidget::setTextOption(const QString& name, const QJsonValue& value)
   }
 
   text->setText(value.toString());
-}
-
-void JsonWidget::setTableOption(const QString& name, const QJsonValue& value)
-{
-  auto* table = qobject_cast<QTableWidget*>(m_widgets.value(name, nullptr));
-  if (table == nullptr) {
-    qWarning() << tr("Error setting default for option '%1'. "
-                     "Bad widget type.")
-                    .arg(name);
-    return;
-  }
-
-  if (!value.isString()) {
-    qWarning() << tr("Error setting default for option '%1'. "
-                     "Bad default value:")
-                    .arg(name)
-               << value;
-    return;
-  }
-
-  // Parse the table up front: the rows are needed twice, to size it and to
-  // fill it, and splitting each line again for the second pass allocates a
-  // fresh QString per cell.
-  const QString delimiter = tableDelimiter(table);
-  const QStringList lines = value.toString().split(u"\n"_s);
-  QList<QStringList> rows;
-  rows.reserve(lines.size());
-  // Without headers the column count is still zero, and setItem() would drop
-  // every cell, so widen the table to the longest line first.
-  int columnCount = table->columnCount();
-  for (const QString& line : lines) {
-    rows.append(line.split(delimiter));
-    columnCount = qMax(columnCount, static_cast<int>(rows.last().size()));
-  }
-
-  // A sortable table re-sorts on every setItem() into the column the sort
-  // indicator is on, moving rows out from under the insertion and scattering
-  // each row's cells across the others. Fill it with sorting off, then put the
-  // setting back and let the view sort the finished rows as a whole.
-  const bool sortingEnabled = table->isSortingEnabled();
-  table->setSortingEnabled(false);
-
-  table->clearContents();
-  table->setRowCount(static_cast<int>(rows.size()));
-  table->setColumnCount(columnCount);
-  for (int i = 0; i < rows.size(); ++i) {
-    const QStringList& entry = rows.at(i);
-    for (int j = 0; j < entry.size(); ++j) {
-      table->setItem(i, j, new QTableWidgetItem(entry.at(j)));
-    }
-  }
-  // createTableWidget() only sizes the columns when the JSON carried the data;
-  // a table filled from its default gets its turn here.
-  table->resizeColumnsToContents();
-  table->setSortingEnabled(sortingEnabled);
 }
 
 void JsonWidget::setFilePathOption(const QString& name, const QJsonValue& value)
@@ -1167,7 +1295,7 @@ QJsonObject JsonWidget::collectOptions() const
                  qobject_cast<QtGui::FileBrowseWidget*>(widget)) {
       ret.insert(label, fileBrowse->fileName());
     } else if (auto* table = qobject_cast<QTableWidget*>(widget)) {
-      ret.insert(label, tableToString(table));
+      ret.insert(label, tableToObject(table));
     } else {
       qWarning()
         << tr("Unhandled widget in collectOptions for option '%1'.").arg(label);
