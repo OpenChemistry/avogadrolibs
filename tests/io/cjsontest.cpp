@@ -854,6 +854,33 @@ TEST(CjsonTest, layerRoundTrip)
   EXPECT_EQ(restoredInfo->settings["TestPlugin"][0]->getSave(), "first");
 }
 
+// Settings read from a file are base LayerData objects that the plugin must
+// convert again, so a stale "loaded" mark for that plugin has to be dropped.
+TEST(CjsonTest, readingLayerSettingsClearsLoaded)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  auto info = molecule.layerInfo();
+  info->settings["TestPlugin"] =
+    Avogadro::Core::Array<Avogadro::Core::LayerDataPtr>();
+  info->settings["TestPlugin"].push_back(
+    std::make_shared<TestLayerData>("first"));
+
+  CjsonFormat cjson;
+  std::string serialized;
+  ASSERT_TRUE(cjson.writeString(serialized, molecule)) << cjson.error();
+
+  Molecule restored;
+  restored.layerInfo()->loaded.insert("TestPlugin");
+  restored.layerInfo()->loaded.insert("Unrelated");
+  ASSERT_TRUE(cjson.readString(serialized, restored)) << cjson.error();
+
+  auto restoredInfo = restored.layerInfo();
+  ASSERT_EQ(restoredInfo->settings["TestPlugin"].size(), 1u);
+  EXPECT_EQ(restoredInfo->loaded.count("TestPlugin"), 0u);
+  EXPECT_EQ(restoredInfo->loaded.count("Unrelated"), 1u);
+}
+
 // A fuzzer found that "cube": "caffeine" (a string where the reader expects
 // an object) made cubeObj["origin"] throw type_error.305. The rest of the
 // file is otherwise valid and must still load, just without the cube.

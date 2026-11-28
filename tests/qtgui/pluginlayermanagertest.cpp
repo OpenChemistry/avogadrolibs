@@ -244,6 +244,59 @@ TEST_F(PluginLayerManagerTest, GetSettingCreatesDefaultAndPersists)
   EXPECT_EQ(second->value(), 7);
 }
 
+// CjsonFormat can only construct the LayerData base for saved settings, and
+// only a plugin's process() used to convert them. Opening a settings widget
+// for a disabled plugin goes straight to getSetting(), which must convert too.
+TEST_F(PluginLayerManagerTest, GetSettingConvertsSettingsReadFromFile)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  setActiveMolecule(&molecule);
+
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  info->settings["Plugin"] = Avogadro::Core::Array<LayerDataPtr>();
+  info->settings["Plugin"].push_back(std::make_shared<LayerData>("13"));
+  info->settings["Plugin"].push_back(nullptr);
+
+  PluginLayerManager plugin("Plugin");
+  auto* setting = plugin.getSetting<TestLayerData>(); // no load() first
+  ASSERT_NE(setting, nullptr);
+  LayerDataPtr slot = info->settings["Plugin"][0];
+  EXPECT_NE(dynamic_cast<TestLayerData*>(slot.get()), nullptr);
+  EXPECT_EQ(setting, slot.get());
+  EXPECT_EQ(setting->value(), 13);
+
+  // A null slot still becomes a default-constructed T.
+  auto* other = plugin.getSetting<TestLayerData>(1);
+  ASSERT_NE(other, nullptr);
+  EXPECT_EQ(other->value(), 0);
+  EXPECT_NE(dynamic_cast<TestLayerData*>(info->settings["Plugin"][1].get()),
+            nullptr);
+
+  // Converted once: edits survive later calls.
+  setting->setValue(21);
+  EXPECT_EQ(plugin.getSetting<TestLayerData>(0)->value(), 21);
+}
+
+TEST_F(PluginLayerManagerTest, SnapshotConvertsSettingsReadFromFile)
+{
+  Molecule molecule;
+  molecule.addAtom(1);
+  setActiveMolecule(&molecule);
+
+  auto info = LayerManager::getMoleculeInfo(&molecule);
+  info->settings["Plugin"] = Avogadro::Core::Array<LayerDataPtr>();
+  info->settings["Plugin"].push_back(std::make_shared<LayerData>("5"));
+
+  PluginLayerManager plugin("Plugin");
+  auto snap = plugin.snapshot<TestLayerData>();
+  auto* setting = snap.setting(0);
+  ASSERT_NE(setting, nullptr);
+  EXPECT_EQ(setting,
+            dynamic_cast<TestLayerData*>(info->settings["Plugin"][0].get()));
+  EXPECT_EQ(setting->value(), 5);
+}
+
 // Cloning happens whenever a MoleculeInfo is copied (see
 // MoleculeInfo::cloneSettings()); a plugin's setting must come along as an
 // independent copy, not a shared pointer to the original.

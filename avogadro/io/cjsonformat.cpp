@@ -1755,6 +1755,8 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
         if (!setting.value().is_array())
           continue;
         names->settings[setting.key()] = Core::Array<Core::LayerDataPtr>();
+        // These are base LayerData again; the plugin must convert them anew.
+        names->loaded.erase(setting.key());
         for (const auto& s : setting.value()) {
           // null means this layer has no settings for that plugin, which is
           // not the same as settings that serialize to an empty string.
