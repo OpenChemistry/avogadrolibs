@@ -133,23 +133,8 @@ public:
   void load()
   {
     auto info = activeMoleculeInfo();
-    if (info != nullptr) {
-      if (info->loaded.find(m_name) == info->loaded.end()) {
-        for (size_t i = 0; i < info->settings[m_name].size(); ++i) {
-          // A null slot means this layer has no settings for this plugin;
-          // leave it null. Every other slot has to be rebuilt as a T, empty
-          // getSave() included: reading came from CjsonFormat, which can only
-          // construct the LayerData base, and getSetting() below static_casts
-          // whatever is here to T*.
-          if (info->settings[m_name][i] == nullptr)
-            continue;
-          auto aux = std::make_shared<T>();
-          aux->deserialize(info->settings[m_name][i]->getSave());
-          info->settings[m_name][i] = aux;
-        }
-        info->loaded.insert(m_name);
-      }
-    }
+    if (info != nullptr)
+      loadInfo<T>(*info);
   }
 
   /** @return if the plugin is enabled in any layer */
@@ -192,6 +177,11 @@ public:
       info->settings[m_name] = Core::Array<Core::LayerDataPtr>();
     }
 
+    // Settings read from a file are plain LayerData until converted to T.
+    // The plugin's process() may never have run (e.g. the plugin is disabled
+    // but its settings widget is open), so convert here before the cast.
+    loadInfo<T>(*info);
+
     // do we need to create new layers in the array?
     while (info->settings[m_name].size() < layer + 1) {
       info->settings[m_name].push_back(std::make_shared<T>());
@@ -202,10 +192,35 @@ public:
     if (info->settings[m_name][layer] == nullptr)
       info->settings[m_name][layer] = std::make_shared<T>();
     // Borrowed: the Array keeps ownership, callers only read through this.
+    // Safe: loadInfo() made every existing slot a T.
     return static_cast<T*>(info->settings[m_name][layer].get());
   }
 
 private:
+  /** Rebuild any settings of this plugin read from a file as T, once. CJSON
+   * reading can only construct the LayerData base, since io cannot know the
+   * plugin's type. */
+  template <typename T>
+  void loadInfo(Core::MoleculeInfo& info)
+  {
+    if (info.loaded.find(m_name) != info.loaded.end())
+      return;
+    auto found = info.settings.find(m_name);
+    if (found != info.settings.end()) {
+      for (auto& slot : found->second) {
+        // A null slot means this layer has no settings for this plugin;
+        // leave it null. Every other slot has to be rebuilt as a T, empty
+        // getSave() included, because getSetting() static_casts to T*.
+        if (slot == nullptr)
+          continue;
+        auto aux = std::make_shared<T>();
+        aux->deserialize(slot->getSave());
+        slot = aux;
+      }
+    }
+    info.loaded.insert(m_name);
+  }
+
   // visible is sized per layer independently of Layer itself, so bounds check
   // it separately rather than assuming the two agree.
   static bool enabledAndVisible(const Core::MoleculeInfo& info,
