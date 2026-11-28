@@ -175,26 +175,31 @@ SpectraDialog::SpectraDialog(QWidget* parent)
   readSettings();
 
   // connections for options
-  connect(m_ui->push_options, SIGNAL(clicked()), this, SLOT(toggleOptions()));
-  connect(m_ui->push_export, SIGNAL(clicked()), this, SLOT(exportData()));
-  connect(m_ui->push_exportData, SIGNAL(clicked()), this, SLOT(exportData()));
-  connect(m_ui->push_import, SIGNAL(clicked()), this, SLOT(importData()));
-  connect(m_ui->cb_raw, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
-  connect(m_ui->cb_import, SIGNAL(toggled(bool)), this, SLOT(updatePlot()));
-  connect(m_ui->push_colorBackground, SIGNAL(clicked()), this,
-          SLOT(changeBackgroundColor()));
-  connect(m_ui->push_colorForeground, SIGNAL(clicked()), this,
-          SLOT(changeForegroundColor()));
-  connect(m_ui->push_colorCalculated, SIGNAL(clicked()), this,
-          SLOT(changeCalculatedSpectraColor()));
-  connect(m_ui->push_colorRaw, SIGNAL(clicked()), this,
-          SLOT(changeRawSpectraColor()));
-  connect(m_ui->push_colorImported, SIGNAL(clicked()), this,
-          SLOT(changeImportedSpectraColor()));
-  connect(m_ui->fontSizeCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(changeFontSize()));
-  connect(m_ui->lineWidthSpinBox, SIGNAL(valueChanged(double)), this,
-          SLOT(changeLineWidth()));
+  connect(m_ui->push_options, &QPushButton::clicked, this,
+          &SpectraDialog::toggleOptions);
+  connect(m_ui->push_export, &QPushButton::clicked, this,
+          &SpectraDialog::exportData);
+  connect(m_ui->push_exportData, &QPushButton::clicked, this,
+          &SpectraDialog::exportData);
+  connect(m_ui->push_import, &QPushButton::clicked, this,
+          &SpectraDialog::importData);
+  connect(m_ui->cb_raw, &QCheckBox::toggled, this, &SpectraDialog::updatePlot);
+  connect(m_ui->cb_import, &QCheckBox::toggled, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->push_colorBackground, &QPushButton::clicked, this,
+          &SpectraDialog::changeBackgroundColor);
+  connect(m_ui->push_colorForeground, &QPushButton::clicked, this,
+          &SpectraDialog::changeForegroundColor);
+  connect(m_ui->push_colorCalculated, &QPushButton::clicked, this,
+          &SpectraDialog::changeCalculatedSpectraColor);
+  connect(m_ui->push_colorRaw, &QPushButton::clicked, this,
+          &SpectraDialog::changeRawSpectraColor);
+  connect(m_ui->push_colorImported, &QPushButton::clicked, this,
+          &SpectraDialog::changeImportedSpectraColor);
+  connect(m_ui->fontSizeCombo, &QComboBox::currentIndexChanged, this,
+          &SpectraDialog::changeFontSize);
+  connect(m_ui->lineWidthSpinBox, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::changeLineWidth);
   connectOptions();
 }
 
@@ -206,49 +211,49 @@ SpectraDialog::~SpectraDialog()
 void SpectraDialog::connectOptions()
 {
   // connect (or reconnect) anything that calls change or update plot
-  connect(m_ui->combo_spectra, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(changeSpectra()));
-  connect(m_ui->xAxisMinimum, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
-  connect(m_ui->xAxisMaximum, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
-  connect(m_ui->yAxisMinimum, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
-  connect(m_ui->yAxisMaximum, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
-  connect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
+  connect(m_ui->combo_spectra, &QComboBox::currentIndexChanged, this,
+          &SpectraDialog::changeSpectra);
+  connect(m_ui->xAxisMinimum, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->xAxisMaximum, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->yAxisMinimum, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->yAxisMaximum, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->peakWidth, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
 
-  connect(m_ui->scaleSpinBox, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
-  connect(m_ui->offsetSpinBox, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
-  connect(m_ui->peakThreshold, SIGNAL(valueChanged(double)), this,
-          SLOT(updatePlot()));
+  connect(m_ui->scaleSpinBox, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->offsetSpinBox, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
+  connect(m_ui->peakThreshold, &QDoubleSpinBox::valueChanged, this,
+          &SpectraDialog::updatePlot);
 }
 
 void SpectraDialog::disconnectOptions()
 {
   // disconnect anything that calls change or update plot
-  disconnect(m_ui->combo_spectra, SIGNAL(currentIndexChanged(int)), this,
-             SLOT(changeSpectra()));
-  disconnect(m_ui->xAxisMinimum, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
-  disconnect(m_ui->xAxisMaximum, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
-  disconnect(m_ui->yAxisMinimum, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
-  disconnect(m_ui->yAxisMaximum, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
-  disconnect(m_ui->peakWidth, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
+  disconnect(m_ui->combo_spectra, &QComboBox::currentIndexChanged, this,
+             &SpectraDialog::changeSpectra);
+  disconnect(m_ui->xAxisMinimum, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
+  disconnect(m_ui->xAxisMaximum, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
+  disconnect(m_ui->yAxisMinimum, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
+  disconnect(m_ui->yAxisMaximum, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
+  disconnect(m_ui->peakWidth, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
 
-  disconnect(m_ui->scaleSpinBox, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
-  disconnect(m_ui->offsetSpinBox, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
-  disconnect(m_ui->peakThreshold, SIGNAL(valueChanged(double)), this,
-             SLOT(updatePlot()));
+  disconnect(m_ui->scaleSpinBox, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
+  disconnect(m_ui->offsetSpinBox, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
+  disconnect(m_ui->peakThreshold, &QDoubleSpinBox::valueChanged, this,
+             &SpectraDialog::updatePlot);
 }
 
 void SpectraDialog::changeEvent(QEvent* event)
@@ -268,8 +273,8 @@ void SpectraDialog::mouseDoubleClickEvent(QMouseEvent* /*e*/)
 void SpectraDialog::updateElementCombo()
 {
   // update the element combo box
-  disconnect(m_ui->elementCombo, SIGNAL(currentIndexChanged(int)), this,
-             SLOT(changeSpectra()));
+  disconnect(m_ui->elementCombo, &QComboBox::currentIndexChanged, this,
+             &SpectraDialog::changeSpectra);
   m_ui->elementCombo->clear();
 
   // go through the elements in atomic number order
@@ -325,8 +330,8 @@ void SpectraDialog::updateElementCombo()
   }
 
   // connect the element combo box
-  connect(m_ui->elementCombo, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(changeSpectra()));
+  connect(m_ui->elementCombo, &QComboBox::currentIndexChanged, this,
+          &SpectraDialog::changeSpectra);
   changeSpectra(); // default to 1H
 }
 
@@ -578,8 +583,8 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
   m_spectra = spectra;
 
   // update the combo box
-  disconnect(m_ui->combo_spectra, SIGNAL(currentIndexChanged(int)), this,
-             SLOT(changeSpectra()));
+  disconnect(m_ui->combo_spectra, &QComboBox::currentIndexChanged, this,
+             &SpectraDialog::changeSpectra);
 
   m_ui->combo_spectra->clear();
   for (auto& spectra : m_spectra) {
@@ -624,8 +629,8 @@ void SpectraDialog::setSpectra(const std::map<std::string, MatrixX>& spectra)
 
   changeSpectra();
   // connect again
-  connect(m_ui->combo_spectra, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(changeSpectra()));
+  connect(m_ui->combo_spectra, &QComboBox::currentIndexChanged, this,
+          &SpectraDialog::changeSpectra);
 }
 
 void SpectraDialog::writeSettings() const

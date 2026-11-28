@@ -28,7 +28,7 @@ Spectra::Spectra(QObject* p)
   action->setEnabled(false);
   action->setText(tr("Plot Spectra…"));
   action->setProperty("menu priority", -900);
-  connect(action, SIGNAL(triggered()), SLOT(openDialog()));
+  connect(action, &QAction::triggered, this, &Spectra::openDialog);
   m_actions.push_back(action);
 }
 
@@ -67,8 +67,8 @@ void Spectra::setMolecule(QtGui::Molecule* mol)
   foreach (auto action, m_actions)
     action->setEnabled(enableAction);
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)),
-          SLOT(moleculeChanged(unsigned int)));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &Spectra::moleculeChanged);
 
   if (enableAction && m_dialog != nullptr) {
     gatherSpectra();
