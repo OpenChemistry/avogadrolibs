@@ -1033,13 +1033,15 @@ public:
 
   /**
    * Perceives bonds in the molecule based on the 3D coordinates of the atoms.
-   *  atoms are considered bonded if within the sum of radii
-   *  plus a small @p tolerance.
-   * @param tolerance The calculation tolerance.
-   * @param minDistance = atoms closer than the square of this are ignored
+   *  atoms are considered bonded if within the sum of covalent radii
+   *  plus a small @p tolerance, except if they are closer than @p minimum.
+   * @param tolerance How much further apart (in angstrom) than the sums of the
+   * covalent radii a pair of atoms may be and yet still be perceived as bonded.
+   * @param minimum How far apart (in angstrom) a pair of atoms must be to be
+   * perceived as bonded.
    */
   void perceiveBondsSimple(const double tolerance = 0.45,
-                           const double minDistance = 0.32);
+                           const double minimum = 0.32);
 
   /**
    * Perceives bonds in the molecule based on preset residue data.
