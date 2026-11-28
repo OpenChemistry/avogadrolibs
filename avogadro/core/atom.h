@@ -179,6 +179,16 @@ public:
   /** @} */
 
   /**
+   * The crystallographic disorder assembly and group of this atom, as in the
+   * CIF. An empty group means the atom is not disordered.
+   * @{
+   */
+  void setDisorder(const std::string& assembly, const std::string& group);
+  std::string disorderAssembly() const;
+  std::string disorderGroup() const;
+  /** @} */
+
+  /**
    * The color of this atom
    * @{
    */
@@ -408,6 +418,25 @@ template <class Molecule_T>
 double AtomTemplate<Molecule_T>::occupancy() const
 {
   return m_molecule->occupancy(m_index);
+}
+
+template <class Molecule_T>
+void AtomTemplate<Molecule_T>::setDisorder(const std::string& assembly,
+                                           const std::string& group)
+{
+  m_molecule->setDisorder(m_index, assembly, group);
+}
+
+template <class Molecule_T>
+std::string AtomTemplate<Molecule_T>::disorderAssembly() const
+{
+  return m_molecule->disorderAssembly(m_index);
+}
+
+template <class Molecule_T>
+std::string AtomTemplate<Molecule_T>::disorderGroup() const
+{
+  return m_molecule->disorderGroup(m_index);
 }
 
 template <class Molecule_T>

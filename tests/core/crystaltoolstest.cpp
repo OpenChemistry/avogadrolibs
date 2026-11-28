@@ -266,6 +266,21 @@ TEST(CrystalToolsTest, perceivePeriodicBondsFindsCrossingBond)
   EXPECT_TRUE(bonds[0].perceived);
 }
 
+TEST(CrystalToolsTest, perceivePeriodicBondsSkipsDisorderAlternatives)
+{
+  // Alternative sites across the a boundary do not bond...
+  Molecule mol = splitAcrossBoundary(false);
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+  EXPECT_EQ(CrystalTools::perceivePeriodicBonds(mol).size(), 0);
+
+  // ...but compatible (same group) or ordered sites still do.
+  ASSERT_TRUE(mol.setDisorder(1, "A", "1"));
+  EXPECT_EQ(CrystalTools::perceivePeriodicBonds(mol).size(), 1);
+  ASSERT_TRUE(mol.setDisorder(1, "", ""));
+  EXPECT_EQ(CrystalTools::perceivePeriodicBonds(mol).size(), 1);
+}
+
 TEST(CrystalToolsTest, perceivePeriodicBondsRoutesStretchedBond)
 {
   // The same pair, this time with the stretched bond already in the file. It
@@ -383,6 +398,68 @@ TEST(CrystalToolsTest, buildSupercellCarriesOccupancy)
       ++oxygens;
   }
   EXPECT_EQ(oxygens, 2);
+}
+
+TEST(CrystalToolsTest, buildSupercellCarriesDisorder)
+{
+  Molecule mol = cubicCell();
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  ASSERT_EQ(mol.atomCount(), 4);
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    const bool oxygen = mol.atomicNumber(i) == 8;
+    EXPECT_EQ(mol.disorderGroup(i), oxygen ? "2" : "") << i;
+    EXPECT_EQ(mol.disorderAssembly(i), oxygen ? "A" : "") << i;
+  }
+}
+
+TEST(CrystalToolsTest, buildSupercellKeepsCoincidentDisorderSites)
+{
+  // Substitutional disorder: two atoms with different groups, same position.
+  Molecule mol;
+  mol.setUnitCell(new UnitCell(Vector3(5.0, 0.0, 0.0), Vector3(0.0, 5.0, 0.0),
+                               Vector3(0.0, 0.0, 5.0)));
+  mol.addAtom(26).setPosition3d(Vector3(1.0, 1.0, 1.0));
+  mol.addAtom(27).setPosition3d(Vector3(1.0, 1.0, 1.0));
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  ASSERT_EQ(mol.atomCount(), 4);
+  int iron = 0, cobalt = 0;
+  for (Index i = 0; i < mol.atomCount(); ++i) {
+    if (mol.atomicNumber(i) == 26) {
+      ++iron;
+      EXPECT_EQ(mol.disorderGroup(i), "1") << i;
+    } else {
+      ++cobalt;
+      EXPECT_EQ(mol.disorderGroup(i), "2") << i;
+    }
+    EXPECT_EQ(mol.disorderAssembly(i), "A") << i;
+  }
+  EXPECT_EQ(iron, 2);
+  EXPECT_EQ(cobalt, 2);
+}
+
+TEST(CrystalToolsTest, buildSupercellMergesDuplicatesWithSameDisorder)
+{
+  Molecule mol;
+  mol.setUnitCell(new UnitCell(Vector3(5.0, 0.0, 0.0), Vector3(0.0, 5.0, 0.0),
+                               Vector3(0.0, 0.0, 5.0)));
+  mol.addAtom(6).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(6).setPosition3d(Vector3(5.0, 0.0, 0.0)); // same site
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "1"));
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 3, 1, 1));
+  EXPECT_EQ(mol.atomCount(), 4);
+}
+
+TEST(CrystalToolsTest, buildSupercellWithoutDisorderStoresNone)
+{
+  Molecule mol = cubicCell();
+  ASSERT_TRUE(CrystalTools::buildSupercell(mol, 2, 1, 1));
+  EXPECT_TRUE(mol.disorderGroups().empty());
+  EXPECT_TRUE(mol.disorderAssemblies().empty());
 }
 
 TEST(CrystalToolsTest, buildSupercellWithoutOccupancyStoresNone)

@@ -412,20 +412,11 @@ bool readBlock(cif::Block& block, CifData& data)
   return true;
 }
 
-// Atoms of different disorder groups of the same assembly are alternatives to
-// each other, never bonded.
-bool areAlternatives(const Site& a, const Site& b)
-{
-  return !a.disorderGroup.empty() && !b.disorderGroup.empty() &&
-         a.disorderGroup != b.disorderGroup &&
-         a.disorderAssembly == b.disorderAssembly;
-}
-
 // Which sites to keep when only the major configuration of each disorder
-// assembly is read. Avogadro stores an occupancy per atom but not the disorder
-// groups, so keeping every group would put all the alternatives on the same
-// atoms (six Cl on one carbon for a CHCl3 split over two groups) with nothing
-// to say which belong together. Within an assembly the group with the
+// assembly is read. Keeping every group would put all the alternatives on the
+// same atoms (six Cl on one carbon for a CHCl3 split over two groups), which
+// is rarely wanted for a model, so the default is one configuration (the
+// atoms keep their labels either way). Within an assembly the group with the
 // highest mean occupancy is kept, the first one in the file on a tie. The only
 // group of an assembly is kept only at a mean occupancy of 0.5 or more,
 // otherwise it is the minor part of a disorder whose other part is labeled
@@ -620,6 +611,18 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
   }
   if (anyPartialOccupancy)
     mol.setOccupancies(occupancies);
+  // The disorder labels as the file gives them, if any atom is in a group
+  Core::Array<std::string> disorderAssemblies;
+  Core::Array<std::string> disorderGroups;
+  bool anyDisorder = false;
+  for (const Site& site : sites) {
+    disorderAssemblies.push_back(site.disorderAssembly);
+    disorderGroups.push_back(site.disorderGroup);
+    if (!site.disorderGroup.empty())
+      anyDisorder = true;
+  }
+  if (anyDisorder)
+    mol.setDisorders(disorderAssemblies, disorderGroups);
   if (!data.name.empty())
     mol.setData("name", data.name);
 
@@ -637,19 +640,10 @@ bool CifFormat::read(std::istream& inStream, Core::Molecule& molecule)
     makeCifSymmetry(data.operations, data.hallSymbol, data.hermannMauguin),
     mol);
 
-  if (perceiveBonds) {
+  // Atoms of different disorder groups are never bonded (the molecule
+  // knows which they are).
+  if (perceiveBonds)
     mol.perceiveBondsSimple();
-
-    // The alternatives of a disordered site are never bonded.
-    std::vector<std::pair<Index, Index>> alternatives;
-    for (const auto& pair : mol.bondPairs()) {
-      if (pair.first < sites.size() && pair.second < sites.size() &&
-          areAlternatives(sites[pair.first], sites[pair.second]))
-        alternatives.push_back(pair);
-    }
-    for (const auto& pair : alternatives)
-      mol.removeBond(pair.first, pair.second);
-  }
 
   for (const auto& labels : data.bondedLabels) {
     const auto first = indexOfLabel.find(labels.first);
@@ -823,6 +817,14 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
                                           "fract_y", "fract_z" };
     if (writeOccupancy)
       siteTags.push_back("occupancy");
+    // and the disorder columns only for one with disorder groups
+    bool writeDisorder = false;
+    for (std::size_t i = 0; i < source->atomCount() && !writeDisorder; ++i)
+      writeDisorder = !source->disorderGroup(i).empty();
+    if (writeDisorder) {
+      siteTags.push_back("disorder_assembly");
+      siteTags.push_back("disorder_group");
+    }
     cif::Loop& sites = block.init_loop("_atom_site_", siteTags);
     const std::vector<std::string> labels = uniqueLabels(*source);
     for (std::size_t i = 0; i < source->atomCount(); ++i) {
@@ -841,6 +843,12 @@ bool CifFormat::write(std::ostream& outStream, const Core::Molecule& molecule)
                                        formatNumber(fractional.z(), 8) };
       if (writeOccupancy)
         row.push_back(formatOccupancy(source->occupancy(i)));
+      if (writeDisorder) {
+        const std::string assembly = source->disorderAssembly(i);
+        const std::string group = source->disorderGroup(i);
+        row.push_back(assembly.empty() ? "." : cif::quote(assembly));
+        row.push_back(group.empty() ? "." : cif::quote(group));
+      }
       sites.add_row(row);
     }
 

@@ -975,6 +975,8 @@ static void expectLikeDefault(const Molecule& m)
   EXPECT_EQ(m.formalCharges().size(), d.formalCharges().size());
   EXPECT_EQ(m.isotopes().size(), d.isotopes().size());
   EXPECT_EQ(m.occupancies().size(), d.occupancies().size());
+  EXPECT_EQ(m.disorderAssemblies().size(), d.disorderAssemblies().size());
+  EXPECT_EQ(m.disorderGroups().size(), d.disorderGroups().size());
   EXPECT_EQ(m.colors().size(), d.colors().size());
   EXPECT_EQ(m.forceVectors().size(), d.forceVectors().size());
   EXPECT_EQ(m.isSelectionEmpty(), d.isSelectionEmpty());
@@ -1287,6 +1289,140 @@ TEST_F(MoleculeTest, occupanciesFollowTheirAtoms)
   molecule.addAtom(6);
   EXPECT_EQ(molecule.occupancy(0), 1.0);
   EXPECT_TRUE(molecule.occupancies().empty());
+}
+
+TEST_F(MoleculeTest, disorderDefaultsToOrdered)
+{
+  Molecule molecule;
+  molecule.addAtom(6);
+  molecule.addAtom(8);
+  EXPECT_TRUE(molecule.disorderAssemblies().empty());
+  EXPECT_TRUE(molecule.disorderGroups().empty());
+  EXPECT_EQ(molecule.disorderAssembly(0), "");
+  EXPECT_EQ(molecule.disorderGroup(1), "");
+  EXPECT_EQ(molecule.disorderGroup(99), "");
+  EXPECT_EQ(molecule.atom(1).disorderGroup(), "");
+  EXPECT_FALSE(molecule.areDisorderAlternatives(0, 1));
+}
+
+TEST_F(MoleculeTest, setDisorder)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+  ASSERT_TRUE(molecule.setDisorder(1, "A", "-1"));
+  EXPECT_EQ(molecule.disorderAssembly(0), "");
+  EXPECT_EQ(molecule.disorderAssembly(1), "A");
+  EXPECT_EQ(molecule.disorderGroup(1), "-1");
+  EXPECT_EQ(molecule.disorderGroup(2), "");
+  EXPECT_EQ(molecule.disorderAssemblies().size(), 3u);
+  EXPECT_EQ(molecule.disorderGroups().size(), 3u);
+
+  EXPECT_FALSE(molecule.setDisorder(3, "A", "1"));
+  molecule.atom(2).setDisorder("B", "2");
+  EXPECT_EQ(molecule.disorderAssembly(2), "B");
+  EXPECT_EQ(molecule.atom(2).disorderGroup(), "2");
+
+  Array<std::string> shortArray;
+  shortArray.push_back("A");
+  EXPECT_FALSE(molecule.setDisorders(shortArray, shortArray));
+  EXPECT_EQ(molecule.disorderGroup(1), "-1");
+  // empty arrays clear
+  EXPECT_TRUE(
+    molecule.setDisorders(Array<std::string>(), Array<std::string>()));
+  EXPECT_TRUE(molecule.disorderGroups().empty());
+}
+
+TEST_F(MoleculeTest, setDisordersSwapsOwnColumns)
+{
+  Molecule molecule;
+  for (int i = 0; i < 3; ++i)
+    molecule.addAtom(6);
+  molecule.setDisorder(0, "A", "1");
+  molecule.setDisorder(1, "B", "2");
+  ASSERT_TRUE(molecule.setDisorders(molecule.disorderGroups(),
+                                    molecule.disorderAssemblies()));
+  EXPECT_EQ(molecule.disorderAssembly(0), "1");
+  EXPECT_EQ(molecule.disorderGroup(0), "A");
+  EXPECT_EQ(molecule.disorderAssembly(1), "2");
+  EXPECT_EQ(molecule.disorderGroup(1), "B");
+  EXPECT_EQ(molecule.disorderAssembly(2), "");
+  EXPECT_EQ(molecule.disorderGroup(2), "");
+}
+
+TEST_F(MoleculeTest, areDisorderAlternatives)
+{
+  Molecule molecule;
+  for (int i = 0; i < 6; ++i)
+    molecule.addAtom(6);
+  molecule.setDisorder(0, "A", "1");
+  molecule.setDisorder(1, "A", "2");
+  molecule.setDisorder(2, "A", "1");
+  molecule.setDisorder(3, "B", "2");
+  molecule.setDisorder(4, "", "1");
+  // atom 5 has no group
+  EXPECT_TRUE(molecule.areDisorderAlternatives(0, 1));
+  EXPECT_TRUE(molecule.areDisorderAlternatives(1, 0));
+  EXPECT_FALSE(molecule.areDisorderAlternatives(0, 2)); // same group
+  EXPECT_FALSE(molecule.areDisorderAlternatives(0, 3)); // other assembly
+  EXPECT_FALSE(molecule.areDisorderAlternatives(0, 5)); // ordered
+  EXPECT_FALSE(molecule.areDisorderAlternatives(5, 5));
+  EXPECT_FALSE(molecule.areDisorderAlternatives(0, 4)); // "" vs "A"
+  EXPECT_FALSE(molecule.areDisorderAlternatives(0, 99));
+  molecule.setDisorder(5, "", "2");
+  EXPECT_TRUE(molecule.areDisorderAlternatives(4, 5)); // implicit assembly
+}
+
+TEST_F(MoleculeTest, disorderFollowsItsAtoms)
+{
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6);
+  molecule.setDisorder(1, "A", "1");
+  molecule.setDisorder(2, "A", "2");
+  molecule.setDisorder(3, "B", "3");
+
+  ASSERT_TRUE(molecule.removeAtom(1));
+  EXPECT_EQ(molecule.disorderGroup(0), "");
+  EXPECT_EQ(molecule.disorderGroup(1), "3");
+  EXPECT_EQ(molecule.disorderAssembly(1), "B");
+  EXPECT_EQ(molecule.disorderGroup(2), "2");
+
+  Molecule copy(molecule);
+  EXPECT_EQ(copy.disorderGroup(1), "3");
+  Molecule moved(std::move(copy));
+  EXPECT_EQ(moved.disorderGroup(2), "2");
+  EXPECT_TRUE(copy.disorderGroups().empty()); // NOLINT: moved-from is empty
+
+  // a new atom after a short column is ordered
+  molecule.addAtom(8);
+  EXPECT_EQ(molecule.disorderGroup(3), "");
+
+  molecule.clearAtoms();
+  molecule.addAtom(6);
+  EXPECT_TRUE(molecule.disorderGroups().empty());
+  EXPECT_TRUE(molecule.disorderAssemblies().empty());
+}
+
+TEST_F(MoleculeTest, perceiveBondsSkipsDisorderAlternatives)
+{
+  // four carbons in a row 1.5 A apart; 1 and 2 are alternatives
+  Molecule molecule;
+  for (int i = 0; i < 4; ++i)
+    molecule.addAtom(6).setPosition3d(Vector3(1.5 * i, 0.0, 0.0));
+  molecule.setDisorder(1, "A", "1");
+  molecule.setDisorder(2, "A", "2");
+  molecule.perceiveBondsSimple();
+  EXPECT_EQ(molecule.bondCount(), 2u);
+  EXPECT_TRUE(molecule.bond(0, 1).isValid());
+  EXPECT_FALSE(molecule.bond(1, 2).isValid());
+  EXPECT_TRUE(molecule.bond(2, 3).isValid());
+
+  // the same group, or another assembly, is bonded
+  molecule.clearBonds();
+  molecule.setDisorder(2, "B", "2");
+  molecule.perceiveBondsSimple();
+  EXPECT_EQ(molecule.bondCount(), 3u);
 }
 
 TEST_F(MoleculeTest, atomLabelsFollowTheirAtoms)
@@ -3418,6 +3554,7 @@ private:
     SetHybridization,
     SetIsotope,
     SetOccupancy,
+    SetDisorder,
     SetColor,
     SetSelected,
     SetFrozenAtom,
@@ -3475,6 +3612,7 @@ private:
       "setHybridization",
       "setIsotope",
       "setOccupancy",
+      "setDisorder",
       "setColor",
       "setAtomSelected",
       "setFrozenAtom",
@@ -4179,6 +4317,15 @@ bool ShadowRunner::step(int stepNumber)
       const double occupancy = 0.25 * pickInt(0, 4);
       mol.setOccupancy(i, occupancy);
       model.atoms[i].occupancy = occupancy;
+      break;
+    }
+    case SetDisorder: {
+      const Index i = pickIndex(n);
+      const std::string assembly = pickInt(0, 1) == 0 ? "" : "A";
+      const std::string group = std::to_string(pickInt(0, 2) - 1);
+      mol.setDisorder(i, assembly, group == "0" ? "" : group);
+      model.atoms[i].disorderAssembly = assembly;
+      model.atoms[i].disorderGroup = group == "0" ? "" : group;
       break;
     }
     case SetColor: {

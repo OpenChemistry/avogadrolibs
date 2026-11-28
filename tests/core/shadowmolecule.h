@@ -102,6 +102,8 @@ struct Atom
     Avogadro::Core::HybridizationUnknown;
   unsigned short isotope = 0;
   double occupancy = 1.0;         // unset: a full site
+  std::string disorderAssembly;   // unset: the implicit assembly
+  std::string disorderGroup;      // unset: not disordered
   std::optional<Vector3ub> color; // unset: the element's colour
   bool selected = false;
   bool frozen[3] = { false, false, false };
@@ -660,6 +662,10 @@ inline std::string verify(const Avogadro::Core::Molecule& mol,
                      SHADOW_INT);
     SHADOW_EXPECT_EQ("isotope", a.isotope, mol.isotope(i), SHADOW_INT);
     SHADOW_EXPECT_EQ("occupancy", a.occupancy, mol.occupancy(i), SHADOW_NUM);
+    SHADOW_EXPECT_EQ("disorderAssembly", a.disorderAssembly,
+                     mol.disorderAssembly(i), SHADOW_NUM);
+    SHADOW_EXPECT_EQ("disorderGroup", a.disorderGroup, mol.disorderGroup(i),
+                     SHADOW_NUM);
 
     const Vector3ub expectedColor =
       a.color ? *a.color : Vector3ub(Elements::color(a.atomicNumber));

@@ -410,6 +410,84 @@ bool RWMolecule::setOccupancy(Index atomId, double occupancy)
   return true;
 }
 
+namespace {
+// Sets both disorder arrays of a molecule, and puts back both old arrays
+// exactly (an empty or short column stays so).
+class SetDisorderArraysCommand : public RWMolecule::UndoCommand
+{
+public:
+  SetDisorderArraysCommand(RWMolecule& m,
+                           const Array<std::string>& oldAssemblies,
+                           const Array<std::string>& oldGroups,
+                           const Array<std::string>& newAssemblies,
+                           const Array<std::string>& newGroups)
+    : UndoCommand(m), m_oldAssemblies(oldAssemblies), m_oldGroups(oldGroups),
+      m_newAssemblies(newAssemblies), m_newGroups(newGroups)
+  {
+  }
+
+  void redo() override { apply(m_newAssemblies, m_newGroups); }
+  void undo() override { apply(m_oldAssemblies, m_oldGroups); }
+
+private:
+  void apply(const Array<std::string>& assemblies,
+             const Array<std::string>& groups)
+  {
+    m_molecule.disorderAssemblies() = assemblies;
+    m_molecule.disorderGroups() = groups;
+    // as for the occupancy: nothing else refreshes a view of the labels
+    m_molecule.emitChanged(Molecule::Atoms | Molecule::Properties);
+  }
+
+  Array<std::string> m_oldAssemblies;
+  Array<std::string> m_oldGroups;
+  Array<std::string> m_newAssemblies;
+  Array<std::string> m_newGroups;
+};
+} // namespace
+
+bool RWMolecule::setDisorder(Index atomId, const std::string& assembly,
+                             const std::string& group)
+{
+  if (atomId >= atomCount())
+    return false;
+
+  // As for the occupancy, setting one atom grows a short or empty column to
+  // the atom count, so keep both whole arrays to let undo restore their
+  // shapes exactly.
+  const Index count = atomCount();
+  const Array<std::string>& assemblies = m_molecule.disorderAssemblies();
+  const Array<std::string>& groups = m_molecule.disorderGroups();
+  if (assemblies.size() == count && groups.size() == count) {
+    // whole columns: only the entries change (a large edit stores no arrays)
+    using Labels = std::pair<std::string, std::string>;
+    auto* entry = new SetEntryCommand<Labels>(
+      *this,
+      [](Molecule& mol, Index index, const Labels& value) {
+        mol.setDisorder(index, value.first, value.second);
+        mol.emitChanged(Molecule::Atoms | Molecule::Properties);
+      },
+      atomId, Labels(assemblies[atomId], groups[atomId]),
+      Labels(assembly, group));
+    entry->setText(tr("Change Atom Disorder"));
+    m_undoStack.push(entry);
+    return true;
+  }
+  Array<std::string> grownAssemblies(assemblies);
+  Array<std::string> grownGroups(groups);
+  if (grownAssemblies.size() < count)
+    grownAssemblies.resize(count);
+  if (grownGroups.size() < count)
+    grownGroups.resize(count);
+  grownAssemblies[atomId] = assembly;
+  grownGroups[atomId] = group;
+  auto* comm = new SetDisorderArraysCommand(*this, assemblies, groups,
+                                            grownAssemblies, grownGroups);
+  comm->setText(tr("Change Atom Disorder"));
+  m_undoStack.push(comm);
+  return true;
+}
+
 bool RWMolecule::setForceVector(Index atomId, const Vector3& force)
 {
   if (atomId >= atomCount())
@@ -766,12 +844,15 @@ void RWMolecule::appendMolecule(const Molecule& mol, const QString& undoText)
   // loop through and add the atoms
   Index offset = atomCount();
   const bool hasOccupancies = !mol.occupancies().empty();
+  const bool hasDisorder = !mol.disorderGroups().empty();
   for (size_t i = 0; i < mol.atomCount(); ++i) {
     Core::Atom atom = mol.atom(i);
     AtomType new_atom = addAtom(atom.atomicNumber(), atom.position3d());
     new_atom.setFormalCharge(atom.formalCharge());
     if (hasOccupancies)
       new_atom.setOccupancy(atom.occupancy());
+    if (hasDisorder)
+      new_atom.setDisorder(atom.disorderAssembly(), atom.disorderGroup());
 
     setAtomSelected(atomCount() - 1, true);
   }

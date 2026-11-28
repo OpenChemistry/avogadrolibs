@@ -724,6 +724,9 @@ Array<CrystalTools::PeriodicBond> CrystalTools::perceivePeriodicBonds(
         continue;
       if (molecule.atomicNumber(i) == 1 && molecule.atomicNumber(j) == 1)
         continue;
+      // Alternative disorder sites are never bonded to each other.
+      if (molecule.areDisorderAlternatives(i, j))
+        continue;
 
       const double cutoff = radii[i] + radii[j] + tolerance;
       const double distanceSq =
@@ -776,8 +779,11 @@ public:
     m_bins[key(pos)].emplace_back(pos, index);
   }
 
-  // Returns true and sets @a index if an atom already sits at @a pos.
-  bool find(const Vector3& pos, Index& index) const
+  // Returns true and sets @a index if an atom within the tolerance of @a pos
+  // satisfies @a accept (called with the atom's index). Every candidate in
+  // range is examined, so an unacceptable atom does not hide a later one.
+  template <typename Predicate>
+  bool find(const Vector3& pos, Index& index, Predicate accept) const
   {
     const std::array<std::int64_t, 3> k = key(pos);
     for (std::int64_t i = -1; i <= 1; ++i) {
@@ -788,7 +794,7 @@ public:
           if (bin == m_bins.end())
             continue;
           for (const auto& entry : bin->second) {
-            if ((entry.first - pos).norm() < m_tol) {
+            if ((entry.first - pos).norm() < m_tol && accept(entry.second)) {
               index = entry.second;
               return true;
             }
@@ -912,6 +918,10 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
   // Only carry site occupancies into the copies if there are any to carry
   const bool hasOccupancies = !molecule.occupancies().empty();
   const Array<double> occupancies = molecule.occupancies();
+  // and the disorder labels
+  const bool hasDisorder = !molecule.disorderGroups().empty();
+  const Array<std::string> disorderAssemblies = molecule.disorderAssemblies();
+  const Array<std::string> disorderGroups = molecule.disorderGroups();
 
   // Fractional coordinates of the original atoms, used to decide which
   // translations of each atom land inside the requested range.
@@ -987,7 +997,20 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
 
           const Vector3 newPos = atoms.at(i) + displacement;
           Index existingIdx = MaxIndex;
-          if (grid.find(newPos, existingIdx)) {
+          // Coincident atoms with different disorder labels are different
+          // sites (substitutional disorder), so only merge matching labels.
+          const std::string assembly =
+            hasDisorder && i < disorderAssemblies.size() ? disorderAssemblies[i]
+                                                         : std::string();
+          const std::string group = hasDisorder && i < disorderGroups.size()
+                                      ? disorderGroups[i]
+                                      : std::string();
+          auto sameLabels = [&](Index idx) {
+            return !hasDisorder ||
+                   (molecule.disorderAssembly(idx) == assembly &&
+                    molecule.disorderGroup(idx) == group);
+          };
+          if (grid.find(newPos, existingIdx, sameLabels)) {
             copyMap[i] = existingIdx;
           } else {
             Atom newAtom = molecule.addAtom(atomicNums.at(i));
@@ -995,6 +1018,11 @@ bool CrystalTools::buildSupercell(Molecule& molecule, const Vector3& rangeMin,
             if (hasOccupancies)
               newAtom.setOccupancy(i < occupancies.size() ? occupancies[i]
                                                           : 1.0);
+            if (hasDisorder)
+              newAtom.setDisorder(
+                i < disorderAssemblies.size() ? disorderAssemblies[i]
+                                              : std::string(),
+                i < disorderGroups.size() ? disorderGroups[i] : std::string());
             copyMap[i] = newAtom.index();
             grid.insert(newPos, newAtom.index());
           }

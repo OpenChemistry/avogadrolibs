@@ -401,6 +401,28 @@ public:
   bool setOccupancy(Index atomId, double occupancy);
 
   /**
+   * Get the crystallographic disorder assembly label of the requested atom
+   * (see Core::Molecule::disorderAssembly()).
+   * @return The label, or an empty string if none has been set or @a atomId
+   * is invalid.
+   */
+  std::string disorderAssembly(Index atomId) const;
+
+  /**
+   * Get the crystallographic disorder group label of the requested atom, empty
+   * if the atom is not disordered.
+   */
+  std::string disorderGroup(Index atomId) const;
+
+  /**
+   * Set the crystallographic disorder assembly and group of a single atom
+   * (undoable). Empty labels mean the implicit assembly and not disordered.
+   * @return True on success, false (changing nothing) if @a atomId is invalid.
+   */
+  bool setDisorder(Index atomId, const std::string& assembly,
+                   const std::string& group);
+
+  /**
    * Get the color for the requested atom.
    * @param atomId The index of the atom.
    * @return The color of the atom indexed at @a atomId, or
@@ -974,6 +996,16 @@ inline signed char RWMolecule::formalCharge(Index atomId) const
 inline double RWMolecule::occupancy(Index atomId) const
 {
   return m_molecule.occupancy(atomId);
+}
+
+inline std::string RWMolecule::disorderAssembly(Index atomId) const
+{
+  return m_molecule.disorderAssembly(atomId);
+}
+
+inline std::string RWMolecule::disorderGroup(Index atomId) const
+{
+  return m_molecule.disorderGroup(atomId);
 }
 
 inline unsigned short RWMolecule::isotope(Index atomId) const

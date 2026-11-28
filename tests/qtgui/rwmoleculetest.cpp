@@ -2474,7 +2474,10 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
       // coordinate sets, which RWMolecule has no undoable edits for.
       if (chance(18))
         pick = pickInt(18, 24);
-      // 13 is setOccupancy(). setIsotope() is left out: it has no case here.
+      // 13 is setOccupancy(), and half of those are setDisorder() instead.
+      // setIsotope() is left out: it has no case here.
+      if (pick == 13 && chance(50))
+        pick = 25;
       if (n == 0 && pick != 0 && pick != 1)
         pick = 0;
       if ((pick == 2 || pick == 3) && (n < 2 || (pick == 3 && bonds == 0)))
@@ -2680,6 +2683,18 @@ TEST(RWMoleculeTest, shadowModelSurvivesUndoRedo)
           const double occupancy = 0.25 * pickInt(0, 4);
           mol.setOccupancy(i, occupancy);
           model.atoms[i].occupancy = occupancy;
+          break;
+        }
+        case 25: {
+          op = "setDisorder";
+          // "" is the implicit assembly and an ordered atom
+          static const char* const pool[] = { "", "1", "2", "-1", "A", "B" };
+          const Index i = pickIndex(n);
+          const std::string assembly = pool[pickInt(0, 5)];
+          const std::string group = pool[pickInt(0, 5)];
+          mol.setDisorder(i, assembly, group);
+          model.atoms[i].disorderAssembly = assembly;
+          model.atoms[i].disorderGroup = group;
           break;
         }
         case 14: {
@@ -4486,6 +4501,133 @@ TEST(RWMoleculeTest, appendMoleculeOccupancyUndoLeavesNone)
   EXPECT_TRUE(m.occupancies().empty());
   mol.undoStack().redo();
   EXPECT_EQ(0.5, mol.occupancy(2));
+}
+
+TEST(RWMoleculeTest, setDisorderIsUndoable)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+  ASSERT_TRUE(m.disorderGroups().empty());
+
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+  EXPECT_EQ("A", mol.disorderAssembly(1));
+  EXPECT_EQ("2", mol.disorderGroup(1));
+  EXPECT_EQ("", mol.disorderGroup(0));
+  EXPECT_EQ(2u, m.disorderGroups().size());
+  EXPECT_EQ(2u, m.disorderAssemblies().size());
+  EXPECT_EQ(1, mol.undoStack().count());
+  EXPECT_EQ(QString("Change Atom Disorder"), mol.undoStack().undoText());
+
+  // undo puts back the shape, not just the values
+  mol.undoStack().undo();
+  EXPECT_TRUE(m.disorderGroups().empty());
+  EXPECT_TRUE(m.disorderAssemblies().empty());
+  mol.undoStack().redo();
+  EXPECT_EQ("2", mol.disorderGroup(1));
+
+  // once the columns are whole, edits are single entries again
+  ASSERT_TRUE(mol.setDisorder(0, "", "-1"));
+  EXPECT_EQ("-1", mol.disorderGroup(0));
+  mol.undoStack().undo();
+  EXPECT_EQ("", mol.disorderGroup(0));
+  EXPECT_EQ(2u, m.disorderGroups().size());
+  EXPECT_EQ("A", mol.disorderAssembly(1));
+  mol.undoStack().redo();
+  EXPECT_EQ("-1", mol.disorderGroup(0));
+
+  EXPECT_FALSE(mol.setDisorder(2, "A", "1"));
+  EXPECT_EQ(2, mol.undoStack().count());
+}
+
+TEST(RWMoleculeTest, setDisorderEmitsChanges)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  const unsigned int change = Molecule::Atoms | Molecule::Properties;
+  const std::vector<unsigned int> expected{ change };
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.setDisorder(1, "A", "1"); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.setDisorder(0, "A", "2"); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().undo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().undo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
+  EXPECT_EQ(expected, captureChanges(m, [&] { mol.undoStack().redo(); }));
+}
+
+TEST(RWMoleculeTest, setDisorderUndoRestoresAShortColumn)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 3; ++i)
+    mol.addAtom(6);
+  // only the groups have been set, and only for the first atom
+  m.disorderGroups().push_back("1");
+  mol.undoStack().clear();
+  ASSERT_TRUE(m.disorderAssemblies().empty());
+
+  ASSERT_TRUE(mol.setDisorder(2, "A", "2"));
+  EXPECT_EQ(3u, m.disorderAssemblies().size());
+  EXPECT_EQ(3u, m.disorderGroups().size());
+  EXPECT_EQ("1", mol.disorderGroup(0));
+  EXPECT_EQ("2", mol.disorderGroup(2));
+
+  // each column gets its own shape back
+  mol.undoStack().undo();
+  EXPECT_TRUE(m.disorderAssemblies().empty());
+  EXPECT_EQ(1u, m.disorderGroups().size());
+  EXPECT_EQ("1", mol.disorderGroup(0));
+  mol.undoStack().redo();
+  EXPECT_EQ(3u, m.disorderAssemblies().size());
+  EXPECT_EQ("A", mol.disorderAssembly(2));
+}
+
+TEST(RWMoleculeTest, undoRemoveAtomRestoresDisorder)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  for (int i = 0; i < 3; ++i)
+    mol.addAtom(6);
+  mol.setDisorder(0, "A", "1");
+  mol.setDisorder(1, "A", "2");
+  mol.setDisorder(2, "B", "3");
+  mol.undoStack().clear();
+
+  mol.removeAtom(0);
+  EXPECT_EQ("3", mol.disorderGroup(0));
+  EXPECT_EQ("2", mol.disorderGroup(1));
+  mol.undoStack().undo();
+  EXPECT_EQ("1", mol.disorderGroup(0));
+  EXPECT_EQ("2", mol.disorderGroup(1));
+  EXPECT_EQ("3", mol.disorderGroup(2));
+  EXPECT_EQ("B", mol.disorderAssembly(2));
+}
+
+TEST(RWMoleculeTest, appendMoleculeCarriesDisorder)
+{
+  Molecule m;
+  RWMolecule mol(m);
+  mol.addAtom(6);
+  mol.undoStack().clear();
+
+  Molecule source;
+  source.addAtom(8);
+  source.addAtom(8);
+  source.setDisorder(1, "A", "2");
+  mol.appendMolecule(source, "Append");
+  ASSERT_EQ(3u, mol.atomCount());
+  EXPECT_EQ("A", mol.disorderAssembly(2));
+  EXPECT_EQ("2", mol.disorderGroup(2));
+  EXPECT_EQ("", mol.disorderGroup(1));
+
+  mol.undoStack().undo();
+  EXPECT_EQ(1u, mol.atomCount());
+  EXPECT_TRUE(m.disorderGroups().empty());
 }
 
 TEST(RWMoleculeTest, setAtomPosition2dUndoRestoresEmptyArray)

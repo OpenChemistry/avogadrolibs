@@ -313,6 +313,82 @@ public:
    */
   bool setOccupancy(Index atomId, double occupancy);
 
+  /**
+   * @return an array of the crystallographic disorder assembly labels of the
+   * atoms in the molecule, as in the CIF @c _atom_site_disorder_assembly. The
+   * array is empty unless some disorder has been set; an entry may be empty
+   * too (see disorderAssembly()). Use setDisorders() or setDisorder() to
+   * change it.
+   */
+  Array<std::string>& disorderAssemblies();
+
+  /** \overload */
+  const Array<std::string>& disorderAssemblies() const;
+
+  /**
+   * @return an array of the crystallographic disorder group labels of the
+   * atoms in the molecule, as in the CIF @c _atom_site_disorder_group. An
+   * empty label is an atom that is not disordered; the array is empty unless
+   * some disorder has been set.
+   */
+  Array<std::string>& disorderGroups();
+
+  /** \overload */
+  const Array<std::string>& disorderGroups() const;
+
+  /**
+   * Get the disorder assembly label of the requested atom. The labels are
+   * stored as the CIF file gives them. Atoms of one assembly that are in
+   * different disorder groups are alternatives to each other (see
+   * areDisorderAlternatives()); an empty assembly is the one implicit
+   * assembly of the structure.
+   * @param atomId The index of the atom.
+   * @return The assembly label, or an empty string if none has been set or
+   * @a atomId is invalid.
+   */
+  std::string disorderAssembly(Index atomId) const;
+
+  /**
+   * Get the disorder group label of the requested atom (for example "1" or
+   * "2", or a negative one such as "-1" for SHELX disorder across a symmetry
+   * element).
+   * @param atomId The index of the atom.
+   * @return The group label, or an empty string if the atom is not disordered,
+   * none has been set or @a atomId is invalid.
+   */
+  std::string disorderGroup(Index atomId) const;
+
+  /**
+   * Replace the disorder labels of all the atoms. The group array is what
+   * says an atom is disordered; an empty assembly array means that every atom
+   * is in the one implicit assembly.
+   * @param assemblies The assembly labels. Must be empty or of length
+   * atomCount().
+   * @param groups The group labels. Must be empty or of length atomCount().
+   * @return True on success, false (changing nothing) otherwise.
+   */
+  bool setDisorders(const Core::Array<std::string>& assemblies,
+                    const Core::Array<std::string>& groups);
+
+  /**
+   * Set the disorder labels of a single atom. Empty labels mean not
+   * disordered (an empty group) and the implicit assembly (an empty assembly).
+   * @param atomId The index of the atom to modify.
+   * @param assembly The disorder assembly label.
+   * @param group The disorder group label.
+   * @return True on success, false (changing nothing) otherwise.
+   */
+  bool setDisorder(Index atomId, const std::string& assembly,
+                   const std::string& group);
+
+  /**
+   * @return True if atoms @a atomA and @a atomB are alternatives of a
+   * disordered site: both are in a disorder group, the groups differ and they
+   * are in the same assembly. Alternatives are never bonded to each other.
+   * False if either index is invalid or the molecule has no disorder.
+   */
+  bool areDisorderAlternatives(Index atomA, Index atomB) const;
+
   /** \returns a vector of colors for the atoms in the moleucle. */
   Array<Vector3ub>& colors();
 
@@ -1576,7 +1652,8 @@ protected:
   ElementMask m_elements; //!< Which elements this molecule contains (e.g., for
                           //!< force fields)
   // The optional per-atom columns that Molecule never indexes directly: 2D
-  // positions, labels, hybridizations, formal charges, isotopes, colors,
+  // positions, labels, hybridizations, formal charges, isotopes, occupancies,
+  // disorder labels, colors,
   // selection, the frozen mask and the custom properties. See atomstate.h.
   AtomState m_atomState;
   Array<Vector3> m_positions3d;
@@ -1771,6 +1848,53 @@ inline bool Molecule::setOccupancy(Index atomId, double occupancy)
   if (!std::isfinite(occupancy) || occupancy < 0.0)
     return false;
   return m_atomState.occupancies.set(atomId, occupancy, atomCount(), 1.0);
+}
+
+inline std::string Molecule::disorderAssembly(Index atomId) const
+{
+  return m_atomState.disorderAssemblies.value(atomId, std::string());
+}
+
+inline std::string Molecule::disorderGroup(Index atomId) const
+{
+  return m_atomState.disorderGroups.value(atomId, std::string());
+}
+
+inline bool Molecule::setDisorders(const Core::Array<std::string>& assemblies,
+                                   const Core::Array<std::string>& groups)
+{
+  // check both before changing either
+  const Index count = atomCount();
+  if ((!assemblies.empty() && assemblies.size() != count) ||
+      (!groups.empty() && groups.size() != count))
+    return false;
+  // Copy first: the arguments may be this molecule's own columns, which the
+  // first setAll() would overwrite before the second one reads them.
+  const Core::Array<std::string> assemblyCopy = assemblies;
+  const Core::Array<std::string> groupCopy = groups;
+  m_atomState.disorderAssemblies.setAll(assemblyCopy, count, true);
+  m_atomState.disorderGroups.setAll(groupCopy, count, true);
+  return true;
+}
+
+inline bool Molecule::setDisorder(Index atomId, const std::string& assembly,
+                                  const std::string& group)
+{
+  if (atomId >= atomCount())
+    return false;
+  m_atomState.disorderAssemblies.set(atomId, assembly, atomCount());
+  m_atomState.disorderGroups.set(atomId, group, atomCount());
+  return true;
+}
+
+inline bool Molecule::areDisorderAlternatives(Index atomA, Index atomB) const
+{
+  const Array<std::string>& groups = m_atomState.disorderGroups.array();
+  if (atomA >= groups.size() || atomB >= groups.size() ||
+      groups[atomA].empty() || groups[atomB].empty() ||
+      groups[atomA] == groups[atomB])
+    return false;
+  return disorderAssembly(atomA) == disorderAssembly(atomB);
 }
 
 inline const Molecule::ElementMask Molecule::elements() const

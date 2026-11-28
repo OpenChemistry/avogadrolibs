@@ -838,17 +838,53 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
     }
   }
 
-  // Crystallographic site occupancies. All or nothing: an array of the wrong
-  // length, or with an entry that is not a finite number >= 0, is ignored
-  // whole rather than partly applied (setOccupancies() checks the values).
-  if (atoms.contains("occupancies")) {
+  // Crystallographic site occupancies. Read as far as the array goes and cut
+  // at the atom count; a missing entry, or one that is not a finite number >=
+  // 0, is a full site. Nothing is stored unless some site is not a full one.
+  if (atoms.contains("occupancies") && atoms["occupancies"].is_array()) {
     const json& occupancies = atoms["occupancies"];
-    if (isNumericArray(occupancies) && occupancies.size() == atomCount) {
-      Array<double> values;
-      values.reserve(atomCount);
-      for (Index i = 0; i < atomCount; ++i)
-        values.push_back(occupancies[i].get<double>());
+    Array<double> values(atomCount, 1.0);
+    bool anyPartial = false;
+    for (Index i = 0; i < atomCount && i < occupancies.size(); ++i) {
+      if (!occupancies[i].is_number())
+        continue;
+      const double value = occupancies[i].get<double>();
+      if (std::isfinite(value) && value >= 0.0 && value != 1.0) {
+        values[i] = value;
+        anyPartial = true;
+      }
+    }
+    if (anyPartial)
       molecule.setOccupancies(values);
+  }
+
+  // Crystallographic disorder labels. An array that is too short or too long
+  // is read as far as it goes (a missing entry is ordered), an entry that is
+  // not a string is ignored, and a missing "assemblies" is all the implicit
+  // assembly.
+  if (atoms.contains("disorder") && atoms["disorder"].is_object()) {
+    const json& disorder = atoms["disorder"];
+    auto readLabels = [&](const char* name) {
+      Array<std::string> labels;
+      bool any = false;
+      if (disorder.contains(name) && disorder[name].is_array()) {
+        const json& list = disorder[name];
+        labels.resize(atomCount);
+        for (Index i = 0; i < atomCount && i < list.size(); ++i) {
+          if (list[i].is_string() && !list[i].get<std::string>().empty()) {
+            labels[i] = list[i].get<std::string>();
+            any = true;
+          }
+        }
+      }
+      return any ? labels : Array<std::string>();
+    };
+    const Array<std::string> groups = readLabels("groups");
+    if (!groups.empty()) {
+      Array<std::string> assemblies = readLabels("assemblies");
+      if (assemblies.empty())
+        assemblies.resize(atomCount);
+      molecule.setDisorders(assemblies, groups);
     }
   }
 
@@ -2336,6 +2372,23 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
       for (Index i = 0; i < molecule.atomCount(); ++i)
         occupancies.push_back(molecule.occupancy(i));
       atoms["occupancies"] = occupancies;
+    }
+
+    // crystallographic disorder labels, only if some atom is in a group
+    {
+      bool anyDisorder = false;
+      for (Index i = 0; i < molecule.atomCount() && !anyDisorder; ++i)
+        anyDisorder = !molecule.disorderGroup(i).empty();
+      if (anyDisorder) {
+        json assemblies = json::array();
+        json groups = json::array();
+        for (Index i = 0; i < molecule.atomCount(); ++i) {
+          assemblies.push_back(molecule.disorderAssembly(i));
+          groups.push_back(molecule.disorderGroup(i));
+        }
+        atoms["disorder"] = { { "assemblies", assemblies },
+                              { "groups", groups } };
+      }
     }
 
     auto layer = LayerManager::getMoleculeInfo(&molecule)->layer;

@@ -55,6 +55,11 @@ AtomState makeState()
     state.properties.setString("s", i, "s" + std::to_string(i));
   }
   state.hybridizations.array()[1] = Avogadro::Core::SP2;
+  // disorder labels on three atoms
+  for (Index i = 0; i < 3; ++i) {
+    state.disorderAssemblies.array().push_back("A");
+    state.disorderGroups.array().push_back(std::to_string(i + 1));
+  }
   for (Index i = 0; i < kAtoms; ++i)
     state.formalCharges.array().push_back(static_cast<signed char>(i) - 2);
   state.colors.array().push_back(Vector3ub(1, 2, 3));
@@ -73,6 +78,9 @@ void expectSame(const AtomState& expected, const AtomState& actual, Index count)
   EXPECT_EQ(expected.formalCharges.size(), actual.formalCharges.size());
   EXPECT_EQ(expected.isotopes.size(), actual.isotopes.size());
   EXPECT_EQ(expected.occupancies.size(), actual.occupancies.size());
+  EXPECT_EQ(expected.disorderAssemblies.size(),
+            actual.disorderAssemblies.size());
+  EXPECT_EQ(expected.disorderGroups.size(), actual.disorderGroups.size());
   EXPECT_EQ(expected.colors.size(), actual.colors.size());
   EXPECT_EQ(expected.selection.size(), actual.selection.size());
   EXPECT_EQ(expected.frozenMask.size(), actual.frozenMask.size());
@@ -87,6 +95,12 @@ void expectSame(const AtomState& expected, const AtomState& actual, Index count)
     EXPECT_EQ(
       expected.hybridizations.value(i, Avogadro::Core::HybridizationUnknown),
       actual.hybridizations.value(i, Avogadro::Core::HybridizationUnknown))
+      << i;
+    EXPECT_EQ(expected.disorderGroups.value(i, "?"),
+              actual.disorderGroups.value(i, "?"))
+      << i;
+    EXPECT_EQ(expected.disorderAssemblies.value(i, "?"),
+              actual.disorderAssemblies.value(i, "?"))
       << i;
     EXPECT_EQ(expected.formalCharges.value(i, 99),
               actual.formalCharges.value(i, 99))
@@ -200,6 +214,8 @@ TEST(AtomStateTest, clearEmptiesEverything)
   EXPECT_TRUE(state.formalCharges.empty());
   EXPECT_TRUE(state.isotopes.empty());
   EXPECT_TRUE(state.occupancies.empty());
+  EXPECT_TRUE(state.disorderAssemblies.empty());
+  EXPECT_TRUE(state.disorderGroups.empty());
   EXPECT_TRUE(state.colors.empty());
   EXPECT_TRUE(state.selection.empty());
   EXPECT_TRUE(state.frozenMask.empty());
@@ -251,5 +267,5 @@ TEST(AtomStateTest, forEachColumnVisitsEveryColumn)
   AtomState state = makeState();
   int visited = 0;
   state.forEachColumn(nullptr, [&](auto&, const auto&) { ++visited; });
-  EXPECT_EQ(visited, 10);
+  EXPECT_EQ(visited, 12);
 }

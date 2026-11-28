@@ -1534,3 +1534,149 @@ TEST(CifTest, writeExpandsToP1WithOccupancy)
   EXPECT_EQ(readBack.occupancy(0), 0.5);
   EXPECT_EQ(readBack.occupancy(1), 0.5);
 }
+
+namespace {
+
+// Check the labels stored on the atoms against what the file lists.
+void expectDisorderLabelsOfFile(const std::string& path,
+                                const Molecule& molecule)
+{
+  const auto disorder = disorderOf(path);
+  auto isNull = [](const std::string& value) {
+    return value == "." || value == "?";
+  };
+  std::size_t grouped = 0;
+  for (std::size_t i = 0; i < molecule.atomCount(); ++i) {
+    const auto it = disorder.find(molecule.atomLabel(i));
+    ASSERT_NE(it, disorder.end()) << molecule.atomLabel(i);
+    const std::string assembly =
+      isNull(it->second.first) ? "" : it->second.first;
+    std::string group = isNull(it->second.second) ? "" : it->second.second;
+    if (group == "0")
+      group = "";
+    EXPECT_EQ(molecule.disorderAssembly(i), assembly) << molecule.atomLabel(i);
+    EXPECT_EQ(molecule.disorderGroup(i), group) << molecule.atomLabel(i);
+    if (!group.empty())
+      ++grouped;
+  }
+  EXPECT_GT(grouped, 0u);
+}
+
+} // namespace
+
+TEST(CifTest, disorderLabelsAreStoredOnTheAtoms)
+{
+  const std::string path = codFile("2017715");
+  const auto disorder = disorderOf(path);
+  std::set<std::string> assemblies;
+  for (const auto& entry : disorder)
+    assemblies.insert(entry.second.first);
+  ASSERT_GT(assemblies.size(), 2u); // A, B and C (and ".")
+
+  std::size_t allCount = 0;
+  for (const char* options : { R"({"disorder": "all"})", "" }) {
+    SCOPED_TRACE(options);
+    Molecule molecule;
+    CifFormat format;
+    if (std::string(options).size() > 0)
+      format.setOptions(options);
+    ASSERT_TRUE(format.readFile(path, molecule)) << format.error();
+    expectDisorderLabelsOfFile(path, molecule);
+    if (allCount == 0)
+      allCount = molecule.atomCount();
+    else
+      EXPECT_LT(molecule.atomCount(), allCount); // "major" drops minor groups
+  }
+}
+
+TEST(CifTest, orderedFileStoresNoDisorder)
+{
+  Molecule molecule;
+  CifFormat format;
+  ASSERT_TRUE(format.readString(disorderedCif("C1 C 0.1 0.1 0.1 . . 1.0\n"
+                                              "C2 C 0.5 0.5 0.5 A 0 1.0\n"),
+                                molecule))
+    << format.error();
+  EXPECT_TRUE(molecule.disorderGroups().empty());
+  EXPECT_TRUE(molecule.disorderAssemblies().empty());
+}
+
+TEST(CifTest, disorderLabelsRoundTripThroughWrite)
+{
+  const std::string text = disorderedCif("C1 C 0.10 0.10 0.10 A 1 0.5\n"
+                                         "C2 C 0.15 0.10 0.10 A 2 0.5\n"
+                                         "C3 C 0.50 0.50 0.50 . . 1.0\n"
+                                         "C4 C 0.70 0.70 0.70 . -1 1.0\n"
+                                         "C5 C 0.30 0.80 0.30 B 3 1.0\n");
+  Molecule original;
+  CifFormat reader;
+  reader.setOptions(R"({"disorder": "all"})");
+  ASSERT_TRUE(reader.readString(text, original)) << reader.error();
+  ASSERT_EQ(original.atomCount(), 5u);
+  EXPECT_EQ(original.disorderAssembly(0), "A");
+  EXPECT_EQ(original.disorderGroup(1), "2");
+  EXPECT_EQ(original.disorderGroup(2), "");
+  EXPECT_EQ(original.disorderGroup(3), "-1");
+  EXPECT_EQ(original.disorderAssembly(3), "");
+  // alternatives of one assembly are not bonded even though they are close
+  EXPECT_FALSE(original.bond(0, 1).isValid());
+
+  std::string written;
+  CifFormat writer;
+  ASSERT_TRUE(writer.writeString(written, original)) << writer.error();
+  EXPECT_NE(written.find("_atom_site_disorder_assembly"), std::string::npos);
+  EXPECT_NE(written.find("_atom_site_disorder_group"), std::string::npos);
+
+  Molecule readBack;
+  CifFormat second;
+  second.setOptions(R"({"disorder": "all"})");
+  ASSERT_TRUE(second.readString(written, readBack)) << second.error();
+  ASSERT_EQ(readBack.atomCount(), original.atomCount());
+  for (std::size_t i = 0; i < original.atomCount(); ++i) {
+    EXPECT_EQ(readBack.disorderAssembly(i), original.disorderAssembly(i)) << i;
+    EXPECT_EQ(readBack.disorderGroup(i), original.disorderGroup(i)) << i;
+  }
+  EXPECT_FALSE(readBack.bond(0, 1).isValid());
+
+  // a molecule without disorder writes neither column
+  Molecule plain;
+  CifFormat plainReader;
+  ASSERT_TRUE(
+    plainReader.readString(disorderedCif("C1 C 0.1 0.1 0.1 . . 1.0\n"), plain));
+  std::string plainText;
+  ASSERT_TRUE(writer.writeString(plainText, plain)) << writer.error();
+  EXPECT_EQ(plainText.find("disorder"), std::string::npos);
+}
+
+TEST(CifTest, disorderLabelsSurviveACellFillAndBondsStayOff)
+{
+  // two alternatives close to each other, in a group with an inversion
+  const std::string text =
+    cubicCif(std::string(siteColumns) +
+               "_atom_site_disorder_assembly\n_atom_site_disorder_group\n",
+             "C1 C 0.10 0.10 0.10 A 1\nC2 C 0.1675 0.10 0.10 A 2\n",
+             "_space_group_name_H-M_alt 'P -1'\nloop_\n_space_group_symop_id\n"
+             "_space_group_symop_operation_xyz\n1 x,y,z\n2 -x,-y,-z\n");
+  Molecule molecule;
+  CifFormat format;
+  format.setOptions(R"({"disorder": "all"})");
+  ASSERT_TRUE(format.readString(text, molecule)) << format.error();
+  // the asymmetric unit is kept
+  ASSERT_EQ(molecule.atomCount(), 2u);
+  EXPECT_EQ(molecule.disorderGroup(0), "1");
+  EXPECT_EQ(molecule.disorderGroup(1), "2");
+  EXPECT_FALSE(molecule.bond(0, 1).isValid());
+
+  SpaceGroups::fillUnitCell(molecule, molecule.hallNumber());
+  ASSERT_EQ(molecule.atomCount(), 4u);
+  for (std::size_t i = 0; i < molecule.atomCount(); ++i)
+    EXPECT_EQ(molecule.disorderAssembly(i), "A") << i;
+  EXPECT_EQ(molecule.disorderGroup(2), "1"); // images keep their group
+  EXPECT_EQ(molecule.disorderGroup(3), "2");
+
+  // perceiving the bonds again, after the fill, still skips the alternatives
+  molecule.clearBonds();
+  molecule.perceiveBondsSimple();
+  EXPECT_FALSE(molecule.bond(0, 1).isValid());
+  EXPECT_FALSE(molecule.bond(2, 3).isValid());
+}

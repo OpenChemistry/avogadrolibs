@@ -1008,10 +1008,14 @@ void removeIdentity(std::vector<SymmetryOperation>& ops)
 }
 
 // Add an atom of the given element at a cartesian position, with its isotope
-// (0 for the default) and its site occupancy (none if the molecule stores no
-// occupancies, so that it does not start to).
+// (0 for the default), its site occupancy and its disorder assembly and group
+// (none if the molecule stores no occupancies or disorder, so that it does not
+// start to).
+using DisorderLabels = std::optional<std::pair<std::string, std::string>>;
+
 void addImage(Molecule& mol, unsigned char atomicNum, unsigned short isotope,
-              std::optional<double> occupancy, const Vector3& position)
+              std::optional<double> occupancy, const DisorderLabels& disorder,
+              const Vector3& position)
 {
   Atom newAtom = mol.addAtom(atomicNum);
   newAtom.setPosition3d(position);
@@ -1019,6 +1023,20 @@ void addImage(Molecule& mol, unsigned char atomicNum, unsigned short isotope,
     newAtom.setIsotope(isotope);
   if (occupancy)
     newAtom.setOccupancy(*occupancy);
+  if (disorder)
+    newAtom.setDisorder(disorder->first, disorder->second);
+}
+
+// True if atom @p index carries the disorder labels @p disorder. A molecule
+// without disorder labels (@p disorder empty) matches everything, so
+// coincident atoms there still count as duplicates.
+bool hasSameDisorder(const Molecule& mol, Index index,
+                     const DisorderLabels& disorder)
+{
+  if (!disorder)
+    return true;
+  return mol.disorderAssembly(index) == disorder->first &&
+         mol.disorderGroup(index) == disorder->second;
 }
 
 // Remove every atom that is the image of an earlier atom of the same element
@@ -1085,6 +1103,7 @@ void fillWithTransforms(
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   Array<unsigned short> isotopes = mol.isotopes(); // may be empty
   Array<double> occupancies = mol.occupancies();   // may be empty
+  const bool hasDisorder = !mol.disorderGroups().empty();
   Array<Vector3> positions = mol.atomPositions3d();
   Index numAtoms = mol.atomCount();
 
@@ -1096,6 +1115,9 @@ void fillWithTransforms(
     std::optional<double> occupancy;
     if (!occupancies.empty())
       occupancy = mol.occupancy(i);
+    DisorderLabels disorder;
+    if (hasDisorder)
+      disorder = std::make_pair(mol.disorderAssembly(i), mol.disorderGroup(i));
     Vector3 pos = uc->toFractional(positions[i]);
 
     Array<Vector3> newAtoms = transformsOf(pos);
@@ -1113,7 +1135,7 @@ void fillWithTransforms(
       bool atomAlreadyPresent = false;
       for (Index k = 0; k < mol.atomCount(); k++) {
         Real distance = uc->distance(mol.atomPosition3d(k), newCandidate);
-        if (distance <= cartTol) {
+        if (distance <= cartTol && hasSameDisorder(mol, k, disorder)) {
           atomAlreadyPresent = true;
           break; // no need to keep looking
         }
@@ -1124,7 +1146,7 @@ void fillWithTransforms(
         continue;
 
       // If we got this far, add the atom!
-      addImage(mol, atomicNum, isotope, occupancy, newCandidate);
+      addImage(mol, atomicNum, isotope, occupancy, disorder, newCandidate);
     }
   }
 
@@ -1311,6 +1333,7 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
   Array<unsigned char> atomicNumbers = mol.atomicNumbers();
   Array<unsigned short> isotopes = mol.isotopes(); // may be empty
   Array<double> occupancies = mol.occupancies();   // may be empty
+  const bool hasDisorder = !mol.disorderGroups().empty();
   Array<Vector3> positions = mol.atomPositions3d();
   Index numAtoms = mol.atomCount();
   for (Index i = 0; i < numAtoms; ++i) {
@@ -1319,6 +1342,9 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
     std::optional<double> occupancy;
     if (!occupancies.empty())
       occupancy = mol.occupancy(i);
+    DisorderLabels disorder;
+    if (hasDisorder)
+      disorder = std::make_pair(mol.disorderAssembly(i), mol.disorderGroup(i));
     Vector3 pos = uc->toFractional(positions[i]);
 
     Array<Vector3> newAtoms;
@@ -1367,7 +1393,7 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
       for (Index k = 0; k < mol.atomCount(); k++) {
         Real distSq = (mol.atomPosition3d(k) - newCandidate).squaredNorm();
 
-        if (distSq <= cartTolSq) {
+        if (distSq <= cartTolSq && hasSameDisorder(mol, k, disorder)) {
           atomAlreadyPresent = true;
           break;
         }
@@ -1378,7 +1404,7 @@ void SpaceGroups::fillTranslationalCopies(Molecule& mol, double cartTol)
         continue;
 
       // If we got this far, add the atom!
-      addImage(mol, atomicNum, isotope, occupancy, newCandidate);
+      addImage(mol, atomicNum, isotope, occupancy, disorder, newCandidate);
     }
   }
 }
