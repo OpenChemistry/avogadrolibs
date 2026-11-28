@@ -6154,3 +6154,104 @@ TEST(MoleculeResidueTest, insertResidueWithDefaultPropertiesKeepsAlignment)
     EXPECT_EQ(mol.residueLabel(now), "label" + std::to_string(r + 1));
   }
 }
+
+namespace {
+
+// Methane with the carbon as atom 0, shifted by @a offset. C-H = 1.09 A.
+Molecule methane(const Vector3& offset)
+{
+  Molecule mol;
+  const double d = 1.09 / std::sqrt(3.0);
+  mol.addAtom(6).setPosition3d(offset);
+  mol.addAtom(1).setPosition3d(offset + Vector3(d, d, d));
+  mol.addAtom(1).setPosition3d(offset + Vector3(d, -d, -d));
+  mol.addAtom(1).setPosition3d(offset + Vector3(-d, d, -d));
+  mol.addAtom(1).setPosition3d(offset + Vector3(-d, -d, d));
+  return mol;
+}
+
+} // namespace
+
+TEST_F(MoleculeTest, radiusIsFarthestAtomFromCenter)
+{
+  // The center of geometry is the carbon, so atom 0 is at distance 0 but the
+  // radius is the C-H distance.
+  Molecule mol = methane(Vector3(0.0, 0.0, 0.0));
+  EXPECT_NEAR(mol.radius(), 1.09, 1.0e-12);
+
+  // Translation does not change it.
+  Molecule shifted = methane(Vector3(5.0, -3.0, 2.0));
+  EXPECT_NEAR(shifted.radius(), 1.09, 1.0e-12);
+}
+
+TEST_F(MoleculeTest, radiusDegenerateCases)
+{
+  Molecule empty;
+  EXPECT_EQ(empty.radius(), 0.0);
+
+  Molecule single;
+  single.addAtom(6).setPosition3d(Vector3(1.0, 2.0, 3.0));
+  EXPECT_EQ(single.radius(), 0.0);
+
+  // Two atoms 2 A apart: the center is the midpoint, so the radius is 1.
+  Molecule pair;
+  pair.addAtom(1).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  pair.addAtom(1).setPosition3d(Vector3(2.0, 0.0, 0.0));
+  EXPECT_NEAR(pair.radius(), 1.0, 1.0e-12);
+}
+
+TEST_F(MoleculeTest, centersOfEmptyMolecule)
+{
+  Molecule empty;
+  EXPECT_EQ(empty.centerOfGeometry(), Vector3::Zero());
+  EXPECT_EQ(empty.centerOfMass(), Vector3::Zero());
+}
+
+TEST_F(MoleculeTest, centerOfMassOfDummyAtomsOnly)
+{
+  // Dummy atoms (Z = 0) have no mass; the center of mass falls back to the
+  // center of geometry instead of dividing by zero.
+  Molecule mol;
+  mol.addAtom(0).setPosition3d(Vector3(0.0, 0.0, 0.0));
+  mol.addAtom(0).setPosition3d(Vector3(2.0, 4.0, 6.0));
+  const Vector3 com = mol.centerOfMass();
+  EXPECT_TRUE(std::isfinite(com.x()));
+  EXPECT_TRUE(std::isfinite(com.y()));
+  EXPECT_TRUE(std::isfinite(com.z()));
+  EXPECT_EQ(com, Vector3(1.0, 2.0, 3.0));
+}
+
+TEST_F(MoleculeTest, bestFitPlaneWithFewPoints)
+{
+  // Fewer than three points used to hit an assert (and, with NDEBUG, read
+  // the wrong singular vector). Now: centroid plus a unit normal.
+  Array<Vector3> none;
+  auto p0 = Molecule::bestFitPlane(none);
+  EXPECT_EQ(p0.first, Vector3::Zero());
+  EXPECT_NEAR(p0.second.norm(), 1.0, 1.0e-12);
+
+  Array<Vector3> one;
+  one.push_back(Vector3(1.0, 2.0, 3.0));
+  auto p1 = Molecule::bestFitPlane(one);
+  EXPECT_EQ(p1.first, Vector3(1.0, 2.0, 3.0));
+  EXPECT_NEAR(p1.second.norm(), 1.0, 1.0e-12);
+
+  Array<Vector3> two;
+  two.push_back(Vector3(0.0, 0.0, 0.0));
+  two.push_back(Vector3(2.0, 0.0, 0.0));
+  auto p2 = Molecule::bestFitPlane(two);
+  EXPECT_EQ(p2.first, Vector3(1.0, 0.0, 0.0));
+  EXPECT_NEAR(p2.second.norm(), 1.0, 1.0e-12);
+  // The normal is perpendicular to the line through the two points.
+  EXPECT_NEAR(p2.second.dot(Vector3(1.0, 0.0, 0.0)), 0.0, 1.0e-12);
+
+  // Coincident points have no direction; still a finite unit normal.
+  Array<Vector3> same;
+  same.push_back(Vector3(1.0, 1.0, 1.0));
+  same.push_back(Vector3(1.0, 1.0, 1.0));
+  EXPECT_NEAR(Molecule::bestFitPlane(same).second.norm(), 1.0, 1.0e-12);
+
+  // Molecule overloads on empty and one-atom molecules.
+  Molecule empty;
+  EXPECT_NEAR(empty.bestFitPlane().second.norm(), 1.0, 1.0e-12);
+}

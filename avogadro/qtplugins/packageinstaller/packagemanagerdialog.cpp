@@ -59,6 +59,17 @@ static QUrl validatedTrackerUrl(const QString& tracker)
   return url;
 }
 
+// Package downloads follow at most this many redirects, and never from https
+// to anything less safe.
+static constexpr int kMaxDownloadRedirects = 10;
+
+static void setDownloadRedirectPolicy(QNetworkRequest* request)
+{
+  request->setAttribute(QNetworkRequest::RedirectPolicyAttribute,
+                        QNetworkRequest::NoLessSafeRedirectPolicy);
+  request->setMaximumRedirectsAllowed(kMaxDownloadRedirects);
+}
+
 static void setRawHeaders(QNetworkRequest* request)
 {
   request->setRawHeader("Accept", "text/html,application/xhtml+xml,application/"
@@ -462,6 +473,7 @@ void PackageManagerDialog::downloadNext()
   const QString url = m_downloadQueue.last().url;
   QNetworkRequest request;
   setRawHeaders(&request);
+  setDownloadRedirectPolicy(&request);
   request.setUrl(QUrl(url));
   QNetworkReply* reply = m_network->get(request);
   connect(reply, &QNetworkReply::finished, this,
@@ -488,9 +500,17 @@ void PackageManagerDialog::handleRedirect()
         reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
       if (redirectUrl.isRelative())
         redirectUrl = reply->url().resolved(redirectUrl);
+      // Normally Qt follows redirects itself (see setDownloadRedirectPolicy);
+      // apply the same limits to any it hands back to us.
+      const int hops = reply->property("redirectHops").toInt() + 1;
+      const bool downgrade =
+        reply->url().scheme().compare(QLatin1String("https"),
+                                      Qt::CaseInsensitive) == 0 &&
+        redirectUrl.scheme().compare(QLatin1String("https"),
+                                     Qt::CaseInsensitive) != 0;
       reply->deleteLater();
 
-      if (!redirectUrl.isValid()) {
+      if (!redirectUrl.isValid() || hops > kMaxDownloadRedirects || downgrade) {
         m_ui->readmeBrowser->append(
           tr("Failed to follow redirect while downloading %1.\n")
             .arg(m_downloadQueue.last().name));
@@ -501,8 +521,10 @@ void PackageManagerDialog::handleRedirect()
 
       QNetworkRequest request;
       setRawHeaders(&request);
+      setDownloadRedirectPolicy(&request);
       request.setUrl(redirectUrl);
       QNetworkReply* redirectReply = m_network->get(request);
+      redirectReply->setProperty("redirectHops", hops);
       connect(redirectReply, &QNetworkReply::finished, this,
               &PackageManagerDialog::handleRedirect);
     } else if (statusCode == 200) {
@@ -577,36 +599,43 @@ void PackageManagerDialog::unzipPlugin(QNetworkReply* reply)
     m_ui->readmeBrowser->append(
       tr("Extraction complete (%1 files)\n").arg(newFiles.size()));
 
-    // Derive component name from GitHub archive directory names like:
-    //   "OpenChemistry-crystals-a7c672d" → "crystals"
-    //   "ghutchis-avogadro-rdkit-2e9abcd" → "avogadro-rdkit"
-    // Pattern is always {org}-{repo}-{sha}, strip org prefix and SHA suffix.
-    QString rawName = newFiles[0];
-    if (rawName.endsWith('/'))
-      rawName.chop(1);
-
-    QString component = rawName;
-    // Strip trailing SHA: last segment if it looks like a hex hash (7+ chars)
-    int lastDash = component.lastIndexOf('-');
-    if (lastDash != -1) {
-      QStringView tail = QStringView(component).mid(lastDash + 1);
-      bool isHex = tail.size() >= 7;
-      for (qsizetype i = 0; isHex && i < tail.size(); ++i) {
-        QChar c = tail[i];
-        isHex = c.isDigit() || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
-      }
-      if (isHex)
-        component = component.left(lastDash);
-    }
-    // Strip leading org/owner prefix (everything before the first dash)
-    int firstDash = component.indexOf('-');
-    if (firstDash != -1)
-      component = component.mid(firstDash + 1);
-    const QString source = QDir::cleanPath(m_filePath + '/' + newFiles[0]);
+    // The archive's top-level directory, renamed to the package name. Both
+    // come from the (untrusted) archive, so never touch anything that is not
+    // a direct child of the plugins directory.
+    const QString topLevel = newFiles[0].section('/', 0, 0);
+    const QString component = ZipExtractor::packageDirectoryName(newFiles[0]);
+    const QString source = QDir::cleanPath(m_filePath + '/' + topLevel);
     const QString dest = QDir::cleanPath(m_filePath + '/' + component);
 
+    // The top-level entry must be a real directory: an archive can make it a
+    // symlink to anywhere, which would then be installed as the package.
+    const QFileInfo sourceInfo(source);
+    const bool managedSource =
+      !component.isEmpty() &&
+      QtGui::PackageManager::isManagedPackagePath(m_filePath, source);
+    if (!managedSource ||
+        !QtGui::PackageManager::isManagedPackagePath(m_filePath, dest) ||
+        sourceInfo.isSymLink() || !sourceInfo.isDir()) {
+      // Remove an extracted top-level link or file itself, never recursively.
+      if (managedSource && (sourceInfo.isSymLink() || sourceInfo.isFile()))
+        QFile::remove(source);
+      m_ui->readmeBrowser->append(
+        tr("Error: could not move extracted package %1 to %2\n")
+          .arg(source)
+          .arg(dest));
+      out.remove();
+      m_downloadQueue.removeLast();
+      downloadNext();
+      return;
+    }
+
     if (source != dest) {
-      QDir(dest).removeRecursively();
+      // A local install is a symlink to the user's own directory: remove the
+      // link, never what it points to.
+      if (QFileInfo(dest).isSymLink())
+        QFile::remove(dest);
+      else
+        QDir(dest).removeRecursively();
 
       if (!QDir().rename(source, dest)) {
         m_ui->readmeBrowser->append(

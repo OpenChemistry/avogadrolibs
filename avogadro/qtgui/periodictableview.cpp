@@ -37,7 +37,8 @@ PeriodicTableView::PeriodicTableView(QWidget* parent_)
   setRenderHint(QPainter::Antialiasing);
   setWindowTitle(tr("Periodic Table"));
   resize(490, 270);
-  connect(table, SIGNAL(elementChanged(int)), this, SLOT(elementClicked(int)));
+  connect(table, &PeriodicTableScene::elementChanged, this,
+          &PeriodicTableView::elementClicked);
 }
 
 PeriodicTableView::~PeriodicTableView()

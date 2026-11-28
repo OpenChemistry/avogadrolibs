@@ -45,7 +45,8 @@ SlaterSetConcurrent::SlaterSetConcurrent(QObject* p)
 {
   liveCalculations().insert(this);
   // Watch for the future
-  connect(&m_watcher, SIGNAL(finished()), this, SLOT(calculationComplete()));
+  connect(&m_watcher, &QFutureWatcher<void>::finished, this,
+          &SlaterSetConcurrent::calculationComplete);
 }
 
 SlaterSetConcurrent::~SlaterSetConcurrent()

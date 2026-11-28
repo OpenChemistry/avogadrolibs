@@ -914,7 +914,9 @@ public:
 
   /**
    * @return The center of mass of the molecule obtained by summing the
-   * coordinates of the atoms weighted by mass.
+   * coordinates of the atoms weighted by mass. If the total mass is not
+   * positive (no atoms, or only dummy atoms), the center of geometry is
+   * returned instead.
    */
   Vector3 centerOfMass() const;
 

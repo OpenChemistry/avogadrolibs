@@ -1564,8 +1564,12 @@ bool CjsonFormat::deserialize(std::istream& file, Molecule& molecule)
           //          << std::endl;
         } else if (element.value().type() == json::value_t::number_float) {
           molecule.setData(element.key(), element.value().get<double>());
-        } else if (element.value().type() == json::value_t::number_integer) {
-          molecule.setData(element.key(), element.value().get<int>());
+        } else if (element.value().is_number_integer()) {
+          // nlohmann stores non-negative integers as number_unsigned
+          if (auto value = toInteger<int>(element.value()))
+            molecule.setData(element.key(), *value);
+          else // does not fit in an int
+            molecule.setData(element.key(), element.value().get<double>());
         } else if (element.value().type() == json::value_t::boolean) {
           molecule.setData(element.key(), element.value().get<bool>());
         } else if (element.value().type() == json::value_t::string) {
@@ -2441,6 +2445,7 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
   if (!molecule.residues().empty()) {
     json residues; // array of objects
     Array residueLabels = molecule.residueLabels();
+    Index residueIndex = 0;
     for (auto residue : molecule.residues()) {
       json entry;
       entry["name"] = residue.residueName();
@@ -2462,12 +2467,14 @@ bool CjsonFormat::serialize(std::ostream& file, const Molecule& molecule)
         atoms[item.first] = item.second;
       }
       entry["atoms"] = atoms;
-      residues.push_back(entry);
 
-      // do we have custom residue labels?
-      if (residueLabels.size() > residue.residueId() + 1) {
-        entry["label"] = residueLabels[residue.residueId()];
-      }
+      // do we have custom residue labels? (indexed by residue index, not id)
+      if (residueIndex < residueLabels.size() &&
+          !residueLabels[residueIndex].empty())
+        entry["label"] = residueLabels[residueIndex];
+
+      residues.push_back(entry);
+      ++residueIndex;
     }
     root["residues"] = residues;
 

@@ -2041,9 +2041,11 @@ double Molecule::monoisotopicMass() const
 Vector3 Molecule::centerOfGeometry() const
 {
   Vector3 center(0.0, 0.0, 0.0);
+  if (atomCount() == 0)
+    return center;
   for (Index i = 0; i < atomCount(); ++i)
     center += atom(i).position3d();
-  return center / atomCount();
+  return center / static_cast<Real>(atomCount());
 }
 
 Vector3 Molecule::centerOfMass() const
@@ -2059,15 +2061,22 @@ Vector3 Molecule::centerOfMass() const
     center += (curr_atom.position3d() * mass);
     totalMass += mass;
   }
+  // No mass at all (no atoms, or only dummy atoms): fall back to the
+  // geometric center, which is zero for an empty molecule.
+  if (!(totalMass > 0.0))
+    return centerOfGeometry();
   center /= totalMass;
   return center;
 }
 
 double Molecule::radius() const
 {
+  // The largest distance of any atom center from the center of geometry.
   double radius = 0.0;
   if (atomCount() > 0) {
-    radius = (centerOfGeometry() - atom(0).position3d()).norm();
+    const Vector3 center = centerOfGeometry();
+    for (Index i = 0; i < atomCount(); ++i)
+      radius = std::max(radius, (atom(i).position3d() - center).norm());
   }
   return radius;
 }
@@ -2081,7 +2090,30 @@ std::pair<Vector3, Vector3> Molecule::bestFitPlane(const Array<Vector3>& pos)
 {
   // copy coordinates to matrix in Eigen format
   size_t num_atoms = pos.size();
-  assert(num_atoms >= 3);
+
+  // A plane is not determined by fewer than three points. Return the
+  // centroid with an arbitrary (but perpendicular, where possible) normal.
+  if (num_atoms < 3) {
+    Vector3 centroid = Vector3::Zero();
+    for (size_t i = 0; i < num_atoms; ++i)
+      centroid += pos[i];
+    if (num_atoms > 0)
+      centroid /= static_cast<Real>(num_atoms);
+
+    Vector3 normal = Vector3::UnitZ();
+    if (num_atoms == 2) {
+      const Vector3 axis = pos[1] - pos[0];
+      if (axis.norm() > 1.0e-10) {
+        // Cross with the Cartesian axis least aligned with the bond.
+        Index least = 0;
+        axis.cwiseAbs().minCoeff(&least);
+        const Vector3 perp = axis.cross(Vector3::Unit(least));
+        if (perp.norm() > 1.0e-10)
+          normal = perp.normalized();
+      }
+    }
+    return std::make_pair(centroid, normal);
+  }
   Eigen::Matrix<Vector3::Scalar, Eigen::Dynamic, Eigen::Dynamic> coord(
     3, num_atoms);
   for (size_t i = 0; i < num_atoms; ++i) {

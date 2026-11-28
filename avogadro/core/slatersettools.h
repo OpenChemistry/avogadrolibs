@@ -64,7 +64,7 @@ public:
 
 private:
   Molecule* m_molecule;
-  SlaterSet* m_basis;
+  SlaterSet* m_basis = nullptr;
 
   bool isSmall(double value) const;
 
