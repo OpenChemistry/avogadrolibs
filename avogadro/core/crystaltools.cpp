@@ -724,6 +724,9 @@ Array<CrystalTools::PeriodicBond> CrystalTools::perceivePeriodicBonds(
         continue;
       if (molecule.atomicNumber(i) == 1 && molecule.atomicNumber(j) == 1)
         continue;
+      // Alternative disorder sites are never bonded to each other.
+      if (molecule.areDisorderAlternatives(i, j))
+        continue;
 
       const double cutoff = radii[i] + radii[j] + tolerance;
       const double distanceSq =

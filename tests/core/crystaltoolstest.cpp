@@ -266,6 +266,21 @@ TEST(CrystalToolsTest, perceivePeriodicBondsFindsCrossingBond)
   EXPECT_TRUE(bonds[0].perceived);
 }
 
+TEST(CrystalToolsTest, perceivePeriodicBondsSkipsDisorderAlternatives)
+{
+  // Alternative sites across the a boundary do not bond...
+  Molecule mol = splitAcrossBoundary(false);
+  ASSERT_TRUE(mol.setDisorder(0, "A", "1"));
+  ASSERT_TRUE(mol.setDisorder(1, "A", "2"));
+  EXPECT_EQ(CrystalTools::perceivePeriodicBonds(mol).size(), 0);
+
+  // ...but compatible (same group) or ordered sites still do.
+  ASSERT_TRUE(mol.setDisorder(1, "A", "1"));
+  EXPECT_EQ(CrystalTools::perceivePeriodicBonds(mol).size(), 1);
+  ASSERT_TRUE(mol.setDisorder(1, "", ""));
+  EXPECT_EQ(CrystalTools::perceivePeriodicBonds(mol).size(), 1);
+}
+
 TEST(CrystalToolsTest, perceivePeriodicBondsRoutesStretchedBond)
 {
   // The same pair, this time with the stretched bond already in the file. It
