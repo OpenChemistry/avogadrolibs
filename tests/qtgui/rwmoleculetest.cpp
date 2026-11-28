@@ -236,7 +236,7 @@ TEST(RWMoleculeTest, removeAtom)
 {
   Molecule m;
   RWMolecule mol(m);
-  typedef RWMolecule::AtomType Atom;
+  using Atom = RWMolecule::AtomType;
 
   Atom a0 = mol.addAtom(1); // H
   Atom a1 = mol.addAtom(2); // He
@@ -344,7 +344,7 @@ TEST(RWMoleculeTest, clearAtoms)
 {
   Molecule m;
   RWMolecule mol(m);
-  typedef RWMolecule::AtomType Atom;
+  using Atom = RWMolecule::AtomType;
 
   Atom a0 = mol.addAtom(1); // H
   Atom a1 = mol.addAtom(2); // He
@@ -798,7 +798,7 @@ TEST(RWMoleculeTest, setBondPairs)
   ASSERT_EQ(Molecule::makeBondPair(2, 3), mol.bondPair(2));
   mol.undoStack().clear();
 
-  typedef std::pair<Index, Index> BondPair;
+  using BondPair = std::pair<Index, Index>;
   Array<BondPair> old(mol.bondPairs());
   Array<BondPair> rep(old);
   for (Array<BondPair>::iterator it = rep.begin(), itEnd = rep.end();
@@ -828,7 +828,7 @@ TEST(RWMoleculeTest, setBondPairsPermutationUndoRedo)
   mol.addBond(2, 3, 3);
   mol.undoStack().clear();
 
-  typedef std::pair<Index, Index> BondPair;
+  using BondPair = std::pair<Index, Index>;
   const Array<BondPair> old(mol.bondPairs());
   Array<BondPair> rotated;
   rotated.push_back(Molecule::makeBondPair(1, 2));
@@ -864,7 +864,7 @@ TEST(RWMoleculeTest, setBondPairRefusalsPushNothing)
   // Setting a bond to the pair it already has succeeds without an undo step.
   EXPECT_TRUE(mol.setBondPair(0, std::make_pair(Index(1), Index(0))));
 
-  typedef std::pair<Index, Index> BondPair;
+  using BondPair = std::pair<Index, Index>;
   Array<BondPair> dup(mol.bondPairs());
   dup[0] = dup[1];
   EXPECT_FALSE(mol.setBondPairs(dup));
@@ -929,7 +929,7 @@ TEST(RWMoleculeTest, AtomType)
 {
   Molecule m;
   RWMolecule mol(m);
-  typedef RWMolecule::AtomType Atom;
+  using Atom = RWMolecule::AtomType;
   Atom a0 = mol.addAtom(1);
   Atom a1 = mol.addAtom(2);
 
@@ -962,8 +962,8 @@ TEST(RWMoleculeTest, BondType)
 {
   Molecule m;
   RWMolecule mol(m);
-  typedef RWMolecule::AtomType Atom;
-  typedef RWMolecule::BondType Bond;
+  using Atom = RWMolecule::AtomType;
+  using Bond = RWMolecule::BondType;
   Atom a0 = mol.addAtom(1);
   Atom a1 = mol.addAtom(2);
   Atom a2 = mol.addAtom(3);
@@ -995,8 +995,8 @@ TEST(RWMoleculeTest, BondType)
 TEST(RWMoleculeTest, MoleculeToRWMolecule)
 {
   Molecule mol;
-  typedef Molecule::AtomType Atom;
-  typedef Molecule::BondType Bond;
+  using Atom = Molecule::AtomType;
+  using Bond = Molecule::BondType;
   Atom a0 = mol.addAtom(1);
   Atom a1 = mol.addAtom(6);
   Atom a2 = mol.addAtom(9);
