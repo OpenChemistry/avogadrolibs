@@ -36,7 +36,7 @@ Orbitals::Orbitals(QObject* p)
 {
   m_action->setEnabled(false);
   m_action->setText(tr("Molecular Orbitals…"));
-  connect(m_action, SIGNAL(triggered()), SLOT(openDialog()));
+  connect(m_action, &QAction::triggered, this, &Orbitals::openDialog);
 }
 
 Orbitals::~Orbitals()
@@ -144,8 +144,8 @@ void Orbitals::setMolecule(QtGui::Molecule* mol)
       m_dialog->hide();
   }
 
-  connect(m_molecule, SIGNAL(changed(unsigned int)),
-          SLOT(moleculeChanged(unsigned int)));
+  connect(m_molecule, &QtGui::Molecule::changed, this,
+          &Orbitals::moleculeChanged);
 
   // Stuff we manage that will not be valid any longer
   stopCalculations();
@@ -183,18 +183,9 @@ void Orbitals::loadOrbitals()
 
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
-    connect(m_dialog,
-            SIGNAL(orbitalSelected(unsigned int, Core::BasisSet::ElectronType)),
-            this,
-            SLOT(renderOrbital(unsigned int, Core::BasisSet::ElectronType)));
-    connect(m_dialog,
-            SIGNAL(renderRequested(unsigned int, double,
-                                   Core::BasisSet::ElectronType)),
-            this,
-            SLOT(calculateOrbitalFromWidget(unsigned int, double,
-                                            Core::BasisSet::ElectronType)));
-    connect(m_dialog, SIGNAL(calculateAll()), this,
-            SLOT(precalculateOrbitals()));
+    connect(m_dialog, &OrbitalWidget::orbitalSelected, this, &Orbitals::renderOrbital);
+    connect(m_dialog, &OrbitalWidget::renderRequested, this, &Orbitals::calculateOrbitalFromWidget);
+    connect(m_dialog,&OrbitalWidget::calculateAll, this, &Orbitals::precalculateOrbitals);
   }
 
   m_dialog->fillTable(m_basis.get());
@@ -251,18 +242,12 @@ void Orbitals::openDialog()
 {
   if (!m_dialog) {
     m_dialog = new OrbitalWidget(qobject_cast<QWidget*>(parent()), Qt::Window);
-    connect(m_dialog,
-            SIGNAL(orbitalSelected(unsigned int, Core::BasisSet::ElectronType)),
-            this,
-            SLOT(renderOrbital(unsigned int, Core::BasisSet::ElectronType)));
-    connect(m_dialog,
-            SIGNAL(renderRequested(unsigned int, double,
-                                   Core::BasisSet::ElectronType)),
-            this,
-            SLOT(calculateOrbitalFromWidget(unsigned int, double,
-                                            Core::BasisSet::ElectronType)));
-    connect(m_dialog, SIGNAL(calculateAll()), this,
-            SLOT(precalculateOrbitals()));
+    connect(m_dialog, &OrbitalWidget::orbitalSelected, this,
+            &Orbitals::renderOrbital);
+    connect(m_dialog, &OrbitalWidget::renderRequested, this,
+            &Orbitals::calculateOrbitalFromWidget);
+    connect(m_dialog, &OrbitalWidget::calculateAll, this,
+            &Orbitals::precalculateOrbitals);
   }
 
   m_dialog->show();
@@ -482,7 +467,7 @@ void Orbitals::calculateCube()
   loadBasis();
 
   auto* watcher = &m_gaussianConcurrent->watcher();
-  connect(watcher, SIGNAL(finished()), this, SLOT(calculateCubeDone()));
+  connect(watcher, &QFutureWatcher<void>::finished, this, &Orbitals::calculateCubeDone);
 
 #ifndef NDEBUG
   qDebug() << info->orbital << " Cube calculation started.";
@@ -569,7 +554,7 @@ void Orbitals::calculatePosMesh()
   if (!m_meshGenerator) {
     m_meshGenerator = new QtGui::MeshGenerator;
   }
-  connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculatePosMeshDone()));
+  connect(m_meshGenerator, &QtGui::MeshGenerator::finished, this, &Orbitals::calculatePosMeshDone);
   m_meshGenerator->initialize(m_meshCube.get(), m_pendingPosMesh.get(),
                               info->isovalue, smoothingPasses);
   m_meshPhase = MeshPhase::Positive;
@@ -598,7 +583,7 @@ void Orbitals::calculateNegMesh()
     // shouldn't happen, but better to be careful
     m_meshGenerator = new QtGui::MeshGenerator;
   }
-  connect(m_meshGenerator, SIGNAL(finished()), SLOT(calculateNegMeshDone()));
+  connect(m_meshGenerator, &QtGui::MeshGenerator::finished, this, &Orbitals::calculateNegMeshDone);
   // true indicates that we want to reverse the surface
   m_meshGenerator->initialize(m_meshCube.get(), m_pendingNegMesh.get(),
                               -info->isovalue, smoothingPasses, true);

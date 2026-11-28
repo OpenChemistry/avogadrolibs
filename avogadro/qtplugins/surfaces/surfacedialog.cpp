@@ -39,17 +39,20 @@ SurfaceDialog::SurfaceDialog(QWidget* parent_, Qt::WindowFlags f)
   m_ui->surfaceCombo->addItem(tr("Solvent Excluded"),
                               Surfaces::Type::SolventExcluded);
 
-  connect(m_ui->surfaceCombo, SIGNAL(currentIndexChanged(int)),
-          SLOT(surfaceComboChanged(int)));
-  connect(m_ui->propertyCombo, SIGNAL(currentIndexChanged(int)),
-          SLOT(propertyComboChanged(int)));
-  connect(m_ui->resolutionCombo, SIGNAL(currentIndexChanged(int)),
-          SLOT(resolutionComboChanged(int)));
-  connect(m_ui->smoothingCombo, SIGNAL(currentIndexChanged(int)),
-          SLOT(smoothingComboChanged(int)));
-  connect(m_ui->stepValue, SIGNAL(valueChanged(int)), SIGNAL(stepChanged(int)));
-  connect(m_ui->calculateButton, SIGNAL(clicked()), SLOT(calculateClicked()));
-  connect(m_ui->recordButton, SIGNAL(clicked()), SLOT(record()));
+  connect(m_ui->surfaceCombo, &QComboBox::currentIndexChanged, this,
+          &SurfaceDialog::surfaceComboChanged);
+  connect(m_ui->propertyCombo, &QComboBox::currentIndexChanged, this,
+          &SurfaceDialog::propertyComboChanged);
+  connect(m_ui->resolutionCombo, &QComboBox::currentIndexChanged, this,
+          &SurfaceDialog::resolutionComboChanged);
+  connect(m_ui->smoothingCombo, &QComboBox::currentIndexChanged, this,
+          &SurfaceDialog::smoothingComboChanged);
+  connect(m_ui->stepValue, &QSpinBox::valueChanged, this,
+          &SurfaceDialog::stepChanged);
+  connect(m_ui->calculateButton, &QPushButton::clicked, this,
+          &SurfaceDialog::calculateClicked);
+  connect(m_ui->recordButton, &QPushButton::clicked, this,
+          &SurfaceDialog::record);
 
   // currentIndexChanged() did not fire for the first item, so apply the
   // per-type defaults (including smoothing) to the initial surface type.

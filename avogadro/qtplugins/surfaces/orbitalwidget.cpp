@@ -46,13 +46,13 @@ OrbitalWidget::OrbitalWidget(QWidget* parent, Qt::WindowFlags f)
 
   connect(
     ui.table->selectionModel(),
-    SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-    this, SLOT(tableClicked(const QItemSelection&)));
-  connect(ui.push_render, SIGNAL(clicked()), this, SLOT(renderClicked()));
+    &QItemSelectionModel::selectionChanged, this,
+    &OrbitalWidget::tableClicked);
+  connect(ui.push_render, &QPushButton::clicked, this, &OrbitalWidget::renderClicked);
 
   // TODO: Implement configure dialog
   ui.push_configure->setVisible(false);
-  connect(ui.push_configure, SIGNAL(clicked()), this, SLOT(configureClicked()));
+  connect(ui.push_configure, &QPushButton::clicked, this, &OrbitalWidget::configureClicked);
   readSettings();
   // Connect after readSettings() so restoring the index doesn't write back.
   // Persist only this key: the destructor may never run at plugin teardown.
